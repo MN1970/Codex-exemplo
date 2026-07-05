@@ -1,0 +1,109 @@
+[
+  {
+    "id": "REF-SINAPI-MANUAL",
+    "bloco": "B3", "grau": "norma",
+    "titulo": "SINAPI — Manual de Metodologias e Conceitos (CEF/IBGE)",
+    "autor": "Caixa Econômica Federal / IBGE",
+    "inst": "CEF", "ano": 2024,
+    "url": "https://files.cercomp.ufg.br/weby/up/124/o/SINAPI_Manual_de_Metodologias_e_Conceitos_v002.pdf",
+    "agentes": ["05"],
+    "KEs": [
+      {"id":"KE-025","tipo":"norma","desc":"Manual completo SINAPI: CHP e CHI de equipamentos, composições de custo horário de mão de obra (alimentação, transporte, EPI, ferramentas, exames, seguros), encargos sociais complementares, aferição de produtividade por grupo de serviços."},
+      {"id":"KE-026","tipo":"parametro","desc":"Fórmulas de custo horário: CHP (produtivo) e CHI (improdutivo). Variáveis: vida útil, depreciação, manutenção, combustível, lubrificantes, pneus. Fator de disponibilidade 1.25."}
+    ],
+    "grader_score": 9.8,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "REF-SICRO-CUSTOS-ENAP",
+    "bloco": "B3", "grau": "norma",
+    "titulo": "Introdução à Orçamentação de Obras Rodoviárias — Composição de Custos (ENAP/DNIT)",
+    "autor": "ENAP / DNIT",
+    "inst": "ENAP", "ano": 2021,
+    "url": "https://repositorio.enap.gov.br/jspui/bitstream/1/7644/3/M%C3%B3dulo%202%20-%20Composi%C3%A7%C3%A3o%20de%20Custos.pdf",
+    "agentes": ["05", "03-S1"],
+    "KEs": [
+      {"id":"KE-027","tipo":"metodo","desc":"Pipeline completo de composição de custos SICRO: (1) custo horário equipamentos, (2) mão de obra com encargos, (3) materiais com fator de conversão, (4) BDI diferenciado por faixa. IS/DG nº 44/2021 para Preços Novos."},
+      {"id":"KE-028","tipo":"parametro","desc":"Fator de conversão corte→solto para terraplenagem. BDI diferenciado: faixas por natureza do serviço (inovação SICRO vs SICRO 2). Decreto 7.983/2013 como base legal."}
+    ],
+    "grader_score": 9.6,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-BARREIROS-CHP",
+    "bloco": "B3", "grau": "paper",
+    "titulo": "Custo Horário de Equipamentos: SINAPI × SICRO — Comparativo",
+    "autor": "Felipe Barreiros",
+    "inst": "UNISUL", "ano": 2020,
+    "url": "https://repositorio.animaeducacao.com.br/bitstream/ANIMA/8772/1/Custo%20Hor%C3%A1rio%20de%20Equipamentos%20SINAPI%20X%20SICRO.pdf",
+    "agentes": ["05"],
+    "KEs": [
+      {"id":"KE-029","tipo":"benchmark","desc":"Comparativo detalhado SINAPI vs SICRO para custo horário de equipamentos: diferenças em depreciação (fator disponibilidade 1.25 SINAPI vs produtividade SICRO), manutenção, vida útil. Mesma tabela de vida útil base, mas tratamento diferente."}
+    ],
+    "grader_score": 7.6,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "TESE-UNIGRANRIO-MC",
+    "bloco": "B2", "grau": "mestrado",
+    "titulo": "Avaliação Probabilística de Cronogramas de Projetos — Simulação Monte Carlo para Descomissionamento",
+    "autor": "Thiago de Souza Silva",
+    "inst": "UNIGRANRIO", "ano": 2022,
+    "url": "https://portal.unigranrio.edu.br/hubfs/Disserta%C3%A7%C3%A3o%20Thiago%20Silva_Final.pdf",
+    "agentes": ["07"],
+    "KEs": [
+      {"id":"KE-030","tipo":"metodo","desc":"Monte Carlo com distribuição Beta para durações de atividades em cronogramas. Comparativo PERT determinístico vs SMC probabilístico. Tabela de durações previstas vs simuladas com desvios."}
+    ],
+    "grader_score": 7.8,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-2024-ICRA-MC",
+    "bloco": "B2", "grau": "paper",
+    "titulo": "Avaliação de riscos de prazos — Simulação Monte Carlo com Índice de Criticidade de Risco de Atraso (ICRA)",
+    "autor": "Caderno Pedagógico",
+    "inst": "Caderno Pedagógico", "ano": 2024,
+    "url": "https://ojs.studiespublicacoes.com.br/ojs/index.php/cadped/article/view/3471",
+    "agentes": ["07"],
+    "KEs": [
+      {"id":"KE-031","tipo":"metodo","desc":"ICRA (Índice de Criticidade de Risco de Atraso) por atividade do caminho crítico + Monte Carlo com @RISK Industrial para probabilidade global de término. Modelo retroalimentável durante execução. Prático para gestores."}
+    ],
+    "grader_score": 8.4,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-2024-PYTHON-MC",
+    "bloco": "B2", "grau": "paper",
+    "titulo": "Simulação Monte Carlo como ferramenta para análise de risco no gerenciamento de projetos — algoritmo Python",
+    "autor": "Herzog, Silva, Weymar",
+    "inst": "UNINOVE / Dialnet", "ano": 2024,
+    "url": "https://dialnet.unirioja.es/descarga/articulo/9850643.pdf",
+    "agentes": ["07"],
+    "KEs": [
+      {"id":"KE-032","tipo":"metodo","desc":"Algoritmo Python para Monte Carlo em cronogramas de construção. Implementação open-source replicável. Integra distribuição triangular + CPM + análise de risco. Diretamente integrável ao agente M07."}
+    ],
+    "grader_score": 8.6,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "TESE-UTFPR-CPM-MC",
+    "bloco": "B2", "grau": "mestrado",
+    "titulo": "Análise comparativa de assertividade dos métodos CPM e Simulação de Monte Carlo para cronogramas de construção civil",
+    "autor": "UTFPR",
+    "inst": "Universidade Tecnológica Federal do Paraná", "ano": 2020,
+    "url": "https://repositorio.utfpr.edu.br/jspui/handle/1/27489",
+    "agentes": ["07"],
+    "KEs": [
+      {"id":"KE-033","tipo":"benchmark","desc":"Comparação empírica CPM determinístico vs Monte Carlo probabilístico em projetos reais de construção civil. Monte Carlo superior na assertividade de previsão de prazo."}
+    ],
+    "grader_score": 8.2,
+    "aluci_status": "pass",
+    "status": "referencia_catalogada"
+  }
+]

@@ -1,0 +1,129 @@
+{
+  "workflow": "WF-AKP-001",
+  "stage": 2,
+  "data_execucao": "2026-07-05",
+  "total_extraidos": 9,
+  "total_KEs": 15,
+  "teses": [
+    {
+      "id": "TESE-2021-UFC-002", "bloco": "B1", "grau": "mestrado",
+      "titulo": "Earthworks Planning Using Optimization Techniques: Literature Analysis and Solution Proposal",
+      "autor": "Pedro G.P.S. Fernandes", "inst": "UFC", "ano": 2021,
+      "url": "https://repositorio.ufc.br/bitstream/riufc/60836/1/2021_dis_pgpsfernandes.pdf",
+      "agentes": ["03-S1","05","07"],
+      "KEs": [
+        {"id":"KE-001","tipo":"metodo","desc":"Modelo MILP terraplenagem+pavimentação+haul roads com restrições geotécnicas. 121 cortes, 257 aterros, solução em 2.98s"},
+        {"id":"KE-002","tipo":"benchmark","desc":"Systematic mapping 72 papers (1958-2021): LP/MILP dominam allocation, GA domina fleet/routing"}
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2012-UP-001", "bloco": "B1", "grau": "mestrado",
+      "titulo": "Distribuição de Terras Usando uma Extensão da Teoria de Brückner",
+      "autor": "Maria Manuela Ramalho de Mesquita", "inst": "U.Porto/FEUP", "ano": 2012,
+      "url": "https://repositorio-aberto.up.pt/bitstream/10216/68372/1/000155026.pdf",
+      "agentes": ["03-S1"],
+      "KEs": [
+        {"id":"KE-007","tipo":"metodo","desc":"Extensão do método Brückner incorporando condicionantes geotécnicas, ambientais e temporais. Múltiplas curvas de Brückner para cada imposição. Caso real: troço de autoestrada"},
+        {"id":"KE-008","tipo":"parametro","desc":"Custos de equipamentos de transporte por tipologia, relacionados com material e inclinação do percurso"}
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2017-USP-TBM", "bloco": "B6", "grau": "mestrado",
+      "titulo": "Túneis escavados em solo por máquina tuneladora: conceituação, comportamento do maciço e modelagem numérica",
+      "autor": "Gustavo Aguiar", "inst": "USP Poli", "ano": 2017,
+      "url": "https://teses.usp.br/teses/disponiveis/3/3145/tde-21062017-132502/publico/GustavoAguiarCorr17.pdf",
+      "agentes": ["03-S4"],
+      "KEs": [
+        {"id":"KE-003","tipo":"metodo","desc":"Diretrizes FEM Plaxis 2D para TBM/EPB: alívio tensões vs contração, Mohr-Coulomb vs Hardening Soil, revestimento com/sem juntas"},
+        {"id":"KE-004","tipo":"parametro","desc":"Parâmetros Hardening Soil para solos SP: E50_ref, Eur_ref, coef. m. Retroanálise caso real"}
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2018-IST-NATM", "bloco": "B6", "grau": "mestrado",
+      "titulo": "Túnel de Águas Santas: análise do comportamento em fase de obra",
+      "autor": "Margarida Ferreira Pinto Afonso e Cunha", "inst": "IST Lisboa", "ano": 2018,
+      "url": "https://fenix.tecnico.ulisboa.pt/downloadFile/844820067126122/Dissertacao_Final_70112.pdf",
+      "agentes": ["03-S4"],
+      "KEs": [
+        {"id":"KE-009","tipo":"metodo","desc":"Retroanálise NATM em maciço granítico com Plaxis 2D + Hoek-Brown. RMR da frente de escavação validado com instrumentação. Faseamento: calote + rebaixo"},
+        {"id":"KE-010","tipo":"case_study","desc":"Túnel A4 Porto/Amarante — dados reais de monitorização + back analysis. GSI, RQD, SPT correlacionados"}
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2020-UFPE-001", "bloco": "B8", "grau": "doutorado",
+      "titulo": "Procedimento Adaptativo de Correção de Contra Flecha em Pontes em Balanços Sucessivos — Monte Carlo + Fluência",
+      "autor": "Mariella Falcão de Lima Oliveira Santos", "inst": "UFPE", "ano": 2020,
+      "url": "https://repositorio.ufpe.br/bitstream/123456789/38379/1/TESE%20Mariella%20Falc%C3%A3o%20de%20Lima%20Oliveira%20Santos.pdf",
+      "agentes": ["03-S2","07"],
+      "KEs": [
+        {"id":"KE-005","tipo":"metodo","desc":"Monte Carlo adaptativo para contra flecha em balanço sucessivo, com otimização por Mínimos Quadrados e incerteza de fluência"},
+        {"id":"KE-006","tipo":"formula","desc":"Modelo estocástico de fluência CEB-FIP/NBR 6118 para diferentes idades com quantificação de incerteza"}
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2016-IST-LEAN", "bloco": "B4", "grau": "mestrado",
+      "titulo": "Lean na Construção: Estado atual, Desafios e Técnicas prioritárias a aplicar em Portugal",
+      "autor": "Patrick Pequito Aparício", "inst": "IST Lisboa", "ano": 2016,
+      "url": "https://fenix.tecnico.ulisboa.pt/downloadFile/1689244997256275/Dissertacao%20-%20(%20Documento%20Final%20Revisto)%20Patrick%20Pequito%20Aparicio.pdf",
+      "agentes": ["07"],
+      "KEs": [
+        {"id":"KE-011","tipo":"benchmark","desc":"Survey + Workshop com indústria PT: 5 técnicas Lean prioritárias identificadas (VSM, Instruções de Trabalho, Reuniões Performance, TVD, BIM)"},
+        {"id":"KE-012","tipo":"metodo","desc":"Framework de implementação Lean Construction com mapeamento de ineficiências por fase do empreendimento"}
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "REF-2000-BIRM-BALLARD", "bloco": "B4", "grau": "doutorado",
+      "titulo": "The Last Planner System of Production Control",
+      "autor": "Herman Glenn Ballard", "inst": "University of Birmingham", "ano": 2000,
+      "url": "https://etheses.bham.ac.uk/id/eprint/4789/",
+      "agentes": ["07"],
+      "KEs": [
+        {"id":"KE-013","tipo":"metodo","desc":"Tese seminal do Last Planner System: PPC (Percent Plan Complete), lookahead planning, constraint analysis, weekly work plans. Base do Lean Construction mundial"}
+      ],
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "REF-2000-HUT-KOSKELA", "bloco": "B4", "grau": "doutorado",
+      "titulo": "An exploration towards a production theory and its application to construction",
+      "autor": "Lauri Koskela", "inst": "Helsinki University of Technology", "ano": 2000,
+      "url": "https://aaltodoc.aalto.fi/",
+      "agentes": ["07","15"],
+      "KEs": [
+        {"id":"KE-014","tipo":"metodo","desc":"Teoria TFV (Transformation-Flow-Value): fundamento teórico do Lean Construction. Construção não é só transformação — fluxo e valor são igualmente críticos"}
+      ],
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "TESE-2024-UFAL-EPANET", "bloco": "B7", "grau": "mestrado",
+      "titulo": "Modelagem e simulação hidráulica do sistema de abastecimento de água com uso de tecnologia GIS e EPANET: estudo de caso Piaçabuçu/AL",
+      "autor": "Hítila Ribeiro Correia", "inst": "UFAL", "ano": 2024,
+      "url": "https://www.repositorio.ufal.br/bitstream/123456789/16342/1/",
+      "agentes": ["03-S8"],
+      "KEs": [
+        {"id":"KE-015","tipo":"metodo","desc":"Pipeline GIS + EPANET 2.0 para modelagem hidráulica de rede de distribuição com dados reais de companhia de saneamento. Metodologia replicável para AySA"}
+      ],
+      "status": "extraido"
+    }
+  ],
+  "resumo_KEs_por_agente": {
+    "03-S1_rodovias": ["KE-001","KE-002","KE-007","KE-008"],
+    "03-S2_oae": ["KE-005","KE-006"],
+    "03-S4_metro": ["KE-003","KE-004","KE-009","KE-010"],
+    "03-S8_saneamento": ["KE-015"],
+    "05_orcamento": ["KE-001"],
+    "07_cronograma": ["KE-002","KE-005","KE-011","KE-012","KE-013","KE-014"],
+    "15_advisory": ["KE-002","KE-014"]
+  },
+  "proximos_passos": {
+    "stage3_grader": "Aplicar M17 grader (score ≥7/10) + aluci-guard nas 9 teses extraídas",
+    "stage2_restantes": "30 teses do catálogo ainda precisam de fetch+extração (batch no Claude Code)",
+    "supabase": "Migration pendente — 3 timeouts, aplicar via dashboard ou Claude Code",
+    "gate_humano": "Após Stage 3, Maurício aprova antes da ingestão pgvector"
+  }
+}

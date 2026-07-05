@@ -1,0 +1,110 @@
+[
+  {
+    "id": "ART-2025-ANPEC-PRIV",
+    "bloco": "B7", "grau": "paper",
+    "titulo": "Efeitos da privatização nos serviços de água e esgoto — análise pós Novo Marco Legal (ANPEC 2025)",
+    "autor": "ANPEC 2025",
+    "inst": "ANPEC", "ano": 2025,
+    "url": "https://www.anpec.org.br/encontro/2025/submissao/files_I/i5-d9b240c7351017d49bbf55a1af279d4b.pdf",
+    "agentes": ["03-S8", "15"],
+    "KEs": [
+      {"id":"KE-043","tipo":"benchmark","desc":"Análise pós-NMLSB (Lei 14.026/2020): privatização promove ganhos gerenciais mas efeitos sobre universalização dependem do desenho contratual. Modelos baseados em menor tarifa + metas de qualidade > modelos focados em outorgas. >100 concessões/ano pós-2021. Aumento tarifário comprovado nos early adopters."},
+      {"id":"KE-044","tipo":"case_study","desc":"Dados SNIS municipais: comparação prestadores públicos vs privados em perdas físicas, eficiência energética, cobertura. Evidência empírica para calibrar expectativas AySA."}
+    ],
+    "grader_score": 9.2,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-SCIELO-PRIV-4CASOS",
+    "bloco": "B7", "grau": "paper",
+    "titulo": "Privatização do saneamento no Brasil: quatro experiências e muitas lições (Limeira, Prolagos, Juturnaíba, Petrópolis)",
+    "autor": "SciELO / Nova Economia",
+    "inst": "SciELO", "ano": 2005,
+    "url": "https://scielo.br/scielo.php?pid=S1413-80502005000300009&script=sci_arttext",
+    "agentes": ["03-S8", "15"],
+    "KEs": [
+      {"id":"KE-045","tipo":"case_study","desc":"4 casos reais de privatização saneamento BR: Limeira (concessão plena), Prolagos e Juturnaíba (Região dos Lagos RJ), Petrópolis (subconcessão). Estrutura tarifária escalonada, outorga, TRA básica R$0.45. Lições sobre desenho contratual."},
+      {"id":"KE-046","tipo":"parametro","desc":"Evolução tarifária pré/pós privatização por município. Faixas de consumo, conta mínima, tarifa social. Benchmark direto para modelagem AySA."}
+    ],
+    "grader_score": 8.8,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-IPPUR-IGUA-RJ",
+    "bloco": "B7", "grau": "paper",
+    "titulo": "Privatização do saneamento e desigualdades ambientais na metrópole carioca — caso Iguá/CEDAE",
+    "autor": "IPPUR/UFRJ",
+    "inst": "IPPUR/UFRJ", "ano": 2025,
+    "url": "https://ippur.ufrj.br/privatizacao-do-saneamento-e-desigualdades-ambientais-na-metropole-carioca/",
+    "agentes": ["03-S8", "15"],
+    "KEs": [
+      {"id":"KE-047","tipo":"case_study","desc":"Caso Iguá/CEDAE Rio de Janeiro: paralisação ETE Barra da Tijuca, desigualdade na aplicação da legislação, Coletores de Tempo Seco (CTS). Riscos de gestão privada sem regulação rigorosa. Contraponto relevante para análise AySA."}
+    ],
+    "grader_score": 8.4,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-2025-NATURE-EVM",
+    "bloco": "B4", "grau": "paper",
+    "titulo": "Comparative analysis of earned value management techniques in construction projects (Scientific Reports / Nature)",
+    "autor": "Scientific Reports",
+    "inst": "Nature / Scientific Reports", "ano": 2025,
+    "url": "https://www.nature.com/articles/s41598-025-05834-z",
+    "agentes": ["07", "05"],
+    "KEs": [
+      {"id":"KE-048","tipo":"benchmark","desc":"Comparação de 3 técnicas EVM em 30 projetos reais (Egito): Earned Duration, Earned Schedule, Planned Value. Earned Schedule mais preciso no início; Earned Duration mais preciso em estágios avançados. Dataset de 30 projetos como benchmark."},
+      {"id":"KE-049","tipo":"metodo","desc":"Framework de seleção de técnica EVM por tipo de projeto e estágio de progresso. Métricas: CPI, SPI, EAC, ETC, VAC. Importância de considerar tipo de projeto ao selecionar método."}
+    ],
+    "grader_score": 9.6,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-2022-MDPI-EVM",
+    "bloco": "B4", "grau": "paper",
+    "titulo": "Earned Value Method for Construction: Current Application and Future Projections (MDPI Buildings)",
+    "autor": "Proaño-Narváez et al.",
+    "inst": "MDPI Buildings", "ano": 2022,
+    "url": "https://www.mdpi.com/2075-5309/12/3/301",
+    "agentes": ["07", "05"],
+    "KEs": [
+      {"id":"KE-050","tipo":"case_study","desc":"EVM aplicado a projetos reais em Cuenca/Equador. Reconstrução de eventos passados via database. Curva S original vs final. Métricas PV/EV/AC ao longo do tempo. VAC%=-3.24% de overrun. Demonstra aplicabilidade em construção civil latino-americana."}
+    ],
+    "grader_score": 8.4,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-2024-ML-EVM",
+    "bloco": "B4", "grau": "paper",
+    "titulo": "Evaluation of EVM-Based Cost Estimation via Machine Learning (MDPI Buildings)",
+    "autor": "MDPI Buildings",
+    "inst": "MDPI Buildings", "ano": 2024,
+    "url": "https://www.mdpi.com/2075-5309/14/12/3772",
+    "agentes": ["07", "05", "16"],
+    "KEs": [
+      {"id":"KE-051","tipo":"metodo","desc":"19 métodos EAC calculados + ML (Machine Learning) para previsão de custo final em obras. Dados reais: 122 dias monitorados diariamente, 13 atividades. ML melhora previsão vs EVM tradicional. Integrável ao M16 pesquisador evolutivo."}
+    ],
+    "grader_score": 9.0,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-2011-SCIDIR-MASSHAULBAL",
+    "bloco": "B1", "grau": "paper",
+    "titulo": "Developing an efficient algorithm for balancing mass-haul diagrams (Automation in Construction)",
+    "autor": "Nassar, Hosny",
+    "inst": "ScienceDirect / Automation in Construction", "ano": 2011,
+    "url": "https://www.sciencedirect.com/science/article/abs/pii/S0926580511000744",
+    "agentes": ["03-S1"],
+    "KEs": [
+      {"id":"KE-052","tipo":"metodo","desc":"Algoritmo automático para balancear diagramas de massa usando shortest-haul-first. Pruning sequencial do mass diagram. 70% dos construction managers usam mass-haul diagram (survey). Supera limitações do balanceamento manual/gráfico e do Civil 3D (que não oferece balanceamento)."}
+    ],
+    "grader_score": 9.0,
+    "aluci_status": "pass",
+    "status": "referencia_catalogada"
+  }
+]

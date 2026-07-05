@@ -5,7 +5,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 operacionais no SharePoint.
 
 Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Saneamento, Energia, Barragens) + WF-AKP-001 (Academic Knowledge Pipeline —
+36 teses / 52 KEs, aprovadas por Maurício em 2026-07-05, seed aplicado no
+Supabase `manta-maestro`).
 
 ---
 
@@ -136,13 +138,28 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 ```
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
-└── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+├── .claude/
+│   └── agents/
+│       ├── agente-portos.md          # 🆕 S6
+│       ├── agente-aeroportos.md      # 🆕 S7
+│       ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
+│       ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
+│       └── agente-barragens.md       # 🆕 S10
+└── academic-ingestor/                # 🆕 WF-AKP-001 (Academic Knowledge Pipeline)
+    ├── README.md                     # ponto de entrada
+    ├── HANDOFF.md                    # handoff canônico (Chat → Code)
+    ├── EXECUCAO-CLAUDECODE.md        # log do que rodou em produção
+    ├── MASTER-CATALOG.json           # 36 teses + 52 KEs (fonte da verdade)
+    ├── INDICE-KEs.md                 # mapa KEs → agentes
+    ├── stage2-jsons/                 # batches originais (M18 extractions)
+    ├── supabase/
+    │   ├── migration_teses_academicas.sql   # DDL consolidado (aplicado)
+    │   └── inserts_teses.sql                # 36 INSERTs (aplicados)
+    ├── src/
+    │   ├── m18_embeddings.py         # pgvector 768d, mpnet multilingual
+    │   ├── m20_sharepoint_upload.py  # Graph API mirror para 04_IA/Manta-Maestro/Teses/
+    │   └── requirements.txt
+    └── pdfs/                         # PDFs originais (fetch pendente)
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
@@ -154,6 +171,12 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.1** (2026-07-05) — WF-AKP-001 (Academic Knowledge Pipeline):
+  36 teses / 52 KEs aprovadas pelo gate humano (Maurício), score médio
+  8.9/10. Schema `teses_academicas` + `knowledge_extractions` +
+  `ke_embeddings` (pgvector 768d, HNSW) aplicado em produção no Supabase
+  `manta-maestro` (`ogxxgvgtulrbbppshjie`). Módulos M18 (embeddings) e
+  M20 (SharePoint mirror) prontos, dependem de credenciais para execução.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.

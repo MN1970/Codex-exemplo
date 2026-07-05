@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ART-2018-PMWJ-TIA",
+    "bloco": "B2", "grau": "paper",
+    "titulo": "Effective Tactics for Delay Analysis — TIA Methods Comparison",
+    "autor": "Pratyush K. Chaturvedi",
+    "inst": "SKEMA Business School / PM World Journal", "ano": 2018,
+    "url": "https://pmworldlibrary.net/wp-content/uploads/2018/12/pmwj77-Dec2018-Chaturvedi-effective-tactices-for-delay-analysis.pdf",
+    "agentes": ["07", "01"],
+    "KEs": [
+      {
+        "id": "KE-016", "tipo": "metodo",
+        "desc": "Comparação TIA prospectiva vs retrospectiva (AACE RP 29R-03). MIP 3.3-3.7 detalhados. TIA é a técnica mais precisa. Aplicação em Oil&Gas EPC com CPM schedule atualizado."
+      },
+      {
+        "id": "KE-017", "tipo": "benchmark",
+        "desc": "Tabela comparativa: As-Planned vs As-Built, Impacted As-Planned, Collapsed As-Built, Window Analysis, TIA — quando usar cada uma"
+      }
+    ],
+    "grader_score": 7.8,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-SPIRE-MM-POWER",
+    "bloco": "B5", "grau": "paper",
+    "titulo": "Quantifying Disruption in Power Projects Using the Measured Mile Analysis",
+    "autor": "Spire Consulting Group",
+    "inst": "Spire Consulting Group", "ano": 2021,
+    "url": "https://www.spireconsultinggroup.com/wp-content/uploads/2021/09/Quantifying-Disruption-in-Power-Projects-Using-Measured-Mile.pdf",
+    "agentes": ["01", "02-C"],
+    "KEs": [
+      {
+        "id": "KE-018", "tipo": "metodo",
+        "desc": "Pipeline completo Measured Mile em 5 etapas: (1) Identificar atividades impactadas, (2) Compilar dados de produtividade, (3) Identificar Measured Mile (período não impactado), (4) Calcular lost man-hours, (5) Totalizar danos. Fórmulas: Productivity = Units/MH, PF = BaselineProd/ActualProd, Lost MH = (Actual - Baseline) × Units"
+      },
+      {
+        "id": "KE-019", "tipo": "case_study",
+        "desc": "Case study: Disruption claim em power plant global. Piping installation como atividade-chave. Gráfico de produtividade por período com identificação visual do Measured Mile. Claim bem-sucedido."
+      },
+      {
+        "id": "KE-020", "tipo": "benchmark",
+        "desc": "AACE RP 25R-03 lista 25 causas de perda de produtividade. Nexo disruption→ripple effects→cumulative impact→lost productivity. Timing e quantum do change afetam severidade."
+      }
+    ],
+    "grader_score": 9.4,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-2022-CDNSCI-MAPPING",
+    "bloco": "B1", "grau": "paper",
+    "titulo": "Optimization of earthworks planning: a systematic mapping study (71 papers, 1958-2021)",
+    "autor": "Canadian J. Civil Engineering",
+    "inst": "Canadian Science Publishing", "ano": 2022,
+    "url": "https://cdnsciencepub.com/doi/10.1139/cjce-2022-0185",
+    "agentes": ["03-S1", "05"],
+    "KEs": [
+      {
+        "id": "KE-021", "tipo": "benchmark",
+        "desc": "Mapping 5785→71 papers earthwork optimization. Allocation, fleet planning, routing, scheduling são os tópicos mais investigados. LP, MILP, GA as técnicas mais usadas. Modelos com fatores construtivos melhoram orçamentos e planos de transporte."
+      }
+    ],
+    "grader_score": 9.0,
+    "aluci_status": "pass",
+    "status": "extraido_aprovado"
+  },
+  {
+    "id": "ART-2024-ASCE-HAUL",
+    "bloco": "B1", "grau": "paper",
+    "titulo": "Optimization Model for Earthwork Allocations Considering Multiple Haul Roads: GIS-Based Integrated Approach",
+    "autor": "ASCE J. Construction Eng. Management",
+    "inst": "ASCE", "ano": 2024,
+    "url": "https://ascelibrary.org/doi/10.1061/JCEMD4.COENG-13922",
+    "agentes": ["03-S1"],
+    "KEs": [
+      {
+        "id": "KE-022", "tipo": "metodo",
+        "desc": "Modelo GIS-based para alocação de terraplenagem com múltiplos haul roads. Integra topografia, distâncias reais (não euclidianas) e custos de abertura de caminhos. Avanço sobre modelos LP tradicionais."
+      }
+    ],
+    "grader_score": 9.2,
+    "aluci_status": "pass",
+    "status": "referencia_catalogada"
+  },
+  {
+    "id": "ART-2024-L2V-METRO",
+    "bloco": "B6", "grau": "paper",
+    "titulo": "Instrumentação geotécnica TBM Linha 2-Verde Metrô SP (Vila Formosa–Coxim, 2024)",
+    "autor": "Caderno Pedagógico",
+    "inst": "Caderno Pedagógico", "ano": 2024,
+    "url": "https://ojs.studiespublicacoes.com.br/ojs/index.php/cadped/article/view/4845",
+    "agentes": ["03-S4"],
+    "KEs": [
+      {
+        "id": "KE-023", "tipo": "case_study",
+        "desc": "Dados reais 2024 de recalques TBM na Linha 2-Verde Metrô SP. Comparação recalques previstos vs observados via marcos superficiais e tassômetros. Diretamente aplicável como benchmark para L5 e L6."
+      }
+    ],
+    "grader_score": 9.0,
+    "aluci_status": "pass",
+    "status": "referencia_catalogada"
+  },
+  {
+    "id": "ART-2023-REBEP-PRIV",
+    "bloco": "B7", "grau": "paper",
+    "titulo": "Impacto da privatização da água e esgoto nas tarifas e acesso no Brasil (1998-2019, 3.536 municípios)",
+    "autor": "Larissa S. Côrtes et al.",
+    "inst": "REBEP / UFMG", "ano": 2023,
+    "url": "https://rebep.org.br/revista/article/view/2238",
+    "agentes": ["03-S8", "15"],
+    "KEs": [
+      {
+        "id": "KE-024", "tipo": "benchmark",
+        "desc": "Diff-in-diff com 3.536 municípios SNIS (1998-2019): prestadores privados têm impacto positivo e significativo em cobertura de água, esgoto e tratamento. Tarifas também sobem. Lei 14.026/2020. Diretamente aplicável à análise AySA."
+      }
+    ],
+    "grader_score": 9.4,
+    "aluci_status": "pass",
+    "status": "referencia_catalogada"
+  }
+]

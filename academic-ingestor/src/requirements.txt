@@ -1,0 +1,11 @@
+# WF-AKP-001 — dependências dos módulos Python
+# Instale só o que você vai rodar; M18 é pesado (baixa modelo mpnet ~470MB).
+
+# M18 embeddings (Supabase pgvector 768d)
+sentence-transformers>=2.5,<3
+supabase>=2.6,<3
+numpy>=1.26
+
+# M20 SharePoint upload (Graph API v1.0)
+msal>=1.28,<2
+httpx>=0.27,<1
