@@ -58,6 +58,29 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 
 ---
 
+## PRINCÍPIO DE EXECUÇÃO — Paralelismo por padrão (v4.2.2, 2026-07-05)
+
+Regra global do Maestro (Manta 00) e obrigatória para todos os agentes que
+orquestram sub-agentes:
+
+> **SEMPRE despachar agentes e sub-agentes em paralelo quando as tarefas
+> forem independentes.** Só serializar quando houver dependência real de
+> dados (o sub-agente B precisa do output do sub-agente A) ou risco de
+> conflito de escrita em recurso compartilhado.
+
+Aplicações concretas:
+- **Roteamento multi-vertical** (ex.: projeto envolve rodovia + ponte + drenagem):
+  disparar S1, S2 e S8 no mesmo turno, coletar respostas, sintetizar.
+- **Análise cross-agent** (ex.: pleito de reequilíbrio): 01 Claims + 02 Contratual
+  + 15 Advisory em paralelo, cada um com seu recorte.
+- **Estudo prévio de segmento novo**: consultar simultaneamente RAG (KEs por
+  agente), SharePoint (documentos-modelo) e templates do bloco correspondente.
+- **Auditoria/DD**: dividir escopo entre múltiplos agentes verticais e
+  horizontais, cada um responsável por um subsistema, resultados agregados
+  ao final.
+
+Serialização é a exceção — precisa justificativa técnica registrada no trace.
+
 ## ROUTING — Maestro (Manta 00)
 
 Regra de roteamento atualizada para Q1 do intake:
