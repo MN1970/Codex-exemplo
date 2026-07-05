@@ -1,0 +1,1418 @@
+{
+  "workflow": "WF-AKP-001",
+  "versao": "master-catalog-v1",
+  "data": "2026-07-05",
+  "stats": {
+    "total_teses": 36,
+    "total_kes": 52,
+    "kes_por_agente": {
+      "01": 10,
+      "02-C": 8,
+      "03-S1": 9,
+      "03-S2": 5,
+      "03-S4": 5,
+      "03-S8": 7,
+      "05": 12,
+      "06": 2,
+      "07": 18,
+      "15": 12,
+      "16": 1
+    }
+  },
+  "teses": [
+    {
+      "id": "TESE-2021-UFC-002",
+      "bloco": "B1",
+      "grau": "mestrado",
+      "titulo": "Earthworks Planning Using Optimization Techniques: Literature Analysis and Solution Proposal",
+      "autor": "Pedro G.P.S. Fernandes",
+      "inst": "UFC",
+      "ano": 2021,
+      "url": "https://repositorio.ufc.br/bitstream/riufc/60836/1/2021_dis_pgpsfernandes.pdf",
+      "agentes": [
+        "03-S1",
+        "05",
+        "07"
+      ],
+      "KEs": [
+        {
+          "id": "KE-001",
+          "tipo": "metodo",
+          "desc": "Modelo MILP terraplenagem+pavimentação+haul roads com restrições geotécnicas. 121 cortes, 257 aterros, solução em 2.98s",
+          "tese_id": "TESE-2021-UFC-002"
+        },
+        {
+          "id": "KE-002",
+          "tipo": "benchmark",
+          "desc": "Systematic mapping 72 papers (1958-2021): LP/MILP dominam allocation, GA domina fleet/routing",
+          "tese_id": "TESE-2021-UFC-002"
+        }
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2012-UP-001",
+      "bloco": "B1",
+      "grau": "mestrado",
+      "titulo": "Distribuição de Terras Usando uma Extensão da Teoria de Brückner",
+      "autor": "Maria Manuela Ramalho de Mesquita",
+      "inst": "U.Porto/FEUP",
+      "ano": 2012,
+      "url": "https://repositorio-aberto.up.pt/bitstream/10216/68372/1/000155026.pdf",
+      "agentes": [
+        "03-S1"
+      ],
+      "KEs": [
+        {
+          "id": "KE-007",
+          "tipo": "metodo",
+          "desc": "Extensão do método Brückner incorporando condicionantes geotécnicas, ambientais e temporais. Múltiplas curvas de Brückner para cada imposição. Caso real: troço de autoestrada",
+          "tese_id": "TESE-2012-UP-001"
+        },
+        {
+          "id": "KE-008",
+          "tipo": "parametro",
+          "desc": "Custos de equipamentos de transporte por tipologia, relacionados com material e inclinação do percurso",
+          "tese_id": "TESE-2012-UP-001"
+        }
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2017-USP-TBM",
+      "bloco": "B6",
+      "grau": "mestrado",
+      "titulo": "Túneis escavados em solo por máquina tuneladora: conceituação, comportamento do maciço e modelagem numérica",
+      "autor": "Gustavo Aguiar",
+      "inst": "USP Poli",
+      "ano": 2017,
+      "url": "https://teses.usp.br/teses/disponiveis/3/3145/tde-21062017-132502/publico/GustavoAguiarCorr17.pdf",
+      "agentes": [
+        "03-S4"
+      ],
+      "KEs": [
+        {
+          "id": "KE-003",
+          "tipo": "metodo",
+          "desc": "Diretrizes FEM Plaxis 2D para TBM/EPB: alívio tensões vs contração, Mohr-Coulomb vs Hardening Soil, revestimento com/sem juntas",
+          "tese_id": "TESE-2017-USP-TBM"
+        },
+        {
+          "id": "KE-004",
+          "tipo": "parametro",
+          "desc": "Parâmetros Hardening Soil para solos SP: E50_ref, Eur_ref, coef. m. Retroanálise caso real",
+          "tese_id": "TESE-2017-USP-TBM"
+        }
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2018-IST-NATM",
+      "bloco": "B6",
+      "grau": "mestrado",
+      "titulo": "Túnel de Águas Santas: análise do comportamento em fase de obra",
+      "autor": "Margarida Ferreira Pinto Afonso e Cunha",
+      "inst": "IST Lisboa",
+      "ano": 2018,
+      "url": "https://fenix.tecnico.ulisboa.pt/downloadFile/844820067126122/Dissertacao_Final_70112.pdf",
+      "agentes": [
+        "03-S4"
+      ],
+      "KEs": [
+        {
+          "id": "KE-009",
+          "tipo": "metodo",
+          "desc": "Retroanálise NATM em maciço granítico com Plaxis 2D + Hoek-Brown. RMR da frente de escavação validado com instrumentação. Faseamento: calote + rebaixo",
+          "tese_id": "TESE-2018-IST-NATM"
+        },
+        {
+          "id": "KE-010",
+          "tipo": "case_study",
+          "desc": "Túnel A4 Porto/Amarante — dados reais de monitorização + back analysis. GSI, RQD, SPT correlacionados",
+          "tese_id": "TESE-2018-IST-NATM"
+        }
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2020-UFPE-001",
+      "bloco": "B8",
+      "grau": "doutorado",
+      "titulo": "Procedimento Adaptativo de Correção de Contra Flecha em Pontes em Balanços Sucessivos — Monte Carlo + Fluência",
+      "autor": "Mariella Falcão de Lima Oliveira Santos",
+      "inst": "UFPE",
+      "ano": 2020,
+      "url": "https://repositorio.ufpe.br/bitstream/123456789/38379/1/TESE%20Mariella%20Falc%C3%A3o%20de%20Lima%20Oliveira%20Santos.pdf",
+      "agentes": [
+        "03-S2",
+        "07"
+      ],
+      "KEs": [
+        {
+          "id": "KE-005",
+          "tipo": "metodo",
+          "desc": "Monte Carlo adaptativo para contra flecha em balanço sucessivo, com otimização por Mínimos Quadrados e incerteza de fluência",
+          "tese_id": "TESE-2020-UFPE-001"
+        },
+        {
+          "id": "KE-006",
+          "tipo": "formula",
+          "desc": "Modelo estocástico de fluência CEB-FIP/NBR 6118 para diferentes idades com quantificação de incerteza",
+          "tese_id": "TESE-2020-UFPE-001"
+        }
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "TESE-2016-IST-LEAN",
+      "bloco": "B4",
+      "grau": "mestrado",
+      "titulo": "Lean na Construção: Estado atual, Desafios e Técnicas prioritárias a aplicar em Portugal",
+      "autor": "Patrick Pequito Aparício",
+      "inst": "IST Lisboa",
+      "ano": 2016,
+      "url": "https://fenix.tecnico.ulisboa.pt/downloadFile/1689244997256275/Dissertacao%20-%20(%20Documento%20Final%20Revisto)%20Patrick%20Pequito%20Aparicio.pdf",
+      "agentes": [
+        "07"
+      ],
+      "KEs": [
+        {
+          "id": "KE-011",
+          "tipo": "benchmark",
+          "desc": "Survey + Workshop com indústria PT: 5 técnicas Lean prioritárias identificadas (VSM, Instruções de Trabalho, Reuniões Performance, TVD, BIM)",
+          "tese_id": "TESE-2016-IST-LEAN"
+        },
+        {
+          "id": "KE-012",
+          "tipo": "metodo",
+          "desc": "Framework de implementação Lean Construction com mapeamento de ineficiências por fase do empreendimento",
+          "tese_id": "TESE-2016-IST-LEAN"
+        }
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "REF-2000-BIRM-BALLARD",
+      "bloco": "B4",
+      "grau": "doutorado",
+      "titulo": "The Last Planner System of Production Control",
+      "autor": "Herman Glenn Ballard",
+      "inst": "University of Birmingham",
+      "ano": 2000,
+      "url": "https://etheses.bham.ac.uk/id/eprint/4789/",
+      "agentes": [
+        "07"
+      ],
+      "KEs": [
+        {
+          "id": "KE-013",
+          "tipo": "metodo",
+          "desc": "Tese seminal do Last Planner System: PPC (Percent Plan Complete), lookahead planning, constraint analysis, weekly work plans. Base do Lean Construction mundial",
+          "tese_id": "REF-2000-BIRM-BALLARD"
+        }
+      ],
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "REF-2000-HUT-KOSKELA",
+      "bloco": "B4",
+      "grau": "doutorado",
+      "titulo": "An exploration towards a production theory and its application to construction",
+      "autor": "Lauri Koskela",
+      "inst": "Helsinki University of Technology",
+      "ano": 2000,
+      "url": "https://aaltodoc.aalto.fi/",
+      "agentes": [
+        "07",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-014",
+          "tipo": "metodo",
+          "desc": "Teoria TFV (Transformation-Flow-Value): fundamento teórico do Lean Construction. Construção não é só transformação — fluxo e valor são igualmente críticos",
+          "tese_id": "REF-2000-HUT-KOSKELA"
+        }
+      ],
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "TESE-2024-UFAL-EPANET",
+      "bloco": "B7",
+      "grau": "mestrado",
+      "titulo": "Modelagem e simulação hidráulica do sistema de abastecimento de água com uso de tecnologia GIS e EPANET: estudo de caso Piaçabuçu/AL",
+      "autor": "Hítila Ribeiro Correia",
+      "inst": "UFAL",
+      "ano": 2024,
+      "url": "https://www.repositorio.ufal.br/bitstream/123456789/16342/1/",
+      "agentes": [
+        "03-S8"
+      ],
+      "KEs": [
+        {
+          "id": "KE-015",
+          "tipo": "metodo",
+          "desc": "Pipeline GIS + EPANET 2.0 para modelagem hidráulica de rede de distribuição com dados reais de companhia de saneamento. Metodologia replicável para AySA",
+          "tese_id": "TESE-2024-UFAL-EPANET"
+        }
+      ],
+      "status": "extraido"
+    },
+    {
+      "id": "ART-2018-PMWJ-TIA",
+      "bloco": "B2",
+      "grau": "paper",
+      "titulo": "Effective Tactics for Delay Analysis — TIA Methods Comparison",
+      "autor": "Pratyush K. Chaturvedi",
+      "inst": "SKEMA Business School / PM World Journal",
+      "ano": 2018,
+      "url": "https://pmworldlibrary.net/wp-content/uploads/2018/12/pmwj77-Dec2018-Chaturvedi-effective-tactices-for-delay-analysis.pdf",
+      "agentes": [
+        "07",
+        "01"
+      ],
+      "KEs": [
+        {
+          "id": "KE-016",
+          "tipo": "metodo",
+          "desc": "Comparação TIA prospectiva vs retrospectiva (AACE RP 29R-03). MIP 3.3-3.7 detalhados. TIA é a técnica mais precisa. Aplicação em Oil&Gas EPC com CPM schedule atualizado.",
+          "tese_id": "ART-2018-PMWJ-TIA"
+        },
+        {
+          "id": "KE-017",
+          "tipo": "benchmark",
+          "desc": "Tabela comparativa: As-Planned vs As-Built, Impacted As-Planned, Collapsed As-Built, Window Analysis, TIA — quando usar cada uma",
+          "tese_id": "ART-2018-PMWJ-TIA"
+        }
+      ],
+      "grader_score": 7.8,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-SPIRE-MM-POWER",
+      "bloco": "B5",
+      "grau": "paper",
+      "titulo": "Quantifying Disruption in Power Projects Using the Measured Mile Analysis",
+      "autor": "Spire Consulting Group",
+      "inst": "Spire Consulting Group",
+      "ano": 2021,
+      "url": "https://www.spireconsultinggroup.com/wp-content/uploads/2021/09/Quantifying-Disruption-in-Power-Projects-Using-Measured-Mile.pdf",
+      "agentes": [
+        "01",
+        "02-C"
+      ],
+      "KEs": [
+        {
+          "id": "KE-018",
+          "tipo": "metodo",
+          "desc": "Pipeline completo Measured Mile em 5 etapas: (1) Identificar atividades impactadas, (2) Compilar dados de produtividade, (3) Identificar Measured Mile (período não impactado), (4) Calcular lost man-hours, (5) Totalizar danos. Fórmulas: Productivity = Units/MH, PF = BaselineProd/ActualProd, Lost MH = (Actual - Baseline) × Units",
+          "tese_id": "ART-SPIRE-MM-POWER"
+        },
+        {
+          "id": "KE-019",
+          "tipo": "case_study",
+          "desc": "Case study: Disruption claim em power plant global. Piping installation como atividade-chave. Gráfico de produtividade por período com identificação visual do Measured Mile. Claim bem-sucedido.",
+          "tese_id": "ART-SPIRE-MM-POWER"
+        },
+        {
+          "id": "KE-020",
+          "tipo": "benchmark",
+          "desc": "AACE RP 25R-03 lista 25 causas de perda de produtividade. Nexo disruption→ripple effects→cumulative impact→lost productivity. Timing e quantum do change afetam severidade.",
+          "tese_id": "ART-SPIRE-MM-POWER"
+        }
+      ],
+      "grader_score": 9.4,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2022-CDNSCI-MAPPING",
+      "bloco": "B1",
+      "grau": "paper",
+      "titulo": "Optimization of earthworks planning: a systematic mapping study (71 papers, 1958-2021)",
+      "autor": "Canadian J. Civil Engineering",
+      "inst": "Canadian Science Publishing",
+      "ano": 2022,
+      "url": "https://cdnsciencepub.com/doi/10.1139/cjce-2022-0185",
+      "agentes": [
+        "03-S1",
+        "05"
+      ],
+      "KEs": [
+        {
+          "id": "KE-021",
+          "tipo": "benchmark",
+          "desc": "Mapping 5785→71 papers earthwork optimization. Allocation, fleet planning, routing, scheduling são os tópicos mais investigados. LP, MILP, GA as técnicas mais usadas. Modelos com fatores construtivos melhoram orçamentos e planos de transporte.",
+          "tese_id": "ART-2022-CDNSCI-MAPPING"
+        }
+      ],
+      "grader_score": 9.0,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2024-ASCE-HAUL",
+      "bloco": "B1",
+      "grau": "paper",
+      "titulo": "Optimization Model for Earthwork Allocations Considering Multiple Haul Roads: GIS-Based Integrated Approach",
+      "autor": "ASCE J. Construction Eng. Management",
+      "inst": "ASCE",
+      "ano": 2024,
+      "url": "https://ascelibrary.org/doi/10.1061/JCEMD4.COENG-13922",
+      "agentes": [
+        "03-S1"
+      ],
+      "KEs": [
+        {
+          "id": "KE-022",
+          "tipo": "metodo",
+          "desc": "Modelo GIS-based para alocação de terraplenagem com múltiplos haul roads. Integra topografia, distâncias reais (não euclidianas) e custos de abertura de caminhos. Avanço sobre modelos LP tradicionais.",
+          "tese_id": "ART-2024-ASCE-HAUL"
+        }
+      ],
+      "grader_score": 9.2,
+      "aluci_status": "pass",
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "ART-2024-L2V-METRO",
+      "bloco": "B6",
+      "grau": "paper",
+      "titulo": "Instrumentação geotécnica TBM Linha 2-Verde Metrô SP (Vila Formosa–Coxim, 2024)",
+      "autor": "Caderno Pedagógico",
+      "inst": "Caderno Pedagógico",
+      "ano": 2024,
+      "url": "https://ojs.studiespublicacoes.com.br/ojs/index.php/cadped/article/view/4845",
+      "agentes": [
+        "03-S4"
+      ],
+      "KEs": [
+        {
+          "id": "KE-023",
+          "tipo": "case_study",
+          "desc": "Dados reais 2024 de recalques TBM na Linha 2-Verde Metrô SP. Comparação recalques previstos vs observados via marcos superficiais e tassômetros. Diretamente aplicável como benchmark para L5 e L6.",
+          "tese_id": "ART-2024-L2V-METRO"
+        }
+      ],
+      "grader_score": 9.0,
+      "aluci_status": "pass",
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "ART-2023-REBEP-PRIV",
+      "bloco": "B7",
+      "grau": "paper",
+      "titulo": "Impacto da privatização da água e esgoto nas tarifas e acesso no Brasil (1998-2019, 3.536 municípios)",
+      "autor": "Larissa S. Côrtes et al.",
+      "inst": "REBEP / UFMG",
+      "ano": 2023,
+      "url": "https://rebep.org.br/revista/article/view/2238",
+      "agentes": [
+        "03-S8",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-024",
+          "tipo": "benchmark",
+          "desc": "Diff-in-diff com 3.536 municípios SNIS (1998-2019): prestadores privados têm impacto positivo e significativo em cobertura de água, esgoto e tratamento. Tarifas também sobem. Lei 14.026/2020. Diretamente aplicável à análise AySA.",
+          "tese_id": "ART-2023-REBEP-PRIV"
+        }
+      ],
+      "grader_score": 9.4,
+      "aluci_status": "pass",
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "REF-SINAPI-MANUAL",
+      "bloco": "B3",
+      "grau": "norma",
+      "titulo": "SINAPI — Manual de Metodologias e Conceitos (CEF/IBGE)",
+      "autor": "Caixa Econômica Federal / IBGE",
+      "inst": "CEF",
+      "ano": 2024,
+      "url": "https://files.cercomp.ufg.br/weby/up/124/o/SINAPI_Manual_de_Metodologias_e_Conceitos_v002.pdf",
+      "agentes": [
+        "05"
+      ],
+      "KEs": [
+        {
+          "id": "KE-025",
+          "tipo": "norma",
+          "desc": "Manual completo SINAPI: CHP e CHI de equipamentos, composições de custo horário de mão de obra (alimentação, transporte, EPI, ferramentas, exames, seguros), encargos sociais complementares, aferição de produtividade por grupo de serviços.",
+          "tese_id": "REF-SINAPI-MANUAL"
+        },
+        {
+          "id": "KE-026",
+          "tipo": "parametro",
+          "desc": "Fórmulas de custo horário: CHP (produtivo) e CHI (improdutivo). Variáveis: vida útil, depreciação, manutenção, combustível, lubrificantes, pneus. Fator de disponibilidade 1.25.",
+          "tese_id": "REF-SINAPI-MANUAL"
+        }
+      ],
+      "grader_score": 9.8,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "REF-SICRO-CUSTOS-ENAP",
+      "bloco": "B3",
+      "grau": "norma",
+      "titulo": "Introdução à Orçamentação de Obras Rodoviárias — Composição de Custos (ENAP/DNIT)",
+      "autor": "ENAP / DNIT",
+      "inst": "ENAP",
+      "ano": 2021,
+      "url": "https://repositorio.enap.gov.br/jspui/bitstream/1/7644/3/M%C3%B3dulo%202%20-%20Composi%C3%A7%C3%A3o%20de%20Custos.pdf",
+      "agentes": [
+        "05",
+        "03-S1"
+      ],
+      "KEs": [
+        {
+          "id": "KE-027",
+          "tipo": "metodo",
+          "desc": "Pipeline completo de composição de custos SICRO: (1) custo horário equipamentos, (2) mão de obra com encargos, (3) materiais com fator de conversão, (4) BDI diferenciado por faixa. IS/DG nº 44/2021 para Preços Novos.",
+          "tese_id": "REF-SICRO-CUSTOS-ENAP"
+        },
+        {
+          "id": "KE-028",
+          "tipo": "parametro",
+          "desc": "Fator de conversão corte→solto para terraplenagem. BDI diferenciado: faixas por natureza do serviço (inovação SICRO vs SICRO 2). Decreto 7.983/2013 como base legal.",
+          "tese_id": "REF-SICRO-CUSTOS-ENAP"
+        }
+      ],
+      "grader_score": 9.6,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-BARREIROS-CHP",
+      "bloco": "B3",
+      "grau": "paper",
+      "titulo": "Custo Horário de Equipamentos: SINAPI × SICRO — Comparativo",
+      "autor": "Felipe Barreiros",
+      "inst": "UNISUL",
+      "ano": 2020,
+      "url": "https://repositorio.animaeducacao.com.br/bitstream/ANIMA/8772/1/Custo%20Hor%C3%A1rio%20de%20Equipamentos%20SINAPI%20X%20SICRO.pdf",
+      "agentes": [
+        "05"
+      ],
+      "KEs": [
+        {
+          "id": "KE-029",
+          "tipo": "benchmark",
+          "desc": "Comparativo detalhado SINAPI vs SICRO para custo horário de equipamentos: diferenças em depreciação (fator disponibilidade 1.25 SINAPI vs produtividade SICRO), manutenção, vida útil. Mesma tabela de vida útil base, mas tratamento diferente.",
+          "tese_id": "ART-BARREIROS-CHP"
+        }
+      ],
+      "grader_score": 7.6,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "TESE-UNIGRANRIO-MC",
+      "bloco": "B2",
+      "grau": "mestrado",
+      "titulo": "Avaliação Probabilística de Cronogramas de Projetos — Simulação Monte Carlo para Descomissionamento",
+      "autor": "Thiago de Souza Silva",
+      "inst": "UNIGRANRIO",
+      "ano": 2022,
+      "url": "https://portal.unigranrio.edu.br/hubfs/Disserta%C3%A7%C3%A3o%20Thiago%20Silva_Final.pdf",
+      "agentes": [
+        "07"
+      ],
+      "KEs": [
+        {
+          "id": "KE-030",
+          "tipo": "metodo",
+          "desc": "Monte Carlo com distribuição Beta para durações de atividades em cronogramas. Comparativo PERT determinístico vs SMC probabilístico. Tabela de durações previstas vs simuladas com desvios.",
+          "tese_id": "TESE-UNIGRANRIO-MC"
+        }
+      ],
+      "grader_score": 7.8,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2024-ICRA-MC",
+      "bloco": "B2",
+      "grau": "paper",
+      "titulo": "Avaliação de riscos de prazos — Simulação Monte Carlo com Índice de Criticidade de Risco de Atraso (ICRA)",
+      "autor": "Caderno Pedagógico",
+      "inst": "Caderno Pedagógico",
+      "ano": 2024,
+      "url": "https://ojs.studiespublicacoes.com.br/ojs/index.php/cadped/article/view/3471",
+      "agentes": [
+        "07"
+      ],
+      "KEs": [
+        {
+          "id": "KE-031",
+          "tipo": "metodo",
+          "desc": "ICRA (Índice de Criticidade de Risco de Atraso) por atividade do caminho crítico + Monte Carlo com @RISK Industrial para probabilidade global de término. Modelo retroalimentável durante execução. Prático para gestores.",
+          "tese_id": "ART-2024-ICRA-MC"
+        }
+      ],
+      "grader_score": 8.4,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2024-PYTHON-MC",
+      "bloco": "B2",
+      "grau": "paper",
+      "titulo": "Simulação Monte Carlo como ferramenta para análise de risco no gerenciamento de projetos — algoritmo Python",
+      "autor": "Herzog, Silva, Weymar",
+      "inst": "UNINOVE / Dialnet",
+      "ano": 2024,
+      "url": "https://dialnet.unirioja.es/descarga/articulo/9850643.pdf",
+      "agentes": [
+        "07"
+      ],
+      "KEs": [
+        {
+          "id": "KE-032",
+          "tipo": "metodo",
+          "desc": "Algoritmo Python para Monte Carlo em cronogramas de construção. Implementação open-source replicável. Integra distribuição triangular + CPM + análise de risco. Diretamente integrável ao agente M07.",
+          "tese_id": "ART-2024-PYTHON-MC"
+        }
+      ],
+      "grader_score": 8.6,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "TESE-UTFPR-CPM-MC",
+      "bloco": "B2",
+      "grau": "mestrado",
+      "titulo": "Análise comparativa de assertividade dos métodos CPM e Simulação de Monte Carlo para cronogramas de construção civil",
+      "autor": "UTFPR",
+      "inst": "Universidade Tecnológica Federal do Paraná",
+      "ano": 2020,
+      "url": "https://repositorio.utfpr.edu.br/jspui/handle/1/27489",
+      "agentes": [
+        "07"
+      ],
+      "KEs": [
+        {
+          "id": "KE-033",
+          "tipo": "benchmark",
+          "desc": "Comparação empírica CPM determinístico vs Monte Carlo probabilístico em projetos reais de construção civil. Monte Carlo superior na assertividade de previsão de prazo.",
+          "tese_id": "TESE-UTFPR-CPM-MC"
+        }
+      ],
+      "grader_score": 8.2,
+      "aluci_status": "pass",
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "TESE-2021-UNB-REEQ",
+      "bloco": "B5",
+      "grau": "mestrado",
+      "titulo": "Contratos de concessões de rodovias federais: análise dos pedidos de revisões extraordinárias com vistas ao reequilíbrio econômico-financeiro",
+      "autor": "Lisandro Cogo Beck",
+      "inst": "Universidade de Brasília",
+      "ano": 2021,
+      "url": "https://repositorio.unb.br/bitstream/10482/41363/1/2021_LisandroCogoBeck.pdf",
+      "agentes": [
+        "01",
+        "02-C",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-034",
+          "tipo": "case_study",
+          "desc": "Análise de pedidos de revisões extraordinárias em concessões rodoviárias federais. Mapeamento dos principais gatilhos de reequilíbrio, metodologias adotadas pela ANTT, e impactos na TIR. Diretamente aplicável a claims em concessões Manta.",
+          "tese_id": "TESE-2021-UNB-REEQ"
+        },
+        {
+          "id": "KE-035",
+          "tipo": "norma",
+          "desc": "Resolução ANTT 5.850/2019: procedimentos para reequilíbrio econômico-financeiro. Fluxo de Caixa Marginal como método. Decreto 7.983/2013 como base legal.",
+          "tese_id": "TESE-2021-UNB-REEQ"
+        }
+      ],
+      "grader_score": 9.4,
+      "aluci_status": "pass",
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "TESE-2014-UNESP-EEF",
+      "bloco": "B5",
+      "grau": "mestrado",
+      "titulo": "O equilíbrio econômico-financeiro dos contratos de concessão de rodovias federais e estaduais sob a égide da Lei 8.987/95",
+      "autor": "Fernanda de Mello Matos",
+      "inst": "UNESP — Faculdade de Ciências Humanas e Sociais",
+      "ano": 2014,
+      "url": "https://repositorio.unesp.br/items/fea2b5af-fd2c-45ce-8bd8-6c818f012b6c",
+      "agentes": [
+        "01",
+        "02-C",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-036",
+          "tipo": "metodo",
+          "desc": "Framework jurídico completo do EEF em concessões rodoviárias: Lei 8.987/95, evolução Procrofe (Fases I-III), posicionamento TCU, matriz de riscos, Fator D para reequilíbrio por atraso em obras de ampliação.",
+          "tese_id": "TESE-2014-UNESP-EEF"
+        }
+      ],
+      "grader_score": 8.6,
+      "aluci_status": "pass",
+      "status": "referencia_catalogada"
+    },
+    {
+      "id": "ART-FGV-EEF-RODOVIAS",
+      "bloco": "B5",
+      "grau": "paper",
+      "titulo": "O equilíbrio econômico-financeiro nas concessões de rodovias federais",
+      "autor": "FGV Direito Rio",
+      "inst": "FGV",
+      "ano": 2017,
+      "url": "https://editoraforum.com.br/wp-content/uploads/2017/07/equilibrio-financeiro-concessoes.pdf",
+      "agentes": [
+        "01",
+        "02-C",
+        "06",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-037",
+          "tipo": "metodo",
+          "desc": "Evolução do racional econômico nas 3 fases do Procrofe. Desconto de reequilíbrio, indicadores de desempenho, gatilhos de investimentos, Fluxo de Caixa Marginal. Posicionamento TCU. Framework completo para modelagem de concessões.",
+          "tese_id": "ART-FGV-EEF-RODOVIAS"
+        }
+      ],
+      "grader_score": 9.2,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "REF-TCEMG-REEQ",
+      "bloco": "B5",
+      "grau": "norma",
+      "titulo": "Estudo Técnico: O Instituto do Reequilíbrio Econômico-Financeiro (TCE-MG)",
+      "autor": "Tribunal de Contas do Estado de Minas Gerais",
+      "inst": "TCE-MG",
+      "ano": 2023,
+      "url": "https://www.tce.mg.gov.br/IMG/2023/Estudo-tecnico-Reequilibrio-Economico-Financeiro-Paginas-Individuais.pdf",
+      "agentes": [
+        "01",
+        "02-C"
+      ],
+      "KEs": [
+        {
+          "id": "KE-038",
+          "tipo": "norma",
+          "desc": "Estudo completo do TCE-MG sobre reequilíbrio: Lei 8.666/93, Lei 14.133/2021, Lei 13.303/16. Variação cambial, reajuste vs revisão, limites da álea. 11 parâmetros do TCE-SC para concessão de reequilíbrio em infraestrutura rodoviária.",
+          "tese_id": "REF-TCEMG-REEQ"
+        }
+      ],
+      "grader_score": 9.0,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "TESE-FGV-EPGE-REEQ",
+      "bloco": "B5",
+      "grau": "mestrado",
+      "titulo": "Avaliação da proposta de readaptação e otimização de concessões rodoviárias (FGV EPGE)",
+      "autor": "FGV EPGE / BNDES",
+      "inst": "FGV EPGE",
+      "ano": 2022,
+      "url": "https://web.bndes.gov.br/bib/jspui/bitstream/1408/26907/1/PRTese_216427_Avalia%C3%A7%C3%A3o%20da%20proposta%20de%20readapta%C3%A7%C3%A3o%20e%20otimiza%C3%A7%C3%A3o.pdf",
+      "agentes": [
+        "06",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-039",
+          "tipo": "metodo",
+          "desc": "Teoria econômica de renegociação de concessões: diferença entre reequilíbrio contratual e renegociação. Impacto da alteração da matriz de risco. Análise das 3 fases do Procrofe com lente econômica. Aplicável a modelagem financeira de concessões.",
+          "tese_id": "TESE-FGV-EPGE-REEQ"
+        }
+      ],
+      "grader_score": 9.0,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "TESE-PHD-MITRE-OAE",
+      "bloco": "B8",
+      "grau": "mestrado",
+      "titulo": "Metodologia para Inspeção e Diagnóstico de Pontes e Viadutos de Concreto",
+      "autor": "Marcos Pedrosa Mitre",
+      "inst": "PHD Engenharia / USP",
+      "ano": 2005,
+      "url": "https://phd.eng.br/wp-content/uploads/2017/04/Mestrado_MarcosMitre.pdf",
+      "agentes": [
+        "03-S2"
+      ],
+      "KEs": [
+        {
+          "id": "KE-040",
+          "tipo": "metodo",
+          "desc": "Metodologia de inspeção e diagnóstico de OAEs: classificação de gravidade/extensão/intensidade, graus de urgência, custos reais de manutenção (dados Ecovias). Norma DNIT 010-PRO integrada. Aplicável ao SGO e gestão de OAEs em concessões.",
+          "tese_id": "TESE-PHD-MITRE-OAE"
+        },
+        {
+          "id": "KE-041",
+          "tipo": "benchmark",
+          "desc": "Custos reais de recuperação de OAEs em concessionárias (Ecovias, Autopistas). Dados de 332 pontes e viadutos analisados com incidência de patologias: infiltrações 88%, desplacamento 53%, armaduras expostas 52%.",
+          "tese_id": "TESE-PHD-MITRE-OAE"
+        }
+      ],
+      "grader_score": 9.0,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-GDE-UNB-OAE",
+      "bloco": "B8",
+      "grau": "paper",
+      "titulo": "Avaliação teórica das metodologias de inspeção visual de OAE: NBR 9452 vs DNIT 010-PRO vs GDE/UnB",
+      "autor": "ResearchGate / Vários",
+      "inst": "UnB / Vários",
+      "ano": 2020,
+      "url": "https://www.researchgate.net/publication/343324993",
+      "agentes": [
+        "03-S2"
+      ],
+      "KEs": [
+        {
+          "id": "KE-042",
+          "tipo": "benchmark",
+          "desc": "Comparação das 3 metodologias de inspeção de OAE: NBR 9452 (ABNT), DNIT 010-PRO, GDE/UnB. GDE/UnB reduz subjetividade via fatores de ponderação+intensidade+grau de dano. As 3 usam escala 1-5. GDE/UnB mais precisa para gestão de portfólio.",
+          "tese_id": "ART-GDE-UNB-OAE"
+        }
+      ],
+      "grader_score": 8.8,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2025-ANPEC-PRIV",
+      "bloco": "B7",
+      "grau": "paper",
+      "titulo": "Efeitos da privatização nos serviços de água e esgoto — análise pós Novo Marco Legal (ANPEC 2025)",
+      "autor": "ANPEC 2025",
+      "inst": "ANPEC",
+      "ano": 2025,
+      "url": "https://www.anpec.org.br/encontro/2025/submissao/files_I/i5-d9b240c7351017d49bbf55a1af279d4b.pdf",
+      "agentes": [
+        "03-S8",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-043",
+          "tipo": "benchmark",
+          "desc": "Análise pós-NMLSB (Lei 14.026/2020): privatização promove ganhos gerenciais mas efeitos sobre universalização dependem do desenho contratual. Modelos baseados em menor tarifa + metas de qualidade > modelos focados em outorgas. >100 concessões/ano pós-2021. Aumento tarifário comprovado nos early adopters.",
+          "tese_id": "ART-2025-ANPEC-PRIV"
+        },
+        {
+          "id": "KE-044",
+          "tipo": "case_study",
+          "desc": "Dados SNIS municipais: comparação prestadores públicos vs privados em perdas físicas, eficiência energética, cobertura. Evidência empírica para calibrar expectativas AySA.",
+          "tese_id": "ART-2025-ANPEC-PRIV"
+        }
+      ],
+      "grader_score": 9.2,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-SCIELO-PRIV-4CASOS",
+      "bloco": "B7",
+      "grau": "paper",
+      "titulo": "Privatização do saneamento no Brasil: quatro experiências e muitas lições (Limeira, Prolagos, Juturnaíba, Petrópolis)",
+      "autor": "SciELO / Nova Economia",
+      "inst": "SciELO",
+      "ano": 2005,
+      "url": "https://scielo.br/scielo.php?pid=S1413-80502005000300009&script=sci_arttext",
+      "agentes": [
+        "03-S8",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-045",
+          "tipo": "case_study",
+          "desc": "4 casos reais de privatização saneamento BR: Limeira (concessão plena), Prolagos e Juturnaíba (Região dos Lagos RJ), Petrópolis (subconcessão). Estrutura tarifária escalonada, outorga, TRA básica R$0.45. Lições sobre desenho contratual.",
+          "tese_id": "ART-SCIELO-PRIV-4CASOS"
+        },
+        {
+          "id": "KE-046",
+          "tipo": "parametro",
+          "desc": "Evolução tarifária pré/pós privatização por município. Faixas de consumo, conta mínima, tarifa social. Benchmark direto para modelagem AySA.",
+          "tese_id": "ART-SCIELO-PRIV-4CASOS"
+        }
+      ],
+      "grader_score": 8.8,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-IPPUR-IGUA-RJ",
+      "bloco": "B7",
+      "grau": "paper",
+      "titulo": "Privatização do saneamento e desigualdades ambientais na metrópole carioca — caso Iguá/CEDAE",
+      "autor": "IPPUR/UFRJ",
+      "inst": "IPPUR/UFRJ",
+      "ano": 2025,
+      "url": "https://ippur.ufrj.br/privatizacao-do-saneamento-e-desigualdades-ambientais-na-metropole-carioca/",
+      "agentes": [
+        "03-S8",
+        "15"
+      ],
+      "KEs": [
+        {
+          "id": "KE-047",
+          "tipo": "case_study",
+          "desc": "Caso Iguá/CEDAE Rio de Janeiro: paralisação ETE Barra da Tijuca, desigualdade na aplicação da legislação, Coletores de Tempo Seco (CTS). Riscos de gestão privada sem regulação rigorosa. Contraponto relevante para análise AySA.",
+          "tese_id": "ART-IPPUR-IGUA-RJ"
+        }
+      ],
+      "grader_score": 8.4,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2025-NATURE-EVM",
+      "bloco": "B4",
+      "grau": "paper",
+      "titulo": "Comparative analysis of earned value management techniques in construction projects (Scientific Reports / Nature)",
+      "autor": "Scientific Reports",
+      "inst": "Nature / Scientific Reports",
+      "ano": 2025,
+      "url": "https://www.nature.com/articles/s41598-025-05834-z",
+      "agentes": [
+        "07",
+        "05"
+      ],
+      "KEs": [
+        {
+          "id": "KE-048",
+          "tipo": "benchmark",
+          "desc": "Comparação de 3 técnicas EVM em 30 projetos reais (Egito): Earned Duration, Earned Schedule, Planned Value. Earned Schedule mais preciso no início; Earned Duration mais preciso em estágios avançados. Dataset de 30 projetos como benchmark.",
+          "tese_id": "ART-2025-NATURE-EVM"
+        },
+        {
+          "id": "KE-049",
+          "tipo": "metodo",
+          "desc": "Framework de seleção de técnica EVM por tipo de projeto e estágio de progresso. Métricas: CPI, SPI, EAC, ETC, VAC. Importância de considerar tipo de projeto ao selecionar método.",
+          "tese_id": "ART-2025-NATURE-EVM"
+        }
+      ],
+      "grader_score": 9.6,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2022-MDPI-EVM",
+      "bloco": "B4",
+      "grau": "paper",
+      "titulo": "Earned Value Method for Construction: Current Application and Future Projections (MDPI Buildings)",
+      "autor": "Proaño-Narváez et al.",
+      "inst": "MDPI Buildings",
+      "ano": 2022,
+      "url": "https://www.mdpi.com/2075-5309/12/3/301",
+      "agentes": [
+        "07",
+        "05"
+      ],
+      "KEs": [
+        {
+          "id": "KE-050",
+          "tipo": "case_study",
+          "desc": "EVM aplicado a projetos reais em Cuenca/Equador. Reconstrução de eventos passados via database. Curva S original vs final. Métricas PV/EV/AC ao longo do tempo. VAC%=-3.24% de overrun. Demonstra aplicabilidade em construção civil latino-americana.",
+          "tese_id": "ART-2022-MDPI-EVM"
+        }
+      ],
+      "grader_score": 8.4,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2024-ML-EVM",
+      "bloco": "B4",
+      "grau": "paper",
+      "titulo": "Evaluation of EVM-Based Cost Estimation via Machine Learning (MDPI Buildings)",
+      "autor": "MDPI Buildings",
+      "inst": "MDPI Buildings",
+      "ano": 2024,
+      "url": "https://www.mdpi.com/2075-5309/14/12/3772",
+      "agentes": [
+        "07",
+        "05",
+        "16"
+      ],
+      "KEs": [
+        {
+          "id": "KE-051",
+          "tipo": "metodo",
+          "desc": "19 métodos EAC calculados + ML (Machine Learning) para previsão de custo final em obras. Dados reais: 122 dias monitorados diariamente, 13 atividades. ML melhora previsão vs EVM tradicional. Integrável ao M16 pesquisador evolutivo.",
+          "tese_id": "ART-2024-ML-EVM"
+        }
+      ],
+      "grader_score": 9.0,
+      "aluci_status": "pass",
+      "status": "extraido_aprovado"
+    },
+    {
+      "id": "ART-2011-SCIDIR-MASSHAULBAL",
+      "bloco": "B1",
+      "grau": "paper",
+      "titulo": "Developing an efficient algorithm for balancing mass-haul diagrams (Automation in Construction)",
+      "autor": "Nassar, Hosny",
+      "inst": "ScienceDirect / Automation in Construction",
+      "ano": 2011,
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0926580511000744",
+      "agentes": [
+        "03-S1"
+      ],
+      "KEs": [
+        {
+          "id": "KE-052",
+          "tipo": "metodo",
+          "desc": "Algoritmo automático para balancear diagramas de massa usando shortest-haul-first. Pruning sequencial do mass diagram. 70% dos construction managers usam mass-haul diagram (survey). Supera limitações do balanceamento manual/gráfico e do Civil 3D (que não oferece balanceamento).",
+          "tese_id": "ART-2011-SCIDIR-MASSHAULBAL"
+        }
+      ],
+      "grader_score": 9.0,
+      "aluci_status": "pass",
+      "status": "referencia_catalogada"
+    }
+  ],
+  "kes": [
+    {
+      "id": "KE-001",
+      "tipo": "metodo",
+      "desc": "Modelo MILP terraplenagem+pavimentação+haul roads com restrições geotécnicas. 121 cortes, 257 aterros, solução em 2.98s",
+      "tese_id": "TESE-2021-UFC-002"
+    },
+    {
+      "id": "KE-002",
+      "tipo": "benchmark",
+      "desc": "Systematic mapping 72 papers (1958-2021): LP/MILP dominam allocation, GA domina fleet/routing",
+      "tese_id": "TESE-2021-UFC-002"
+    },
+    {
+      "id": "KE-007",
+      "tipo": "metodo",
+      "desc": "Extensão do método Brückner incorporando condicionantes geotécnicas, ambientais e temporais. Múltiplas curvas de Brückner para cada imposição. Caso real: troço de autoestrada",
+      "tese_id": "TESE-2012-UP-001"
+    },
+    {
+      "id": "KE-008",
+      "tipo": "parametro",
+      "desc": "Custos de equipamentos de transporte por tipologia, relacionados com material e inclinação do percurso",
+      "tese_id": "TESE-2012-UP-001"
+    },
+    {
+      "id": "KE-003",
+      "tipo": "metodo",
+      "desc": "Diretrizes FEM Plaxis 2D para TBM/EPB: alívio tensões vs contração, Mohr-Coulomb vs Hardening Soil, revestimento com/sem juntas",
+      "tese_id": "TESE-2017-USP-TBM"
+    },
+    {
+      "id": "KE-004",
+      "tipo": "parametro",
+      "desc": "Parâmetros Hardening Soil para solos SP: E50_ref, Eur_ref, coef. m. Retroanálise caso real",
+      "tese_id": "TESE-2017-USP-TBM"
+    },
+    {
+      "id": "KE-009",
+      "tipo": "metodo",
+      "desc": "Retroanálise NATM em maciço granítico com Plaxis 2D + Hoek-Brown. RMR da frente de escavação validado com instrumentação. Faseamento: calote + rebaixo",
+      "tese_id": "TESE-2018-IST-NATM"
+    },
+    {
+      "id": "KE-010",
+      "tipo": "case_study",
+      "desc": "Túnel A4 Porto/Amarante — dados reais de monitorização + back analysis. GSI, RQD, SPT correlacionados",
+      "tese_id": "TESE-2018-IST-NATM"
+    },
+    {
+      "id": "KE-005",
+      "tipo": "metodo",
+      "desc": "Monte Carlo adaptativo para contra flecha em balanço sucessivo, com otimização por Mínimos Quadrados e incerteza de fluência",
+      "tese_id": "TESE-2020-UFPE-001"
+    },
+    {
+      "id": "KE-006",
+      "tipo": "formula",
+      "desc": "Modelo estocástico de fluência CEB-FIP/NBR 6118 para diferentes idades com quantificação de incerteza",
+      "tese_id": "TESE-2020-UFPE-001"
+    },
+    {
+      "id": "KE-011",
+      "tipo": "benchmark",
+      "desc": "Survey + Workshop com indústria PT: 5 técnicas Lean prioritárias identificadas (VSM, Instruções de Trabalho, Reuniões Performance, TVD, BIM)",
+      "tese_id": "TESE-2016-IST-LEAN"
+    },
+    {
+      "id": "KE-012",
+      "tipo": "metodo",
+      "desc": "Framework de implementação Lean Construction com mapeamento de ineficiências por fase do empreendimento",
+      "tese_id": "TESE-2016-IST-LEAN"
+    },
+    {
+      "id": "KE-013",
+      "tipo": "metodo",
+      "desc": "Tese seminal do Last Planner System: PPC (Percent Plan Complete), lookahead planning, constraint analysis, weekly work plans. Base do Lean Construction mundial",
+      "tese_id": "REF-2000-BIRM-BALLARD"
+    },
+    {
+      "id": "KE-014",
+      "tipo": "metodo",
+      "desc": "Teoria TFV (Transformation-Flow-Value): fundamento teórico do Lean Construction. Construção não é só transformação — fluxo e valor são igualmente críticos",
+      "tese_id": "REF-2000-HUT-KOSKELA"
+    },
+    {
+      "id": "KE-015",
+      "tipo": "metodo",
+      "desc": "Pipeline GIS + EPANET 2.0 para modelagem hidráulica de rede de distribuição com dados reais de companhia de saneamento. Metodologia replicável para AySA",
+      "tese_id": "TESE-2024-UFAL-EPANET"
+    },
+    {
+      "id": "KE-016",
+      "tipo": "metodo",
+      "desc": "Comparação TIA prospectiva vs retrospectiva (AACE RP 29R-03). MIP 3.3-3.7 detalhados. TIA é a técnica mais precisa. Aplicação em Oil&Gas EPC com CPM schedule atualizado.",
+      "tese_id": "ART-2018-PMWJ-TIA"
+    },
+    {
+      "id": "KE-017",
+      "tipo": "benchmark",
+      "desc": "Tabela comparativa: As-Planned vs As-Built, Impacted As-Planned, Collapsed As-Built, Window Analysis, TIA — quando usar cada uma",
+      "tese_id": "ART-2018-PMWJ-TIA"
+    },
+    {
+      "id": "KE-018",
+      "tipo": "metodo",
+      "desc": "Pipeline completo Measured Mile em 5 etapas: (1) Identificar atividades impactadas, (2) Compilar dados de produtividade, (3) Identificar Measured Mile (período não impactado), (4) Calcular lost man-hours, (5) Totalizar danos. Fórmulas: Productivity = Units/MH, PF = BaselineProd/ActualProd, Lost MH = (Actual - Baseline) × Units",
+      "tese_id": "ART-SPIRE-MM-POWER"
+    },
+    {
+      "id": "KE-019",
+      "tipo": "case_study",
+      "desc": "Case study: Disruption claim em power plant global. Piping installation como atividade-chave. Gráfico de produtividade por período com identificação visual do Measured Mile. Claim bem-sucedido.",
+      "tese_id": "ART-SPIRE-MM-POWER"
+    },
+    {
+      "id": "KE-020",
+      "tipo": "benchmark",
+      "desc": "AACE RP 25R-03 lista 25 causas de perda de produtividade. Nexo disruption→ripple effects→cumulative impact→lost productivity. Timing e quantum do change afetam severidade.",
+      "tese_id": "ART-SPIRE-MM-POWER"
+    },
+    {
+      "id": "KE-021",
+      "tipo": "benchmark",
+      "desc": "Mapping 5785→71 papers earthwork optimization. Allocation, fleet planning, routing, scheduling são os tópicos mais investigados. LP, MILP, GA as técnicas mais usadas. Modelos com fatores construtivos melhoram orçamentos e planos de transporte.",
+      "tese_id": "ART-2022-CDNSCI-MAPPING"
+    },
+    {
+      "id": "KE-022",
+      "tipo": "metodo",
+      "desc": "Modelo GIS-based para alocação de terraplenagem com múltiplos haul roads. Integra topografia, distâncias reais (não euclidianas) e custos de abertura de caminhos. Avanço sobre modelos LP tradicionais.",
+      "tese_id": "ART-2024-ASCE-HAUL"
+    },
+    {
+      "id": "KE-023",
+      "tipo": "case_study",
+      "desc": "Dados reais 2024 de recalques TBM na Linha 2-Verde Metrô SP. Comparação recalques previstos vs observados via marcos superficiais e tassômetros. Diretamente aplicável como benchmark para L5 e L6.",
+      "tese_id": "ART-2024-L2V-METRO"
+    },
+    {
+      "id": "KE-024",
+      "tipo": "benchmark",
+      "desc": "Diff-in-diff com 3.536 municípios SNIS (1998-2019): prestadores privados têm impacto positivo e significativo em cobertura de água, esgoto e tratamento. Tarifas também sobem. Lei 14.026/2020. Diretamente aplicável à análise AySA.",
+      "tese_id": "ART-2023-REBEP-PRIV"
+    },
+    {
+      "id": "KE-025",
+      "tipo": "norma",
+      "desc": "Manual completo SINAPI: CHP e CHI de equipamentos, composições de custo horário de mão de obra (alimentação, transporte, EPI, ferramentas, exames, seguros), encargos sociais complementares, aferição de produtividade por grupo de serviços.",
+      "tese_id": "REF-SINAPI-MANUAL"
+    },
+    {
+      "id": "KE-026",
+      "tipo": "parametro",
+      "desc": "Fórmulas de custo horário: CHP (produtivo) e CHI (improdutivo). Variáveis: vida útil, depreciação, manutenção, combustível, lubrificantes, pneus. Fator de disponibilidade 1.25.",
+      "tese_id": "REF-SINAPI-MANUAL"
+    },
+    {
+      "id": "KE-027",
+      "tipo": "metodo",
+      "desc": "Pipeline completo de composição de custos SICRO: (1) custo horário equipamentos, (2) mão de obra com encargos, (3) materiais com fator de conversão, (4) BDI diferenciado por faixa. IS/DG nº 44/2021 para Preços Novos.",
+      "tese_id": "REF-SICRO-CUSTOS-ENAP"
+    },
+    {
+      "id": "KE-028",
+      "tipo": "parametro",
+      "desc": "Fator de conversão corte→solto para terraplenagem. BDI diferenciado: faixas por natureza do serviço (inovação SICRO vs SICRO 2). Decreto 7.983/2013 como base legal.",
+      "tese_id": "REF-SICRO-CUSTOS-ENAP"
+    },
+    {
+      "id": "KE-029",
+      "tipo": "benchmark",
+      "desc": "Comparativo detalhado SINAPI vs SICRO para custo horário de equipamentos: diferenças em depreciação (fator disponibilidade 1.25 SINAPI vs produtividade SICRO), manutenção, vida útil. Mesma tabela de vida útil base, mas tratamento diferente.",
+      "tese_id": "ART-BARREIROS-CHP"
+    },
+    {
+      "id": "KE-030",
+      "tipo": "metodo",
+      "desc": "Monte Carlo com distribuição Beta para durações de atividades em cronogramas. Comparativo PERT determinístico vs SMC probabilístico. Tabela de durações previstas vs simuladas com desvios.",
+      "tese_id": "TESE-UNIGRANRIO-MC"
+    },
+    {
+      "id": "KE-031",
+      "tipo": "metodo",
+      "desc": "ICRA (Índice de Criticidade de Risco de Atraso) por atividade do caminho crítico + Monte Carlo com @RISK Industrial para probabilidade global de término. Modelo retroalimentável durante execução. Prático para gestores.",
+      "tese_id": "ART-2024-ICRA-MC"
+    },
+    {
+      "id": "KE-032",
+      "tipo": "metodo",
+      "desc": "Algoritmo Python para Monte Carlo em cronogramas de construção. Implementação open-source replicável. Integra distribuição triangular + CPM + análise de risco. Diretamente integrável ao agente M07.",
+      "tese_id": "ART-2024-PYTHON-MC"
+    },
+    {
+      "id": "KE-033",
+      "tipo": "benchmark",
+      "desc": "Comparação empírica CPM determinístico vs Monte Carlo probabilístico em projetos reais de construção civil. Monte Carlo superior na assertividade de previsão de prazo.",
+      "tese_id": "TESE-UTFPR-CPM-MC"
+    },
+    {
+      "id": "KE-034",
+      "tipo": "case_study",
+      "desc": "Análise de pedidos de revisões extraordinárias em concessões rodoviárias federais. Mapeamento dos principais gatilhos de reequilíbrio, metodologias adotadas pela ANTT, e impactos na TIR. Diretamente aplicável a claims em concessões Manta.",
+      "tese_id": "TESE-2021-UNB-REEQ"
+    },
+    {
+      "id": "KE-035",
+      "tipo": "norma",
+      "desc": "Resolução ANTT 5.850/2019: procedimentos para reequilíbrio econômico-financeiro. Fluxo de Caixa Marginal como método. Decreto 7.983/2013 como base legal.",
+      "tese_id": "TESE-2021-UNB-REEQ"
+    },
+    {
+      "id": "KE-036",
+      "tipo": "metodo",
+      "desc": "Framework jurídico completo do EEF em concessões rodoviárias: Lei 8.987/95, evolução Procrofe (Fases I-III), posicionamento TCU, matriz de riscos, Fator D para reequilíbrio por atraso em obras de ampliação.",
+      "tese_id": "TESE-2014-UNESP-EEF"
+    },
+    {
+      "id": "KE-037",
+      "tipo": "metodo",
+      "desc": "Evolução do racional econômico nas 3 fases do Procrofe. Desconto de reequilíbrio, indicadores de desempenho, gatilhos de investimentos, Fluxo de Caixa Marginal. Posicionamento TCU. Framework completo para modelagem de concessões.",
+      "tese_id": "ART-FGV-EEF-RODOVIAS"
+    },
+    {
+      "id": "KE-038",
+      "tipo": "norma",
+      "desc": "Estudo completo do TCE-MG sobre reequilíbrio: Lei 8.666/93, Lei 14.133/2021, Lei 13.303/16. Variação cambial, reajuste vs revisão, limites da álea. 11 parâmetros do TCE-SC para concessão de reequilíbrio em infraestrutura rodoviária.",
+      "tese_id": "REF-TCEMG-REEQ"
+    },
+    {
+      "id": "KE-039",
+      "tipo": "metodo",
+      "desc": "Teoria econômica de renegociação de concessões: diferença entre reequilíbrio contratual e renegociação. Impacto da alteração da matriz de risco. Análise das 3 fases do Procrofe com lente econômica. Aplicável a modelagem financeira de concessões.",
+      "tese_id": "TESE-FGV-EPGE-REEQ"
+    },
+    {
+      "id": "KE-040",
+      "tipo": "metodo",
+      "desc": "Metodologia de inspeção e diagnóstico de OAEs: classificação de gravidade/extensão/intensidade, graus de urgência, custos reais de manutenção (dados Ecovias). Norma DNIT 010-PRO integrada. Aplicável ao SGO e gestão de OAEs em concessões.",
+      "tese_id": "TESE-PHD-MITRE-OAE"
+    },
+    {
+      "id": "KE-041",
+      "tipo": "benchmark",
+      "desc": "Custos reais de recuperação de OAEs em concessionárias (Ecovias, Autopistas). Dados de 332 pontes e viadutos analisados com incidência de patologias: infiltrações 88%, desplacamento 53%, armaduras expostas 52%.",
+      "tese_id": "TESE-PHD-MITRE-OAE"
+    },
+    {
+      "id": "KE-042",
+      "tipo": "benchmark",
+      "desc": "Comparação das 3 metodologias de inspeção de OAE: NBR 9452 (ABNT), DNIT 010-PRO, GDE/UnB. GDE/UnB reduz subjetividade via fatores de ponderação+intensidade+grau de dano. As 3 usam escala 1-5. GDE/UnB mais precisa para gestão de portfólio.",
+      "tese_id": "ART-GDE-UNB-OAE"
+    },
+    {
+      "id": "KE-043",
+      "tipo": "benchmark",
+      "desc": "Análise pós-NMLSB (Lei 14.026/2020): privatização promove ganhos gerenciais mas efeitos sobre universalização dependem do desenho contratual. Modelos baseados em menor tarifa + metas de qualidade > modelos focados em outorgas. >100 concessões/ano pós-2021. Aumento tarifário comprovado nos early adopters.",
+      "tese_id": "ART-2025-ANPEC-PRIV"
+    },
+    {
+      "id": "KE-044",
+      "tipo": "case_study",
+      "desc": "Dados SNIS municipais: comparação prestadores públicos vs privados em perdas físicas, eficiência energética, cobertura. Evidência empírica para calibrar expectativas AySA.",
+      "tese_id": "ART-2025-ANPEC-PRIV"
+    },
+    {
+      "id": "KE-045",
+      "tipo": "case_study",
+      "desc": "4 casos reais de privatização saneamento BR: Limeira (concessão plena), Prolagos e Juturnaíba (Região dos Lagos RJ), Petrópolis (subconcessão). Estrutura tarifária escalonada, outorga, TRA básica R$0.45. Lições sobre desenho contratual.",
+      "tese_id": "ART-SCIELO-PRIV-4CASOS"
+    },
+    {
+      "id": "KE-046",
+      "tipo": "parametro",
+      "desc": "Evolução tarifária pré/pós privatização por município. Faixas de consumo, conta mínima, tarifa social. Benchmark direto para modelagem AySA.",
+      "tese_id": "ART-SCIELO-PRIV-4CASOS"
+    },
+    {
+      "id": "KE-047",
+      "tipo": "case_study",
+      "desc": "Caso Iguá/CEDAE Rio de Janeiro: paralisação ETE Barra da Tijuca, desigualdade na aplicação da legislação, Coletores de Tempo Seco (CTS). Riscos de gestão privada sem regulação rigorosa. Contraponto relevante para análise AySA.",
+      "tese_id": "ART-IPPUR-IGUA-RJ"
+    },
+    {
+      "id": "KE-048",
+      "tipo": "benchmark",
+      "desc": "Comparação de 3 técnicas EVM em 30 projetos reais (Egito): Earned Duration, Earned Schedule, Planned Value. Earned Schedule mais preciso no início; Earned Duration mais preciso em estágios avançados. Dataset de 30 projetos como benchmark.",
+      "tese_id": "ART-2025-NATURE-EVM"
+    },
+    {
+      "id": "KE-049",
+      "tipo": "metodo",
+      "desc": "Framework de seleção de técnica EVM por tipo de projeto e estágio de progresso. Métricas: CPI, SPI, EAC, ETC, VAC. Importância de considerar tipo de projeto ao selecionar método.",
+      "tese_id": "ART-2025-NATURE-EVM"
+    },
+    {
+      "id": "KE-050",
+      "tipo": "case_study",
+      "desc": "EVM aplicado a projetos reais em Cuenca/Equador. Reconstrução de eventos passados via database. Curva S original vs final. Métricas PV/EV/AC ao longo do tempo. VAC%=-3.24% de overrun. Demonstra aplicabilidade em construção civil latino-americana.",
+      "tese_id": "ART-2022-MDPI-EVM"
+    },
+    {
+      "id": "KE-051",
+      "tipo": "metodo",
+      "desc": "19 métodos EAC calculados + ML (Machine Learning) para previsão de custo final em obras. Dados reais: 122 dias monitorados diariamente, 13 atividades. ML melhora previsão vs EVM tradicional. Integrável ao M16 pesquisador evolutivo.",
+      "tese_id": "ART-2024-ML-EVM"
+    },
+    {
+      "id": "KE-052",
+      "tipo": "metodo",
+      "desc": "Algoritmo automático para balancear diagramas de massa usando shortest-haul-first. Pruning sequencial do mass diagram. 70% dos construction managers usam mass-haul diagram (survey). Supera limitações do balanceamento manual/gráfico e do Civil 3D (que não oferece balanceamento).",
+      "tese_id": "ART-2011-SCIDIR-MASSHAULBAL"
+    }
+  ],
+  "agent_map": {
+    "01": [
+      "KE-016",
+      "KE-017",
+      "KE-018",
+      "KE-019",
+      "KE-020",
+      "KE-034",
+      "KE-035",
+      "KE-036",
+      "KE-037",
+      "KE-038"
+    ],
+    "02-C": [
+      "KE-018",
+      "KE-019",
+      "KE-020",
+      "KE-034",
+      "KE-035",
+      "KE-036",
+      "KE-037",
+      "KE-038"
+    ],
+    "03-S1": [
+      "KE-001",
+      "KE-002",
+      "KE-007",
+      "KE-008",
+      "KE-021",
+      "KE-022",
+      "KE-027",
+      "KE-028",
+      "KE-052"
+    ],
+    "03-S2": [
+      "KE-005",
+      "KE-006",
+      "KE-040",
+      "KE-041",
+      "KE-042"
+    ],
+    "03-S4": [
+      "KE-003",
+      "KE-004",
+      "KE-009",
+      "KE-010",
+      "KE-023"
+    ],
+    "03-S8": [
+      "KE-015",
+      "KE-024",
+      "KE-043",
+      "KE-044",
+      "KE-045",
+      "KE-046",
+      "KE-047"
+    ],
+    "05": [
+      "KE-001",
+      "KE-002",
+      "KE-021",
+      "KE-025",
+      "KE-026",
+      "KE-027",
+      "KE-028",
+      "KE-029",
+      "KE-048",
+      "KE-049",
+      "KE-050",
+      "KE-051"
+    ],
+    "06": [
+      "KE-037",
+      "KE-039"
+    ],
+    "07": [
+      "KE-001",
+      "KE-002",
+      "KE-005",
+      "KE-006",
+      "KE-011",
+      "KE-012",
+      "KE-013",
+      "KE-014",
+      "KE-016",
+      "KE-017",
+      "KE-030",
+      "KE-031",
+      "KE-032",
+      "KE-033",
+      "KE-048",
+      "KE-049",
+      "KE-050",
+      "KE-051"
+    ],
+    "15": [
+      "KE-014",
+      "KE-024",
+      "KE-034",
+      "KE-035",
+      "KE-036",
+      "KE-037",
+      "KE-039",
+      "KE-043",
+      "KE-044",
+      "KE-045",
+      "KE-046",
+      "KE-047"
+    ],
+    "16": [
+      "KE-051"
+    ]
+  }
+}
