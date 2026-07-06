@@ -157,13 +157,17 @@ R7: selo ★☆☆ (busca) / ★★☆ (busca+classif+rota) / ★★★ (+RAG+va
 - [x] Copiar 5 agent .md dos verticais S6–S10 para `.claude/agents/` (v4.2)
 - [x] Criar agente-sp-hub.md em `.claude/agents/` (v4.3)
 - [x] Aplicar patch no CLAUDE.md master (Manta 20 + routing SP Hub)
+- [x] Implementar `sp_hub/` (Fase 2: delta_sync, classifier, router, feed + Fase 3: rag_bridge, write_gateway) — 36 testes pytest passando
+- [x] Runbook operacional em `docs/RUNBOOK-SPHUB-FASE-2-3.md`
 - [ ] Aplicar migração `2026_07_06_v4_3_manta20_sphub.sql` no Supabase (cria `sp_agent_feed`, `sp_routing_rules`, semeia 24 rules)
 - [ ] Deploy MantaBase MCP no Railway (Fase 1 da spec)
-- [ ] Implementar `delta_sync.py` + cron (Fase 2)
-- [ ] Conectar delta → M18 (RAG ingest) e gateway Zapier Graph (Fase 3)
+- [ ] Configurar cron `sp_hub/daily_index.sh` + env vars (Fase 2, ver runbook §Fase 2)
+- [ ] Ativar RAG bridge (`SP_HUB_RAG_ENDPOINT`) apontando para M18 (Fase 3, ver runbook §Fase 3 RAG)
+- [ ] Configurar Zap + `SP_HUB_ZAPIER_WRITE_WEBHOOK` para o gateway de escrita (Fase 3, ver runbook §Fase 3 write)
 - [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/` (inclui `agente-sp-hub/`)
 - [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v2.0.0 → v2.1.0)
-- [ ] Testar routing do Maestro com prompts SP (busca, feed, write, admin)
+- [ ] Validar R7 ★★☆ com M1/M3/M8 (ver runbook §Validação)
+- [ ] Validar R7 ★★★ (ciclo E2E doc → RAG → agente responde)
 - [ ] Gate humano: aprovação MN antes de merge
 
 ---
@@ -173,8 +177,10 @@ R7: selo ★☆☆ (busca) / ★★☆ (busca+classif+rota) / ★★★ (+RAG+va
 ```
 Codex-exemplo/
 ├── CLAUDE.md                                        # este arquivo (master registry, v4.3)
+├── pyproject.toml                                   # 🆕 v4.3 (pytest config para sp_hub)
 ├── docs/
-│   └── MANTA-20-SPHUB-SPEC-v2.0.md                 # 🆕 v4.3 spec canônica Manta 20
+│   ├── MANTA-20-SPHUB-SPEC-v2.0.md                 # 🆕 v4.3 spec canônica Manta 20
+│   └── RUNBOOK-SPHUB-FASE-2-3.md                   # 🆕 v4.3 runbook operacional
 ├── .claude/
 │   └── agents/
 │       ├── agente-portos.md                        # S6 (v4.2)
@@ -193,6 +199,27 @@ Codex-exemplo/
 │       └── agente-sp-hub/                          # 🆕 v4.3
 │           ├── SKILL.md
 │           └── README.md
+├── sp_hub/                                          # 🆕 v4.3 implementação Fases 2 e 3
+│   ├── __init__.py
+│   ├── models.py                                    # dataclasses + Priority + SyncResult
+│   ├── db.py                                        # wrapper Supabase (Protocol para fake em teste)
+│   ├── classifier.py                                # (path, name, ext) → doc_type
+│   ├── router.py                                    # aplica sp_routing_rules → RoutingDecision
+│   ├── feed.py                                      # RoutingDecision → FeedEntry (com R1 sanitize)
+│   ├── delta_sync.py                                # entrypoint Fase 2 (python -m sp_hub.delta_sync)
+│   ├── rag_bridge.py                                # Fase 3: Noop | Http | Queue bridge → M18
+│   ├── write_gateway.py                             # Fase 3: M20.write() → Zapier → Graph API
+│   ├── daily_index.sh                               # cron wrapper (sp_indexer + delta_sync)
+│   └── README.md
+├── tests/
+│   └── sp_hub/                                      # 🆕 v4.3 pytest suite (36 testes, offline)
+│       ├── conftest.py                              # FakeSupabase in-memory
+│       ├── test_classifier.py
+│       ├── test_router.py
+│       ├── test_feed.py
+│       ├── test_delta_sync.py
+│       ├── test_rag_bridge.py
+│       └── test_write_gateway.py
 └── supabase/
     └── migrations/
         ├── 2026_07_05_v4_2_agents_s6_s10.sql       # v4.2
@@ -213,6 +240,10 @@ mapa de routing.
   SharePoint. 3 modos (reativo/proativo/escrita), protocolo inter-agente
   (`M20.search/feed/read/write`), 2 novas tabelas Supabase
   (`sp_agent_feed`, `sp_routing_rules`) + 24 routing rules iniciais.
+  Inclui implementação Python completa em `sp_hub/` (Fase 2: `delta_sync`,
+  `classifier`, `router`, `feed`; Fase 3: `rag_bridge`, `write_gateway`),
+  cron `daily_index.sh`, 36 testes pytest passando com FakeSupabase
+  in-memory, e runbook operacional em `docs/RUNBOOK-SPHUB-FASE-2-3.md`.
   Ticket MANTA-SPHUB-20260706-001.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
