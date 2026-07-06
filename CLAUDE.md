@@ -4,8 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-07-06) — Manta 20 SP Hub v2.0 (evolução do
+`agente-sp-indexer` v1.0 para Hub Central SharePoint com modos reativo /
+proativo / escrita e alimentação por routing rules).
 
 ---
 
@@ -26,6 +27,7 @@ Saneamento, Energia, Barragens).
 | Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
 | Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
 | Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
+| Manta 20 | sp-hub | manta-20, sp-hub, sp-indexer, sharepoint-hub | Sonnet | 🆕 v4.3 (evolução do sp-indexer v1.0) |
 
 ### Eixo 2 — Verticais por segmento (C3)
 
@@ -88,7 +90,32 @@ IF menção a ferrovia|trilho|AMV|dormente|via permanente
 
 IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
    → agente-infraestrutura S4
+
+# Roteamento p/ o SP Hub (Manta 20, v4.3)
+IF menção a SharePoint|SP|indexar|delta|sp_agent_feed|sp_index|
+   sp_routing_rules|sharepoint-map|sp_sync_log|MantaBase MCP|
+   feed de documentos|roteamento SP|
+   OU pedido de busca/leitura/escrita de arquivo no SharePoint
+   → agente-sp-hub (Manta 20)
 ```
+
+---
+
+## SP HUB — Fluxo proativo (Manta 20 v2.0)
+
+O Manta 20 opera em 3 modos e serve como ponto único de entrada/saída SP:
+
+| Modo | Gatilho | Ação |
+|------|---------|------|
+| **Reativo** | Agente chama `M20.search()` ou `M20.read()` | `search_sp_index` (Supabase FTS pt) → `sharepoint_search` (fallback live) → devolve lista/conteúdo |
+| **Proativo** | `daily_index.sh` + `delta_sync.py` detectam doc novo/modificado | Classifica (extensão + pasta + nome) → aplica `sp_routing_rules` → insere em `sp_agent_feed` (status `pending`); se prioridade `alta`, dispara ingest RAG via M18 |
+| **Escrita** | Agente chama `M20.write(drive, path, content, metadata)` | PUT Graph API via Zapier → registra em `sp_sync_log` + atualiza `sp_index` |
+
+**Protocolo inter-agente:** `M20.search(query, filters)`,
+`M20.feed(agent_code)`, `M20.read(doc_id)`, `M20.write(drive, path, content)`.
+
+**Regras** — R1: paths sanitizados antes de servir a outros agentes;
+R7: selo ★☆☆ (busca) / ★★☆ (busca+classif+rota) / ★★★ (+RAG+validação).
 
 ---
 
@@ -104,7 +131,9 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
-## SHAREPOINT — Routing rules (sp_agent_routing)
+## SHAREPOINT — Routing rules (sp_agent_routing / sp_routing_rules)
+
+**Verticais S6–S10 (v4.2)** — regra por pasta em `sp_agent_routing`:
 
 | Agente | Pasta SP sugerida | Pattern |
 |--------|-------------------|---------|
@@ -114,19 +143,27 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
 | agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
 
+**SP Hub proativo (v4.3)** — 24 regras iniciais em `sp_routing_rules`
+(migração `2026_07_06_v4_3_manta20_sphub.sql`) cobrindo:
+
+- Pastas `02_CLIENTE/*/{01_CONTRATO,02_REC,03_PROPOSTA,04_PROJETO,05_MEDICAO,06_CORRESPONDENCIA,07_CRONOGRAMA}` → M1/M2/M3/M4/M7/M8.
+- Extensões cross-folder (`.xer/.mpp` → M1+M3, `.dwg/.dxf` → M3+M4, `.ifc` → M4+M6, `.landxml` → M3, `.pdf` → M18).
+- Nomes (`SICRO` → M7, `RDO` → M1+M7, `BM` → M7+M1, `TAC` → M1+M2, `PER` → M8+M3, `sondagem` → M4+M10, `batimetria` → M3-S6, `barragem` → M3-S10, `edital` → M8).
+
 ---
 
-## DEPLOY CHECKLIST v4.2
+## DEPLOY CHECKLIST v4.3
 
-- [x] Copiar 5 agent .md para `.claude/agents/`
-- [x] Aplicar patch no CLAUDE.md master (seção Agentes)
-- [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
-- [ ] Inserir 5 routing rules em `sp_agent_routing`
-- [ ] Criar pastas SP para novos segmentos
-- [ ] Registrar skills no catálogo (skill registry)
-- [ ] Testar routing do Maestro com prompts de cada segmento
-- [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
-- [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
+- [x] Copiar 5 agent .md dos verticais S6–S10 para `.claude/agents/` (v4.2)
+- [x] Criar agente-sp-hub.md em `.claude/agents/` (v4.3)
+- [x] Aplicar patch no CLAUDE.md master (Manta 20 + routing SP Hub)
+- [ ] Aplicar migração `2026_07_06_v4_3_manta20_sphub.sql` no Supabase (cria `sp_agent_feed`, `sp_routing_rules`, semeia 24 rules)
+- [ ] Deploy MantaBase MCP no Railway (Fase 1 da spec)
+- [ ] Implementar `delta_sync.py` + cron (Fase 2)
+- [ ] Conectar delta → M18 (RAG ingest) e gateway Zapier Graph (Fase 3)
+- [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/` (inclui `agente-sp-hub/`)
+- [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v2.0.0 → v2.1.0)
+- [ ] Testar routing do Maestro com prompts SP (busca, feed, write, admin)
 - [ ] Gate humano: aprovação MN antes de merge
 
 ---
@@ -135,14 +172,31 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                         # este arquivo (master registry)
-└── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+├── CLAUDE.md                                        # este arquivo (master registry, v4.3)
+├── docs/
+│   └── MANTA-20-SPHUB-SPEC-v2.0.md                 # 🆕 v4.3 spec canônica Manta 20
+├── .claude/
+│   └── agents/
+│       ├── agente-portos.md                        # S6 (v4.2)
+│       ├── agente-aeroportos.md                    # S7 (v4.2)
+│       ├── agente-saneamento.md                    # S8 (v4.2) — prioridade AySA
+│       ├── agente-energia.md                       # S9 (v4.2) — ANEEL/State Grid
+│       ├── agente-barragens.md                     # S10 (v4.2)
+│       └── agente-sp-hub.md                        # 🆕 Manta 20 (v4.3)
+├── sharepoint/
+│   └── 01-agentes-fundamentais/
+│       ├── agente-portos/…                         # v4.2
+│       ├── agente-aeroportos/…                     # v4.2
+│       ├── agente-saneamento/…                     # v4.2
+│       ├── agente-energia/…                        # v4.2
+│       ├── agente-barragens/…                      # v4.2
+│       └── agente-sp-hub/                          # 🆕 v4.3
+│           ├── SKILL.md
+│           └── README.md
+└── supabase/
+    └── migrations/
+        ├── 2026_07_05_v4_2_agents_s6_s10.sql       # v4.2
+        └── 2026_07_06_v4_3_manta20_sphub.sql       # 🆕 v4.3
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
@@ -154,6 +208,12 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-07-06) — **Manta 20 SP Hub v2.0**. Evolui o
+  `agente-sp-indexer` v1.0 de indexador passivo para Hub Central
+  SharePoint. 3 modos (reativo/proativo/escrita), protocolo inter-agente
+  (`M20.search/feed/read/write`), 2 novas tabelas Supabase
+  (`sp_agent_feed`, `sp_routing_rules`) + 24 routing rules iniciais.
+  Ticket MANTA-SPHUB-20260706-001.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
