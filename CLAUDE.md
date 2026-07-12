@@ -4,8 +4,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-07-12) — Manta 08 quantitativos (agente horizontal
+de LQ multi-disciplina).
 
 ---
 
@@ -22,6 +22,7 @@ Saneamento, Energia, Barragens).
 | Manta 05 | orcamento | manta-05 | Sonnet | ✅ Operacional |
 | Manta 06 | modelagem | manta-06 | Sonnet/Opus | ✅ Operacional |
 | Manta 07 | cronograma | manta-07 | Sonnet | ✅ Operacional |
+| Manta 08 | quantitativos | manta-08, quantitativos, LQ | Sonnet | 🆕 Criado 2026-07-12 |
 | Manta 13 | bd | manta-13, business-dev | Sonnet | ✅ Operacional |
 | Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
 | Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
@@ -61,6 +62,9 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 Regra de roteamento atualizada para Q1 do intake:
 
 ```
+IF menção a quantitativo|LQ|takeoff|planilha de suprimentos|PQ_SUPRIMENTOS|BQ|orçamento sintético|EAP consolidada|memória de cálculo
+   → agente-quantitativos (Manta 08 horizontal)
+
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
    → agente-saneamento (S8)
 
@@ -96,6 +100,7 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 | Coleção | Prefixo storage | Fontes iniciais | Status |
 |---------|-----------------|-----------------|--------|
+| quantitativos | qto: | SICRO, TPU, SINAPI, NBR 7480/14931, templates PQ_SUPRIMENTOS, decisões de matching | 🆕 v4.3 |
 | saneamento | san: | SNIS, IWA, NBR 12211-12218, Lei 14.026, editais BNDES | 🆕 v4.2 |
 | energia | ene: | ANEEL editais, R1-R5 EPE, ONS, IEEE | 🆕 v4.2 |
 | portos | por: | ANTAQ, PIANC, editais BNDES/ANTAQ | 🆕 v4.2 |
@@ -108,6 +113,7 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 | Agente | Pasta SP sugerida | Pattern |
 |--------|-------------------|---------|
+| agente-quantitativos | 03_Projetos/*/Orçamento/* | *.xlsx, *.pdf |
 | agente-saneamento | 03_Projetos/Saneamento/* | *.pdf, *.dwg, *.xlsx |
 | agente-energia | 03_Projetos/Energia/* | *.pdf, *.dwg, *.xlsx |
 | agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
@@ -138,6 +144,7 @@ Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
 └── .claude/
     └── agents/
+        ├── agente-quantitativos.md   # 🆕 Manta 08 horizontal (LQ multi-disciplina)
         ├── agente-portos.md          # 🆕 S6
         ├── agente-aeroportos.md      # 🆕 S7
         ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
@@ -154,6 +161,11 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-07-12) — Manta 08 quantitativos (agente horizontal de LQ
+  multi-disciplina). Orquestra OAE + IFC + Iluminação + Pavimentação +
+  Terraplenagem + Balanço + Sondagem sob schema comum QtoItem via 3 tools
+  MCP (qto_ingest_package, qto_consolidate, qto_export_consolidated).
+  Ticket MNT-2026-QTO-HORIZONTAL.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
