@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S8
 description: >
   Agente para projetos aeroportuários Manta cobrindo lado ar (pista de
   pouso e decolagem, taxiways, pátios, RESA), lado terra (TPS, TECA,
@@ -20,6 +21,7 @@ description: >
   artefato React + memorial DOCX. Use SEMPRE que mencionar aeroporto,
   pista, RWY, taxiway, TWY, pátio, TPS, TECA, ANAC, RBAC, ICAO, FAA,
   balizamento, PAPI, ILS, PCN, ACN, gate, jetway, concessão aeroportuária.
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S8.
 ---
 
 # AGENTE-AEROPORTOS — Manta 03-S7

@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-12
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S13
 description: >
   Agente para projetos de mineração Manta cobrindo tipologias de mina
   (open pit, subterrânea sub-level stoping / room-and-pillar / block
@@ -36,6 +37,7 @@ description: >
   Nexa, CBMM, MRN, Carajás, Salobo, Minas Rio, Paracatu, Chapada,
   Trombetas, Vazante, Cajati, Whittle, Datamine, Micromine, Vulcan,
   Leapfrog, Deswik, NRM, NR-22.
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S13.
 ---
 
 # AGENTE-MINERACAO — Manta 03-S11

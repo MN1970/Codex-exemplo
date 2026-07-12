@@ -4,11 +4,15 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.6** (2026-07-12) — evolução Maestro em 5 vetores paralelos:
-V1 learned routing (scaffold ML), V2 bibliografia arq. de agentes (6 KEs
-seed), V3 WF-MCP-001 casos Manta (coleção `mcs:` priority 120 > academic),
-V4 cron diário promote_gaps_to_backlog, V5 LLM-as-a-judge (Sonnet 4.6),
-V7 multi-channel distribution (Claude Code/AI/Cowork).
+Versão: **v4.6** (2026-07-12, com reconciliação Codex ↔ SP) — evolução
+Maestro em 5 vetores paralelos: V1 learned routing (scaffold ML), V2
+bibliografia arq. de agentes (6 KEs seed), V3 WF-MCP-001 casos Manta
+(coleção `mcs:` priority 120 > academic), V4 cron diário
+promote_gaps_to_backlog, V5 LLM-as-a-judge (Sonnet 4.6), V7 multi-channel
+distribution (Claude Code/AI/Cowork). Adicionalmente formaliza a
+reconciliação entre a taxonomia sub-segmento `Manta 03-S{n}` deste repo
+Codex-exemplo e a taxonomia top-level `S{n}` do Maestro operacional SP
+v3.0+ (ver seção "RECONCILIAÇÃO COM MAESTRO OPERACIONAL").
 
 Versão anterior: **v4.5** (2026-07-12) — camada de governança: cross-refs
 entre KEs (contradicts/supports), versionamento de tese com history,
@@ -62,6 +66,38 @@ Aeroportos, Saneamento, Energia, Barragens).
 | Manta 03-S11 | Mineração | agente-mineracao | 🆕 Criado 2026-07-12 (v4.4) — adjacente S10 |
 | Manta 03-S12 | Óleo & Gás | agente-oleo-gas | 🆕 Criado 2026-07-12 (v4.4) — downstream + midstream |
 | Manta 03-S13 | Edificações | agente-edificacoes | 🆕 Criado 2026-07-12 (v4.4) — vertical + galpão |
+
+### RECONCILIAÇÃO COM MAESTRO OPERACIONAL (SP v3.0+)
+
+**Contexto do conflito:** o repositório Codex-exemplo (este) modela os
+segmentos de C3 como sub-códigos `Manta 03-S{n}` (S1–S13); o Maestro
+operacional SP v3.0 (rodando em produção) usa códigos top-level `S{n}`
+que colidem em S5 e S6 (SP: S5 Imobiliário, S6 Edificações — sem os
+outros verticais deste repo). A tabela abaixo é a **reconciliação
+canônica** aplicada aos SKILL.md via campo `sp_operational_segment` no
+frontmatter YAML:
+
+| Codex-exemplo (este repo) | Segmento    | Maestro SP operacional |
+|---------------------------|-------------|------------------------|
+| Manta 03-S1               | Rodovias    | S1                     |
+| Manta 03-S2               | OAE         | S2                     |
+| Manta 03-S3               | Ferrovia    | S3                     |
+| Manta 03-S4               | Metrô       | S4                     |
+| Manta 03-S5               | Túneis      | **S12**                |
+| Manta 03-S6               | Portos      | **S7**                 |
+| Manta 03-S7               | Aeroportos  | **S8**                 |
+| Manta 03-S8               | Saneamento  | **S9**                 |
+| Manta 03-S9               | Energia     | **S10**                |
+| Manta 03-S10              | Barragens   | **S11**                |
+| Manta 03-S11              | Mineração   | **S13**                |
+| Manta 03-S12              | Óleo & Gás  | **S14**                |
+| Manta 03-S13              | Edificações | S6 (reusa)             |
+
+Cada arquivo `sharepoint/01-agentes-fundamentais/agente-*/SKILL.md`
+declara agora `sp_operational_segment: S<N>` conforme a coluna direita.
+O código `Manta 03-S{n}` continua sendo a identidade canônica deste
+repo; o `sp_operational_segment` é o pino de ligação com o kernel
+Manta 12 do SP.
 
 ### Eixo 3 — Ciclo de vida (8 fases)
 

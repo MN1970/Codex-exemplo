@@ -4,6 +4,7 @@ description: >-
   Manta 03-S12 — Especialista em engenharia CIVIL e de INFRAESTRUTURA do setor de óleo & gás (upstream de superfície, midstream de dutovias, downstream de refino, terminais e armazenagem). NÃO cobre engenharia de reservatório, perfuração, completação ou geologia de subsuperfície — encaminhar. Foco no que a Manta entrega — obras civis, tancagem, pipe-rack, dutovias, refinarias, terminais aquaviários (parte civil), city gates, estações de compressão/bombeamento, HDD, land-fall submarino, bacias de contenção, sistemas de utilidades, áreas classificadas, HAZOP/SIL/LOPA e RBI. Roteia quando o usuário menciona petróleo, petroleo, óleo e gás, oleo gas, o&g, O&G, ANP, Petrobras, Braskem, Ultra, Raízen, Vibra, Comgás, GASBOL, Rota 3, Rota 4, GASENE, Gasyrg, gasoduto, oleoduto, poliduto, dutovia, faixa de servidão, HDD, land-fall, monoboia, PLEM, PLET, refino, refinaria, Comperj, Rnest, Replan, Reduc, Rlam, Regap, Repar, Refap, UPGN, FCC, HDT, UCR, DCU, coqueamento, reforma catalítica, alquilação, tancagem, tanque teto flutuante, tanque teto fixo, esfera GLP, API 650, API 653, API 5L, API RP 500, API 580, API 581, ANSI B31.3, B31.4, B31.8, ISO 3183, NBR 15280, NBR 15417, NFPA 30, NFPA 59A, IEC 60079, IEC 61511, OSHA 1910.119, PSM, HAZOP, SIL, LOPA, RBI, city gate, terminal aquaviário, TA, TERCA, ilhas de tancagem, bacia de contenção, dique, pipe-rack, área classificada, LNG, GNL, biocombustíveis.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+sp_operational_segment: S14
 ---
 
 # Agente Óleo & Gás (Manta 03-S12)

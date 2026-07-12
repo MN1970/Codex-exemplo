@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-12
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S12
 description: >
   Agente para projetos de túneis e obras subterrâneas Manta cobrindo
   túneis rodoviários (montanha, urbano, imerso — ITT), ferroviários,
@@ -28,6 +29,7 @@ description: >
   grouting, jet fan, PIARC, ITA, AITES, NFPA 502, convergência,
   curva de Fenner-Pacher, método observacional Peck, escudo,
   tuneladora, pipe jacking, microtúnel, portal, poço de acesso.
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S12.
 ---
 
 # AGENTE-TUNEIS — Manta 03-S5

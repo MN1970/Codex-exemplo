@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S9
 description: >
   Agente para projetos de saneamento básico Manta (água, esgoto,
   drenagem urbana, resíduos sólidos) com PRIORIDADE AySA (Argentina) e
@@ -20,6 +21,7 @@ description: >
   Use SEMPRE que mencionar saneamento, ETA, ETE, adutora, esgoto, AySA,
   água tratada, drenagem urbana, macrodrenagem, SNIS, PMSB, Lei 14.026,
   elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, UASB, MBR.
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S9.
 ---
 
 # AGENTE-SANEAMENTO — Manta 03-S8

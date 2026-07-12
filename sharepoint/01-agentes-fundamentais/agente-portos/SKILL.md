@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S7
 description: >
   Agente para projetos portuários e hidroviários Manta cobrindo terminais
   marítimos (contêineres, granéis sólidos e líquidos, ro-ro, offshore),
@@ -21,6 +22,7 @@ description: >
   Use SEMPRE que mencionar porto, terminal marítimo, TUP, ANTAQ, PIANC,
   dragagem, molhe, quebra-mar, dolfin, berço, cais, píer, calado,
   contêiner, granel, hidrovia, arrendamento portuário, retroárea, defensa.
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S7.
 ---
 
 # AGENTE-PORTOS — Manta 03-S6

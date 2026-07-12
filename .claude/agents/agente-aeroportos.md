@@ -3,6 +3,7 @@ name: agente-aeroportos
 description: Manta 03-S7 — Especialista em infraestrutura aeroportuária (lado ar + lado terra). Cobre pistas de pouso e decolagem, taxiways, pátios, TPS (terminal de passageiros), TECA (terminal de cargas), balizamento e sistemas visuais, torre de controle e apoio ao aeroporto. Roteia quando o usuário menciona aeroporto, pista, RWY, taxiway, TWY, pátio, TPS, TECA, ANAC, RBAC 154, ICAO Annex 14, FAA AC, balizamento, PAPI, ILS, PCN, gate, ponte de embarque, jetway, aviação geral, aviação regional, concessão aeroportuária.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+sp_operational_segment: S8
 ---
 
 # Agente Aeroportos (Manta 03-S7)

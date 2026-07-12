@@ -3,6 +3,7 @@ name: agente-energia
 description: Manta 03-S9 — Especialista em setor elétrico (geração, transmissão, distribuição). Prioridade transmissão (ANEEL/State Grid). Cobre estudo prévio, projeto básico, executivo, obra, O&M, leilão, DD e descomissionamento de linhas de transmissão, subestações, usinas (hidro, eólica, solar, térmica), sistemas de distribuição. Roteia quando o usuário menciona transmissão, LT, subestação, ANEEL, RAP, leilão transmissão, ONS, EPE, PDE, R1-R5, torre estaiada, cabo condutor, ACSR, CAA, ATSR, ONS, MRE, ACR, ACL, WEG, State Grid, ISA CTEEP, Alupar, Taesa, geração eólica, PV, hidráulica, PCH, UHE.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+sp_operational_segment: S10
 ---
 
 # Agente Energia (Manta 03-S9)

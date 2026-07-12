@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-12
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S6
 description: >
   Agente para edificações Manta cobrindo verticais residenciais (MCMV,
   médio, alto padrão, AAA), comerciais (edifícios corporativos, uso
@@ -31,6 +32,7 @@ description: >
   NÃO usar para obra industrial pesada de processo (→ S11 mineração / S12
   óleo & gás), barragens (→ S10), OAE grandes (→ S2), TPS aeroportuário
   (→ S7).
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S6.
 ---
 
 # AGENTE-EDIFICACOES — Manta 03-S13

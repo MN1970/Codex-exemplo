@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-12
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S14
 description: >
   Agente para projetos de engenharia CIVIL e de INFRAESTRUTURA do setor
   de óleo & gás Manta, cobrindo upstream de superfície (UPGN, ETE água
@@ -28,6 +29,7 @@ description: >
   refinaria, Comperj, Rnest, Replan, Reduc, Rlam, UPGN, FCC, HDT, UCR,
   coqueamento, tancagem, API 650, API 5L, ANSI B31, monoboia, PLEM, PLET,
   HAZOP, SIL, LOPA, RBI, NFPA 30, city gate, LNG, GNL.
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S14.
 ---
 
 # AGENTE-OLEO-GAS — Manta 03-S12

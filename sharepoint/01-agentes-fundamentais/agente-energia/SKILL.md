@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S10
 description: >
   Agente para projetos do setor elétrico Manta com foco em TRANSMISSÃO
   (ANEEL/State Grid) e cobertura de geração (hidro, eólica, solar,
@@ -20,6 +21,7 @@ description: >
   React + memorial DOCX. Use SEMPRE que mencionar transmissão, LT,
   subestação, ANEEL, RAP, leilão transmissão, ONS, EPE, R1-R5, ACSR,
   ACAR, OPGW, geração eólica, PV, hidráulica, PCH, UHE, State Grid.
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S10.
 ---
 
 # AGENTE-ENERGIA — Manta 03-S9

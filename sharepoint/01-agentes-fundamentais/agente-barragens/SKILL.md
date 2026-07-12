@@ -6,6 +6,7 @@ version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados
 template_origem: agente-infraestrutura v1.0.0
+sp_operational_segment: S11
 description: >
   Agente para projetos de barragens Manta cobrindo tipologias concreto
   (CVC, CCR, RCC, arco, contrafortes), terra (homogênea, zonada),
@@ -23,6 +24,7 @@ description: >
   barragem, vertedouro, CFRD, CCR, rejeitos, PNSB, ICOLD, CBDB, TSF,
   dique, SIGBM, ANM, alteamento (montante/jusante/linha de centro),
   Fundão, Brumadinho, descaracterização, PAE, PAEBM, ZAS, ZSS, HHP.
+  Registrado em Maestro SP como Manta 12 (kernel) → segmento S11.
 ---
 
 # AGENTE-BARRAGENS — Manta 03-S10
