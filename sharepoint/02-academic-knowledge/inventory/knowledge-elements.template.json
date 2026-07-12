@@ -1,0 +1,50 @@
+{
+  "$schema": "https://mantaassociados.com/schemas/akp-ke-payload.v1.json",
+  "version": "1.0.0",
+  "pipeline": "WF-AKP-001",
+  "generated_at": "2026-07-12T00:00:00Z",
+  "stages_completed": [1, 2, 3],
+  "theses_count": 36,
+  "knowledge_elements_count": 52,
+  "elements": [
+    {
+      "id": "KE-001",
+      "tese_id": "silva-2019-dragagem",
+      "ordem": 1,
+      "tipo": "metodo",
+      "titulo": "Fórmula do calado mínimo operacional (Silva 2019)",
+      "chunk": "O calado mínimo operacional (Cm) é a soma de três parcelas: calado carregado (Cc), folga bruta (Fb = 10% Cc) e folga por assoreamento anual (Fa = 0.3 m para portos amazônicos). Cm = Cc + Fb + Fa. Silva (2019) mostra que ...",
+      "chunk_tokens": 512,
+      "paginas": "[42,55)",
+      "segmento": "portos",
+      "aplicabilidade": ["estudo_previo", "projeto_basico", "o_m"],
+      "agentes_alvo": ["agente-portos"],
+      "citacao_bibtex": "@phdthesis{silva2019dragagem, author={Silva, J. M.}, title={Metodologia para dimensionamento de dragagem em terminais graneleiros}, school={USP}, year={2019}}",
+      "provenance": {
+        "stage_1": {"curator": "MN", "curated_at": "2026-04-15T10:23:00Z"},
+        "stage_2": {"extractor": "manual+llm-review", "extracted_at": "2026-05-02T14:11:00Z"},
+        "stage_3": {"reviewer": "vinicius", "reviewed_at": "2026-06-10T09:45:00Z", "notes": "chunk consolidado a partir de 2 parágrafos"}
+      }
+    },
+    {
+      "id": "KE-052",
+      "tese_id": "pereira-2021-aerodromos-regionais",
+      "ordem": 3,
+      "tipo": "critica",
+      "titulo": "Superdimensionamento sistemático em aeródromos regionais brasileiros",
+      "chunk": "Pereira (2021) mostra que 78% dos aeródromos regionais analisados aplicam mecanicamente o comprimento de pista RBAC 154 tabela para aeronave de projeto ATR 72-600, ignorando o fator de correção FCL da temperatura ...",
+      "chunk_tokens": 640,
+      "paginas": "[112,130)",
+      "segmento": "aeroportos",
+      "aplicabilidade": ["estudo_previo", "projeto_basico"],
+      "agentes_alvo": ["agente-aeroportos"],
+      "citacao_bibtex": "@mastersthesis{pereira2021aerodromos, author={Pereira, L. C.}, title={Aeródromos regionais brasileiros: dimensionamento estatístico da pista}, school={COPPE/UFRJ}, year={2021}}",
+      "provenance": {
+        "stage_1": {"curator": "MN", "curated_at": "2026-05-20T16:00:00Z"},
+        "stage_2": {"extractor": "manual", "extracted_at": "2026-06-01T11:30:00Z"},
+        "stage_3": {"reviewer": "vinicius", "reviewed_at": "2026-06-12T13:20:00Z"}
+      }
+    }
+  ],
+  "_todo": "50 elementos restantes — sincronizar com 03_exports/akp-ke-payload.json"
+}

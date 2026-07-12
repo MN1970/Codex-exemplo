@@ -1,0 +1,212 @@
+name: Publish agents (multi-channel distribution)
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths:
+      - 'sharepoint/01-agentes-fundamentais/**'
+      - '.claude/agents/**'
+      - '.github/workflows/publish-agents.yml'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Canal(is) a publicar (CSV ou "all")'
+        required: false
+        default: 'all'
+      agents:
+        description: 'Slugs a filtrar (CSV, vazio = todos)'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    name: Build multi-channel bundles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codex-exemplo
+        uses: actions/checkout@v4
+        with:
+          path: Codex-exemplo
+
+      - name: Checkout manta-hub (scripts)
+        uses: actions/checkout@v4
+        with:
+          repository: manta-associados/manta-hub
+          path: manta-hub
+          # Se manta-hub for privado, adicionar `token: ${{ secrets.MANTA_HUB_TOKEN }}`.
+          # A falha graceful abaixo cobre o cenário sem token.
+        continue-on-error: true
+
+      - name: Fallback — usar scripts embarcados se manta-hub não estiver disponível
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f "manta-hub/scripts/publish_agents.py" ]; then
+            echo "!! manta-hub checkout indisponível — usando fallback embarcado se existir"
+            if [ -f "Codex-exemplo/scripts/publish_agents.py" ]; then
+              mkdir -p manta-hub/scripts
+              cp Codex-exemplo/scripts/publish_agents.py manta-hub/scripts/
+              echo "✓ script copiado do repo Codex-exemplo/scripts/"
+            else
+              echo "✗ nenhum publish_agents.py encontrado — abortando"
+              exit 2
+            fi
+          fi
+          echo "✓ manta-hub/scripts/publish_agents.py disponível"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "PyYAML>=6.0"
+
+      - name: Resolve inputs
+        id: params
+        shell: bash
+        run: |
+          target="${{ github.event.inputs.target }}"
+          [ -z "$target" ] && target="all"
+          agents="${{ github.event.inputs.agents }}"
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "agents=$agents" >> "$GITHUB_OUTPUT"
+          echo "sha_short=$(echo ${GITHUB_SHA} | cut -c1-7)" >> "$GITHUB_OUTPUT"
+
+      - name: Run publish_agents.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          agents_arg=""
+          if [ -n "${{ steps.params.outputs.agents }}" ]; then
+            agents_arg="--agents ${{ steps.params.outputs.agents }}"
+          fi
+          python manta-hub/scripts/publish_agents.py \
+            --source-dir Codex-exemplo/sharepoint/01-agentes-fundamentais/ \
+            --claude-agents-dir Codex-exemplo/.claude/agents/ \
+            --output-dir dist/ \
+            --target "${{ steps.params.outputs.target }}" \
+            $agents_arg \
+            --verbose
+
+      - name: Summarize output
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "═══ Bundle summary ═══"
+          echo "Arquivos gerados:"
+          find dist -type f | sort | sed 's|^|  |'
+          echo ""
+          echo "Agentes empacotados:"
+          python -c "
+          import json
+          idx = json.load(open('dist/index.json'))
+          for a in idx['agents']:
+              chans = ','.join(sorted(a['channels'].keys()))
+              print(f\"  {a['slug']:24s} v{a['version']:8s} [{chans}]\")
+          "
+
+      - name: Upload dist as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: manta-agents-dist-${{ steps.params.outputs.sha_short }}
+          path: dist/
+          retention-days: 30
+          if-no-files-found: error
+
+  publish:
+    name: Publish to distribution channels (stub)
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download dist
+        uses: actions/download-artifact@v4
+        with:
+          name: manta-agents-dist-${{ github.sha }}
+          path: dist/
+        continue-on-error: true
+
+      - name: Publish stubs (endpoints TBD)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "═══ Multi-channel publish plan ═══"
+          echo ""
+          echo "▸ code:      nothing to do — .claude/agents/ é a fonte viva."
+          echo ""
+          echo "▸ projects:  claude.ai Projects não expõe API pública de import."
+          echo "             would publish: dist/projects/*.zip"
+          echo "             TODO: fluxo automatizado quando a API estiver disponível."
+          echo ""
+          echo "▸ skills:    Anthropic Skills v2 endpoint em rollout."
+          echo "             would publish: dist/skills/*.zip"
+          echo "             TODO: POST api.anthropic.com/v1/skills (endpoint TBD)."
+          echo ""
+          echo "▸ cowork:    Cowork workspace shared-skills API em establishment."
+          echo "             would publish: dist/cowork/*.json"
+          echo "             TODO: MCP tool mcp__cowork__publish_skill (TBD)."
+          echo ""
+          echo "Gate humano MN antes de merge em qualquer canal (deploy checklist)."
+
+  release:
+    name: Attach dist zips to GitHub Release (tag push only)
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout (for release notes context)
+        uses: actions/checkout@v4
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          # nome do artifact do job "build" usa sha_short; puxamos por padrão do tag SHA
+          pattern: manta-agents-dist-*
+          path: dist-download/
+          merge-multiple: true
+
+      - name: Collect all zips into a flat folder
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          # projects zips + skills zips
+          find dist-download -type f -name '*.zip' -exec cp {} release-assets/ \;
+          # cowork jsons
+          find dist-download -type f -name '*.json' -path '*/cowork/*' -exec cp {} release-assets/ \;
+          # index.json (metadata do build)
+          find dist-download -type f -name 'index.json' -not -path '*/skills/*' -not -path '*/projects/*' -exec cp {} release-assets/manta-agents-index.json \;
+          # bundle único p/ quem quer tudo de uma vez
+          (cd dist-download && zip -qr - .) > release-assets/manta-agents-all-$(echo "${GITHUB_REF#refs/tags/}").zip
+          echo "═══ Release assets ═══"
+          ls -lh release-assets/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          body: |
+            # Manta Maestro — Multi-channel Distribution
+
+            Cada agente vertical foi empacotado em 3 formatos:
+
+            | Canal | Arquivo | Como usar |
+            |---|---|---|
+            | **claude.ai Projects** | `agente-*.zip` (dentro de `manta-agents-all-*.zip` na pasta `projects/`) | Upload via UI: New Project → Import zip |
+            | **claude.ai Skills v2** | `agente-*.zip` (idem, pasta `skills/`) | Settings → Skills → Upload zip |
+            | **Cowork** | `agente-*.json` | `cowork skill import <arquivo>` ou UI Import |
+            | **Claude Code** | `.claude/agents/*.md` no repo | Já commitado — `git pull` na sua Manta box |
+
+            Metadados de build: `manta-agents-index.json` (schema + hashes).
+
+            **Bundle único:** `manta-agents-all-<tag>.zip` — tudo de uma vez, 27 arquivos.

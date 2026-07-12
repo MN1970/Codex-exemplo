@@ -1,0 +1,119 @@
+# =====================================================================
+# Episodes consolidation daily — decay policy da memoria episodica v4.7
+# =====================================================================
+#
+# Ticket: MNT-IA-20260712-001 (roadmap v4.7 — Upgrade C)
+#
+# Chama diariamente a funcao `public.consolidate_old_episodes()`
+# criada em
+#   supabase/migrations/2026_07_13_maestro_v4_7_reflexion_episodic_cost.sql
+#
+# A funcao aplica a policy §4.5 do roadmap:
+#   * 30..90d: agrupa episodios por (agent_id, task_type) que tenham >=3
+#              ocorrencias, extrai top-3 lessons_learned e insere um
+#              episodio-resumo com task_type = "destilled_<orig>"; os
+#              originais sao deletados.
+#   * > 90d  : purga (as destilacoes ja cobrem o historico).
+# Retorna INTEGER = (n_destilados + n_deletados).
+#
+# Roda ANTES do akp-daily-cron das 08:00 UTC para nao competir por
+# tempo de CPU do Supabase no mesmo horario.
+#
+# ---------------------------------------------------------------------
+# SETUP NECESSARIO (uma vez, no repositorio GitHub)
+# ---------------------------------------------------------------------
+#
+#   Secrets do repositorio (Settings -> Secrets and variables -> Actions):
+#
+#     SUPABASE_URL
+#       URL do projeto Supabase (ex.: https://xxx.supabase.co).
+#
+#     SUPABASE_SERVICE_ROLE_KEY
+#       Service role key. Precisa de EXECUTE em
+#       public.consolidate_old_episodes(). A service role ja tem por
+#       default.
+#
+# ---------------------------------------------------------------------
+# QUANDO RODA
+# ---------------------------------------------------------------------
+#   - Diariamente as 03:00 UTC (00:00 BRT) — janela fria do banco,
+#     antes do akp-daily-cron das 08:00 UTC.
+#   - Manualmente via `workflow_dispatch` (aba Actions -> Run workflow).
+#
+# ---------------------------------------------------------------------
+# RUNBOOK
+# ---------------------------------------------------------------------
+# Ver docs/EPISODIC-CONSOLIDATION-RUNBOOK.md
+#
+
+name: Episodes consolidation daily (v4.7)
+
+on:
+  schedule:
+    # 03:00 UTC = 00:00 BRT (America/Sao_Paulo, UTC-3)
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: episodes-consolidation-daily
+  cancel-in-progress: false
+
+jobs:
+  consolidate:
+    name: Run consolidate_old_episodes()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call consolidate_old_episodes RPC
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "::error::SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY nao configurados."
+            echo "Configure em Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+          endpoint="${SUPABASE_URL%/}/rest/v1/rpc/consolidate_old_episodes"
+
+          echo "POST ${endpoint}"
+
+          # -w "\n%{http_code}" faz o codigo HTTP vir na ultima linha,
+          # sem contaminar o corpo JSON que sera logado/checado.
+          raw="$(curl -sS -X POST "${endpoint}" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -w '\n%{http_code}' \
+            -d '{}')"
+
+          http_code="$(echo "${raw}" | tail -n1)"
+          body="$(echo "${raw}" | sed '$d')"
+
+          echo "HTTP ${http_code}"
+          echo "Body: ${body}"
+
+          # PostgREST devolve erros do Postgres como JSON com o campo
+          # "code" (SQLSTATE) — ex.: {"code":"42883","message":"..."}.
+          # Falha o job se detectar esse padrao, independente do HTTP.
+          if echo "${body}" | grep -q '"code"'; then
+            echo "::error::Erro Postgres na resposta do RPC consolidate_old_episodes: ${body}"
+            exit 1
+          fi
+
+          if [ "${http_code}" -lt 200 ] || [ "${http_code}" -ge 300 ]; then
+            echo "::error::HTTP ${http_code} chamando ${endpoint}: ${body}"
+            exit 1
+          fi
+
+          # A funcao retorna INTEGER (numero total de episodios
+          # destilados + apagados). Loga o valor bruto para trilha.
+          echo "consolidate_old_episodes retornou: ${body}"
+          echo "::notice::consolidate_old_episodes OK — resultado=${body}"

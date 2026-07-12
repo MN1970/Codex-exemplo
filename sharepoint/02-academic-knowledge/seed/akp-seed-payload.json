@@ -1,0 +1,297 @@
+{
+  "$schema": "https://mantaassociados.com/schemas/akp-ke-payload.v1.json",
+  "version": "1.0.0-seed",
+  "pipeline": "WF-AKP-001",
+  "generated_at": "2026-07-12T00:00:00Z",
+  "stages_completed": [1, 2, 3],
+  "theses_count": 10,
+  "knowledge_elements_count": 15,
+  "_note": "SEED-VALIDATION payload. Não é o resultado real das stages 1-3. Ver seed/README.md.",
+  "elements": [
+    {
+      "id": "seed-KE-S6-01",
+      "tese_id": "seed-silva-2019-dragagem",
+      "ordem": 1,
+      "tipo": "metodo",
+      "titulo": "Fórmula do calado mínimo operacional (Silva 2019)",
+      "chunk": "O calado mínimo operacional (Cm) para terminais graneleiros amazônicos é a soma de três parcelas: calado carregado da aeronave crítica (Cc), folga bruta (Fb = 10% Cc) e folga por assoreamento anual (Fa = 0,3 m para portos amazônicos). Cm = Cc + Fb + Fa. Silva (2019) mostra que a folga PIANC 158 (5%) subestima o assoreamento em rios de perfil sedimentar como Amazonas e Madeira, gerando paradas operacionais de 15-40 dias/ano.",
+      "chunk_tokens": 512,
+      "paginas": "[42,55)",
+      "segmento": "portos",
+      "aplicabilidade": ["estudo_previo", "projeto_basico", "o_m"],
+      "agentes_alvo": ["agente-portos"],
+      "citacao_bibtex": "@phdthesis{silva2019dragagem, author={Silva, J. M.}, title={Metodologia para dimensionamento de dragagem de manutenção em terminais graneleiros}, school={USP}, year={2019}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S6-02",
+      "tese_id": "seed-costa-2022-santos",
+      "ordem": 1,
+      "tipo": "caso",
+      "titulo": "Porto de Santos: dragagem de manutenção 2012-2022 (10 anos)",
+      "chunk": "Costa (2022) analisa 10 anos de dados operacionais da manutenção do canal de acesso ao Porto de Santos (14 m de calado). Volume dragado médio 3,2 Mm³/ano com pico de 4,8 Mm³ em 2015 (El Niño). Custo médio R$ 22/m³ (mecânica) vs R$ 35/m³ (hidráulica com disposição offshore). Taxa de assoreamento no berço 9 sazonalmente sensível ao regime pluvial da bacia do Cubatão.",
+      "chunk_tokens": 480,
+      "paginas": "[88,105)",
+      "segmento": "portos",
+      "aplicabilidade": ["o_m", "dd"],
+      "agentes_alvo": ["agente-portos"],
+      "citacao_bibtex": "@mastersthesis{costa2022santos, author={Costa, R. F.}, title={Manutenção do canal de acesso ao Porto de Santos: 10 anos de dados operacionais}, school={COPPE/UFRJ}, year={2022}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S6-03",
+      "tese_id": "seed-silva-2019-dragagem",
+      "ordem": 2,
+      "tipo": "critica",
+      "titulo": "Crítica à sobrelargura PIANC 158 em canais brasileiros",
+      "chunk": "A recomendação PIANC 158 de sobrelargura W_add ≥ 0,3 B (B = boca da embarcação de projeto) foi calibrada em canais europeus e do Golfo do México. Silva (2019) argumenta que para canais brasileiros com correnteza pluvial forte (Norte/Nordeste) a sobrelargura deveria escalar linearmente com o coeficiente adimensional de deriva V_c/V_e (velocidade da corrente / velocidade da embarcação), não como constante. Diferença ~35% no custo de dragagem inicial.",
+      "chunk_tokens": 520,
+      "paginas": "[210,225)",
+      "segmento": "portos",
+      "aplicabilidade": ["estudo_previo", "projeto_basico"],
+      "agentes_alvo": ["agente-portos"],
+      "citacao_bibtex": "@phdthesis{silva2019dragagem, author={Silva, J. M.}, title={Metodologia para dimensionamento de dragagem de manutenção em terminais graneleiros}, school={USP}, year={2019}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S7-01",
+      "tese_id": "seed-oliveira-2023-pcn",
+      "ordem": 1,
+      "tipo": "formula",
+      "titulo": "Cálculo de PCN via FAARFIELD para ATR 72-600",
+      "chunk": "Para aeronave de projeto ATR 72-600 (MTOW 23.000 kg, trem de nose simples + main duplo em tandem) e frequência CDF ≥ 1.200 pousos/ano, o PCN pelo FAARFIELD deve ser calculado com CBR de subleito ≥ 15 % após tratamento com cal (3-5 %). PCN típico resultante = 41/F/A/W/T para pista de aeródromo regional com pavimento flexível de 45 cm CBUQ + 30 cm BGS + 40 cm sub-base tratada.",
+      "chunk_tokens": 480,
+      "paginas": "[62,78)",
+      "segmento": "aeroportos",
+      "aplicabilidade": ["projeto_basico", "executivo"],
+      "agentes_alvo": ["agente-aeroportos"],
+      "citacao_bibtex": "@phdthesis{oliveira2023pcn, author={Oliveira, P. S.}, title={Determinação do PCN via FAARFIELD para pátios de aeronave crítica ATR 72-600}, school={USP}, year={2023}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S7-02",
+      "tese_id": "seed-pereira-2021-aerodromos",
+      "ordem": 1,
+      "tipo": "critica",
+      "titulo": "Superdimensionamento sistemático em aeródromos regionais brasileiros",
+      "chunk": "Pereira (2021) mostra que 78 % dos aeródromos regionais analisados (n=41) aplicam mecanicamente o comprimento de pista da tabela RBAC 154 para ATR 72-600, ignorando o Fator de Correção de Comprimento (FCL) pela temperatura de referência do aeródromo (ATRA). Para aeródromos amazônicos (ATRA ≥ 32 °C) o comprimento correto é 15-22 % maior; para aeródromos serranos (ATRA ≤ 22 °C) é 8-12 % menor. Superdimensionamento médio: 340 m de pavimento adicional desnecessário.",
+      "chunk_tokens": 590,
+      "paginas": "[112,130)",
+      "segmento": "aeroportos",
+      "aplicabilidade": ["estudo_previo", "projeto_basico"],
+      "agentes_alvo": ["agente-aeroportos"],
+      "citacao_bibtex": "@mastersthesis{pereira2021aerodromos, author={Pereira, L. C.}, title={Aeródromos regionais brasileiros: dimensionamento estatístico da pista}, school={COPPE/UFRJ}, year={2021}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S7-03",
+      "tese_id": "seed-pereira-2021-aerodromos",
+      "ordem": 2,
+      "tipo": "metodo",
+      "titulo": "Método CBR-cone para pavimento aeroportuário flexível",
+      "chunk": "O método CBR-cone (cone dinâmico de penetração + laboratório) permite estimar o CBR do subleito com 85 % de correlação (r² = 0,85) em aeródromos remotos onde não há laboratório de mecânica dos solos disponível. Pereira (2021) mostra que 3 furos + 20 penetrômetros DCP por hectare de pátio dão precisão equivalente a 6 CBRs de laboratório, com custo 40 % menor.",
+      "chunk_tokens": 420,
+      "paginas": "[155,170)",
+      "segmento": "aeroportos",
+      "aplicabilidade": ["estudo_previo", "projeto_basico"],
+      "agentes_alvo": ["agente-aeroportos"],
+      "citacao_bibtex": "@mastersthesis{pereira2021aerodromos, author={Pereira, L. C.}, title={Aeródromos regionais brasileiros: dimensionamento estatístico da pista}, school={COPPE/UFRJ}, year={2021}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S8-01",
+      "tese_id": "seed-rodriguez-2020-reuso",
+      "ordem": 1,
+      "tipo": "recomendacao",
+      "titulo": "Modelo de reúso urbano AySA — parâmetros de projeto",
+      "chunk": "Rodríguez (2020) recomenda para a AMBA (Área Metropolitana de Buenos Aires) três classes de reúso: (I) irrigação de espaços verdes públicos exige DBO ≤ 20 mg/L + coliformes ≤ 10³ NMP/100mL; (II) uso industrial não potável exige turbidez ≤ 2 UT + condutividade ≤ 1500 μS/cm; (III) recarga de aquífero exige nitrato ≤ 10 mg N/L. Modelo comparado com AySA PIRHA vs NBR 13969 mostra que os requisitos brasileiros são 40 % mais restritivos para reúso urbano irrestrito.",
+      "chunk_tokens": 540,
+      "paginas": "[178,198)",
+      "segmento": "saneamento",
+      "aplicabilidade": ["projeto_basico", "executivo", "o_m"],
+      "agentes_alvo": ["agente-saneamento"],
+      "citacao_bibtex": "@phdthesis{rodriguez2020reuso, author={Rodr{\\'i}guez, A. L.}, title={Modelo de reúso de água urbana para AySA (Área Metropolitana de Buenos Aires)}, school={UBA}, year={2020}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S8-02",
+      "tese_id": "seed-lima-2024-uasb",
+      "ordem": 1,
+      "tipo": "metodo",
+      "titulo": "UASB modificado com pós-tratamento por bio-óleo — eficiência DQO",
+      "chunk": "Lima (2024) propõe UASB modificado com pós-tratamento de bio-óleo (pirólise de lodo primário) para esgoto sanitário municipal em cidades ≤ 50k hab. Eficiência de remoção de DQO 87 ± 4 % (n=124 amostras, 18 meses) vs 78 % do UASB convencional. Consumo energético líquido -8,4 kWh/hab.ano (produz mais bio-óleo que consome). TRH 6h no reator, 4h no polimento.",
+      "chunk_tokens": 460,
+      "paginas": "[92,108)",
+      "segmento": "saneamento",
+      "aplicabilidade": ["projeto_basico", "executivo"],
+      "agentes_alvo": ["agente-saneamento"],
+      "citacao_bibtex": "@phdthesis{lima2024uasb, author={Lima, E. M.}, title={Reator UASB modificado com pós-tratamento por bio-óleo}, school={UFPE}, year={2024}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S8-03",
+      "tese_id": "seed-rodriguez-2020-reuso",
+      "ordem": 2,
+      "tipo": "dado",
+      "titulo": "Consumo per capita comparado AMBA vs SNIS 2024",
+      "chunk": "Rodríguez (2020) tabula consumo per capita de referência: AMBA 245 L/hab.dia (média 2018-2019), grande São Paulo 158 L/hab.dia (SNIS 2019), Rio de Janeiro 187 L/hab.dia (SNIS 2019), Bogotá 122 L/hab.dia (2019). A diferença AMBA vs São Paulo (+55 %) reflete perdas físicas historicamente altas em Buenos Aires (~42 % em 2018) — desafio central do PIRHA 2020-2035.",
+      "chunk_tokens": 380,
+      "paginas": "[52,68)",
+      "segmento": "saneamento",
+      "aplicabilidade": ["estudo_previo", "dd"],
+      "agentes_alvo": ["agente-saneamento"],
+      "citacao_bibtex": "@phdthesis{rodriguez2020reuso, author={Rodr{\\'i}guez, A. L.}, title={Modelo de reúso de água urbana para AySA (Área Metropolitana de Buenos Aires)}, school={UBA}, year={2020}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S9-01",
+      "tese_id": "seed-santos-2018-acsr",
+      "ordem": 1,
+      "tipo": "formula",
+      "titulo": "Ampacidade dinâmica de ACSR — IEEE 738 revisada",
+      "chunk": "Santos (2018) propõe ajuste na IEEE Std 738 para clima brasileiro: coeficiente de radiação solar α_s = 0,80 (cobre média Brasil central vs 0,50 padrão IEEE, calibrado no Texas). Ampacidade resultante para ACSR 795 MCM Drake operando a 100 °C: 895 A (dinâmica com dados SONDA/INMET) vs 720 A (estática IEEE default). Ganho de +24 % de capacidade sem investimento novo, com risco de flecha < 5 % do vão.",
+      "chunk_tokens": 500,
+      "paginas": "[122,140)",
+      "segmento": "energia",
+      "aplicabilidade": ["projeto_basico", "o_m"],
+      "agentes_alvo": ["agente-energia"],
+      "citacao_bibtex": "@phdthesis{santos2018acsr, author={Santos, G. B.}, title={Ampacidade dinâmica de condutores ACSR: revisão da IEEE Std 738}, school={USP}, year={2018}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S9-02",
+      "tese_id": "seed-santos-2018-acsr",
+      "ordem": 2,
+      "tipo": "conceito",
+      "titulo": "Torre estaiada CIGRÉ TB 348 aplicada a 500 kV brasileira",
+      "chunk": "A torre estaiada V (CIGRÉ TB 348) é 22 % mais leve em aço que a autoportante convencional para o mesmo circuito 500 kV duplo, mas exige acesso permanente para inspeção de estais (típica em travessias urbanas). Santos (2018) mostra que o custo total de projeto+obra é 8-15 % menor em terrenos planos > 200 m entre torres. Não aplicável em áreas de perícia frequente (para-raios de altura).",
+      "chunk_tokens": 440,
+      "paginas": "[210,225)",
+      "segmento": "energia",
+      "aplicabilidade": ["projeto_basico", "executivo"],
+      "agentes_alvo": ["agente-energia"],
+      "citacao_bibtex": "@phdthesis{santos2018acsr, author={Santos, G. B.}, title={Ampacidade dinâmica de condutores ACSR: revisão da IEEE Std 738}, school={USP}, year={2018}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S9-03",
+      "tese_id": "seed-carvalho-2023-hvdc",
+      "ordem": 1,
+      "tipo": "caso",
+      "titulo": "HVDC Xingu-Estreito: perdas operacionais em bipolo 800 kV",
+      "chunk": "Carvalho (2023) analisa 3 anos (2020-2023) de operação do bipolo HVDC Xingu-Estreito (2.087 km, 4.000 MW nominal). Perdas médias 3,7 % no polo positivo e 3,9 % no negativo, com sazonalidade de +0,4 % no verão (aumento de temperatura ambiente). Comparado com CA 500 kV hipotético equivalente: HVDC economiza 42 % de perdas totais no corredor, justificativa técnica alinhada com escolha State Grid.",
+      "chunk_tokens": 480,
+      "paginas": "[168,185)",
+      "segmento": "energia",
+      "aplicabilidade": ["o_m", "dd"],
+      "agentes_alvo": ["agente-energia"],
+      "citacao_bibtex": "@mastersthesis{carvalho2023hvdc, author={Carvalho, D. A.}, title={HVDC Xingu-Estreito: análise operacional de perdas em bipolo de 800 kV}, school={Unicamp}, year={2023}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S10-01",
+      "tese_id": "seed-fernandes-2020-drystack",
+      "ordem": 1,
+      "tipo": "metodo",
+      "titulo": "Dry stack para rejeitos de minério de ferro — parâmetros de filtragem",
+      "chunk": "Fernandes (2020) propõe para minério de ferro (Quadrilátero Ferrífero) filtro-prensa horizontal com pressão de operação 12-15 bar, obtendo umidade final de 14-17 % (limite para empilhamento estável). Consumo de energia 8,5 kWh/t seca de rejeito. Custo total US$ 6,80/t vs US$ 2,10/t (barragem convencional), mas elimina passivo residual — VPL positivo em horizonte 30 anos incluindo custo de descaracterização evitado.",
+      "chunk_tokens": 490,
+      "paginas": "[195,220)",
+      "segmento": "barragens",
+      "aplicabilidade": ["estudo_previo", "projeto_basico", "descomissionamento"],
+      "agentes_alvo": ["agente-barragens"],
+      "citacao_bibtex": "@phdthesis{fernandes2020drystack, author={Fernandes, M. R.}, title={Disposição de rejeitos por empilhamento a seco (dry stack): estudo em ferro}, school={USP}, year={2020}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S10-02",
+      "tese_id": "seed-mendes-2022-alteamento",
+      "ordem": 1,
+      "tipo": "critica",
+      "titulo": "Crítica ao alteamento a montante pós-Brumadinho",
+      "chunk": "Mendes (2022) argumenta que a proibição do alteamento a montante pela Lei 14.066/2020 é tecnicamente sólida para minério de ferro (rejeitos com baixa densidade seca e susceptíveis a liquefação), mas potencialmente sobrerreativa para rejeitos de bauxita e níquel laterítico (densidade seca > 2,1 t/m³ e alto teor de finos coesivos). Recomenda diferenciação regulatória por tipologia de rejeito, com auditoria PNSB reforçada por FoS ≥ 1,5 estático.",
+      "chunk_tokens": 520,
+      "paginas": "[178,205)",
+      "segmento": "barragens",
+      "aplicabilidade": ["dd", "descomissionamento"],
+      "agentes_alvo": ["agente-barragens"],
+      "citacao_bibtex": "@phdthesis{mendes2022alteamento, author={Mendes, T. C.}, title={Crítica ao alteamento a montante em barragens de rejeitos pós-Brumadinho}, school={UFOP}, year={2022}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-S10-03",
+      "tese_id": "seed-fernandes-2020-drystack",
+      "ordem": 2,
+      "tipo": "conceito",
+      "titulo": "CFRD — flexão diferencial da laje de concreto",
+      "chunk": "Em barragens CFRD (Concrete Face Rockfill Dam) altas (> 150 m), a flexão diferencial da laje de face pode gerar trincas críticas na junção com o plinto. Fernandes (2020) mostra que o padrão global (Bureau of Reclamation) para CFRD > 150 m recomenda laje com espessura variável (0,3 + 0,003 h, em metros), junta perimetral tripla (cobre + PVC + graxa) e monitoramento com fibra ótica ao longo dos horizontes contínuos de tração.",
+      "chunk_tokens": 500,
+      "paginas": "[38,55)",
+      "segmento": "barragens",
+      "aplicabilidade": ["projeto_basico", "executivo", "o_m"],
+      "agentes_alvo": ["agente-barragens"],
+      "citacao_bibtex": "@phdthesis{fernandes2020drystack, author={Fernandes, M. R.}, title={Disposição de rejeitos por empilhamento a seco (dry stack): estudo em ferro}, school={USP}, year={2020}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    }
+  ]
+}

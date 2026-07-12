@@ -1,0 +1,118 @@
+name: Skill sync parity check
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  parity:
+    name: CLAUDE.md ↔ .claude/agents ↔ sharepoint parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run parity check
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "═══════════════════════════════════════════════════════"
+          echo "Skill sync parity — v4.5"
+          echo "═══════════════════════════════════════════════════════"
+
+          # 1) Lista de agentes por fonte
+          declare -A AGENTS_CLI AGENTS_SP AGENTS_MASTER
+
+          if [ -d ".claude/agents" ]; then
+            for f in .claude/agents/agente-*.md; do
+              [ -e "$f" ] || continue
+              slug="$(basename "$f" .md)"
+              AGENTS_CLI["$slug"]=1
+            done
+          fi
+
+          if [ -d "sharepoint/01-agentes-fundamentais" ]; then
+            for d in sharepoint/01-agentes-fundamentais/agente-*/; do
+              [ -e "$d" ] || continue
+              slug="$(basename "$d")"
+              AGENTS_SP["$slug"]=1
+            done
+          fi
+
+          # Master lê os slugs mencionados no CLAUDE.md master
+          if [ -f "CLAUDE.md" ]; then
+            while IFS= read -r slug; do
+              AGENTS_MASTER["$slug"]=1
+            done < <(grep -oE 'agente-[a-z-]+' CLAUDE.md | sort -u)
+          fi
+
+          echo "CLI (.claude/agents/): ${#AGENTS_CLI[@]} agentes"
+          echo "SharePoint mirror:     ${#AGENTS_SP[@]} agentes"
+          echo "CLAUDE.md master:      ${#AGENTS_MASTER[@]} slugs"
+          echo ""
+
+          # 2) Diff
+          fail=0
+
+          echo "▸ Verificando: cada .claude/agents/*.md tem pasta em sharepoint/"
+          for slug in "${!AGENTS_CLI[@]}"; do
+            if [ -z "${AGENTS_SP[$slug]:-}" ]; then
+              echo "  ✗ '$slug' existe em .claude/agents/ mas NÃO em sharepoint/01-agentes-fundamentais/"
+              fail=1
+            fi
+          done
+
+          echo "▸ Verificando: cada pasta em sharepoint/ tem .md em .claude/agents/"
+          for slug in "${!AGENTS_SP[@]}"; do
+            if [ -z "${AGENTS_CLI[$slug]:-}" ]; then
+              echo "  ✗ '$slug' existe em sharepoint/ mas NÃO em .claude/agents/"
+              fail=1
+            fi
+          done
+
+          echo "▸ Verificando: cada agente CLI+SP é referenciado em CLAUDE.md"
+          for slug in "${!AGENTS_CLI[@]}"; do
+            if [ -z "${AGENTS_MASTER[$slug]:-}" ]; then
+              echo "  ✗ '$slug' existe no filesystem mas NÃO no CLAUDE.md master"
+              fail=1
+            fi
+          done
+
+          echo "▸ Verificando: cada pasta agente-*/ tem os 4 arquivos obrigatórios"
+          for slug in "${!AGENTS_SP[@]}"; do
+            base="sharepoint/01-agentes-fundamentais/$slug"
+            for required in "SKILL.md" "README.md" "refs/README.md" "prompts/starters.md"; do
+              if [ ! -f "$base/$required" ]; then
+                echo "  ✗ '$slug' está faltando '$required'"
+                fail=1
+              fi
+            done
+          done
+
+          echo "▸ Verificando: SKILL.md dos agentes v4.2+ têm hook academic-knowledge"
+          for slug in agente-portos agente-aeroportos agente-saneamento \
+                     agente-energia agente-barragens agente-tuneis \
+                     agente-mineracao agente-oleo-gas agente-edificacoes; do
+            skill_file="sharepoint/01-agentes-fundamentais/$slug/SKILL.md"
+            if [ -f "$skill_file" ]; then
+              if ! grep -q "academic-knowledge" "$skill_file"; then
+                echo "  ✗ '$slug/SKILL.md' NÃO tem hook academic-knowledge (WF-AKP-001)"
+                fail=1
+              fi
+              if ! grep -q "Formato canônico de citação acadêmica" "$skill_file"; then
+                echo "  ✗ '$slug/SKILL.md' NÃO tem 'Formato canônico de citação acadêmica'"
+                fail=1
+              fi
+            fi
+          done
+
+          echo ""
+          if [ "$fail" = "0" ]; then
+            echo "✓ Todos os checks passaram. Ecossistema em paridade."
+          else
+            echo "✗ Drift detectado — corrigir antes de merge."
+            exit 1
+          fi

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://mantaassociados.com/schemas/mcs-cases-payload.v1.json",
+  "version": "1.0.0",
+  "pipeline": "WF-MCP-001",
+  "generated_at": "2026-07-12T00:00:00Z",
+  "stages_completed": [1, 2, 3],
+  "projects_count": 3,
+  "case_elements_count": 3,
+  "elements": [
+    {
+      "id": "MCS-00001",
+      "projeto_id": "epr-br365",
+      "ordem": 1,
+      "tipo": "decisão_projeto",
+      "titulo": "Barreira Brückner adicional na OAE Ribeirão do Salitre (EPR BR-365)",
+      "chunk": "Na duplicação da BR-365 entre km 594+300 e km 596+500, a análise de Brückner apontou saldo positivo de 78 mil m³ concentrado no trecho de aterro do encontro Norte da OAE Ribeirão do Salitre. Optou-se por INSERIR uma barreira artificial no eixo em km 594+300 (fixa) mesmo sem obstrução física, para forçar o motor de compensação a distribuir esse volume dentro da faixa 500 m, evitando bota-fora com DMT > 3 km. Justificativa: SICRO out/2024 mostra que transporte acima de 2 km torna a compensação mais cara que reciclagem de material. Decisão validada pela obra: economia real de R$ 380 mil vs cenário sem barreira.",
+      "chunk_tokens": 520,
+      "segmento": "rodovias",
+      "disciplinas": ["terraplenagem", "orçamento"],
+      "agentes_alvo": ["agente-infraestrutura-s1"],
+      "fase_ciclo_vida": ["projeto_basico", "projeto_executivo"],
+      "nda_level": "interno",
+      "citacao_interna": "[MN 2024, memorial-EPR-BR365-DD, §4.2 — Terraplenagem Brückner]",
+      "provenance": {
+        "stage_1": {"curator": "MN", "curated_at": "2026-05-20T09:00:00Z", "source_doc": "memorial-DD-EPR-BR365-r03.pdf", "source_page_range": "42-58"},
+        "stage_2": {"extractor": "manta_cases_extract.py+llm-review", "model": "claude-sonnet-4-6", "extracted_at": "2026-05-22T11:00:00Z", "cost_usd": 0.18},
+        "stage_3": {"reviewer": "vinicius", "reviewed_at": "2026-06-08T14:30:00Z", "notes": "chunk validado contra planilha SICRO — número 380k confere"}
+      }
+    },
+    {
+      "id": "MCS-00002",
+      "projeto_id": "epr-br365",
+      "ordem": 2,
+      "tipo": "pleito_claim",
+      "titulo": "Pleito de reequilíbrio por variação de aço CA-50 (EPR BR-365)",
+      "chunk": "Entre a data-base do contrato (mar/2023) e a execução das OAEs (jul/2024), o INCC-DI variou 6,8% e o preço do aço CA-50 ao construtor subiu 14,7% (fonte SindusCon-MG). O pleito foi construído com base no MEMORIAL 08 do próprio contrato: fórmula paramétrica de reajuste que só remunera INCC. Diferencial da argumentação Manta: cruzar boletim SindusCon com curva CBIC do aço e demonstrar que a variação do aço é FATO IMPREVISÍVEL não amortizado pelo INCC — logo, cabe reequilíbrio via cláusula 12.4 do contrato de concessão. Pleito aceito parcialmente (72% do valor solicitado) em fevereiro/2025.",
+      "chunk_tokens": 460,
+      "segmento": "oae",
+      "disciplinas": ["contratos", "claim", "orçamento"],
+      "agentes_alvo": ["agente-infraestrutura-s2", "agente-claims", "agente-contratual"],
+      "fase_ciclo_vida": ["obra"],
+      "nda_level": "confidencial",
+      "citacao_interna": "[MN + BS 2024, memorial-pleito-EPR-BR365-r02, §5.3 — Reequilíbrio Aço CA-50]",
+      "provenance": {
+        "stage_1": {"curator": "MN", "curated_at": "2026-05-22T10:15:00Z", "source_doc": "memorial-pleito-EPR-BR365-r02.pdf", "source_page_range": "12-24"},
+        "stage_2": {"extractor": "manta_cases_extract.py+llm-review", "model": "claude-sonnet-4-6", "extracted_at": "2026-05-23T08:00:00Z", "cost_usd": 0.22},
+        "stage_3": {"reviewer": "vinicius", "reviewed_at": "2026-06-10T09:00:00Z", "notes": "nda_level ELEVADO de interno para confidencial — pleito ainda em disputa parcial na 2ª instância administrativa"}
+      }
+    },
+    {
+      "id": "MCS-00003",
+      "projeto_id": "aysa-eta-buenos-aires",
+      "ordem": 1,
+      "tipo": "padrão_aplicado",
+      "titulo": "Padrão Manta de decantador de alta taxa para ETA em cinturão urbano (AySA)",
+      "chunk": "Para a ETA de 8 m³/s em zona urbana consolidada da região norte de Buenos Aires, adotou-se decantador de alta taxa com módulos de placas paralelas (60°, distância entre placas 8 cm) em vez de decantador convencional. Ganho de footprint: 42% menor que decantador clássico para a mesma vazão + turbidez de saída ≤ 5 NTU. Restrição de projeto: temperatura mínima do inverno de Buenos Aires (5-8°C) requer taxa de aplicação 20% mais conservadora que padrão IWA. Esse padrão foi replicado depois nas ETAs de Rosario e Córdoba com ajustes locais.",
+      "chunk_tokens": 380,
+      "segmento": "saneamento",
+      "disciplinas": ["saneamento", "processo"],
+      "agentes_alvo": ["agente-saneamento"],
+      "fase_ciclo_vida": ["projeto_basico", "projeto_executivo"],
+      "nda_level": "interno",
+      "citacao_interna": "[MN + Equipe AR 2024, memorial-executivo-AYSA-ETA-BA-r01, §3.4 — Decantação de Alta Taxa]",
+      "provenance": {
+        "stage_1": {"curator": "MN", "curated_at": "2026-06-01T08:00:00Z", "source_doc": "memorial-executivo-AYSA-ETA-BA-r01.pdf", "source_page_range": "78-95"},
+        "stage_2": {"extractor": "manta_cases_extract.py", "model": "claude-sonnet-4-6", "extracted_at": "2026-06-01T09:30:00Z", "cost_usd": 0.14},
+        "stage_3": {"reviewer": "vinicius", "reviewed_at": "2026-06-11T16:00:00Z"}
+      }
+    }
+  ],
+  "_todo": "N elementos restantes — sincronizar com 03_exports/manta-cases-payload.json"
+}
