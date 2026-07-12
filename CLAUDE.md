@@ -4,10 +4,21 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.7** (2026-07-13 planejada) — Agentic Intelligence Layer
-sobre v4.6.1: Reflexion Loop pré-entrega + Memória episódica + P2
-Prompt Contract + Loop primitives + Model tiering explícito + SkillForge
-(ver roadmap MNT-IA-20260712-001 e SKILL.md §14 do Maestro).
+Versão: **v4.9** (2026-07-13) — Fechar loop de aprendizado. 5 pipes
+paralelas: (1) cron diário `consolidate_old_episodes()`; (2) endpoint
+`POST /api/quantitativo/field-measurement` para ingestão pós-obra;
+(3) unblock do learned router (migration v4.6 ainda não aplicada em
+prod — plano de telemetria + bootstrap sintético 350 rows); (4) seed
+de Manta Cases v4.9 (OAE 622 + EPR BR-365 + AySA anonimizado, 23 KEs);
+(5) trigger `agent_response_flags → akp_curation_backlog` + view
+`v_judge_feedback_health`. Todas idempotentes, gate humano MN antes de
+aplicar em prod. Ver `docs/JUDGE-FEEDBACK-LOOP-v4.9.md`,
+`docs/EPISODIC-CONSOLIDATION-RUNBOOK.md`, `docs/LEARNED-ROUTER-UNBLOCK.md`.
+
+Versão v4.7 (2026-07-13) — Agentic Intelligence Layer sobre v4.6.1:
+Reflexion Loop pré-entrega + Memória episódica + P2 Prompt Contract +
+Loop primitives + Model tiering explícito + SkillForge (ver roadmap
+MNT-IA-20260712-001 e SKILL.md §14 do Maestro).
 
 Versão anterior: **v4.6** (2026-07-12, com reconciliação Codex ↔ SP) —
 evolução Maestro em 5 vetores paralelos: V1 learned routing (scaffold
