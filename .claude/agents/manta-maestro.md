@@ -3,10 +3,10 @@ name: manta-maestro
 display_name: "Manta Maestro"
 manta_code: "Manta 00 (roteador) / Manta 12 (kernel-agent)"
 aliases: ["manta", "maestro", "manta-agente", "manta-router", "/manta", "/maestro", "manta 12", "manta-12", "kernel-manta"]
-version: 4.6.0
+version: 4.6.1
 updated: 2026-07-12
 author: Manta Associados
-supersedes: 3.0.0 (2026-07-09), 2.2.0 (2026-07-06), 2.0.0 (2026-07-04), 1.0.0 (2026-06-21)
+supersedes: 4.6.0 (2026-07-12 primeira versao do dia), 3.0.0 (2026-07-09), 2.2.0 (2026-07-06), 2.0.0 (2026-07-04), 1.0.0 (2026-06-21)
 description: >
   Manta Maestro — roteador e regente do agentic OS proprietario da Manta
   Associados. Recebe o pedido, le as fontes (F4 Extracao), sintetiza objetivo,
@@ -463,6 +463,101 @@ O Maestro **nunca** devolve o conteudo bruto do entregavel. Retorna:
 - Tarefa trivial coberta por 1 sub-skill L1 direto (ex.: "le esse PDF" -> F4 direto)
 - Ja se esta dentro de um agente de segmento e o usuario quer rodar sub-tarefa
 - Usuario pediu nominalmente uma skill
+
+## 12.5 F2 SharePoint — cadeia de fallback para I/O  **[novo v4.6.1]**
+
+Regra durável estabelecida em 2026-07-12 por MN: SEMPRE que precisar
+LER OU ESCREVER no SharePoint Manta, o Maestro tenta os canais na
+ordem abaixo, adotando o primeiro que funcionar na sessao corrente:
+
+### Ordem canonica dos canais SP
+
+| # | Canal | Tool MCP | Capacidade | Prefer para |
+|---|-------|----------|------------|-------------|
+| 1 | **M365 SharePoint MCP** oficial | `sharepoint_search`, `sharepoint_folder_search`, `read_resource` | Read + (write quando Anthropic expuser) | Leitura de qualquer arquivo, listagem de folders, dispatch de intake |
+| 2 | **Desktop Commander MCP** | `execute_command` local shell | Escreve em pasta OneDrive sync -> sync automatico ao SP | Upload de N arquivos, criacao de estruturas de folder, batch de SKILL.md updates |
+| 3 | **Playwright/Chrome MCP** | `browser_navigate`, `browser_upload_file`, `browser_click` | Dirige UI web do SP (mnassociados.sharepoint.com) | Casos que exigem UI (comentarios, aprovacoes, share, permissoes) |
+| 4 | **Fallback manual** — bundle SP-ready | Zip mirror da estrutura SP + INSTRUCTIONS.md | Ultimo recurso quando 1-3 indisponiveis | Sessao sem os MCPs instalados; MN arrasta e solta |
+
+### Algoritmo de decisao
+
+```
+ao precisar de I/O em SP:
+    op = "read" ou "write"
+
+    # 1. Tenta M365 MCP primeiro (sempre disponivel se conector M365 ativo)
+    if op == "read":
+        return sharepoint_search / read_resource -> OK
+
+    if op == "write":
+        # 2. Desktop Commander se instalado
+        if mcp_available("desktop-commander"):
+            path_local = "~/OneDrive - Manta Associados/Engenharia/..."
+            execute_command("cp <src> <path_local>")
+            log("upload via OneDrive sync — propaga em ~5s")
+            return OK
+
+        # 3. Playwright se instalado
+        if mcp_available("playwright") or mcp_available("chrome"):
+            browser_navigate("https://mnassociados.sharepoint.com/sites/Engenharia/...")
+            browser_upload_file(file_path)
+            return OK
+
+        # 4. Fallback manual: montar bundle e SendUserFile
+        bundle = build_sp_ready_zip()
+        SendUserFile(bundle, caption="Bundle SP-ready — arraste sobre a raiz do SP")
+        log("MCPs de write ausentes — entregando bundle manual")
+        return NEEDS_HUMAN
+```
+
+### Instrucoes de instalacao (uma vez, permanente)
+
+Para desbloquear os canais 2 e 3, MN instala os MCPs na sua configuracao
+claude.ai / Claude Code (Settings -> MCP servers):
+
+- **Desktop Commander MCP** — <https://github.com/wonderwhy-er/DesktopCommanderMCP>
+  Cross-platform. Setup: `claude mcp add desktop-commander npx -y @wonderwhy-er/desktop-commander`.
+  Permite escrita em qualquer path local, incluindo a pasta sync do OneDrive.
+- **Playwright MCP** oficial Anthropic — `@modelcontextprotocol/server-playwright`.
+  Setup: `claude mcp add playwright npx -y @modelcontextprotocol/server-playwright`.
+  Chromium ja vem embarcado; nao requer instalacao adicional.
+
+Uma vez instalados, esta secao 12.5 opera automaticamente sem prompts
+adicionais. O Maestro sempre reporta qual canal foi adotado:
+> "SP write via [canal 2 Desktop Commander] — OneDrive sync ativo, arquivo em rota."
+
+### Registro de invocacao em manta_agent_messages
+
+Cada I/O em SP registra em `manta_agent_messages` (audit trail):
+
+```sql
+INSERT INTO public.manta_agent_messages (
+    parent_trace_id, timestamp, direction,
+    from_agent, to_agent, action,
+    payload_json
+) VALUES (
+    <trace>, now(), 'outbound',
+    '00-maestro', 'external:sharepoint', 'file_write',
+    jsonb_build_object(
+        'channel_used', 'desktop-commander',
+        'sp_path', '/sites/Engenharia/.../SKILL.md',
+        'local_path', '~/OneDrive - Manta Associados/...',
+        'bytes', <size>,
+        'attempts_before', 0
+    )
+);
+```
+
+### Anti-patterns SP
+
+- Nao tentar canal 4 (bundle manual) sem antes tentar 1-3.
+- Nao gerar bundle grande (>50 MB) sem confirmar com usuario — SendUserFile
+  fica lento e OneDrive sync engasga.
+- Nao editar arquivos SP a partir de multiplas sessoes concorrentes sem
+  fetch previo — SP tem ETag mas MCP nem sempre expoe. Sessoes concorrentes
+  devem coordenar via `manta_agent_messages` lock/unlock.
+- Nao pular o registro em `manta_agent_messages` — audit trail obrigatorio
+  para R5 (BRL + TRACE).
 
 ## 13. Observabilidade e Governanca  **[novo v4.6]**
 
