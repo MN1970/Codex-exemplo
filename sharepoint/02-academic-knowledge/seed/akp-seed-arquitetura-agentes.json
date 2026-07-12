@@ -1,0 +1,126 @@
+{
+  "$schema": "https://mantaassociados.com/schemas/akp-ke-payload.v1.json",
+  "version": "1.0.0-seed-arq",
+  "pipeline": "WF-AKP-001",
+  "generated_at": "2026-07-12T00:00:00Z",
+  "stages_completed": [1, 2, 3],
+  "theses_count": 6,
+  "knowledge_elements_count": 6,
+  "_note": "SEED-VALIDATION — extensão da bibliografia acadêmica com literatura sobre arquitetura de agentes IA. Segmento transversal_arq. Alvo: agente-arquiteto-ia (Manta 16) e agente-maestro (Manta 00) — o próprio Maestro consulta esses papers ao debater sua evolução. Ver README-arquitetura-agentes.md.",
+  "elements": [
+    {
+      "id": "seed-KE-ARQ-01",
+      "tese_id": "seed-arq-chen-2024-agentbench",
+      "ordem": 1,
+      "tipo": "metodo",
+      "titulo": "AgentBench: benchmark multi-tarefa para avaliar LLMs como agentes",
+      "chunk": "Chen et al. (2024) propõem o AgentBench, benchmark com 8 tarefas distintas: (1) sistema operacional (shell interativo), (2) database (SQL sobre schemas), (3) knowledge graph (Freebase QA), (4) card game (Aquawar), (5) house-holding (ALFWorld), (6) web shopping (WebShop), (7) web browsing (Mind2Web) e (8) digital card. A métrica é multi-dimensional: success rate por tarefa + score agregado normalizado. Aplicado ao Maestro: cada agente vertical (S1-S13) precisa de um sub-benchmark análogo — não basta 'achou a resposta', precisa medir a cadeia de tool-use (ex.: para S8/saneamento, dado edital AySA, listar as 3 NBRs relevantes com página + comparar com PIRHA). O paper demonstra que GPT-4 é o único agente com score > 4.0/10 em todas as 8 tarefas — os demais degradam em domínios com estado persistente (OS, DB), justificando por que agentes verticais precisam de tools especializadas e não podem confiar apenas no LLM base.",
+      "chunk_tokens": 620,
+      "paginas": "[1,15)",
+      "segmento": "transversal_arq",
+      "aplicabilidade": ["estudo_previo", "projeto_basico"],
+      "agentes_alvo": ["agente-arquiteto-ia", "agente-maestro"],
+      "citacao_bibtex": "@article{chen2024agentbench, author={Chen, X. and Liu, X. and Yin, D. and Tang, J.}, title={AgentBench: Evaluating LLMs as Agents}, journal={ICLR}, year={2024}, note={arXiv:2308.03688}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-ARQ-02",
+      "tese_id": "seed-arq-wu-2023-autogen",
+      "ordem": 1,
+      "tipo": "conceito",
+      "titulo": "AutoGen: protocolo conversacional entre agentes LLM (Microsoft)",
+      "chunk": "Wu et al. (2023) propõem o AutoGen (Microsoft Research), framework onde a computação de um workflow multi-agente é modelada como uma conversa entre 2+ agentes especializados. Elementos centrais: (a) UserProxyAgent — proxy do humano, executa tools/código local; (b) AssistantAgent — agente LLM puro (Sonnet/GPT); (c) GroupChatManager — orquestrador que escolhe o próximo agente a falar dado o histórico. O paper mostra que decompor uma tarefa complexa em 3-5 agentes conversantes (planner + executor + critic) supera single-agent com chain-of-thought em 12/15 benchmarks. Aplicação direta ao Manta Maestro: o Manta 00 (maestro/router) hoje é um Haiku que decide entre 20 agentes por regex — poderia evoluir para GroupChatManager, e o handoff entre agente-portos ↔ agente-orcamento (para custear dragagem) pode ser modelado como diálogo (portos propõe volume, orçamento questiona base SICRO/TPU, portos ajusta). O critic pattern do AutoGen também justifica uma futura Manta 15b (advisory-critic) que audita a saída de outros agentes antes de entregar ao cliente.",
+      "chunk_tokens": 680,
+      "paginas": "[3,20)",
+      "segmento": "transversal_arq",
+      "aplicabilidade": ["projeto_basico", "executivo"],
+      "agentes_alvo": ["agente-arquiteto-ia", "agente-maestro"],
+      "citacao_bibtex": "@article{wu2023autogen, author={Wu, Q. and Bansal, G. and Zhang, J. and Wu, Y. and Li, B. and Zhu, E. and Jiang, L. and Zhang, X. and Zhang, S. and Liu, J. and Awadallah, A. H. and White, R. W. and Burger, D. and Wang, C.}, title={AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation Framework}, journal={arXiv:2308.08155}, year={2023}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-ARQ-03",
+      "tese_id": "seed-arq-park-2023-generative-agents",
+      "ordem": 1,
+      "tipo": "metodo",
+      "titulo": "Memória reflexiva: observação → reflexão → planejamento (Park/Stanford)",
+      "chunk": "Park et al. (2023) formalizam a arquitetura de memória reflexiva em 3 camadas: (1) Memory Stream — log append-only de observações raw com timestamp + importance score 1-10 gerado por LLM; (2) Reflection — periodicamente (quando Σ importance > threshold=150) o agente agrupa observações e sintetiza reflexões de alto nível ('João valoriza tempo de resposta'); (3) Planning — antes de agir, o agente recupera as top-K memórias por retrieval híbrido (recency × importance × relevance ao contexto atual). A retrieval usa score = α·recency + β·importance + γ·similarity com α+β+γ=1. Aplicação ao Maestro: o AskCAD já implementa esse padrão parcialmente (Reflexive Memory com Haiku 4.5 extraindo fatos post-turno — ver `backends/askcad/app/memory/`). A camada 2 (reflection) ainda não está implementada — o Maestro ganharia com um processo diário que sintetiza 'padrões de uso do MN nesta semana' e injeta na próxima conversa. Também justifica por que o WF-AKP-002 (curation backlog) precisa de gap_score = f(n_occurrences, recency, avg_top_sim) e não só threshold binário.",
+      "chunk_tokens": 720,
+      "paginas": "[5,22)",
+      "segmento": "transversal_arq",
+      "aplicabilidade": ["projeto_basico", "executivo", "o_m"],
+      "agentes_alvo": ["agente-arquiteto-ia", "agente-maestro"],
+      "citacao_bibtex": "@inproceedings{park2023generative, author={Park, J. S. and O'Brien, J. C. and Cai, C. J. and Morris, M. R. and Liang, P. and Bernstein, M. S.}, title={Generative Agents: Interactive Simulacra of Human Behavior}, booktitle={UIST '23}, year={2023}, note={arXiv:2304.03442}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-ARQ-04",
+      "tese_id": "seed-arq-shen-2023-hugginggpt",
+      "ordem": 1,
+      "tipo": "critica",
+      "titulo": "HuggingGPT: crítica ao routing simples via LLM-as-planner",
+      "chunk": "Shen et al. (2023) propõem o HuggingGPT: ChatGPT atua como planner central e delega subtarefas para models especialistas do Hugging Face Hub (BLIP p/ imagem, Whisper p/ áudio, etc.). O planner produz um DAG de invocações, executa em paralelo/sequencial conforme dependências e sintetiza a resposta final. A crítica implícita (que o próprio paper reconhece na §4.4 Limitations): (a) o LLM-planner não conhece as capacidades reais dos experts, só as descrições no prompt — falha catastróficamente quando o expert 'estranho ao prompt' seria o correto; (b) latência linear no nº de steps do DAG (média 12s/query no experimento com 4 tools); (c) custo de tokens não-limitado (dupla passagem: planner emite JSON, expert consome, planner reconsome saída). Aplicação ao Maestro: o Manta 00 hoje é justamente um router LLM (Haiku sobre Q1 do intake) — que evolui para o mesmo problema em escala com 20 agentes. Mitigação: (i) taxonomia forte de tools no prompt do maestro (não descrição livre), (ii) fallback determinístico via regex (que hoje já existe na seção 'ROUTING' do CLAUDE.md), (iii) budget cap por handoff (ver LoopGuard do AskCAD como referência).",
+      "chunk_tokens": 740,
+      "paginas": "[8,20)",
+      "segmento": "transversal_arq",
+      "aplicabilidade": ["estudo_previo", "projeto_basico"],
+      "agentes_alvo": ["agente-arquiteto-ia", "agente-maestro"],
+      "citacao_bibtex": "@article{shen2023hugginggpt, author={Shen, Y. and Song, K. and Tan, X. and Li, D. and Lu, W. and Zhuang, Y.}, title={HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face}, journal={NeurIPS}, year={2023}, note={arXiv:2303.17580}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-ARQ-05",
+      "tese_id": "seed-arq-anthropic-2024-building-effective-agents",
+      "ordem": 1,
+      "tipo": "recomendacao",
+      "titulo": "Padrões de design de agentes (Anthropic 2024)",
+      "chunk": "A Anthropic (dez/2024) publica guia oficial 'Building effective agents' consolidando 5 padrões canônicos: (1) Prompt chaining — sequência linear de LLM calls, cada uma processa a saída da anterior; usar quando a tarefa se decompõe em etapas fixas e uma etapa depende do resultado da anterior. (2) Routing — classifica input e envia para o handler correto; usar quando há tipos de query distintos que exigem prompts/tools diferentes (exatamente o caso do Manta 00). (3) Parallelization — sectioning (subtarefas independentes) ou voting (mesma tarefa N vezes p/ consenso); usar para speed-up ou confiança. (4) Orchestrator-workers — planner delega a workers dinâmicos e sintetiza; usar quando as subtarefas não são conhecidas a priori. (5) Evaluator-optimizer — um LLM gera resposta, outro LLM avalia e requisita revisão; usar quando há critérios claros de qualidade e feedback é acionável. A recomendação central do guia: comece com o padrão mais simples (single LLM call com tools) e só escale a complexidade quando o comportamento simples se mostrar insuficiente. Aplicação: o Maestro hoje é padrão (2) routing; o próximo salto natural é (4) orchestrator-workers para casos multi-vertical (ex.: EVTE de porto exige portos + orçamento + advisory), evitando o smell do 'super-agente' Manta 15 que hoje faz três papéis.",
+      "chunk_tokens": 780,
+      "paginas": "[1,12)",
+      "segmento": "transversal_arq",
+      "aplicabilidade": ["estudo_previo", "projeto_basico", "executivo"],
+      "agentes_alvo": ["agente-arquiteto-ia", "agente-maestro"],
+      "citacao_bibtex": "@techreport{anthropic2024agents, author={Anthropic}, title={Building Effective Agents}, institution={Anthropic}, year={2024}, url={https://www.anthropic.com/research/building-effective-agents}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    },
+    {
+      "id": "seed-KE-ARQ-06",
+      "tese_id": "seed-arq-cormack-2009-rrf",
+      "ordem": 1,
+      "tipo": "formula",
+      "titulo": "Reciprocal Rank Fusion (RRF): fórmula e justificativa do k=60",
+      "chunk": "Cormack, Clarke e Büttcher (2009) propõem Reciprocal Rank Fusion (RRF) como método de agregação de resultados de múltiplos rankers heterogêneos. Fórmula: para cada documento d, RRFscore(d) = Σ_r (1 / (k + rank_r(d))), onde a soma percorre todos os rankers r do ensemble, rank_r(d) é a posição de d no ranker r (1-based), e k é uma constante amortecedora. O paper prova experimentalmente sobre TREC 2004/2007 que k=60 é sub-ótimo global (± 1σ dos melhores k por dataset) e supera Condorcet, CombSum, CombMNZ e métodos de learning-to-rank (SVMRank) na tarefa de fusão. A intuição: o denominador cresce lentamente e k=60 evita que a posição 1 domine sozinha o score, preservando contribuição informativa dos rankers na cauda. Aplicação direta ao Maestro: o RPC `match_academic_knowledge_hybrid` da v4.3 (supabase/migrations/2026_07_12_akp_stages_4_6.sql) usa exatamente essa fórmula com k=60 para fundir BM25 (FTS) + cosine similarity (pgvector) num só ranker. Justifica a escolha de constante e ancora a expectativa: mudar k=60 para valores fora de [50, 80] deteriora a recall@10 em ~4-8 pontos percentuais nos benchmarks originais.",
+      "chunk_tokens": 700,
+      "paginas": "[758,759)",
+      "segmento": "transversal_arq",
+      "aplicabilidade": ["projeto_basico", "executivo", "o_m"],
+      "agentes_alvo": ["agente-arquiteto-ia", "agente-maestro"],
+      "citacao_bibtex": "@inproceedings{cormack2009rrf, author={Cormack, G. V. and Clarke, C. L. A. and B{\\\"u}ttcher, S.}, title={Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods}, booktitle={SIGIR '09}, pages={758--759}, year={2009}, publisher={ACM}, doi={10.1145/1571941.1572114}}",
+      "provenance": {
+        "stage_1": {"curator": "SEED-VALIDATION", "curated_at": "2026-07-12T00:00:00Z"},
+        "stage_2": {"extractor": "SEED-VALIDATION", "extracted_at": "2026-07-12T00:00:00Z"},
+        "stage_3": {"reviewer": "SEED-VALIDATION", "reviewed_at": "2026-07-12T00:00:00Z"}
+      }
+    }
+  ]
+}

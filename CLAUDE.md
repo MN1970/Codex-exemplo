@@ -4,14 +4,19 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.5** (2026-07-12) — camada de governança: cross-refs entre
-KEs (contradicts/supports), versionamento de tese com history, WF-AKP-002
-(backlog de curadoria alimentado pela telemetria), human approval workflow,
-CI parity check, playbook de handoffs cross-agent.
+Versão: **v4.6** (2026-07-12) — evolução Maestro em 5 vetores paralelos:
+V1 learned routing (scaffold ML), V2 bibliografia arq. de agentes (6 KEs
+seed), V3 WF-MCP-001 casos Manta (coleção `mcs:` priority 120 > academic),
+V4 cron diário promote_gaps_to_backlog, V5 LLM-as-a-judge (Sonnet 4.6),
+V7 multi-channel distribution (Claude Code/AI/Cowork).
 
-Versão anterior: **v4.4** (2026-07-12) — expansão de verticais: S5
-Túneis promovido a agente próprio + S11 Mineração + S12 Óleo & Gás +
-S13 Edificações.
+Versão anterior: **v4.5** (2026-07-12) — camada de governança: cross-refs
+entre KEs (contradicts/supports), versionamento de tese com history,
+WF-AKP-002 (backlog de curadoria alimentado pela telemetria), human
+approval workflow, CI parity check, playbook de handoffs cross-agent.
+
+Versão v4.4 (2026-07-12) — expansão de verticais: S5 Túneis promovido
+a agente próprio + S11 Mineração + S12 Óleo & Gás + S13 Edificações.
 
 Versão v4.3 (2026-07-12) — ativação do Academic Knowledge Pipeline
 (WF-AKP-001): coleção `academic-knowledge` transversal, schema pgvector,
@@ -199,6 +204,34 @@ Stages 1-3 concluídas fora deste repo (36 teses, 52 KEs). Stages 4-6:
 - [ ] Smoke test AKP também para os 4 novos (extender `akp_smoke_test.py`)
 - [ ] Gate humano MN antes de merge
 
+## DEPLOY CHECKLIST v4.6 — Evolução Maestro (5 vetores paralelos)
+
+- [x] **V1 Learned Routing** — migração `2026_07_12_maestro_learned_router_v4_6.sql`
+      (`maestro_routing_predictions` + views `v_router_accuracy` + `v_router_disagreements`)
+      + `manta-hub/scripts/maestro_learned_router.py` com 4 modos (train/infer/evaluate/retrain-incremental).
+- [x] **V2 Bibliografia arq. agentes** — 6 seed KEs em
+      `sharepoint/02-academic-knowledge/seed/akp-seed-arquitetura-agentes.json`
+      (Chen AgentBench, Wu AutoGen, Park Generative Agents, Shen HuggingGPT,
+      Anthropic Building Effective Agents, Cormack RRF).
+- [x] **V3 WF-MCP-001 casos Manta** — migração `2026_07_12_manta_cases_v4_6.sql`
+      (coleção `mcs:` priority 120, tabelas `manta_projects` + `manta_cases_elements`
+      + função `match_manta_cases_hybrid` com filtro NDA) + folder SP
+      `03-manta-cases/` + doc `docs/WF-MCP-001.md` + script `manta-hub/scripts/manta_cases_extract.py`.
+- [x] **V4 Cron diário** — GH Action `.github/workflows/akp-daily-cron.yml`
+      (promote-gaps 08:00 UTC + daily-report como job auxiliar).
+- [x] **V5 LLM-as-a-judge** — migração `2026_07_12_llm_judge_v4_6.sql`
+      (colunas `judge_score/judge_notes` em `agent_query_log` + tabela
+      `agent_response_flags` + trigger auto-flag < 3 + view `v_akp_judge_health`)
+      + `manta-hub/scripts/akp_judge.py`.
+- [x] **V7 Multi-channel distribution** — `manta-hub/scripts/publish_agents.py`
+      (emite Claude Code + claude.ai Project.zip + Skill v2.zip + Cowork.json)
+      + GH Action `.github/workflows/publish-agents.yml`.
+- [x] Fix YAML frontmatter dos 4 agentes v4.4 (colons no `description:` →
+      block scalar `>-`).
+- [ ] Aplicar as 4 migrações v4.6 no Supabase (ordem: learned_router →
+      llm_judge → manta_cases; independentes entre si)
+- [ ] Gate humano MN antes de mergear v4.6
+
 ## DEPLOY CHECKLIST v4.5 — Governance Layer
 
 - [x] Migração candidata `supabase/migrations/2026_07_12_akp_governance_v4_5.sql`
@@ -242,6 +275,27 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.6** (2026-07-12) — Evolução Maestro em 5 vetores paralelos
+  (V1+V2+V3+V4+V5+V7), disparados como 5 subagentes simultâneos e
+  costurados em commit único. **V1 Learned Routing** (scaffold ML: MLP
+  384→128 sobre embeddings multilingual-e5-small; mock data quando log
+  vazio; integra como pré-router com threshold de confidence 0.85).
+  **V2 Bibliografia arq. agentes** (6 papers seed cobrindo AgentBench,
+  AutoGen, Generative Agents, HuggingGPT, Anthropic "Building Effective
+  Agents", Cormack RRF — Maestro consulta a si mesmo). **V3 WF-MCP-001
+  Manta Cases Pipeline** (coleção `mcs:` transversal priority 120 > 100
+  da academic; tabela `manta_projects` + `manta_cases_elements` com
+  8 tipos de caso; função hybrid com filtro NDA 4 níveis; extrator PDF
+  /DOCX via Sonnet 4.6). **V4 cron diário** de `promote_gaps_to_backlog`
+  (GH Action 08:00 UTC + issue automática ≥5 tickets). **V5
+  LLM-as-a-judge** (Sonnet 4.6 avalia 5 critérios 0-5 sobre amostragem
+  10% estratificada; trigger auto-flag < 3; ~US$0.02/query). **V7
+  multi-channel distribution** (script publish_agents emite Claude Code
+  + claude.ai Project.zip + Skill v2.zip + Cowork.json a partir da mesma
+  fonte SKILL.md; GH Action publica em push). Fix bonus: os 4 YAML
+  frontmatter dos agentes v4.4 (colons no `description:`) foram
+  convertidos para block scalar `>-`. V6 (fusão Codex↔manta-hub) fica
+  para sprint separada com Vinícius.
 - **v4.5** (2026-07-12) — Camada de governança. Cross-references entre
   KEs (contradicts/supports/extends/supersedes/cites via JSONB + view
   `v_akp_contradictions`). Versionamento de tese: coluna `revision` +
