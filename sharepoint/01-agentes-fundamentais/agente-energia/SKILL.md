@@ -160,6 +160,35 @@ citar um resultado dessa coleção, o agente:
 Consumo default: **auxiliary** (priority 100). Ver `agent_rag_bindings`
 na migração `2026_07_12_akp_stages_4_6.sql`.
 
+### Formato canônico de citação acadêmica
+
+Quando o agente cita um KE recuperado por `match_academic_knowledge()`,
+a resposta segue este template (independente do tipo — conceito, método,
+formula, caso, dado, crítica, recomendação):
+
+```
+> 🎓 **Acadêmico** — [tese autor+ano]
+>
+> <trecho do chunk citado ipsis literis, ≤3 linhas>
+>
+> Fonte: <citacao_bibtex>
+> Última revisão: <provenance.stage_3.reviewed_at> · Curador: <provenance.stage_1.curator>
+```
+
+**Campos obrigatórios** na renderização:
+
+1. Badge `🎓 Acadêmico` — sinaliza origem (não é norma nem edital).
+2. Ipsis literis do chunk (sem paráfrase) — respeita provenance.
+3. `citacao_bibtex` completo — permite citação em memorial DOCX/PDF.
+4. `stage_3.reviewed_at` + `stage_1.curator` — audit trail visível.
+
+**Nunca** apagar `provenance` da resposta ao usuário: audit trail é o
+que separa "opinião do agente" de "citação acadêmica revisada".
+
+Se dois KEs se contradizem no top-3 (ex.: tese A defende alteamento a
+jusante, tese B critica), o agente cita **ambos** e sinaliza o
+desacordo — não escolhe um dos lados por si.
+
 ## 5. ARTEFATO — ABAS
 
 1. Resumo Executivo & Score
