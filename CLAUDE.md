@@ -4,12 +4,18 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.4** (2026-07-12) — expansão de verticais: S5 Túneis promovido
-a agente próprio + S11 Mineração + S12 Óleo & Gás + S13 Edificações.
+Versão: **v4.5** (2026-07-12) — camada de governança: cross-refs entre
+KEs (contradicts/supports), versionamento de tese com history, WF-AKP-002
+(backlog de curadoria alimentado pela telemetria), human approval workflow,
+CI parity check, playbook de handoffs cross-agent.
 
-Versão anterior: **v4.3** (2026-07-12) — ativação do Academic Knowledge
-Pipeline (WF-AKP-001): coleção `academic-knowledge` transversal, schema
-pgvector, 36 teses + 52 KEs, hooks nos SKILL.md de S6–S10.
+Versão anterior: **v4.4** (2026-07-12) — expansão de verticais: S5
+Túneis promovido a agente próprio + S11 Mineração + S12 Óleo & Gás +
+S13 Edificações.
+
+Versão v4.3 (2026-07-12) — ativação do Academic Knowledge Pipeline
+(WF-AKP-001): coleção `academic-knowledge` transversal, schema pgvector,
+36 teses + 52 KEs, hooks nos SKILL.md de S6–S10.
 
 Versão base: **v4.2** (2026-07-05) — expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens).
@@ -193,6 +199,20 @@ Stages 1-3 concluídas fora deste repo (36 teses, 52 KEs). Stages 4-6:
 - [ ] Smoke test AKP também para os 4 novos (extender `akp_smoke_test.py`)
 - [ ] Gate humano MN antes de merge
 
+## DEPLOY CHECKLIST v4.5 — Governance Layer
+
+- [x] Migração candidata `supabase/migrations/2026_07_12_akp_governance_v4_5.sql`
+      - Coluna `related_kes` JSONB + view `v_akp_contradictions` (#7)
+      - Coluna `revision` + tabela `academic_theses_history` + trigger (#8)
+      - Tabela `akp_curation_backlog` + função `promote_gaps_to_backlog()` (#10 — WF-AKP-002)
+      - Tabelas `agent_change_requests` + `agent_change_reviews` + trigger de auto-status (#13)
+- [x] Playbook em `docs/HANDOFFS-CROSS-AGENT.md` (8 cenários canônicos)
+- [x] CI parity em `.github/workflows/skill-sync-check.yml`
+- [ ] Aplicar migração no Supabase (aditiva sobre v4.4)
+- [ ] Rodar os 8 cenários do playbook manualmente com MN e registrar resultado
+- [ ] Agendar `SELECT promote_gaps_to_backlog();` diário via pg_cron ou GH Action
+- [ ] Gate humano MN antes de merge
+
 ---
 
 ## Arquivos deste repositório
@@ -222,6 +242,18 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.5** (2026-07-12) — Camada de governança. Cross-references entre
+  KEs (contradicts/supports/extends/supersedes/cites via JSONB + view
+  `v_akp_contradictions`). Versionamento de tese: coluna `revision` +
+  tabela `academic_theses_history` + trigger auto-snapshot antes de
+  UPDATE. WF-AKP-002 formalizado como `akp_curation_backlog` +
+  função `promote_gaps_to_backlog()` que alimenta tickets a partir da
+  view v4.3 `v_akp_gap_candidates`. Human approval workflow com
+  `agent_change_requests` + `agent_change_reviews` (regra ≥2 approvals
+  sem rejeitos → aprovado). Playbook `docs/HANDOFFS-CROSS-AGENT.md`
+  com 8 cenários cross-agent. CI parity check
+  `.github/workflows/skill-sync-check.yml` valida drift entre
+  `.claude/agents/`, `sharepoint/` e o CLAUDE.md master.
 - **v4.4** (2026-07-12) — Expansão de verticais: S5 Túneis promovido
   a agente próprio (NATM/TBM/imerso), S11 Mineração (adjacente a S10
   barragens, escopo fora de TSF), S12 Óleo & Gás (downstream + midstream,
