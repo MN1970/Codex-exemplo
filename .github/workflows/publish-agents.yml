@@ -3,6 +3,7 @@ name: Publish agents (multi-channel distribution)
 on:
   push:
     branches: [main]
+    tags: ['v*']
     paths:
       - 'sharepoint/01-agentes-fundamentais/**'
       - '.claude/agents/**'
@@ -152,3 +153,60 @@ jobs:
           echo "             TODO: MCP tool mcp__cowork__publish_skill (TBD)."
           echo ""
           echo "Gate humano MN antes de merge em qualquer canal (deploy checklist)."
+
+  release:
+    name: Attach dist zips to GitHub Release (tag push only)
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout (for release notes context)
+        uses: actions/checkout@v4
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          # nome do artifact do job "build" usa sha_short; puxamos por padrão do tag SHA
+          pattern: manta-agents-dist-*
+          path: dist-download/
+          merge-multiple: true
+
+      - name: Collect all zips into a flat folder
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          # projects zips + skills zips
+          find dist-download -type f -name '*.zip' -exec cp {} release-assets/ \;
+          # cowork jsons
+          find dist-download -type f -name '*.json' -path '*/cowork/*' -exec cp {} release-assets/ \;
+          # index.json (metadata do build)
+          find dist-download -type f -name 'index.json' -not -path '*/skills/*' -not -path '*/projects/*' -exec cp {} release-assets/manta-agents-index.json \;
+          # bundle único p/ quem quer tudo de uma vez
+          (cd dist-download && zip -qr - .) > release-assets/manta-agents-all-$(echo "${GITHUB_REF#refs/tags/}").zip
+          echo "═══ Release assets ═══"
+          ls -lh release-assets/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          body: |
+            # Manta Maestro — Multi-channel Distribution
+
+            Cada agente vertical foi empacotado em 3 formatos:
+
+            | Canal | Arquivo | Como usar |
+            |---|---|---|
+            | **claude.ai Projects** | `agente-*.zip` (dentro de `manta-agents-all-*.zip` na pasta `projects/`) | Upload via UI: New Project → Import zip |
+            | **claude.ai Skills v2** | `agente-*.zip` (idem, pasta `skills/`) | Settings → Skills → Upload zip |
+            | **Cowork** | `agente-*.json` | `cowork skill import <arquivo>` ou UI Import |
+            | **Claude Code** | `.claude/agents/*.md` no repo | Já commitado — `git pull` na sua Manta box |
+
+            Metadados de build: `manta-agents-index.json` (schema + hashes).
+
+            **Bundle único:** `manta-agents-all-<tag>.zip` — tudo de uma vez, 27 arquivos.
