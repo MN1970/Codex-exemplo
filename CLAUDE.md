@@ -4,17 +4,22 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.6** (2026-07-12, com reconciliação Codex ↔ SP) — evolução
-Maestro em 5 vetores paralelos: V1 learned routing (scaffold ML), V2
-bibliografia arq. de agentes (6 KEs seed), V3 WF-MCP-001 casos Manta
-(coleção `mcs:` priority 120 > academic), V4 cron diário
+Versão: **v4.7** (2026-07-13 planejada) — Agentic Intelligence Layer
+sobre v4.6.1: Reflexion Loop pré-entrega + Memória episódica + P2
+Prompt Contract + Loop primitives + Model tiering explícito + SkillForge
+(ver roadmap MNT-IA-20260712-001 e SKILL.md §14 do Maestro).
+
+Versão anterior: **v4.6** (2026-07-12, com reconciliação Codex ↔ SP) —
+evolução Maestro em 5 vetores paralelos: V1 learned routing (scaffold
+ML), V2 bibliografia arq. de agentes (6 KEs seed), V3 WF-MCP-001 casos
+Manta (coleção `mcs:` priority 120 > academic), V4 cron diário
 promote_gaps_to_backlog, V5 LLM-as-a-judge (Sonnet 4.6), V7 multi-channel
 distribution (Claude Code/AI/Cowork). Adicionalmente formaliza a
 reconciliação entre a taxonomia sub-segmento `Manta 03-S{n}` deste repo
 Codex-exemplo e a taxonomia top-level `S{n}` do Maestro operacional SP
 v3.0+ (ver seção "RECONCILIAÇÃO COM MAESTRO OPERACIONAL").
 
-Versão anterior: **v4.5** (2026-07-12) — camada de governança: cross-refs
+Versão v4.5 (2026-07-12) — camada de governança: cross-refs
 entre KEs (contradicts/supports), versionamento de tese com history,
 WF-AKP-002 (backlog de curadoria alimentado pela telemetria), human
 approval workflow, CI parity check, playbook de handoffs cross-agent.
@@ -281,6 +286,70 @@ Stages 1-3 concluídas fora deste repo (36 teses, 52 KEs). Stages 4-6:
 - [ ] Rodar os 8 cenários do playbook manualmente com MN e registrar resultado
 - [ ] Agendar `SELECT promote_gaps_to_backlog();` diário via pg_cron ou GH Action
 - [ ] Gate humano MN antes de merge
+
+## DEPLOY CHECKLIST v4.7 — Agentic Intelligence Upgrade
+
+Roadmap MNT-IA-20260712-001. Seis fases sequenciadas (A pode ir em
+paralelo com B; C bloqueia F). Cada fase tem gate humano MN antes de
+mergear.
+
+### Fase 1 — Fundação (docs + refs SharePoint)
+
+- [x] Criar 4 refs canônicos em `sharepoint/01-agentes-fundamentais/manta-maestro/refs/`
+      (`p2-contract-template.md`, `reflexion-loop-guide.md`,
+      `skillforge-pipeline.md`, `episodic-memory-schema.md`)
+- [x] Bump versão CLAUDE.md master v4.6 → v4.7 (esta entrada)
+- [ ] Bump `SKILL.md` do Maestro para v4.7 incluindo §14 (A-F)
+- [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v2.0.0 → v3.0.0)
+
+### Fase 2 — P2 Contract (Upgrade B) + Episodic Memory (Upgrade C)
+
+- [ ] Migração candidata `supabase/migrations/2026_07_13_episodic_memory_v4_7.sql`
+      (tabela `agent_episodes` + view `v_high_quality_episodes` +
+      view `v_episodic_health` + índice HNSW)
+- [ ] Implementar emissão obrigatória de P2 no dispatcher do Maestro
+      (falha soft se ausente; log warning por 14d, hard fail depois)
+- [ ] Instrumentar gravação em `agent_episodes` ao fim de cada
+      execução de subagente (task_id, p2_contract, tools_used, custos)
+
+### Fase 3 — Reflexion Loop (Upgrade A)
+
+- [ ] Implementar `maestro_reflexion.py` em `manta-hub/scripts/`
+      (prompt de autocrítica §2.4 do roadmap + retry policy max=3)
+- [ ] Gating: aplicar SOMENTE em tarefas star2/star3 (intake Q3)
+- [ ] Métrica: `v_reflexion_stats` (taxa 1-iter, escalation rate por agente)
+- [ ] Alerta Slack: escalation rate > 10% em 7d ⇒ ping MN
+
+### Fase 4 — Loop primitives (Upgrade D)
+
+- [ ] Definir 3 loop primitives canônicos (sequential, parallel, race)
+      em `manta_shared/loop_primitives.py`
+- [ ] Refactor do Maestro para emitir DAG de execução usando os 3
+      primitives (substitui orquestração ad-hoc atual)
+- [ ] Testes E2E dos 8 cenários de `handoffs-cross-agent.md` com DAG novo
+
+### Fase 5 — Model Tiering explícito (Upgrade E) + Cost governance
+
+- [ ] Atualizar todos SKILL.md com campo `tier_policy` explícito:
+      `haiku_for: [...]`, `sonnet_for: [...]`, `opus_for: [...]`
+- [ ] Enforcement no dispatcher (rejeita tier abaixo do mínimo)
+- [ ] Dashboard `/admin/cost-per-agent` em manta-hub com timeseries
+
+### Fase 6 — SkillForge (Upgrade F)
+
+- [ ] Criar `sharepoint/03-skills-forjadas/` (vazio inicial) +
+      `sharepoint/03-skills-forjadas/deprecated/`
+- [ ] Migração `supabase/migrations/2026_07_13_skillforge_v4_7.sql`
+      (tabela `skillforge_rejects` + view `v_skillforge_gate`)
+- [ ] Script `manta-hub/scripts/skillforge_pipeline.py` (6 passos do
+      §1 do ref)
+- [ ] GH Action `.github/workflows/skillforge-daily.yml` — cron 03:00 UTC
+
+### Gate humano MN final (aplicável a TODAS as fases)
+
+- [ ] MN roda `tests/maestro/test_wipe_recovery.py` (episódios wipe test)
+- [ ] MN valida os 8 cenários de `handoffs-cross-agent.md` com v4.7 ligado
+- [ ] MN aprova merge para main (branch `feat/v4.7-agentic-intelligence`)
 
 ---
 
