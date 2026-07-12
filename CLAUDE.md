@@ -4,11 +4,14 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.3** (2026-07-12) — ativação do Academic Knowledge Pipeline
-(WF-AKP-001): coleção `academic-knowledge` transversal, schema pgvector,
-36 teses + 52 KEs, hooks nos SKILL.md de S6–S10.
+Versão: **v4.4** (2026-07-12) — expansão de verticais: S5 Túneis promovido
+a agente próprio + S11 Mineração + S12 Óleo & Gás + S13 Edificações.
 
-Versão anterior: **v4.2** (2026-07-05) — expansão S6–S10 (Portos,
+Versão anterior: **v4.3** (2026-07-12) — ativação do Academic Knowledge
+Pipeline (WF-AKP-001): coleção `academic-knowledge` transversal, schema
+pgvector, 36 teses + 52 KEs, hooks nos SKILL.md de S6–S10.
+
+Versão base: **v4.2** (2026-07-05) — expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens).
 
 ---
@@ -39,12 +42,15 @@ Aeroportos, Saneamento, Energia, Barragens).
 | Manta 03-S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | Manta 03-S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
 | Manta 03-S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| Manta 03-S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
-| Manta 03-S6 | Portos | agente-portos | 🆕 Criado 2026-07-05 |
-| Manta 03-S7 | Aeroportos | agente-aeroportos | 🆕 Criado 2026-07-05 |
-| Manta 03-S8 | Saneamento | agente-saneamento | 🆕 Criado 2026-07-05 — PRIORIDADE AySA |
-| Manta 03-S9 | Energia | agente-energia | 🆕 Criado 2026-07-05 — ANEEL/State Grid |
-| Manta 03-S10 | Barragens | agente-barragens | 🆕 Criado 2026-07-05 |
+| Manta 03-S5 | Túneis | agente-tuneis | 🆕 Criado 2026-07-12 (v4.4) |
+| Manta 03-S6 | Portos | agente-portos | ✅ Criado 2026-07-05 |
+| Manta 03-S7 | Aeroportos | agente-aeroportos | ✅ Criado 2026-07-05 |
+| Manta 03-S8 | Saneamento | agente-saneamento | ✅ Criado 2026-07-05 — PRIORIDADE AySA |
+| Manta 03-S9 | Energia | agente-energia | ✅ Criado 2026-07-05 — ANEEL/State Grid |
+| Manta 03-S10 | Barragens | agente-barragens | ✅ Criado 2026-07-05 |
+| Manta 03-S11 | Mineração | agente-mineracao | 🆕 Criado 2026-07-12 (v4.4) — adjacente S10 |
+| Manta 03-S12 | Óleo & Gás | agente-oleo-gas | 🆕 Criado 2026-07-12 (v4.4) — downstream + midstream |
+| Manta 03-S13 | Edificações | agente-edificacoes | 🆕 Criado 2026-07-12 (v4.4) — vertical + galpão |
 
 ### Eixo 3 — Ciclo de vida (8 fases)
 
@@ -80,6 +86,18 @@ IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
 IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
    → agente-barragens (S10)
 
+IF menção a túnel|tunel|NATM|TBM|EPB|shotcrete|dovela|cut and cover|imerso
+   → agente-tuneis (S5)
+
+IF menção a mineração|mina|minério|ANM|DNPM|cava|open pit|NI 43-101|JORC|LOM|heap leach|Vale|Anglo|Carajás
+   → agente-mineracao (S11)
+
+IF menção a petróleo|óleo e gás|ANP|gasoduto|oleoduto|refinaria|Comperj|Rnest|API 650|API 5L|GASBOL|LNG|HAZOP
+   → agente-oleo-gas (S12)
+
+IF menção a edificação|torre|galpão|warehouse|data center|hospital|MCMV|NBR 15575|MRV|Cyrela|BIM|LEED|AQUA
+   → agente-edificacoes (S13)
+
 # Regras existentes S1-S4 mantidas sem alteração
 IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
    → agente-infraestrutura S1
@@ -106,6 +124,10 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
 | academic-knowledge | ake: | 36 teses + 52 KEs curados (WF-AKP-001) | 🆕 v4.3 — transversal |
+| tuneis | tun: | ITA/AITES, PIARC C4, NFPA 502, NBR 15220, DNIT IPR-742 | 🆕 v4.4 |
+| mineracao | min: | ANM/NRM, SME, CIM/JORC, NI 43-101, PERC | 🆕 v4.4 |
+| oleo-gas | ogs: | ANP, API (650, 5L, 653), ANSI B31, NFPA 30/59A, IEC 61511 | 🆕 v4.4 |
+| edificacoes | edi: | NBR 15575, NBR 6118, IT-CBMESP, LEED, ISO 19650 | 🆕 v4.4 |
 
 ---
 
@@ -119,6 +141,10 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
 | agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
 | rag-academic-knowledge | 07_Conhecimento_Academico/* | *.pdf, *.md, *.json |
+| agente-tuneis | 03_Projetos/Tuneis/* | *.pdf, *.dwg, *.xlsx |
+| agente-mineracao | 03_Projetos/Mineracao/* | *.pdf, *.dwg, *.xlsx |
+| agente-oleo-gas | 03_Projetos/OleoGas/* | *.pdf, *.dwg, *.xlsx |
+| agente-edificacoes | 03_Projetos/Edificacoes/* | *.pdf, *.dwg, *.xlsx |
 
 ---
 
@@ -151,6 +177,22 @@ Stages 1-3 concluídas fora deste repo (36 teses, 52 KEs). Stages 4-6:
 - [ ] Smoke test — 5 prompts (um por segmento S6-S10) retornando ≥3 KEs
 - [ ] Gate humano MN antes de habilitar produção
 
+## DEPLOY CHECKLIST v4.4 — Expansão S5, S11, S12, S13
+
+- [x] Copiar 4 novos agent .md para `.claude/agents/`
+      (agente-tuneis, agente-mineracao, agente-oleo-gas, agente-edificacoes)
+- [x] Criar 4 novas pastas SP em `01-agentes-fundamentais/`
+      (SKILL.md + README.md + refs/ + prompts/)
+- [x] Bump versão CLAUDE.md master v4.3 → v4.4
+- [x] Migração candidata `supabase/migrations/2026_07_12_verticals_v4_4.sql`
+      (4 rag_collections + 4 sp_agent_routing + keywords + agent_rag_bindings
+      para consumo da coleção academic-knowledge)
+- [ ] Aplicar migração no Supabase
+- [ ] Criar as 4 pastas no SharePoint (`03_Projetos/{Tuneis,Mineracao,OleoGas,Edificacoes}/`)
+- [ ] Testar routing do Maestro com prompts de cada novo segmento
+- [ ] Smoke test AKP também para os 4 novos (extender `akp_smoke_test.py`)
+- [ ] Gate humano MN antes de merge
+
 ---
 
 ## Arquivos deste repositório
@@ -160,11 +202,15 @@ Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
 └── .claude/
     └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+        ├── agente-portos.md          # S6 (v4.2)
+        ├── agente-aeroportos.md      # S7 (v4.2)
+        ├── agente-saneamento.md      # S8 — prioridade AySA (v4.2)
+        ├── agente-energia.md         # S9 — ANEEL/State Grid (v4.2)
+        ├── agente-barragens.md       # S10 (v4.2)
+        ├── agente-tuneis.md          # 🆕 S5 (v4.4)
+        ├── agente-mineracao.md       # 🆕 S11 (v4.4) — adjacente S10
+        ├── agente-oleo-gas.md        # 🆕 S12 (v4.4) — downstream/midstream
+        └── agente-edificacoes.md     # 🆕 S13 (v4.4) — vertical + galpão
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
@@ -176,6 +222,12 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.4** (2026-07-12) — Expansão de verticais: S5 Túneis promovido
+  a agente próprio (NATM/TBM/imerso), S11 Mineração (adjacente a S10
+  barragens, escopo fora de TSF), S12 Óleo & Gás (downstream + midstream,
+  fora reservatório/poço), S13 Edificações (vertical residencial +
+  comercial + galpão industrial leve). 4 novos agentes + 4 coleções RAG
+  + 4 pastas SP + migração candidata `2026_07_12_verticals_v4_4.sql`.
 - **v4.3** (2026-07-12) — Academic Knowledge Pipeline (WF-AKP-001)
   stages 4-6. Nova coleção RAG transversal `academic-knowledge` com
   36 teses + 52 Knowledge Elements. Schema pgvector, folder SP
