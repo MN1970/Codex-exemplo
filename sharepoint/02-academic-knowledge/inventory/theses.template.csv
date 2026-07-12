@@ -1,0 +1,4 @@
+id,titulo,autor,ano,instituicao,programa,orientador,nivel,segmento,doi,url_publico,sp_path,palavras_chave,qualis,status
+silva-2019-dragagem,Metodologia para dimensionamento de dragagem em terminais graneleiros,Silva J. M.,2019,USP,POLI Engenharia de Transportes,Prof. Dr. A. Ribeiro,doutorado,portos,10.11606/T.3.2019.tde-example,https://teses.usp.br/teses/example,07_Conhecimento_Academico/01_teses/silva-2019-dragagem.pdf,"dragagem;calado;terminal graneleiro;ANTAQ",A2,ativo
+pereira-2021-aerodromos-regionais,Aeródromos regionais brasileiros: dimensionamento estatístico da pista,Pereira L. C.,2021,COPPE/UFRJ,Engenharia de Transportes,Prof. Dr. M. Souza,mestrado,aeroportos,,https://coppetec.coppe.ufrj.br/example,07_Conhecimento_Academico/01_teses/pereira-2021-aerodromos-regionais.pdf,"aeródromo regional;RBAC 154;ICAO Annex 14",,ativo
+# TODO: 34 linhas restantes — sincronizar com 03_exports/akp-theses-inventory.csv

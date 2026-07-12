@@ -142,6 +142,20 @@ Antes de qualquer ação:
 - ROM 0.2 (ações), ROM 2.0 (marítimo civil)
 - Manuais brasileiros CDP, EMAP, Codesa, Codeba
 
+### Coleção auxiliar transversal — `academic-knowledge`
+
+Além da coleção primária `por:`, este agente consulta a coleção transversal
+`academic-knowledge` (WF-AKP-001) via `match_academic_knowledge(...)`. Ao
+citar um resultado dessa coleção, o agente:
+
+1. Renderiza `citacao_bibtex` explicitamente na resposta.
+2. Marca o trecho com badge "🎓 Acadêmico — tese <autor, ano>".
+3. Encaminha para `refs/README.md` se a tese ainda não estiver na
+   bibliografia oficial do agente.
+
+Consumo default: **auxiliary** (priority 100). Ver `agent_rag_bindings`
+na migração `2026_07_12_akp_stages_4_6.sql`.
+
 ## 5. ARTEFATO — ABAS
 
 1. Resumo Executivo & Score

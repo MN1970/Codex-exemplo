@@ -4,8 +4,12 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-07-12) — ativação do Academic Knowledge Pipeline
+(WF-AKP-001): coleção `academic-knowledge` transversal, schema pgvector,
+36 teses + 52 KEs, hooks nos SKILL.md de S6–S10.
+
+Versão anterior: **v4.2** (2026-07-05) — expansão S6–S10 (Portos,
+Aeroportos, Saneamento, Energia, Barragens).
 
 ---
 
@@ -101,6 +105,7 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | portos | por: | ANTAQ, PIANC, editais BNDES/ANTAQ | 🆕 v4.2 |
 | aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
+| academic-knowledge | ake: | 36 teses + 52 KEs curados (WF-AKP-001) | 🆕 v4.3 — transversal |
 
 ---
 
@@ -113,6 +118,7 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
 | agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
 | agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
+| rag-academic-knowledge | 07_Conhecimento_Academico/* | *.pdf, *.md, *.json |
 
 ---
 
@@ -128,6 +134,22 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 - [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
 - [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
 - [ ] Gate humano: aprovação MN antes de merge
+
+## DEPLOY CHECKLIST v4.3 — Academic Knowledge Pipeline (WF-AKP-001)
+
+Stages 1-3 concluídas fora deste repo (36 teses, 52 KEs). Stages 4-6:
+
+- [x] Migração pgvector candidata em `supabase/migrations/2026_07_12_akp_stages_4_6.sql`
+- [x] Folder SharePoint scaffolded em `sharepoint/02-academic-knowledge/`
+- [x] Hooks `academic-knowledge` adicionados nos 5 SKILL.md (S6-S10)
+- [x] Script ingestor em `manta-hub/scripts/akp_ingest.py`
+- [x] Runbook em `manta-hub/docs/AKP-INGESTION.md`
+- [ ] Aplicar migração no Supabase (`supabase db push`)
+- [ ] Upload dos 36 PDFs em `07_Conhecimento_Academico/01_teses/`
+- [ ] Rodar `akp_ingest.py` com `akp-ke-payload.json` real
+- [ ] Validar 52 embeddings em `academic_knowledge_elements`
+- [ ] Smoke test — 5 prompts (um por segmento S6-S10) retornando ≥3 KEs
+- [ ] Gate humano MN antes de habilitar produção
 
 ---
 
@@ -154,6 +176,11 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-07-12) — Academic Knowledge Pipeline (WF-AKP-001)
+  stages 4-6. Nova coleção RAG transversal `academic-knowledge` com
+  36 teses + 52 Knowledge Elements. Schema pgvector, folder SP
+  `07_Conhecimento_Academico/`, hooks nos SKILL.md de S6-S10 e nos
+  horizontais advisory + arquiteto-ia.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
