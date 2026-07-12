@@ -143,6 +143,53 @@ Não é jogado para S1 (rodovia) ou S14 (adução de óleo).
 
 ---
 
+## Cenário 9 — A2 Quantitativos SEMPRE precede briefing confirmado
+
+**Input**: "Roda o levantamento de quantidades do projeto OAE 622 pra mim."
+(ou variantes: "extrai tudo agora", "faz o quantitativo", "gera a
+PQ_SUPRIMENTOS", "cria a planilha de suprimentos SAP", "levanta os aços
+do viaduto").
+
+**Fluxo esperado (NAO invertivel):**
+
+1. Maestro → **manta-maestro** (roteador) reconhece A2 no verbo/objeto.
+2. Maestro instancia `BriefingGenerator(mode=auto_select_mode(...),
+   project_files=[...])` do modulo
+   `manta-hub/backends/shared/briefing_generator.py`.
+3. Maestro chama `build_briefing(backend_hint=<oae|balanco|drenagem|...>)`
+   → gera `ProjectBriefing` com os 10 blocos (ver §14.2.1 do SKILL.md).
+4. Maestro renderiza `briefing.to_markdown()` no chat e AGUARDA CONFIRM
+   do MN. Correcao MN → `briefing.diff_after_patch(patch)`.
+5. So depois do CONFIRM (ou modo `DIRETO` acionado por >=3 episodios
+   similares em `agent_episodes`), Maestro dispara os backends de
+   extracao (`backends/oae`, `backends/balanco`, `backends/sondagem`,
+   `backends/drenagem`, `backends/ifc`, `backends/landxml`,
+   `backends/pavimentacao`, `backends/terraplenagem`,
+   `backends/iluminacao`).
+6. Backend de extracao consome o `discrepancy_rules_active` do briefing
+   → gera Auditoria/Discrepancias/Rastreabilidade nas abas do XLSX.
+7. Ao terminar, Maestro grava `agent_episodes` com o P2 emitido + o
+   briefing confirmado (`context_json.briefing`) — alimenta o modo
+   Direto de futuras execucoes.
+
+**Fronteira testada:** o Maestro **NUNCA** delega A2 antes de MN
+aprovar briefing. Se o usuario forcar ("nao precisa preambulo, roda"),
+o Maestro **insiste** no minimo dos blocos 1/2/3 (base SICRO/TPU/SINAPI
++ estado + data-base) — porque um quantitativo errado por base
+desatualizada e retrabalho garantido. Modo Direto NAO e atalho de
+preguica: e atalho de aprendizado (o Maestro ja aprendeu o padrao).
+
+**Regressao testavel:** input "levanta o aço da OAE 622" ⇒ Maestro
+emite briefing OAE com 22 itens SAP esperados (F3002, F2015, F2018,
+F1001, F1002, O1044, O1632, O1193, D5054, C5001, T3017, O2141, O2146,
+O1174, O2021, O1443, O1401, O1522, O1541, O2701, F2020 + item variavel)
++ regras de consist-guard (taxa_armadura, diametro_cage_vs_furo,
+qtd_neoprene) + base SICRO/DNIT + SP + 2024-10. Se qualquer bloco
+sair vazio ou o Maestro pular pro EXECUTE sem CONFIRM: cenario
+falha.
+
+---
+
 ## Automação futura (v5)
 
 GH Action rodando os 8 cenários a cada release do CLAUDE.md master

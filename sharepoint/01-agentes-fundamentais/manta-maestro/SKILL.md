@@ -784,6 +784,78 @@ mas agora explicitas e validadas.
 elementos + retorna erro para Maestro re-planejar. Enforcement
 inteiro, nao aviso.
 
+#### 14.2.1 Aplicacao do P2 Contract em A2 (Quantitativos) — briefing de 10 blocos
+
+Especializacao operacional do P2 para a atividade **A2 Levantamento
+de Quantidades**. Antes de disparar QUALQUER extrator (balanco, oae,
+sondagem, drenagem, ifc, landxml, pavimentacao, terraplenagem, iluminacao),
+o Maestro **DEVE** emitir um briefing pre-extracao de 10 blocos e
+aguardar CONFIRM do MN. Enforcement do guardrail F7 estendido: brief A2
+sem os 10 blocos preenchidos ⇒ hard fail.
+
+**Modulo de referencia:** `manta-hub/backends/shared/briefing_generator.py`
+(classe `BriefingGenerator`, dataclass `ProjectBriefing`, enum
+`BriefingMode`). Qualquer backend pode importar e reusar; a saida
+`ProjectBriefing.to_markdown()` renderiza o card no chat.
+
+**Os 10 blocos obrigatorios:**
+
+1. **project_context** — tipo de obra inferido (rodovia|oae|drenagem|
+   metro|portuario|edificacao|generico) + convencoes detectadas
+   (PRL/RioSP, DER-SP, DNIT, Civil 3D, IFC 4) + estado + arquivos count.
+2. **files_read** — lista de todos arquivos consumidos (path relativo,
+   extensao, size_mb) — auditoria de F4 Extracao.
+3. **base_referencia** — SICRO/TPU/SINAPI + estado + data_base
+   (default v4.7: SP + OUT/2024). MN corrige aqui se a base for outra.
+4. **layers_assigned** — layers CAD ou IfcClass identificados no
+   discovery, ligados aos roles (topografia, estrutural, drenagem, etc.).
+5. **will_extract / will_NOT_extract** — escopo positivo e negativo
+   (ex.: rodovia extrai pavimento MAS encaminha OAE ao S2 e drenagem ao
+   agente-drenagem novo).
+6. **itens_esperados_padrao / itens_esperados_ausentes_flag** — lista
+   base do checklist SAP por tipo de obra (`refs/{oae,rodovias,drenagem,
+   edificacoes}-checklist-sap.md`). Cada item traz SAP code, descricao,
+   unidade, faixa tipica, flag_se_ausente, norma. Itens marcados
+   `esperado` ou `warn` que nao aparecerem na extracao viram flag.
+7. **normas_aplicaveis** — normas ABNT/DNIT/PMSP/DER-SP relevantes ao
+   contexto (ex.: OAE => NBR 6118/7187/7480/15805 + SICRO).
+8. **discrepancy_rules_active** — regras de consist-guard que o
+   extractor vai aplicar (ex.: taxa_armadura_longarina 100-180 kg/m3,
+   qtd_neoprene ∈ {2,4,8,12,16}, V_corte + V_aterro fecham com Bruckner
+   ±5%). MN pode desligar regras que nao se aplicam ao projeto.
+9. **sla_thresholds** — confianca minima por item (0.7 default),
+   tolerancia absoluta (±5% baseline), budget USD extracao (0.30).
+10. **output_format** — template XLSX de saida (PQ_SUPRIMENTOS para OAE,
+    planilha padrao para os demais) + abas de auditoria fixas
+    (Auditoria DWG / Discrepancias / Rastreabilidade / Nao Mapeados).
+
+**3 modos de briefing (auto-selecao via `auto_select_mode`):**
+
+- **verboso** — 10 blocos + `reasoning` explicando cada inferencia.
+  Usar em projetos criticos (star3, obra-em-execucao, AySA) ou
+  quando o tipo de obra e novo pra Manta (primeira execucao no
+  segmento).
+- **condensado** (default) — 10 blocos compactos sem reasoning.
+  Cobertura completa mas leitura rapida (≤2 min).
+- **direto** — apenas blocos 1/2/3. Acionado quando
+  `get_relevant_episodes(agent_slug, task_embedding, "success")`
+  retorna >=3 episodios similares recentes: Maestro assume defaults
+  e SEGUE direto para EXECUTE. Reduz friccao em fluxos repetitivos
+  (ex.: 5o levantamento OAE consecutivo pro mesmo cliente).
+
+**Regra invioavel:** o Maestro **NUNCA** delega A2 sem briefing
+confirmado — exceto no modo Direto ativo (que ainda emite os blocos
+1/2/3 no chat, so nao aguarda CONFIRM). Se o usuario tentar burlar
+("roda extracao agora, sem preambulo"), o Maestro insiste: "Preciso
+minimo do bloco 3 (base de referencia) — SICRO estado + data-base — pra
+nao entregar quantitativo errado."
+
+**Cross-refs:** cenario #9 do `refs/handoffs-cross-agent.md`; 4
+checklists SAP em `refs/{oae,rodovias,drenagem,edificacoes}-checklist-sap.md`;
+`briefing_generator.py` no repo `manta-hub`. Ciclo completo:
+`intake → BriefingGenerator.auto_select_mode → build_briefing →
+to_markdown → CONFIRM MN → dispatch backends de extracao → agent_episodes`.
+
 ### 14.3 Memória Episódica (Upgrade C) — pilar 2 dos 4 pilares
 
 **Contexto — os 4 pilares de memoria** (framework agentic OS):
