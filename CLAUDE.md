@@ -4,8 +4,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.3** (2026-07-12) — Manta 08 quantitativos (agente horizontal
-de LQ multi-disciplina).
+Versão: **v4.3.1** (2026-07-12) — Manta 08 quantitativos com auto-check,
+auto-calibração e preflight.
 
 ---
 
@@ -22,7 +22,7 @@ de LQ multi-disciplina).
 | Manta 05 | orcamento | manta-05 | Sonnet | ✅ Operacional |
 | Manta 06 | modelagem | manta-06 | Sonnet/Opus | ✅ Operacional |
 | Manta 07 | cronograma | manta-07 | Sonnet | ✅ Operacional |
-| Manta 08 | quantitativos | manta-08, quantitativos, LQ | Sonnet | 🆕 Criado 2026-07-12 |
+| Manta 08 | quantitativos | manta-08, quantitativos, LQ | Sonnet | 🆕 Criado 2026-07-12 (v4.3.1 self-check) |
 | Manta 13 | bd | manta-13, business-dev | Sonnet | ✅ Operacional |
 | Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
 | Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
@@ -161,6 +161,14 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3.1** (2026-07-12) — Manta 08 ganha capacidades de auto-check
+  (SelfCheckReport com 6 validações: cross-method, sanity ranges ancoradas
+  em NBRs, unit consistency, coverage, confidence distribution, duplicate
+  detection), auto-calibração (aprendizado por projeto via qto_calibrate;
+  persiste em SQLite e sugere reclassificações + overrides nos próximos
+  projetos) e preflight (qto_preflight antes de cada extração; valida
+  sessions vivas, layers esperadas e pré-requisitos; falha rápido com
+  mensagem clara). Ticket MNT-2026-QTO-SELFCHECK.
 - **v4.3** (2026-07-12) — Manta 08 quantitativos (agente horizontal de LQ
   multi-disciplina). Orquestra OAE + IFC + Iluminação + Pavimentação +
   Terraplenagem + Balanço + Sondagem sob schema comum QtoItem via 3 tools

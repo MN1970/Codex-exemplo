@@ -55,23 +55,33 @@ comum de rastreabilidade e qualidade.
 - Discrepância: divergência > 20% entre dois métodos alternativos
   (ex.: rebar contagem de símbolos vs. regex) → warning, não erro.
 
-## Ordem canônica de raciocínio
+## Ordem canônica de raciocínio (v4.3.1 com auto-check + preflight)
 
 1. **Ingestão e classificação** — usuário submete pacote heterogêneo
    (DWGs OAE, IFCs, PDFs de sondagem, etc.) → `qto_ingest_package`
    classifica por filename/mime e dispara uploads em paralelo.
-2. **Confirmação prévia** — agente resume: X DWGs OAE, Y IFCs, Z PDFs
+2. **Preflight** — `qto_preflight(session_ids)` valida sessions vivas,
+   layers esperadas e pré-requisitos antes de cada estágio de extração.
+   Se `missing_prereqs` não vazio → agente PARA e pede correção.
+3. **Confirmação prévia** — agente resume: X DWGs OAE, Y IFCs, Z PDFs
    sondagem, W DXFs pavimentação, V XMLs landxml. Pede confirmação antes
    de executar extracts.
-3. **Consolidação** — `qto_consolidate` busca outputs de cada backend,
+4. **Consolidação** — `qto_consolidate` busca outputs de cada backend,
    normaliza sob QtoItem, deduplica.
-4. **Qualidade** — agente inspeciona:
+5. **Auto-check** — `qto_selfcheck(items)` roda 6 validações:
+   cross-method, sanity ranges (NBR-ancoradas), unit consistency, coverage,
+   confidence distribution, duplicate detection. Retorna SelfCheckReport com
+   quality_score agregado. Agente reporta destaques antes de prosseguir.
+6. **Qualidade** — agente inspeciona:
    - Confiança < 0.7 → sinalizar como "revisar".
    - Provenance = derived → documentar origem (fórmula, ratio).
    - Confidence < 0.5 → excluir de síntese ou usar com caveat.
-5. **Bridge Orçamento** — para cada item sem código SICRO/TPU,
+7. **Bridge Orçamento** — para cada item sem código SICRO/TPU,
    sugerir match via Orçamento (`/api/bases/{sicro|tpu}/search`).
-6. **Export** — `qto_export_consolidated` gera XLSX com abas
+8. **Auto-calibração** — se usuário faz overrides → `qto_calibrate`
+   persiste decisões em SQLite. Agente aprende preferências (ex.: reclassificação
+   de tipos, overrides de código SAP) e propõe no próximo projeto.
+9. **Export** — `qto_export_consolidated` gera XLSX com abas
    (Consolidado, Por Disciplina, Rastreabilidade, Gaps, Discrepâncias).
    Agente informa gaps (volumes não cobertos) e discrepâncias
    (inconsistências inter-disciplina).
@@ -83,10 +93,24 @@ comum de rastreabilidade e qualidade.
   7 backends (OAE, IFC, Iluminação, Pavimentação, Terraplenagem,
   LandXML/Balanço, Sondagem). Retorna routing map + session_ids +
   warnings (arquivo desconhecido, upload falhou, etc.).
+- `qto_preflight(session_ids)` — chama com dict `{oae: sid, ifc: sid, ...}`.
+  Retorna PreflightReport: sessions_alive/ready, missing_prereqs (layers,
+  blocos, template), warnings (recuperáveis). Agente bloqueia se
+  missing_prereqs não vazio.
 - `qto_consolidate(session_ids[], nivel_detalhe="sintetico"|"analitico")`
   — busca outputs, normaliza sob QtoItem, deduplica. Nível sintético =
   1 linha por categoria; analítico = 1 linha por item. Retorna items[]
   consolidados com rastreabilidade.
+- `qto_selfcheck(items)` — roda 6 validações: (1) cross-method divergência
+  > 20%, (2) sanity ranges por categoria (NBR-ancoradas: taxa armadura,
+  espessura laje, fck, cimento), (3) unit consistency, (4) coverage
+  por prancha, (5) confidence distribution, (6) duplicate detection.
+  Retorna SelfCheckReport com discrepancies[], warnings[], errors[],
+  quality_score [0,1].
+- `qto_calibrate(project_id, decisions[])` — persiste overrides em SQLite.
+  Cada decision = {item_source_ref, field_changed, old_value, new_value,
+  reason?}. Agente usa histórico para sugerir reclassificações e overrides
+  de SAP code nos próximos projetos.
 - `qto_export_consolidated(items[], template_path?)` — gera XLSX
   multi-aba (Consolidado, Por Disciplina, Rastreabilidade, Gaps,
   Discrepâncias).
@@ -146,6 +170,140 @@ comum de rastreabilidade e qualidade.
   se de sources diferentes).
 - User overrides (confidence=0.99, provenance="user_override") recebem
   marcação âmbar nas abas de rastreabilidade.
+
+## Auto-check, auto-calibração e preflight (v4.3.1)
+
+### A. Preflight (preparação pré-extração)
+
+Antes de cada estágio de extração, agente DEVE chamar `qto_preflight(session_ids)`
+com um dicionário mapeando os IDs de session de cada backend:
+`{oae: sid, ifc: sid, iluminacao: sid, pavimentacao: sid, terraplenagem: sid, balanco: sid, sondagem: sid}`.
+
+A ferramenta retorna um `PreflightReport` contendo:
+
+1. **sessions_alive**: dict[tool, bool] — Cada session ainda existe no backend
+   (não expirou)? Sessions com TTL 24h caducam silenciosamente; preflight
+   detecta.
+2. **sessions_ready**: dict[tool, bool] — Session já passou upload + parse?
+   (necessário antes de consolidate rodar).
+3. **missing_prereqs**: list[str] — Condições bloqueantes:
+   - Layers esperadas ausentes (ex.: "F-VT-MALHA" em OAE, faltando em DXF)
+   - Blocos de símbolos ausentes (ex.: blocos de aço D6.3/D10/D12.5 em OAE)
+   - Campos obrigatórios vazios (ex.: fck do concreto não preenchido)
+   - Template PQ_SUPRIMENTOS não configurado ou inacessível
+   - Versão de schema incompatível (ex.: frontend antigo, backend novo)
+4. **warnings**: list[str] — Condições recuperáveis:
+   - Session em outra versão do template → vai funcionar mas com fallback
+   - DXF/DWG só contém 3 de 7 camadas esperadas → consolidação parcial
+   - Arquivo classificado como "sondagem" mas contém PDFs escaneados
+     (fallback LLM desativo; usuario pode ligar)
+   - Timeout esperado para arquivo > 500 MB
+
+**Lógica**: Se `len(missing_prereqs) > 0` → agente PARA, reporta cada item
+ao usuário e pede correção ANTES de prosseguir para consolidate.
+Se apenas `warnings`, agente continua mas sinaliza riscos.
+
+### B. Auto-check (validação pós-consolidação)
+
+Após `qto_consolidate` retornar items[], agente chama `qto_selfcheck(items)`
+que roda **6 validações** e retorna um `SelfCheckReport`:
+
+1. **Cross-method**: Quando o mesmo item vem por dois caminhos alternativos
+   (ex.: OAE rebar via regex em MTEXT vs. contagem de blocos de símbolos
+   D6.3/D10), se divergência > 20% → registra como discrepancy. Heurística:
+   loga ambas as medições com confidence e fonte; agente usuário escolhe
+   ou faz média ponderada.
+
+2. **Sanity ranges por categoria** (ancoradas em NBRs):
+   - Taxa de armadura (kg/m³):
+     * Longarina (NBR 7187): 60–180 (typo: se > 250 → revisar)
+     * Bloco/pilar: 40–120
+     * Laje: 40–100
+   - Espessura mínima de laje:
+     * Residencial: 8 cm (conforto acústico)
+     * Comercial: 10 cm
+   - fck (resistência do concreto):
+     * Estrutural: ≥ 25 MPa
+     * Longarina (NBR 7187): ≥ 40 MPa
+   - Consumo de cimento (kg/m³):
+     * C30: 320–370
+     * C40: 380–420
+   Fora da faixa → warning (NÃO erro — só sinal para revisar).
+
+3. **Unit consistency**: Itens da mesma categoria devem ter a mesma
+   unidade (ex.: m³, m², kg, un, km). Misto na mesma classe = erro.
+
+4. **Coverage**: Para cada prancha classificada (ex., "armação", "concreto",
+   "estaca"), quantos itens foram extraídos? Se prancha de "armação"
+   retornou 0 rebar rows → warning "cobertura baixa nesta prancha".
+
+5. **Confidence distribution**: Se > 30% dos items têm `confidence < 0.7`
+   OU se > 5% têm `provenance = default` (não extracted/user_override) →
+   sinaliza "extração de baixa qualidade — recomendo revisão manual".
+
+6. **Duplicate detection**: Dois QtoItems com mesmo `(categoria, source_ref)`
+   mas quantidades diferentes = erro (bug do extractor ou duplicação acidental).
+
+**Retorna** um `SelfCheckReport` com listas:
+- `discrepancies: list[str]` — 20% divergências, dados conflitantes
+- `warnings: list[str]` — fora de faixa, cobertura baixa, confiança baixa
+- `errors: list[str]` — unit mismatch, duplicate detection falhas
+- `quality_score: float [0, 1]` — agregado: (1 - (len(errors) + len(warnings)*0.5 + len(discrepancies)*0.3) / len(items))
+
+**Lógica do agente**: Sempre reporta `quality_score` ao usuário. Se
+`quality_score < 0.6`, destaca em vermelho e sugere revisão manual
+antes de exportar. Se erros, bloqueia export até correção.
+
+### C. Auto-calibração (aprendizado transversal)
+
+O agente **NUNCA decide sozinho** quando encontrar uma correção —
+sempre pede confirmação ao usuário. Mas persiste as decisões via
+`qto_calibrate(project_id, decisions)` para acelerar o próximo projeto.
+
+Cada `decision` é um dict:
+```
+{
+  item_source_ref: "oae:rebar:row_12",
+  field_changed: "categoria",
+  old_value: "estrutural.aço_CA50",
+  new_value: "estrutural.aço_CA60",
+  reason: "especificação do projeto para longarinas"
+}
+```
+
+ou
+
+```
+{
+  item_source_ref: "ifc:wall:guid_abc123",
+  field_changed: "sap_code",
+  old_value: "F2015",  # C30 default
+  new_value: "F2018",  # C40 especificado
+  reason: "vedação estrutural, fck 40 em vez de 30"
+}
+```
+
+**Backend (manta-hub)**: Armazena em SQLite (`data/qto_calibration.db`),
+uma linha por decision, com timestamp e project_id. Índice em
+`(project_id, item_source_ref)`.
+
+**Aprendizado nos próximos projetos**: Ao rodar `qto_consolidate`,
+o backend consulta decisões passadas e ajusta:
+- Se em 3+ projetos anteriores o usuário reclassificou IfcWall/Alvenaria
+  como `estrutural.vedacao_bloco` → subir confidence dessa classificação
+  de 0.5 para 0.75 por default no próximo projeto.
+- Se para categoria X o usuário sempre override o SAP code Y por Z →
+  sugerir Z como primeira opção com nota "aprendido de N obras".
+- Histórico fica em memória do agente + persistido em SQLite — não altera
+  código, altera dados.
+
+**Comunicação ao usuário**: "Aprendi de N obras anteriores que você
+prefere X aqui — mantenho ou você quer redecidir?"
+
+**Lógica de entrada**: Antes de exportar (passo 9), se o usuário fez
+qualquer override via UI (clicou "editar" em um item e mudou valor),
+agente coleta os deltas, pede confirmação ("Você quer que eu aprenda
+isso para próximas obras?") e chama `qto_calibrate` com a lista.
 
 ## O que este agente NÃO faz
 
