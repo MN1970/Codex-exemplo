@@ -316,6 +316,250 @@ python -m uvicorn app.main:app --reload --port 8000
 6. Search is case-insensitive (using SQL ILIKE)
 7. Pagination is unlimited by default but max 500 items per request
 
+## JWT Authentication Layer (Layer 5)
+
+### Overview
+Comprehensive JWT-based authentication and authorization system for Portal Master. Provides token-based authentication with role-based access control, automatic token expiration, and request logging.
+
+### Files Created/Modified
+
+#### Core Security Modules
+- **`app/core/config.py`** - Security configuration settings
+  - JWT secret and algorithm (HS256)
+  - Token expiration times (access: 30 min, refresh: 7 days)
+  - CORS allowed origins
+  - Public endpoint exclusion list
+  - Environment variable support
+
+- **`app/core/security.py`** - Authentication utilities
+  - `hash_password()` - bcrypt password hashing
+  - `verify_password()` - password verification
+  - `create_access_token()` - JWT access token generation
+  - `create_refresh_token()` - JWT refresh token generation
+  - `verify_jwt_token()` - token validation and decoding
+  - `get_current_user()` - FastAPI dependency for user extraction
+  - `get_current_admin_user()` - admin role enforcement
+  - `get_current_editor_user()` - editor/admin role enforcement
+  - `oauth2_scheme` - HTTPBearer for OpenAPI documentation
+
+#### Authentication Router
+- **`app/routers/auth.py`** - Authentication endpoints
+  - `POST /api/auth/token` - Login with username/password
+  - `POST /api/auth/verify` - Verify token validity
+  - `POST /api/auth/refresh` - Refresh expired access token
+  - `GET /api/auth/me` - Get current user information
+  - Mock user database (Phase 2: database integration)
+
+#### Authentication Middleware
+- **`app/middleware/auth_middleware.py`** - JWT token validation middleware
+  - Automatic token validation on protected endpoints
+  - Public endpoint bypass
+  - Request logging with user context
+  - Error handling and proper HTTP status codes
+  - Performance timing for all requests
+
+#### Models
+- **`app/models/auth.py`** - Pydantic schemas for authentication
+  - `User` - User representation
+  - `TokenData` - JWT payload structure
+  - `TokenResponse` - Token response model
+  - `LoginRequest` - Login request model
+  - `LoginResponse` - Login response model
+  - `RefreshTokenRequest` - Token refresh request
+  - `TokenVerifyRequest` - Token verification request
+  - `ErrorResponse` - Standard error response
+
+#### Tests
+- **`tests/test_auth_middleware.py`** - Comprehensive auth tests (90+ test cases)
+  - Password hashing tests
+  - Token creation and verification tests
+  - Public endpoint access tests
+  - Login endpoint tests (success, invalid creds, etc.)
+  - Protected endpoint tests
+  - Token refresh tests
+  - Authentication header parsing tests
+  - Role-based access control tests
+
+### Key Features
+
+#### 1. Token Structure (JWT)
+```json
+{
+  "sub": "user-001",
+  "username": "admin",
+  "role": "admin",
+  "service": "portal-master",
+  "iat": 1694000000,
+  "exp": 1694001800
+}
+```
+
+#### 2. Authentication Flow
+1. User logs in with username/password via `/api/auth/token`
+2. Server validates credentials and returns access + refresh tokens
+3. Client includes access token in Authorization header: `Bearer <token>`
+4. Middleware validates token on each request
+5. When access token expires, client uses refresh token to get new one
+
+#### 3. Protected Endpoints
+The following endpoints now require authentication:
+- `POST /api/sync/pull` - Pull agent metadata
+- `POST /api/sync/push` - Push agent metadata
+- `GET /api/agents` (when adding write operations)
+
+#### 4. Public Endpoints (No Auth Required)
+- `GET /api/health` - Health check
+- `GET /api/config` - Configuration
+- `GET /api/config/webhooks` - Webhook config
+- `GET /docs` - Swagger UI
+- `GET /redoc` - ReDoc
+- `GET /openapi.json` - OpenAPI schema
+
+#### 5. Role System
+- **admin** - Full access to all endpoints
+- **editor** - Write access to sync/push operations
+- **viewer** - Read-only access (Phase 2 implementation)
+
+### User Accounts (Development)
+
+Current mock users (Phase 2: will use real database):
+```
+admin:admin123 (role: admin)
+editor:editor123 (role: editor)
+viewer:viewer123 (role: viewer)
+```
+
+### API Usage Examples
+
+#### Login
+```bash
+curl -X POST http://localhost:8000/api/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+```
+
+Response:
+```json
+{
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "token_type": "Bearer",
+  "expires_in": 1800,
+  "user": {
+    "id": "user-001",
+    "username": "admin",
+    "email": "admin@portal.local",
+    "role": "admin",
+    "is_active": true
+  }
+}
+```
+
+#### Use Token
+```bash
+curl -X POST http://localhost:8000/api/sync/pull \
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
+```
+
+#### Refresh Token
+```bash
+curl -X POST http://localhost:8000/api/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{"refresh_token":"eyJ0eXAiOiJKV1QiLCJhbGc..."}'
+```
+
+#### Verify Token
+```bash
+curl -X POST http://localhost:8000/api/auth/verify \
+  -H "Content-Type: application/json" \
+  -d '{"token":"eyJ0eXAiOiJKV1QiLCJhbGc..."}'
+```
+
+#### Get Current User
+```bash
+curl -X GET http://localhost:8000/api/auth/me \
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
+```
+
+### Configuration
+
+#### Environment Variables
+Create a `.env` file in `portal/backend/`:
+```
+JWT_SECRET=your-secret-key-here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+```
+
+To generate a secure JWT secret:
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(64))"
+```
+
+### Testing
+
+#### Run All Auth Tests
+```bash
+pytest tests/test_auth_middleware.py -v
+```
+
+#### Run Specific Test Class
+```bash
+pytest tests/test_auth_middleware.py::TestLoginEndpoint -v
+```
+
+#### Run With Coverage
+```bash
+pytest tests/test_auth_middleware.py --cov=app.core --cov=app.middleware
+```
+
+### Security Best Practices
+
+1. **Never share JWT_SECRET** - Store in environment variables only
+2. **Use HTTPS in production** - Tokens must be sent over secure connections
+3. **Set strong passwords** - Phase 2 will enforce password requirements
+4. **Token expiration** - Short access token lifetime (30 min) limits exposure
+5. **Refresh token rotation** - Phase 2 will implement refresh token tracking
+6. **CORS configuration** - Restrict to known frontend domains only
+
+### Middleware Behavior
+
+The AuthMiddleware intercepts all requests and:
+1. Checks if path is in EXCLUDED_PATHS
+2. If excluded, allows request to pass through
+3. If protected:
+   - Extracts Authorization header
+   - Validates Bearer token format
+   - Decodes and verifies JWT
+   - Injects user info into request.state
+   - Logs request with user context
+
+### Error Handling
+
+| Status | Condition |
+|--------|-----------|
+| 200 | Successful authentication |
+| 401 | Missing/invalid/expired token |
+| 403 | Insufficient permissions (Phase 2) |
+| 422 | Invalid request format |
+| 500 | Server error |
+
+### Phase 2 Implementation Notes
+
+The current implementation is a foundation for Phase 2, which will include:
+
+1. **Database-backed users** - Replace mock users with real database
+2. **User management endpoints** - CRUD operations for users
+3. **Refresh token persistence** - Track refresh tokens in database
+4. **Refresh token rotation** - Reuse detection and rotation
+5. **Password requirements** - Enforce strong password policies
+6. **Email verification** - Confirm user email addresses
+7. **2FA/MFA** - Multi-factor authentication
+8. **OAuth2/OIDC** - Third-party provider integration
+9. **Audit logging** - Log all authentication events
+10. **Rate limiting** - Prevent brute force attacks
+
 ## Future Enhancements
 
 1. Add service health checks for service_url
@@ -324,7 +568,7 @@ python -m uvicorn app.main:app --reload --port 8000
 4. Implement agent versioning
 5. Add audit logging for all changes
 6. Implement agent tagging/categorization
-7. Add API key authentication for service calls
-8. Implement role-based access control (RBAC)
+7. ~~Add API key authentication for service calls~~ ✅ JWT added
+8. ~~Implement role-based access control (RBAC)~~ ✅ Basic RBAC added
 9. Add webhook notifications for agent changes
 10. Implement agent dependency graph

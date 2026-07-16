@@ -4,13 +4,14 @@ Central registry and API for Manta Maestro v5.0 5-Layer Architecture
 """
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import logging
 
 from app.db import init_db
 from app.core.config import get_security_settings
+from app.core.security import get_current_user
 from app.middleware.auth_middleware import AuthMiddleware
 from app.routers import agents, github, maestro, knowledge, auth
 
@@ -115,7 +116,7 @@ async def list_agents():
     }
 
 @app.post("/api/sync/pull", tags=["Synchronization"])
-async def sync_pull(current_user: dict):
+async def sync_pull(current_user: dict = Depends(get_current_user)):
     """Pull agent metadata from Manta Hub. Requires authentication."""
     logger.info(f"Sync pull requested by user: {current_user.get('sub')}")
     return {
@@ -124,7 +125,7 @@ async def sync_pull(current_user: dict):
     }
 
 @app.post("/api/sync/push", tags=["Synchronization"])
-async def sync_push(current_user: dict):
+async def sync_push(current_user: dict = Depends(get_current_user)):
     """Push agent metadata to Manta Hub. Requires authentication."""
     logger.info(f"Sync push requested by user: {current_user.get('sub')}")
     return {
