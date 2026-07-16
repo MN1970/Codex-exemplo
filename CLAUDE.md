@@ -333,7 +333,7 @@ return {
 **v4.2 (7 jul):**
 - [x] Copiar 5 agent .md para `.claude/agents/`
 - [x] Aplicar patch no CLAUDE.md master (seção Agentes)
-- [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
+- [x] Criar 5 coleções RAG em Supabase (`rag_chunks`)
 - [ ] Inserir 5 routing rules em `sp_agent_routing`
 - [ ] Criar pastas SP para novos segmentos
 - [ ] Registrar skills no catálogo (skill registry)
