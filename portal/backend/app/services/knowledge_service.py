@@ -286,9 +286,9 @@ class KnowledgeBaseManager:
         """Extract agent IDs from content"""
         agent_ids = set()
 
-        # Match manta-## or Manta ##
+        # Match manta-## or Manta ## (including multi-segment IDs like manta-03-s1)
         patterns = [
-            r"manta-[\w\d]+",
+            r"manta-[\w\d-]+",
             r"Manta\s+\d+(?:-[A-Z]\d+)?",
         ]
 

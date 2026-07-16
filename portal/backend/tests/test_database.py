@@ -68,12 +68,12 @@ class TestDatabaseInitialization:
         inspector = inspect(engine)
 
         # Check agents indexes
-        agent_indexes = [idx.name for idx in inspector.get_indexes("agents")]
-        assert "idx_agent_code" in agent_indexes
+        agent_indexes = [idx['name'] for idx in inspector.get_indexes("agents")]
+        assert "idx_agent_eixo_status" in agent_indexes
         assert "idx_agent_status" in agent_indexes
 
         # Check tool_services indexes
-        tool_indexes = [idx.name for idx in inspector.get_indexes("tool_services")]
+        tool_indexes = [idx['name'] for idx in inspector.get_indexes("tool_services")]
         assert "idx_tool_status" in tool_indexes
         assert "idx_tool_port" in tool_indexes
 
@@ -174,8 +174,8 @@ class TestAgentModel:
         )
 
         repr_str = repr(agent)
-        assert "manta-test" in repr_str
         assert "TEST" in repr_str
+        assert "Test Agent" in repr_str
 
 
 class TestToolServiceModel:
@@ -401,7 +401,7 @@ class TestExternalSourceModel:
             id="doc-external-test",
             title="Document with Links",
             content="Content with external links",
-            category=KnowledgeCategory.REFERENCE,
+            category=KnowledgeCategory.EXTERNAL_RESOURCE,
         )
         session.add(doc)
         session.flush()
@@ -487,10 +487,11 @@ class TestDatabaseRelationships:
             ExternalSource.id == "doc-cascade-test:0"
         ).first() is not None
 
-        # Delete document
-        session.query(KnowledgeDocument).filter(
+        # Delete document (use ORM delete to trigger cascade, not bulk delete)
+        doc = session.query(KnowledgeDocument).filter(
             KnowledgeDocument.id == "doc-cascade-test"
-        ).delete()
+        ).first()
+        session.delete(doc)
         session.commit()
 
         # Verify cascade delete
