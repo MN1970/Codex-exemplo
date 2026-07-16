@@ -7,7 +7,7 @@ from typing import Optional, Dict, Any
 import bcrypt
 import jwt
 from fastapi import HTTPException, status, Depends
-from fastapi.security import HTTPBearer, HTTPAuthCredentials
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from app.core.config import (
     get_security_settings,
@@ -159,7 +159,7 @@ def verify_jwt_token(token: str) -> Dict[str, Any]:
 
 
 async def get_current_user(
-    credentials: HTTPAuthCredentials = Depends(oauth2_scheme)
+    credentials: HTTPAuthorizationCredentials = Depends(oauth2_scheme)
 ) -> Dict[str, Any]:
     """
     Dependency to extract and validate the current user from JWT token.
