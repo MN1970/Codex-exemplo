@@ -26,21 +26,24 @@ class TestAgentRegistry:
         assert "agents" in data
 
     def test_list_agents_has_count_field(self, client):
-        """Test that response has count field."""
+        """Test that response has total field."""
         response = client.get("/api/agents")
         data = response.json()
-        assert "count" in data
-        assert isinstance(data["count"], int)
+        assert "total" in data
+        assert isinstance(data["total"], int)
 
     def test_list_agents_returns_empty_on_init(self, client):
         """Test that agents list is empty on init."""
         response = client.get("/api/agents")
         data = response.json()
-        assert data["count"] == 0
+        assert data["total"] == 0
         assert len(data["agents"]) == 0
 
     def test_list_agents_response_status(self, client):
-        """Test that response includes status field."""
+        """Test that response includes expected fields."""
         response = client.get("/api/agents")
         data = response.json()
-        assert "status" in data
+        assert "total" in data
+        assert "agents" in data
+        assert "limit" in data
+        assert "offset" in data

@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.main import app
 from app.core.database import Base, get_db
+from app.core.security import create_access_token
 from app.models.agent import Agent, AgentStatus, AgentTier, AgentEixo
 from app.db.agent import create_agent
 from app.schemas.agent import AgentCreate
@@ -38,10 +39,26 @@ def db():
 
 
 @pytest.fixture
-def client(db):
-    """Create test client with overridden dependency"""
+def auth_token():
+    """Generate a valid JWT token for testing."""
+    token = create_access_token(
+        data={
+            "sub": "test-user-123",
+            "name": "Test User",
+            "role": "admin"
+        }
+    )
+    return token
+
+
+@pytest.fixture
+def client(db, auth_token):
+    """Create test client with overridden dependency and authentication"""
     app.dependency_overrides[get_db] = lambda: db
     client = TestClient(app)
+    client.headers.update({
+        "Authorization": f"Bearer {auth_token}"
+    })
     yield client
     app.dependency_overrides.clear()
 
