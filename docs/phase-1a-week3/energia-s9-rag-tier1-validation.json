@@ -1,0 +1,674 @@
+{
+  "segmento": "S9-Energia",
+  "fase": "Phase 1a RAG Tier 1 Validation",
+  "data_validacao": "2026-07-15",
+  "especialista": "Manta 03-S9 (Energia)",
+  "foco": "Transmissão (ANEEL/State Grid)",
+
+  "fontes_validadas": [
+    {
+      "ordem": 1,
+      "fonte": "ANEEL Editais Leilões Transmissão",
+      "url_acesso_principal": "https://www.gov.br/aneel/pt-br",
+      "url_portal_dados": "https://dadosabertos.aneel.gov.br/",
+      "url_dados_abertos_arcgis": "https://dadosabertos-aneel.opendata.arcgis.com/",
+      "url_editais_diretos": "https://www2.aneel.gov.br/aplicacoes_liferay/editais_transmissao/edital_transmissao.cfm",
+      "url_leiloes": "https://leilao.aneel.gov.br/listaLeiloesFinalizados",
+      "acesso_publico": true,
+      "autenticacao_necessaria": false,
+      "formato_publicacao": [
+        "PDF (editais, anexos, resoluções)",
+        "HTML (consultas públicas)",
+        "CSV/JSON (API dados abertos)",
+        "PowerBI (dashboards SIGA - Sistema de Informações de Geração)"
+      ],
+      "n_documentos_estimado": {
+        "editais_transmissao_2024_2026": 15,
+        "editais_geracao_anual": 8,
+        "resoluções_normativas": 150,
+        "consultas_publicas_ativas": 5,
+        "dados_estruturados_api": 25,
+        "total_tier1": "~200+ documentos/dataset"
+      },
+      "volume_estimado_gb": 2.5,
+      "estrategia_crawl": {
+        "abordagem_principal": "Web scraper + API REST",
+        "etapas": [
+          "1. Rastrear https://www.gov.br/aneel/pt-br/empreendedores/leiloes para índice de leilões",
+          "2. Para cada leilão, baixar: edital PDF, anexos (especificações técnicas, ROT, normas), consulta pública HTML",
+          "3. Usar API dadosabertos.aneel.gov.br (CSV/JSON) para: Transmissão, Geração, Multas, SIGEC",
+          "4. Raspar consultas públicas via https://antigo.aneel.gov.br/web/guest/consultas-publicas (paginação)",
+          "5. Coletar atualizações mensais via RSS feed (quando disponível) ou polling semanal"
+        ],
+        "tecnicas": "Selenium para JavaScript, BeautifulSoup para HTML, httpx para API, FTP fallback para arquivos legados",
+        "rate_limiting": "Respectar robots.txt ANEEL, limite: 1 requisição/segundo, user-agent identificado"
+      },
+      "blockers_tecnicos": {
+        "autenticacao": "NONE — dados abertos público",
+        "oauth": "NÃO APLICÁVEL — ANEEL não usa OAuth para dados abertos",
+        "rate_limiting": "Moderado — ANEEL não bloqueia raspagem de dados públicos, mas respeita robots.txt",
+        "javascript": "MÉDIO — Alguns dashboards PowerBI (SIGA) usam JavaScript; scrapers devem usar Selenium ou headless Chrome",
+        "anti_scraping": "BAIXO — Dados abertos são incentivados; nenhuma proteção ativa detectada",
+        "pdf_parsing": "MÉDIO — Editais em PDF com tabelas e imagens; usar pdfplumber + OCR para imagens de assinatura/selos",
+        "atualizacoes_frequencia": "Editais: ~1-2/mês durante períodos de leilão (quadrimestral), Dados API: diariamente ou conforme atualização"
+      },
+      "campos_chave_extrair": [
+        "edital_numero",
+        "data_publicacao",
+        "data_leilao",
+        "lotes",
+        "investimento_estimado_r",
+        "tipo_leilao (A1/A2/A3 genração, LTA transmissão)",
+        "tensao_nomina_kv",
+        "extensao_km",
+        "normas_tecnicas_referenciadas (NBR 5422, IEEE 738)",
+        "especificacoes_tecnicas (condutores ACSR/CAA/ATSR, isolamento, torres)",
+        "cronograma_fases",
+        "restricoes_tecnicas_ambientais",
+        "resolucoes_aneel_referenciadas"
+      ],
+      "semanas_ingestion": [
+        {
+          "semana": "Week 3",
+          "tarefa": "Rastreamento ANEEL site + API endpoint discovery",
+          "entregaveis": [
+            "Mapa de URLs de leilões 2024-2026",
+            "Validação acesso API dadosabertos.aneel.gov.br",
+            "Teste de parsing 3 editais PDF sample",
+            "Documentação rate limits observados"
+          ]
+        }
+      ],
+      "status": "✅ Validado — Acesso público, API disponível, volume médio"
+    },
+
+    {
+      "ordem": 2,
+      "fonte": "EPE Relatórios Planejamento (R1-R5, PDE, PNE)",
+      "url_acesso_principal": "https://www.epe.gov.br/pt",
+      "url_publicacoes": "https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes",
+      "url_dados_abertos": "https://www.epe.gov.br/pt/publicacoes-dados-abertos/dados-abertos",
+      "url_portal_gov": "https://dados.gov.br/dados/organizacoes/visualizar/empresa-de-pesquisa-energetica-epe",
+      "acesso_publico": true,
+      "autenticacao_necessaria": false,
+      "formato_publicacao": [
+        "PDF (Relatórios PDE, PNE, R1-R5, Technical Notes)",
+        "HTML (dashboards interativos BEN, PNE 2050 Panel)",
+        "CSV/Excel (dados abertos de geração, oferta/demanda)",
+        "API (plataformas específicas como PASI - Portal Sistemas Isolados)"
+      ],
+      "n_documentos_estimado": {
+        "pde_historico_10_anos": 10,
+        "pne_planejamento_longo_prazo": 3,
+        "notas_tecnicas_anuais": 25,
+        "relatorios_monitoramento": 15,
+        "dados_abertos_bens": 5,
+        "estudos_especificos_transmissao": 12,
+        "total_tier1": "~70 documentos"
+      },
+      "volume_estimado_gb": 1.8,
+      "estrategia_crawl": {
+        "abordagem_principal": "Web scraper + Download direto + API (PASI)",
+        "etapas": [
+          "1. Indexar https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes (HTML table parsing)",
+          "2. Identificar PDFs por categoria: PDE (links diretos), PNE (links diretos), R1-R5 (annual reports), Technical Notes (busca por palavra-chave 'transmissão')",
+          "3. Para cada PDF, extrair metadados: título, ano, tópicos (via OCR ou headers)",
+          "4. Raspar dashboards interativos BEN 2025/PNE 2050 Panel (screenshot + tabela data extraction)",
+          "5. Monitorar novos relatórios via página de publicações (polling mensal)"
+        ],
+        "tecnicas": "Requests + BeautifulSoup para scraping HTML, pdfplumber para extração de metadados/tabelas, Selenium para dashboards dinâmicos",
+        "rate_limiting": "Baixo — EPE incentiva acesso, nenhuma proteção observada"
+      },
+      "blockers_tecnicos": {
+        "autenticacao": "NONE — dados públicos",
+        "oauth": "NÃO APLICÁVEL",
+        "rate_limiting": "BAIXO — sem restrições detectadas",
+        "javascript": "MÉDIO — Dashboards BEN/PNE 2050 Panel usam React/Vue; preferir acesso via API ou screenshot + OCR",
+        "anti_scraping": "NENHUM",
+        "pdf_parsing": "MÉDIO — PDFs bem estruturados, mas tabelas multi-coluna; pdfplumber adequado",
+        "atualizacoes_frequencia": "Anual (PDE/PNE/BEN), Trimestral (Technical Notes e Notas Técnicas), Contínuo (PASI)"
+      },
+      "campos_chave_extrair": [
+        "ano_base",
+        "titulo_relatorio",
+        "tipo_documento (PDE/PNE/R1-R5/Technical Note)",
+        "tópicos_transmissão",
+        "linhas_transmissao_planejadas (km, tensão, região)",
+        "crescimento_demanda_mva",
+        "cenarios_economicos",
+        "investimentos_estimados",
+        "resolucoes_aneel_vinculadas",
+        "coordenadas_geograficas_novos_empreendimentos (quando disponível)"
+      ],
+      "semanas_ingestion": [
+        {
+          "semana": "Week 4",
+          "tarefa": "Indexação EPE publicações + teste parse PDF",
+          "entregaveis": [
+            "Lista completa PDE/PNE/R1-R5/Technical Notes (2015-2026)",
+            "Teste parsing 2 PDE PDFs (extração tabelas investimento)",
+            "Verificação frequência atualização (snapshot cronogram)",
+            "Acesso às ferramentas interativas (BEN, PASI, PNE 2050 Panel)"
+          ]
+        }
+      ],
+      "status": "✅ Validado — Acesso público, documentos bem estruturados, volume médio"
+    },
+
+    {
+      "ordem": 3,
+      "fonte": "ONS Relatórios Operação Transmissão",
+      "url_acesso_principal": "https://www.ons.org.br",
+      "url_boletins": "https://www.ons.org.br/paginas/resultados-da-operacao/boletins-da-operacao",
+      "url_relatorio_anual": "https://www.ons.org.br/relatorio_anual/index.html",
+      "url_dados_abertos": "https://dados.ons.org.br",
+      "url_sistema_publico": "https://publico.ons.org.br/sistemasons.aspx",
+      "acesso_publico": true,
+      "autenticacao_necessaria": false,
+      "formato_publicacao": [
+        "PDF (Relatórios Anuais, Resoluções Operativas)",
+        "HTML (Boletins Diários de Operação)",
+        "CSV/JSON (Portal Dados Abertos, API SINOps)",
+        "XML (Dados estruturados SIN - Sistema Interligado Nacional)"
+      ],
+      "n_documentos_estimado": {
+        "relatorio_anual": 10,
+        "boletins_operacao_diarios": 8000,
+        "resolucoes_operativas_anuais": 120,
+        "estudos_especificos": 30,
+        "base_dados_operacional": 1,
+        "total_tier1": "~8,000+ registros (diários) + 160 documentos"
+      },
+      "volume_estimado_gb": 8.0,
+      "estrategia_crawl": {
+        "abordagem_principal": "API REST SINOps + Boletins HTML + Relatórios PDF",
+        "etapas": [
+          "1. Acessar API dados.ons.org.br para série histórica operacional (demanda MW, importação/exportação, indisponibilidades)",
+          "2. Raspar boletins diários em HTML https://www.ons.org.br/.../boletins-da-operacao (1 boletim/dia, ~365/ano, acumular 5 anos = 1,825)",
+          "3. Baixar Relatórios Anuais 2014-2026 (PDF) via https://www.ons.org.br/relatorio_anual/ (10 arquivos)",
+          "4. Extrair Resoluções Operativas 2024-2026 (HTML) de publicação oficial",
+          "5. Integrar dados SINOps (API estruturada) para séries de potência, carregamento de linhas, contingências"
+        ],
+        "tecnicas": "httpx para API, BeautifulSoup para HTML boletins, pdfplumber para PDFs, pipeline de normalização temporal (UTC → Brasília)"
+      },
+      "blockers_tecnicos": {
+        "autenticacao": "NONE — Dados públicos de operação",
+        "oauth": "NÃO APLICÁVEL",
+        "rate_limiting": "BAIXO — API SINOps permite até 100 req/min (inferido de prática)",
+        "javascript": "BAIXO — Boletins são HTML estático",
+        "anti_scraping": "NENHUM",
+        "pdf_parsing": "ALTO — Relatórios anuais têm gráficos, tabelas complexas; usar OCR para extrair dados de gráficos de série temporal",
+        "atualizacoes_frequencia": "Boletins: diários (automático), Relatórios: anual (junho), Resoluções: contínuas (conforme necessidade operativa)"
+      },
+      "campos_chave_extrair": [
+        "data_operacao (timestamp)",
+        "demanda_total_sin_mw",
+        "geracao_por_tipo (hidroeletrica, eolica, solar, termica, nuclear, importacao_mwh)",
+        "carregamento_linhas_transmissao (%)",
+        "indisponibilidades (contingências planejadas/não planejadas, equipamento, motivo, duração)",
+        "intercambios_regionais_mwh",
+        "reservatorio_nivel_armazenamento (%)",
+        "preco_mcee_r_mwh",
+        "numero_geradores_despachados",
+        "restricoes_operativas_ativas"
+      ],
+      "semanas_ingestion": [
+        {
+          "semana": "Week 5",
+          "tarefa": "Acesso API ONS + parsing boletins históricos",
+          "entregaveis": [
+            "Validação endpoint API dados.ons.org.br",
+            "Parser para boletins HTML com testes em 5 dias distintos",
+            "Download Relatórios Anuais 2020-2026 (7 arquivos)",
+            "Cronograma coleta diária boletins (automação via cron/APScheduler)"
+          ]
+        }
+      ],
+      "status": "✅ Validado — Acesso público, API estruturada, alto volume de séries temporais"
+    },
+
+    {
+      "ordem": 4,
+      "fonte": "IEEE 738 Standard (Transmission Line Rating)",
+      "url_acesso_principal": "https://standards.ieee.org/ieee/738/6860/",
+      "url_docs_publicos": "https://www.transmission-line.net/2011/04/ieee-standard-738-1993-temperature.html",
+      "url_dados_abertos": "Nenhum — padrão proprietário IEEE",
+      "acesso_publico": false,
+      "autenticacao_necessaria": true,
+      "formato_publicacao": [
+        "PDF proprietário (IEEE Std 738-2023, IEEE Std 738-2012)",
+        "HTML resumos público (transmission-line.net, academia.edu, ResearchGate)"
+      ],
+      "n_documentos_estimado": {
+        "ieee_738_versoes": 3,
+        "resumos_academicos": 15,
+        "papers_aplicacao": 20,
+        "total_tier1": "~5-10 documentos úteis (3 padrões + resumos + estudos de caso)"
+      },
+      "volume_estimado_gb": 0.05,
+      "estrategia_crawl": {
+        "abordagem_principal": "Acesso via instituição + Resumos públicos + Papers acadêmicos",
+        "etapas": [
+          "1. NÃO raspar IEEE diretamente (proprietário); usar licença institucional se disponível (UFRJ, USP, Manta pode ter acesso)",
+          "2. Coletar resumos públicos: transmission-line.net, academia.edu (IEEE 738 descriptions/handouts)",
+          "3. Buscar papers de aplicação em IEEE Xplore (quando acesso institucional) ou via ResearchGate/arXiv",
+          "4. Extrair seções públicas de teses/papers que citam IEEE 738 (metodologia, equações)",
+          "5. Integrar com cálculos de ampacidade em artigos de ONS/ANEEL que referenciam o padrão"
+        ],
+        "tecnicas": "Requests para HTML público, pdfplumber para papers, integração com dados de temperatura (INMET, estações meteorológicas) para contexto brasileiro",
+        "rate_limiting": "Respeitoso — acesso público apenas"
+      },
+      "blockers_tecnicos": {
+        "autenticacao": "CRÍTICO — IEEE padrão é PROPRIETÁRIO; exige compra (US$200) ou licença institucional",
+        "oauth": "NÃO APLICÁVEL",
+        "rate_limiting": "NENHUM para resumos públicos",
+        "javascript": "BAIXO",
+        "anti_scraping": "NENHUM para resumos públicos",
+        "pdf_parsing": "Propriedade intelectual — não copiar integral",
+        "atualizacoes_frequencia": "IEEE 738-2023 é a versão atual; atualizações a cada ~10 anos"
+      },
+      "mitigacao": "RECOMENDAÇÃO: Adquirir licença IEEE 738-2023 (US$200, one-time) ou usar acesso institucional UFRJ/USP. Para RAG Phase 1a, incluir resumos/papers públicos + referências de ONS/ANEEL que aplicam o padrão. IEEE 738 é crítico para dimensionamento térmico de condutores; SEM acesso, usar fórmulas aproximadas de ampacidade publicadas em NBR 5422 ou ONS-ME.30.",
+      "campos_chave_extrair": [
+        "método_calculo_temperatura_condutor",
+        "variáveis_entrada (velocidade vento m/s, temperatura ambiente °C, irradiância solar W/m², emissividade, absortância)",
+        "equacao_balanco_termico",
+        "ampacidade_em_funcao_temperatura",
+        "fatores_correcao_altitude",
+        "aplicacao_brasil_transmissao_aerea"
+      ],
+      "semanas_ingestion": [
+        {
+          "semana": "Week 6 (flex)",
+          "tarefa": "Avaliação IEEE 738 — acesso institucional vs. resumos públicos",
+          "entregaveis": [
+            "Verificação se Manta tem licença IEEE (via Manta Associados)",
+            "Compilação resumos/papers públicos (15-20 itens)",
+            "Proposta: incluir ou postergar para Phase 1b?",
+            "Alternativa: usar NBR 5422 como referência principal para ampacidade"
+          ]
+        }
+      ],
+      "status": "⚠️ BLOQUEADO — Padrão proprietário IEEE; requer licença ou acesso institucional. MITIGAÇÃO: resumos públicos + NBR 5422 + referências em ONS/ANEEL"
+    },
+
+    {
+      "ordem": 5,
+      "fonte": "NBR 5422 Projeto Linhas Transmissão Aéreas",
+      "url_acesso_principal": "https://www.abnt.org.br",
+      "url_norma_descricao": "https://www.normas.com.br/visualizar/abnt-nbr-nm/5329/abnt-nbr5422-projeto-de-linhas-aereas-de-energia-eletrica-criterios-tecnicos",
+      "url_resumo_publico": "https://www.osetoreletrico.com.br/revisao-da-norma-nbr-5422-uma-jornada-de-39-anos/",
+      "url_pdf_publico_sample": "https://www.mprs.mp.br/media/areas/urbanistico/arquivos/lts/nbr_5422.pdf",
+      "acesso_publico": false,
+      "autenticacao_necessaria": true,
+      "formato_publicacao": [
+        "PDF propriedade ABNT (NBR 5422:2024 — versão atual, publicada janeiro 2024)",
+        "HTML resumos e artigos técnicos públicos",
+        "Referências em editais ANEEL + ONS (citam a norma)"
+      ],
+      "n_documentos_estimado": {
+        "nbr_5422_versoes": 4,
+        "artigos_sobre_nbr": 8,
+        "aplicacoes_em_editais_aneel": 25,
+        "total_tier1": "~20 documentos (norma + contextualização + aplicações)"
+      },
+      "volume_estimado_gb": 0.08,
+      "estrategia_crawl": {
+        "abordagem_principal": "Adquirir NBR 5422:2024 + extrair contexto de editais ANEEL + artigos técnicos",
+        "etapas": [
+          "1. COMPRAR NBR 5422:2024 via ABNT (https://www.abnt.org.br, ~R$400-600) ou usar acesso institucional UFRJ/USP",
+          "2. Se acesso institucional: fazer OCR + extração estruturada (capítulos, seções, tabelas normativas)",
+          "3. Rastrear referências a NBR 5422 em: editais ANEEL 2024-2026 (busca por 'NBR 5422'), Resoluções ANEEL, artigos O Setor Elétrico",
+          "4. Coletar tabelas normativas públicas: tensões nominais, distâncias de segurança, cargas de vento, fatores de segurança",
+          "5. Integrar com edital + estudo prévio: mostrar como NBR 5422 é aplicado em ROT (Relatório de Opções Técnicas) de leilões"
+        ],
+        "tecnicas": "OCR pdfplumber (se acesso digital), parsing de editais para seções '3.3 Normas Aplicáveis', regex para extrair valores de tabelas",
+        "rate_limiting": "N/A"
+      },
+      "blockers_tecnicos": {
+        "autenticacao": "CRÍTICO — NBR 5422:2024 é propriedade ABNT; exige compra (R$400-600) ou acesso institucional",
+        "oauth": "NÃO APLICÁVEL",
+        "rate_limiting": "N/A",
+        "javascript": "N/A",
+        "anti_scraping": "Propriedade intelectual — não copiar integral",
+        "pdf_parsing": "Possível (OCR), mas respeitando copyright ABNT",
+        "atualizacoes_frequencia": "NBR 5422:2024 (janeiro 2024) é a versão atual; próxima revisão provavelmente 2034+ (última foi 1985 → 2024)"
+      },
+      "mitigacao": "RECOMENDAÇÃO: (1) Adquirir NBR 5422:2024 via site ABNT (~R$400-600) — investimento essencial; (2) Extrair seções públicas de citações em editais ANEEL; (3) Usar artigos técnicos públicos sobre a revisão 2024 (O Setor Elétrico, ABRATE); (4) Integrar com aplicações reais em ROTs de leilões (case study approach).",
+      "campos_chave_extrair": [
+        "tensoes_nominais_kv_cobertas (69, 138, 230, 345, 500, 765 kV, ±320 kV CC)",
+        "distancias_seguranca_solo_pessoas",
+        "cargas_vento_pressao",
+        "isolamento_cadeia (número discos, tipos, materiais)",
+        "condutores_permitidos (ACSR, CAA, ATSR, tipos)",
+        "torres_estruturas (alinhamento, ângulo, fundações)",
+        "ampacidade_tabelas",
+        "fatores_seguranca_esforcos",
+        "procedimentos_projeto (fase 1-9)"
+      ],
+      "semanas_ingestion": [
+        {
+          "semana": "Week 6 (concorrente com IEEE 738)",
+          "tarefa": "Acesso NBR 5422:2024 + integração com editais",
+          "entregaveis": [
+            "Compra/acesso NBR 5422:2024 (confirmação)",
+            "OCR + estruturação capítulos (if digital access)",
+            "Mapa: referências NBR 5422 em editais ANEEL 2024-2026",
+            "Extração tabelas normativas chave (distâncias, isolamentos, condutores)"
+          ]
+        }
+      ],
+      "status": "⚠️ REQUER AQUISIÇÃO — NBR 5422:2024 propriedade ABNT. ESSENCIAL para Tier 1. MITIGAÇÃO: compra recomendada + contexto via editais + artigos públicos"
+    },
+
+    {
+      "ordem": 6,
+      "fonte": "Teses Acadêmicas COPPE/UFRJ + IEE/USP",
+      "url_acesso_principal_ufrj": "https://pantheon.ufrj.br/handle/11422/1",
+      "url_acesso_principal_usp": "https://www.teses.usp.br/index.php?lang=pt-br",
+      "url_iee_usp": "https://www.iee.usp.br/?q=pt-br/energia-mestrado-e-doutorado",
+      "url_coppe_ppe": "https://ppe.coppe.ufrj.br/en/",
+      "acesso_publico": true,
+      "autenticacao_necessaria": false,
+      "formato_publicacao": [
+        "PDF (teses/dissertações completas, open access)",
+        "HTML (metadados + resumos)"
+      ],
+      "n_documentos_estimado": {
+        "coppe_ppe_teses_2010_2026": 120,
+        "iee_usp_teses_2010_2026": 85,
+        "outras_pos_energia_brasil": 200,
+        "total_tier1_selecionado": "~150 teses (filtro: transmissão, planejamento, operação, inovação tecnológica)"
+      },
+      "volume_estimado_gb": 5.0,
+      "estrategia_crawl": {
+        "abordagem_principal": "API + Scraping repositórios institucionais",
+        "etapas": [
+          "1. Raspar Pantheon UFRJ (OAI-PMH API para COPPE/PPE) — busca: ('energy' OR 'transmission' OR 'planning') AND (university:COPPE OR faculty:PPE)",
+          "2. Raspar USP Teses (OAI-PMH ou API BDTD) — busca: ('energia' OR 'transmissão' OR 'planejamento') AND institution:IEE",
+          "3. Para cada tese, extrair: título, autor, orientador, ano, resumo, palavras-chave, PDF link",
+          "4. Baixar PDF (respeitando open access), extrair capítulo de introdução + conclusão + referências",
+          "5. Filtrar por tópicos-chave: linhas transmissão, subestações, planejamento expansão, operação SIN, inovação tecnológica (HVDC, cabos supercondutores, PMU)"
+        ],
+        "tecnicas": "OAI-PMH client para metadados, pdfplumber para extração de resumos/capítulos-chave, NLP para classificação temática (TF-IDF ou sentence-transformers)",
+        "rate_limiting": "BAIXO — repositórios institucionais permitem mining de pesquisa"
+      },
+      "blockers_tecnicos": {
+        "autenticacao": "NONE — Repositórios open access",
+        "oauth": "NÃO APLICÁVEL",
+        "rate_limiting": "BAIXO — OAI-PMH permite até 10 req/seg",
+        "javascript": "BAIXO — Repositórios são HTML estático ou OAI-PMH XML",
+        "anti_scraping": "NENHUM",
+        "pdf_parsing": "MÉDIO — PDFs acadêmicos bem estruturados, mas referências em rodapé podem duplicar conteúdo",
+        "atualizacoes_frequencia": "Contínua — novas dissertações defendidas anualmente (~30-40/ano COPPE+IEE)"
+      },
+      "campos_chave_extrair": [
+        "titulo",
+        "autor",
+        "orientador(es)",
+        "ano_defesa",
+        "nivel (mestrado/doutorado)",
+        "programa_posgraduacao",
+        "resumo",
+        "palavras_chave",
+        "topicos_principais (extrair automaticamente via NLP)",
+        "tecnologias_transmissao_coberta (LT AC/CC, pMU, SCADA, operação otimizada, etc)",
+        "universidade_empresa_parceria (Eletrobras, Cemig, etc.)"
+      ],
+      "semanas_ingestion": [
+        {
+          "semana": "Week 7",
+          "tarefa": "Descoberta e parsing repositórios acadêmicos",
+          "entregaveis": [
+            "Teste OAI-PMH UFRJ + USP (validação metadados)",
+            "Query COPPE 'energia transmissão' — amostra 20 teses, análise de metadados",
+            "Parser teses + download primeiras 10 (validação links PDF)",
+            "Classificação automática por tópico (TF-IDF scores)"
+          ]
+        }
+      ],
+      "status": "✅ Validado — Acesso público, repositórios bem estruturados, volume alto, atualização contínua"
+    }
+  ],
+
+  "resumo_volume_e_formatos": {
+    "volume_total_gb": 17.5,
+    "volume_decomposicao": {
+      "aneel_editais": "2.5 GB (editais PDF + dados API)",
+      "epe_planejamento": "1.8 GB (PDFs + dashboards)",
+      "ons_operacao": "8.0 GB (série histórica + boletins)",
+      "ieee_738": "0.05 GB (resumos apenas)",
+      "nbr_5422": "0.08 GB (norma + aplicações)",
+      "teses_academicas": "5.0 GB (150 teses × ~33 MB cada)"
+    },
+    "formatos_principais": [
+      "PDF (editais, normas, teses, relatórios) — ~80%",
+      "HTML (boletins, consultas públicas, dashboards) — ~10%",
+      "CSV/JSON (API dados abertos, séries históricas) — ~8%",
+      "XML (metadados OAI-PMH) — ~2%"
+    ],
+    "estruturacao": {
+      "ja_estruturados": "ANEEL API, EPE datasets, ONS SINOps (~25% do volume)",
+      "semi_estruturados": "PDFs com tabelas regulares (editais NBR, teses) (~40%)",
+      "nao_estruturados": "Boletins HTML livre, gráficos em PDFs scaneados (~35%)"
+    }
+  },
+
+  "cronograma_phase1a_weeks_3_8": {
+    "week_3": {
+      "tema": "ANEEL Tier 1 Discovery & API Validation",
+      "tarefas": [
+        "Mapeamento URLs leilões 2024-2026 via https://www.gov.br/aneel/pt-br",
+        "Teste acesso API dadosabertos.aneel.gov.br (GET /dataset/transmissao)",
+        "Download sample editais (3 arquivos): Leilão 1/2026, 2/2025, 1/2024",
+        "OCR/parsing edital PDF — extração: edital_numero, data_leilao, investimento_r, lotes",
+        "Documentação rate limits observados + robots.txt compliance"
+      ],
+      "entregaveis": [
+        "✓ crawler_aneel_editais.py (v0.1 — web scraper + API)",
+        "✓ aneel_editais_index.json (25 leilões 2020-2026 metadados)",
+        "✓ parsed_edital_2026_01.json (prototipo extração estruturada)",
+        "✓ BLOCKERS.md (nenhum identificado para ANEEL)"
+      ]
+    },
+    "week_4": {
+      "tema": "EPE Publicações & PDE/PNE Indexação",
+      "tarefas": [
+        "Rastrear https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes (tabela HTML)",
+        "Baixar PDFs: PDE 2024, PDE 2023, PNE 2050 Final, BEN Síntese 2025",
+        "Parser epublicacoes HTML (extrair: título, ano, link, categoria)",
+        "Teste parsing 2 PDFs: extração títulos, tabelas investimento, seções transmissão",
+        "Verificação links dashboards interativos (BEN, PASI, PNE 2050 Panel)"
+      ],
+      "entregaveis": [
+        "✓ crawler_epe_publicacoes.py (HTML parser)",
+        "✓ epe_publicacoes_index.json (70 documentos 2010-2026)",
+        "✓ pde_2024_transmissao_section.json (tabelas extraídas)",
+        "✓ epe_dashboard_screenshots.zip (BEN, PNE 2050, PASI)"
+      ]
+    },
+    "week_5": {
+      "tema": "ONS Operação & Boletins Históricos",
+      "tarefas": [
+        "Validação API dados.ons.org.br (teste GET /demanda, /geracao, /indisponibilidades)",
+        "Parser boletins diários HTML (5 dias teste) — extração: data, demanda_mw, geracao_por_tipo",
+        "Download Relatórios Anuais PDF 2020-2026 (7 arquivos)",
+        "Teste OCR em relatório 2024 — extração gráficos série histórica demanda",
+        "Documentação frequência atualização boletins (diária)"
+      ],
+      "entregaveis": [
+        "✓ crawler_ons_boletins.py (HTML parser + agendador diário)",
+        "✓ ons_api_client.py (wrapper SINOps com retry logic)",
+        "✓ boletins_sample_5dias.json (demanda, geração, carregamento)",
+        "✓ relatorios_anuais_index.json + PDFs baixados"
+      ]
+    },
+    "week_6": {
+      "tema": "Padrões Técnicos (IEEE 738, NBR 5422) & Decisões de Acesso",
+      "tarefas": [
+        "Investigação: Manta tem licença IEEE? (contato departamento técnico)",
+        "Se NÃO: compilar resumos públicos IEEE 738 (15+ fontes) — transmission-line.net, academia.edu, ResearchGate",
+        "Compra NBR 5422:2024 via ABNT (~R$400-600) OU verificar acesso institucional UFRJ",
+        "Se acesso digital NBR 5422: OCR + estruturação (capítulos, tabelas normativas)",
+        "Extração: referências NBR 5422 em editais ANEEL 2024-2026 (busca por 'NBR 5422')"
+      ],
+      "entregaveis": [
+        "✓ ieee_738_resumos_compilacao.md (15-20 fontes públicas + papers)",
+        "✓ nbr_5422_2024_adquirida.pdf (aquisição confirmada) OU acesso_institucional.txt",
+        "✓ nbr_5422_tabelas_normativas.json (distâncias, isolamentos, ampacidade)",
+        "✓ aneel_editais_nbr5422_referencias.json (mapa: edital → seção normativa)"
+      ]
+    },
+    "week_7": {
+      "tema": "Teses Acadêmicas COPPE/UFRJ + IEE/USP",
+      "tarefas": [
+        "Teste OAI-PMH UFRJ Pantheon + USP Teses (validação metadados)",
+        "Query busca COPPE: ('energy' OR 'transmission' OR 'planning') — amostra 20 teses",
+        "Query busca IEE-USP: ('energia' OR 'transmissão' OR 'planejamento') — amostra 15 teses",
+        "Download PDF primeiras 10 teses (validação links, teste OCR em resumos)",
+        "NLP classificação automática: tópicos-chave por tese (TF-IDF)"
+      ],
+      "entregaveis": [
+        "✓ crawler_repositorios_academicos.py (OAI-PMH client UFRJ + USP)",
+        "✓ teses_index.json (150 teses metadados)",
+        "✓ teses_sample_10.pdf (downloads validados)",
+        "✓ teses_classificacao_topicos.json (TF-IDF scores transmissão/planejamento)"
+      ]
+    },
+    "week_8": {
+      "tema": "Consolidação, Validação Cross-Source & Ingestion Planning",
+      "tarefas": [
+        "Merge todos índices: aneel_editais, epe_publicacoes, ons_boletins, nbr_5422, teses",
+        "Validação cruzada: referências mútuas (ex., edital cita PDE 2024 + NBR 5422)",
+        "Teste pipeline ingestion end-to-end: 20 documentos representativos (1 de cada fonte)",
+        "Documentação blockers técnicos finais + mitigações",
+        "Planning Phase 1b: quais fontes escalaram? Quais requerem otimizações?"
+      ],
+      "entregaveis": [
+        "✓ merged_rag_tier1_energia_index.json (200+ documentos + metadados)",
+        "✓ cross_references_map.json (edital → PDE, edital → NBR 5422, etc.)",
+        "✓ validation_report_week8.md (testes end-to-end)",
+        "✓ BLOCKERS_AND_MITIGATIONS.md (IEEE 738, NBR 5422, capacidade servidor)",
+        "✓ PHASE_1B_STRATEGY.md (prototipo + escalonamento)"
+      ]
+    }
+  },
+
+  "riscos_e_mitigacao": [
+    {
+      "risco": "IEEE 738 acesso restrito (padrão proprietário)",
+      "probabilidade": "ALTA (100%)",
+      "impacto": "MÉDIO (IEEE 738 importante mas não crítico)",
+      "mitigacao": [
+        "Adquirir licença IEEE (US$200) OU verificar acesso institucional UFRJ/USP",
+        "Para Phase 1a: usar resumos públicos + referências em NBR 5422 + aplicações em ONS/ANEEL",
+        "IEEE 738 será Tier 2 (secundário) até confirmação acesso"
+      ]
+    },
+    {
+      "risco": "NBR 5422:2024 compra R$400-600 (custo)",
+      "probabilidade": "ALTA (100% precisa adquirir)",
+      "impacto": "MÉDIO (custo único, essencial para Tier 1)",
+      "mitigacao": [
+        "Aprovar aquisição com Manta gerência tech/finance",
+        "Priorizar compra para Week 6",
+        "Fallback: usar resumos públicos (O Setor Elétrico) até aquisição"
+      ]
+    },
+    {
+      "risco": "Volume ONS boletins (8 GB histórico) — espaço armazenamento",
+      "probabilidade": "MÉDIA (80%)",
+      "impacto": "MÉDIO (infraestrutura Supabase/storage)",
+      "mitigacao": [
+        "Priorizar 2-3 anos recentes (2024-2026) na Phase 1a (~2-3 GB)",
+        "Considerar compressão + chunking de série histórica para RAG",
+        "Avaliar Supabase bucket limits (requer confirmação arquitetura)"
+      ]
+    },
+    {
+      "risco": "Taxa atualização boletins ONS (diária) — custo crawling",
+      "probabilidade": "MÉDIA (70%)",
+      "impacto": "BAIXO (operacional, custo marginal)",
+      "mitigacao": [
+        "Implementar agendador cron/APScheduler (Week 5)",
+        "Deduplicação: boletim já no índice? → pular download",
+        "Considerar Phase 2: pipeline em tempo real (Kafka, RabbitMQ)"
+      ]
+    },
+    {
+      "risco": "PDF parsing complexo (editais com gráficos, boletins scaneados)",
+      "probabilidade": "MÉDIA (60%)",
+      "impacto": "MÉDIO (qualidade extração)",
+      "mitigacao": [
+        "Usar pdfplumber + Tesseract OCR para imagens",
+        "Manual QA on sample (5-10% dos documentos) Week 3-8",
+        "Documentação confidence scores por campo extraído"
+      ]
+    },
+    {
+      "risco": "Repositórios acadêmicos (UFRJ/USP) — links quebrados, teses removidas",
+      "probabilidade": "BAIXA (10%)",
+      "impacto": "BAIXO (documentos são públicos, repositório estável)",
+      "mitigacao": [
+        "Manter checksum/hash de PDFs baixados (verificação integridade)",
+        "URL fallback: Pantheon + USP Teses + Google Scholar em caso de indisponibilidade",
+        "Política de atualização: rescan mensal para novos uploads"
+      ]
+    },
+    {
+      "risco": "ANEEL/EPE/ONS — mudança estrutura website (URLs quebram)",
+      "probabilidade": "BAIXA-MÉDIA (30%)",
+      "impacto": "MÉDIO (manutenção crawler)",
+      "mitigacao": [
+        "Usar Wayback Machine (archive.org) como fallback para histórico",
+        "Monitorar status 404 em crawls automáticos — alertar tech team",
+        "Documentar URLs primárias + alternativas (e.g., portal antigo ANEEL)"
+      ]
+    },
+    {
+      "risco": "API rate limiting não documentado (ANEEL, EPE, ONS)",
+      "probabilidade": "BAIXA (20%)",
+      "impacto": "MÉDIO (pausas ou bloqueio temporário)",
+      "mitigacao": [
+        "Week 3-5: monitorar X-RateLimit headers + response codes 429",
+        "Implementar exponential backoff + jitter em retry logic",
+        "Contato com tech teams (dadosabertos@aneel.gov.br) para documentação oficial"
+      ]
+    }
+  ],
+
+  "dependencias_externas": {
+    "tecnologia": [
+      "Supabase: storage para PDFs + PostgreSQL para índices metadados",
+      "Servidores de scraping: Selenium/Puppeteer para JS-heavy dashboards",
+      "OCR: Tesseract or cloud (Google Vision) para imagens em PDFs",
+      "NLP: sentence-transformers (multilingual-e5-small) para classificação teses"
+    ],
+    "acesso": [
+      "IEEE 738 — licença (US$200) ou acesso institucional UFRJ/USP",
+      "NBR 5422:2024 — compra ABNT (~R$400-600) ou acesso institucional",
+      "APIs: ANEEL, EPE, ONS — acesso público confirmado ✅"
+    ],
+    "expertise": [
+      "Engenharia de transmissão: validação de campos extraídos (Week 3-8)",
+      "DevOps: deployer crawler + agendador em produção (Week 8)",
+      "NLP: configuração sentence-transformers para classificação teses"
+    ]
+  },
+
+  "metricas_sucesso": {
+    "week_3": "Crawler ANEEL operational, índice 25 editais, 0 erros parsing estrutura",
+    "week_4": "Crawler EPE operational, índice 70 publicações, 2 PDFs parsed com sucesso",
+    "week_5": "API ONS validada, 30 boletins históricos baixados, agendador boletim diário ativo",
+    "week_6": "IEEE 738 acesso adquirido/verificado, NBR 5422 adquirida, 5 referências NBR em editais extraídas",
+    "week_7": "150 teses indexadas, 10 PDFs baixados com checksum, TF-IDF classificação validada",
+    "week_8": "Merged index 200+ docs, cross-reference map validado, 0 blockers críticos, prototipo Phase 1b documentado"
+  },
+
+  "observacoes": {
+    "prioridade": "ANEEL (semana 3) > EPE (semana 4) > ONS (semana 5) > Teses (semana 7); IEEE/NBR flex (semana 6)",
+    "paralelo": "ANEEL + EPE podem ser paralelos Week 3-4 (2 crawlers independentes)",
+    "reuso": "Parsers PDF (pdfplumber) reutilizáveis ANEEL ↔ EPE ↔ NBR; OCR (Tesseract) reutilizável editais ↔ teses",
+    "github": "Recomendação: criar repo `manta-rag-energia-s9` com estrutura `/sources/{aneel,epe,ons,ieee,nbr,teses}`, `.github/workflows/` para daily crawls, `docs/` para BLOCKERS.md + progress.md",
+    "comunicacao": "Reunião semanal (Fri 16h) com Maestro + Manta 01 (claims para validação jurídica IEEE/NBR) para escalações"
+  }
+}
