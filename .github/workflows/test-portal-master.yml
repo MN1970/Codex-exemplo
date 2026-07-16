@@ -1,0 +1,61 @@
+name: Test Portal Master (Codex-exemplo)
+
+on:
+  push:
+    branches: [ main, claude/adk-5-layer-architecture-3xr4te ]
+    paths:
+      - 'portal/backend/**'
+      - '.github/workflows/test-portal-master.yml'
+  pull_request:
+    branches: [ main, claude/adk-5-layer-architecture-3xr4te ]
+    paths:
+      - 'portal/backend/**'
+
+jobs:
+  test:
+    name: Test Portal Master
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        working-directory: portal/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+
+      - name: Run tests
+        working-directory: portal/backend
+        run: pytest tests/ -v --tb=short
+
+      - name: Generate coverage report
+        working-directory: portal/backend
+        run: pytest tests/ --cov=app --cov-report=xml --cov-report=term
+        if: success()
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./portal/backend/coverage.xml
+          flags: portal-master
+          name: portal-master-cov
+        if: success()
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Test Results (Python ${{ matrix.python-version }})
+          path: 'portal/backend/test-results.xml'
+          reporter: 'java-junit'
