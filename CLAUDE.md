@@ -408,6 +408,47 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.9** (2026-07-19) — Fechar loop de aprendizado. Sprint concluído:
+  5 pipes paralelas aplicadas em produção 2026-07-19 + hardening pós-apply.
+  **Pipe 1** cron consolidação episódica
+  (`.github/workflows/episodes-consolidation-daily.yml`, dedup + TTL).
+  **Pipe 2** backend quantitativo (9 testes, ingestão realizado×projeto).
+  **Pipe 3** learned router skip formal — hard-code
+  `/rest/v1/manta_rag_ml_predictions` já em prod (restore
+  `maestro_routing_predictions` desnecessário). **Pipe 4** seed Manta Cases
+  (`scripts/seed_manta_cases_v4_9.py`). **Pipe 5** judge feedback loop D1'
+  aplicado: migração `2026_07_13_judge_feedback_loop_v4_9_adapted.sql` +
+  runbook `JUDGE-FEEDBACK-LOOP-v4.9-ADAPTED-RUNBOOK.md` + smoke test
+  AKP-JF-00001 (idempotência OK, priority=1 para score ≤ 0). Hardening:
+  REVOKE grants excessivos em `v_judge_feedback_health` e
+  `judge_flag_to_backlog()`, COMMENT ON VIEW `v_akp_judge_health` (v4.6,
+  retrocompatível). Gate humano MN completado 2026-07-19.
+- **v4.8** (2026-07-14) — Hardening pós-v4.7 + consolidação episódica.
+  Pipe 1: cron diário `consolidate_old_episodes()` com idempotência e dedup
+  por `(agent_id, task_context_hash)`. Pipe 2: novo backend quantitativo com
+  endpoint `POST /api/quantitativo/field-measurement` para ingestão pós-obra
+  (DER-SP Brückner realizado vs. projeto + SPI). Pipe 3: learned router
+  hard-coded contra `/rest/v1/manta_rag_ml_predictions` produção (scaffold
+  ML 384→128; threshold 0.85 padrão). Pipe 4: seed Manta Cases v4.9
+  (3 projetos × 23 KEs canônicos: OAE 622 + EPR BR-365 + AySA anonimizado).
+  Pipe 5: refator judge feedback v4.6 com trigger `agent_response_flags →
+  akp_curation_backlog` + view `v_judge_feedback_health` reutilizando
+  infraestrutura. Todas idempotentes com gate humano MN antes de apply.
+- **v4.7** (2026-07-13) — Agentic Intelligence Layer sobre v4.6.1:
+  Reflexion Loop pré-entrega + Memória episódica + P2 Prompt Contract +
+  Loop primitives + Model tiering explícito + SkillForge. Roadmap
+  MNT-IA-20260712-001 com 6 fases sequenciadas. Fase 1 (refs canônicos em
+  `sharepoint/01-agentes-fundamentais/manta-maestro/refs/`: `p2-contract-template.md`,
+  `reflexion-loop-guide.md`, `skillforge-pipeline.md`, `episodic-memory-schema.md`)
+  concluída. Fase 2 (P2 Contract obrigatório + `agent_episodes` +
+  `v_high_quality_episodes` + índice HNSW). Fase 3 (`maestro_reflexion.py`,
+  max 3 retries, gating star2/star3). Fase 4 (Loop primitives em
+  `loop_primitives.py`: sequential/parallel/race DAG). Fase 5 (Model tiering
+  explícito via SKILL.md: `haiku_for/sonnet_for/opus_for` + enforcement).
+  Fase 6 (SkillForge em `sharepoint/03-skills-forjadas/` com
+  `skillforge_rejects` + pipeline cron 03:00 UTC). Gate humano MN:
+  `test_wipe_recovery.py` + validação 8 cenários cross-agent antes de merge
+  para `feat/v4.7-agentic-intelligence`.
 - **v4.6** (2026-07-12) — Evolução Maestro em 5 vetores paralelos
   (V1+V2+V3+V4+V5+V7), disparados como 5 subagentes simultâneos e
   costurados em commit único. **V1 Learned Routing** (scaffold ML: MLP
