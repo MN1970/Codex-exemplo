@@ -64,10 +64,14 @@ on:
         description: "Nº mínimo de ocorrências p/ promover a ticket"
         required: false
         default: "3"
-      max_top_sim:
-        description: "Similaridade top-1 máxima (float 0..1)"
+      max_avg_hits:
+        description: "Média de acertos máxima (float 0..1)"
         required: false
         default: "0.30"
+      min_judge_flags:
+        description: "Nº mínimo de judge flags (int ≥0)"
+        required: false
+        default: "3"
 
 permissions:
   contents: read
@@ -109,7 +113,8 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           MIN_OCCURRENCES: ${{ github.event.inputs.min_occurrences || '3' }}
-          MAX_TOP_SIM: ${{ github.event.inputs.max_top_sim || '0.30' }}
+          MAX_AVG_HITS: ${{ github.event.inputs.max_avg_hits || '0.30' }}
+          MIN_JUDGE_FLAGS: ${{ github.event.inputs.min_judge_flags || '3' }}
         run: |
           set -euo pipefail
 
@@ -130,7 +135,8 @@ jobs:
           url = os.environ["SUPABASE_URL"].rstrip("/")
           key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
           min_occ = int(os.environ.get("MIN_OCCURRENCES", "3"))
-          max_sim = float(os.environ.get("MAX_TOP_SIM", "0.30"))
+          max_avg_hits = float(os.environ.get("MAX_AVG_HITS", "0.30"))
+          min_judge_flags = int(os.environ.get("MIN_JUDGE_FLAGS", "3"))
 
           endpoint = f"{url}/rest/v1/rpc/promote_gaps_to_backlog"
           headers = {
@@ -139,7 +145,7 @@ jobs:
               "Content-Type": "application/json",
               "Accept": "application/json",
           }
-          body = {"min_occurrences": min_occ, "max_top_sim": max_sim}
+          body = {"min_occurrences": min_occ, "max_avg_hits": max_avg_hits, "min_judge_flags": min_judge_flags}
 
           print(f"POST {endpoint}")
           print(f"body: {body}")
@@ -156,7 +162,8 @@ jobs:
           report = {
               "generated_at": datetime.now(timezone.utc).isoformat(),
               "min_occurrences": min_occ,
-              "max_top_sim": max_sim,
+              "max_avg_hits": max_avg_hits,
+              "min_judge_flags": min_judge_flags,
               "created_count": len(created),
               "updated_count": len(updated),
               "created": created,

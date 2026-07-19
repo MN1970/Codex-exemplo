@@ -364,6 +364,23 @@ mergear.
 
 ---
 
+## DEPLOY CHECKLIST v4.9 - Fechar loop de aprendizado
+
+Sprint concluido 2026-07-19. 5 pipes paralelas + hardening pos-apply.
+
+- [x] Pipe 1 - Cron diario consolidate_old_episodes (.github/workflows/episodes-consolidation-daily.yml)
+- [x] Pipe 2 - Endpoint POST /api/quantitativo/field-measurement (backends/quantitativo/app/field_measurements.py + 9 testes)
+- [x] Pipe 3 - Learned router SKIP formal (maestro_learned_router.py hard-code /rest/v1/manta_rag_ml_predictions que ja existe em prod; restaurar maestro_routing_predictions nao e necessario)
+- [x] Pipe 4 - Seed Manta Cases v4.9 (scripts/seed_manta_cases_v4_9.py com 3 projetos x 23 KEs canonicos)
+- [x] Pipe 5 - Judge feedback loop D1' APLICADO EM PROD 2026-07-19
+  - migration: supabase/migrations/2026_07_13_judge_feedback_loop_v4_9_adapted.sql
+  - runbook: docs/JUDGE-FEEDBACK-LOOP-v4.9-ADAPTED-RUNBOOK.md
+  - smoke test: AKP-JF-00001 criado, idempotencia OK, priority=1 para score=0
+  - hardening pos-apply: REVOKE grants excessivos em v_judge_feedback_health e judge_flag_to_backlog(); COMMENT ON VIEW v_akp_judge_health (v4.6, keep-with-comment)
+- [x] Gate humano MN antes de aplicar em prod - CONCLUIDO 2026-07-19
+
+---
+
 ## Arquivos deste repositório
 
 ```
