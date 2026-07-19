@@ -116,7 +116,109 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## SLA & Tier por Agente
+
+| Agente | Tier padrão | RTT esperado | SLA resposta | Notas |
+|--------|-------------|--------------|--------------|-------|
+| Manta 00 (maestro) | Haiku→Sonnet | < 1s | RTT | Router crítico; escalada automática |
+| Manta 01 (claims) | Opus | < 3s | 2h | Análise jurídica complexa |
+| Manta 02 (contratual) | Sonnet | < 2s | 4h | Minutas e termos legais |
+| Manta 04 (imobiliário) | Sonnet | < 2s | 4h | Análise de propriedades |
+| Manta 05 (orçamento) | Sonnet | < 2s | 6h | Levantamentos e BOQs |
+| Manta 06 (modelagem) | Sonnet/Opus | < 3s | 8h | Modelos econômicos complexos |
+| Manta 07 (cronograma) | Sonnet | < 2s | 6h | Planejamento de prazos |
+| Manta 13 (business-dev) | Sonnet | < 2s | 4h | Prospecção e análise de mercado |
+| Manta 14 (apresentações) | Sonnet | < 2s | 4h | Geração de decks |
+| Manta 15 (advisory) | Sonnet/Opus | < 3s | 8h | Consultoria estratégica |
+| Manta 16 (arquiteto-IA) | Opus | < 3s | 6h | Desenho de arquiteturas |
+| Manta 03-S1 (Rodovias) | Sonnet | < 2s | 24h | Segmento maduro |
+| Manta 03-S2 (OAE) | Sonnet | < 2s | 24h | Segmento maduro |
+| Manta 03-S3 (Ferrovia) | Sonnet | < 2s | 24h | Segmento maduro |
+| Manta 03-S4 (Metrô) | Sonnet | < 2s | 24h | Segmento maduro |
+| Manta 03-S6 (Portos) | Sonnet | < 2s | 24h | Novo v4.2 |
+| Manta 03-S7 (Aeroportos) | Sonnet | < 2s | 24h | Novo v4.2 |
+| Manta 03-S8 (Saneamento) | Sonnet | < 2s | 24h | Novo v4.2 — **PRIORITY AySA** |
+| Manta 03-S9 (Energia) | Sonnet | < 2s | 24h | Novo v4.2 — ANEEL/State Grid |
+| Manta 03-S10 (Barragens) | Sonnet | < 2s | 24h | Novo v4.2 |
+
+---
+
+## Exemplos de Roteamento
+
+### Exemplo 1: Análise de terminal portuário
+
+**Prompt do usuário:**
+```
+Preciso analisar a viabilidade técnica de um terminal de contêineres 
+em Rio Grande. Quais serão os calados mínimos, e qual é a capacidade 
+anual estimada?
+```
+
+**Roteamento esperado:** → **agente-portos (Manta 03-S6)**
+- Keywords detectadas: "terminal", "contêineres", "calados"
+- RAG acionada: `por:*` (ANTAQ, PIANC)
+- Contexto geográfico (Rio Grande) enriquecido
+
+### Exemplo 2: Projeto de subestação elétrica
+
+**Prompt do usuário:**
+```
+Qual é o procedimento para licenciar uma LT de 345 kV no estado de São Paulo? 
+Preciso da documentação ANEEL e do prazo esperado.
+```
+
+**Roteamento esperado:** → **agente-energia (Manta 03-S9)**
+- Keywords detectadas: "LT", "345 kV", "ANEEL", "licenciar"
+- RAG acionada: `ene:*` (ANEEL editais, R1-R5 EPE, ONS)
+- Sugestão de integração com Manta 02 (contratual) para minutas
+
+### Exemplo 3: Drenagem urbana em área de expansão
+
+**Prompt do usuário:**
+```
+Estou desenvolvendo um projeto de drenagem para um bairro novo em Brasília. 
+Qual é a vazão de projeto, segundo a NBR 12211? Qual é o volume de retenção 
+necessário para 25 anos de retorno?
+```
+
+**Roteamento esperado:** → **agente-saneamento (Manta 03-S8)**
+- Keywords detectadas: "drenagem", "NBR 12211", "vazão projeto", "retenção"
+- RAG acionada: `san:*` (SNIS, IWA, NBR 12211-12218, Lei 14.026)
+- Integração potencial com Manta 05 (orçamento) para estudo preliminar
+
+### Exemplo 4: Reavaliação econômica de rodovia com sondagens
+
+**Prompt do usuário:**
+```
+Tenho um levantamento de sondagens SPT em uma rodovia federal. Como devo 
+reclassificar o material escavado (1ª, 2ª ou 3ª categoria) e qual é o 
+impacto no orçamento de terraplenagem?
+```
+
+**Roteamento esperado:** → **agente-infraestrutura S1 (Manta 03-S1)**
+- Keywords detectadas: "sondagens", "SPT", "categoria DNIT", "terraplenagem"
+- RAG acionada: `s1:*` (DNIT, NBR 6484, manuais de terraplenagem)
+- Integração com Manta 05 (orçamento) para reestimativa pós-classificação
+
+### Exemplo 5: Segurança de barragem após inspeção visual
+
+**Prompt do usuário:**
+```
+Uma barragem de CCR apresenta fissuras em padrão de mapa. Qual é o protocolo 
+de inspeção segundo o CBDB? O quanto devo aprofundar para atestar a segurança 
+estrutural?
+```
+
+**Roteamento esperado:** → **agente-barragens (Manta 03-S10)**
+- Keywords detectadas: "barragem", "CCR", "fissuras", "CBDB", "inspeção"
+- RAG acionada: `bar:*` (ICOLD, CBDB, SIGBM, Lei 12.334)
+- Sugestão de escalada para Manta 15 (advisory) se risco > nível de confiança
+
+---
+
 ## DEPLOY CHECKLIST v4.2
+
+**PRIORITY: Completar 7 itens [ ] antes de merge para v4.2 GA**
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
 - [x] Aplicar patch no CLAUDE.md master (seção Agentes)
