@@ -33,7 +33,10 @@ básico, executivo, obra, O&M, licitação, DD e descomissionamento.
   referência (NR-001 tarifas, NR-002 outorga, NR-004 regionalização).
 - **ARSESP, AGERGS, AGENERSA, ADASA** — agências reguladoras estaduais.
 - **NBR 12211** (concepção de sistemas públicos de abastecimento),
-  **NBR 12212** (poço tubular), **NBR 12213-12218** (projeto ETA/ETE).
+  **NBR 12212** (poço tubular), **NBR 12213** (adução de água),
+  **NBR 12214** (sistema de bombeamento), **NBR 12215** (adução e distribuição),
+  **NBR 12216** (ETA — Estação de Tratamento de Água),
+  **NBR 12217** (reservatório de distribuição), **NBR 12218** (rede de distribuição).
 - **NBR 9648–9651** (esgoto sanitário), **NBR 15645** (obra de emissário
   submarino).
 - **SNIS** — sistema nacional de informações sobre saneamento (KPIs de

@@ -9,7 +9,7 @@ Saneamento, Energia, Barragens).
 
 ---
 
-## MAPA COMPLETO DE AGENTES — 20 agentes, 3 eixos
+## MAPA COMPLETO DE AGENTES — 19 agentes, 3 eixos
 
 ### Eixo 1 — Horizontais (transversais a todos os segmentos)
 
@@ -35,7 +35,6 @@ Saneamento, Energia, Barragens).
 | Manta 03-S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | Manta 03-S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
 | Manta 03-S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| Manta 03-S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
 | Manta 03-S6 | Portos | agente-portos | 🆕 Criado 2026-07-05 |
 | Manta 03-S7 | Aeroportos | agente-aeroportos | 🆕 Criado 2026-07-05 |
 | Manta 03-S8 | Saneamento | agente-saneamento | 🆕 Criado 2026-07-05 — PRIORIDADE AySA |
@@ -58,7 +57,7 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 
 ## ROUTING — Maestro (Manta 00)
 
-Regra de roteamento atualizada para Q1 do intake:
+Regra de roteamento atualizada para Q1 do intake. **Nota:** Manta 03-S5 (Túneis) foi consolidado em S2 (OAE) e S4 (Metrô) para eliminar redundância.
 
 ```
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
@@ -96,8 +95,8 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 | Coleção | Prefixo storage | Fontes iniciais | Status |
 |---------|-----------------|-----------------|--------|
-| saneamento | san: | SNIS, IWA, NBR 12211-12218, Lei 14.026, editais BNDES | 🆕 v4.2 |
-| energia | ene: | ANEEL editais, R1-R5 EPE, ONS, IEEE | 🆕 v4.2 |
+| saneamento | san: | SNIS, IWA, NBR 12211–12218, Lei 14.026, editais BNDES | 🆕 v4.2 |
+| energia | ene: | ANEEL editais, EPE Planos Decenais, ONS, IEEE | 🆕 v4.2 |
 | portos | por: | ANTAQ, PIANC, editais BNDES/ANTAQ | 🆕 v4.2 |
 | aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
@@ -120,9 +119,10 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
 - [x] Aplicar patch no CLAUDE.md master (seção Agentes)
+- [x] Corrigir inconsistências: rubrica órfã S5 removida, formatos unificados
 - [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
-- [ ] Inserir 5 routing rules em `sp_agent_routing`
-- [ ] Criar pastas SP para novos segmentos
+- [ ] Inserir 5 routing rules em `sp_agent_routing` (tabela sp_agent_routing)
+- [ ] Criar pastas SP para novos segmentos (03_Projetos/Saneamento, Energia, Portos, Aeroportos, Barragens)
 - [ ] Registrar skills no catálogo (skill registry)
 - [ ] Testar routing do Maestro com prompts de cada segmento
 - [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`

@@ -11,15 +11,15 @@ description: >
   drenagem urbana, resíduos sólidos) com PRIORIDADE AySA (Argentina) e
   cobertura do marco brasileiro pós-Lei 14.026/2020. Estrutura em 5
   vertentes: V1 Análise Técnica & Risco, V2 Inteligência Setorial
-  (ANA/ARSESP/ERAS, SNIS, IWA, NBR 12211-12218), V3 Gestão de Obra
-  Urbana, V4 Document Intelligence, V5 12 Disciplinas (mananciais,
-  adutora, ETA, reservação, distribuição, coleta esgoto, EEE, ETE,
-  emissário, drenagem, resíduos, reúso). Knowledge Engine RAG
-  (prefixo `san:`). Aceita PMSB, ETC, DWG/DXF, resultados analíticos
-  de água/esgoto, cronograma. Entrega artefato React + memorial DOCX.
-  Use SEMPRE que mencionar saneamento, ETA, ETE, adutora, esgoto, AySA,
-  água tratada, drenagem urbana, macrodrenagem, SNIS, PMSB, Lei 14.026,
-  elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, UASB, MBR.
+  (ANA/ARSESP/ERAS, SNIS, IWA, NBR 12211–12218 — normas de abastecimento
+  de água e tratamento), V3 Gestão de Obra Urbana, V4 Document
+  Intelligence, V5 12 Disciplinas (mananciais, adutora, ETA, reservação,
+  distribuição, coleta esgoto, EEE, ETE, emissário, drenagem, resíduos,
+  reúso). Knowledge Engine RAG (prefixo `san:`). Aceita PMSB, ETC, DWG/DXF,
+  resultados analíticos de água/esgoto, cronograma. Entrega artefato React
+  + memorial DOCX. Use SEMPRE que mencionar saneamento, ETA, ETE, adutora,
+  esgoto, AySA, água tratada, drenagem urbana, macrodrenagem, SNIS, PMSB,
+  Lei 14.026, elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, UASB, MBR.
 ---
 
 # AGENTE-SANEAMENTO — Manta 03-S8
