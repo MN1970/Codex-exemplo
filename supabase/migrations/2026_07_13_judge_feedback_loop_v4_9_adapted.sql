@@ -340,17 +340,13 @@ COMMENT ON FUNCTION public.judge_flag_to_backlog() IS
 -- Recria trigger (permite re-run limpo do migration)
 DROP TRIGGER IF EXISTS trg_judge_flag_to_backlog ON public.manta_rag_queries;
 
+-- WHEN só pode referenciar NEW (OLD é NULL em INSERT; TG_OP não é permitido
+-- em WHEN). A idempotência (dedup por query_id) é garantida pelo short-circuit
+-- + UNIQUE INDEX parcial dentro da função — não pelo WHEN.
 CREATE TRIGGER trg_judge_flag_to_backlog
   AFTER INSERT OR UPDATE OF judge_score ON public.manta_rag_queries
   FOR EACH ROW
-  WHEN (
-    NEW.judge_score IS NOT NULL
-    AND NEW.judge_score < 3
-    AND (
-      TG_OP = 'INSERT'
-      OR OLD.judge_score IS DISTINCT FROM NEW.judge_score
-    )
-  )
+  WHEN (NEW.judge_score IS NOT NULL AND NEW.judge_score < 3)
   EXECUTE FUNCTION public.judge_flag_to_backlog();
 
 -- ============================================================================
