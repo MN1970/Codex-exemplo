@@ -1,15 +1,15 @@
-# CLAUDE.md — Manta Maestro (Agent Registry)
+# CLAUDE.md — Manta Maestro v5 (Agent Registry)
 
 Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v5.0** (2026-07-20) — RAG híbrido + 30 agentes dinâmicos (matriz S1–S5 × E01–E06) +
+workflow engine com detecção de projeto + MCP fallback + orchestração paralela.
 
 ---
 
-## MAPA COMPLETO DE AGENTES — 20 agentes, 3 eixos
+## MAPA COMPLETO DE AGENTES — 30 agentes, 3 eixos
 
 ### Eixo 1 — Horizontais (transversais a todos os segmentos)
 
@@ -27,107 +27,145 @@ Saneamento, Energia, Barragens).
 | Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
 | Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
 
-### Eixo 2 — Verticais por segmento (C3)
+### Eixo 2 — Verticais por segmento (5 segmentos × 6 especialistas)
 
-| Código | Segmento | Agente | Status |
-|--------|----------|--------|--------|
-| Manta 03-S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
-| Manta 03-S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
-| Manta 03-S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
-| Manta 03-S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| Manta 03-S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
-| Manta 03-S6 | Portos | agente-portos | 🆕 Criado 2026-07-05 |
-| Manta 03-S7 | Aeroportos | agente-aeroportos | 🆕 Criado 2026-07-05 |
-| Manta 03-S8 | Saneamento | agente-saneamento | 🆕 Criado 2026-07-05 — PRIORIDADE AySA |
-| Manta 03-S9 | Energia | agente-energia | 🆕 Criado 2026-07-05 — ANEEL/State Grid |
-| Manta 03-S10 | Barragens | agente-barragens | 🆕 Criado 2026-07-05 |
+**Matriz dinâmica: 30 agentes**
 
-### Eixo 3 — Ciclo de vida (8 fases)
+| Segmento | E01 (Estudo) | E02 (Básico) | E03 (Executivo) | E04 (Obra) | E05 (Operação) | E06 (Encerramento) |
+|----------|---|---|---|---|---|---|
+| **S1** Rodovias | S1.E01 ✅ | S1.E02 ✅ | S1.E03 ✅ | S1.E04 ✅ | S1.E05 ✅ | S1.E06 🆕 |
+| **S2** OAE (pontes) | S2.E01 ✅ | S2.E02 ✅ | S2.E03 ✅ | S2.E04 ✅ | S2.E05 ✅ | S2.E06 🆕 |
+| **S3** Ferrovia | S3.E01 ✅ | S3.E02 ✅ | S3.E03 ✅ | S3.E04 ✅ | S3.E05 ✅ | S3.E06 🆕 |
+| **S4** Metrô/VLT | S4.E01 ✅ | S4.E02 ✅ | S4.E03 ✅ | S4.E04 ✅ | S4.E05 ✅ | S4.E06 🆕 |
+| **S5** Saneamento | S5.E01 🆕 | S5.E02 🆕 | S5.E03 🆕 | S5.E04 🆕 | S5.E05 🆕 | S5.E06 🆕 |
 
-Todos os agentes verticais suportam as 8 fases via intake Q2:
-1. Estudo prévio / EVTE
-2. Projeto básico
-3. Projeto executivo
-4. Obra em execução
-5. Operação & manutenção
-6. Processo competitivo / licitação
-7. Due diligence / M&A
-8. Encerramento / descomissionamento
+**Status:**
+- ✅ Operacional (S1–S4 existentes, reusando lógica por fase)
+- 🆕 Criado v5.0 (S5 Saneamento; E06 Encerramento p/ todos; refatoração para dinâmica)
+
+### Eixo 3 — Ciclo de vida (6 fases de especialização)
+
+Matriz dinâmica: cada agente é especialista em UMA fase × UM segmento.
+
+1. **E01** — Estudo prévio / EVTE
+2. **E02** — Projeto básico (traçado/layout)
+3. **E03** — Projeto executivo (PAP, quantitativo)
+4. **E04** — Obra em execução (cronograma, serviços)
+5. **E05** — Operação & manutenção (AAD, tarifação, O&M)
+6. **E06** — Encerramento / Concessão / Descomissionamento
 
 ---
 
-## ROUTING — Maestro (Manta 00)
+## RAG HÍBRIDO — Maestro v5
 
-Regra de roteamento atualizada para Q1 do intake:
+Arquitetura tripartite (SQLite local + Redis cache + MCP fallback):
 
+| Camada | Tecnologia | Atualização | Latência | Custo |
+|--------|---|---|---|---|
+| 1. Cache local | SQLite FTS5 + embeddings | 2x/dia (batch) | <100ms | ~0 |
+| 2. Hot reindex | Voyage AI embeddings | 2x/dia (12h apart) | <200ms | $0.01/1M tokens |
+| 3. MCP fallback | SharePoint M365 query | On-demand | <2s | JWT bearer |
+
+**Fluxo de retrieval:**
 ```
-IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
-   → agente-saneamento (S8)
-
-IF menção a transmissão|LT|subestação|ANEEL|RAP|leilão transmissão|ONS|EPE
-   → agente-energia (S9)
-
-IF menção a porto|terminal|ANTAQ|dragagem|molhe|berço|calado|contêiner|granel
-   → agente-portos (S6)
-
-IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
-   → agente-aeroportos (S7)
-
-IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
-   → agente-barragens (S10)
-
-# Regras existentes S1-S4 mantidas sem alteração
-IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
-   → agente-infraestrutura S1
-
-IF menção a ponte|viaduto|OAE|NBR 7187|túnel rodoviário
-   → agente-infraestrutura S2
-
-IF menção a ferrovia|trilho|AMV|dormente|via permanente
-   → agente-infraestrutura S3
-
-IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
-   → agente-infraestrutura S4
+Query + Segmento + Fase
+  ↓
+SQLite FTS5 (keywords) + Redis cache hit?
+  ├─ HIT → rerank (Sonnet) → top-2
+  └─ MISS → MCP M365 sharepoint_search → INSERT SQLite → rerank
+    → top-2 chunks injetados em system prompt do agente S#.E##
 ```
 
 ---
 
-## RAG — Coleções em Supabase
+## WORKFLOW ENGINE — Maestro (Manta 00)
 
-| Coleção | Prefixo storage | Fontes iniciais | Status |
-|---------|-----------------|-----------------|--------|
-| saneamento | san: | SNIS, IWA, NBR 12211-12218, Lei 14.026, editais BNDES | 🆕 v4.2 |
-| energia | ene: | ANEEL editais, R1-R5 EPE, ONS, IEEE | 🆕 v4.2 |
-| portos | por: | ANTAQ, PIANC, editais BNDES/ANTAQ | 🆕 v4.2 |
-| aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
-| barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
+Pipeline determinístico: Input → Detect Type → Route → Execute Parallel → Synthesize
+
+1. **Detect Project Type** (metadata .mtp.json)
+   - Extrai: segment (S1–S5), phase (E01–E06), estado, projeto_id
+2. **NLU Triagem** (Haiku 4.5)
+   - Intent classification (orçamento, cronograma, geotecnia, etc.)
+   - Agent candidates (1–3 agentes S#.E##)
+3. **Route** (determinístico)
+   - Segment × Phase → agente específico
+   - Intent → fallback para múltiplos agentes (fan-out)
+4. **Execute Parallel** (asyncio.gather)
+   - 30 agentes max (concorrência adaptativa)
+   - RAG inject + system prompt customizado
+   - Timeout 60s por agente
+5. **Synthesize** (Sonnet 4.6)
+   - Merge respostas N agentes → JSON estruturado
+   - Audit log em Postgres
+   - Cache resultados 24h (Redis)
 
 ---
 
-## SHAREPOINT — Routing rules (sp_agent_routing)
+## ROUTING — Maestro v5 (Matriz dinâmica)
 
-| Agente | Pasta SP sugerida | Pattern |
-|--------|-------------------|---------|
-| agente-saneamento | 03_Projetos/Saneamento/* | *.pdf, *.dwg, *.xlsx |
-| agente-energia | 03_Projetos/Energia/* | *.pdf, *.dwg, *.xlsx |
-| agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
-| agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
-| agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
+Regra de roteamento atualizada para v5 (metadata-driven):
+
+```
+# Matriz dinâmica: projeto_metadata.segment × projeto_metadata.phase → agente único
+
+EXEMPLO: projeto BR-365.json contém {segment: "S1", phase: "E03"}
+  → ROUTE → S1.E03 (Projeto Executivo de Rodovia)
+
+# Intent-driven routing (quando phase é desconhecida ou agnóstica)
+
+IF intent == "orçamento" E metadata.segment == "S1"
+   → FAN-OUT [S1.E03, S1.E04, S1.E05]  # todas as fases que geram orçamento
+
+IF intent == "cronograma" E metadata.segment == "*"
+   → FAN-OUT [*.E04, *.E05]  # obra e operação têm cronogramas
+
+IF intent == "geotecnia" E metadata.segment IN ["S2", "S4"]
+   → FAN-OUT [S2.E01, S4.E01]  # estudos com geotecnia
+
+# Fallback: unknown segment
+IF metadata.segment NOT IN ["S1", "S2", "S3", "S4", "S5"]
+   → MAESTRO_TRIAGEM (Haiku 4.5 classifica) → reroute
+```
 
 ---
 
-## DEPLOY CHECKLIST v4.2
+## DEPLOYMENT CHECKLIST v5.0 — Fase 1 (RAG Foundation)
 
-- [x] Copiar 5 agent .md para `.claude/agents/`
-- [x] Aplicar patch no CLAUDE.md master (seção Agentes)
-- [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
-- [ ] Inserir 5 routing rules em `sp_agent_routing`
-- [ ] Criar pastas SP para novos segmentos
-- [ ] Registrar skills no catálogo (skill registry)
-- [ ] Testar routing do Maestro com prompts de cada segmento
-- [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
-- [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
-- [ ] Gate humano: aprovação MN antes de merge
+### Codex-exemplo (este repo)
+- [ ] Criar 30 skill files (`s#-e##.md`) em `.claude/agents/`
+- [ ] Atualizar CLAUDE.md com schema v5.0 (✅ feito)
+- [ ] Criar `.claude/rules/antipatterns.md`
+- [ ] Validar lint de YAML frontmatter (30 agents)
+- [ ] PR + merge para `claude/rag-sharepoint-dynamic-workflow-m2ar2b`
+
+### manta-hub (backend)
+**Fase 1A — RAG Service** (2–3 semanas)
+- [ ] Schema SQLite local (`backends/maestro/data/maestro_rag.db`)
+  - sp_documents (FTS5 index)
+  - embeddings_cache (Voyage AI 1024d)
+  - query_log (auditoria)
+- [ ] `rag_service.py` (retrieve + sync + embed)
+- [ ] `file_sync_daemon.py` (APScheduler batch sync 2x/dia)
+- [ ] `project_detector.py` (metadata .mtp.json parser)
+- [ ] Tests + fixtures (20 casobase)
+
+**Fase 1B — Orchestrator** (2–3 semanas)
+- [ ] `nlm_classifier.py` (Haiku 4.5 triagem)
+- [ ] `workflow_engine.py` (fan-out + synthesize)
+- [ ] `routers/query.py` (`POST /api/query`)
+- [ ] `agent_invoker.py` (Claude API wrapper)
+- [ ] Tests parallelismo (5 agentes concorrentes)
+
+**Fase 1C — Infrastructure** (1 semana)
+- [ ] `.env.example` com RAG_*, MCP_*, MAESTRO_*
+- [ ] `deploy/maestro-api.service` (systemd)
+- [ ] `deploy/nginx-maestro.conf` (reverse proxy)
+- [ ] GitHub Actions CI/CD (lint + test)
+
+### Supabase (seed RAG)
+- [ ] Criar/verificar 5 coleções `rag_chunks`
+- [ ] Upload 100 chunks por segmento (S1–S5)
+- [ ] Testar retrieval + embedding similarity
 
 ---
 
@@ -135,26 +173,53 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                         # este arquivo (master registry)
-└── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+├── CLAUDE.md                                # este arquivo (v5.0)
+├── .claude/
+│   ├── agents/                              # 30 agentes × skills
+│   │   ├── s1-e01-estudo.md
+│   │   ├── s1-e02-basico.md
+│   │   ├── s1-e03-executivo.md
+│   │   ├── s1-e04-obra.md
+│   │   ├── s1-e05-operacao.md
+│   │   ├── s1-e06-encerramento.md
+│   │   ├── s2-e01-estudo.md
+│   │   # ... s2-e02 até s2-e06 (OAE)
+│   │   # ... s3-e01 até s3-e06 (Ferrovia)
+│   │   # ... s4-e01 até s4-e06 (Metrô)
+│   │   # ... s5-e01 até s5-e06 (Saneamento)
+│   │
+│   ├── helpers/
+│   │   ├── maestro-router.md               # Orchestrator triagem
+│   │   ├── rag-retriever.md                # Embeddings helper
+│   │   └── query-synthesizer.md            # Merge final
+│   │
+│   └── rules/
+│       └── antipatterns.md
+│
+├── backend/ (em manta-hub)
+│   └── maestro/
+│       ├── rag_service.py               # SQLite + MCP fallback
+│       ├── file_sync_daemon.py          # SP sync daemon (APScheduler)
+│       ├── project_detector.py          # Metadata parser
+│       ├── nlm_classifier.py            # NLU Haiku triagem
+│       ├── workflow_engine.py           # Orchestração paralela
+│       └── routers/
+│           └── query.py                 # POST /api/query
 ```
 
-Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
-no repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
-serve como referência canônica versionada dos agentes verticais e do
-mapa de routing.
+Os agentes horizontais (Manta 00, 01, 02, etc.) vivem no repositório
+operacional `manta-hub`. Este repositório (`Codex-exemplo`) serve como
+referência canônica versionada dos agentes verticais (S#.E##) e do
+mapa de routing matricial.
 
 ---
 
 ## Histórico de versões
 
-- **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-  Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
-  coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
+- **v5.0** (2026-07-20) — Refatoração para matriz dinâmica (30 agentes:
+  5 segmentos × 6 fases). RAG híbrido (SQLite + Redis + MCP). Workflow
+  engine com detecção de projeto. Orchestração paralela de agentes.
+  Ticket MNT-2026-UPGRADE-RAG-MAESTRO-V5.
+- **v4.2** (2026-07-05) — Expansão S6–S10 (Portos, Aeroportos,
+  Saneamento, Energia, Barragens). 5 novos agentes verticais.
 - **v4.1** (anterior) — 15 agentes: horizontais + S1–S4.
