@@ -202,6 +202,8 @@ BEGIN
         cag_p50_ms = EXCLUDED.cag_p50_ms,
         cag_p95_ms = EXCLUDED.cag_p95_ms,
         cag_p99_ms = EXCLUDED.cag_p99_ms,
+        latency_delta_pct_avg = EXCLUDED.latency_delta_pct_avg,
+        confidence_delta_avg = EXCLUDED.confidence_delta_avg,
         go_ready = EXCLUDED.go_ready,
         updated_at = NOW();
 END;

@@ -172,12 +172,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker Image (multiarch)
+      - name: Build Docker Image (amd64 only)
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository }}/cag-shadow-mode:latest
             ${{ env.REGISTRY }}/${{ github.repository }}/cag-shadow-mode:${{ github.sha }}
