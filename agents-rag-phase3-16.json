@@ -1,0 +1,435 @@
+{
+  "version": "3.0.0",
+  "name": "Manta Maestro v5 — Phase 3: RAG Indexing & 16-Agent Orchestration",
+  "timestamp": "2026-07-22T00:00:00Z",
+  "status": "planned",
+  "deployment": {
+    "maxParallel": 16,
+    "loadBalancingStrategy": "round-robin-weighted",
+    "concurrencyCap": {
+      "indexers": 8,
+      "validators": 3,
+      "specialists": 5
+    }
+  },
+  "agents": {
+    "layer1_specialists": [
+      {
+        "id": "manta-03-s6",
+        "name": "agente-portos",
+        "alias": "Especialista Portos",
+        "segment": "S6",
+        "collection": "por:",
+        "tier": "opus",
+        "parallelSlot": false,
+        "ragAccess": "full",
+        "priority": "medium"
+      },
+      {
+        "id": "manta-03-s7",
+        "name": "agente-aeroportos",
+        "alias": "Especialista Aeroportos",
+        "segment": "S7",
+        "collection": "aer:",
+        "tier": "opus",
+        "parallelSlot": false,
+        "ragAccess": "full",
+        "priority": "medium"
+      },
+      {
+        "id": "manta-03-s8",
+        "name": "agente-saneamento",
+        "alias": "Especialista Saneamento (AySA)",
+        "segment": "S8",
+        "collection": "san:",
+        "tier": "opus",
+        "parallelSlot": false,
+        "ragAccess": "full",
+        "priority": "high"
+      },
+      {
+        "id": "manta-03-s9",
+        "name": "agente-energia",
+        "alias": "Especialista Energia (ANEEL)",
+        "segment": "S9",
+        "collection": "ene:",
+        "tier": "opus",
+        "parallelSlot": false,
+        "ragAccess": "full",
+        "priority": "high"
+      },
+      {
+        "id": "manta-03-s10",
+        "name": "agente-barragens",
+        "alias": "Especialista Barragens",
+        "segment": "S10",
+        "collection": "bar:",
+        "tier": "opus",
+        "parallelSlot": false,
+        "ragAccess": "full",
+        "priority": "medium"
+      }
+    ],
+    "layer2_indexers": [
+      {
+        "id": "indexer-san-fulltext",
+        "name": "Indexador Full-Text Saneamento",
+        "type": "indexer",
+        "subtype": "fulltext",
+        "tier": "sonnet",
+        "parallelSlot": true,
+        "parallelGroup": "indexers",
+        "collection": "san:",
+        "indexType": "tsvector",
+        "language": "portuguese",
+        "creates": "idx_rag_san_fulltext",
+        "priority": "high"
+      },
+      {
+        "id": "indexer-ene-fulltext",
+        "name": "Indexador Full-Text Energia",
+        "type": "indexer",
+        "subtype": "fulltext",
+        "tier": "sonnet",
+        "parallelSlot": true,
+        "parallelGroup": "indexers",
+        "collection": "ene:",
+        "indexType": "tsvector",
+        "language": "portuguese",
+        "creates": "idx_rag_ene_fulltext",
+        "priority": "high"
+      },
+      {
+        "id": "indexer-por-fulltext",
+        "name": "Indexador Full-Text Portos",
+        "type": "indexer",
+        "subtype": "fulltext",
+        "tier": "sonnet",
+        "parallelSlot": true,
+        "parallelGroup": "indexers",
+        "collection": "por:",
+        "indexType": "tsvector",
+        "language": "portuguese",
+        "creates": "idx_rag_por_fulltext",
+        "priority": "medium"
+      },
+      {
+        "id": "indexer-aer-fulltext",
+        "name": "Indexador Full-Text Aeroportos",
+        "type": "indexer",
+        "subtype": "fulltext",
+        "tier": "sonnet",
+        "parallelSlot": true,
+        "parallelGroup": "indexers",
+        "collection": "aer:",
+        "indexType": "tsvector",
+        "language": "portuguese",
+        "creates": "idx_rag_aer_fulltext",
+        "priority": "medium"
+      },
+      {
+        "id": "indexer-bar-fulltext",
+        "name": "Indexador Full-Text Barragens",
+        "type": "indexer",
+        "subtype": "fulltext",
+        "tier": "sonnet",
+        "parallelSlot": true,
+        "parallelGroup": "indexers",
+        "collection": "bar:",
+        "indexType": "tsvector",
+        "language": "portuguese",
+        "creates": "idx_rag_bar_fulltext",
+        "priority": "medium"
+      },
+      {
+        "id": "indexer-vectors-1",
+        "name": "Indexador Vector Embeddings (Chunks 1-200)",
+        "type": "indexer",
+        "subtype": "vector",
+        "tier": "opus",
+        "parallelSlot": true,
+        "parallelGroup": "indexers",
+        "chunkRange": [1, 200],
+        "indexType": "hnsw",
+        "embedding": {
+          "model": "text-embedding-3-large",
+          "dimension": 1536,
+          "provider": "openai"
+        },
+        "creates": "idx_rag_vectors_hnsw_1",
+        "priority": "high"
+      },
+      {
+        "id": "indexer-vectors-2",
+        "name": "Indexador Vector Embeddings (Chunks 200-400)",
+        "type": "indexer",
+        "subtype": "vector",
+        "tier": "opus",
+        "parallelSlot": true,
+        "parallelGroup": "indexers",
+        "chunkRange": [200, 400],
+        "indexType": "hnsw",
+        "embedding": {
+          "model": "text-embedding-3-large",
+          "dimension": 1536,
+          "provider": "openai"
+        },
+        "creates": "idx_rag_vectors_hnsw_2",
+        "priority": "high"
+      },
+      {
+        "id": "indexer-vectors-3",
+        "name": "Indexador Vector Embeddings (Chunks 400-600)",
+        "type": "indexer",
+        "subtype": "vector",
+        "tier": "opus",
+        "parallelSlot": true,
+        "parallelGroup": "indexers",
+        "chunkRange": [400, 600],
+        "indexType": "hnsw",
+        "embedding": {
+          "model": "text-embedding-3-large",
+          "dimension": 1536,
+          "provider": "openai"
+        },
+        "creates": "idx_rag_vectors_hnsw_3",
+        "priority": "high"
+      }
+    ],
+    "layer3_validators": [
+      {
+        "id": "validator-confidence",
+        "name": "Validador Confidence Score",
+        "type": "validator",
+        "subtype": "confidence",
+        "tier": "sonnet",
+        "parallelSlot": true,
+        "parallelGroup": "validators",
+        "validatesField": "confidence_score",
+        "minThreshold": 0.85,
+        "filters": "keeps_passing",
+        "priority": "high"
+      },
+      {
+        "id": "validator-metadata",
+        "name": "Validador Completude Metadata",
+        "type": "validator",
+        "subtype": "metadata",
+        "tier": "sonnet",
+        "parallelSlot": true,
+        "parallelGroup": "validators",
+        "validates": [
+          "document_id",
+          "source_url",
+          "collection_prefix",
+          "segment"
+        ],
+        "filters": "keeps_complete",
+        "priority": "high"
+      },
+      {
+        "id": "validator-ranking",
+        "name": "Validador Ranking & Relevância",
+        "type": "validator",
+        "subtype": "ranking",
+        "tier": "sonnet",
+        "parallelSlot": true,
+        "parallelGroup": "validators",
+        "rankingCriteria": [
+          "confidence_score",
+          "semantic_similarity",
+          "text_match_score"
+        ],
+        "outputFormat": "ranked_topN",
+        "topN": 10,
+        "priority": "high"
+      }
+    ]
+  },
+  "orchestration": {
+    "routingRules": {
+      "saneamento|ETA|esgoto|SNIS|Lei 14.026": {
+        "agent": "agente-saneamento",
+        "collection": "san:",
+        "segment": "S8",
+        "priority": "high"
+      },
+      "energia|transmissão|ANEEL|EPE|ONS": {
+        "agent": "agente-energia",
+        "collection": "ene:",
+        "segment": "S9",
+        "priority": "high"
+      },
+      "porto|dragagem|ANTAQ|TUP": {
+        "agent": "agente-portos",
+        "collection": "por:",
+        "segment": "S6",
+        "priority": "medium"
+      },
+      "aeroporto|pista|ANAC|RBAC": {
+        "agent": "agente-aeroportos",
+        "collection": "aer:",
+        "segment": "S7",
+        "priority": "medium"
+      },
+      "barragem|CBDB|SIGBM|Lei 12.334": {
+        "agent": "agente-barragens",
+        "collection": "bar:",
+        "segment": "S10",
+        "priority": "medium"
+      }
+    },
+    "parallelExecution": {
+      "maxConcurrent": 16,
+      "groups": {
+        "indexers": {
+          "count": 8,
+          "type": "cpu-bound",
+          "timeout": "2000ms",
+          "retryPolicy": "exponential-backoff"
+        },
+        "validators": {
+          "count": 3,
+          "type": "cpu-bound",
+          "timeout": "1000ms",
+          "retryPolicy": "exponential-backoff"
+        },
+        "specialists": {
+          "count": 5,
+          "type": "io-bound",
+          "timeout": "5000ms",
+          "retryPolicy": "exponential-backoff"
+        }
+      }
+    },
+    "workflow": {
+      "name": "Query Processing Pipeline",
+      "stages": [
+        {
+          "stage": 1,
+          "name": "Maestro Routing",
+          "agents": ["manta-00"],
+          "parallel": false,
+          "timeout": "500ms"
+        },
+        {
+          "stage": 2,
+          "name": "Parallel Indexing",
+          "agents": [
+            "indexer-san-fulltext",
+            "indexer-ene-fulltext",
+            "indexer-por-fulltext",
+            "indexer-aer-fulltext",
+            "indexer-bar-fulltext",
+            "indexer-vectors-1",
+            "indexer-vectors-2",
+            "indexer-vectors-3"
+          ],
+          "parallel": true,
+          "maxParallel": 8,
+          "timeout": "2000ms"
+        },
+        {
+          "stage": 3,
+          "name": "Result Validation",
+          "agents": [
+            "validator-confidence",
+            "validator-metadata",
+            "validator-ranking"
+          ],
+          "parallel": true,
+          "maxParallel": 3,
+          "timeout": "1000ms"
+        },
+        {
+          "stage": 4,
+          "name": "Specialist Response",
+          "agents": [
+            "agente-saneamento",
+            "agente-energia",
+            "agente-portos",
+            "agente-aeroportos",
+            "agente-barragens"
+          ],
+          "parallel": false,
+          "timeout": "5000ms"
+        }
+      ]
+    }
+  },
+  "performance": {
+    "targets": {
+      "queryLatency": "< 200ms",
+      "queriesPerSecond": "> 50",
+      "indexingTime": "< 2000ms",
+      "validationAccuracy": "> 99%",
+      "topNRelevance": "> 0.92"
+    },
+    "benchmarks": {
+      "without_indexing": {
+        "latency_ms": 2000,
+        "qps": 0.5,
+        "method": "full-table-scan"
+      },
+      "with_indexing": {
+        "latency_ms": 200,
+        "qps": 5,
+        "method": "fulltext-only"
+      },
+      "with_16_agents": {
+        "latency_ms": 20,
+        "qps": 50,
+        "method": "fulltext+vector+parallel-validation"
+      }
+    }
+  },
+  "deployment": {
+    "phase": 3,
+    "timeline": "After Phase 2 completes (after 2026-07-28)",
+    "dependencies": [
+      "Phase 2: 947+ chunks in Supabase",
+      "Supabase schema with rag_chunks table",
+      "PostgreSQL tsvector support",
+      "pgvector extension for embeddings"
+    ],
+    "rolloutPlan": [
+      {
+        "week": 1,
+        "action": "Deploy 8 indexers",
+        "status": "planned"
+      },
+      {
+        "week": 2,
+        "action": "Deploy 3 validators",
+        "status": "planned"
+      },
+      {
+        "week": 3,
+        "action": "Full 16-agent orchestration",
+        "status": "planned"
+      }
+    ]
+  },
+  "integrations": {
+    "supabase": {
+      "tables": ["rag_chunks", "rag_collection_status"],
+      "extensions": ["uuid-ossp", "pgvector"],
+      "indexes": [
+        "idx_rag_san_fulltext",
+        "idx_rag_ene_fulltext",
+        "idx_rag_por_fulltext",
+        "idx_rag_aer_fulltext",
+        "idx_rag_bar_fulltext",
+        "idx_rag_vectors_hnsw_1",
+        "idx_rag_vectors_hnsw_2",
+        "idx_rag_vectors_hnsw_3"
+      ]
+    },
+    "agents": {
+      "maestroRouter": "manta-00",
+      "specialists": ["manta-03-s6", "manta-03-s7", "manta-03-s8", "manta-03-s9", "manta-03-s10"],
+      "indexers": 8,
+      "validators": 3
+    }
+  }
+}
