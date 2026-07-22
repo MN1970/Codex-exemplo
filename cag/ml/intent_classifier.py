@@ -162,6 +162,8 @@ class IntentClassifier:
         Futura: usar Anthropic Embeddings API quando disponível,
         ou integrar com OpenAI Embeddings / Hugging Face.
         """
+        import random
+
         # TODO: Substituir por real embedding API quando disponível
         cache_key = hashlib.sha256(text.encode()).hexdigest()
 
@@ -169,9 +171,7 @@ class IntentClassifier:
             return self._embedding_cache[cache_key]
 
         # STUB: mock embedding (1536 dims como OpenAI)
-        import hashlib
         seed = int(hashlib.sha256(text.encode()).hexdigest(), 16) % 10000
-        import random
         random.seed(seed)
         embedding = [random.gauss(0, 1) for _ in range(1536)]
 
