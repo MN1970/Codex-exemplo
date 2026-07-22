@@ -57,19 +57,19 @@ init_logging() {
 }
 
 log_info() {
-  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] ${BLUE}ℹ${NC} $@" | tee -a "$LOG_FILE"
+  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] ${BLUE}ℹ${NC} $@" | tee -a "$LOG_FILE" >&2
 }
 
 log_success() {
-  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] ${GREEN}✓${NC} $@" | tee -a "$LOG_FILE"
+  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] ${GREEN}✓${NC} $@" | tee -a "$LOG_FILE" >&2
 }
 
 log_warn() {
-  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] ${YELLOW}⚠${NC} $@" | tee -a "$LOG_FILE"
+  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] ${YELLOW}⚠${NC} $@" | tee -a "$LOG_FILE" >&2
 }
 
 log_error() {
-  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] ${RED}✗${NC} $@" | tee -a "$LOG_FILE"
+  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] ${RED}✗${NC} $@" | tee -a "$LOG_FILE" >&2
 }
 
 # Validar pré-requisitos

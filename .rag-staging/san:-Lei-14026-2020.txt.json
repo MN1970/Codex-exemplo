@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "document_id": "doc-2026-07-22-Lei-14026-2020",
+    "filename": "Lei-14026-2020.txt",
+    "collection_prefix": "san:",
+    "segment": "S8",
+    "source_url": "/home/user/Codex-exemplo/data/rag-docs/san:/Lei-14026-2020.txt",
+    "source_type": "file",
+    "file_size_kb": 2.302734375,
+    "file_format": ".txt",
+    "extracted_at": "2026-07-22T21:22:47.270012"
+  },
+  "chunk_count": 1,
+  "chunks": [
+    {
+      "chunk_index": 0,
+      "content": "LEI Nº 14.026, DE 26 DE JULHO DE 2020 Atualiza o marco legal do saneamento básico no Brasil. CAPÍTULO I — DISPOSIÇÕES GERAIS Art. 1º Esta Lei atualiza o marco legal do saneamento básico no Brasil, alterando a Lei nº 9.427, de 26 de dezembro de 1996, a Lei nº 10.233, de 5 de junho de 2001, e a Lei nº 11.445, de 5 de janeiro de 2007. Art. 2º Os objetivos desta Lei incluem: I - Universalização da prestação de serviços de água e esgotos; II - Melhor alocação de responsabilidades entre os entes da Federação; III - Melhoria na qualidade da prestação de serviços; IV - Incremento dos investimentos na infraestrutura de saneamento; V - Aperfeiçoamento do marco regulatório; VI - Segurança, legalidade, modicidade de tarifas, publicidade de informações e demonstrações contábeis. CAPÍTULO II — PRESTAÇÃO DE SERVIÇOS Art. 3º Os serviços de saneamento básico são aqueles de limpeza urbana e manejo de resíduos sólidos, esgotamento sanitário, abastecimento de água potável e drenagem e manejo das águas pluviais urbanas. Art. 4º A prestação regionalizada de serviços de saneamento básico é aquela prestada por entidade de direito público ou privado que atua em área de atuação que compreenda mais de um município. Art. 5º As entidades reguladoras deverão garantir: I - O acesso a serviços de saneamento básico; II - A sustentabilidade econômico-financeira da prestação dos serviços; III - Conformidade com normas técnicas aplicáveis; IV - Proteção do meio ambiente e recursos hídricos. CAPÍTULO III — METAS DE UNIVERSALIZAÇÃO Art. 6º Até 31 de dezembro de 2033, deverão ser alcançadas as seguintes metas: - 99% de cobertura de abastecimento de água; - 90% de cobertura de esgotamento sanitário; - Coleta universal de resíduos sólidos urbanos. CAPÍTULO IV — REGULAÇÃO E FISCALIZAÇÃO Art. 7º A regulação e fiscalização dos serviços será realizada por órgãos ou entidades reguladoras específicas, que deverão ser dotadas de autonomia e independência. Art. 8º As tarifas deverão ser fixadas de forma a garantir a sustentabilidade econômico-financeira da prestação dos serviços, com base em custos eficientes. CAPÍTULO V — DISPOSIÇÕES FINAIS Art. 9º Esta Lei entra em vigor na data de sua publicação. Brasília, 26 de julho de 2020.",
+      "length": 2220,
+      "collection_prefix": "san:",
+      "segment": "S8",
+      "valid": true,
+      "confidence_score": 1.0,
+      "validation_status": "validated",
+      "issues": [],
+      "validated_at": "2026-07-22T21:22:47.270860"
+    }
+  ]
+}
