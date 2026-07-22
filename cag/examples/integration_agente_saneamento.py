@@ -25,7 +25,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from ml.intent_classifier import IntentClassifier, AgentSelector, IntentPrediction
-from orchestrator.response_ranker import ResponseRanker, AgentResponse
+from orchestrator.response_ranker import ResponseRanker, AgentResponse, RankedResponse
 from orchestrator.cag_orchestrator import CAGOrchestrator
 
 # =============================================================================
@@ -249,6 +249,92 @@ def setup_agent_pool() -> Dict:
 
 
 # =============================================================================
+# MOCK SÍNTESE (sem API keys)
+# =============================================================================
+
+def simulate_orchestration(query: str, agent_response: AgentResponse, rankings: List[RankedResponse]) -> Dict:
+    """
+    Simula a orquestração completa sem chamar API Claude.
+    Em produção, isso seria feito pelo ResponseSynthesizer.
+    """
+    import time
+    start_time = time.time()
+
+    # Simular síntese (seria feita por Claude em produção)
+    final_response = f"""## Resposta Integrada: {query}
+
+Com base na análise de especialistas em saneamento:
+
+### Estações de Tratamento de Água (ETA)
+
+A **NBR 12.211** e **NBR 12.216** especificam os critérios técnicos para projeto de ETAs:
+- Dimensionamento de unidades de decantação com taxa de escoamento adequada
+- Profundidade útil de 3-4 metros
+- Período de detenção de 4-6 horas
+- Integração de coagulação, floculação, decantação, filtração e desinfecção
+
+### Sistema de Coleta e Tratamento de Esgoto
+
+A **NBR 9648** e **Lei 14.026/2020** são normativos principais:
+
+**Dimensionamento técnico (NBR 9648)**:
+- Velocidade mínima: 0,6 m/s
+- Profundidade de assentamento: mínimo 0,6 m
+- Declividade adequada ao terreno
+
+**Requisitos legais (Lei 14.026/2020)**:
+- Universalização de coleta até 2033 (90% da população)
+- Tratamento de 92% do esgoto coletado
+- Regulação profissional de serviços
+- Participação de concessionárias privadas
+
+### Integração de Normativas
+
+Para um projeto que combine ETA + coleta/tratamento de esgoto:
+1. Aplicar NBR 12.211/12.216 para o sistema de água potável
+2. Aplicar NBR 9648 para sistema de coleta/PTAR
+3. Garantir conformidade com Lei 14.026 em documentação de projeto
+4. Para zonas rurais, considerar NBR 7229 (tanques sépticos descentralizados)
+
+---
+
+**Fontes consultadas**: NBR 12.211, NBR 12.216, NBR 9648, Lei 14.026, NBR 7229
+**Confiança geral**: 90%
+**Agentes consultados**: agente-saneamento
+"""
+
+    all_sources = agent_response.sources
+    elapsed_ms = (time.time() - start_time) * 1000
+
+    return {
+        'query': query,
+        'selected_agents': [agent_response.agent_slug],
+        'rankings': [
+            {
+                'rank': r.rank,
+                'agent': r.agent_slug,
+                'score': r.score,
+                'relevance': r.relevance,
+                'completeness': r.completeness,
+                'accuracy': r.accuracy,
+                'reasoning': r.reasoning
+            }
+            for r in rankings
+        ],
+        'final_response': final_response,
+        'sources': sorted(list(set(all_sources))),
+        'metadata': {
+            'session_id': f"cag_{datetime.utcnow().isoformat().split('T')[0]}_integration_001",
+            'timestamp': datetime.utcnow().isoformat(),
+            'avg_confidence': sum(r.score for r in rankings) / len(rankings) if rankings else 0.0,
+            'execution_time_ms': elapsed_ms,
+            'num_agents_consulted': 1,
+            'top_agent': rankings[0].agent_slug if rankings else None
+        }
+    }
+
+
+# =============================================================================
 # MAIN: Fluxo Completo CAG com Agente Saneamento
 # =============================================================================
 
@@ -359,18 +445,15 @@ async def run_integration_example():
     # =========================================================================
     print(f"\n7. ORQUESTRAÇÃO COMPLETA (Ranking + Síntese)")
 
-    orchestrator = CAGOrchestrator(debug=False)
-
-    agent_responses_dict = {
-        agent_response.agent_slug: agent_response
-    }
-
-    result = await orchestrator.orchestrate(
-        query=user_query,
-        selected_agents=[agent_response.agent_slug],
-        agent_responses_dict=agent_responses_dict,
-        session_id="integration-example-001"
+    # Em vez de chamar o orchestrator que requer API keys,
+    # vamos simular o resultado final localmente
+    orchestrated_result = simulate_orchestration(
+        user_query,
+        agent_response,
+        rankings
     )
+
+    result = orchestrated_result
 
     print(f"   Session ID: {result['metadata']['session_id']}")
     print(f"   Top Agent: {result['metadata']['top_agent']}")
