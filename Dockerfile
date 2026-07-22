@@ -21,9 +21,8 @@ COPY . .
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD python -c "import socket; socket.create_connection(('localhost', 8000), timeout=2)"
+# Verify installation
+RUN python -c "import cag.shadow_mode; print('✓ CAG Shadow Mode ready')"
 
-# Default command
-CMD ["python", "-m", "uvicorn", "cag.orchestrator.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Default command (can be overridden)
+CMD ["python", "-m", "pytest", "cag/tests/", "-v"]

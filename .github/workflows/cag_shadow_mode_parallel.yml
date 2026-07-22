@@ -38,11 +38,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-asyncio pytest-cov anthropic
+          pip install -r requirements.txt
 
       - name: Run Shadow Mode Tests
         run: |
-          pytest cag/tests/test_shadow_mode.py \
+          python -m pytest cag/tests/test_shadow_mode.py cag/tests/test_parallel_processor.py \
             -v \
             --tb=short \
             --cov=cag/shadow_mode \
