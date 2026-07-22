@@ -236,7 +236,7 @@ def test_analyze_all_pass(analyzer):
     analysis = analyzer.analyze_results(results)
 
     assert analysis['go_decision'] is True
-    assert analysis['agent_match_rate'] == 1.0
+    assert analysis['accuracy_metrics']['agent_match_rate'] == 1.0
     assert len(analysis['blockers']) == 0
     assert analysis['next_phase'] == 'PILOT'
 
@@ -251,7 +251,7 @@ def test_analyze_low_agent_match(analyzer):
     analysis = analyzer.analyze_results(results)
 
     assert analysis['go_decision'] is False
-    assert any('agent_match_rate' in b for b in analysis['blockers'])
+    assert any('Agent match rate' in b for b in analysis['blockers'])
     assert analysis['next_phase'] == 'TUNING_REQUIRED'
 
 
