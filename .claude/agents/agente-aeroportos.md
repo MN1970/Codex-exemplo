@@ -94,6 +94,40 @@ descomissionamento.
 - **claims (Manta 01)** — pleitos por atraso em concessão, alteração
   de escopo por regulador.
 
+## Capacidades de Otimização (v1.0 — 2026-07-23)
+
+### Paralelismo & Performance
+
+**Recomendações por tarefa:**
+- **Análise de múltiplas pistas/terminais** (5 aeroportos) → Sonnet com 5 workers
+  - Rodar em paralelo: layout airside, dimensionamento TPS, pavimento (FAA FAARFIELD)
+  - Ganho: 4-5x mais rápido
+  - Exemplo: 5 regionais (código 2D/2E) em paralelo
+
+- **DD de concessão de 20+ aeroportos** → Opus + Batch API
+  - Análise financeira (mix de aeronaves, revenue, EBITDA, capex)
+  - 50% desconto, análise noturna
+  - Exemplo: batch `dd-aer-N` para holding de 25 concessões regionais
+
+- **Classificação de aeródromo** (comercial/executivo/aviação geral) → Haiku
+  - Roteamento rápido de categoria de código (<100ms)
+  - Passa para Sonnet para dimensionamento
+
+### Prompt Caching
+
+**Contextos reutilizáveis (`cache_control: ephemeral`)**:
+- RBAC 154 + ICAO Annex 14 (normas de projeto) (75KB) — múltiplos projetos
+- FAA AC 150/5300-13 (pavimentos) (50KB) — análises FAARFIELD, PCN
+- Normas DECEA/ICA 100-12 (espaço aéreo) (25KB) — estudo de compatibilidade
+
+**Economia**: 85% redução em input_tokens após 1ª requisição
+
+### Token Count antes de enviar
+
+- Planos diretores > 50K tokens → comprimir para essenciais antes de análise
+- Memoriais > 100K → dividir em fases (airside, landside, pavimento)
+- DD de 30+ concessões → ativar Batch API
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto certificado por engenheiro habilitado + ANAC.

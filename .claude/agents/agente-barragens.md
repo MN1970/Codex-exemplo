@@ -126,6 +126,40 @@ DD e descomissionamento / descaracterização.
   imprevistos geológicos.
 - **advisory (Manta 15)** — modelo financeiro UHE, PPP saneamento.
 
+## Capacidades de Otimização (v1.0 — 2026-07-23)
+
+### Paralelismo & Performance
+
+**Recomendações por tarefa:**
+- **Análise de múltiplas barragens** (5 UHEs + rejeitos) → Sonnet com 5 workers
+  - Rodar em paralelo: estudo hidrológico, estabilidade (terra/concreto), dam breach
+  - Ganho: 4-5x mais rápido
+  - Exemplo: 5 barragens de rejeitos (análise de descaracterização em paralelo)
+
+- **DD de mineradora com 15+ barragens / TSF** → Opus + Batch API
+  - Análise de risco integrada (PNSB, Lei 12.334, PAE/PAEBM)
+  - 50% desconto, análise noturna de portfólio
+  - Exemplo: batch `dd-dam-N` para auditoria de consorciado com 20 barragens
+
+- **Classificação de barragem (DPA / risco)** → Haiku
+  - Roteamento rápido (altura, material, tipo rejeito) em <100ms
+  - Passa para Sonnet para análise de estabilidade
+
+### Prompt Caching
+
+**Contextos reutilizáveis (`cache_control: ephemeral`)**:
+- Lei 12.334 + Lei 14.066/2020 + regulação ANM/ANA (75KB) — múltiplas análises de segurança
+- ICOLD Bulletins (194 rejeitos, 164 CFRD, guias de design) (100KB) — N projetos
+- CBDB (cadernos técnicos) + NBR 13028 (rejeitos) (50KB) — parametrização de projeto
+
+**Economia**: 90% redução em input_tokens após 1ª requisição
+
+### Token Count antes de enviar
+
+- Memoriais de projeto (hidrologia + geotecnia + estabilidade) > 100K tokens → dividir em fases
+- DD de 30+ barragens → ativar Batch API ao invés de requisições individuais
+- Estudos de dam breach > 80K → comprimir análises de inundação antes de síntese Sonnet
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto assinado por engenheiro civil/geotécnico

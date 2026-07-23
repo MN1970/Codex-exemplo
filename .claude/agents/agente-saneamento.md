@@ -111,6 +111,41 @@ básico, executivo, obra, O&M, licitação, DD e descomissionamento.
 - **advisory (Manta 15)** — modelos financeiros de concessão de
   saneamento, VPL, TIR, EBITDA.
 
+## Capacidades de Otimização (v1.0 — 2026-07-23)
+
+### Paralelismo & Performance
+
+**Recomendações por tarefa:**
+- **Análise de múltiplos documentos** (5-10 projetos) → Sonnet com 5 workers paralelos
+  - Rodar em paralelo: leitura EIA/RIMA, memoriais, normas técnicas
+  - Ganho esperado: 4-5x mais rápido (vs sequencial)
+  - Exemplo: `ThreadPoolExecutor(max_workers=5)` para análise de 5 ETAs
+
+- **DD de 20+ empresas saneamento** → Opus + Batch API
+  - 50% desconto em custos
+  - Processamento overnight
+  - Exemplo: batch `dd-companyN` para 20 concessionárias
+
+- **Roteamento inicial (classification)** → Haiku (via Maestro)
+  - "É ETA? É ETE? É drenagem?" em <100ms/msg
+  - Só passa para Sonnet após classifi cação
+
+### Prompt Caching
+
+**Contextos reutilizáveis (aplicar `cache_control: ephemeral`)**:
+- Lei 14.026/2020 + resoluções ANA (100KB) — N perguntas tarifárias/regulatórias
+- NBR 12211-12218 (normas ETA/ETE) — M análises de projeto
+- Metodologia SNIS/PMSB — parametrização de benchmarks
+
+**Economia esperada**: 85-90% redução em input_tokens após 1ª requisição
+
+### Token Count antes de enviar
+
+Usar `client.messages.count_tokens()` para:
+- Documentos > 50K tokens → comprimir com Haiku antes de análise Sonnet
+- Projeções > 100K tokens → dividir em fases (estudo prévio, básico, executivo)
+- DD de 50+ docs → ativar batch API ao invés de chamadas individuais
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto assinado por engenheiro sanitarista habilitado.
