@@ -152,8 +152,25 @@ mapa de routing.
 
 ---
 
+## CONECTORES MCP ATIVOS
+
+| Servidor | Versão | Tipo | Casos de uso |
+|----------|--------|------|-------------|
+| **Obscura** | 0.1.10 | Browser headless + scraping | Fetch/render, editais, competitive intel, monitoramento de portais |
+
+**Registro:** `.mcp.json` (stdio mode)
+
+**Documentação:** `OBSCURA-INTEGRATION.md`
+
+**Agentes que usam:** Advisory (15), BD (13), Energy (S9), Saneamento (S8), Portos (S6)
+
+---
+
 ## Histórico de versões
 
+- **v4.3** (2026-07-23) — Integração Obscura MCP. Conector headless browser
+  para scraping, render, monitoramento de portais. Documento: OBSCURA-INTEGRATION.md.
+  Ticket MNT-2026-OBSCURA-MCP.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
