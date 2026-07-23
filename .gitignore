@@ -2,7 +2,6 @@
 # RAG Phase 3 — Temporary files
 .rag-phase3-*.log
 .rag-phase3-*.json
-.rag-phase3-staging/
-.rag-phase3-staging-30/
+.rag-phase3-staging*/
 .rag-phase3-mock-chunks.json
 .rag-phase3-deployment-summary.txt
