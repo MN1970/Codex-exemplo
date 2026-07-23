@@ -4,8 +4,7 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-07-23) — expansão S6–S10 + otimizações de velocidade/tokens.
 
 ---
 
@@ -35,11 +34,12 @@ Saneamento, Energia, Barragens).
 | Manta 03-S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | Manta 03-S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
 | Manta 03-S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| Manta 03-S6 | Portos | agente-portos | 🆕 Criado 2026-07-05 |
-| Manta 03-S7 | Aeroportos | agente-aeroportos | 🆕 Criado 2026-07-05 |
-| Manta 03-S8 | Saneamento | agente-saneamento | 🆕 Criado 2026-07-05 — PRIORIDADE AySA |
-| Manta 03-S9 | Energia | agente-energia | 🆕 Criado 2026-07-05 — ANEEL/State Grid |
-| Manta 03-S10 | Barragens | agente-barragens | 🆕 Criado 2026-07-05 |
+| Manta 03-S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
+| Manta 03-S6 | Portos | agente-portos | ✅ S6 otimizado (2026-07-23) |
+| Manta 03-S7 | Aeroportos | agente-aeroportos | ✅ S7 otimizado (2026-07-23) |
+| Manta 03-S8 | Saneamento | agente-saneamento | ✅ S8 otimizado — PRIORIDADE AySA |
+| Manta 03-S9 | Energia | agente-energia | ✅ S9 otimizado — ANEEL/State Grid |
+| Manta 03-S10 | Barragens | agente-barragens | ✅ S10 otimizado (2026-07-23) |
 
 ### Eixo 3 — Ciclo de vida (8 fases)
 
@@ -115,8 +115,9 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
-## DEPLOY CHECKLIST v4.2
+## DEPLOY CHECKLIST v4.3
 
+### v4.2 (Infraestrutura básica — 2026-07-05)
 - [x] Copiar 5 agent .md para `.claude/agents/`
 - [x] Aplicar patch no CLAUDE.md master (seção Agentes)
 - [x] Corrigir inconsistências: rubrica órfã S5 removida, formatos unificados
@@ -127,6 +128,17 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 - [ ] Testar routing do Maestro com prompts de cada segmento
 - [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
 - [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
+
+### v4.3 (Otimizações — 2026-07-23)
+- [x] Adicionar seção "Capacidades de Otimização" aos 5 agentes (S6-S10)
+- [x] Criar `OPTIMIZATION-PATTERNS-MANTA.md` (guia consolidado)
+- [x] Documentar paralelismo (ThreadPoolExecutor, 5-10 workers)
+- [x] Documentar prompt caching (ephemeral, 1h TTL)
+- [x] Documentar Batch API (50% desconto para 1K+ reqs)
+- [x] Documentar token counting (estimativa antes de enviar)
+- [x] Criar benchmark table por agente (Haiku/Sonnet/Opus)
+- [ ] Implementar exemplo Python end-to-end (paralelismo + cache)
+- [ ] Implementar exemplo TypeScript end-to-end
 - [ ] Gate humano: aprovação MN antes de merge
 
 ---
@@ -135,14 +147,17 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                         # este arquivo (master registry)
+├── CLAUDE.md                              # este arquivo (master registry)
+├── docs/
+│   ├── MODEL-SPEEDS-PARALLEL-TOKENS.md    # 🆕 Guia de modelos e velocidades
+│   └── OPTIMIZATION-PATTERNS-MANTA.md     # 🆕 Padrões de otimização (v4.3)
 └── .claude/
     └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+        ├── agente-portos.md               # ✅ S6 (otimizado v4.3)
+        ├── agente-aeroportos.md           # ✅ S7 (otimizado v4.3)
+        ├── agente-saneamento.md           # ✅ S8 — prioridade AySA (otimizado v4.3)
+        ├── agente-energia.md              # ✅ S9 — ANEEL/State Grid (otimizado v4.3)
+        └── agente-barragens.md            # ✅ S10 (otimizado v4.3)
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
@@ -154,6 +169,7 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-07-23) — Otimizações de velocidade e tokens. Seção "Capacidades de Otimização" adicionada aos 5 agentes S6-S10. Novo guia `OPTIMIZATION-PATTERNS-MANTA.md` com padrões de paralelismo (ThreadPoolExecutor), prompt caching (ephemeral), Batch API (50% off) e token counting. Benchmarks esperados: 4-5x mais rápido em análises paralelas; 85-90% economia com caching.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.

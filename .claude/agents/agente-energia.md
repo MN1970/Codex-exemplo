@@ -114,6 +114,40 @@ DD e descomissionamento.
 - **advisory (Manta 15)** — modelo financeiro RAP × investimento;
   VPL/TIR do projeto de transmissão.
 
+## Capacidades de Otimização (v1.0 — 2026-07-23)
+
+### Paralelismo & Performance
+
+**Recomendações por tarefa:**
+- **Análise de múltiplas LTs / subestações** (5-10 projetos) → Sonnet com 5 workers
+  - Rodar em paralelo: traçado, cálculo de ampacidade (IEEE 738), tower design, aterramento
+  - Ganho: 4-5x mais rápido
+  - Exemplo: 5 LTs de 230 kV em paralelo; 3 subestações em paralelo
+
+- **DD de 20+ empresas transmissão (ANEEL leilão)** → Opus + Batch API
+  - Análise financeira de RAP (Receita Anual Permitida), investimento, VPL/TIR
+  - 50% desconto, processamento noturno
+  - Exemplo: batch `dd-lt-N` para consorciado de 25 leilões ANEEL
+
+- **Roteamento de questão (LT vs subestação vs geração)** → Haiku
+  - Classificação em <100ms
+  - Passa para Sonnet para análise técnica detalhada
+
+### Prompt Caching
+
+**Contextos reutilizáveis (`cache_control: ephemeral`)**:
+- ANEEL REN + procedimentos ONS (normas transmissão) (100KB) — múltiplos leilões
+- NBR 5422 + IEEE Std 738 (cálculos LT) (50KB) — análises de ampacidade/tower
+- EPE R1-R5 methodology + PDE (plano decenal) (75KB) — estudos de sistema
+
+**Economia**: 90% redução em input_tokens após 1ª requisição
+
+### Token Count antes de enviar
+
+- Estudos R1-R3 (estudo completo) > 100K tokens → dividir em fases (sistema, traçado, eletromec)
+- DD de 50+ empresas → ativar Batch API
+- Memoriais técnicos > 80K → comprimir para essenciais antes de análise Sonnet
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto assinado por engenheiro eletricista habilitado

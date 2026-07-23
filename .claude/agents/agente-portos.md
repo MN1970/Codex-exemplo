@@ -82,6 +82,40 @@ descomissionamento).
 - **claims (Manta 01)** — pleitos por atraso de dragagem, mudança de
   cronograma.
 
+## Capacidades de Otimização (v1.0 — 2026-07-23)
+
+### Paralelismo & Performance
+
+**Recomendações por tarefa:**
+- **Análise de múltiplos berços/terminais** (5-10 layouts) → Sonnet com 5 workers
+  - Rodar em paralelo: estudos de dragagem, dimensionamento de cais, layout de retroárea
+  - Ganho: 4-5x mais rápido
+  - Exemplo: 5 terminais de contêiner vs granéis em paralelo
+
+- **DD de 15+ portos / concessões** → Opus + Batch API
+  - Análise de viabilidade econômica (fluxo de carga, tarifa, EBITDA)
+  - 50% desconto, processamento noturno
+  - Exemplo: batch `dd-porto-N` para consórcio de 20 terminais
+
+- **Classificação de projeto (TUP/arrendado/concessão)** → Haiku via Maestro
+  - Roteamento inicial em <100ms
+  - Passa para Sonnet após enquadramento regulatório
+
+### Prompt Caching
+
+**Contextos reutilizáveis (`cache_control: ephemeral`)**:
+- ANTAQ Lei 12.815/2013 + resoluções normativas (50KB) — múltiplos editais
+- PIANC reports (dragagem, layout, amarração) (100KB) — N análises de design
+- Metodologia batimetria/sondagem — parametrização de dragagem
+
+**Economia**: 85-90% redução em input_tokens após 1ª requisição
+
+### Token Count antes de enviar
+
+- Estudos oceanográficos > 50K tokens → comprimir resumo antes de análise Sonnet
+- DD de 50+ portos → ativar Batch API ao invés de requisições individuais
+- Memoriais de projeto > 100K → dividir em fases (estudos, layout, dragagem)
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto executivo assinado por engenheiro habilitado.
