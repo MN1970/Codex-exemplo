@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "obscura": {
+      "command": "/root/.local/bin/obscura",
+      "args": ["mcp"],
+      "env": {
+        "OBSCURA_STEALTH": "true",
+        "OBSCURA_OBEY_ROBOTS": "true"
+      }
+    }
+  }
+}
