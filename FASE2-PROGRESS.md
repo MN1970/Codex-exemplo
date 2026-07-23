@@ -11,12 +11,12 @@
 
 | Coleção | Target | Coletados | % | Status |
 |---------|--------|-----------|---|--------|
-| **san:** Saneamento | 200 | 1 | 0.5% | ⏳ Em coleta |
-| **ene:** Energia | 300 | 1 | 0.3% | ⏳ Em coleta |
-| **por:** Portos | 150 | 1 | 0.7% | ⏳ Em coleta |
-| **aer:** Aeroportos | 120 | 1 | 0.8% | ⏳ Em coleta |
-| **bar:** Barragens | 180 | 1 | 0.6% | ⏳ Em coleta |
-| **TOTAL** | **950** | **5** | **0.5%** | 🚀 Started |
+| **san:** Saneamento | 200 | 27 | 13.5% | ⏳ Em coleta |
+| **ene:** Energia | 300 | 73 | 24.3% | ⏳ Em coleta |
+| **por:** Portos | 150 | 62 | 41.3% | ⏳ Em coleta |
+| **aer:** Aeroportos | 120 | 52 | 43.3% | ⏳ Em coleta |
+| **bar:** Barragens | 180 | 82 | 45.6% | ⏳ Em coleta |
+| **TOTAL** | **950** | **299** | **31.5%** | 🚀 Running |
 
 ---
 
