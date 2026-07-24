@@ -14,10 +14,13 @@ from fastmcp import FastMCP
 from pydantic import BaseModel
 
 from auth import get_token_manager, TokenPayload
+from logging_config import get_logger
 from middleware import check_permission, RequestWithAuth
 from permissions import PermissionChecker, Scope
 from sandbox import execute_python
 from supabase_client import SupabaseQueryClient
+import hashlib
+import time
 
 
 # --- Server setup ---
@@ -92,11 +95,23 @@ def execute(request: ExecuteRequest) -> dict[str, Any]:
         return {"error": "Code too large (max 10KB)", "result": None}
 
     # Executar em sandbox
+    start_time = time.time()
     result = execute_python(request.code, locals_dict=request.context)
+    duration_ms = int((time.time() - start_time) * 1000)
 
     # Adicionar metadata de auditoria
     result["user"] = payload.sub
     result["role"] = PermissionChecker.get_role_from_scopes(payload.scope).value if PermissionChecker.get_role_from_scopes(payload.scope) else "unknown"
+
+    # Logar execução
+    code_hash = hashlib.md5(request.code.encode()).hexdigest()[:8]
+    error_msg = result.get("error")
+    get_logger().log_execute(
+        user_email=payload.sub,
+        code_hash=code_hash,
+        duration_ms=duration_ms,
+        error=error_msg,
+    )
 
     return result
 
@@ -140,14 +155,34 @@ def query(request: QueryRequest) -> dict[str, Any]:
         return {"rows": [], "count": 0, "error": error_msg}
 
     try:
+        start_time = time.time()
         client = SupabaseQueryClient()
         result = client.execute_query(request.sql, request.params)
+        duration_ms = int((time.time() - start_time) * 1000)
+
         result["user"] = payload.sub
+
+        # Logar query
+        query_hash = hashlib.md5(request.sql.encode()).hexdigest()[:8]
+        row_count = result.get("count", 0)
+        error_msg = result.get("error")
+        get_logger().log_query(
+            user_email=payload.sub,
+            query_hash=query_hash,
+            duration_ms=duration_ms,
+            row_count=row_count,
+            error=error_msg,
+        )
+
         return result
     except ValueError as e:
-        return {"rows": [], "count": 0, "error": f"Configuration error: {str(e)}"}
+        error_str = f"Configuration error: {str(e)}"
+        get_logger().error("Query config error", user_email=payload.sub, error=error_str)
+        return {"rows": [], "count": 0, "error": error_str}
     except Exception as e:
-        return {"rows": [], "count": 0, "error": f"Query error: {str(e)}"}
+        error_str = f"Query error: {str(e)}"
+        get_logger().error("Query execution error", user_email=payload.sub, error=error_str)
+        return {"rows": [], "count": 0, "error": error_str}
 
 
 # --- Tool 3: skills ---

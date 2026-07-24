@@ -102,7 +102,7 @@ class SupabaseQueryClient:
         params: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
         """
-        Executa uma query read-only no Supabase com parâmetros.
+        Executa uma query read-only no Supabase via RPC.
 
         Args:
             sql: SQL a executar (SELECT only).
@@ -115,32 +115,37 @@ class SupabaseQueryClient:
                 "error": None ou mensagem
             }
         """
-        # Validar query
+        # Validar query localmente primeiro
         is_safe, error = SupabaseQueryValidator.is_safe(sql)
         if not is_safe:
             return {"rows": [], "count": 0, "error": error}
 
         try:
-            # Supabase não suporta SQL raw via client Python
-            # Alternativa: usar RPC (stored procedure) ou fazer query via PostgREST
-            # Por enquanto, retornamos indicação de que precisa implementação real
-            # Em produção, seria:
-            # - Via Supabase RPC: self.client.rpc('execute_query', {'sql': sql, 'params': params})
-            # - Via direct PostgreSQL: psycopg3 com Supabase database URL
+            # Chamar RPC function no Supabase
+            # RPC: execute_select_query(p_sql TEXT, p_params JSONB)
+            result = self.client.rpc(
+                "execute_select_query",
+                {
+                    "p_sql": sql,
+                    "p_params": params,
+                },
+            ).execute()
 
-            # Simulação de resposta para query SELECT válida
-            return {
-                "rows": [],
-                "count": 0,
-                "error": None,
-                "notice": "Query execution via Supabase RPC — requires database setup",
-            }
+            # Result estrutura: {"rows": [...], "count": N, "error": null}
+            if result.data and len(result.data) > 0:
+                return result.data[0]
+            else:
+                return {
+                    "rows": [],
+                    "count": 0,
+                    "error": "No data returned from RPC",
+                }
 
         except Exception as e:
             return {
                 "rows": [],
                 "count": 0,
-                "error": f"Execution error: {str(e)}",
+                "error": f"RPC execution error: {str(e)}",
             }
 
     def test_connection(self) -> bool:
