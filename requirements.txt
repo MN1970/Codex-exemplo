@@ -1,0 +1,11 @@
+anthropic>=0.18.0
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+pylint>=3.0.0
+black>=23.7.0
+mypy>=1.5.0
+uvicorn>=0.23.0
+fastapi>=0.103.0
+supabase>=2.3.0
+pydantic>=2.3.0

@@ -1,0 +1,329 @@
+# CAG Shadow Mode — Parallel Deployment Configuration
+# Deploys shadow mode across multiple environments in parallel
+# Supports: staging, production, canary, multi-region
+
+version: '1.0'
+description: 'Parallel deployment of CAG Shadow Mode across environments'
+
+# =============================================================================
+# ENVIRONMENTS (deploy in parallel)
+# =============================================================================
+
+environments:
+  staging:
+    name: Staging
+    enabled: true
+    order: 1
+    supabase_project: staging-codex
+    region: us-east-1
+    workers:
+      log_processor: 2
+      analyzer: 1
+    batch_size: 50
+    buffer_flush_interval_sec: 60
+    deployment:
+      strategy: blue-green
+      health_check_interval: 30s
+      health_check_endpoint: /health/shadow-mode
+      timeout: 300s
+
+  production:
+    name: Production
+    enabled: true
+    order: 2
+    supabase_project: prod-codex-main
+    region: us-east-1
+    workers:
+      log_processor: 8
+      analyzer: 4
+    batch_size: 100
+    buffer_flush_interval_sec: 30
+    deployment:
+      strategy: canary
+      canary_percentage: 10
+      canary_duration_min: 30
+      health_check_interval: 10s
+      health_check_endpoint: /health/shadow-mode
+      timeout: 300s
+      rollback_on_error: true
+
+  canary:
+    name: Canary (5% traffic)
+    enabled: true
+    order: 3
+    supabase_project: prod-codex-canary
+    region: eu-west-1
+    workers:
+      log_processor: 2
+      analyzer: 1
+    batch_size: 50
+    deployment:
+      strategy: canary
+      canary_percentage: 5
+      health_check_interval: 15s
+      timeout: 300s
+
+# =============================================================================
+# PARALLEL JOBS
+# =============================================================================
+
+parallel_jobs:
+  # Job 1: Deploy code to all environments
+  deploy_code:
+    name: Deploy Code to All Environments
+    parallel: true
+    environments: [staging, production, canary]
+    steps:
+      - name: Checkout Code
+        run: git fetch origin claude/manta-maestro-cag-ml-8wdrg4
+      - name: Build Docker Image
+        run: docker build -t cag-shadow-mode:latest cag/
+      - name: Push to Registry
+        run: docker push cag-shadow-mode:latest
+      - name: Deploy to Environment
+        run: |
+          kubectl set image deployment/maestro maestro=cag-shadow-mode:latest \
+            --namespace=${ENVIRONMENT}
+      - name: Verify Deployment
+        run: kubectl rollout status deployment/maestro --namespace=${ENVIRONMENT}
+
+  # Job 2: Apply Supabase migrations to all environments
+  apply_migrations:
+    name: Apply Shadow Mode Migrations
+    parallel: true
+    environments: [staging, production, canary]
+    depends_on: []
+    steps:
+      - name: Authenticate to Supabase
+        run: supabase login --token ${SUPABASE_TOKEN}
+      - name: Apply Migration
+        run: |
+          supabase db push \
+            --project-ref ${SUPABASE_PROJECT} \
+            supabase/migrations/2026_07_22_v1_0_shadow_mode.sql
+      - name: Verify Tables
+        run: |
+          supabase db query \
+            --project-ref ${SUPABASE_PROJECT} \
+            "SELECT COUNT(*) FROM information_schema.tables WHERE table_name LIKE 'cag_shadow_%';"
+
+  # Job 3: Initialize monitoring & alerting
+  setup_monitoring:
+    name: Setup Monitoring & Alerting
+    parallel: true
+    environments: [staging, production, canary]
+    depends_on: [apply_migrations]
+    steps:
+      - name: Create Grafana Dashboards
+        run: |
+          grafana-cli dashboard import dashboards/shadow-mode.json \
+            --grafana-url ${GRAFANA_URL} \
+            --grafana-api-key ${GRAFANA_API_KEY}
+      - name: Configure Alerts (Slack)
+        run: |
+          curl -X POST ${SLACK_WEBHOOK_URL} \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "text": "Shadow Mode monitoring initialized in ${ENVIRONMENT}",
+              "channel": "#cag-alerts"
+            }'
+      - name: Verify Dashboards
+        run: curl -s ${GRAFANA_URL}/api/dashboards/name/shadow-mode | jq '.id'
+
+  # Job 4: Run parallel tests
+  test_all_environments:
+    name: Run Tests in All Environments
+    parallel: true
+    environments: [staging, production, canary]
+    depends_on: [deploy_code]
+    steps:
+      - name: Run Shadow Mode Tests
+        run: |
+          pytest cag/tests/test_shadow_mode.py \
+            -v \
+            --tb=short \
+            --junit-xml=test-results-${ENVIRONMENT}.xml
+      - name: Run Smoke Tests
+        run: |
+          python cag/tests/smoke_test_shadow_mode.py \
+            --environment ${ENVIRONMENT} \
+            --queries 100
+      - name: Upload Test Results
+        run: |
+          aws s3 cp test-results-${ENVIRONMENT}.xml \
+            s3://codex-test-results/shadow-mode/
+
+  # Job 5: Enable shadow mode in all environments
+  enable_shadow_mode:
+    name: Enable Shadow Mode Feature Flag
+    parallel: true
+    environments: [staging, production, canary]
+    depends_on: [apply_migrations, setup_monitoring, test_all_environments]
+    steps:
+      - name: Update Shadow Config
+        run: |
+          supabase db query \
+            --project-ref ${SUPABASE_PROJECT} \
+            "UPDATE cag_shadow_config SET value = 'true' WHERE key = 'enabled';"
+      - name: Verify Enabled
+        run: |
+          supabase db query \
+            --project-ref ${SUPABASE_PROJECT} \
+            "SELECT value FROM cag_shadow_config WHERE key = 'enabled';"
+      - name: Warm-up Queries
+        run: |
+          for i in {1..50}; do
+            curl -X POST http://${MAESTRO_ENDPOINT}/query \
+              -H 'Content-Type: application/json' \
+              -d "{\"query\":\"Query $i\",\"session_id\":\"warmup-$i\"}" &
+          done
+          wait
+
+# =============================================================================
+# PARALLEL WORKER CONFIGURATION
+# =============================================================================
+
+workers:
+  log_processor:
+    replicas_per_environment: 4
+    cpu_request: 500m
+    cpu_limit: 1000m
+    memory_request: 512Mi
+    memory_limit: 1024Mi
+    image: cag-shadow-mode:latest
+    command: python -m cag.shadow_mode.parallel_processor --mode log_processor
+    health_check:
+      path: /health/log-processor
+      interval: 30s
+      timeout: 5s
+
+  analyzer:
+    replicas_per_environment: 2
+    cpu_request: 1000m
+    cpu_limit: 2000m
+    memory_request: 1024Mi
+    memory_limit: 2048Mi
+    image: cag-shadow-mode:latest
+    command: python -m cag.shadow_mode.parallel_processor --mode analyzer
+    health_check:
+      path: /health/analyzer
+      interval: 30s
+      timeout: 5s
+
+# =============================================================================
+# MONITORING METRICS (collected in parallel)
+# =============================================================================
+
+monitoring:
+  metrics_to_collect:
+    - name: shadow_logs_processed
+      type: counter
+      help: Total shadow logs processed
+      labels: [environment, dimension]
+
+    - name: shadow_flush_duration_ms
+      type: histogram
+      help: Duration of log flush operation
+      buckets: [10, 50, 100, 500, 1000, 5000]
+
+    - name: shadow_analysis_duration_ms
+      type: histogram
+      help: Duration of analysis operation
+      buckets: [100, 500, 1000, 5000, 10000]
+
+    - name: shadow_agent_match_rate
+      type: gauge
+      help: Current agent match rate
+      labels: [environment]
+
+    - name: shadow_error_rate
+      type: gauge
+      help: Current error rate
+      labels: [environment]
+
+    - name: shadow_queue_depth
+      type: gauge
+      help: Number of pending tasks in queue
+      labels: [environment, worker_type]
+
+# =============================================================================
+# HEALTH CHECKS & ALERTS
+# =============================================================================
+
+health_checks:
+  endpoint_health:
+    interval: 30s
+    timeout: 5s
+    endpoints:
+      - /health/shadow-mode
+      - /health/log-processor
+      - /health/analyzer
+    failure_threshold: 3
+
+  data_freshness:
+    interval: 60s
+    check: "SELECT MAX(timestamp) FROM cag_shadow_logs WHERE timestamp > NOW() - INTERVAL '5 minutes'"
+    alert_if_stale: true
+    stale_threshold_min: 5
+
+alerts:
+  - name: ShadowModeDown
+    condition: "endpoint_health_failures > 3"
+    severity: critical
+    notify: [slack, pagerduty]
+
+  - name: HighErrorRate
+    condition: "shadow_error_rate > 0.005"
+    severity: warning
+    notify: [slack]
+
+  - name: LowAgentMatchRate
+    condition: "shadow_agent_match_rate < 0.80"
+    severity: warning
+    notify: [slack]
+
+  - name: LongQueueDepth
+    condition: "shadow_queue_depth > 1000"
+    severity: warning
+    notify: [slack]
+
+# =============================================================================
+# ROLLBACK STRATEGY
+# =============================================================================
+
+rollback:
+  trigger_conditions:
+    - agent_match_rate < 0.75
+    - error_rate > 0.01
+    - latency_p95 > rag_p95 * 1.20
+    - health_check_failures > 3
+
+  actions:
+    - disable_shadow_mode: true
+    - revert_deployment: true
+    - notify_team: true
+    - create_incident: true
+
+# =============================================================================
+# DEPLOYMENT EXECUTION
+# =============================================================================
+
+execution:
+  mode: parallel  # parallel | sequential
+  max_parallel_jobs: 5
+  fail_fast: false  # continue if one job fails
+  timeout_minutes: 30
+  log_level: info
+
+  pre_deployment_checks:
+    - verify_git_branch: claude/manta-maestro-cag-ml-8wdrg4
+    - verify_migrations_exist: true
+    - verify_docker_image: cag-shadow-mode:latest
+    - verify_supabase_connection: true
+
+  post_deployment_verification:
+    - verify_all_pods_running: true
+    - verify_migrations_applied: true
+    - run_smoke_tests: true
+    - verify_metrics_flowing: true
+    - verify_alerts_configured: true

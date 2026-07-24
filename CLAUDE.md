@@ -7,6 +7,9 @@ operacionais no SharePoint.
 Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
 Saneamento, Energia, Barragens).
 
+**Versão v5.0 (PROTOTIPAGEM)**: CAG (Custom Agent Group) — orquestração
+inteligente com ML. Branch: `claude/manta-maestro-cag-ml-8wdrg4`.
+
 ---
 
 ## MAPA COMPLETO DE AGENTES — 19 agentes, 3 eixos
@@ -52,6 +55,103 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 6. Processo competitivo / licitação
 7. Due diligence / M&A
 8. Encerramento / descomissionamento
+
+---
+
+## CAG — Custom Agent Group (v5.0 PROTOTIPAGEM)
+
+### O que é CAG
+
+**CAG** é a próxima geração de roteamento no Maestro — em vez de
+**1 agente responder por keywords**, **múltiplos agentes competem em
+paralelo** com ML decidindo qual(is) responder melhor.
+
+**Fluxo CAG vs RAG (v4.2):**
+
+| Fase | RAG (v4.2) | CAG (v5.0) |
+|------|-----------|-----------|
+| **Input** | Query usuário | Query usuário |
+| **Classificação** | Keywords determinísticos | ML intent classifier |
+| **Seleção** | 1 agente (IF/ELSE) | N agentes (0.6+ score) |
+| **Execução** | Sequencial | **Paralelo** |
+| **RAG** | Busca docs (sim) | Busca docs (cada agente) |
+| **Ranking** | Não tem | LLM judge (sim) |
+| **Síntese** | Não | Integrada |
+| **Feedback** | Manual (keywords) | Automático (matriz) |
+
+### Componentes CAG
+
+1. **Intent Classifier** (`cag/ml/intent_classifier.py`)
+   - Embedding + keywords → P(saneamento), P(energia), etc.
+   - Fine-tune contínuo com histórico de queries
+
+2. **Agent Selector** (`cag/ml/intent_classifier.py`)
+   - Toma IntentPrediction → seleciona top-N agentes (threshold 0.6+)
+   - Exemplo: "ETA+LT" → [agente-saneamento (0.92), agente-energia (0.85)]
+
+3. **Response Ranker** (`cag/orchestrator/response_ranker.py`)
+   - Claude-as-a-judge compara N respostas
+   - Outputs: relevância, completude, acurácia (0-1.0)
+
+4. **Response Synthesizer** (`cag/orchestrator/response_ranker.py`)
+   - Integra top-2 respostas em 1 texto coerente
+   - Mantém citações de fontes
+
+### Schema Supabase para CAG
+
+Tabelas criadas em `cag/schemas/cag_schema.sql`:
+
+- `cag_intent_models` — registro de classificadores treinados
+- `cag_agent_scores` — matriz de hits/misses por (agent, intent)
+- `cag_feedback_logs` — quando usuário marca "útil" ou "não"
+- `cag_routing_metrics` — dashboard de acurácia por dia
+- `cag_agent_pool` — registro de agentes participantes
+- `cag_intent_classes` — mapeamento (intent → agentes)
+- `cag_query_cache` — cache de embeddings + predicções
+
+### Implementação em Fases
+
+**Fase 1: Shadow (seu branch — v5.0-alpha)**
+- ✅ Schema Supabase pronto
+- ✅ Intent Classifier implementado (keyword + semantic)
+- ✅ Agent Selector implementado
+- ✅ Response Ranker + Synthesizer implementados
+- 🚧 Testes com queries reais (histórico)
+- 🚧 Fine-tuning do classifier
+
+**Fase 2: Pilot (após merge)**
+- ⏳ CAG roda em paralelo com v4.2 (não substitui)
+- ⏳ Logs: quando CAG vs v4.2 discordam
+- ⏳ Retraining semanal do classifier
+
+**Fase 3: GA (produção)**
+- ⏳ CAG é default; v4.2 fallback
+- ⏳ Feedback loop contínuo
+
+### Exemplo: Query Ambígua
+
+**Query**: "Estou fazendo um projeto de saneamento com uma subestação de energia.
+Qual é a norma de projeto para a ETA e qual impacto na estrutura?"
+
+**RAG v4.2** (sequencial):
+```
+Maestro: "saneamento" apareceu primeiro → agente-saneamento
+Resposta 1: ETA + normas de saneamento (tempo: 4s)
+Handoff manual: "vou encaminhar para energia"
+Resposta 2: Subestação + normas de energia (tempo: 4s, após resposta 1)
+Usuário: vê 2 blocos separados, tem que sintetizar sozinho
+Total: 8 segundos
+```
+
+**CAG v5.0** (paralelo + rank + síntese):
+```
+Intent Classifier: P(saneamento)=0.92, P(energia)=0.85 → ambos selecionados
+Agente-saneamento + Agente-energia rodam PARALELO (2-3 segundos)
+Response Ranker: compara → saneamento (0.92) é primária, energia (0.85) é complementar
+Response Synthesizer: integra ambas em 1 resposta coerente
+Usuário: resposta única integrada com scoring visível
+Total: 5 segundos (-38%)
+```
 
 ---
 
