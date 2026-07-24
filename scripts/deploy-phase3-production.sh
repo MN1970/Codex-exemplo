@@ -1,4 +1,5 @@
 #!/bin/bash
+# Version: 5.0.0
 # Phase 3 Production Deployment — Manta Maestro Integration
 # Extracts documents, populates Supabase, deploys 30-agent orchestrator
 
