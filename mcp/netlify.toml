@@ -1,0 +1,12 @@
+[build]
+command = "pip install -e . && python -m pytest tests/ -v"
+functions = "functions"
+publish = "."
+
+[functions."mcp"]
+runtime = "python3.11"
+handler = "server.run"
+
+[env.production]
+  [env.production.context.production]
+    environment = { MANTABASE_SECRET_KEY = "prod-secret-from-secrets-manager" }
