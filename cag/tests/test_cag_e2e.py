@@ -5,6 +5,7 @@ Testes end-to-end para CAG
 import pytest
 import sys
 import os
+from unittest.mock import Mock, patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from ml.intent_classifier import IntentClassifier, AgentSelector
@@ -202,37 +203,48 @@ class TestResponseRanker:
 
     def test_rank_multiple_responses(self):
         """Test ranking com múltiplas respostas"""
-        ranker = ResponseRanker()
-
-        responses = [
-            AgentResponse(
-                agent_slug='agente-saneamento',
-                agent_name='Saneamento',
-                response_text='ETA: NBR 12.211 especifica...',
-                confidence=0.92,
-                sources=['NBR 12.211', 'Lei 14.026'],
-                latency_ms=2500
-            ),
-            AgentResponse(
-                agent_slug='agente-energia',
-                agent_name='Energia',
-                response_text='Subestação: ANEEL exige...',
-                confidence=0.85,
-                sources=['ANEEL', 'NBR 5422'],
-                latency_ms=3100
-            )
+        # Mock Claude API response
+        mock_response = Mock()
+        mock_response.content = [
+            Mock(text='{"rankings": [{"agent_slug": "agente-saneamento", "score": 0.95, "relevance": 0.95, "completeness": 0.90, "accuracy": 0.90, "reasoning": "Diretamente sobre ETA"}, {"agent_slug": "agente-energia", "score": 0.85, "relevance": 0.85, "completeness": 0.80, "accuracy": 0.85, "reasoning": "Sobre subestação, menos direto"}]}')
         ]
 
-        rankings = ranker.rank_responses(
-            "Qual é a norma para ETA e subestação?",
-            responses
-        )
+        with patch('orchestrator.response_ranker.anthropic.Anthropic') as mock_client:
+            mock_instance = Mock()
+            mock_client.return_value = mock_instance
+            mock_instance.messages.create.return_value = mock_response
 
-        # Deve ter 2 rankings
-        assert len(rankings) == 2
+            ranker = ResponseRanker()
 
-        # Devem estar em ordem descending por score
-        assert rankings[0].score >= rankings[1].score
+            responses = [
+                AgentResponse(
+                    agent_slug='agente-saneamento',
+                    agent_name='Saneamento',
+                    response_text='ETA: NBR 12.211 especifica...',
+                    confidence=0.92,
+                    sources=['NBR 12.211', 'Lei 14.026'],
+                    latency_ms=2500
+                ),
+                AgentResponse(
+                    agent_slug='agente-energia',
+                    agent_name='Energia',
+                    response_text='Subestação: ANEEL exige...',
+                    confidence=0.85,
+                    sources=['ANEEL', 'NBR 5422'],
+                    latency_ms=3100
+                )
+            ]
+
+            rankings = ranker.rank_responses(
+                "Qual é a norma para ETA e subestação?",
+                responses
+            )
+
+            # Deve ter 2 rankings
+            assert len(rankings) == 2
+
+            # Devem estar em ordem descending por score
+            assert rankings[0].score >= rankings[1].score
 
 # =============================================================================
 # TESTES: Integration (Intent → Selector → Response)

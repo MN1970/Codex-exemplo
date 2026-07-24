@@ -15,6 +15,7 @@ import os
 import time
 import random
 import string
+from unittest.mock import Mock, patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -613,31 +614,42 @@ class TestResponseRankerEdgeCases:
 
     def test_identical_responses(self):
         """Edge case: múltiplas respostas 100% idênticas"""
-        ranker = ResponseRanker()
-
-        responses = [
-            AgentResponse(
-                agent_slug='agente-saneamento',
-                agent_name='Saneamento',
-                response_text='ETA conforme NBR 12.211',
-                confidence=0.92,
-                sources=['NBR 12.211'],
-                latency_ms=2500
-            ),
-            AgentResponse(
-                agent_slug='agente-energia',
-                agent_name='Energia',
-                response_text='ETA conforme NBR 12.211',  # IDÊNTICO
-                confidence=0.92,
-                sources=['NBR 12.211'],
-                latency_ms=2500
-            )
+        # Mock Claude API response
+        mock_response = Mock()
+        mock_response.content = [
+            Mock(text='{"rankings": [{"agent_slug": "agente-saneamento", "score": 0.85, "relevance": 0.85, "completeness": 0.85, "accuracy": 0.85, "reasoning": "Resposta técnica válida"}, {"agent_slug": "agente-energia", "score": 0.85, "relevance": 0.85, "completeness": 0.85, "accuracy": 0.85, "reasoning": "Resposta técnica válida, idêntica"}]}')
         ]
 
-        rankings = ranker.rank_responses("Query", responses)
+        with patch('orchestrator.response_ranker.anthropic.Anthropic') as mock_client:
+            mock_instance = Mock()
+            mock_client.return_value = mock_instance
+            mock_instance.messages.create.return_value = mock_response
 
-        # Ambas devem ser ranqueadas (possivelmente com score próximo)
-        assert len(rankings) == 2
+            ranker = ResponseRanker()
+
+            responses = [
+                AgentResponse(
+                    agent_slug='agente-saneamento',
+                    agent_name='Saneamento',
+                    response_text='ETA conforme NBR 12.211',
+                    confidence=0.92,
+                    sources=['NBR 12.211'],
+                    latency_ms=2500
+                ),
+                AgentResponse(
+                    agent_slug='agente-energia',
+                    agent_name='Energia',
+                    response_text='ETA conforme NBR 12.211',  # IDÊNTICO
+                    confidence=0.92,
+                    sources=['NBR 12.211'],
+                    latency_ms=2500
+                )
+            ]
+
+            rankings = ranker.rank_responses("Query", responses)
+
+            # Ambas devem ser ranqueadas (possivelmente com score próximo)
+            assert len(rankings) == 2
 
     # =========================================================================
     # Resposta com caracteres especiais/Unicode
@@ -862,29 +874,53 @@ class TestCAGPerformanceEdgeCases:
 
     def test_ranker_with_many_responses(self):
         """Stress test: ranking com 50+ respostas"""
-        ranker = ResponseRanker()
+        # Mock Claude API response for many responses
+        rankings_json = {
+            "rankings": [
+                {
+                    "agent_slug": f'agente-{i}',
+                    "score": 0.9 - (i * 0.01),
+                    "relevance": 0.9 - (i * 0.01),
+                    "completeness": 0.85,
+                    "accuracy": 0.85,
+                    "reasoning": f"Agent {i} response"
+                }
+                for i in range(50)
+            ]
+        }
 
-        # Criar 50 respostas
-        responses = [
-            AgentResponse(
-                agent_slug=f'agente-{i}',
-                agent_name=f'Agent {i}',
-                response_text=f'Response from agent {i}: Standard response text',
-                confidence=0.5 + (i % 10) * 0.05,
-                sources=[f'source-{i}'],
-                latency_ms=random.randint(100, 5000)
-            )
-            for i in range(50)
-        ]
+        import json
+        mock_response = Mock()
+        mock_response.content = [Mock(text=json.dumps(rankings_json))]
 
-        start = time.time()
-        rankings = ranker.rank_responses("Test query", responses)
-        elapsed_ms = (time.time() - start) * 1000
+        with patch('orchestrator.response_ranker.anthropic.Anthropic') as mock_client:
+            mock_instance = Mock()
+            mock_client.return_value = mock_instance
+            mock_instance.messages.create.return_value = mock_response
 
-        # Não deve causar timeout (timeout seria >30s)
-        assert elapsed_ms < 30000
-        print(f"50 responses ranking: {elapsed_ms:.2f}ms")
-        assert len(rankings) > 0
+            ranker = ResponseRanker()
+
+            # Criar 50 respostas
+            responses = [
+                AgentResponse(
+                    agent_slug=f'agente-{i}',
+                    agent_name=f'Agent {i}',
+                    response_text=f'Response from agent {i}: Standard response text',
+                    confidence=0.5 + (i % 10) * 0.05,
+                    sources=[f'source-{i}'],
+                    latency_ms=random.randint(100, 5000)
+                )
+                for i in range(50)
+            ]
+
+            start = time.time()
+            rankings = ranker.rank_responses("Test query", responses)
+            elapsed_ms = (time.time() - start) * 1000
+
+            # Não deve causar timeout (timeout seria >30s)
+            assert elapsed_ms < 30000
+            print(f"50 responses ranking: {elapsed_ms:.2f}ms")
+            assert len(rankings) > 0
 
     def test_classifier_latency_benchmark(self, intent_classes):
         """Performance benchmark: latência típica do classifier"""
@@ -931,10 +967,21 @@ class TestCAGIntegrationEdgeCases:
         prediction = classifier.classify(long_query)
         assert prediction.primary_intent == 'saneamento'
 
-        # Simular ranking mesmo com query longa
-        ranker = ResponseRanker()
-        rankings = ranker.rank_responses(long_query, sample_agent_responses)
-        assert len(rankings) > 0
+        # Mock Claude API for ranking with long query
+        mock_response = Mock()
+        mock_response.content = [
+            Mock(text='{"rankings": [{"agent_slug": "agente-saneamento", "score": 0.95, "relevance": 0.95, "completeness": 0.90, "accuracy": 0.90, "reasoning": "Resposta em saneamento"}]}')
+        ]
+
+        with patch('orchestrator.response_ranker.anthropic.Anthropic') as mock_client:
+            mock_instance = Mock()
+            mock_client.return_value = mock_instance
+            mock_instance.messages.create.return_value = mock_response
+
+            # Simular ranking mesmo com query longa
+            ranker = ResponseRanker()
+            rankings = ranker.rank_responses(long_query, sample_agent_responses)
+            assert len(rankings) > 0
 
     def test_e2e_special_chars_query(self, intent_classes, agent_pool):
         """Integration: query com special chars → fluxo completo"""
@@ -977,29 +1024,40 @@ class TestNumericalBoundaries:
 
     def test_latency_bounds(self, intent_classes):
         """Testar que latencies são positivas"""
-        ranker = ResponseRanker()
-
-        responses = [
-            AgentResponse(
-                agent_slug='agente-test',
-                agent_name='Test',
-                response_text='Response',
-                confidence=0.9,
-                sources=[],
-                latency_ms=0.001  # Muito pequeno
-            ),
-            AgentResponse(
-                agent_slug='agente-test2',
-                agent_name='Test2',
-                response_text='Response',
-                confidence=0.9,
-                sources=[],
-                latency_ms=999999  # Muito grande
-            )
+        # Mock Claude API response
+        mock_response = Mock()
+        mock_response.content = [
+            Mock(text='{"rankings": [{"agent_slug": "agente-test", "score": 0.9, "relevance": 0.9, "completeness": 0.9, "accuracy": 0.9, "reasoning": "Fast response"}, {"agent_slug": "agente-test2", "score": 0.85, "relevance": 0.85, "completeness": 0.85, "accuracy": 0.85, "reasoning": "Slow response"}]}')
         ]
 
-        rankings = ranker.rank_responses("Query", responses)
-        assert len(rankings) == 2
+        with patch('orchestrator.response_ranker.anthropic.Anthropic') as mock_client:
+            mock_instance = Mock()
+            mock_client.return_value = mock_instance
+            mock_instance.messages.create.return_value = mock_response
+
+            ranker = ResponseRanker()
+
+            responses = [
+                AgentResponse(
+                    agent_slug='agente-test',
+                    agent_name='Test',
+                    response_text='Response',
+                    confidence=0.9,
+                    sources=[],
+                    latency_ms=0.001  # Muito pequeno
+                ),
+                AgentResponse(
+                    agent_slug='agente-test2',
+                    agent_name='Test2',
+                    response_text='Response',
+                    confidence=0.9,
+                    sources=[],
+                    latency_ms=999999  # Muito grande
+                )
+            ]
+
+            rankings = ranker.rank_responses("Query", responses)
+            assert len(rankings) == 2
 
 # =============================================================================
 # MAIN

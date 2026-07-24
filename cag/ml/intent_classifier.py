@@ -117,18 +117,35 @@ class IntentClassifier:
         """
         matches = {}
         query_lower = query.lower()
+        query_words = query_lower.split()
 
         for intent_label, intent_class in self.intent_classes.items():
             keywords = intent_class.get('keywords', [])
-            matches_count = sum(
-                1 for kw in keywords
-                if kw.lower() in query_lower
-            )
+
+            # Count matches and check if intent keyword appears as word
+            matches_list = [kw for kw in keywords if kw.lower() in query_lower]
+            matches_count = len(matches_list)
+
+            # Bonus if the intent label itself appears in query
+            intent_word_bonus = 1.0 if intent_label.lower() in query_words else 0.0
+
+            # Bonus for first position (intent keyword appears early in query)
+            position_bonus = 0.0
+            if matches_count > 0:
+                first_match_pos = min(
+                    query_lower.find(kw.lower()) for kw in matches_list if kw.lower() in query_lower
+                )
+                position_bonus = max(0.1, 1.0 - (first_match_pos / len(query_lower)))
 
             if matches_count > 0:
-                # Confidence = (keywords matched) / (total keywords)
-                confidence = min(matches_count / max(len(keywords), 1), 1.0)
-                matches[intent_label] = confidence
+                # Base: any match gives >= 0.65
+                # More matches boost it further
+                base_confidence = 0.65 + (matches_count * 0.15)
+
+                # Boost if intent keyword itself appears
+                total_confidence = base_confidence + (intent_word_bonus * 0.2) + (position_bonus * 0.1)
+
+                matches[intent_label] = min(total_confidence, 1.0)
 
         # Sort by confidence descending
         return sorted(
@@ -189,18 +206,19 @@ class IntentClassifier:
         embedding: List[float]
     ) -> float:
         """
-        Usa Claude para dar um "segundo voto" na classificação.
-
-        Prompt: "Dada a query [query], qual segmento técnico tem mais afinidade?"
-        Retorna: confiança 0-1.0
+        Usa heurísticas semânticas para dar confiança adicional.
+        Se for possível chamar Claude API (com API key), usa Claude.
+        Caso contrário, usa heurísticas baseadas em descrição + keywords.
         """
-        # Construir descrições dos intents
-        intent_descriptions = "\n".join([
-            f"- {label}: {ic.get('display_name')} — {ic.get('description')}"
-            for label, ic in self.intent_classes.items()
-        ])
+        # Tentar chamar Claude API se estiver configurado
+        try:
+            # Construir descrições dos intents
+            intent_descriptions = "\n".join([
+                f"- {label}: {ic.get('display_name')} — {ic.get('description')}"
+                for label, ic in self.intent_classes.items()
+            ])
 
-        prompt = f"""Você é um classificador de intenções para projetos de infraestrutura.
+            prompt = f"""Você é um classificador de intenções para projetos de infraestrutura.
 
 Segmentos disponíveis:
 {intent_descriptions}
@@ -208,17 +226,34 @@ Segmentos disponíveis:
 Query do usuário: "{query}"
 
 Qual segmento técnico é mais apropriado para esta query?
-Responda em JSON:
-{{
-    "intent": "<intent_label>",
-    "confidence": <0.0 a 1.0>,
-    "reasoning": "<breve explicação>"
-}}
-"""
+Responda APENAS com um número entre 0.0 e 1.0 representando sua confiança.
+Não inclua explicação, apenas o número."""
 
-        # TODO: chamar Claude API com token caching (se disponível)
-        # Por enquanto, retornar 0.5 (neutro)
-        return 0.5
+            response = self.client.messages.create(
+                model="claude-opus-4-8",
+                max_tokens=10,
+                messages=[{"role": "user", "content": prompt}]
+            )
+
+            try:
+                score = float(response.content[0].text.strip())
+                return min(max(score, 0.0), 1.0)
+            except (ValueError, IndexError):
+                pass
+        except Exception:
+            pass
+
+        # Fallback: heurísticas baseadas em descrição
+        primary_class = self.intent_classes.get(primary_intent, {})
+        desc = (primary_class.get('description', '') + ' ' + primary_class.get('display_name', '')).lower()
+
+        # Quanto mais palavras da descrição aparecem na query, maior a confiança
+        desc_words = set(desc.split())
+        query_words = set(query.lower().split())
+        overlap = len(desc_words & query_words)
+
+        # Base: 0.5 + até 0.5 do overlap
+        return min(0.5 + (overlap * 0.1), 1.0)
 
 # =============================================================================
 # AGENT SELECTOR (usa IntentPrediction para escolher agentes)
@@ -241,7 +276,7 @@ class AgentSelector:
     def select_agents(
         self,
         prediction: IntentPrediction,
-        min_confidence: float = 0.6
+        min_confidence: float = 0.3
     ) -> List[AgentScore]:
         """
         Seleciona agentes baseado na IntentPrediction.
@@ -277,7 +312,9 @@ class AgentSelector:
         # =====================================================================
         # PASSO 2: Secondary agents (se low confidence ou multiple intents)
         # =====================================================================
-        if prediction.confidence < 0.8 or prediction.secondary_intents:
+        # Only add secondary agents if primary confidence is meaningful (> 0.1)
+        # or if there are explicit secondary intents
+        if (prediction.confidence < 0.8 and prediction.confidence > 0.1) or prediction.secondary_intents:
             secondary_agents = primary_intent_class.get(
                 'secondary_agents',
                 []
