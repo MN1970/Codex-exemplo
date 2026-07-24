@@ -14,9 +14,11 @@ from fastmcp import FastMCP
 from pydantic import BaseModel
 
 from auth import get_token_manager, TokenPayload
+from cors_config import CORSConfig, create_cors_headers
 from logging_config import get_logger
 from middleware import check_permission, RequestWithAuth
 from permissions import PermissionChecker, Scope
+from rate_limiting import get_rate_limiter, RateLimitExceeded
 from sandbox import execute_python
 from supabase_client import SupabaseQueryClient
 import hashlib
@@ -27,6 +29,8 @@ import time
 
 mcp = FastMCP("mantabase-mcp-v2")
 token_manager = get_token_manager()
+rate_limiter = get_rate_limiter()
+cors_config = CORSConfig()
 
 
 class ExecuteRequest(BaseModel):
@@ -76,23 +80,41 @@ def execute(request: ExecuteRequest) -> dict[str, Any]:
             "execution_time": float
         }
     """
+    # Helper para respostas com CORS
+    def respond_execute_error(error: str, payload=None) -> dict[str, Any]:
+        resp = {"error": error, "result": None, "_cors_headers": create_cors_headers("*", cors_config)}
+        if payload:
+            resp["user"] = payload.sub
+        return resp
+
     # Validar token e extrair permissões
     if not request.token:
-        return {"error": "Authorization required (no token provided)", "result": None}
+        return respond_execute_error("Authorization required (no token provided)")
 
     payload = token_manager.validate_token(request.token)
     if not payload:
-        return {"error": "Invalid or expired token", "result": None}
+        return respond_execute_error("Invalid or expired token")
+
+    # Verificar rate limit
+    try:
+        rate_limiter.check_rate_limit(payload.sub)
+    except RateLimitExceeded as e:
+        get_logger().warning(
+            "Rate limit exceeded for execute",
+            user_email=payload.sub,
+            error=str(e),
+        )
+        return respond_execute_error(f"Rate limit exceeded: {str(e)}", payload)
 
     # Verificar permissão (ADMIN pode usar execute.python, USER usa execute.sandboxed)
     required_scopes = [Scope.EXECUTE_SANDBOXED, Scope.EXECUTE_PYTHON]
     error_msg = check_permission(payload, required_scopes)
     if error_msg:
-        return {"error": error_msg, "result": None}
+        return respond_execute_error(error_msg, payload)
 
     # Validar tamanho do código
     if len(request.code) > 10 * 1024:
-        return {"error": "Code too large (max 10KB)", "result": None}
+        return respond_execute_error("Code too large (max 10KB)", payload)
 
     # Executar em sandbox
     start_time = time.time()
@@ -102,6 +124,9 @@ def execute(request: ExecuteRequest) -> dict[str, Any]:
     # Adicionar metadata de auditoria
     result["user"] = payload.sub
     result["role"] = PermissionChecker.get_role_from_scopes(payload.scope).value if PermissionChecker.get_role_from_scopes(payload.scope) else "unknown"
+
+    # Adicionar CORS headers para HTTP wrapper (origin = any)
+    result["_cors_headers"] = create_cors_headers("*", cors_config)
 
     # Logar execução
     code_hash = hashlib.md5(request.code.encode()).hexdigest()[:8]
@@ -140,19 +165,37 @@ def query(request: QueryRequest) -> dict[str, Any]:
             "error": None ou mensagem
         }
     """
+    # Helper para respostas com CORS
+    def respond_query_error(error: str, payload=None) -> dict[str, Any]:
+        resp = {"rows": [], "count": 0, "error": error, "_cors_headers": create_cors_headers("*", cors_config)}
+        if payload:
+            resp["user"] = payload.sub
+        return resp
+
     # Validar token
     if not request.token:
-        return {"rows": [], "count": 0, "error": "Authorization required (no token provided)"}
+        return respond_query_error("Authorization required (no token provided)")
 
     payload = token_manager.validate_token(request.token)
     if not payload:
-        return {"rows": [], "count": 0, "error": "Invalid or expired token"}
+        return respond_query_error("Invalid or expired token")
+
+    # Verificar rate limit
+    try:
+        rate_limiter.check_rate_limit(payload.sub)
+    except RateLimitExceeded as e:
+        get_logger().warning(
+            "Rate limit exceeded for query",
+            user_email=payload.sub,
+            error=str(e),
+        )
+        return respond_query_error(f"Rate limit exceeded: {str(e)}", payload)
 
     # Verificar permissão
     required_scopes = [Scope.QUERY_SUPABASE]
     error_msg = check_permission(payload, required_scopes)
     if error_msg:
-        return {"rows": [], "count": 0, "error": error_msg}
+        return respond_query_error(error_msg, payload)
 
     try:
         start_time = time.time()
@@ -161,6 +204,7 @@ def query(request: QueryRequest) -> dict[str, Any]:
         duration_ms = int((time.time() - start_time) * 1000)
 
         result["user"] = payload.sub
+        result["_cors_headers"] = create_cors_headers("*", cors_config)
 
         # Logar query
         query_hash = hashlib.md5(request.sql.encode()).hexdigest()[:8]
@@ -178,11 +222,11 @@ def query(request: QueryRequest) -> dict[str, Any]:
     except ValueError as e:
         error_str = f"Configuration error: {str(e)}"
         get_logger().error("Query config error", user_email=payload.sub, error=error_str)
-        return {"rows": [], "count": 0, "error": error_str}
+        return respond_query_error(error_str, payload)
     except Exception as e:
         error_str = f"Query error: {str(e)}"
         get_logger().error("Query execution error", user_email=payload.sub, error=error_str)
-        return {"rows": [], "count": 0, "error": error_str}
+        return respond_query_error(error_str, payload)
 
 
 # --- Tool 3: skills ---
