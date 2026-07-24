@@ -1,0 +1,18 @@
+[build]
+builder = "dockerfile"
+dockerfile = "Dockerfile"
+
+[deploy]
+startCommand = "python -m fastmcp.cli server.py"
+healthcheckPath = "/health"
+healthcheckInterval = 30
+
+[env.production]
+MANTABASE_SECRET_KEY = "from-vault"
+SUPABASE_URL = "from-vault"
+SUPABASE_KEY = "from-vault"
+
+[env.staging]
+MANTABASE_SECRET_KEY = "from-vault-staging"
+SUPABASE_URL = "from-vault-staging"
+SUPABASE_KEY = "from-vault-staging"

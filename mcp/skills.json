@@ -1,0 +1,60 @@
+{
+  "skills": [
+    {
+      "id": "skill-001",
+      "name": "Bulk insert rows",
+      "category": "data-processing",
+      "description": "Insere múltiplas linhas em uma tabela Supabase com validação de schema.",
+      "code": "# Bulk insert com validação\n# Uso: exec(skill_code, {'table': 'projects', 'rows': [{...}, {...}]})\n\nfrom supabase import create_client\n\ntable_name = context.get('table')\nrows = context.get('rows', [])\n\nif not table_name or not rows:\n    raise ValueError('table and rows required')\n\nclient = create_client(os.getenv('SUPABASE_URL'), os.getenv('SUPABASE_KEY'))\nresult = client.table(table_name).insert(rows).execute()\n\nprint(f'Inserted {len(rows)} rows')"
+    },
+    {
+      "id": "skill-002",
+      "name": "Aggregate by group",
+      "category": "data-analysis",
+      "description": "Agrupa dados por coluna e calcula estatísticas (count, sum, avg, max, min).",
+      "code": "# Agregação por grupo\n# Uso: exec(skill_code, {'table': 'tasks', 'group_by': 'status', 'agg': 'count'})\n\nimport pandas as pd\n\ntable_name = context.get('table')\ngroup_by = context.get('group_by')\nagg_func = context.get('agg', 'count')\n\nif not table_name or not group_by:\n    raise ValueError('table and group_by required')\n\n# Query via Supabase\nclient = create_client(os.getenv('SUPABASE_URL'), os.getenv('SUPABASE_KEY'))\ndata = client.table(table_name).select('*').execute().data\ndf = pd.DataFrame(data)\n\nresult = df.groupby(group_by).agg({group_by: agg_func}).reset_index()\nprint(result.to_dict())"
+    },
+    {
+      "id": "skill-003",
+      "name": "Filter and transform",
+      "category": "data-processing",
+      "description": "Filtra linhas com condições e transforma valores usando pandas.",
+      "code": "# Filtra e transforma dados\n# Uso: exec(skill_code, {'data': df, 'filter': {'col': 'status', 'value': 'active'}, 'transform': {'col': 'price', 'op': 'multiply', 'val': 1.1}})\n\nimport pandas as pd\n\ndata = context.get('data')\nfilter_spec = context.get('filter', {})\ntransform_spec = context.get('transform', {})\n\nif isinstance(data, list):\n    df = pd.DataFrame(data)\nelse:\n    df = data\n\n# Aplicar filtro\nif filter_spec:\n    col = filter_spec.get('col')\n    value = filter_spec.get('value')\n    df = df[df[col] == value]\n\n# Aplicar transformação\nif transform_spec:\n    col = transform_spec.get('col')\n    op = transform_spec.get('op')\n    val = transform_spec.get('val')\n    if op == 'multiply':\n        df[col] = df[col] * val\n    elif op == 'add':\n        df[col] = df[col] + val\n\nprint(df.to_dict())"
+    },
+    {
+      "id": "skill-004",
+      "name": "Validate email list",
+      "category": "validation",
+      "description": "Valida lista de emails e retorna válidos/inválidos.",
+      "code": "# Validação de emails\n# Uso: exec(skill_code, {'emails': ['test@test.com', 'invalid', 'user@domain.org']})\n\nimport re\n\nemails = context.get('emails', [])\npattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n\nvalid = []\ninvalid = []\n\nfor email in emails:\n    if re.match(pattern, email):\n        valid.append(email)\n    else:\n        invalid.append(email)\n\nresult = {'valid': valid, 'invalid': invalid, 'total': len(emails)}\nprint(result)"
+    },
+    {
+      "id": "skill-005",
+      "name": "Generate date ranges",
+      "category": "date-handling",
+      "description": "Gera ranges de datas para períodos (diário, semanal, mensal).",
+      "code": "# Gera ranges de data\n# Uso: exec(skill_code, {'start': '2024-01-01', 'end': '2024-12-31', 'freq': 'monthly'})\n\nimport pandas as pd\n\nstart = context.get('start')\nend = context.get('end')\nfreq = context.get('freq', 'daily')\n\nfreq_map = {'daily': 'D', 'weekly': 'W', 'monthly': 'MS', 'quarterly': 'QS', 'yearly': 'YS'}\nfreq_code = freq_map.get(freq, 'D')\n\ndates = pd.date_range(start=start, end=end, freq=freq_code)\nranges = [{'start': d, 'end': d + pd.to_timedelta(1, freq_code)} for d in dates]\n\nprint(f'Generated {len(ranges)} ranges')\nprint(ranges[:5])"
+    },
+    {
+      "id": "skill-006",
+      "name": "Export to CSV",
+      "category": "export",
+      "description": "Exporta dados para CSV (output file ou string).",
+      "code": "# Exporta para CSV\n# Uso: exec(skill_code, {'data': df, 'filename': 'export.csv'})\n\nimport pandas as pd\nimport io\n\ndata = context.get('data')\nfilename = context.get('filename')\n\nif isinstance(data, list):\n    df = pd.DataFrame(data)\nelse:\n    df = data\n\nif filename:\n    df.to_csv(filename, index=False)\n    print(f'Exported to {filename}')\nelse:\n    csv_string = df.to_csv(index=False)\n    print(csv_string)"
+    },
+    {
+      "id": "skill-007",
+      "name": "Detect duplicates",
+      "category": "data-quality",
+      "description": "Detecta linhas duplicadas por coluna(s) e retorna estatísticas.",
+      "code": "# Detecta duplicatas\n# Uso: exec(skill_code, {'data': df, 'columns': ['email', 'name']})\n\nimport pandas as pd\n\ndata = context.get('data')\ncolumns = context.get('columns', [])\n\nif isinstance(data, list):\n    df = pd.DataFrame(data)\nelse:\n    df = data\n\nif not columns:\n    columns = df.columns.tolist()\n\nduplicates = df[df.duplicated(subset=columns, keep=False)]\ndup_count = len(duplicates) // 2 if len(duplicates) > 0 else 0\n\nresult = {\n    'total_rows': len(df),\n    'duplicate_count': dup_count,\n    'duplicate_pct': (dup_count / len(df) * 100) if len(df) > 0 else 0\n}\nprint(result)"
+    },
+    {
+      "id": "skill-008",
+      "name": "Calculate percentiles",
+      "category": "statistics",
+      "description": "Calcula percentis (p25, p50, p75, p90, p95, p99) para uma coluna numérica.",
+      "code": "# Calcula percentis\n# Uso: exec(skill_code, {'data': df, 'column': 'price'})\n\nimport pandas as pd\nimport numpy as np\n\ndata = context.get('data')\ncolumn = context.get('column')\n\nif isinstance(data, list):\n    df = pd.DataFrame(data)\nelse:\n    df = data\n\npercentiles = [25, 50, 75, 90, 95, 99]\nresult = {}\n\nfor p in percentiles:\n    result[f'p{p}'] = float(np.percentile(df[column].dropna(), p))\n\nprint(result)"
+    }
+  ]
+}
