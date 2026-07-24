@@ -77,7 +77,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./mcp
+          context: .
           file: ./mcp/Dockerfile
           push: false
           tags: mcp-v2:latest
