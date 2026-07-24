@@ -1,0 +1,100 @@
+{
+  "timestamp": "2026-07-24T14:52:34.319058",
+  "total_segments": 9,
+  "segments_with_files": 0,
+  "total_files": 0,
+  "total_size_mb": 0,
+  "estimated_rag_chunks": 0,
+  "audits": [
+    {
+      "segment": "S1",
+      "name": "Rodovias",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "rod:"
+    },
+    {
+      "segment": "S2",
+      "name": "OAE",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "oae:"
+    },
+    {
+      "segment": "S3",
+      "name": "Ferrovia",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "fer:"
+    },
+    {
+      "segment": "S4",
+      "name": "Metrô",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "mtr:"
+    },
+    {
+      "segment": "S6",
+      "name": "Portos",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "por:"
+    },
+    {
+      "segment": "S7",
+      "name": "Aeroportos",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "aer:"
+    },
+    {
+      "segment": "S8",
+      "name": "Saneamento",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "san:"
+    },
+    {
+      "segment": "S9",
+      "name": "Energia",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "ene:"
+    },
+    {
+      "segment": "S10",
+      "name": "Barragens",
+      "status": "OK",
+      "files": [],
+      "categories": {},
+      "total_files": 0,
+      "total_size_mb": 0,
+      "rag_prefix": "bar:"
+    }
+  ]
+}
