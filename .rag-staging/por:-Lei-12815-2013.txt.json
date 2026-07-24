@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "document_id": "doc-2026-07-22-Lei-12815-2013",
+    "filename": "Lei-12815-2013.txt",
+    "collection_prefix": "por:",
+    "segment": "S6",
+    "source_url": "/home/user/Codex-exemplo/data/rag-docs/por:/Lei-12815-2013.txt",
+    "source_type": "file",
+    "file_size_kb": 1.90234375,
+    "file_format": ".txt",
+    "extracted_at": "2026-07-22T21:32:45.355578"
+  },
+  "chunk_count": 1,
+  "chunks": [
+    {
+      "chunk_index": 0,
+      "content": "LEI Nº 12.815, DE 5 DE JUNHO DE 2013 Dispõe sobre a exploração direta e mediante autorização da navegação de cabotagem e da exploração de portos e instalações portuárias. CAPÍTULO I — DISPOSIÇÕES PRELIMINARES Art. 1º Esta Lei dispõe sobre a exploração de portos, instalações portuárias, infraestrutura de navegação e, inclusive, sobre a operação de navegação de cabotagem. Art. 2º Portos organizados e instalações portuárias serão explorados: I - Pela União, diretamente ou em regime de concessão; II - Mediante autorização, em regime de serviço público, para pessoas jurídicas constituídas sob as leis brasileiras. CAPÍTULO II — PUERTOS ORGANIZADOS Art. 3º Portos organizados são as instalações portuárias construídas e controladas pela União, dentro ou fora de sua planta industrial, que apresentam características próprias. Art. 4º São requisitos para concessão de porto organizado: I - Viabilidade técnica e econômica; II - Compatibilidade com legislação ambiental; III - Plano de desenvolvimento do porto; IV - Modelo de governança. CAPÍTULO III — INSTALAÇÕES PORTUÁRIAS Art. 5º Instalações portuárias podem ser: I - De uso público, operadas por concessionários; II - Privativas, operadas por seus proprietários; III - De caráter privado, de uso público mediante autorização. Art. 6º Todas as instalações portuárias deverão observar: - Normas de segurança operacional; - Padrões ambientais; - Capacidade de armazenagem adequada; - Modernização tecnológica contínua. CAPÍTULO IV — DRAGAGEM E INFRAESTRUTURA Art. 7º A manutenção de profundidades de navegação será de responsabilidade: I - Do poder público para vias navegáveis federais; II - Do concessionário para portos e instalações portuárias. Art. 8º A dragagem deverá manter os calados e áreas de manobra em condições operacionais. Brasília, 5 de junho de 2013.",
+      "length": 1820,
+      "collection_prefix": "por:",
+      "segment": "S6",
+      "valid": true,
+      "confidence_score": 1.0,
+      "validation_status": "validated",
+      "issues": [],
+      "validated_at": "2026-07-22T21:32:45.356417"
+    }
+  ]
+}

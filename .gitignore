@@ -1,0 +1,9 @@
+
+# RAG Phase 2-3 — Data and temporary files
+data/rag-docs/
+logs/rag-population/
+.rag-phase3-*.log
+.rag-phase3-*.json
+.rag-phase3-staging*/
+.rag-phase3-mock-chunks.json
+.rag-phase3-deployment-summary.txt

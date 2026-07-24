@@ -1,0 +1,70 @@
+{
+  "name": "maestro-rag-phase3-integration",
+  "version": "1.0.0",
+  "status": "production",
+  "tier": "production-30agents",
+  "deployed_date": "2026-07-24",
+
+  "routing_rules": [
+    {
+      "domain": "saneamento",
+      "triggers": ["ETA", "água", "esgoto", "SNIS", "BNDES saneamento", "AySA"],
+      "agent": "agente-saneamento",
+      "orchestrator": "rag-phase3-query-orchestrator-30agents",
+      "collection": "san:",
+      "documents": 201,
+      "chunks": "~560"
+    },
+    {
+      "domain": "energia",
+      "triggers": ["transmissão", "LT", "ANEEL", "leilão", "ONS", "EPE", "PDE"],
+      "agent": "agente-energia",
+      "orchestrator": "rag-phase3-query-orchestrator-30agents",
+      "collection": "ene:",
+      "documents": 299,
+      "chunks": "~840"
+    },
+    {
+      "domain": "portos",
+      "triggers": ["porto", "terminal", "ANTAQ", "dragagem", "contêiner", "granel"],
+      "agent": "agente-portos",
+      "orchestrator": "rag-phase3-query-orchestrator-30agents",
+      "collection": "por:",
+      "documents": 150,
+      "chunks": "~420"
+    },
+    {
+      "domain": "aeroportos",
+      "triggers": ["aeroporto", "pista", "ANAC", "RBAC", "taxiway", "TPS"],
+      "agent": "agente-aeroportos",
+      "orchestrator": "rag-phase3-query-orchestrator-30agents",
+      "collection": "aer:",
+      "documents": 120,
+      "chunks": "~336"
+    },
+    {
+      "domain": "barragens",
+      "triggers": ["barragem", "vertedouro", "CFRD", "rejeitos", "SIGBM", "ANA"],
+      "agent": "agente-barragens",
+      "orchestrator": "rag-phase3-query-orchestrator-30agents",
+      "collection": "bar:",
+      "documents": 180,
+      "chunks": "~504"
+    }
+  ],
+
+  "orchestrator_config": {
+    "agents_total": 30,
+    "model": "claude-haiku-4-5",
+    "latency_target_ms": 300,
+    "throughput_qps": 150,
+    "validation_rate": 0.997,
+    "cost_per_1m_queries": 225
+  },
+
+  "supabase": {
+    "table": "rag_chunks",
+    "total_chunks": 2660,
+    "indexes": 12
+  }
+}

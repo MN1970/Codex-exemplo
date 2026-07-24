@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "document_id": "doc-2026-07-22-Lei-9074-1995",
+    "filename": "Lei-9074-1995.txt",
+    "collection_prefix": "ene:",
+    "segment": "S9",
+    "source_url": "/home/user/Codex-exemplo/data/rag-docs/ene:/Lei-9074-1995.txt",
+    "source_type": "file",
+    "file_size_kb": 1.966796875,
+    "file_format": ".txt",
+    "extracted_at": "2026-07-22T21:32:45.036809"
+  },
+  "chunk_count": 1,
+  "chunks": [
+    {
+      "chunk_index": 0,
+      "content": "LEI Nº 9.074, DE 30 DE JUNHO DE 1995 Estabelece normas para outorga e prorrogações das concessões de geração, transmissão e distribuição de energia elétrica. CAPÍTULO I — CONCESSÕES DE GERAÇÃO Art. 1º A concessão de geração de energia elétrica poderá ser outorgada a pessoas jurídicas de direito público ou privado, na forma desta Lei. Art. 2º As concessões serão outorgadas para períodos de: I - 30 anos para geração hidráulica; II - 25 anos para geração térmica; III - 20 anos para geração eólica ou solar. Art. 3º São requisitos para obtenção de concessão: I - Qualificação técnica e financeira; II - Apresentação de projeto técnico compatível com normas; III - Capacidade de cumprir obrigações regulatórias; IV - Compatibilidade ambiental. CAPÍTULO II — CONCESSÕES DE TRANSMISSÃO Art. 4º As concessões de transmissão compreenderão sistemas específicos de linhas de transmissão, subestações e equipamentos associados. Art. 5º Prazo de concessão para transmissão: 30 anos, prorrogável por igual período. CAPÍTULO III — CONCESSÕES DE DISTRIBUIÇÃO Art. 6º As áreas de distribuição serão previamente delimitadas pela ANEEL, com base em critérios técnicos e econômicos. Art. 7º Prazo de concessão para distribuição: 35 anos. CAPÍTULO IV — CRITÉRIOS REGULATÓRIOS Art. 8º A regulação será realizada pela Agência Nacional de Energia Elétrica - ANEEL, que estabelecerá: I - Normas técnicas; II - Metodologia de cálculo de tarifas; III - Critérios de qualidade do serviço; IV - Procedimentos de segurança operacional. Art. 9º Os concessionários deverão manter investimentos contínuos em: - Modernização de equipamentos; - Redução de perdas técnicas; - Melhoria da eficiência operacional; - Adequação ambiental. CAPÍTULO V — DISPOSIÇÕES TRANSITÓRIAS Art. 10º Concessões anteriores a esta Lei serão prorrogadas em conformidade com as novas regras. Brasília, 30 de junho de 1995.",
+      "length": 1869,
+      "collection_prefix": "ene:",
+      "segment": "S9",
+      "valid": true,
+      "confidence_score": 0.85,
+      "validation_status": "validated",
+      "issues": [],
+      "validated_at": "2026-07-22T21:32:45.037583"
+    }
+  ]
+}
