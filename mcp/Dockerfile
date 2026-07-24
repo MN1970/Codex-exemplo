@@ -7,9 +7,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy project
-COPY pyproject.toml pyproject.toml
-COPY mcp/ mcp/
+# Copy project (pyproject.toml is in mcp/ directory)
+COPY mcp/pyproject.toml .
+COPY mcp/ .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -e .
