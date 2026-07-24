@@ -159,6 +159,7 @@ def skills(request: SkillsListRequest) -> dict[str, Any]:
     Lista templates de skills pré-aprovados.
 
     Cada skill é um snippet Python testado que pode ser usado em `execute()`.
+    Carrega da biblioteca skills.json.
 
     Args:
         category: filtro por categoria (padrão: "all").
@@ -168,7 +169,7 @@ def skills(request: SkillsListRequest) -> dict[str, Any]:
             "skills": [
                 {
                     "id": "skill-001",
-                    "name": "Bulk insert into table",
+                    "name": "Bulk insert rows",
                     "category": "data-processing",
                     "code": "...",
                     "description": "..."
@@ -176,21 +177,27 @@ def skills(request: SkillsListRequest) -> dict[str, Any]:
             ]
         }
     """
-    # TODO: carregar do database ou arquivo skills.json.
-    mock_skills = [
-        {
-            "id": "skill-001",
-            "name": "Bulk insert rows",
-            "category": "data-processing",
-            "code": "# Insert rows into Supabase table\n# Usage: exec(skill_code, {'table': 'my_table', 'rows': [...]}}",
-            "description": "Template para inserção em lote com validação de schema.",
-        },
-    ]
+    import json
+    import os
 
+    # Carregar skills.json
+    skills_path = os.path.join(os.path.dirname(__file__), "skills.json")
+    try:
+        with open(skills_path, "r") as f:
+            data = json.load(f)
+        all_skills = data.get("skills", [])
+    except FileNotFoundError:
+        return {"skills": [], "error": "Skills library not found"}
+    except json.JSONDecodeError:
+        return {"skills": [], "error": "Skills library malformed"}
+
+    # Filtrar por categoria
     if request.category != "all":
-        mock_skills = [s for s in mock_skills if s["category"] == request.category]
+        filtered_skills = [s for s in all_skills if s.get("category") == request.category]
+    else:
+        filtered_skills = all_skills
 
-    return {"skills": mock_skills}
+    return {"skills": filtered_skills, "count": len(filtered_skills)}
 
 
 # --- Startup hook: token renewal ---
