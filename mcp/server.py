@@ -8,13 +8,15 @@ Tools:
 """
 
 import os
-from typing import Any
+from typing import Any, Optional
 
 from fastmcp import FastMCP
 from pydantic import BaseModel
 
-from auth import get_token_manager
+from auth import get_token_manager, TokenPayload
+from permissions import PermissionChecker, Scope
 from sandbox import execute_python
+from supabase_client import SupabaseQueryClient
 
 
 # --- Server setup ---
@@ -95,16 +97,14 @@ def query(request: QueryRequest) -> dict[str, Any]:
             "error": None ou mensagem
         }
     """
-    # TODO: implementar validação SQL + execução via Supabase client.
-    # Por enquanto, stubbed.
-
-    if any(
-        keyword in request.sql.upper()
-        for keyword in ["INSERT", "UPDATE", "DELETE", "DROP", "TRUNCATE"]
-    ):
-        return {"error": "Mutation queries are not allowed (read-only)", "rows": []}
-
-    return {"rows": [], "count": 0, "error": "Not implemented yet"}
+    try:
+        client = SupabaseQueryClient()
+        result = client.execute_query(request.sql, request.params)
+        return result
+    except ValueError as e:
+        return {"rows": [], "count": 0, "error": f"Configuration error: {str(e)}"}
+    except Exception as e:
+        return {"rows": [], "count": 0, "error": f"Query error: {str(e)}"}
 
 
 # --- Tool 3: skills ---
