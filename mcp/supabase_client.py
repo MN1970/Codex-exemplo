@@ -9,7 +9,10 @@ import os
 import re
 from typing import Any, Optional
 
-from supabase import create_client
+try:
+    from supabase import create_client
+except ImportError:
+    create_client = None  # Optional dependency
 
 
 class SupabaseQueryValidator:
@@ -88,6 +91,9 @@ class SupabaseQueryClient:
             url: URL do Supabase (padrão: env SUPABASE_URL).
             key: API key do Supabase (padrão: env SUPABASE_KEY).
         """
+        if create_client is None:
+            raise ImportError("supabase package is required but not installed")
+
         self.url = url or os.getenv("SUPABASE_URL")
         self.key = key or os.getenv("SUPABASE_KEY")
 

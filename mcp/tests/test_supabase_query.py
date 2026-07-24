@@ -2,9 +2,13 @@
 
 import pytest
 
-from supabase_client import SupabaseQueryValidator
+try:
+    from supabase_client import SupabaseQueryValidator
+except ImportError:
+    SupabaseQueryValidator = None
 
 
+@pytest.mark.skipif(SupabaseQueryValidator is None, reason="supabase not installed")
 class TestQueryValidation:
     """Testes de validação SQL."""
 

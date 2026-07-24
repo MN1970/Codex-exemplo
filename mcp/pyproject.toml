@@ -12,12 +12,10 @@ license = {text = "MIT"}
 authors = [{name = "Manta Associados", email = "dev@mantaassociados.com"}]
 
 dependencies = [
-    "fastmcp==0.2.0",
+    "fastmcp>=0.2.0",
     "pydantic>=2.0.0",
-    "supabase>=2.4.0",
-    "python-jose[cryptography]>=3.3.0",
     "python-dotenv>=1.0.0",
-    "restricted-python>=6.0.0",
+    "RestrictedPython>=6.0.0",
     "tenacity>=8.0.0",
 ]
 
@@ -40,6 +38,9 @@ all = [
     "ruff>=0.1.0",
     "sentry-sdk>=1.30.0",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
 
 [tool.black]
 line-length = 100
