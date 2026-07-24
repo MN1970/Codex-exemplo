@@ -7,7 +7,7 @@ name = "mantabase-mcp-v2"
 version = "2.0.0"
 description = "MantaBase MCP v2 — code-execution + sandbox + SSA auth"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "Manta Associados", email = "dev@mantaassociados.com"}]
 
@@ -47,4 +47,4 @@ line-length = 100
 
 [tool.ruff]
 line-length = 100
-target-version = "py39"
+target-version = "py310"
