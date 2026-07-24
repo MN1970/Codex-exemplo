@@ -14,6 +14,7 @@ from fastmcp import FastMCP
 from pydantic import BaseModel
 
 from auth import get_token_manager, TokenPayload
+from middleware import check_permission, RequestWithAuth
 from permissions import PermissionChecker, Scope
 from sandbox import execute_python
 from supabase_client import SupabaseQueryClient
@@ -30,6 +31,7 @@ class ExecuteRequest(BaseModel):
 
     code: str
     context: dict[str, Any] = {}  # variáveis injetadas (ex: {"df": pandas.DataFrame})
+    token: Optional[str] = None  # JWT token para autenticação
 
 
 class QueryRequest(BaseModel):
@@ -37,6 +39,7 @@ class QueryRequest(BaseModel):
 
     sql: str
     params: dict[str, Any] = {}
+    token: Optional[str] = None  # JWT token para autenticação
 
 
 class SkillsListRequest(BaseModel):
@@ -53,12 +56,14 @@ def execute(request: ExecuteRequest) -> dict[str, Any]:
     """
     Executa código Python assinado em sandbox isolado.
 
+    Requer: Scope EXECUTE_SANDBOXED (USER+) ou EXECUTE_PYTHON (ADMIN).
     Bloqueia: I/O de rede, filesystem, subprocess.
     Acessa: Supabase (via contexto), pandas, numpy, etc.
 
     Args:
         code: código Python (máx 10KB).
         context: variáveis injetadas no escopo (ex: {"client": supabase_client}).
+        token: JWT token para autenticação.
 
     Returns:
         {
@@ -68,10 +73,31 @@ def execute(request: ExecuteRequest) -> dict[str, Any]:
             "execution_time": float
         }
     """
+    # Validar token e extrair permissões
+    if not request.token:
+        return {"error": "Authorization required (no token provided)", "result": None}
+
+    payload = token_manager.validate_token(request.token)
+    if not payload:
+        return {"error": "Invalid or expired token", "result": None}
+
+    # Verificar permissão (ADMIN pode usar execute.python, USER usa execute.sandboxed)
+    required_scopes = [Scope.EXECUTE_SANDBOXED, Scope.EXECUTE_PYTHON]
+    error_msg = check_permission(payload, required_scopes)
+    if error_msg:
+        return {"error": error_msg, "result": None}
+
+    # Validar tamanho do código
     if len(request.code) > 10 * 1024:
         return {"error": "Code too large (max 10KB)", "result": None}
 
+    # Executar em sandbox
     result = execute_python(request.code, locals_dict=request.context)
+
+    # Adicionar metadata de auditoria
+    result["user"] = payload.sub
+    result["role"] = PermissionChecker.get_role_from_scopes(payload.scope).value if PermissionChecker.get_role_from_scopes(payload.scope) else "unknown"
+
     return result
 
 
@@ -85,10 +111,12 @@ def query(request: QueryRequest) -> dict[str, Any]:
 
     Suporta: SELECT, agregações, JOINs.
     Bloqueia: INSERT, UPDATE, DELETE, DROP.
+    Requer: Scope QUERY_SUPABASE (USER+) ou QUERY_SHAREPOINT (ADMIN).
 
     Args:
         sql: SQL a executar.
         params: parâmetros nomeados (ex: {"id": 123}).
+        token: JWT token para autenticação.
 
     Returns:
         {
@@ -97,9 +125,24 @@ def query(request: QueryRequest) -> dict[str, Any]:
             "error": None ou mensagem
         }
     """
+    # Validar token
+    if not request.token:
+        return {"rows": [], "count": 0, "error": "Authorization required (no token provided)"}
+
+    payload = token_manager.validate_token(request.token)
+    if not payload:
+        return {"rows": [], "count": 0, "error": "Invalid or expired token"}
+
+    # Verificar permissão
+    required_scopes = [Scope.QUERY_SUPABASE]
+    error_msg = check_permission(payload, required_scopes)
+    if error_msg:
+        return {"rows": [], "count": 0, "error": error_msg}
+
     try:
         client = SupabaseQueryClient()
         result = client.execute_query(request.sql, request.params)
+        result["user"] = payload.sub
         return result
     except ValueError as e:
         return {"rows": [], "count": 0, "error": f"Configuration error: {str(e)}"}
