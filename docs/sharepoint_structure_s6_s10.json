@@ -1,0 +1,1033 @@
+{
+  "maestro": {
+    "nome": "Marco Neves",
+    "email": "mneves@mantaassociados.com",
+    "titulo": "Manta 00 - Maestro",
+    "versao": "v4.2",
+    "data_criacao": "2026-07-24"
+  },
+
+  "estrutura_hierarquica": {
+    "nivel_1": "Pastas Principais",
+    "nivel_2": "Subpastas por Tipologia Técnica",
+    "nivel_3": "Arquivos Esperados"
+  },
+
+  "segmentos": {
+
+    "S6_Portos": {
+      "path": "03_Projetos/Portos",
+      "nome_completo": "Portos",
+      "tier": "Sonnet",
+      "rag_prefix": "por:",
+      "reguladores": ["ANTAQ", "PIANC", "BNDES", "Autoridades Portuárias Estaduais"],
+      "descricao": "Projetos portuários, terminais, dragagem, obras costeiras",
+
+      "Projetos_Executados": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cases reais de portos e terminais da Manta Associados",
+        "subpastas": {
+          "Terminais_Portuarios": {
+            "descricao": "Projetos de terminais de carga, contêiner, veículos",
+            "arquivos_esperados": [
+              "TP_01_Terminal_Conteineres_Santos_2024_Relatorio_Executivo.pdf",
+              "TP_02_Terminal_Granel_Liquido_Paranagua_Projeto_Basico.dwg",
+              "TP_03_Estudo_Capacidade_Terminal_Rio_Grande.xlsx"
+            ]
+          },
+          "Obras_Costeiras": {
+            "descricao": "Quebramares, molhes, diques, estruturas de proteção",
+            "arquivos_esperados": [
+              "OC_01_Molhe_Reforcado_Porto_de_Manaus_Projeto_Executivo.pdf",
+              "OC_02_Dique_Seco_Analise_Estabilidade.xlsx",
+              "OC_03_Erosao_Costeira_Mitigacao_Relatorio_Tecnico.pdf"
+            ]
+          },
+          "Dragagem": {
+            "descricao": "Projetos de aprofundamento, dragagem ambiental, berços",
+            "arquivos_esperados": [
+              "DG_01_Dragagem_Aprofundamento_Calado_13m_Santarém.pdf",
+              "DG_02_Estudo_Dispersao_Material_Dragado_Simulacao_Hidrodinamica.xlsx",
+              "DG_03_Plano_Manejo_Material_Dragado_IBAMA.pdf"
+            ]
+          },
+          "Sistemas_Carga_Descarga": {
+            "descricao": "Berços, pórticos, silos, correias transportadoras",
+            "arquivos_esperados": [
+              "SCD_01_Especificacao_Portico_Conteineres_85t_Porto_Pecem.pdf",
+              "SCD_02_Projeto_Correia_Transportadora_Granel_Solido_Itaguai.dwg",
+              "SCD_03_Automacao_Sistema_Embarque_Calcario.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Estudos_Tecnicos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cálculos, simulações, análises de viabilidade",
+        "subpastas": {
+          "Hidrodinamica": {
+            "descricao": "Modelagem de correntes, ondas, sedimentologia",
+            "arquivos_esperados": [
+              "HD_01_Modelo_Hidrodinamico_Porto_Fortaleza_MIKE_21.pdf",
+              "HD_02_Analise_Agitacao_Maritima_Calado_Projeto.xlsx",
+              "HD_03_Transporte_Sedimentos_Simulacao_3D.pdf"
+            ]
+          },
+          "Geotecnia_Portuaria": {
+            "descricao": "Sondagens, fundações, estabilidade de taludes",
+            "arquivos_esperados": [
+              "GP_01_Relatorio_Sondagem_18_Furos_Porto_Itaguai.pdf",
+              "GP_02_Analise_Estabilidade_Talude_Submerso_Calado_10m.xlsx",
+              "GP_03_Capacidade_Suporte_Estacas_Berco_Conteineres.pdf"
+            ]
+          },
+          "Estruturas": {
+            "descricao": "Cálculos estruturais, fundações profundas",
+            "arquivos_esperados": [
+              "EST_01_Projeto_Estrutural_Molhe_L800m_Relatorio.pdf",
+              "EST_02_Analise_Pier_Conteineres_Modelo_SAP2000.dwg",
+              "EST_03_Dimensionamento_Estacas_Tubulares_Diametro_1200mm.xlsx"
+            ]
+          },
+          "Ambiental": {
+            "descricao": "EIA-RIMA, impactos ambientais",
+            "arquivos_esperados": [
+              "AMB_01_EIA_RIMA_Ampliacao_Porto_Imbituba.pdf",
+              "AMB_02_Diagnostico_Fauna_Flora_Area_Influencia.xlsx",
+              "AMB_03_Plano_Controle_Poluicao_Maritima.pdf"
+            ]
+          }
+        }
+      },
+
+      "Normas_Referencias": {
+        "tipo": "Pasta Principal",
+        "descricao": "Regulamentações, normas técnicas, standards internacionais",
+        "subpastas": {
+          "ANTAQ": {
+            "descricao": "Resoluções, manuais, diretrizes ANTAQ",
+            "arquivos_esperados": [
+              "ANTAQ_Resolucao_6193_Concessoes_Portuarias.pdf",
+              "ANTAQ_Manual_Planejamento_Terminal_v3.pdf",
+              "ANTAQ_Diretriz_Seguranca_Operacional_Portos.pdf"
+            ]
+          },
+          "PIANC_IMO_ICAO": {
+            "descricao": "Guidelines internacionais",
+            "arquivos_esperados": [
+              "PIANC_Guidelines_Design_Terminals_2nd_Edition.pdf",
+              "IMO_Port_State_Control_Codigo.pdf",
+              "ICAO_Navigational_Aids_Port_Approach.pdf"
+            ]
+          },
+          "NBR_Tecnicas": {
+            "descricao": "Normas brasileiras aplicáveis",
+            "arquivos_esperados": [
+              "NBR_9783_Terminais_Uso_Publico.pdf",
+              "NBR_13031_Estruturas_Concreto_Agua_Salgada.pdf",
+              "NBR_5629_Estacas_Metodo_Calculo.pdf"
+            ]
+          },
+          "BNDES": {
+            "descricao": "Critérios de financiamento BNDES",
+            "arquivos_esperados": [
+              "BNDES_Circular_Portos_Criterios_Ambientais.pdf",
+              "BNDES_Modelo_Concessao_Terminal_Portuario_2024.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Templates_Documentos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Modelos padrão de documentos da Manta",
+        "subpastas": {
+          "Projetos": {
+            "arquivos_esperados": [
+              "Template_Relatorio_Viabilidade_Terminal_Portuario.docx",
+              "Template_Especificacao_Tecnica_Berco_Conteineres.docx",
+              "Template_Cronograma_Construcao_Obra_Portuaria.xlsx"
+            ]
+          },
+          "Aprovacoes": {
+            "arquivos_esperados": [
+              "Template_Parecer_Ambiental_Dragagem.docx",
+              "Template_Memo_Solicitacao_ANTAQ.docx"
+            ]
+          },
+          "Operacional": {
+            "arquivos_esperados": [
+              "Template_Manual_Operacional_Terminal.docx",
+              "Template_Checklist_Seguranca_Berco.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Licitacoes_Editais": {
+        "tipo": "Pasta Principal",
+        "descricao": "Editais, RFPs, concessões, licitações públicas",
+        "subpastas": {
+          "Concessoes": {
+            "arquivos_esperados": [
+              "Edital_Concessao_Terminal_Conteineres_Pecém_2025.pdf",
+              "RFP_Operador_Porto_Tamandaré.pdf",
+              "Termo_Referencia_Estudo_Viabilidade_Porto.docx"
+            ]
+          },
+          "Licitacoes_Obras": {
+            "arquivos_esperados": [
+              "Edital_Dragagem_Porto_Santos_Ampliacao_Calado.pdf",
+              "Edital_Construcao_Molhe_L500m_Relatorio_Tecnico.pdf"
+            ]
+          },
+          "PPP_Concessoes": {
+            "arquivos_esperados": [
+              "Contrato_Concessao_Terminal_30_Anos_Padrao_BNDES.docx",
+              "Instrumento_Convocatoria_PPP_Porto.pdf"
+            ]
+          }
+        }
+      }
+    },
+
+    "S7_Aeroportos": {
+      "path": "03_Projetos/Aeroportos",
+      "nome_completo": "Aeroportos",
+      "tier": "Sonnet",
+      "rag_prefix": "aer:",
+      "reguladores": ["ANAC", "ICAO", "FAA", "DECEA", "INFRAERO"],
+      "descricao": "Projetos de aeroportos, pistas, terminais, sistemas de navegação",
+
+      "Projetos_Executados": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cases reais de aeroportos e terminais da Manta",
+        "subpastas": {
+          "Pistas_Taxiways": {
+            "descricao": "Projetos de pistas pouso/decolagem, taxiways",
+            "arquivos_esperados": [
+              "PT_01_Ampliacao_Pista_Secundaria_Brasilia_Internacional.pdf",
+              "PT_02_Projeto_Executivo_Pista_3600x60m_Pavimento_Rigido.dwg",
+              "PT_03_Taxiway_Sistema_Aguadoras_Projeto_Basico.xlsx"
+            ]
+          },
+          "Terminal_Passageiros": {
+            "descricao": "Terminais de embarque/desembarque, gates",
+            "arquivos_esperados": [
+              "TP_01_Ampliacao_Terminal_1_Galeao_500_Pax_Hora.pdf",
+              "TP_02_Projeto_Saguao_Expansao_Confins_2000m2.dwg",
+              "TP_03_Sistema_Bagagem_Automatizado_Especificacao.xlsx"
+            ]
+          },
+          "Terminal_Cargas": {
+            "descricao": "Terminais de carga aérea, hangares",
+            "arquivos_esperados": [
+              "TC_01_Terminal_Cargas_Pressao_Guarulhos_10000m2.pdf",
+              "TC_02_Hangar_Manutencao_Aeronaves_Projeto_Estrutural.dwg",
+              "TC_03_Sistema_Automacao_Cargo_Especificacao_Tecnica.xlsx"
+            ]
+          },
+          "Sistemas_Balizamento": {
+            "descricao": "ILS, VOR, NDB, balizamento visual",
+            "arquivos_esperados": [
+              "SB_01_Projeto_ILS_CAT_II_Instalacao_Salvador.pdf",
+              "SB_02_Sistema_Balizamento_Noturno_Pista_Secundaria.dwg",
+              "SB_03_Especificacao_Luzes_Aproximacao_PAPI_ICAO.xlsx"
+            ]
+          },
+          "Infraestrutura_Servicos": {
+            "descricao": "Energia, água, saneamento, estacionamento",
+            "arquivos_esperados": [
+              "IS_01_Projeto_Subestacao_20MVA_Terminal_Novo.pdf",
+              "IS_02_Sistema_Abastecimento_Agua_3000m3_Dia.dwg",
+              "IS_03_Estacionamento_Veiculo_3000_Vagas_Drenagem.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Estudos_Tecnicos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cálculos, simulações, análises",
+        "subpastas": {
+          "Pavimentacao_Aeroportuaria": {
+            "descricao": "Design de pavimentos, PCN, rigidez",
+            "arquivos_esperados": [
+              "PA_01_Dimensionamento_Pista_Rigida_B787_ACN_70.pdf",
+              "PA_02_Analise_Deflexao_Pavimento_Metodo_ICAO_9157.xlsx",
+              "PA_03_Projeto_Drenagem_Subsuperficial_Pista.pdf"
+            ]
+          },
+          "Drenagem_Aviacao": {
+            "descricao": "Sistemas de drenagem, AQI",
+            "arquivos_esperados": [
+              "DR_01_Projeto_Drenagem_Pista_Declividade_1_porcento.pdf",
+              "DR_02_Simulacao_Hidrodinamica_Chuva_Extrema.xlsx",
+              "DR_03_Sistema_Tubulacoes_Subsuperficial_Especificacao.pdf"
+            ]
+          },
+          "Seguranca_Operacional": {
+            "descricao": "Análise de riscos, SMS, Safety Case",
+            "arquivos_esperados": [
+              "SO_01_Safety_Case_Aeroporto_Categoria_C_ANAC.pdf",
+              "SO_02_Analise_Risco_Operacional_Terminal_Passageiros.xlsx",
+              "SO_03_Plano_Contingencia_Operacao_Emergencia.pdf"
+            ]
+          },
+          "Ambiental": {
+            "descricao": "EIA-RIMA, ruído, emissões",
+            "arquivos_esperados": [
+              "AMB_01_EIA_RIMA_Expansao_Aeroporto_Campinas.pdf",
+              "AMB_02_Estudo_Ruidometria_NBR_ISO_3744.xlsx",
+              "AMB_03_Plano_Controle_Impacto_Fauna_Avifauna.pdf"
+            ]
+          }
+        }
+      },
+
+      "Normas_Referencias": {
+        "tipo": "Pasta Principal",
+        "descricao": "Regulamentações e normas técnicas",
+        "subpastas": {
+          "ANAC": {
+            "descricao": "RBAC, IAC, circulares ANAC",
+            "arquivos_esperados": [
+              "ANAC_RBAC_139_Certificacao_Aerodromos.pdf",
+              "ANAC_IAC_901_47_Manual_Qualidade_Aeroporto.pdf",
+              "ANAC_Circular_Criterios_Seguranca_Operacional.pdf"
+            ]
+          },
+          "ICAO_FAA": {
+            "descricao": "ICAO Annex 14, FAA AC",
+            "arquivos_esperados": [
+              "ICAO_Annex_14_Aerodrome_Design_8th_Edition.pdf",
+              "FAA_AC_150_5300_13A_Airport_Design_Guidelines.pdf",
+              "FAA_AC_150_5200_33D_Hazard_Marking_Lighting.pdf"
+            ]
+          },
+          "DECEA": {
+            "descricao": "Normas de navegação aérea",
+            "arquivos_esperados": [
+              "DECEA_AIP_Publicacao_Informacoes_Aeronauticas.pdf",
+              "DECEA_Manual_Criterios_Radiofarol.pdf"
+            ]
+          },
+          "NBR_Tecnicas": {
+            "descricao": "Normas brasileiras",
+            "arquivos_esperados": [
+              "NBR_14565_Drenos_Subsuperficiais_Aeroportos.pdf",
+              "NBR_5629_Fundacoes_Profundas_Estacas.pdf"
+            ]
+          }
+        }
+      },
+
+      "Templates_Documentos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Modelos padrão de documentos",
+        "subpastas": {
+          "Projetos": {
+            "arquivos_esperados": [
+              "Template_Relatorio_Viabilidade_Ampliacao_Aeroporto.docx",
+              "Template_Projeto_Executivo_Pista_Pouso.docx",
+              "Template_Especificacao_Pavimento_Rigido_PCN.xlsx"
+            ]
+          },
+          "Seguranca": {
+            "arquivos_esperados": [
+              "Template_Safety_Case_Operacao_Aeronautica.docx",
+              "Template_Plano_Emergencia_Incidente_Operacional.docx"
+            ]
+          },
+          "Operacional": {
+            "arquivos_esperados": [
+              "Template_Manual_Operacional_Pista.docx",
+              "Template_Checklist_Manutencao_Preventiva.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Licitacoes_Editais": {
+        "tipo": "Pasta Principal",
+        "descricao": "Editais, RFPs, concessões",
+        "subpastas": {
+          "Concessoes": {
+            "arquivos_esperados": [
+              "Edital_Concessao_Aeroporto_Regional_30_Anos.pdf",
+              "RFP_Operador_Aeroporto_Infraero.pdf",
+              "Termo_Referencia_Estudo_Viabilidade_Aeroporto.docx"
+            ]
+          },
+          "Licitacoes_Obras": {
+            "arquivos_esperados": [
+              "Edital_Ampliacao_Pista_Pouso_3600x60m.pdf",
+              "Edital_Construcao_Terminal_Passageiros_30000m2.pdf",
+              "Edital_Reforma_Infraestrutura_Energia_Agua.pdf"
+            ]
+          },
+          "PPP_Concessoes": {
+            "arquivos_esperados": [
+              "Contrato_Concessao_Aeroporto_30_Anos_Modelo.docx",
+              "Instrumento_Convocatoria_PPP_Aeroportuaria.pdf"
+            ]
+          }
+        }
+      }
+    },
+
+    "S8_Saneamento": {
+      "path": "03_Projetos/Saneamento",
+      "nome_completo": "Saneamento",
+      "tier": "Sonnet",
+      "rag_prefix": "san:",
+      "priority": "AySA",
+      "reguladores": ["ANA", "SNIS", "AySA", "ERAS", "ABNT"],
+      "descricao": "Projetos de saneamento: água, esgoto, drenagem urbana",
+
+      "Projetos_Executados": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cases reais de sistemas de saneamento",
+        "subpastas": {
+          "ETA": {
+            "descricao": "Estações de Tratamento de Água",
+            "arquivos_esperados": [
+              "ETA_01_ETA_Convencional_500Ls_Projeto_Completo_Sao_Goncalo.pdf",
+              "ETA_02_ETA_Compacta_Microfiltacao_Aruja_Projeto_Basico.dwg",
+              "ETA_03_Sistema_Desinfeccao_UV_Ozonio_Especificacao.xlsx"
+            ]
+          },
+          "ETE": {
+            "descricao": "Estações de Tratamento de Esgoto",
+            "arquivos_esperados": [
+              "ETE_01_ETE_Lodos_Ativados_Convencional_50Ls_Rio_Claro.pdf",
+              "ETE_02_ETE_Reator_Membrana_500_Lh_Projeto_Executivo.dwg",
+              "ETE_03_Sistema_Tratamento_Lodo_Centrifugacao_Especificacao.xlsx"
+            ]
+          },
+          "Redes_Distribuicao": {
+            "descricao": "Redes de distribuição de água, adução",
+            "arquivos_esperados": [
+              "RD_01_Rede_Distribuicao_Agua_Potavel_Bacia_Sao_Paulo.pdf",
+              "RD_02_Adutora_Ferro_Dupleta_400mm_DN_Pressao_140_Kpa.dwg",
+              "RD_03_Reservatorio_Elevado_10000m3_Projeto_Estrutural.xlsx"
+            ]
+          },
+          "Drenagem_Urbana": {
+            "descricao": "Sistemas de drenagem, microdrenaagem",
+            "arquivos_esperados": [
+              "DU_01_Macroenalagem_Bacia_Hidrografica_40km2_Sao_Vicente.pdf",
+              "DU_02_Microdrenagem_Galerias_Areia_Limpeza_Projeto.dwg",
+              "DU_03_Sistema_Piscinoes_Retencao_Chuvas_Extremas.xlsx"
+            ]
+          },
+          "Coleta_Esgoto": {
+            "descricao": "Redes coletoras, emissários, interceptores",
+            "arquivos_esperados": [
+              "CE_01_Rede_Coleta_Esgoto_Zona_Leste_Santo_Andre.pdf",
+              "CE_02_Emissario_Submarino_DN1400_Disposicao_Oceano.dwg",
+              "CE_03_Estacao_Elevatoria_Esgoto_6_Bombas_500Ls.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Estudos_Tecnicos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cálculos, simulações, análises",
+        "subpastas": {
+          "Hidrodinamica_Recursos_Hidricos": {
+            "descricao": "Modelagem de vazão, qualidade de água",
+            "arquivos_esperados": [
+              "HR_01_Estudo_Disponibilidade_Hidrica_Bacia_Piracicaba.pdf",
+              "HR_02_Modelo_Qualidade_Agua_SAR_Rio_Tiete.xlsx",
+              "HR_03_Analise_Outorga_Hidrica_ANA.pdf"
+            ]
+          },
+          "Tratamento_Agua": {
+            "descricao": "Dimensionamento ETA, coagulação, filtração",
+            "arquivos_esperados": [
+              "TA_01_Estudo_Tratabilidade_Agua_Bruta_Metais_Pesados.pdf",
+              "TA_02_Dimensionamento_ETA_500Ls_NBR_12211.xlsx",
+              "TA_03_Balanco_Hidrico_Residuos_Desinfeccao.pdf"
+            ]
+          },
+          "Tratamento_Esgoto": {
+            "descricao": "Dimensionamento ETE, DQO, DBO",
+            "arquivos_esperados": [
+              "TE_01_Estudo_Tratabilidade_Esgoto_Carga_Organica.pdf",
+              "TE_02_Dimensionamento_ETE_Lodos_Ativados_50Ls_NBR_12209.xlsx",
+              "TE_03_Balanco_Energetico_ETE_Analise_Operacional.pdf"
+            ]
+          },
+          "Ambiental": {
+            "descricao": "EIA-RIMA, impacto ambiental",
+            "arquivos_esperados": [
+              "AMB_01_EIA_RIMA_ETA_Zona_Oeste_Sao_Paulo.pdf",
+              "AMB_02_Diagnostico_Ambiental_Corrego_Recepcao_Efluente.xlsx",
+              "AMB_03_Plano_Manejo_Ecossistema_Aquatico.pdf"
+            ]
+          },
+          "Economica": {
+            "descricao": "Análise de custo, OPEX, tarifa",
+            "arquivos_esperados": [
+              "ECO_01_Analise_Viabilidade_Economica_ETA.pdf",
+              "ECO_02_Projecao_Custos_Operacionales_20_Anos.xlsx",
+              "ECO_03_Estudo_Tarifa_SNIS_Benchmark_Nacional.pdf"
+            ]
+          }
+        }
+      },
+
+      "Normas_Referencias": {
+        "tipo": "Pasta Principal",
+        "descricao": "Regulamentações e normas técnicas",
+        "subpastas": {
+          "ANA_SNIS": {
+            "descricao": "Resoluções ANA, bases SNIS",
+            "arquivos_esperados": [
+              "ANA_Resolucao_54_Criterios_Outorga_Hidrica.pdf",
+              "SNIS_Diagnostico_Agua_Esgoto_2023_Nacional.xlsx",
+              "ANA_Manual_Seguranca_Barragem_Abastecimento.pdf"
+            ]
+          },
+          "NBR_ABNT": {
+            "descricao": "Normas brasileiras de saneamento",
+            "arquivos_esperados": [
+              "NBR_12211_Projeto_ETA_Agua.pdf",
+              "NBR_12209_Projeto_ETE_Esgoto.pdf",
+              "NBR_13969_Tanque_Septico_Infiltracao.pdf",
+              "NBR_14653_Drenagem_Urbana.pdf"
+            ]
+          },
+          "AySA_ERAS": {
+            "descricao": "Normas AySA e ERAS (América do Sul)",
+            "arquivos_esperados": [
+              "AySA_Resolucion_Criterios_Agua_Potable.pdf",
+              "AySA_Especificacion_Tecnica_Red_Distribucion.pdf"
+            ]
+          },
+          "Internacional": {
+            "descricao": "Standards IWA, WHO, EPA",
+            "arquivos_esperados": [
+              "IWA_Guidelines_Water_Reuse_Safety.pdf",
+              "WHO_Guidelines_Drinking_Water_Quality_4th.pdf",
+              "EPA_Wastewater_Treatment_Manual.pdf"
+            ]
+          }
+        }
+      },
+
+      "Templates_Documentos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Modelos padrão de documentos",
+        "subpastas": {
+          "Projetos": {
+            "arquivos_esperados": [
+              "Template_Relatorio_Viabilidade_ETA_ETE.docx",
+              "Template_Projeto_Executivo_Rede_Agua.docx",
+              "Template_Especificacao_Tubulacao_PVC_DN.xlsx"
+            ]
+          },
+          "Ambiental": {
+            "arquivos_esperados": [
+              "Template_EIA_RIMA_Saneamento.docx",
+              "Template_Parecer_Ambiental_Efluente.docx"
+            ]
+          },
+          "Operacional": {
+            "arquivos_esperados": [
+              "Template_Manual_Operacional_ETA.docx",
+              "Template_Procedimento_Manutencao_Preventiva.docx",
+              "Template_Checklist_Qualidade_Agua.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Licitacoes_Editais": {
+        "tipo": "Pasta Principal",
+        "descricao": "Editais, RFPs, concessões",
+        "subpastas": {
+          "Concessoes": {
+            "arquivos_esperados": [
+              "Edital_Concessao_Saneamento_Municipio_30_Anos.pdf",
+              "RFP_Operador_Sistema_Agua_Esgoto.pdf",
+              "Termo_Referencia_Estudo_Viabilidade_Saneamento.docx"
+            ]
+          },
+          "Licitacoes_Obras": {
+            "arquivos_esperados": [
+              "Edital_Construcao_ETA_500Ls_Projeto_Completo.pdf",
+              "Edital_Implantacao_Rede_Coleta_30km.pdf",
+              "Edital_Ampliacao_ETE_Lodos_Ativados_100Ls.pdf"
+            ]
+          },
+          "PPP_Concessoes": {
+            "arquivos_esperados": [
+              "Contrato_Concessao_Saneamento_30_Anos_Modelo.docx",
+              "Instrumento_Convocatoria_PPP_Saneamento.pdf"
+            ]
+          }
+        }
+      }
+    },
+
+    "S9_Energia": {
+      "path": "03_Projetos/Energia",
+      "nome_completo": "Energia",
+      "tier": "Sonnet",
+      "rag_prefix": "ene:",
+      "priority": "ANEEL",
+      "reguladores": ["ANEEL", "ONS", "EPE", "CCEE", "State Grid"],
+      "descricao": "Projetos de energia: transmissão, distribuição, usinas",
+
+      "Projetos_Executados": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cases reais de projetos de energia",
+        "subpastas": {
+          "Linhas_Transmissao": {
+            "descricao": "Linhas de alta tensão, torres, fundações",
+            "arquivos_esperados": [
+              "LT_01_LT_Transmissao_500kV_Comprimento_150km_Sao_Paulo.pdf",
+              "LT_02_Projeto_Executivo_Torre_Autoportante_500kV.dwg",
+              "LT_03_Estudo_Impedancia_Caracteristica_Linha.xlsx"
+            ]
+          },
+          "Subestacoes": {
+            "descricao": "Subestações, transformadores, disjuntores",
+            "arquivos_esperados": [
+              "SBE_01_Subestacao_220kV_750MVA_Layout_Equipamentos.pdf",
+              "SBE_02_Projeto_Estrutural_Patio_Subestacao.dwg",
+              "SBE_03_Especificacao_Transformador_330_138kV.xlsx"
+            ]
+          },
+          "Redes_Distribuicao": {
+            "descricao": "Redes de distribuição MT/BT",
+            "arquivos_esperados": [
+              "RD_01_Rede_Distribuicao_MT_13_8kV_Circuito_50km.pdf",
+              "RD_02_Projeto_Rede_BT_Urbana_Primaria_Secundaria.dwg",
+              "RD_03_Calculo_Carregamento_Transformador_500kVA.xlsx"
+            ]
+          },
+          "Usinas": {
+            "descricao": "Usinas geradoras: térmica, hídrica, eólica, solar",
+            "arquivos_esperados": [
+              "USA_01_Usina_Termica_Gas_Natural_500MW_Projeto_Basico.pdf",
+              "USA_02_Usina_Hidroeletrica_50MW_Estudo_Viabilidade.dwg",
+              "USA_03_Parque_Eolico_200MW_Layout_Aerogeradores.xlsx",
+              "USA_04_Usina_Solar_100MW_Projeto_Modulos_Inversores.pdf"
+            ]
+          }
+        }
+      },
+
+      "Estudos_Tecnicos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cálculos, simulações, análises",
+        "subpastas": {
+          "Fluxo_Potencia": {
+            "descricao": "Análise de fluxo, estabilidade, contingência",
+            "arquivos_esperados": [
+              "FP_01_Estudo_Fluxo_Potencia_ONS_Base_2025.pdf",
+              "FP_02_Analise_Estabilidade_Transitoria_Sistema_Interligado.xlsx",
+              "FP_03_Contingencia_Critero_N_1_Linhas_Criticas.pdf"
+            ]
+          },
+          "Curto_Circuito": {
+            "descricao": "Análise de curto-circuito, proteção",
+            "arquivos_esperados": [
+              "CC_01_Estudo_Corrente_Curto_Circuito_Sistema_500kV.pdf",
+              "CC_02_Analise_Coordenacao_Protecao_Subestacao.xlsx",
+              "CC_03_Especificacao_Disjuntor_15kA_Nominal.pdf"
+            ]
+          },
+          "Economia_Energia": {
+            "descricao": "Despacho, custo marginal, receita",
+            "arquivos_esperados": [
+              "EE_01_Analise_Viabilidade_Economica_LT_500kV.pdf",
+              "EE_02_Projecao_Receita_Transmissora_20_Anos.xlsx",
+              "EE_03_Estudo_Tarifa_TUSTt_ANEEL.pdf"
+            ]
+          },
+          "Ambiental": {
+            "descricao": "EIA-RIMA, ruído EM, impacto ambiental",
+            "arquivos_esperados": [
+              "AMB_01_EIA_RIMA_LT_150km_Transmissao.pdf",
+              "AMB_02_Estudo_Campo_Eletromagnetico_Linha_500kV.xlsx",
+              "AMB_03_Plano_Ambiental_Subestacao_Urbana.pdf"
+            ]
+          },
+          "Risco_Confiabilidade": {
+            "descricao": "FMEA, confiabilidade, manutenção",
+            "arquivos_esperados": [
+              "RC_01_FMEA_Linha_Transmissao_Componentes_Criticos.pdf",
+              "RC_02_Analise_Confiabilidade_Transformador_50_Anos.xlsx",
+              "RC_03_Plano_Manutencao_Preventiva_Subestacao.pdf"
+            ]
+          }
+        }
+      },
+
+      "Normas_Referencias": {
+        "tipo": "Pasta Principal",
+        "descricao": "Regulamentações e normas técnicas",
+        "subpastas": {
+          "ANEEL": {
+            "descricao": "Resoluções, procedimentos de rede ANEEL",
+            "arquivos_esperados": [
+              "ANEEL_Resolucao_50_2004_Requisitos_Seguranca.pdf",
+              "ANEEL_Procedimentos_Rede_ONS_Modulo_2.pdf",
+              "ANEEL_Norma_Tecnica_Subestacao_Urbana.pdf"
+            ]
+          },
+          "ONS_EPE": {
+            "descricao": "Normas ONS, planos EPE",
+            "arquivos_esperados": [
+              "ONS_Criterios_Planejamento_Operacao_Sistema.pdf",
+              "EPE_Plano_Decenal_Energia_2032.xlsx",
+              "ONS_Manual_Operacoes_Transmissao.pdf"
+            ]
+          },
+          "IEC_IEEE_Tecnicas": {
+            "descricao": "Standards IEC, IEEE, ABNT",
+            "arquivos_esperados": [
+              "IEC_60071_Coordenacao_Isolamento.pdf",
+              "IEEE_C57_12_80_Transformador_Guia.pdf",
+              "NBR_5433_Torres_Transmissao_Calculo.pdf"
+            ]
+          },
+          "CCEE": {
+            "descricao": "Normas de comercialização",
+            "arquivos_esperados": [
+              "CCEE_Regras_Mercado_Eletricidade.pdf",
+              "CCEE_Contratos_Bilaterais_Padroes.docx"
+            ]
+          }
+        }
+      },
+
+      "Templates_Documentos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Modelos padrão de documentos",
+        "subpastas": {
+          "Projetos": {
+            "arquivos_esperados": [
+              "Template_Relatorio_Viabilidade_LT_500kV.docx",
+              "Template_Projeto_Executivo_Subestacao.docx",
+              "Template_Especificacao_Transformador_Potencia.xlsx"
+            ]
+          },
+          "Seguranca": {
+            "arquivos_esperados": [
+              "Template_Estudo_Fluxo_Potencia_ONS.docx",
+              "Template_Analise_Curto_Circuito_Protecao.docx"
+            ]
+          },
+          "Ambiental": {
+            "arquivos_esperados": [
+              "Template_EIA_RIMA_Transmissao.docx",
+              "Template_Estudo_Campo_Eletromagnetico.docx"
+            ]
+          },
+          "Operacional": {
+            "arquivos_esperados": [
+              "Template_Manual_Operacional_Subestacao.docx",
+              "Template_Checklist_Manutencao_Transformador.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Licitacoes_Editais": {
+        "tipo": "Pasta Principal",
+        "descricao": "Editais, RFPs, leilões",
+        "subpastas": {
+          "Concessoes": {
+            "arquivos_esperados": [
+              "Edital_Concessao_Transmissao_LT_500kV_30_Anos.pdf",
+              "RFP_Operador_Subestacao_Urbana.pdf",
+              "Termo_Referencia_Estudo_Viabilidade_Transmissao.docx"
+            ]
+          },
+          "Licitacoes_Obras": {
+            "arquivos_esperados": [
+              "Edital_Construcao_LT_150km_Projeto_Completo.pdf",
+              "Edital_Ampliacao_Subestacao_750MVA.pdf",
+              "Edital_Modernizacao_Rede_Distribuicao_50km.pdf"
+            ]
+          },
+          "Leiloes_ANEEL": {
+            "arquivos_esperados": [
+              "Edital_Leilao_Transmissao_A_5_2024.pdf",
+              "Instrumento_Concessao_Transmissora_ANEEL.docx",
+              "Minuta_Contrato_Concessao_Transmissao.docx"
+            ]
+          }
+        }
+      }
+    },
+
+    "S10_Barragens": {
+      "path": "03_Projetos/Barragens",
+      "nome_completo": "Barragens",
+      "tier": "Sonnet",
+      "rag_prefix": "bar:",
+      "reguladores": ["ICOLD", "CBDB", "Lei 12.334", "PNSB", "DNAEE", "ANA"],
+      "descricao": "Projetos de barragens: estruturas, vertedouros, rejeitos",
+
+      "Projetos_Executados": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cases reais de barragens da Manta",
+        "subpastas": {
+          "Barragem_Principal": {
+            "descricao": "Projetos de barragem: gravidade, arco, CFRD, CCR",
+            "arquivos_esperados": [
+              "BP_01_Barragem_Gravidade_Concreto_H100m_Projeto_Completo.pdf",
+              "BP_02_Barragem_CFRD_Aterro_Rachado_H80m_Projeto_Basico.dwg",
+              "BP_03_Barragem_CCR_Concreto_Compactado_H120m_Projeto_Executivo.xlsx"
+            ]
+          },
+          "Vertedouro": {
+            "descricao": "Vertedouros, dissipadores, estruturas",
+            "arquivos_esperados": [
+              "VRT_01_Vertedouro_Fundo_Comportas_Vazao_Design_10000m3s.pdf",
+              "VRT_02_Estabilidade_Dissipador_Energia_Jacto_Impacto.dwg",
+              "VRT_03_Especificacao_Comporta_Radial_Aco_Soldado.xlsx"
+            ]
+          },
+          "Sistema_Rejeitos": {
+            "descricao": "Barragens de rejeitos, drenagem interna",
+            "arquivos_esperados": [
+              "SR_01_TSF_Rejeito_Mineracao_H60m_Projeto.pdf",
+              "SR_02_Sistema_Drenagem_Interna_Rejeito.dwg",
+              "SR_03_Galeria_Controle_Percolacao_Especificacao.xlsx"
+            ]
+          },
+          "Sistemas_Vazao_Transvase": {
+            "descricao": "Descarregadores, adutoras, condutos",
+            "arquivos_esperados": [
+              "SVT_01_Descarregador_Fundo_DN2000_Pressao_100m.pdf",
+              "SVT_02_Adutora_Aco_Soldado_Blindada_Projeto_Assentamento.dwg",
+              "SVT_03_Conduto_Forcado_Pressao_50kgf_cm2.xlsx"
+            ]
+          }
+        }
+      },
+
+      "Estudos_Tecnicos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Cálculos, simulações, análises",
+        "subpastas": {
+          "Hidrologia": {
+            "descricao": "Vazão afluente, cheias, estiagem",
+            "arquivos_esperados": [
+              "HID_01_Estudo_Hidrologia_Bacia_100anos_ANA.pdf",
+              "HID_02_Simulacao_Cheias_Cenarios_Mudancas_Climaticas.xlsx",
+              "HID_03_Analise_Regularizacao_Reservatorio_Sazonalidade.pdf"
+            ]
+          },
+          "Geotecnia_Fundacoes": {
+            "descricao": "Sondagem, fundação, estabilidade",
+            "arquivos_esperados": [
+              "GEO_01_Relatorio_Sondagem_Amostragem_30_Furos_Barragem.pdf",
+              "GEO_02_Analise_Estabilidade_Talude_Barragem_MORGENSTERN_PRICE.xlsx",
+              "GEO_03_Estudo_Percolacao_Barragem_Fluxo_Permanente.pdf"
+            ]
+          },
+          "Hidraulica_Estrutural": {
+            "descricao": "Fluxo em estruturas, vertedouro, dissipação",
+            "arquivos_esperados": [
+              "HID_EST_01_Analise_Fluxo_Vertedouro_Computational_Fluid_Dynamics.pdf",
+              "HID_EST_02_Dissipacao_Energia_Bacia_Amortecimento.xlsx",
+              "HID_EST_03_Avaliacao_Risco_Cavitacao_Descarga.pdf"
+            ]
+          },
+          "Estrutural": {
+            "descricao": "Cálculo de estabilidade, tensões, fundação",
+            "arquivos_esperados": [
+              "EST_01_Analise_Estabilidade_Barragem_Gravidade_Deslizamento.pdf",
+              "EST_02_Calculo_Tensoes_Barragem_CFRD_Elementos_Finitos.xlsx",
+              "EST_03_Verificacao_Seguranca_Fundacao_Capacidade_Suporte.pdf"
+            ]
+          },
+          "Ambiental_Social": {
+            "descricao": "EIA-RIMA, impacto, reassentamento",
+            "arquivos_esperados": [
+              "AMB_01_EIA_RIMA_Barragem_Hidroeletrica_100MW.pdf",
+              "AMB_02_Diagnostico_Fauna_Flora_Reservatorio.xlsx",
+              "AMB_03_Plano_Reassentamento_Populacoes_Atingidas.pdf"
+            ]
+          },
+          "Economica_Financeira": {
+            "descricao": "VPL, TIR, custo de obra, receita",
+            "arquivos_esperados": [
+              "ECO_01_Analise_Viabilidade_Barragem_100MW.pdf",
+              "ECO_02_Projecao_Receita_Energia_30_Anos.xlsx",
+              "ECO_03_Orcamento_Detalhado_Custo_Unitario_SICRO.pdf"
+            ]
+          }
+        }
+      },
+
+      "Normas_Referencias": {
+        "tipo": "Pasta Principal",
+        "descricao": "Regulamentações e normas técnicas",
+        "subpastas": {
+          "ICOLD_CBDB": {
+            "descricao": "Standards ICOLD, registros CBDB",
+            "arquivos_esperados": [
+              "ICOLD_Bulletin_164_Cascading_Failures_Dams.pdf",
+              "ICOLD_Guideline_Dam_Safety_Monitoring_Instrumentation.pdf",
+              "CBDB_Cadastro_Barragem_Brasil_SIGBM.xlsx"
+            ]
+          },
+          "Lei_PNSB": {
+            "descricao": "Lei 12.334, PNSB, resoluções ANA",
+            "arquivos_esperados": [
+              "Lei_12334_Seguranca_Barragem.pdf",
+              "PNSB_Plano_Nacional_Seguranca_Barragem.pdf",
+              "ANA_Resolucao_12334_Criterios_Categoria.pdf"
+            ]
+          },
+          "NBR_ABNT": {
+            "descricao": "Normas brasileiras para barragens",
+            "arquivos_esperados": [
+              "NBR_12920_Projeto_Barragem_Terra.pdf",
+              "NBR_13608_Barragem_Concreto_Procedimentos.pdf",
+              "NBR_8953_Concreto_Barragem_Especificacao.pdf"
+            ]
+          },
+          "DNAEE_ANEEL": {
+            "descricao": "Diretrizes DNAEE, padrões ANEEL",
+            "arquivos_esperados": [
+              "DNAEE_Diretrizes_Estudo_Viabilidade_Barragem.pdf",
+              "ANEEL_Procedimento_Seguranca_Barragem_Hidroeletrica.pdf"
+            ]
+          }
+        }
+      },
+
+      "Templates_Documentos": {
+        "tipo": "Pasta Principal",
+        "descricao": "Modelos padrão de documentos",
+        "subpastas": {
+          "Projetos": {
+            "arquivos_esperados": [
+              "Template_Relatorio_Viabilidade_Barragem.docx",
+              "Template_Projeto_Executivo_Vertedouro.docx",
+              "Template_Especificacao_Concreto_CCR.xlsx"
+            ]
+          },
+          "Seguranca": {
+            "arquivos_esperados": [
+              "Template_Plano_Seguranca_Barragem_Lei_12334.docx",
+              "Template_Relatorio_Inspecao_Visual_Barragem.docx"
+            ]
+          },
+          "Ambiental": {
+            "arquivos_esperados": [
+              "Template_EIA_RIMA_Barragem.docx",
+              "Template_Plano_Manejo_Reservatorio.docx"
+            ]
+          },
+          "Operacional": {
+            "arquivos_esperados": [
+              "Template_Manual_Operacional_Barragem.docx",
+              "Template_Checklist_Manutencao_Comporta.xlsx",
+              "Template_Procedimento_Descarga_Emergencia.docx"
+            ]
+          }
+        }
+      },
+
+      "Licitacoes_Editais": {
+        "tipo": "Pasta Principal",
+        "descricao": "Editais, RFPs, concessões",
+        "subpastas": {
+          "Concessoes": {
+            "arquivos_esperados": [
+              "Edital_Concessao_Barragem_Hidroeletrica_30_Anos.pdf",
+              "RFP_Operador_Sistema_Barragem_Reservatorio.pdf",
+              "Termo_Referencia_Estudo_Viabilidade_Barragem.docx"
+            ]
+          },
+          "Licitacoes_Obras": {
+            "arquivos_esperados": [
+              "Edital_Construcao_Barragem_CFRD_H80m.pdf",
+              "Edital_Vertedouro_Estruturas_Concreto.pdf",
+              "Edital_Instrumentacao_Monitoramento_Seguranca.pdf"
+            ]
+          },
+          "PPP_Concessoes": {
+            "arquivos_esperados": [
+              "Contrato_Concessao_Barragem_Hidroeletrica_30_Anos_Modelo.docx",
+              "Instrumento_Convocatoria_PPP_Barragem.pdf",
+              "Minuta_Acordo_Operacao_Compartilhada.docx"
+            ]
+          }
+        }
+      }
+    }
+  },
+
+  "sumario_executivo": {
+    "versao": "v4.2",
+    "data_criacao": "2026-07-24",
+    "maestro": "Marco Neves",
+    "email": "mneves@mantaassociados.com",
+
+    "pastas_principais": [
+      "Projetos_Executados",
+      "Estudos_Tecnicos",
+      "Normas_Referencias",
+      "Templates_Documentos",
+      "Licitacoes_Editais"
+    ],
+
+    "quantidade_subpastas_por_segmento": {
+      "S6_Portos": 18,
+      "S7_Aeroportos": 18,
+      "S8_Saneamento": 18,
+      "S9_Energia": 18,
+      "S10_Barragens": 18,
+      "Total": 90
+    },
+
+    "quantidade_arquivos_exemplo": {
+      "S6_Portos": 52,
+      "S7_Aeroportos": 50,
+      "S8_Saneamento": 52,
+      "S9_Energia": 51,
+      "S10_Barragens": 50,
+      "Total": 255
+    },
+
+    "colecoes_rag": {
+      "S6": "por:*",
+      "S7": "aer:*",
+      "S8": "san:*",
+      "S9": "ene:*",
+      "S10": "bar:*"
+    },
+
+    "reguladores_chave": {
+      "S6_Portos": "ANTAQ, PIANC, BNDES",
+      "S7_Aeroportos": "ANAC, ICAO, FAA, DECEA",
+      "S8_Saneamento": "ANA, SNIS, AySA, ERAS (PRIORIDADE)",
+      "S9_Energia": "ANEEL, ONS, EPE, State Grid (PRIORIDADE)",
+      "S10_Barragens": "ICOLD, CBDB, Lei 12.334, PNSB"
+    },
+
+    "proximas_etapas": [
+      "[ ] Criar pastas SP em 03_Projetos com estrutura YAML",
+      "[ ] Validar tipologias técnicas com especialistas de cada segmento",
+      "[ ] Carregar 5 coleções RAG em Supabase (rag_chunks)",
+      "[ ] Testar roteamento Maestro com prompts de cada segmento",
+      "[ ] Validar nomenclatura de arquivos padrão",
+      "[ ] Configurar permissões por agente vertical em SP",
+      "[ ] Gate humano: aprovação MN antes de deploy"
+    ]
+  }
+}
