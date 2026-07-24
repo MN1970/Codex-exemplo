@@ -1,0 +1,51 @@
+ID,Tipo,Assunto,Arquivo,Tags,Priority,Status,Data_Criacao,URL,Notas
+SEI-001,Norma,Análise Sísmica de Estruturas,NBR 15421:2016,seismic|bridge|design,ALTA,Confirmado,2026-07-24,https://www.abnt.org.br,Norma ABNT principal para análise sísmica
+SEI-002,Norma,Ações Sísmicas em Estruturas,NBR 8681:2015,seismic|forces|load,ALTA,Confirmado,2026-07-24,https://www.abnt.org.br,Ações sísmicas - Base de carregamento
+SEI-003,Norma,Construção em Zonas Sísmicas,NBR 15421 Suplemen,seismic|construction,ALTA,Confirmado,2026-07-24,https://www.abnt.org.br,Recomendações complementares
+SEI-004,Documento,USGS Shakemap Data Format,shakemap-manual-en.pdf,usgs|data|format,ALTA,Disponível,2026-07-24,https://earthquake.usgs.gov/earthquakes/shakemap/,Manual de dados Shakemap
+SEI-005,Paper,Seismic Vulnerability Assessment of Bridges,p-695.pdf,vulnerability|bridge|retrofit,ALTA,Baixado,2026-07-24,https://www.fema.gov/,FEMA P-695 / ATC-63
+SEI-006,Documento,IRIS Synthetics Database,iris-synthetics.pdf,iris|synthetic|records,MÉDIA,Disponível,2026-07-24,https://www.iris.washington.edu,Base de registros sísmicos sintéticos
+SEI-007,Paper,Seismic Design of Bridge Abutments,abutt-design-paper.pdf,bridge|abutment|design,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1061,Projeto de encontro sísmico
+SEI-008,Mapa,Mapa de Risco Sísmico Brasil,risco-sismico-brasil.shp,brazil|risk|map,ALTA,Processando,2026-07-24,file:///data/rag/mapas/,Shapefile atualizado USGS+CPRM
+SEI-009,Norma,Retrofit e Reforço de Estruturas,NBR 14080:2013,retrofit|strengthening,MÉDIA,Confirmado,2026-07-24,https://www.abnt.org.br,Norma para reforço sísmico
+SEI-010,Paper,Performance-Based Earthquake Engineering,pbee-cornell.pdf,pbee|methodology|framework,ALTA,Baixado,2026-07-24,https://doi.org/10.1016,Framework PBEE - Cornell & Krawinkler
+SEI-011,Documento,USGS Ground Motion Prediction Equations,gmpe-2014.pdf,gmpe|prediction|motion,ALTA,Disponível,2026-07-24,https://earthquake.usgs.gov,Equações de previsão de movimento sísmico
+SEI-012,Edital,Licitação BNDES - Reforço de Pontes,edital-bndes-2024.pdf,bndes|tender|bridge,ALTA,Ativo,2026-07-24,https://www.bndes.gov.br/,Requisitos técnicos de retrofit sísmico
+SEI-013,Paper,Seismic Assessment of Viaducts,viaduct-seismic-2023.pdf,viaduct|oae|assessment,MÉDIA,Baixado,2026-07-24,https://journals.earthquake.org,Estudo de vulnerabilidade em viadutos
+SEI-014,Documento,miniSEED Data Format Specification,miniseed-format-v3.pdf,miniseed|format|data,MÉDIA,Processando,2026-07-24,https://www.iris.washington.edu,Formato de dados sísmicos miniSEED
+SEI-015,Norma,Espectros de Resposta NBR,nbrr-espectros.pdf,spectrum|response|nbr,ALTA,Confirmado,2026-07-24,https://www.abnt.org.br,Cálculo de espectros de resposta
+SEI-016,Paper,Liquefaction Analysis Methods,liquefaction-review.pdf,liquefaction|geotechnical|analysis,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1016,Análise de liquefação de solos
+SEI-017,Documento,ICOLD Guidelines - Seismic Safety,icold-seismic-2019.pdf,icold|dam|seismic,MÉDIA,Disponível,2026-07-24,https://www.icold-cigb.org,Diretrizes para barragens sísmicas
+SEI-018,Mapa,Estações Sísmicas Brasil Rede Sismográfica,rssb-estacoes.geojson,brazil|stations|network,ALTA,Ativo,2026-07-24,file:///data/rag/mapas/,Rede Sismográfica Brasileira (RSSB)
+SEI-019,Paper,Damping in Seismic Analysis,damping-models-2021.pdf,damping|modeling|analysis,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1061,Modelagem de amortecimento sísmico
+SEI-020,Documento,OpenSHA Hazard Calculation Guide,opensha-guide.pdf,opensha|hazard|calculation,MÉDIA,Processando,2026-07-24,https://opensha.org,Cálculo probabilístico de risco sísmico
+SEI-021,Edital,Concorrência ANTAQ - Portos Sísmicos,edital-antaq-porto.pdf,antaq|port|seismic,MÉDIA,Futuro,2026-08-01,https://www.antaq.gov.br/,Requisitos sísmicos para portos
+SEI-022,Paper,Base Isolation Systems for Bridges,isolation-2022.pdf,isolation|base|bridge,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1016,Sistemas de isolamento sísmico
+SEI-023,Documento,IRIS Regional Seismicity Maps,iris-regional-maps.pdf,iris|seismicity|maps,BAIXA,Disponível,2026-07-24,https://www.iris.washington.edu,Mapas de sismicidade regional
+SEI-024,Norma,Geotécnica em Zonas Sísmicas,nbt-geotec-seismic.pdf,geotechnical|seismic|nbr,MÉDIA,Confirmado,2026-07-24,https://www.abnt.org.br,Considerações geotécnicas sísmicas
+SEI-025,Paper,Modal Analysis of Bridges,modal-analysis-2020.pdf,modal|analysis|vibration,BAIXA,Baixado,2026-07-24,https://doi.org/10.1016,Análise modal para estruturas
+SEI-026,Mapa,Epicentros Históricos Brasil,epicentros-hist-brasil.shp,brazil|epicenter|history,MÉDIA,Ativo,2026-07-24,file:///data/rag/mapas/,Catálogo sísmico 1900-2025
+SEI-027,Documento,USGS Earthquake Hazard Program,usgs-ehp-report.pdf,usgs|hazard|program,ALTA,Disponível,2026-07-24,https://earthquake.usgs.gov,Relatório do programa de risco sísmico USGS
+SEI-028,Paper,Nonlinear Time-History Analysis,nltha-2019.pdf,nonlinear|time-history|analysis,ALTA,Baixado,2026-07-24,https://doi.org/10.1016,Análise não-linear no tempo
+SEI-029,Documento,NIST Seismic Design Guidelines,nist-guidelines-2017.pdf,nist|design|guidelines,ALTA,Processando,2026-07-24,https://www.nist.gov/,Diretrizes NIST para design sísmico
+SEI-030,Edital,Licitação DNIT - Reabilitação Rodovia,edital-dnit-rodovia.pdf,dnit|highway|seismic,MÉDIA,Ativo,2026-07-24,https://www.gov.br/dnit/,Requisitos de resilência sísmica
+SEI-031,Paper,Pile Foundation Seismic Design,pile-seismic-2021.pdf,pile|foundation|seismic,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1061,Design de fundações em estacas
+SEI-032,Documento,CPRM - Atlas Sísmico Brasil,cprm-atlas-sismico.pdf,cprm|brazil|seismic,ALTA,Disponível,2026-07-24,https://www.cprm.gov.br/,Atlas completo de sismicidade brasileira
+SEI-033,Norma,Inspeção de Estruturas Danificadas,nbi-inspecao-danificadas.pdf,inspection|damaged|nbr,BAIXA,Confirmado,2026-07-24,https://www.abnt.org.br,Protocolo de inspeção pós-evento
+SEI-034,Paper,Soil-Structure Interaction in Seismic,ssi-seismic-2020.pdf,ssi|soilstructure|interaction,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1016,Interação solo-estrutura dinâmica
+SEI-035,Mapa,Geologia Estrutural Brasil,geologia-estrutural.shp,brazil|geology|structural,BAIXA,Ativo,2026-07-24,file:///data/rag/mapas/,Estruturas tectônicas principais
+SEI-036,Documento,SAC Data Format Specification,sac-format-spec.pdf,sac|seismic|format,BAIXA,Processando,2026-07-24,https://ds.iris.washington.edu,Formato SAC para dados sísmicos
+SEI-037,Paper,Displacement-Based Seismic Design,dbsd-2018.pdf,displacement|based|design,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1061,Design sísmico baseado em deslocamento
+SEI-038,Edital,BNDES Tecnologia - Monitoramento Sísmico,edital-bndes-tech.pdf,bndes|monitoring|tech,ALTA,Futuro,2026-08-15,https://www.bndes.gov.br/,Equipamentos e software de monitoramento
+SEI-039,Documento,Comcat USGS Earthquake Database,usgs-comcat-guide.pdf,usgs|comcat|database,MÉDIA,Disponível,2026-07-24,https://earthquake.usgs.gov,Acesso ao banco de dados sísmico USGS
+SEI-040,Paper,Fragility Functions Development,fragility-functions-2022.pdf,fragility|functions|damage,ALTA,Baixado,2026-07-24,https://doi.org/10.1016,Desenvolvimento de funções de fragilidade
+SEI-041,Norma,Materiais para Ambiente Sísmico,nbr-materiais-sismico.pdf,materials|seismic|nbr,BAIXA,Confirmado,2026-07-24,https://www.abnt.org.br,Propriedades de materiais em zona sísmica
+SEI-042,Documento,GeoNet NZ Earthquake Network,geonet-guide.pdf,geonet|newzealand|network,BAIXA,Disponível,2026-07-24,https://www.geonet.org.nz,Dados sísmicos da Nova Zelândia
+SEI-043,Paper,Pushover Analysis Methods,pushover-2019.pdf,pushover|analysis|capacity,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1061,Análise pushover para estruturas
+SEI-044,Mapa,Zonas de Subdução America do Sul,zonas-subducao.shp,subduction|southamerica|seismic,MÉDIA,Ativo,2026-07-24,file:///data/rag/mapas/,Zonas de subdução relevantes para Brasil
+SEI-045,Documento,SeisComP3 Software Manual,seiscomp3-manual.pdf,seiscomp|software|processing,MÉDIA,Processando,2026-07-24,https://www.seiscomp.de,Software de processamento sísmico
+SEI-046,Paper,Equivalent Linear Site Response,el-site-response-2020.pdf,site|response|geotechnical,BAIXA,Baixado,2026-07-24,https://doi.org/10.1016,Resposta de sítio linearizada
+SEI-047,Edital,Concorrência MPU - Estruturas Sísmicas,edital-mpu-estruturas.pdf,mpu|public|seismic,MÉDIA,Futuro,2026-09-01,https://www.mpu.gov.br/,Projetos públicos com critérios sísmicos
+SEI-048,Documento,RUPEE - Resposta Urbana a Sismos,rupee-db-guide.pdf,rupee|urban|damage,BAIXA,Disponível,2026-07-24,https://rupee.irisdmc.org,Base de dados de dano urbano
+SEI-049,Paper,Seismic Hazard De-aggregation,deaggregation-2021.pdf,deaggregation|hazard|analysis,MÉDIA,Baixado,2026-07-24,https://doi.org/10.1016,Análise de desagregação de risco
+SEI-050,Documento,Plano Nacional de Segurança de Barragens,pnsb-2024.pdf,pnsb|dam|safety,ALTA,Ativo,2026-07-24,https://www.gov.br/,Regulações brasileiras para barragens
