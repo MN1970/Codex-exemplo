@@ -1,0 +1,545 @@
+{
+  "metadata": {
+    "data_compilacao": "2026-07-24",
+    "total_plataformas": 60,
+    "regioes": 8,
+    "ultima_atualizacao": "2026-07-24"
+  },
+  "regioes": {
+    "china": {
+      "nome": "China & Ásia Oriental",
+      "mercado_dominante": "Alibaba (ModelScope)",
+      "regulacao": "CAC AI regulations; data sovereignty obrigatória",
+      "idiomas": ["Chinês simplificado", "Chinês tradicional", "Japanese", "Korean", "Vietnamese"],
+      "plataformas": [
+        {
+          "nome": "ModelScope",
+          "pais": "China",
+          "url": "https://modelscope.cn",
+          "tipo": "Model hub + datasets + spaces",
+          "tamanho": "80K+ modelos",
+          "especialidade": "Multimodal (vision, NLP, audio)",
+          "linguagem": ["Chinês", "Inglês"],
+          "publico_alvo": "Global (foco Ásia)",
+          "status": "✅ Ativo",
+          "diferenciais": [
+            "MaaS integrado",
+            "Modelo deployment sem sair plataforma",
+            "CDN China rápida",
+            "Suporte multilíngue (18+ idiomas)"
+          ],
+          "comunidade": "2K+ organizações; 16M devs globais"
+        },
+        {
+          "nome": "BAAI",
+          "pais": "China",
+          "url": "https://wudao.baai.ac.cn",
+          "tipo": "Model registry + research",
+          "tamanho": "5K+ modelos",
+          "especialidade": "Vision-language, code gen",
+          "linguagem": ["Chinês", "Inglês"],
+          "publico_alvo": "Researchers",
+          "status": "✅ Ativo"
+        },
+        {
+          "nome": "OpenI",
+          "pais": "China",
+          "url": "https://openi.ac.cn",
+          "tipo": "Open platform",
+          "tamanho": "10K+ modelos",
+          "especialidade": "General ML",
+          "linguagem": ["Chinês"],
+          "publico_alvo": "Academic/Research",
+          "status": "✅ Ativo"
+        },
+        {
+          "nome": "Alibaba Cloud PAI",
+          "pais": "China",
+          "url": "https://www.aliyun.com",
+          "tipo": "Cloud ML platform",
+          "tamanho": "Modelos proprietários",
+          "especialidade": "Enterprise ML",
+          "linguagem": ["Chinês", "Inglês"],
+          "publico_alvo": "Enterprise",
+          "status": "✅ Ativo"
+        }
+      ]
+    },
+    "coreia": {
+      "nome": "Coreia do Sul",
+      "mercado_dominante": "Tripartido (Naver, Kakao, Upstage)",
+      "regulacao": "Governo mandato 'sovereign AI'",
+      "idiomas": ["Coreano", "Inglês"],
+      "plataformas": [
+        {
+          "nome": "HyperCLOVA X",
+          "empresa": "Naver",
+          "url": "https://clova-x.com",
+          "tipo": "LLM platform",
+          "tamanho": "Proprietário",
+          "especialidade": "General LLM + agents",
+          "linguagem": ["Coreano", "Inglês"],
+          "publico_alvo": "Enterprise/Consumers",
+          "status": "✅ Ativo",
+          "diferenciais": [
+            "Integração profunda e-commerce (Naver Shopping)",
+            "Agentic AI capabilities (2026)",
+            "Real-time search",
+            "Dominância Naver (68% search market share)"
+          ]
+        },
+        {
+          "nome": "Solar LLM",
+          "empresa": "Upstage",
+          "url": "https://upstage.ai",
+          "tipo": "LLM platform",
+          "tamanho": "7B-32B",
+          "especialidade": "Code gen, chat, RAG",
+          "linguagem": ["Coreano", "Inglês"],
+          "publico_alvo": "Developers",
+          "status": "✅ Ativo",
+          "diferenciais": [
+            "Governo backing",
+            "Open-source variants",
+            "Rising star"
+          ]
+        },
+        {
+          "nome": "EXAONE",
+          "empresa": "LG AI Research",
+          "url": "https://exaone.ai",
+          "tipo": "LLM platform",
+          "tamanho": "7B-70B",
+          "especialidade": "General LLM + multimodal",
+          "linguagem": ["Inglês", "Coreano"],
+          "publico_alvo": "Enterprise",
+          "status": "✅ Ativo"
+        }
+      ]
+    },
+    "japao": {
+      "nome": "Japão",
+      "mercado_dominante": "Rinna (disperso)",
+      "regulacao": "Leis AI light-touch",
+      "idiomas": ["Japonês", "Inglês"],
+      "plataformas": [
+        {
+          "nome": "Rinna",
+          "empresa": "Corporate",
+          "url": "https://rinna.com",
+          "tipo": "Model hub",
+          "tamanho": "50+ modelos JP",
+          "especialidade": "Text, audio, image multimodal",
+          "linguagem": ["Japonês", "Inglês"],
+          "publico_alvo": "Developers/Enterprise",
+          "status": "✅ Ativo",
+          "diferenciais": [
+            "Especialização Japanese 100%",
+            "Japanese-GPT2-medium (500M params)",
+            "Nekomata (multilingual Qwen-based)",
+            "Japanese Stable Diffusion"
+          ]
+        },
+        {
+          "nome": "Japanese StableLM",
+          "empresa": "Stability AI JP",
+          "url": "https://huggingface.co/stabilityai",
+          "tipo": "LM on HF",
+          "tamanho": "7B-13B",
+          "especialidade": "General text generation",
+          "linguagem": ["Japonês", "Inglês"],
+          "publico_alvo": "Open-source users",
+          "status": "✅ Ativo"
+        }
+      ]
+    },
+    "india": {
+      "nome": "Índia & South Asia",
+      "mercado_dominante": "AI4Bharat (académica-driven)",
+      "regulacao": "Indiansoft policy; localização dados obrigatória",
+      "idiomas": ["22 idiomas oficiais", "Indic languages prioritários"],
+      "plataformas": [
+        {
+          "nome": "AI4Bharat",
+          "instituicao": "IIT Madras",
+          "url": "https://ai4bharat.iitm.ac.in",
+          "tipo": "Research hub + datasets",
+          "tamanho": "50+ Indic models",
+          "especialidade": "Indic languages (NLP)",
+          "linguagem": ["22 Indic languages", "Inglês"],
+          "publico_alvo": "Researchers",
+          "status": "✅ Ativo - DOMINANTE",
+          "diferenciais": [
+            "Gobierno backing (MEITY)",
+            "Transliteration (Roman ↔ Indic script)",
+            "NLP em idiomas indianos",
+            "Speech synthesis + recognition (Indic)",
+            "100K+ horas speech; millions sentences em Indic",
+            "Open-source (MIT/Apache)"
+          ]
+        },
+        {
+          "nome": "IndicNLP",
+          "instituicao": "AI4Bharat",
+          "url": "https://indicnlp.ai4bharat.org",
+          "tipo": "NLP resource library",
+          "tamanho": "Code + datasets",
+          "especialidade": "Indian language NLP",
+          "linguagem": ["22 Indic languages"],
+          "publico_alvo": "Devs, researchers",
+          "status": "✅ Ativo"
+        },
+        {
+          "nome": "Krutrim",
+          "instituicao": "Bhashini project",
+          "url": "https://krutrim.ai",
+          "tipo": "LLM platform",
+          "tamanho": "Proprietário",
+          "especialidade": "Indian languages LLM",
+          "linguagem": ["Indic languages", "Inglês"],
+          "publico_alvo": "Enterprise/Consumers",
+          "status": "✅ Ativo (2024+)",
+          "diferenciais": [
+            "Gov backed",
+            "3.2T tokens trained",
+            "Positioning como 'Indian ChatGPT'"
+          ]
+        },
+        {
+          "nome": "Sarvam AI",
+          "instituicao": "Startup",
+          "url": "https://www.sarvam.ai",
+          "tipo": "Open-source LLMs",
+          "tamanho": "35M-7B",
+          "especialidade": "Indic language models",
+          "linguagem": ["Tamil", "Telugu", "Kannada"],
+          "publico_alvo": "Developers",
+          "status": "✅ Ativo (Series A)"
+        }
+      ]
+    },
+    "europa": {
+      "nome": "Europa & UK",
+      "mercado_dominante": "HuggingFace (France)",
+      "regulacao": "GDPR mandatory; AI Act compliance (2025+)",
+      "idiomas": ["EN", "FR", "DE", "ES", "IT", "etc"],
+      "plataformas": [
+        {
+          "nome": "HuggingFace",
+          "pais": "France 🇫🇷",
+          "url": "https://huggingface.co",
+          "tipo": "Model hub (global)",
+          "tamanho": "500K+ modelos",
+          "especialidade": "Multimodal",
+          "linguagem": ["EN", "FR", "DE", "ES", "+"],
+          "publico_alvo": "Global",
+          "status": "✅ DOMINANTE",
+          "diferenciais": [
+            "500K+ modelos; 200K+ datasets; 50K+ spaces",
+            "Comunidade global padrão-ouro",
+            "Network effects",
+            "Freemium (cloud compute pago)",
+            "GDPR compliant; EU servers available"
+          ],
+          "hq": "Paris, France"
+        },
+        {
+          "nome": "Mistral AI",
+          "pais": "France 🇫🇷",
+          "url": "https://mistral.ai",
+          "tipo": "LLM platform",
+          "tamanho": "7B-72B models",
+          "especialidade": "General LLM + agents",
+          "linguagem": ["EN", "FR", "DE", "+"],
+          "publico_alvo": "Enterprise/Devs",
+          "status": "✅ Ativo",
+          "diferenciais": [
+            "VC funding $400M (2023-2024)",
+            "EU backing",
+            "Mistral-7B (SOTA small)",
+            "Mixtral-8x7B (sparse MoE)",
+            "Unicorn europeu (2024)"
+          ]
+        },
+        {
+          "nome": "Aleph Alpha",
+          "pais": "Germany 🇩🇪",
+          "url": "https://aleph-alpha.com",
+          "tipo": "LLM + explainability",
+          "tamanho": "7B-70B",
+          "especialidade": "Transparency-focused LLMs",
+          "linguagem": ["EN", "DE"],
+          "publico_alvo": "Enterprise (regulated)",
+          "status": "✅ Ativo",
+          "diferenciais": [
+            "Transparência + explainability",
+            "German government backing",
+            "Interpretability focus",
+            "GDPR-native design",
+            "Regulated industries focus"
+          ]
+        },
+        {
+          "nome": "Jina AI",
+          "pais": "Germany 🇩🇪",
+          "url": "https://jina.ai",
+          "tipo": "Embeddings + multimodal",
+          "tamanho": "100+ models",
+          "especialidade": "Embeddings, neural search",
+          "linguagem": ["EN", "DE", "ZH"],
+          "publico_alvo": "Developers",
+          "status": "✅ Ativo"
+        },
+        {
+          "nome": "Stability AI",
+          "pais": "UK 🇬🇧",
+          "url": "https://stability.ai",
+          "tipo": "Generative models",
+          "tamanho": "100+ (diffusion, LLM)",
+          "especialidade": "Diffusion + LLM",
+          "linguagem": ["EN", "JP", "ZH"],
+          "publico_alvo": "Creators, enterprise",
+          "status": "✅ Ativo"
+        }
+      ]
+    },
+    "latam": {
+      "nome": "América Latina",
+      "mercado_dominante": "Latam-GPT (emergente)",
+      "regulacao": "Brazil AI Law (2024); sectoral frameworks",
+      "idiomas": ["Spanish", "Portuguese (Brasil)"],
+      "plataformas": [
+        {
+          "nome": "Latam-GPT",
+          "regiao": "LATAM (Regional)",
+          "url": "https://latamgpt.org",
+          "tipo": "Open-source LLM",
+          "tamanho": "7B-70B (base+instruct)",
+          "especialidade": "Spanish/Portuguese optimized",
+          "linguagem": ["ES", "PT"],
+          "publico_alvo": "Researchers, devs",
+          "status": "✅ Novo (2025)",
+          "diferenciais": [
+            "CENIA (Chile) liderança + 30+ instituições 8 países",
+            "Governo backing + regional cooperation",
+            "Spanish optimization (Castilian + regional)",
+            "Portuguese (Brazilian)",
+            "Contexto cultural Latin-Americano",
+            "Open-source (Apache 2.0)"
+          ],
+          "paises_participantes": ["Chile", "Argentina", "Brasil", "México", "Colômbia", "Perú", "Equador", "Uruguai"]
+        },
+        {
+          "nome": "WideLabs",
+          "pais": "Brazil 🇧🇷",
+          "url": "https://widelabs.io",
+          "tipo": "LLM platform",
+          "tamanho": "3B-13B proprietary",
+          "especialidade": "Regional language optimization",
+          "linguagem": ["PT", "ES"],
+          "publico_alvo": "Enterprise/Startups",
+          "status": "✅ Ativo"
+        },
+        {
+          "nome": "Enter",
+          "pais": "Brazil 🇧🇷",
+          "url": "https://enter.ai",
+          "tipo": "Legaltech + AI models",
+          "tamanho": "Proprietário models",
+          "especialidade": "Legal document processing",
+          "linguagem": ["PT", "EN"],
+          "publico_alvo": "Enterprise legal",
+          "status": "✅ Unicorn 2024"
+        }
+      ]
+    },
+    "russia": {
+      "nome": "Rússia & CIS",
+      "mercado_dominante": "Sber + Yandex",
+      "regulacao": "Russian data only; export restrictions lifted 2025",
+      "idiomas": ["Russo"],
+      "plataformas": [
+        {
+          "nome": "GigaChat",
+          "empresa": "Sber",
+          "url": "https://gigachat.sber.ru",
+          "tipo": "LLM platform",
+          "tamanho": "36B+ (proprietary)",
+          "especialidade": "General LLM + Russian",
+          "linguagem": ["RU"],
+          "publico_alvo": "Consumers, enterprise",
+          "status": "✅ Ativo - DOMINANTE",
+          "diferenciais": [
+            "Sber market dominance",
+            "Sber Cloud (data stays Russia)",
+            "Ranking 12th Chatbot Arena"
+          ]
+        },
+        {
+          "nome": "YandexGPT",
+          "empresa": "Yandex",
+          "url": "https://yandex.ru",
+          "tipo": "LLM + search",
+          "tamanho": "70B+ (proprietary)",
+          "especialidade": "Search + generation",
+          "linguagem": ["RU", "EN"],
+          "publico_alvo": "Consumers, enterprise",
+          "status": "✅ Ativo",
+          "diferenciais": [
+            "Search integration nativa (50% market share Russia)",
+            "Yandex Cloud (Russian hosted)",
+            "Ranking 17th Chatbot Arena"
+          ]
+        },
+        {
+          "nome": "Kandinsky",
+          "empresa": "Sber",
+          "url": "(API only)",
+          "tipo": "Text-to-image",
+          "tamanho": "2.1, 3.0 proprietary",
+          "especialidade": "Image generation",
+          "linguagem": ["RU", "EN"],
+          "publico_alvo": "Creative users",
+          "status": "✅ Ativo"
+        }
+      ]
+    },
+    "apac": {
+      "nome": "APAC - Southeast Asia",
+      "mercado_dominante": "SEA-LION (Singapore)",
+      "regulacao": "Regional governance",
+      "idiomas": ["EN", "TH", "VI", "ID", "MY"],
+      "plataformas": [
+        {
+          "nome": "SEA-LION",
+          "pais": "Singapore 🇸🇬",
+          "url": "https://www.seallion.ai",
+          "tipo": "LLM + ecosystem",
+          "tamanho": "Base models",
+          "especialidade": "Southeast Asian languages",
+          "linguagem": ["EN", "TH", "VI", "ID", "MY"],
+          "publico_alvo": "Region developers",
+          "status": "✅ FLAGSHIP (2024 launch)",
+          "diferenciais": [
+            "S$70 million gobierno backing",
+            "Multi-language Southeast Asia",
+            "Thai, Vietnamese, Indonesian, Malay",
+            "2026 expansion a text-to-image, multimodal",
+            "Government cloud (GovTech Singapore)"
+          ]
+        },
+        {
+          "nome": "PhoGPT",
+          "pais": "Vietnam 🇻🇳",
+          "url": "https://github.com/vinai/PhoGPT",
+          "tipo": "LLM",
+          "tamanho": "7B-13B",
+          "especialidade": "Vietnamese language",
+          "linguagem": ["VI", "EN"],
+          "publico_alvo": "Developers",
+          "status": "✅ Open-source"
+        }
+      ]
+    },
+    "mena": {
+      "nome": "Middle East & Africa",
+      "mercado_dominante": "Falcon (UAE) + ALLaM (Saudi)",
+      "regulacao": "Sovereign AI push",
+      "idiomas": ["Árabe", "Inglês"],
+      "plataformas": [
+        {
+          "nome": "Falcon",
+          "pais": "UAE 🇦🇪",
+          "url": "https://falconllm.tii.ae",
+          "tipo": "LLM open-source",
+          "tamanho": "7B-40B",
+          "especialidade": "General LLM + enterprise",
+          "linguagem": ["EN", "AR"],
+          "publico_alvo": "Global devs + MENA",
+          "status": "✅ Ativo",
+          "diferenciais": [
+            "Decoupling Arabic AI from Western dependencies",
+            "Open-source (Apache 2.0)",
+            "Abu Dhabi sovereign wealth",
+            "MENA SOTA contender",
+            "HuggingFace open-source distribution"
+          ]
+        },
+        {
+          "nome": "ALLaM",
+          "pais": "Saudi Arabia 🇸🇦",
+          "url": "N/A",
+          "tipo": "LLM proprietary",
+          "tamanho": "70B+",
+          "especialidade": "Arabic-centric",
+          "linguagem": ["AR", "EN"],
+          "publico_alvo": "Saudi enterprise",
+          "status": "✅ Emergente (2024-2025)",
+          "diferenciais": [
+            "Saudi government backing (PIF)",
+            "Proprietary (API enterprise)",
+            "Arabic-centric focus"
+          ]
+        },
+        {
+          "nome": "Stargate",
+          "pais": "UAE 🇦🇪",
+          "tipo": "GPU Cluster Infrastructure",
+          "tamanho": "1GW AI infrastructure",
+          "especialidade": "Inference hub",
+          "status": "🆕 Em construção (2026)",
+          "diferenciais": [
+            "OpenAI + Oracle + Cisco + SoftBank",
+            "Compute infrastructure (não model hub)"
+          ]
+        },
+        {
+          "nome": "HUMAIN",
+          "pais": "Saudi Arabia 🇸🇦",
+          "tipo": "GPU Cluster Infrastructure",
+          "tamanho": "500MW+ infrastructure",
+          "especialidade": "Inference hub",
+          "status": "🆕 Em construção (2026)",
+          "diferenciais": [
+            "Saudi PIF backed",
+            "Compute infrastructure (não model hub)"
+          ]
+        }
+      ]
+    }
+  },
+  "resumo_global": {
+    "tier_1_gigantes": {
+      "descricao": "Plataformas globais dominantes (100K+ modelos)",
+      "plataformas": [
+        "HuggingFace",
+        "ModelScope"
+      ],
+      "comunidade": "10M+ devs"
+    },
+    "tier_2_regionais": {
+      "descricao": "Alternativas regionais fortes (10K-100K modelos)",
+      "plataformas": [
+        "AI4Bharat (Índia)",
+        "Mistral AI (Europa)",
+        "Latam-GPT (LATAM)",
+        "Solar/EXAONE (Coreia)"
+      ]
+    },
+    "tier_3_especializadas": {
+      "descricao": "Plataformas especializadas (1K-10K modelos)",
+      "categorias": [
+        "Computer Vision (OpenMMLab, TensorFlow Hub)",
+        "Generative Art (Civitai - 100K modelos)",
+        "Inference APIs (Replicate, Together AI, Fireworks)",
+        "Self-hosted (Ollama - 164K GitHub stars)"
+      ]
+    }
+  },
+  "tendencias_2026": {
+    "regionalizacao": "Cada região desenvolvendo seu 'national champion' AI hub",
+    "soberania_dados": "Mandatory em China, Russia, Vietnam, Saudi Arabia",
+    "especializacao": "Regional specialists com maior valor agregado",
+    "open_source": "Modelos escaping proprietary platforms via GitHub"
+  }
+}

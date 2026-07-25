@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Development
+.venv/
+venv/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test artifacts
+.claude/output/
+.claude/samples/
+.pytest_cache/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Scratchpad
+scratchpad/

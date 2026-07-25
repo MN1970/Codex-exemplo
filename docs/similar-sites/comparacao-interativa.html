@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparador de Plataformas - HuggingFace Similares</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-light: #ffffff;
+            --bg-dark: #0f1419;
+            --text-light: #000000;
+            --text-dark: #ffffff;
+            --border-light: #e0e0e0;
+            --border-dark: #2d2d2d;
+            --primary: #2563eb;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --danger: #dc2626;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --current-bg: var(--bg-dark);
+                --current-text: var(--text-dark);
+                --current-border: var(--border-dark);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --current-bg: var(--bg-light);
+                --current-text: var(--text-light);
+                --current-border: var(--border-light);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--current-bg);
+            color: var(--current-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--current-border);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--current-bg);
+            border: 1px solid var(--current-border);
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        select, input {
+            padding: 10px;
+            border: 1px solid var(--current-border);
+            border-radius: 6px;
+            background-color: var(--current-bg);
+            color: var(--current-text);
+            font-size: 1em;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            border: 1px solid var(--current-border);
+            border-radius: 12px;
+            padding: 20px;
+            background-color: var(--current-bg);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--current-border);
+            padding-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-region {
+            font-size: 0.85em;
+            opacity: 0.7;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .badge-status {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .badge-category {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .badge-tier {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .card-content {
+            flex-grow: 1;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--current-border);
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            opacity: 0.7;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--current-border);
+        }
+
+        .url-link {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .url-link:hover {
+            text-decoration: underline;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.6;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--current-border);
+        }
+
+        .comparison-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background-color: var(--current-border);
+        }
+
+        .checkmark {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .region-emoji {
+            font-size: 1.5em;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .comparison-table {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Comparador de Plataformas - HuggingFace Similares</h1>
+            <p class="subtitle">Pesquisa completa de 60+ plataformas em 8 regiões geográficas</p>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">60+</div>
+                    <div class="stat-label">Plataformas</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Regiões</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">500K+</div>
+                    <div class="stat-label">Modelos HF</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">2026</div>
+                    <div class="stat-label">Data</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="filters">
+            <div class="filter-group">
+                <label for="region-filter">🌍 Filtrar por Região</label>
+                <select id="region-filter">
+                    <option value="">Todas as regiões</option>
+                    <option value="china">🇨🇳 China & Ásia Oriental</option>
+                    <option value="coreia">🇰🇷 Coreia do Sul</option>
+                    <option value="japao">🇯🇵 Japão</option>
+                    <option value="india">🇮🇳 Índia</option>
+                    <option value="europa">🇪🇺 Europa</option>
+                    <option value="latam">🇧🇷 América Latina</option>
+                    <option value="russia">🇷🇺 Rústia</option>
+                    <option value="apac">🇸🇬 SE Asia</option>
+                    <option value="mena">🇦🇪 Middle East</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="category-filter">📁 Filtrar por Categoria</label>
+                <select id="category-filter">
+                    <option value="">Todas as categorias</option>
+                    <option value="model-hub">Model Hub</option>
+                    <option value="llm-platform">Plataforma LLM</option>
+                    <option value="inference">Inferência/Serverless</option>
+                    <option value="self-hosted">Self-Hosted Local</option>
+                    <option value="research">Research/Academic</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="search-filter">🔍 Buscar por Nome</label>
+                <input type="text" id="search-filter" placeholder="Ex: ModelScope, Mistral...">
+            </div>
+        </section>
+
+        <section id="results" class="grid"></section>
+
+        <section id="summary" style="margin-top: 40px; padding: 20px; background-color: var(--current-border); border-radius: 8px;">
+            <h2>📊 Resumo Executivo</h2>
+            <p style="margin-top: 15px;">
+                O ecossistema global de model hubs está <strong>regionalizando-se rapidamente</strong>.
+                Enquanto HuggingFace mantém hegemonia global com 500K+ modelos, cada região desenvolve
+                alternativas estratégicas com foco em <strong>soberania de dados</strong>,
+                <strong>idiomas locais</strong>, e <strong>conformidade regulatória</strong>.
+            </p>
+
+            <h3 style="margin-top: 25px;">🌍 Dinâmica Regional (2026)</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>China:</strong> ModelScope monopoliza (80K+ modelos)</li>
+                <li><strong>Coreia:</strong> Competição tripartida (Naver, Kakao, Upstage)</li>
+                <li><strong>Índia:</strong> AI4Bharat dominante (22 idiomas indígenas)</li>
+                <li><strong>Europa:</strong> HuggingFace + Mistral + Aleph Alpha</li>
+                <li><strong>LATAM:</strong> Latam-GPT emergência (8 países)</li>
+                <li><strong>Rústia:</strong> Isolamento pós-sanções (Sber/Yandex)</li>
+                <li><strong>APAC:</strong> SEA-LION (Singapore) crescimento</li>
+                <li><strong>MENA:</strong> Falcon (UAE) + ALLaM (Saudi Arabia)</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // Dados das plataformas (simplificado para o artefato)
+        const plataformas = [
+            {
+                nome: "HuggingFace",
+                regiao: "europa",
+                pais: "🇫🇷 France",
+                categoria: "model-hub",
+                tamanho: "500K+ modelos",
+                url: "https://huggingface.co",
+                status: "✅ Ativo",
+                idiomas: "EN, FR, DE, ES, +",
+                especialidade: "Multimodal (Vision, NLP, Audio)",
+                tier: "Tier 1 (Gigante)",
+                forca: "Comunidade global; amplitude"
+            },
+            {
+                nome: "ModelScope",
+                regiao: "china",
+                pais: "🇨🇳 China",
+                categoria: "model-hub",
+                tamanho: "80K+ modelos",
+                url: "https://modelscope.cn",
+                status: "✅ Ativo",
+                idiomas: "Chinês, Inglês",
+                especialidade: "Multimodal (Vision, NLP, Audio)",
+                tier: "Tier 2 (Regional)",
+                forca: "MaaS integrado; Qwen distribuição"
+            },
+            {
+                nome: "AI4Bharat",
+                regiao: "india",
+                pais: "🇮🇳 Índia",
+                categoria: "research",
+                tamanho: "50+ Indic models",
+                url: "https://ai4bharat.iitm.ac.in",
+                status: "✅ Ativo - DOMINANTE",
+                idiomas: "22 Indic languages",
+                especialidade: "Indic NLP; Speech; Transliteration",
+                tier: "Tier 3 (Especializada)",
+                forca: "Governo backing; idiomas indígenas"
+            },
+            {
+                nome: "Replicate",
+                regiao: "europa",
+                pais: "🌍 Global",
+                categoria: "inference",
+                tamanho: "50K+ models",
+                url: "https://replicate.com",
+                status: "✅ Ativo (Cloudflare 2026)",
+                idiomas: "English",
+                especialidade: "Inference API; Serverless",
+                tier: "Tier 2 (Global)",
+                forca: "Simplicidade; UX limpa; catálogo"
+            },
+            {
+                nome: "Ollama",
+                regiao: "europa",
+                pais: "🌍 Global",
+                categoria: "self-hosted",
+                tamanho: "164K★ GitHub",
+                url: "https://ollama.ai",
+                status: "✅ Ativo",
+                idiomas: "Multi-language",
+                especialidade: "Local Inference; Docker",
+                tier: "Tier 2 (Popular)",
+                forca: "Simplicidade; performance; comunidade"
+            },
+            {
+                nome: "Mistral AI",
+                regiao: "europa",
+                pais: "🇫🇷 France",
+                categoria: "llm-platform",
+                tamanho: "7B-72B models",
+                url: "https://mistral.ai",
+                status: "✅ Ativo",
+                idiomas: "EN, FR, DE, +",
+                especialidade: "General LLM + agents",
+                tier: "Tier 2 (Rising Star)",
+                forca: "$400M VC; EU backing; unicorn"
+            },
+            {
+                nome: "Together AI",
+                regiao: "europa",
+                pais: "🌍 Global",
+                categoria: "inference",
+                tamanho: "100+ LLMs",
+                url: "https://www.together.ai",
+                status: "✅ Ativo",
+                idiomas: "Multi-language",
+                especialidade: "LLM Inference; Fine-tuning",
+                tier: "Tier 2 (Global)",
+                forca: "$1B ARR; melhor preço LLMs"
+            },
+            {
+                nome: "Latam-GPT",
+                regiao: "latam",
+                pais: "🇧🇷 Regional (8 países)",
+                categoria: "llm-platform",
+                tamanho: "7B-70B models",
+                url: "https://latamgpt.org",
+                status: "✅ Novo (2025)",
+                idiomas: "Spanish, Portuguese",
+                especialidade: "Regional language optimization",
+                tier: "Tier 3 (Emergente)",
+                forca: "Governo backing; CENIA + 30 instituições"
+            },
+            {
+                nome: "Rinna",
+                regiao: "japao",
+                pais: "🇯🇵 Japão",
+                categoria: "model-hub",
+                tamanho: "50+ JP models",
+                url: "https://rinna.com",
+                status: "✅ Ativo",
+                idiomas: "Japanese, English",
+                especialidade: "Multimodal (Text, Audio, Image)",
+                tier: "Tier 4 (Especializada)",
+                forca: "Especialização Japanese 100%"
+            },
+            {
+                nome: "Falcon",
+                regiao: "mena",
+                pais: "🇦🇪 UAE",
+                categoria: "llm-platform",
+                tamanho: "7B-40B open-source",
+                url: "https://falconllm.tii.ae",
+                status: "✅ Ativo",
+                idiomas: "English, Arabic",
+                especialidade: "General LLM + enterprise",
+                tier: "Tier 2 (Rising)",
+                forca: "Decoupling Arabic AI; Abu Dhabi backing"
+            },
+            {
+                nome: "GigaChat",
+                regiao: "russia",
+                pais: "🇷🇺 Rústia",
+                categoria: "llm-platform",
+                tamanho: "36B+ proprietary",
+                url: "https://gigachat.sber.ru",
+                status: "✅ Ativo - DOMINANTE",
+                idiomas: "Russian",
+                especialidade: "General LLM + Russian",
+                tier: "Tier 3 (Regional)",
+                forca: "Sber dominance; data stays Russia"
+            },
+            {
+                nome: "SEA-LION",
+                regiao: "apac",
+                pais: "🇸🇬 Singapore",
+                categoria: "llm-platform",
+                tamanho: "Foundation models",
+                url: "https://www.seallion.ai",
+                status: "✅ Novo (2024) - FLAGSHIP",
+                idiomas: "EN, TH, VI, ID, MY",
+                especialidade: "Southeast Asian languages",
+                tier: "Tier 3 (Regional)",
+                forca: "S$70M gobierno backing; multi-language ASEAN"
+            },
+            {
+                nome: "Civitai",
+                regiao: "europa",
+                pais: "🌍 Global",
+                categoria: "inference",
+                tamanho: "100K+ Stable Diffusion",
+                url: "https://civitai.com",
+                status: "✅ Ativo",
+                idiomas: "English",
+                especialidade: "Generative art models",
+                tier: "Tier 2 (Nicho)",
+                forca: "Domínio generative art; monetização"
+            }
+        ];
+
+        function filtrarPlataformas() {
+            const regionFilter = document.getElementById('region-filter').value;
+            const categoryFilter = document.getElementById('category-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+
+            const filtrados = plataformas.filter(p => {
+                const regionMatch = !regionFilter || p.regiao === regionFilter;
+                const categoryMatch = !categoryFilter || p.categoria === categoryFilter;
+                const searchMatch = !searchFilter ||
+                    p.nome.toLowerCase().includes(searchFilter) ||
+                    p.especialidade.toLowerCase().includes(searchFilter);
+
+                return regionMatch && categoryMatch && searchMatch;
+            });
+
+            renderizarResultados(filtrados);
+        }
+
+        function renderizarResultados(filtrados) {
+            const resultsDiv = document.getElementById('results');
+
+            if (filtrados.length === 0) {
+                resultsDiv.innerHTML = '<div class="no-results"><h3>Nenhuma plataforma encontrada</h3><p>Tente ajustar seus filtros</p></div>';
+                return;
+            }
+
+            resultsDiv.innerHTML = filtrados.map(p => `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">${p.nome}</div>
+                        <div class="card-region">${p.pais}</div>
+                    </div>
+
+                    <div class="card-content">
+                        <div style="margin-bottom: 10px;">
+                            <span class="badge badge-status">${p.status}</span>
+                            <span class="badge badge-category">${p.categoria}</span>
+                            <span class="badge badge-tier">${p.tier}</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">Tamanho</span>
+                            <span class="metric-value">${p.tamanho}</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">Idiomas</span>
+                            <span class="metric-value">${p.idiomas}</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">Especialidade</span>
+                            <span class="metric-value">${p.especialidade}</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">Força</span>
+                            <span class="metric-value">${p.forca}</span>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="${p.url}" class="url-link" target="_blank">Visitar →</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event listeners
+        document.getElementById('region-filter').addEventListener('change', filtrarPlataformas);
+        document.getElementById('category-filter').addEventListener('change', filtrarPlataformas);
+        document.getElementById('search-filter').addEventListener('input', filtrarPlataformas);
+
+        // Render inicial
+        renderizarResultados(plataformas);
+    </script>
+</body>
+</html>
