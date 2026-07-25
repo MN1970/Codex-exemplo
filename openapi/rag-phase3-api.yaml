@@ -1,0 +1,409 @@
+openapi: 3.0.3
+info:
+  title: Manta Maestro — Phase 3 RAG Orchestrator API
+  version: "1.0.0"
+  description: >
+    REST wrapper around the Phase 3 RAG orchestrator for the S6-S10
+    verticals (portos, aeroportos, saneamento, energia, barragens), plus
+    the existing S1-S4 rodovias/OAE/ferrovia/metrô routing rules.
+
+
+    IMPORTANT — production status: the orchestrator this API wraps
+    defaults to `RAG_DRY_RUN=true` (deterministic fixtures, no Supabase
+    call) because, per CLAUDE.md's DEPLOY CHECKLIST v4.2, the human
+    approval gate ("Gate humano: aprovação MN antes de merge") is not yet
+    checked and no documents have been ingested for the 5 new verticals.
+    Every `/query` response includes `dry_run` and `degraded` fields so
+    callers always know whether a result is a real retrieval, an empty
+    result, or a fixture — never trust a response's usefulness without
+    checking those two fields first.
+  contact:
+    name: Manta Maestro — Arquitetura IA
+servers:
+  - url: http://localhost:8080
+    description: Local development
+  - url: https://rag-phase3-api.internal.manta.example/v1
+    description: Placeholder — replace with the real deployment host once approved
+
+tags:
+  - name: rag
+    description: Domain-routed retrieval-augmented query
+  - name: ops
+    description: Health, readiness and observability
+  - name: admin
+    description: Runtime configuration (requires admin token)
+
+security:
+  - bearerAuth: []
+
+paths:
+  /query:
+    post:
+      tags: [rag]
+      summary: Route a query to a domain/agent and retrieve grounding context
+      description: >
+        Runs the deterministic keyword router (mirrors CLAUDE.md's "ROUTING
+        — Maestro (Manta 00)" table) to pick a domain/agent, then attempts
+        RAG retrieval for that domain with timeout/retry/circuit-breaker
+        protection. Falls back to `degraded: true` with a `reason` instead
+        of failing the request when retrieval is empty, low-confidence, or
+        the domain's circuit breaker is open.
+      operationId: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueryRequest"
+            examples:
+              saneamento:
+                value:
+                  query: "Como funciona uma ETA e quais os parâmetros de SNIS?"
+              porto:
+                value:
+                  query: "Qual o calado máximo do berço 4 do terminal?"
+                  top_k: 3
+      responses:
+        "200":
+          description: Query routed and (attempted) retrieval completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "502":
+          $ref: "#/components/responses/RagBackendError"
+        "504":
+          $ref: "#/components/responses/RagTimeout"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /status:
+    get:
+      tags: [ops]
+      summary: Service status, dry-run flag, per-domain circuit breaker state
+      operationId: getStatus
+      responses:
+        "200":
+          description: Current status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /metrics:
+    get:
+      tags: [ops]
+      summary: In-process counters and p95 latencies
+      operationId: getMetrics
+      parameters:
+        - name: fmt
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [json, prometheus]
+            default: json
+          description: Response encoding.
+      responses:
+        "200":
+          description: Metrics snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetricsResponse"
+            text/plain:
+              schema:
+                type: string
+                description: Prometheus text exposition format (when fmt=prometheus).
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /configure:
+    post:
+      tags: [admin]
+      summary: Update model tier and retrieval tunables at runtime
+      description: >
+        Requires an admin bearer token (superset of the query token scope).
+        Only fields present in the request body are changed; omitted
+        fields keep their current value. Changes apply to this process
+        only and do not persist across restarts.
+      operationId: configure
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfigureRequest"
+            examples:
+              switchTier:
+                value:
+                  tier: sonnet
+                  note: "Escalating saneamento queries to Sonnet per MN request"
+      responses:
+        "200":
+          description: Configuration applied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfigureResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque-token
+      description: >
+        `Authorization: Bearer <token>`. Query-scoped tokens (RAG_API_TOKEN)
+        may call /query, /status, /metrics. Admin tokens (RAG_ADMIN_TOKEN)
+        may additionally call /configure.
+
+  schemas:
+    Chunk:
+      type: object
+      properties:
+        doc_id:
+          type: string
+        titulo:
+          type: string
+          nullable: true
+        texto:
+          type: string
+        score:
+          type: number
+          format: float
+      required: [doc_id, texto, score]
+
+    QueryRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        top_k:
+          type: integer
+          minimum: 1
+          maximum: 20
+          nullable: true
+        trace_id:
+          type: string
+          maxLength: 128
+          nullable: true
+      required: [query]
+
+    QueryResponse:
+      type: object
+      properties:
+        trace_id:
+          type: string
+        domain:
+          type: string
+          enum: [saneamento, energia, portos, aeroportos, barragens,
+                 rodovias, oae, ferrovia, metro, geral]
+        agent:
+          type: string
+          nullable: true
+        routing_confidence:
+          type: number
+          format: float
+        degraded:
+          type: boolean
+        reason:
+          type: string
+          nullable: true
+        dry_run:
+          type: boolean
+          description: True if this result came from deterministic fixtures, not a live Supabase call.
+        chunks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Chunk"
+        augmented_prompt:
+          type: string
+        latency_ms:
+          type: number
+          format: float
+      required: [trace_id, domain, routing_confidence, degraded, dry_run,
+                 chunks, augmented_prompt, latency_ms]
+
+    CircuitBreakerState:
+      type: object
+      properties:
+        domain:
+          type: string
+        open:
+          type: boolean
+      required: [domain, open]
+
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        service:
+          type: string
+        version:
+          type: string
+        uptime_s:
+          type: number
+        dry_run:
+          type: boolean
+        tier:
+          type: string
+          enum: [haiku, sonnet, opus]
+        config:
+          type: object
+          properties:
+            timeout_s:
+              type: number
+            max_retries:
+              type: integer
+            match_count:
+              type: integer
+            min_confidence:
+              type: number
+        circuit_breakers:
+          type: array
+          items:
+            $ref: "#/components/schemas/CircuitBreakerState"
+      required: [status, service, version, uptime_s, dry_run, tier, config, circuit_breakers]
+
+    MetricsResponse:
+      type: object
+      properties:
+        counters:
+          type: object
+          additionalProperties:
+            type: integer
+        latency_p95_ms:
+          type: object
+          additionalProperties:
+            type: number
+            nullable: true
+      required: [counters, latency_p95_ms]
+
+    ConfigureRequest:
+      type: object
+      properties:
+        tier:
+          type: string
+          enum: [haiku, sonnet, opus]
+          nullable: true
+        timeout_s:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 30
+          nullable: true
+        max_retries:
+          type: integer
+          minimum: 0
+          maximum: 5
+          nullable: true
+        match_count:
+          type: integer
+          minimum: 1
+          maximum: 50
+          nullable: true
+        min_confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+          nullable: true
+        note:
+          type: string
+          maxLength: 200
+          nullable: true
+
+    ConfigureResponse:
+      type: object
+      properties:
+        applied:
+          type: object
+          additionalProperties: true
+        tier:
+          type: string
+        updated_at_epoch_s:
+          type: number
+      required: [applied, tier, updated_at_epoch_s]
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            request_id:
+              type: string
+              nullable: true
+            details:
+              nullable: true
+          required: [code, message]
+      required: [error]
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Valid token but insufficient scope (admin required)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ValidationError:
+      description: Request failed schema validation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    RateLimited:
+      description: Too many requests for this token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    RagBackendError:
+      description: The RAG backend (Supabase RPC) returned an error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    RagTimeout:
+      description: The RAG backend did not respond within the configured timeout
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
