@@ -231,17 +231,6 @@ def pytest_runtest_protocol(item, nextitem):
 # HELPER FUNCTIONS (accessible via fixtures)
 # ============================================================================
 
-def pytest_namespace():
-    """Adiciona helpers ao namespace pytest."""
-    return {
-        "helpers": {
-            "log_metric": lambda name, value: logging.getLogger(__name__).info(
-                f"METRIC: {name}={value}"
-            ),
-        }
-    }
-
-
 # ============================================================================
 # COMMAND LINE OPTIONS
 # ============================================================================

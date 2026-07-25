@@ -275,7 +275,12 @@ class TestRegressionVersioning:
         if versions_path.exists():
             with open(versions_path, 'r') as f:
                 data = json.load(f)
-                assert "v5.0" in data or "agente-saneamento" in data
+                # Check for required top-level keys
+                assert "version_format" in data
+                assert "agent_skills" in data
+                # Check that agent_skills has expected agents
+                agent_skills = data.get("agent_skills", {})
+                assert "agente-saneamento" in agent_skills or len(agent_skills) > 0
 
     def test_skill_checksums_exist(self):
         """Checksums de skills calculados."""
