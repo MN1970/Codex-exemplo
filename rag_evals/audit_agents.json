@@ -1,0 +1,67 @@
+{
+  "records": [
+    {
+      "agent_id": "agente-aeroportos",
+      "agent_name": "agente-aeroportos",
+      "status": "synced",
+      "skill_version_pin": "v4.2",
+      "checksum_md5": "b392e63c04110e987910fa39f2fa0ef8",
+      "divergence_reason": null,
+      "last_sync_at": "2026-07-25T00:46:04.775841+00:00",
+      "notes": "",
+      "model": "sonnet",
+      "tools": "Read, Grep, Glob, Bash, WebSearch, WebFetch"
+    },
+    {
+      "agent_id": "agente-barragens",
+      "agent_name": "agente-barragens",
+      "status": "synced",
+      "skill_version_pin": "v4.2",
+      "checksum_md5": "13c5e3ed80ff0a10f11e16f91ee3963c",
+      "divergence_reason": null,
+      "last_sync_at": "2026-07-25T00:46:04.776404+00:00",
+      "notes": "",
+      "model": "sonnet",
+      "tools": "Read, Grep, Glob, Bash, WebSearch, WebFetch"
+    },
+    {
+      "agent_id": "agente-energia",
+      "agent_name": "agente-energia",
+      "status": "synced",
+      "skill_version_pin": "v4.2",
+      "checksum_md5": "a258f7772a2c6588e3f3025015868155",
+      "divergence_reason": null,
+      "last_sync_at": "2026-07-25T00:46:04.776601+00:00",
+      "notes": "",
+      "model": "sonnet",
+      "tools": "Read, Grep, Glob, Bash, WebSearch, WebFetch"
+    },
+    {
+      "agent_id": "agente-portos",
+      "agent_name": "agente-portos",
+      "status": "synced",
+      "skill_version_pin": "v4.2",
+      "checksum_md5": "de56705e8f1bb369782468b549bbc0ca",
+      "divergence_reason": null,
+      "last_sync_at": "2026-07-25T00:46:04.776861+00:00",
+      "notes": "",
+      "model": "sonnet",
+      "tools": "Read, Grep, Glob, Bash, WebSearch, WebFetch"
+    },
+    {
+      "agent_id": "agente-saneamento",
+      "agent_name": "agente-saneamento",
+      "status": "synced",
+      "skill_version_pin": "v4.2",
+      "checksum_md5": "4500289afe2f8e3f3ea282e6452f17da",
+      "divergence_reason": null,
+      "last_sync_at": "2026-07-25T00:46:04.777085+00:00",
+      "notes": "",
+      "model": "sonnet",
+      "tools": "Read, Grep, Glob, Bash, WebSearch, WebFetch"
+    }
+  ],
+  "divergence_count": 0,
+  "timestamp": "2026-07-25T00:46:04.777285+00:00",
+  "claude_md_version": "v4.2"
+}
