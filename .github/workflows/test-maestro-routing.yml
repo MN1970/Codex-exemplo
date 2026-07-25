@@ -46,6 +46,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install anthropic python-dotenv supabase pydantic
 
+      - name: Check credentials
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "⚠️  ANTHROPIC_API_KEY not configured"
+            echo "Configure GitHub secrets in Settings → Secrets and variables → Actions"
+            echo "Required: ANTHROPIC_API_KEY"
+            exit 1
+          fi
+
       - name: Run routing tests
         id: test
         run: |
