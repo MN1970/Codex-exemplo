@@ -1,0 +1,248 @@
+================================================================================
+v4.2 DEPLOY — QUICK REFERENCE CARD (Semana 1: 25–31 jul 2026)
+================================================================================
+
+DEADLINE: Sábado 30 jul 17:00 UTC (Gate MN)
+STATUS: 🟢 PRONTO PARA COMEÇAR
+
+================================================================================
+DOCUMENTOS DE EXECUÇÃO (em ordem de leitura)
+================================================================================
+
+1. LEIA-ME-PRIMEIRO.md            ← COMECE AQUI (10 min)
+   - Hub de navegação
+   - Próximos passos
+
+2. CHECKLIST-SEMANA1-EXEC.md      ← MASTER DOCUMENT (20 min)
+   - 10 tarefas detalhadas
+   - Prazos hora-a-hora
+   - Dependências e caminho crítico
+
+3. VISAO-GERAL-MN.md              ← Para MN (5 min)
+   - Resumo executivo
+   - O que MN precisa fazer
+
+4. STANDUP-DAILY-TEMPLATE.md      ← Para daily reports
+   - Template para cada dia (ter-sab)
+   - Copy-paste and fill
+
+5. DESVIOS.md                      ← Live tracking
+   - Desvios de prazo/escopo
+   - Bloqueadores técnicos
+
+================================================================================
+MAPA DE 10 TAREFAS
+================================================================================
+
+FASE 1 — Infra & Base (TER 26 jul)
+├─ 1.1 Supabase RAG             [Você] TER 09:00 → 11:00 (2h)
+├─ 1.2 Routing rules SP         [MN]   TER 14:00 → 15:00 (1h)
+└─ 1.3 Pastas SharePoint        [MN]   TER 15:30 → 16:00 (30m)
+
+FASE 2 — Config & Docs (QUA-QUI 27-28 jul)
+├─ 2.1 Skills registry          [Você] QUA 10:00 → 11:30 (1.5h)
+├─ 2.2 Carga RAG                [Você] QUA 13:00 → 16:00 (3h) [CRÍTICO]
+└─ 2.3 Arquitetura updated      [Você] QUA 16:00 → 17:00 (1h)
+                                        [MN Review]
+
+FASE 3 — Testes & Gate (SEX-SÁB 29-30 jul)
+├─ 3.1 Testes routing           [Você] SEX 09:00 → 11:00 (2h) [CRÍTICO]
+├─ 3.2 Upload SKILL.md SP       [MN]   SEX 14:00 → 15:00 (1h)
+└─ 3.3 Gate final (VOCÊ APROVA) [MN]   SÁB 17:00 → 18:00 (1h) ⭐ DEADLINE
+
+Duração sequencial: 14h | Seu tempo: 10h | Tempo MN: 3.5h
+
+================================================================================
+CAMINHO CRÍTICO (não pode atrasar!)
+================================================================================
+
+1.1 (TER 09:00)
+  ↓ bloqueador
+2.2 (QUA 13:00)
+  ↓ bloqueador
+3.1 (SEX 09:00)
+  ↓ bloqueador
+3.3 (SÁB 17:00) ← DEADLINE
+
+Se 1.1 atrassar 1h → tudo atrasa 1h
+
+================================================================================
+CRONOGRAMA VISUAL
+================================================================================
+
+SEG 25      | Prepare-se (leia documentos)
+TER 26 09:00| 1.1 Supabase RAG (Você)
+TER 26 14:00| 1.2 Routing rules (MN)
+TER 26 15:30| 1.3 Pastas SP (MN)
+            |
+QUA 27 10:00| 2.1 Skills registry (Você)
+QUA 27 13:00| 2.2 Carga RAG (Você) — CRÍTICO
+QUA 27 16:00| 2.3 Arquitetura (Você) + MN review
+            |
+QUI 28      | Buffer & ajustes
+            |
+SEX 29 09:00| 3.1 Testes routing (Você) — CRÍTICO
+SEX 29 14:00| 3.2 Upload SP (MN)
+SEX 29 17:00| NOTIFY MN: "Pronto para gate amanhã"
+            |
+SÁB 30 17:00| 3.3 Gate MN (MN aprova/bloqueia) ⭐ DEADLINE
+            |
+SÁB 30 18:00| Merge v4.2 + tag (Você)
+            |
+DOM 31      | Post-mortem & lições aprendidas
+
+================================================================================
+MATRIX DE RESPONSÁVEIS (resumida)
+================================================================================
+
+Tarefa          | Você (Haiku) | MN           | Esp. BD | Esp. SP | Esp. Maestro
+1.1 Supabase    | ✅ LEAD      | Apoio        | Apoio   | —       | —
+1.2 Routing     | —            | ✅ LEAD      | —       | Apoio   | —
+1.3 Pastas      | —            | ✅ LEAD      | —       | Apoio   | —
+2.1 Skills      | ✅ LEAD      | Apoio        | —       | —       | —
+2.2 Carga RAG   | ✅ LEAD      | —            | Apoio   | —       | —
+2.3 Arquitetura | ✅ LEAD      | ✅ Review    | —       | Apoio   | —
+3.1 Testes      | ✅ LEAD      | Apoio        | —       | —       | ✅ Co-lead
+3.2 Upload SP   | —            | ✅ LEAD      | —       | Apoio   | —
+3.3 Gate MN     | Apoio        | ✅ LEAD      | —       | —       | —
+
+✅ LEAD = Proprietário, decisão final
+✅ Co-lead = Responsável compartilhado
+Apoio = Suporte / revisão
+
+================================================================================
+DEPENDÊNCIAS (graficamente)
+================================================================================
+
+1.1 Supabase
+  ├─→ 2.2 Carga RAG (bloqueador direto)
+  │     └─→ 3.1 Testes (bloqueador direto)
+  │           └─→ 3.3 Gate (bloqueador direto)
+  │
+1.2 Routing
+  ├─→ 2.3 Arquitetura
+  │
+1.3 Pastas
+  │ (independente)
+  │
+2.1 Skills
+  └─→ 3.1 Testes (co-requisito)
+
+Tarefas paralelas: 1.1, 1.2, 1.3, 2.1
+
+================================================================================
+COMO USAR ESTE DOCUMENTO
+================================================================================
+
+DIÁRIO (VOCÊ):
+  1. Check CHECKLIST-SEMANA1-EXEC.md para tarefa do dia
+  2. Log progresso em DESVIOS.md se houver atraso
+  3. Daily standup: preencha STANDUP-DAILY-TEMPLATE.md + Slack para MN
+
+DIÁRIO (MN):
+  1. Ler VISAO-GERAL-MN.md (quem faz o quê, quando)
+  2. Check Slack para updates
+  3. Quando 2.3 ficar pronto (QUA 16:00): revisar documento
+  4. SÁB 17:00: GATE FINAL
+
+SE HOUVER PROBLEMA:
+  1. Log em DESVIOS.md (tipo, data, causa, ETA fix)
+  2. Se atraso < 1h: log e continue
+  3. Se atraso 1–2h: notifique MN no Slack
+  4. Se bloqueador: MN + especialista relevante (call urgente)
+
+================================================================================
+CONTATOS
+================================================================================
+
+MN (Gate final)           : mneves@mantaassociados.com
+Você (Lead técnico)       : Claude-Haiku
+Especialista Supabase     : [TBD — acionar hoje]
+Especialista SharePoint   : [TBD — acionar hoje]
+Especialista Maestro      : [TBD — acionar hoje]
+
+ESCALAÇÃO:
+  Desvio < 1h         → log em DESVIOS.md
+  Desvio 1–2h         → notify MN (Slack)
+  Bloqueador crítico  → call MN + especialista
+
+================================================================================
+ARQUIVOS GERADOS
+================================================================================
+
+Após sábado 30 jul 17:00 UTC, deve-se ter:
+
+✅ CHECKLIST-SEMANA1-EXEC.md (100% preenchido)
+✅ DESVIOS.md (histórico de mudanças)
+✅ 5 coleções RAG em Supabase (san:, ene:, por:, aer:, bar:)
+✅ 5 pastas SharePoint criadas
+✅ 5 SKILL.md uploaded
+✅ ARQUITETURA-AGENTES-IA.md (v1.0.0 → v2.0.0)
+✅ Testes routing 100% passing
+✅ Git tag: v4.2 com changelog
+
+================================================================================
+PRAZOS CRÍTICOS (RED FLAGS)
+================================================================================
+
+RED FLAG 1: TER 26 09:00 (1.1 Supabase)
+  → Se atrasar, notifique MN imediatamente
+  → Impacta 2.2 (QUA) e 3.1 (SEX) e 3.3 (SÁB)
+
+RED FLAG 2: QUA 27 13:00–16:00 (2.2 Carga RAG)
+  → Se atrasar, notifique MN
+  → Impacta 3.1 (SEX) e 3.3 (SÁB)
+
+RED FLAG 3: SEX 29 09:00 (3.1 Testes)
+  → Resultado determina gate de SÁB
+  → Se houver falha, MN pode bloquear merge
+
+RED FLAG 4: SÁB 30 17:00 (3.3 Gate MN)
+  → DEADLINE ABSOLUTO
+  → Sem aprovação = atraso para segunda
+
+================================================================================
+PERGUNTAS FREQUENTES
+================================================================================
+
+P: E se 1.1 atrasar em 2h?
+R: Notifique MN. Ele ajustará caminho crítico ou acionará mais recursos.
+
+P: Posso fazer 2.1 + 2.2 em paralelo?
+R: Não! 2.2 depende de 1.1 (Supabase). Faça 2.1 enquanto aguarda fim de 1.1.
+
+P: Se 3.1 (testes) falhar, o que fazer?
+R: Log em DESVIOS.md + notifique MN. Ele decidirá se aprova (com issues)
+   ou bloqueia para fix.
+
+P: Qual é o slack de tempo?
+R: NENHUM. Cronograma está ajustado até a hora. Só há buffer no DOM 31.
+
+P: Quem faz merge final?
+R: Você (após aprovação MN em 3.3).
+
+P: E se MN não estiver disponível no SÁB 17:00?
+R: Notifique 24h antes (SEX 17:00). Ele ajustará horário ou delegará.
+
+================================================================================
+STATUS GLOBAL
+================================================================================
+
+Deploy v4.2 Semana 1
+
+Status:       🟢 PRONTO PARA COMEÇAR
+Tarefas:      10 (Você: 6 | MN: 4)
+Risco:        🟢 BAIXO (caminho crítico mapeado)
+Deadline:     SÁB 30 jul 17:00 UTC
+Responsável:  Você (Claude-Haiku) + MN (gate)
+
+Próxima ação:
+  1. Você: leia LEIA-ME-PRIMEIRO.md
+  2. MN: confirme recebimento + acione especialistas
+  3. TER 26 09:00: Você começa 1.1
+
+================================================================================
+Criado: 2026-07-25 14:30 UTC
+Válido: Semana 1 Deploy v4.2 (25–31 jul)
+Versão: 1.0
+================================================================================
