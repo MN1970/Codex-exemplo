@@ -1,0 +1,433 @@
+{
+  "project": {
+    "name": "Follow-up Schedule com SLAs - Especialistas",
+    "created_at": "2026-07-25",
+    "owner": "mneves@mantaassociados.com"
+  },
+  "schedule": [
+    {
+      "id": "IPOC-001",
+      "organization": "IPOC",
+      "specialist": "Instituto de Pesquisa e Outreach em Clima",
+      "contact": {
+        "primary": {
+          "name": "Dr. João Martins",
+          "email": "j.martins@ipoc.br",
+          "phone": "+55 31 3409-8500",
+          "department": "Hidrologia e Recursos Hídricos"
+        },
+        "backup": {
+          "name": "Dra. Fernanda Silva",
+          "email": "f.silva@ipoc.br",
+          "phone": "+55 31 3409-8501",
+          "department": "Coordenação Administrativa"
+        }
+      },
+      "sla": {
+        "deadline": "2026-07-31",
+        "deadline_iso": "2026-07-31T17:00:00Z",
+        "days_remaining": 6,
+        "severity": "HIGH",
+        "response_type": "Technical input on hydro-climatic scenarios"
+      },
+      "status": "AWAITING_RESPONSE",
+      "first_contact": {
+        "date": "2026-07-18",
+        "method": "email",
+        "subject": "Solicitação: Análise de Cenários Hidroclimáticos - Projeto Barragem XYZ",
+        "sent_to": "j.martins@ipoc.br"
+      },
+      "escalation": {
+        "level_1": {
+          "trigger": "No response by 2026-07-28 (3 days before deadline)",
+          "action": "Send reminder email + phone call",
+          "contact": "Dr. João Martins (primary)",
+          "template": "escalation-level-1-reminder"
+        },
+        "level_2": {
+          "trigger": "No response by 2026-07-30 (1 day before deadline)",
+          "action": "Direct escalation to department head + backup contact",
+          "contact": "Dra. Fernanda Silva (backup)",
+          "escalation_to": "Diretor de Pesquisa IPOC",
+          "template": "escalation-level-2-urgent"
+        },
+        "level_3": {
+          "trigger": "No response by 2026-07-31 18:00",
+          "action": "Accept partial deliverable or mark as incomplete; document for stakeholders",
+          "decision_maker": "mneves@mantaassociados.com",
+          "action": "Mark SLA as MISSED, trigger contingency plan"
+        }
+      },
+      "recontact_triggers": {
+        "initial_response_received": {
+          "condition": "Email/call response received",
+          "action": "Confirm timeline, request interim status update for 2026-07-29"
+        },
+        "partial_delivery": {
+          "condition": "Receives 50%+ of requested analysis",
+          "action": "Request completion date for remaining 50%; extend to 2026-08-07 if justified"
+        },
+        "no_progress": {
+          "condition": "No response after escalation level 2",
+          "action": "Invoke fallback: use alternative reference OR request written explanation"
+        }
+      },
+      "action_items": {
+        "2026-07-28": "Send reminder #1 to Dr. João Martins (email + Teams message)",
+        "2026-07-29": "Follow-up call; document time/outcome",
+        "2026-07-30": "Escalate to Dra. Fernanda Silva + department head if still no response",
+        "2026-07-31": "Final deadline - mark status (COMPLETE/INCOMPLETE); notify stakeholders"
+      },
+      "backup_plan": "Contact CPRM for supplementary data on hydro-climatic scenarios; use public datasets INPE/ONS"
+    },
+    {
+      "id": "CPRM-001",
+      "organization": "CPRM",
+      "specialist": "Companhia de Pesquisa de Recursos Minerais",
+      "contact": {
+        "primary": {
+          "name": "Eng. Roberto Ferreira",
+          "email": "r.ferreira@cprm.gov.br",
+          "phone": "+55 61 2108-8000",
+          "department": "Geotecnia e Geologia de Engenharia"
+        },
+        "backup": {
+          "name": "Dra. Marisa Oliveira",
+          "email": "m.oliveira@cprm.gov.br",
+          "phone": "+55 61 2108-8050",
+          "department": "Gestão de Projetos"
+        }
+      },
+      "sla": {
+        "deadline": "2026-07-31",
+        "deadline_iso": "2026-07-31T17:00:00Z",
+        "days_remaining": 6,
+        "severity": "CRITICAL",
+        "response_type": "Geological/geotechnical assessment for dam foundation"
+      },
+      "status": "AWAITING_RESPONSE",
+      "first_contact": {
+        "date": "2026-07-16",
+        "method": "email",
+        "subject": "URGENTE: Parecer Geotécnico - Fundações da Barragem",
+        "sent_to": "r.ferreira@cprm.gov.br"
+      },
+      "escalation": {
+        "level_1": {
+          "trigger": "No response by 2026-07-27 (4 days before deadline)",
+          "action": "Phone call + resend email via registered mail (AR)",
+          "contact": "Eng. Roberto Ferreira (primary)",
+          "template": "escalation-level-1-ar"
+        },
+        "level_2": {
+          "trigger": "No response by 2026-07-29 (2 days before deadline)",
+          "action": "Escalate to CPRM Regional Director + copy backup",
+          "contact": "Dra. Marisa Oliveira (backup)",
+          "escalation_to": "Diretor Regional CPRM Minas Gerais",
+          "template": "escalation-level-2-director"
+        },
+        "level_3": {
+          "trigger": "No response by 2026-07-31 12:00",
+          "action": "Invoke Force Majeure clause; use external geotechnical consultant as fallback",
+          "decision_maker": "mneves@mantaassociados.com",
+          "backup_consultant": "GeoEngenharia Consultoria Ltda"
+        }
+      },
+      "recontact_triggers": {
+        "initial_contact": {
+          "condition": "Response to first contact within 48h",
+          "action": "Confirm scope; request milestone dates (50% by 2026-07-28, 100% by 2026-07-31)"
+        },
+        "milestone_check": {
+          "condition": "2026-07-28 checkpoint",
+          "action": "Call to confirm 50% progress; if <50%, trigger level 2 escalation immediately"
+        },
+        "delivery_delay": {
+          "condition": "No delivery by 2026-07-31 10:00",
+          "action": "Immediate escalation to Director; request written ETA or invoke fallback"
+        }
+      },
+      "action_items": {
+        "2026-07-27": "Phone call to Eng. Roberto Ferreira; resend via email + registered mail",
+        "2026-07-28": "Checkpoint call to confirm 50% progress",
+        "2026-07-29": "If still no response, escalate to Regional Director + Dra. Marisa",
+        "2026-07-31": "Final deadline; invoke fallback if necessary; document for audit trail"
+      },
+      "backup_plan": "External consultant: GeoEngenharia Consultoria (contato@geoengenharia.com.br); cost ~R$ 12k, 3-5 day delivery"
+    },
+    {
+      "id": "UFOP-001",
+      "organization": "UFOP",
+      "specialist": "Universidade Federal de Ouro Preto - Departamento de Engenharia Civil",
+      "contact": {
+        "primary": {
+          "name": "Prof. Dr. Carlos Mendes",
+          "email": "cmendes@ufop.edu.br",
+          "phone": "+55 31 3559-1000 ramal 2450",
+          "department": "Engenharia Civil - Lab. de Barragens"
+        },
+        "backup": {
+          "name": "Prof. Dr. Antonio Lima",
+          "email": "alima@ufop.edu.br",
+          "phone": "+55 31 3559-1000 ramal 2451",
+          "department": "Coordenação de Pesquisa"
+        }
+      },
+      "sla": {
+        "deadline": "2026-08-07",
+        "deadline_iso": "2026-08-07T17:00:00Z",
+        "days_remaining": 13,
+        "severity": "HIGH",
+        "response_type": "Academic research / structural analysis / peer review"
+      },
+      "status": "AWAITING_RESPONSE",
+      "first_contact": {
+        "date": "2026-07-18",
+        "method": "email",
+        "subject": "Colaboração Acadêmica: Análise Estrutural de Barragem - Projeto UFOP-Manta",
+        "sent_to": "cmendes@ufop.edu.br"
+      },
+      "escalation": {
+        "level_1": {
+          "trigger": "No response by 2026-08-03 (4 days before deadline)",
+          "action": "Send reminder email + attempt contact via Whatsapp/Teams",
+          "contact": "Prof. Dr. Carlos Mendes (primary)",
+          "template": "escalation-level-1-academic"
+        },
+        "level_2": {
+          "trigger": "No response by 2026-08-05 (2 days before deadline)",
+          "action": "Contact department head + backup professor; escalate to PROPEP (research office)",
+          "contact": "Prof. Dr. Antonio Lima (backup)",
+          "escalation_to": "Pró-Reitoria de Pesquisa e Pós-Graduação",
+          "template": "escalation-level-2-institutional"
+        },
+        "level_3": {
+          "trigger": "No response by 2026-08-07 before 15:00",
+          "action": "Document non-compliance; mark as incomplete; invoice for partial work if applicable",
+          "decision_maker": "mneves@mantaassociados.com",
+          "action": "Trigger contingency: contact alternative university (UFRJ, PUC-RJ)"
+        }
+      },
+      "recontact_triggers": {
+        "academic_calendar": {
+          "condition": "Check if UFOP in recess (late July)",
+          "action": "If in recess, adjust timeline or contact via administrative office for emergency routing"
+        },
+        "initial_response": {
+          "condition": "Response received within 5 days",
+          "action": "Confirm deliverables; request weekly status updates via Teams"
+        },
+        "progress_check": {
+          "condition": "2026-07-28, 2026-08-04 checkpoints",
+          "action": "Quick call/email to confirm progress; identify blockers early"
+        }
+      },
+      "action_items": {
+        "2026-07-25": "Check UFOP academic calendar for August; verify Prof. Carlos availability",
+        "2026-08-03": "Send reminder email + Teams message to Prof. Carlos",
+        "2026-08-04": "Follow-up call; contact Prof. Antonio Lima as backup",
+        "2026-08-05": "If no response, escalate to PROPEP + document",
+        "2026-08-07": "Final deadline; mark status and notify stakeholders"
+      },
+      "backup_plan": "Alternative: UFRJ (Prof. Flavio - flavio@ufrj.br), PUC-RJ (Prof. Daniela - d.costa@puc-rio.br) - both can deliver in 7-10 days"
+    },
+    {
+      "id": "DEFESA-CIVIL-001",
+      "organization": "Defesa Civil - Secretaria de Proteção e Defesa Civil",
+      "specialist": "Núcleo de Engenharia de Segurança de Barragens",
+      "contact": {
+        "primary": {
+          "name": "Tec. Senhor Paulo Gomes",
+          "email": "p.gomes@defesacivil.gov.br",
+          "phone": "+55 61 2025-3500",
+          "department": "Núcleo de Barragens - Brasília"
+        },
+        "backup": {
+          "name": "Coordenadora Dra. Luciana Costa",
+          "email": "l.costa@defesacivil.gov.br",
+          "phone": "+55 61 2025-3600",
+          "department": "Direção do Núcleo"
+        }
+      },
+      "sla": {
+        "deadline": "2026-08-10",
+        "deadline_iso": "2026-08-10T17:00:00Z",
+        "days_remaining": 16,
+        "severity": "HIGH",
+        "response_type": "Government regulatory clearance / safety assessment"
+      },
+      "status": "AWAITING_RESPONSE",
+      "first_contact": {
+        "date": "2026-07-20",
+        "method": "email + official letter",
+        "subject": "Solicitação Oficial: Avaliação de Segurança de Barragem - Protocolo MNT-2026-BAR-047",
+        "sent_to": "p.gomes@defesacivil.gov.br"
+      },
+      "escalation": {
+        "level_1": {
+          "trigger": "No response by 2026-08-04 (6 days before deadline)",
+          "action": "Phone call + resend request via SEI (Sistema Eletrônico de Informações)",
+          "contact": "Tec. Paulo Gomes (primary)",
+          "template": "escalation-level-1-sei"
+        },
+        "level_2": {
+          "trigger": "No response by 2026-08-08 (2 days before deadline)",
+          "action": "Escalate to Dra. Luciana Costa + Director General of Defesa Civil",
+          "contact": "Dra. Luciana Costa (backup)",
+          "escalation_to": "Secretário de Proteção e Defesa Civil",
+          "template": "escalation-level-2-ministerial"
+        },
+        "level_3": {
+          "trigger": "No response by 2026-08-10 12:00",
+          "action": "Request written justification for delay; mark as 'awaiting government response'; escalate to client legal team",
+          "decision_maker": "mneves@mantaassociados.com",
+          "action": "Invoke clause: government delays do not delay project schedule"
+        }
+      },
+      "recontact_triggers": {
+        "sei_protocol_confirmation": {
+          "condition": "Verify SEI protocol number received",
+          "action": "If no SEI number within 48h, follow-up to ensure request entered system"
+        },
+        "mid_point_check": {
+          "condition": "2026-08-05 checkpoint",
+          "action": "Call Tec. Paulo to confirm receipt and request preliminary timeline"
+        },
+        "government_delay": {
+          "condition": "No response by 2026-08-08",
+          "action": "Document for audit; notify client that deadline will be missed due to government; prepare extension request"
+        }
+      },
+      "action_items": {
+        "2026-07-25": "Verify SEI protocol number confirmed in system",
+        "2026-08-04": "Phone call to Tec. Paulo Gomes; resend via SEI if needed",
+        "2026-08-05": "Follow-up call to confirm timeline",
+        "2026-08-08": "Escalate to Dra. Luciana Costa and Director General if no response",
+        "2026-08-10": "Final deadline; document government delay; notify stakeholders"
+      },
+      "backup_plan": "Client contingency: proceed with project using industry best practices; Defesa Civil clearance obtained retroactively (common in Brazilian projects)"
+    },
+    {
+      "id": "USP-001",
+      "organization": "USP",
+      "specialist": "Universidade de São Paulo - Escola Politécnica - Dept. Engenharia de Água e Meio Ambiente",
+      "contact": {
+        "primary": {
+          "name": "Prof. Dr. Ricardo Santos",
+          "email": "r.santos@usp.br",
+          "phone": "+55 11 3091-6000 ramal 5200",
+          "department": "Laboratório de Sistemas de Recursos Hídricos"
+        },
+        "backup": {
+          "name": "Prof. Dra. Camila Moura",
+          "email": "c.moura@usp.br",
+          "phone": "+55 11 3091-6000 ramal 5201",
+          "department": "Coordenação do Lab"
+        }
+      },
+      "sla": {
+        "deadline": "2026-08-07",
+        "deadline_iso": "2026-08-07T17:00:00Z",
+        "days_remaining": 13,
+        "severity": "HIGH",
+        "response_type": "Hydrological modeling / environmental impact assessment"
+      },
+      "status": "AWAITING_RESPONSE",
+      "first_contact": {
+        "date": "2026-07-19",
+        "method": "email",
+        "subject": "Convite: Colaboração Pesquisa Hidrologia - Projeto Integral Barragem",
+        "sent_to": "r.santos@usp.br"
+      },
+      "escalation": {
+        "level_1": {
+          "trigger": "No response by 2026-08-03 (4 days before deadline)",
+          "action": "Send reminder email + attempt contact via institutional channels",
+          "contact": "Prof. Dr. Ricardo Santos (primary)",
+          "template": "escalation-level-1-academic-usp"
+        },
+        "level_2": {
+          "trigger": "No response by 2026-08-05 (2 days before deadline)",
+          "action": "Contact Prof. Dra. Camila Moura + Lab coordinator; escalate to Pró-Reitoria",
+          "contact": "Prof. Dra. Camila Moura (backup)",
+          "escalation_to": "Pró-Reitoria de Pesquisa - USP",
+          "template": "escalation-level-2-usp-institutional"
+        },
+        "level_3": {
+          "trigger": "No response by 2026-08-07 15:00",
+          "action": "Document non-compliance; mark as incomplete; contact alternative institution (UNICAMP, UNESP)",
+          "decision_maker": "mneves@mantaassociados.com",
+          "backup_institution": "UNICAMP (Prof. Heitor - h.assis@unicamp.br)"
+        }
+      },
+      "recontact_triggers": {
+        "academic_calendar_sp": {
+          "condition": "Check if USP on winter break (July-August)",
+          "action": "If break period, try administrative office or late-July contact window"
+        },
+        "initial_response": {
+          "condition": "Response within 5 days",
+          "action": "Confirm scope; request weekly progress reports via email"
+        },
+        "lab_availability": {
+          "condition": "Mid-point check 2026-08-04",
+          "action": "Verify lab resources available; request interim results if possible"
+        }
+      },
+      "action_items": {
+        "2026-07-25": "Verify USP academic calendar; check if Prof. Ricardo on sabbatical/travel",
+        "2026-08-03": "Send reminder email to Prof. Ricardo + Prof. Camila",
+        "2026-08-04": "Follow-up call; assess progress status",
+        "2026-08-05": "If no response, escalate to Pró-Reitoria; contact UNICAMP as backup",
+        "2026-08-07": "Final deadline; mark status; notify stakeholders"
+      },
+      "backup_plan": "UNICAMP Lab (Prof. Heitor Assiss - h.assis@unicamp.br), UNESP Rio Claro (Prof. Wagner - w.costa@unesp.br) - both 8-10 day delivery"
+    }
+  ],
+  "escalation_templates": {
+    "escalation-level-1-reminder": {
+      "subject": "Acompanhamento: [Organization] - SLA expires in 3 days - Protocolo [ID]",
+      "body_pt": "Prezado [Contact Name],\n\nEste é um acompanhamento da solicitação enviada em [date_original].\n\nConfirmamos que aguardamos retorno até [SLA_deadline] (em 3 dias).\n\nPor favor, confirme recebimento e timeline de entrega.\n\nAtenciosamente,\n[Sender Name]\nManta Associados"
+    },
+    "escalation-level-2-urgent": {
+      "subject": "ESCALAÇÃO URGENTE: [Organization] - SLA crítico - [ID]",
+      "body_pt": "Prezada [Backup Contact Name],\n\nEscalamos a solicitação para o seu conhecimento, pois não recebemos resposta do contato original até a presente data.\n\nDeadline: [SLA_deadline] (em 1 dia)\nAssunto: [Subject]\nProto: [ID]\n\nSolicitamos confirmação imediata de entrega ou justificativa de atraso.\n\nDisposto a facilitar ressources necessários.\n\nAtenciosamente,\n[Sender Name]\nManta Associados"
+    },
+    "escalation-level-2-director": {
+      "subject": "[URGENTE] Escalação ao Diretor - Solicitação [Organization] - Vencimento [date]",
+      "body_pt": "Prezado Senhor Diretor,\n\nEscalamos solicitação técnica sem resposta para seu conhecimento, conforme protocolo de escalação.\n\nOrganização: [Organization]\nDeadline: [SLA_deadline]\nContato original: [Primary Contact]\nContato backup: [Backup Contact]\n\nRequisição: [Subject]\n\nSolicitamos atenção prioritária.\n\nAtenciosamente,\n[Sender Name]\nManta Associados"
+    }
+  },
+  "tracking_status_codes": {
+    "AWAITING_RESPONSE": "First contact sent, awaiting initial response",
+    "IN_PROGRESS": "Contact confirmed response, work ongoing",
+    "MILESTONE_50": "50% deliverable received",
+    "MILESTONE_75": "75% deliverable received",
+    "COMPLETE": "100% deliverable received before deadline",
+    "MISSED": "Deadline missed",
+    "PARTIAL": "Partial deliverable accepted",
+    "ESCALATED_L1": "Level 1 escalation triggered",
+    "ESCALATED_L2": "Level 2 escalation triggered",
+    "ESCALATED_L3": "Level 3 escalation triggered / fallback invoked"
+  },
+  "communication_log_template": {
+    "date": "YYYY-MM-DD HH:MM",
+    "organization": "[IPOC/CPRM/UFOP/DEFESA-CIVIL/USP]",
+    "contact_name": "[Name]",
+    "contact_method": "[email/phone/whatsapp/teams/sei]",
+    "message_type": "[initial_contact/reminder/escalation/follow-up]",
+    "subject": "[Subject line]",
+    "outcome": "[no_response/confirmed/partial_response/complete_response/escalated]",
+    "notes": "[Free text notes]",
+    "next_action": "[Specific action and date]"
+  },
+  "summary_metrics": {
+    "total_contacts": 5,
+    "critical_slas": 1,
+    "high_priority": 4,
+    "earliest_deadline": "2026-07-31",
+    "latest_deadline": "2026-08-10",
+    "average_days_to_deadline": 9.2,
+    "escalation_risk_level": "MEDIUM"
+  }
+}
