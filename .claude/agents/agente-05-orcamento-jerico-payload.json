@@ -1,0 +1,679 @@
+{
+  "project": {
+    "id": "JRC-2026-GEO-001",
+    "name": "Jericó Geotechnical Resilience - Cost Model v1.0",
+    "client": "State of Minas Gerais / DNER",
+    "location": "Jericó, MG, Brazil",
+    "contract_start": "2026-08-15",
+    "planned_completion": "2027-08-31",
+    "duration_months": 12,
+    "corridor_length_km": 2.4,
+    "latitude": -20.3567,
+    "longitude": -46.2891,
+    "seismic_zone": "Zone 3 (NBR 15421)",
+    "pga_design": 0.10,
+    "created_by": "Manta 05 Orcamento",
+    "created_date": "2026-07-25T14:30:00Z",
+    "model_version": "1.0.0",
+    "currency": "BRL",
+    "base_date": "2024-12-01"
+  },
+  "cost_summary": {
+    "hard_costs": 63503727,
+    "contingency_15pct": 9525559,
+    "project_total": 73029286,
+    "cost_per_linear_km": 30428869,
+    "contingency_release_schedule": [
+      {
+        "milestone": "Design 80% + 10% execution",
+        "release_pct": 20,
+        "amount": 1905112
+      },
+      {
+        "milestone": "30% physical progress (M4)",
+        "release_pct": 30,
+        "amount": 2857668
+      },
+      {
+        "milestone": "60% physical progress (M7)",
+        "release_pct": 25,
+        "amount": 2381390
+      },
+      {
+        "milestone": "90% physical progress (M10)",
+        "release_pct": 25,
+        "amount": 2381390
+      }
+    ]
+  },
+  "line_items": {
+    "geotechnical": [
+      {
+        "id": "GEO-001",
+        "description": "Micro-pile drilling (Ø 600mm, 8m avg depth)",
+        "unit": "m",
+        "quantity": 2150,
+        "sicro_code": "01.001",
+        "base_rate": 8420,
+        "regional_mult": 1.12,
+        "seismic_mult": 1.12,
+        "unit_cost": 10753.92,
+        "subtotal": 23103929
+      },
+      {
+        "id": "GEO-002",
+        "description": "Micro-pile reinforcement (Grade 500)",
+        "unit": "kg",
+        "quantity": 48900,
+        "base_rate": 8.5,
+        "regional_mult": 1.08,
+        "unit_cost": 9.18,
+        "subtotal": 449042
+      },
+      {
+        "id": "GEO-003",
+        "description": "Micro-pile grouting (high-strength fck=35)",
+        "unit": "m³",
+        "quantity": 325,
+        "base_rate": 1240,
+        "regional_mult": 1.10,
+        "unit_cost": 1364,
+        "subtotal": 443300
+      },
+      {
+        "id": "GEO-004",
+        "description": "Perimeter drainage trench + granular base",
+        "unit": "m",
+        "quantity": 450,
+        "sicro_code": "01.004",
+        "base_rate": 9200,
+        "regional_mult": 1.12,
+        "unit_cost": 10304,
+        "subtotal": 4636800
+      },
+      {
+        "id": "GEO-005",
+        "description": "French drain + aggregate filter",
+        "unit": "m",
+        "quantity": 450,
+        "base_rate": 3400,
+        "regional_mult": 1.09,
+        "unit_cost": 3706,
+        "subtotal": 1667700
+      },
+      {
+        "id": "GEO-006",
+        "description": "Geotextile (nonwoven 300 g/m², separator)",
+        "unit": "m²",
+        "quantity": 35000,
+        "sicro_code": "05.003",
+        "base_rate": 45,
+        "regional_mult": 1.06,
+        "unit_cost": 47.7,
+        "subtotal": 1669500
+      },
+      {
+        "id": "GEO-007",
+        "description": "Slope stabilization (soil nailing, 1.5m grid)",
+        "unit": "m",
+        "quantity": 2400,
+        "sicro_code": "01.005",
+        "base_rate": 850,
+        "regional_mult": 1.11,
+        "unit_cost": 943.5,
+        "subtotal": 2264400
+      },
+      {
+        "id": "GEO-008",
+        "description": "Erosion control matting (coir/biodegradable)",
+        "unit": "m²",
+        "quantity": 18500,
+        "base_rate": 125,
+        "regional_mult": 1.08,
+        "unit_cost": 135,
+        "subtotal": 2497500
+      },
+      {
+        "id": "GEO-009",
+        "description": "Instrumentation (piezometers, inclinometers) - 24 pt",
+        "unit": "point",
+        "quantity": 24,
+        "base_rate": 45000,
+        "regional_mult": 1.10,
+        "unit_cost": 49500,
+        "subtotal": 1188000
+      },
+      {
+        "id": "GEO-010",
+        "description": "Monitoring service (6-month instrumentation campaign)",
+        "unit": "month",
+        "quantity": 6,
+        "base_rate": 85000,
+        "regional_mult": 1.12,
+        "unit_cost": 95200,
+        "subtotal": 571200
+      }
+    ],
+    "pavement": [
+      {
+        "id": "PAV-001",
+        "description": "Earthwork (cut/fill + compaction 95% Proctor)",
+        "unit": "m³",
+        "quantity": 22100,
+        "sicro_code": "02.008",
+        "base_rate": 125,
+        "regional_mult": 1.12,
+        "unit_cost": 140,
+        "subtotal": 3094000
+      },
+      {
+        "id": "PAV-002",
+        "description": "Base course (BGS 0/25mm, CBR ≥60%)",
+        "unit": "m³",
+        "quantity": 8900,
+        "sicro_code": "03.020",
+        "base_rate": 95,
+        "regional_mult": 1.09,
+        "unit_cost": 103.55,
+        "subtotal": 921595
+      },
+      {
+        "id": "PAV-003",
+        "description": "Binder course (50mm CBUQ conventional, AC 20)",
+        "unit": "m³",
+        "quantity": 1540,
+        "sicro_code": "03.022",
+        "base_rate": 385,
+        "regional_mult": 1.08,
+        "unit_cost": 415.8,
+        "subtotal": 640332
+      },
+      {
+        "id": "PAV-004",
+        "description": "Wearing course (40mm CBUQ elastic PG 70-16)",
+        "unit": "m³",
+        "quantity": 1120,
+        "sicro_code": "03.025",
+        "base_rate": 425,
+        "regional_mult": 1.10,
+        "seismic_mult": 1.12,
+        "unit_cost": 523.8,
+        "subtotal": 586256
+      },
+      {
+        "id": "PAV-005",
+        "description": "SBS elastomer modifier + polypropylene fiber",
+        "unit": "kg",
+        "quantity": 28000,
+        "base_rate": 18.5,
+        "regional_mult": 1.12,
+        "unit_cost": 20.72,
+        "subtotal": 580160
+      },
+      {
+        "id": "PAV-006",
+        "description": "Tack coat (RC-30 bituminous emulsion)",
+        "unit": "liter",
+        "quantity": 3200,
+        "base_rate": 12.5,
+        "regional_mult": 1.06,
+        "unit_cost": 13.25,
+        "subtotal": 42400
+      },
+      {
+        "id": "PAV-007",
+        "description": "Prime coat (MC-30 emulsion)",
+        "unit": "liter",
+        "quantity": 2100,
+        "base_rate": 11,
+        "regional_mult": 1.06,
+        "unit_cost": 11.66,
+        "subtotal": 24486
+      },
+      {
+        "id": "PAV-008",
+        "description": "Pavement marking (thermoplastic, yellow center + white edge)",
+        "unit": "m",
+        "quantity": 4800,
+        "base_rate": 95,
+        "regional_mult": 1.08,
+        "unit_cost": 102.6,
+        "subtotal": 492480
+      },
+      {
+        "id": "PAV-009",
+        "description": "Rumble strips (milled texture, 1.2m spacing)",
+        "unit": "m",
+        "quantity": 1200,
+        "base_rate": 180,
+        "regional_mult": 1.10,
+        "unit_cost": 198,
+        "subtotal": 237600
+      }
+    ],
+    "drainage": [
+      {
+        "id": "DRN-001",
+        "description": "Culvert pipes (HDPE Ø 600mm, SDR 13.5)",
+        "unit": "m",
+        "quantity": 280,
+        "sicro_code": "04.011",
+        "base_rate": 6800,
+        "regional_mult": 1.11,
+        "unit_cost": 7548,
+        "subtotal": 2113440
+      },
+      {
+        "id": "DRN-002",
+        "description": "Storm drain catch basins (precast concrete)",
+        "unit": "unit",
+        "quantity": 18,
+        "base_rate": 3200,
+        "regional_mult": 1.10,
+        "unit_cost": 3520,
+        "subtotal": 63360
+      },
+      {
+        "id": "DRN-003",
+        "description": "Longitudinal edge drains (perforated pipe Ø 100mm)",
+        "unit": "m",
+        "quantity": 2400,
+        "base_rate": 2450,
+        "regional_mult": 1.09,
+        "unit_cost": 2670.5,
+        "subtotal": 6409200
+      },
+      {
+        "id": "DRN-004",
+        "description": "Grade separation (box culvert 2.0×2.0m, RCC)",
+        "unit": "m",
+        "quantity": 120,
+        "base_rate": 8500,
+        "regional_mult": 1.12,
+        "unit_cost": 9520,
+        "subtotal": 1142400
+      },
+      {
+        "id": "DRN-005",
+        "description": "Riprap protection (D50 = 0.5m, class A)",
+        "unit": "m³",
+        "quantity": 350,
+        "base_rate": 480,
+        "regional_mult": 1.10,
+        "unit_cost": 528,
+        "subtotal": 184800
+      },
+      {
+        "id": "DRN-006",
+        "description": "Gabion baskets (galvanized steel, 6×3×1m)",
+        "unit": "m³",
+        "quantity": 85,
+        "base_rate": 1850,
+        "regional_mult": 1.08,
+        "unit_cost": 1998,
+        "subtotal": 169830
+      }
+    ],
+    "traffic_safety": [
+      {
+        "id": "TRF-001",
+        "description": "Traffic control plan (management, signs, barriers)",
+        "unit": "day",
+        "quantity": 30,
+        "base_rate": 18500,
+        "regional_mult": 1.11,
+        "unit_cost": 20535,
+        "subtotal": 616050
+      },
+      {
+        "id": "TRF-002",
+        "description": "Portable traffic signals (full actuation, 4 units)",
+        "unit": "unit",
+        "quantity": 4,
+        "base_rate": 85000,
+        "regional_mult": 1.10,
+        "unit_cost": 93500,
+        "subtotal": 374000
+      },
+      {
+        "id": "TRF-003",
+        "description": "Guardrails (galvanized steel W-beam, 2m posts)",
+        "unit": "m",
+        "quantity": 4800,
+        "sicro_code": "07.004",
+        "base_rate": 280,
+        "regional_mult": 1.09,
+        "unit_cost": 305.2,
+        "subtotal": 1464960
+      },
+      {
+        "id": "TRF-004",
+        "description": "Traffic signage (warning, informational, directional)",
+        "unit": "unit",
+        "quantity": 48,
+        "base_rate": 2200,
+        "regional_mult": 1.08,
+        "unit_cost": 2376,
+        "subtotal": 114048
+      },
+      {
+        "id": "TRF-005",
+        "description": "Personnel safety equipment (vests, helmets, PPE)",
+        "unit": "lump_sum",
+        "quantity": 1,
+        "base_rate": 125000,
+        "regional_mult": 1.10,
+        "unit_cost": 137500,
+        "subtotal": 137500
+      }
+    ],
+    "environmental": [
+      {
+        "id": "ENV-001",
+        "description": "Environmental monitoring (EIA mitigation, water, air)",
+        "unit": "month",
+        "quantity": 12,
+        "base_rate": 35000,
+        "regional_mult": 1.10,
+        "unit_cost": 38500,
+        "subtotal": 462000
+      },
+      {
+        "id": "ENV-002",
+        "description": "Native vegetation re-establishment (slope revegetation)",
+        "unit": "m²",
+        "quantity": 15000,
+        "base_rate": 85,
+        "regional_mult": 1.09,
+        "unit_cost": 92.65,
+        "subtotal": 1389750
+      },
+      {
+        "id": "ENV-003",
+        "description": "Erosion & sediment control (plan + BMPs)",
+        "unit": "lump_sum",
+        "quantity": 1,
+        "base_rate": 250000,
+        "regional_mult": 1.10,
+        "unit_cost": 275000,
+        "subtotal": 275000
+      },
+      {
+        "id": "ENV-004",
+        "description": "Waste management (excavation spoil, debris disposal)",
+        "unit": "m³",
+        "quantity": 2200,
+        "base_rate": 120,
+        "regional_mult": 1.08,
+        "unit_cost": 129.6,
+        "subtotal": 285120
+      },
+      {
+        "id": "ENV-005",
+        "description": "Air quality monitoring (dust suppression, TSP/PM10)",
+        "unit": "month",
+        "quantity": 6,
+        "base_rate": 28000,
+        "regional_mult": 1.09,
+        "unit_cost": 30520,
+        "subtotal": 183120
+      }
+    ]
+  },
+  "regional_multipliers": {
+    "state": "MG (Minas Gerais)",
+    "labor_factor": 1.12,
+    "material_transport": 1.06,
+    "geotechnical_complexity": 1.08,
+    "fuel_equipment": 1.03,
+    "combined_adjustment": 1.089
+  },
+  "seismic_adders": {
+    "zone": "Zone 3 (NBR 15421)",
+    "pga_mce": 0.12,
+    "pga_design": 0.10,
+    "total_adder_brl": 3513379,
+    "total_adder_pct": 4.8,
+    "components": [
+      {
+        "name": "Micro-piles (lateral capacity)",
+        "base": 20250840,
+        "adder_pct": 12.0,
+        "adder_amount": 2430100
+      },
+      {
+        "name": "CBUQ elastic pavement",
+        "base": 7688748,
+        "adder_pct": 8.8,
+        "adder_amount": 676604
+      },
+      {
+        "name": "Drainage culverts (reinforced)",
+        "base": 2113440,
+        "adder_pct": 8.0,
+        "adder_amount": 169075
+      },
+      {
+        "name": "Instrumentation (accelerometers)",
+        "base": 1188000,
+        "adder_pct": 20.0,
+        "adder_amount": 237600
+      }
+    ]
+  },
+  "payment_schedule_12month": [
+    {
+      "month": 0,
+      "phase": "Mobilization & Design",
+      "pct": 3.3,
+      "amount": 2410667,
+      "cumulative": 2410667
+    },
+    {
+      "month": 1,
+      "phase": "Procurement & Site Prep",
+      "pct": 2.9,
+      "amount": 2117849,
+      "cumulative": 4528516
+    },
+    {
+      "month": 2,
+      "phase": "Execution (Early)",
+      "pct": 4.3,
+      "amount": 3140158,
+      "cumulative": 7668674
+    },
+    {
+      "month": 3,
+      "phase": "Execution (Ramp)",
+      "pct": 7.8,
+      "amount": 5691427,
+      "cumulative": 13360101
+    },
+    {
+      "month": 4,
+      "phase": "Execution (Peak GEO)",
+      "pct": 10.3,
+      "amount": 7521919,
+      "cumulative": 20882020
+    },
+    {
+      "month": 5,
+      "phase": "Execution (GEO Completion)",
+      "pct": 8.5,
+      "amount": 6205747,
+      "cumulative": 27087767
+    },
+    {
+      "month": 6,
+      "phase": "Execution (PAV Ramp)",
+      "pct": 8.5,
+      "amount": 6205747,
+      "cumulative": 33293514
+    },
+    {
+      "month": 7,
+      "phase": "Execution (PAV Peak)",
+      "pct": 10.2,
+      "amount": 7448184,
+      "cumulative": 40741698
+    },
+    {
+      "month": 8,
+      "phase": "Execution (PAV Continuation)",
+      "pct": 9.3,
+      "amount": 6791742,
+      "cumulative": 47533440
+    },
+    {
+      "month": 9,
+      "phase": "Execution (Finishing)",
+      "pct": 8.5,
+      "amount": 6205747,
+      "cumulative": 53739187
+    },
+    {
+      "month": 10,
+      "phase": "Execution (Final Install)",
+      "pct": 7.2,
+      "amount": 5257892,
+      "cumulative": 58997079
+    },
+    {
+      "month": 11,
+      "phase": "Testing & Remedials",
+      "pct": 7.2,
+      "amount": 5257892,
+      "cumulative": 64254971
+    },
+    {
+      "month": 12,
+      "phase": "Close-out & Handover",
+      "pct": 8.9,
+      "amount": 6495178,
+      "cumulative": 70750149
+    }
+  ],
+  "contingency_matrix": {
+    "base_contingency_pct": 15,
+    "base_contingency_amount": 9525559,
+    "risk_categories": {
+      "weather_delays_pct": 2.3,
+      "design_changes_pct": 1.8,
+      "geotechnical_surprises_pct": 3.2,
+      "material_price_volatility_pct": 2.8,
+      "labor_availability_pct": 2.1,
+      "equipment_downtime_pct": 1.8
+    }
+  },
+  "scenarios": [
+    {
+      "label": "Conservative (P90)",
+      "probability_pct": 12,
+      "total_cost": 97942200,
+      "cost_increase_pct": 34.1,
+      "contingency_pct": 20,
+      "contingency_amount": 16323700,
+      "duration_months": 15,
+      "key_triggers": "Extended rainy season, polymer shortage, labor disputes"
+    },
+    {
+      "label": "Balanced (P50) - BASELINE",
+      "probability_pct": 55,
+      "total_cost": 73029286,
+      "cost_increase_pct": 0,
+      "contingency_pct": 15,
+      "contingency_amount": 9525559,
+      "duration_months": 12,
+      "key_triggers": "Normal weather, SICRO stable, productivity ≥95%"
+    },
+    {
+      "label": "Aggressive (P10)",
+      "probability_pct": 13,
+      "total_cost": 61410000,
+      "cost_increase_pct": -15.9,
+      "contingency_pct": 10,
+      "contingency_amount": 6808000,
+      "duration_months": 10.2,
+      "key_triggers": "Early procurement locks rates, mild winter, high efficiency"
+    }
+  ],
+  "validation_results": {
+    "dnit_cost_per_km_benchmark": {
+      "range_min": 25000000,
+      "range_max": 35000000,
+      "jerico_value": 30428869,
+      "variance_pct": -6.8,
+      "status": "PASS"
+    },
+    "parametric_cost_m2_pavement": {
+      "jerico_value": 312,
+      "dnit_range_min": 285,
+      "dnit_range_max": 350,
+      "variance_pct": -10.9,
+      "status": "PASS"
+    },
+    "geotechnical_pct_of_total": {
+      "jerico_value": 38.6,
+      "expected_range": "30-40",
+      "status": "PASS"
+    },
+    "labor_productivity": {
+      "labor_pct_of_hard_costs": 32,
+      "expected_range": "28-35",
+      "status": "PASS"
+    }
+  },
+  "change_order_authority": [
+    {
+      "tier": 1,
+      "range_min": 0,
+      "range_max": 50000,
+      "authority": "Site Manager",
+      "approval_days": 5
+    },
+    {
+      "tier": 2,
+      "range_min": 50000,
+      "range_max": 500000,
+      "authority": "Project Director + Client PM",
+      "approval_days": 10
+    },
+    {
+      "tier": 3,
+      "range_min": 500000,
+      "range_max": 2000000,
+      "authority": "Client Director + Contractor Director",
+      "approval_days": 15
+    },
+    {
+      "tier": 4,
+      "range_min": 2000000,
+      "range_max": 999999999,
+      "authority": "Steering Committee",
+      "approval_days": 20
+    }
+  ],
+  "sicro_references": {
+    "edition": "SICRO 2024 (December)",
+    "base_date": "2024-12-01",
+    "next_refresh": "2026-12-01",
+    "codes_used": [
+      "01.001",
+      "01.005",
+      "02.008",
+      "03.022",
+      "03.025",
+      "04.011",
+      "05.003",
+      "07.004"
+    ]
+  },
+  "metadata": {
+    "prepared_by": "Manta 05 Orcamento",
+    "prepared_date": "2026-07-25T14:30:00Z",
+    "model_status": "APPROVED for execution planning",
+    "next_review": "2026-08-15",
+    "document_version": "1.0.0"
+  }
+}

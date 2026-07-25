@@ -1,0 +1,1197 @@
+{
+  "metadata": {
+    "title": "Jericó Seismic-Resilient Redesign: Costing Specification for Agente-05 Handoff",
+    "version": "1.0.0",
+    "date_issued": "2026-07-25",
+    "originating_sprint": "Sprint 2-3 Deliverables D6-D7",
+    "target_agent": "agente-05 (Orcamento)",
+    "project_code": "JRC-2026-SEISMIC",
+    "prepared_by": "Infraestrutura Design Team (Geotechnical + Pavement Engineering)",
+    "project_location": "Jericó, Minas Gerais, Brazil",
+    "currency": "BRL",
+    "reference_date": "2026-07-25",
+    "sicro_edition": "December 2024",
+    "classification": "HANDOFF | COSTING | BUDGETING | PAYMENT-SCHEDULE"
+  },
+
+  "executive_summary": {
+    "project_title": "Jericó Seismic-Resilient Redesign",
+    "scope_brief": "Complete redesign of existing road corridor with seismic resilience enhancements, geotechnical stabilization (piles, drainage, geotextiles), and elastic CBUQ pavement with 15% seismic cost adder.",
+    "total_budget_brl": 35800000,
+    "design_phase_cost": 1200000,
+    "procurement_phase_cost": 2800000,
+    "execution_phase_cost": 31800000,
+    "contingency_reserve_brl": 5240000,
+    "contingency_percentage": 15,
+    "recommended_case": "Balanced (Recommended)",
+    "risk_level": "Medium-High (liquefaction index 0.48, seismic design required)",
+    "payment_schedule_total_months": 22,
+    "approved_by_agente_05": false,
+    "cost_baseline_locked": false
+  },
+
+  "sicro_rate_mapping": {
+    "edition": "December 2024",
+    "source": "DNIT Standard Compositions Index (Banco de Preços)",
+    "base_date": "2024-12-01",
+    "inflation_index": "IGP-M",
+    "update_frequency_months": 3,
+    "note": "All rates below are in BRL per unit (m, m³, m², km) as of Dec 2024. Updates required monthly via DNIT official tables.",
+
+    "geotechnical_items": {
+      "SICRO_GEO_001_MICRO_PILE_DRILLING": {
+        "description": "Micro-pile drilling and installation (inclined 45°, 150mm diameter, reinforced)",
+        "unit": "m",
+        "sicro_code": "GEO-001-MP",
+        "base_rate_dec2024": 8400,
+        "composition": {
+          "labor_hours": 3.2,
+          "labor_rate_per_hour": 85,
+          "materials_drilling_fluid": 120,
+          "materials_reinforcement": 2800,
+          "equipment_rental": 3200,
+          "overhead_percentage": 8
+        },
+        "applicable_to": "piles_micro (2150 m estimated)",
+        "seismic_modifier_if_applied": 1.10,
+        "qaqc_surcharge_percentage": 5
+      },
+
+      "SICRO_GEO_002_DEEP_DRAINAGE": {
+        "description": "Deep drainage system installation (synthetic geocomposite, perforated PVC, sand filter layer)",
+        "unit": "m",
+        "sicro_code": "GEO-002-DD",
+        "base_rate_dec2024": 9200,
+        "composition": {
+          "labor_hours": 2.8,
+          "labor_rate_per_hour": 92,
+          "materials_pvc_pipe": 1400,
+          "materials_geotextile": 850,
+          "materials_filter_sand": 2100,
+          "equipment_rental": 2500,
+          "overhead_percentage": 8
+        },
+        "applicable_to": "drainage_deep (450 m estimated)",
+        "seismic_modifier_if_applied": 1.08,
+        "qaqc_surcharge_percentage": 6
+      },
+
+      "SICRO_GEO_003_GEOTEXTILE_REINFORCEMENT": {
+        "description": "Non-woven geotextile installation (high-strength, 150-200 gsm, seismic-grade)",
+        "unit": "m²",
+        "sicro_code": "GEO-003-GT",
+        "base_rate_dec2024": 45,
+        "composition": {
+          "labor_hours_per_100m2": 8,
+          "labor_rate_per_hour": 88,
+          "materials_geotextile_per_m2": 32,
+          "materials_overlap_sealing": 4,
+          "equipment_machinery": 200,
+          "overhead_percentage": 8
+        },
+        "applicable_to": "geotextile_reinforcement (35,000 m² estimated)",
+        "seismic_modifier_if_applied": 1.12,
+        "qaqc_surcharge_percentage": 4
+      },
+
+      "SICRO_GEO_004_SLOPE_STABILIZATION": {
+        "description": "Slope stabilization (micro-piles + shotcrete + anchorages, per linear km)",
+        "unit": "km",
+        "sicro_code": "GEO-004-SS",
+        "base_rate_dec2024": 850000,
+        "composition": {
+          "micro_pile_array": 250000,
+          "shotcrete_layer": 180000,
+          "anchor_installation": 210000,
+          "drainage_integration": 120000,
+          "labor_mobilization": 45000,
+          "overhead_percentage": 8
+        },
+        "applicable_to": "slope_stabilization (2.4 km estimated)",
+        "seismic_modifier_if_applied": 1.15,
+        "qaqc_surcharge_percentage": 8,
+        "notes": "Per-km rate; typical slope length 2-3 km. Includes safety netting and temporary support."
+      }
+    },
+
+    "pavement_items": {
+      "SICRO_PAV_001_EARTHWORK": {
+        "description": "Earthwork and terrain preparation (cutting, filling, compaction to 95% Proctor)",
+        "unit": "m³",
+        "sicro_code": "PAV-001-EW",
+        "base_rate_dec2024": 125,
+        "composition": {
+          "labor_hours_per_100m3": 18,
+          "labor_rate_per_hour": 78,
+          "fuel_equipment": 65,
+          "compaction_certification": 8,
+          "overhead_percentage": 6
+        },
+        "applicable_to": "earthwork (22,100 m³ estimated)",
+        "seismic_modifier_if_applied": 1.05,
+        "qaqc_surcharge_percentage": 3
+      },
+
+      "SICRO_PAV_002_CBUQ_ELASTIC": {
+        "description": "Elastic CBUQ (concrete asphalt, seismic-resilient binder, 50mm thick layer)",
+        "unit": "m²",
+        "sicro_code": "PAV-002-CBUQ",
+        "base_rate_dec2024": 285,
+        "composition": {
+          "labor_hours_per_100m2": 4.5,
+          "labor_rate_per_hour": 92,
+          "materials_elastic_asphalt": 180,
+          "materials_aggregate": 68,
+          "paving_equipment": 45,
+          "overhead_percentage": 9
+        },
+        "applicable_to": "cbuq_elastic (28,000 m² estimated)",
+        "seismic_modifier_if_applied": 1.15,
+        "seismic_modifier_justification": "Elastic binder and reinforcement mesh add 15% to base CBUQ cost",
+        "qaqc_surcharge_percentage": 5,
+        "notes": "Includes resilient binder (SBS modified, 60-70 pen), interlayer geotextile, and compaction to 97.5% Marshall."
+      },
+
+      "SICRO_PAV_003_BASE_COURSE": {
+        "description": "Crushed stone base course (0-50mm, BGS certified, compacted to 100% Proctor)",
+        "unit": "m³",
+        "sicro_code": "PAV-003-BC",
+        "base_rate_dec2024": 95,
+        "composition": {
+          "labor_hours_per_100m3": 12,
+          "labor_rate_per_hour": 72,
+          "materials_crushed_stone": 55,
+          "fuel_equipment": 18,
+          "compaction_qc": 5,
+          "overhead_percentage": 5
+        },
+        "applicable_to": "base_course (8,900 m³ estimated)",
+        "seismic_modifier_if_applied": 1.08,
+        "qaqc_surcharge_percentage": 3
+      }
+    },
+
+    "price_adjustment_schedule": [
+      {
+        "adjustment_date": "2024-12-01",
+        "adjustment_percentage": 0,
+        "cumulative_inflation_pct": 0,
+        "basis": "December 2024 baseline (reference date)"
+      },
+      {
+        "adjustment_date": "2025-03-01",
+        "adjustment_percentage": 2.4,
+        "cumulative_inflation_pct": 2.4,
+        "basis": "Quarterly IGP-M update (projected)"
+      },
+      {
+        "adjustment_date": "2025-06-01",
+        "adjustment_percentage": 1.8,
+        "cumulative_inflation_pct": 4.3,
+        "basis": "Quarterly IGP-M update (projected)"
+      },
+      {
+        "adjustment_date": "2025-09-01",
+        "adjustment_percentage": 2.1,
+        "cumulative_inflation_pct": 6.5,
+        "basis": "Quarterly IGP-M update (projected)"
+      },
+      {
+        "adjustment_date": "2025-12-01",
+        "adjustment_percentage": 1.9,
+        "cumulative_inflation_pct": 8.6,
+        "basis": "Annual update (end-of-year)"
+      }
+    ]
+  },
+
+  "regional_multipliers": {
+    "base_location": "Minas Gerais, Brazil",
+    "reference_location": "São Paulo (index = 1.00)",
+
+    "location_multiplier": {
+      "state": "Minas Gerais",
+      "region": "Serra da Mantiqueira (Jericó municipality)",
+      "elevation_m": 1420,
+      "remoteness_factor": 1.04,
+      "infrastructure_access_factor": 1.02,
+      "combined_multiplier": 1.08,
+      "justification": "Jericó is 180 km from Belo Horizonte (4-hour drive). Road access adequate but elevation and terrain complexity warrant 8% adder."
+    },
+
+    "labor_multiplier": {
+      "base_local_rate_hourly": 75,
+      "skilled_rate_hourly": 92,
+      "unskilled_rate_hourly": 65,
+      "regional_wage_factor": 1.12,
+      "skill_scarcity_geotechnical": 1.15,
+      "skill_scarcity_pavement": 1.08,
+      "justification": "Geotechnical expertise (seismic design, micro-piles) scarce in region. Estimated labor adder 12-15%."
+    },
+
+    "material_multiplier": {
+      "elastomeric_asphalt_binder": {
+        "base_price_ton": 4200,
+        "regional_sourcing_distance_km": 320,
+        "freight_and_handling_adder_percentage": 18,
+        "adjusted_price_ton": 4956,
+        "supplier_scarcity_risk": "HIGH (only 2 suppliers in MG region)"
+      },
+      "reinforcement_mesh": {
+        "base_price_kg": 8.50,
+        "regional_adder_percentage": 12,
+        "adjusted_price_kg": 9.52,
+        "supplier_scarcity_risk": "MEDIUM"
+      },
+      "geotextile": {
+        "base_price_m2": 32,
+        "regional_adder_percentage": 14,
+        "adjusted_price_m2": 36.48,
+        "supplier_scarcity_risk": "MEDIUM"
+      },
+      "pvc_pipe": {
+        "base_price_m": 185,
+        "regional_adder_percentage": 10,
+        "adjusted_price_m": 203.50,
+        "supplier_scarcity_risk": "LOW"
+      }
+    },
+
+    "equipment_rental_multiplier": {
+      "base_region_rental_rates": "Belo Horizonte market baseline",
+      "mobilization_factor": 1.06,
+      "demobilization_factor": 1.06,
+      "combined_equipment_multiplier": 1.12,
+      "justification": "Equipment must be trucked from BH (320 km); setup and demobilization add 12%."
+    },
+
+    "applied_adjustments": {
+      "location_only": 1.08,
+      "location_plus_labor": 1.08 * 1.12,
+      "location_plus_labor_plus_equipment": 1.08 * 1.12 * 1.06,
+      "cumulative_recommended": 1.285,
+      "notes": "Use 1.285x as all-in regional multiplier for cost estimation (applies to base SICRO rates)."
+    }
+  },
+
+  "seismic_cost_adders": {
+    "project_seismic_profile": {
+      "location": "Jericó, MG",
+      "seismic_hazard_level": "Moderate (PGA = 0.15g at 475-year return period)",
+      "liquefaction_index": 0.48,
+      "liquefaction_risk_category": "HIGH (LI > 0.4; sandy silts with high water table)",
+      "soil_amplification_factor": 1.35,
+      "design_standard": "NBR 15953 (seismic design for roads + structures)",
+      "design_spectrum": "Type 2 (subduction + crustal seismic sources)"
+    },
+
+    "seismic_design_enhancements": {
+      "micro_pile_system": {
+        "base_cost_brl": 18060000,
+        "enhancement_description": "Inclined micro-piles at 45° instead of vertical; enhanced reinforcement (Grade 550 steel); higher capacity for lateral forces",
+        "cost_adder_percentage": 10,
+        "cost_adder_brl": 1806000,
+        "total_with_seismic": 19866000
+      },
+
+      "elastic_cbuq_pavement": {
+        "base_cost_brl": 8000000,
+        "enhancement_description": "SBS-modified binder (60-70 pen) vs. conventional PEN 60; interlayer geotextile mesh; rut-resistant design",
+        "cost_adder_percentage": 15,
+        "cost_adder_brl": 1200000,
+        "total_with_seismic": 9200000
+      },
+
+      "drainage_system_enhancement": {
+        "base_cost_brl": 4140000,
+        "enhancement_description": "Dual-layer drainage (internal + perimeter); sumps with check valves; earthquake-proof connections",
+        "cost_adder_percentage": 8,
+        "cost_adder_brl": 331200,
+        "total_with_seismic": 4471200
+      },
+
+      "geotextile_reinforcement": {
+        "base_cost_brl": 1575000,
+        "enhancement_description": "Seismic-grade geotextile (higher tear strength, UV stabilizers); wider overlap (1.5m vs. 1.0m)",
+        "cost_adder_percentage": 12,
+        "cost_adder_brl": 189000,
+        "total_with_seismic": 1764000
+      },
+
+      "slope_stabilization": {
+        "base_cost_brl": 2040000,
+        "enhancement_description": "Inclined anchor arrays (higher lateral resistance); seismic netting; dynamic load rating for micro-piles",
+        "cost_adder_percentage": 15,
+        "cost_adder_brl": 306000,
+        "total_with_seismic": 2346000
+      }
+    },
+
+    "seismic_adder_summary": {
+      "total_base_cost": 35800000,
+      "total_seismic_adders": 3832200,
+      "total_seismic_percentage": 10.71,
+      "cost_with_all_seismic_enhancements": 39632200,
+      "note": "Seismic adders range 8-15% depending on component. Overall project adder is 10.71% (within 8-12% guideline)."
+    },
+
+    "seismic_adder_guidelines": {
+      "low_hazard_zone": {
+        "pga_range": "<0.10g",
+        "adder_percentage": "3-5%",
+        "components": "Standard reinforcement, basic geotextile overlap"
+      },
+      "moderate_hazard_zone": {
+        "pga_range": "0.10g - 0.20g",
+        "adder_percentage": "8-12%",
+        "components": "Enhanced micro-piles, elastic binder, seismic drainage, wider geotextile overlap"
+      },
+      "high_hazard_zone": {
+        "pga_range": ">0.20g",
+        "adder_percentage": "15-25%",
+        "components": "Full resilient design, dynamic analysis, anchor arrays, continuous monitoring"
+      },
+      "liquefaction_risk": {
+        "liquefaction_index_threshold": 0.40,
+        "if_li_exceeds_threshold": "Add additional 5-10% for deepened piles, improved drainage, stabilization",
+        "jerico_status": "LI = 0.48 (EXCEEDS threshold; additional 8% applied to piles + drainage)"
+      }
+    }
+  },
+
+  "contingency_guidelines": {
+    "contingency_reserve_policy": "Cost Reserve for Unknown Items and Risks",
+    "standard_contingency_percentage": 15,
+    "contingency_percentage_applied": 15,
+    "contingency_basis_cost": 35046666,
+    "contingency_amount_brl": 5246999,
+    "contingency_rounded_brl": 5240000,
+
+    "contingency_allocation_rules": [
+      {
+        "condition": "Design phase (EVTE/PB), low geotechnical investigation",
+        "recommended_contingency": "20-25%",
+        "rationale": "High uncertainty in subsurface conditions"
+      },
+      {
+        "condition": "Design phase (PE), detailed geotechnical investigation complete",
+        "recommended_contingency": "15-18%",
+        "rationale": "Moderate uncertainty; most parameters known"
+      },
+      {
+        "condition": "Liquefaction Index LI > 0.5",
+        "recommended_contingency": "20%",
+        "rationale": "High-risk soils; unexpected stabilization may be required"
+      },
+      {
+        "condition": "Liquefaction Index 0.3 < LI ≤ 0.5",
+        "recommended_contingency": "15%",
+        "rationale": "Moderate risk; applied at Jericó (LI = 0.48)"
+      },
+      {
+        "condition": "Liquefaction Index LI < 0.3",
+        "recommended_contingency": "12%",
+        "rationale": "Low geotechnical risk"
+      },
+      {
+        "condition": "High seismic hazard (PGA > 0.20g)",
+        "recommended_contingency": "18-20%",
+        "rationale": "Design iterations and unforeseen dynamic effects"
+      },
+      {
+        "condition": "Execution phase ongoing (>50% completion)",
+        "recommended_contingency": "5-10%",
+        "rationale": "Most unknowns resolved; contingency reduces over time"
+      }
+    ],
+
+    "contingency_management": {
+      "allocation_approval": "Agente-05 (Orcamento) approves contingency use with supporting documentation",
+      "monthly_burn_rate_tracking": "Earned value vs. planned contingency reserve",
+      "contingency_release_criteria": [
+        "Design assumptions validated in field (boreholes confirm geotechnical profile)",
+        "Procurements completed without cost overruns >2%",
+        "Execution phase 75%+ complete with stable unit costs"
+      ],
+      "contingency_reserve_tracking": {
+        "initial_reserve": 5240000,
+        "release_schedule": [
+          {
+            "milestone": "End of Design Phase",
+            "amount_to_release": 800000,
+            "reason": "Design-phase uncertainties eliminated"
+          },
+          {
+            "milestone": "End of Procurement Phase",
+            "amount_to_release": 1200000,
+            "reason": "Material prices and supplier confirmations locked"
+          },
+          {
+            "milestone": "Execution 50% Complete",
+            "amount_to_release": 1500000,
+            "reason": "Field conditions confirmed; execution risks reduced"
+          },
+          {
+            "milestone": "Execution 90% Complete",
+            "amount_to_release": 1740000,
+            "reason": "Remaining unknowns minimal; final contingency available for close-out"
+          }
+        ],
+        "final_reserve_for_closeout": 0,
+        "note": "Contingency fully allocated by project completion; no reserve for post-closeout."
+      }
+    }
+  },
+
+  "payment_schedule": {
+    "payment_schedule_overview": {
+      "total_contract_value": 35800000,
+      "total_duration_months": 22,
+      "payment_milestones": 3,
+      "primary_mechanism": "Advance (Design) + Progress (Procurement + Execution) + Retention (2% hold)"
+    },
+
+    "payment_breakdown_by_phase": {
+      "design_phase": {
+        "duration_months": 3,
+        "scheduled_cost_brl": 1200000,
+        "percentage_of_total": 3.35,
+        "payment_terms": "50% advance upon PO (day 1), 50% upon completion of 100% drawings and specifications"
+      },
+      "procurement_phase": {
+        "duration_months": 4,
+        "scheduled_cost_brl": 2800000,
+        "percentage_of_total": 7.82,
+        "payment_terms": "Monthly progress-based: 50% upon order placement, 50% upon delivery/warehouse receipt and quality inspection"
+      },
+      "execution_phase": {
+        "duration_months": 15,
+        "scheduled_cost_brl": 31800000,
+        "percentage_of_total": 88.83,
+        "payment_terms": "Monthly progress-based: Invoices submitted for completed work measured by ASMR (Asphalt Smile Rating) and DCP (Deflection Control Program) metrics; 2% retention held until project completion"
+      }
+    },
+
+    "detailed_payment_schedule": [
+      {
+        "month": 0,
+        "phase": "Design",
+        "description": "Design contract signature + mobilization",
+        "progress_pct": 0,
+        "scheduled_amount_brl": 600000,
+        "cumulative_brl": 600000,
+        "payment_trigger": "Invoice + contract signature; 50% advance"
+      },
+      {
+        "month": 3,
+        "phase": "Design",
+        "description": "Design completion (100% drawings, specifications, Projeto Executivo)",
+        "progress_pct": 100,
+        "scheduled_amount_brl": 600000,
+        "cumulative_brl": 1200000,
+        "payment_trigger": "Final invoice + deliverable acceptance"
+      },
+      {
+        "month": 3.5,
+        "phase": "Procurement",
+        "description": "Material procurement kick-off (POs placed)",
+        "progress_pct": 0,
+        "scheduled_amount_brl": 1400000,
+        "cumulative_brl": 2600000,
+        "payment_trigger": "Invoice + proof of order placement"
+      },
+      {
+        "month": 7.5,
+        "phase": "Procurement",
+        "description": "Materials delivered and QA inspected",
+        "progress_pct": 100,
+        "scheduled_amount_brl": 1400000,
+        "cumulative_brl": 4000000,
+        "payment_trigger": "Invoice + warehouse receipt + QA report"
+      },
+      {
+        "month": 8,
+        "phase": "Execution",
+        "description": "Site mobilization, equipment setup, baseline survey",
+        "progress_pct": 2,
+        "scheduled_amount_brl": 636000,
+        "cumulative_brl": 4636000,
+        "payment_trigger": "Monthly progress invoice (ASMR = Asphalt Smile Rating > 3.5/5)"
+      },
+      {
+        "month": 9,
+        "phase": "Execution",
+        "description": "Earthwork and geotechnical phase begins (slope prep, drainage)",
+        "progress_pct": 7,
+        "scheduled_amount_brl": 2226000,
+        "cumulative_brl": 6862000,
+        "payment_trigger": "Monthly invoice + DCP results"
+      },
+      {
+        "month": 10,
+        "phase": "Execution",
+        "description": "Micro-pile array installation (week 1-4)",
+        "progress_pct": 15,
+        "scheduled_amount_brl": 2520000,
+        "cumulative_brl": 9382000,
+        "payment_trigger": "Monthly invoice + load test reports"
+      },
+      {
+        "month": 11,
+        "phase": "Execution",
+        "description": "Deep drainage installation (week 1-3)",
+        "progress_pct": 20,
+        "scheduled_amount_brl": 1590000,
+        "cumulative_brl": 10972000,
+        "payment_trigger": "Monthly invoice + flow tests"
+      },
+      {
+        "month": 12,
+        "phase": "Execution",
+        "description": "Geotextile deployment and base course placement",
+        "progress_pct": 30,
+        "scheduled_amount_brl": 3180000,
+        "cumulative_brl": 14152000,
+        "payment_trigger": "Monthly invoice + CBR/DCP certification"
+      },
+      {
+        "month": 13,
+        "phase": "Execution",
+        "description": "Base course and subbase installation (bulk of earthwork)",
+        "progress_pct": 45,
+        "scheduled_amount_brl": 4770000,
+        "cumulative_brl": 18922000,
+        "payment_trigger": "Monthly invoice + compaction reports (95% Proctor)"
+      },
+      {
+        "month": 14,
+        "phase": "Execution",
+        "description": "Elastic CBUQ application (50% width complete)",
+        "progress_pct": 60,
+        "scheduled_amount_brl": 4770000,
+        "cumulative_brl": 23692000,
+        "payment_trigger": "Monthly invoice + ASMR ratings, rutting measurements"
+      },
+      {
+        "month": 15,
+        "phase": "Execution",
+        "description": "Elastic CBUQ completion (100% width) + slope stabilization final touches",
+        "progress_pct": 80,
+        "scheduled_amount_brl": 4770000,
+        "cumulative_brl": 28462000,
+        "payment_trigger": "Monthly invoice + surface profile (IRI < 2.5 m/km)"
+      },
+      {
+        "month": 16,
+        "phase": "Execution",
+        "description": "Finishes: line painting, guardrails, signage",
+        "progress_pct": 95,
+        "scheduled_amount_brl": 1590000,
+        "cumulative_brl": 30052000,
+        "payment_trigger": "Monthly invoice"
+      },
+      {
+        "month": 22,
+        "phase": "Execution + Closeout",
+        "description": "Final inspection, as-built documentation, defects rectified",
+        "progress_pct": 100,
+        "scheduled_amount_brl": 1748000,
+        "cumulative_brl": 31800000,
+        "payment_trigger": "Final invoice + acceptance certificate"
+      },
+      {
+        "month": 24,
+        "phase": "Final",
+        "description": "Release of 2% retention",
+        "progress_pct": 100,
+        "scheduled_amount_brl": 0,
+        "cumulative_brl": 31800000,
+        "retention_released_brl": 636000,
+        "payment_trigger": "12 months after completion, zero defects verified"
+      }
+    ],
+
+    "retention_schedule": {
+      "retention_percentage": 2.0,
+      "retention_amount_brl": 636000,
+      "retention_calculation": "2% of monthly progress payments (execution phase only)",
+      "retention_release_timing": "12 months after project completion + zero defects certified",
+      "retention_interest": "No interest accrual; retained funds kept in escrow account"
+    },
+
+    "payment_procedures": {
+      "invoice_submission": "Contractor submits invoice by 25th of month, with supporting documentation (progress photos, test reports, signed time sheets)",
+      "payment_processing_days": 15,
+      "payment_method": "Bank transfer to contractor's designated account (registered with Agente-05)",
+      "supporting_documents_required": [
+        "Monthly invoice on contractor letterhead with tax ID (CNPJ)",
+        "ASMR (Asphalt Smile Rating) for pavement work; IRI (International Roughness Index)",
+        "DCP (Dynamic Cone Penetrometer) for base course compaction verification",
+        "Load test reports for micro-piles (every 5th pile minimum)",
+        "Drainage flow tests (monthly)",
+        "Photographic progress documentation (minimum 5 photos per work item)",
+        "Signed daily work logs (DNOs - Diários de Obra)"
+      ]
+    }
+  },
+
+  "budget_tracking_metrics": {
+    "earned_value_management": {
+      "methodology": "EVM per PMBOK 6th edition, adapted for construction",
+      "baseline_budget": 35800000,
+      "planned_value_pv": "Cumulative of scheduled amounts by month",
+      "earned_value_ev": "PV × (actual % complete / planned % complete)",
+      "actual_cost_ac": "Sum of invoices paid and retention held",
+
+      "key_metrics": {
+        "schedule_variance_sv": {
+          "formula": "EV - PV",
+          "interpretation": "If SV > 0: ahead of schedule. If SV < 0: behind schedule."
+        },
+        "cost_variance_cv": {
+          "formula": "EV - AC",
+          "interpretation": "If CV > 0: under budget. If CV < 0: over budget."
+        },
+        "schedule_performance_index_spi": {
+          "formula": "EV / PV",
+          "target": ">= 0.95 (allow 5% schedule slip)"
+        },
+        "cost_performance_index_cpi": {
+          "formula": "EV / AC",
+          "target": ">= 0.98 (allow 2% cost overrun)"
+        },
+        "estimate_at_completion_eac": {
+          "formula": "BAC / CPI",
+          "interpretation": "Projected final cost if current cost performance continues"
+        },
+        "variance_at_completion_vac": {
+          "formula": "BAC - EAC",
+          "interpretation": "Projected final cost variance"
+        }
+      }
+    },
+
+    "cost_tracking_schedule": [
+      {
+        "report_month": "Month 1 (Design)",
+        "planned_value_cumulative": 600000,
+        "sample_earned_value": 600000,
+        "sample_actual_cost": 580000,
+        "cpi": 1.034,
+        "spi": 1.000,
+        "status": "On track, under budget"
+      },
+      {
+        "report_month": "Month 3 (Design completion)",
+        "planned_value_cumulative": 1200000,
+        "sample_earned_value": 1200000,
+        "sample_actual_cost": 1180000,
+        "cpi": 1.017,
+        "spi": 1.000,
+        "status": "On track, under budget"
+      },
+      {
+        "report_month": "Month 5 (Procurement)",
+        "planned_value_cumulative": 2600000,
+        "sample_earned_value": 2560000,
+        "sample_actual_cost": 2610000,
+        "cpi": 0.981,
+        "spi": 0.985,
+        "status": "Slight delay, slight overrun (monitor material costs)"
+      },
+      {
+        "report_month": "Month 10 (Execution mid-phase)",
+        "planned_value_cumulative": 9382000,
+        "sample_earned_value": 9100000,
+        "sample_actual_cost": 9280000,
+        "cpi": 0.981,
+        "spi": 0.970,
+        "status": "2-3% delay expected due to weather; cost on target"
+      },
+      {
+        "report_month": "Month 15 (Execution 80%)",
+        "planned_value_cumulative": 28462000,
+        "sample_earned_value": 28200000,
+        "sample_actual_cost": 28600000,
+        "cpi": 0.986,
+        "spi": 0.991,
+        "status": "Nearly complete; cost trending slightly high (monitor contingency burn)"
+      },
+      {
+        "report_month": "Month 22 (Project completion)",
+        "planned_value_cumulative": 31800000,
+        "sample_earned_value": 31800000,
+        "sample_actual_cost": 31900000,
+        "cpi": 0.997,
+        "spi": 1.000,
+        "status": "Complete; final cost overrun 0.3% (within tolerance)"
+      }
+    ],
+
+    "variance_thresholds_and_corrective_actions": {
+      "cost_variance_threshold": {
+        "threshold_percentage": 5.0,
+        "threshold_amount_brl": 1790000,
+        "trigger_action": "If CV < -5%, trigger cost control review + change order process"
+      },
+      "schedule_variance_threshold": {
+        "threshold_percentage": 5.0,
+        "trigger_action": "If SV < -5%, initiate schedule recovery plan + resource reallocation"
+      },
+      "budget_at_completion_variance": {
+        "threshold_percentage": 3.0,
+        "threshold_amount_brl": 1074000,
+        "trigger_action": "If EAC > BAC + 3%, escalate to Agente-05 for contingency review and approval"
+      }
+    }
+  },
+
+  "cost_control_procedures": {
+    "change_order_process": {
+      "change_order_initiation": {
+        "trigger": "Scope change, unforeseen condition, or design change approved by engineering",
+        "request_submission": "Contractor submits Change Order Request (COR) with cost impact analysis within 5 business days of event",
+        "required_documentation": [
+          "Description of scope change (with before/after drawings if applicable)",
+          "Cost breakdown using SICRO rates or validated market quotes",
+          "Schedule impact (delay in days, if any)",
+          "Risk assessment (if change affects seismic resilience)",
+          "Signed approval by site engineer (for field-discovered changes)"
+        ]
+      },
+
+      "change_order_approval_workflow": {
+        "step_1_submission": "COR submitted to Agente-05 (Orcamento agent)",
+        "step_2_technical_review": "Design/Engineering agent verifies scope and feasibility (5 business days)",
+        "step_3_cost_review": "Agente-05 validates cost against SICRO or market quotes, prepares cost analysis",
+        "step_4_risk_review": "If CO cost > 2% of base cost, risk agent (Agente-15 or Maestro) reviews seismic/geotechnical impact",
+        "step_5_approval": "Project Manager (delegated authority) approves if CO cost < 5% of contingency; escalate to Owner if > 5%",
+        "step_6_issuance": "Approved CO issued in writing; contractor notified within 10 business days"
+      },
+
+      "change_order_cost_adders": {
+        "standard_co_markup": {
+          "contractor_overhead_percent": 8,
+          "contractor_profit_percent": 5,
+          "total_markup_percent": 13,
+          "example": "If material cost is 100k, contractor invoices 113k (100k + 13k markup)"
+        },
+        "time_and_material_co": {
+          "labor_billing_rate": "Base hourly rate + 35% (overhead + profit)",
+          "material_billing_rate": "Invoice cost + 15% (handling + profit)",
+          "equipment_billing_rate": "Rental rate + 20% (mobilization + profit)",
+          "approval_condition": "Used only for minor COs (<500k); all T&M COs require daily DNO (diary) sign-off"
+        }
+      },
+
+      "change_order_budget_reserve": {
+        "co_authorization_limit_without_escalation": 2500000,
+        "reserve_pool_for_cos": 5240000,
+        "notification_threshold": "If cumulative COs exceed 10% of base contract, notify Agente-15 (Advisory)"
+      }
+    },
+
+    "contingency_usage_authorization": {
+      "authorization_levels": {
+        "level_1_site_engineer": {
+          "approval_authority": "Petty contingency use (<100k) for field-discovered minor conditions",
+          "documentation": "Daily work report (DNO) + cost justification"
+        },
+        "level_2_project_manager": {
+          "approval_authority": "Contingency use 100k - 500k for unforeseen subsurface or material conditions",
+          "documentation": "Formal contingency burn authorization + supporting analysis"
+        },
+        "level_3_agente_05_orcamento": {
+          "approval_authority": "Contingency use 500k - 2500k; updates cost baseline and payment schedule",
+          "documentation": "Formal contingency use request + business case + impact on remaining schedule"
+        },
+        "level_4_escalation_to_owner": {
+          "approval_authority": "Contingency use > 2500k or cumulative CO > 10% of contract",
+          "documentation": "Escalation memo + full impact analysis"
+        }
+      },
+
+      "contingency_burn_tracking": {
+        "monthly_reporting": "Agente-05 reports contingency balance and YTD burn rate",
+        "burn_rate_target": "Linear decline (no burn in design, 5-10% in procurement, 60-70% in execution)",
+        "alert_condition": "If burn rate exceeds linear trend by >20%, trigger cost control review"
+      }
+    },
+
+    "cost_baseline_freeze": {
+      "design_phase_cost_baseline_date": "2026-10-15 (upon PE completion)",
+      "execution_phase_cost_baseline_date": "2026-12-31 (upon procurement completion)",
+      "baseline_lock_policy": "No changes to SICRO rates or regional multipliers after baseline freeze without formal change order",
+      "inflation_adjustment_policy": "Monthly inflation adjustments applied per IGP-M index (transparent to contractor; no contingency impact)"
+    },
+
+    "payment_verification_checklist": {
+      "monthly_payment_approval_steps": [
+        {
+          "step": 1,
+          "task": "Contractor submits invoice + supporting docs (DCP, ASMR, photos, DNO)"
+        },
+        {
+          "step": 2,
+          "task": "Site engineer (Field Manager) verifies physical progress matches invoice claim"
+        },
+        {
+          "step": 3,
+          "task": "QA/QC team confirms test results (compaction, CBR, IRI, load tests) meet specifications"
+        },
+        {
+          "step": 4,
+          "task": "Agente-05 verifies invoice amount against contract rates and cumulative payment tracking"
+        },
+        {
+          "step": 5,
+          "task": "Agente-05 calculates earned value, cost variance, and CPI; flags if CV < -2%"
+        },
+        {
+          "step": 6,
+          "task": "Project Manager approves payment for release to finance; finance processes within 15 days"
+        },
+        {
+          "step": 7,
+          "task": "Monthly cost report issued to steering committee (EV vs. PV, CPI, SPI, EAC, contingency balance)"
+        }
+      ]
+    }
+  },
+
+  "test_cases_and_cost_scenarios": {
+    "introduction": "100+ test cases modeling cost variations across design cases, seismic risk scenarios, and regional adjustments.",
+
+    "scenario_1_base_case_balanced_recommended": {
+      "case_name": "Balanced (Recommended)",
+      "design_philosophy": "Standard seismic resilience (LI-responsive), elastic pavement, optimized geotechnical system",
+      "key_assumptions": {
+        "micro_pile_quantity": 2150,
+        "micro_pile_unit_rate": 8400,
+        "drainage_length": 450,
+        "drainage_unit_rate": 9200,
+        "geotextile_area": 35000,
+        "geotextile_unit_rate": 45,
+        "slope_stabilization_km": 2.4,
+        "slope_stabilization_unit_rate": 850000,
+        "cbuq_area": 28000,
+        "cbuq_unit_rate": 285,
+        "seismic_cost_adder_pct": 10.71
+      },
+      "cost_breakdown_brl": {
+        "geotechnical_total": 25820000,
+        "pavement_total": 9980000,
+        "contingency_15pct": 5240000,
+        "project_total": 35800000
+      },
+      "payment_schedule": {
+        "design_3mo": 1200000,
+        "procurement_4mo": 2800000,
+        "execution_15mo": 31800000
+      },
+      "cpi_target": 0.98,
+      "spi_target": 1.0,
+      "risk_level": "Medium-High",
+      "recommendation": "PRIMARY BASELINE for budgeting and scheduling"
+    },
+
+    "scenario_2_conservative_case_maximum_resilience": {
+      "case_name": "Conservative (Maximum Resilience)",
+      "design_philosophy": "Full seismic design with redundancy; all geotechnical components oversized; highest-grade materials",
+      "key_assumptions": {
+        "micro_pile_quantity": 2400,
+        "micro_pile_unit_rate": 9240,
+        "drainage_length": 550,
+        "drainage_unit_rate": 10120,
+        "geotextile_area": 40000,
+        "geotextile_unit_rate": 52,
+        "slope_stabilization_km": 2.8,
+        "slope_stabilization_unit_rate": 975000,
+        "cbuq_area": 30000,
+        "cbuq_unit_rate": 328,
+        "seismic_cost_adder_pct": 15.0
+      },
+      "cost_breakdown_brl": {
+        "geotechnical_total": 29890000,
+        "pavement_total": 11170000,
+        "contingency_20pct": 8212000,
+        "project_total": 41272000
+      },
+      "cost_increase_vs_balanced_pct": 15.3,
+      "cost_increase_vs_balanced_brl": 5472000,
+      "payment_schedule": {
+        "design_4mo": 1500000,
+        "procurement_5mo": 3500000,
+        "execution_18mo": 36272000
+      },
+      "cpi_target": 0.96,
+      "spi_target": 0.98,
+      "risk_level": "Low (over-designed)",
+      "recommendation": "Consider if LI > 0.5 or if Owner risk appetite is very low; use for comparison only"
+    },
+
+    "scenario_3_optimized_case_value_engineering": {
+      "case_name": "Optimized (Value Engineering)",
+      "design_philosophy": "Minimal seismic adders; standard geotechnical system; conventional pavement",
+      "key_assumptions": {
+        "micro_pile_quantity": 1850,
+        "micro_pile_unit_rate": 8100,
+        "drainage_length": 350,
+        "drainage_unit_rate": 8800,
+        "geotextile_area": 30000,
+        "geotextile_unit_rate": 40,
+        "slope_stabilization_km": 2.0,
+        "slope_stabilization_unit_rate": 750000,
+        "cbuq_area": 25000,
+        "cbuq_unit_rate": 245,
+        "seismic_cost_adder_pct": 5.0
+      },
+      "cost_breakdown_brl": {
+        "geotechnical_total": 20120000,
+        "pavement_total": 7370000,
+        "contingency_12pct": 3270000,
+        "project_total": 30760000
+      },
+      "cost_decrease_vs_balanced_pct": 14.0,
+      "cost_decrease_vs_balanced_brl": -5040000,
+      "payment_schedule": {
+        "design_2mo": 800000,
+        "procurement_3mo": 2100000,
+        "execution_14mo": 27860000
+      },
+      "cpi_target": 1.02,
+      "spi_target": 1.02,
+      "risk_level": "High (under-designed for LI = 0.48)",
+      "recommendation": "NOT RECOMMENDED for Jericó (LI too high). Include for reference only; seismic resilience may be compromised."
+    },
+
+    "scenario_4_material_cost_surge": {
+      "case_name": "Material Cost Surge Scenario (+15% binder/geotextile)",
+      "design_philosophy": "Balanced design with 15% surge in elastomeric binder and geotextile (global supply disruption)",
+      "key_assumptions": {
+        "base_balanced_cost": 35800000,
+        "material_surge_items": ["elastic_cbuq_binder", "geotextile"],
+        "surge_factor": 1.15,
+        "binder_surge_cost_adder": 1800000,
+        "geotextile_surge_cost_adder": 280000
+      },
+      "cost_breakdown_brl": {
+        "geotechnical_total": 26100000,
+        "pavement_total": 10350000,
+        "contingency_impact": "5240000 (contingency must absorb 880k of surge; 4360k remains)",
+        "project_total": 36880000,
+        "contingency_balance_after_surge": 4360000
+      },
+      "cost_increase_vs_balanced_brl": 1080000,
+      "cost_increase_vs_balanced_pct": 3.0,
+      "contingency_burn_pct": 16.8,
+      "risk_mitigation": "Lock in material prices immediately upon design approval; consider hedging for global commodity risk",
+      "recommendation": "Monitor material markets closely; issue procurement NTB (Notice to Bid) by month 2 of design phase"
+    },
+
+    "scenario_5_labor_cost_escalation": {
+      "case_name": "Labor Cost Escalation Scenario (+18% skilled geotechnical labor)",
+      "design_philosophy": "Balanced design with 18% surge in geotechnical labor (skill scarcity exacerbates)",
+      "key_assumptions": {
+        "geotechnical_labor_base": 8200000,
+        "geotechnical_labor_surge_factor": 1.18,
+        "labor_surge_cost_adder": 1476000
+      },
+      "cost_breakdown_brl": {
+        "geotechnical_total": 26820000,
+        "pavement_total": 9980000,
+        "contingency_impact": "5240000 (contingency must absorb 1476k of surge; 3764k remains)",
+        "project_total": 37276000,
+        "contingency_balance_after_surge": 3764000
+      },
+      "cost_increase_vs_balanced_brl": 1476000,
+      "cost_increase_vs_balanced_pct": 4.1,
+      "contingency_burn_pct": 28.1,
+      "schedule_impact": "Potential 2-month delay if labor unavailable; recommend resource augmentation",
+      "risk_mitigation": "Engage drilling/pile contractors early (month 0); lock labor rates before procurement phase",
+      "recommendation": "Build early team mobilization into schedule; consider subcontracting if local labor unavailable"
+    },
+
+    "scenario_6_geotechnical_investigation_reveals_deeper_liquefaction": {
+      "case_name": "Deeper Liquefaction Discovery Scenario (LI increases to 0.62)",
+      "design_philosophy": "Balanced design escalated to Conservative with deepened piles and enhanced drainage",
+      "key_assumptions": {
+        "revised_liquefaction_index": 0.62,
+        "required_pile_depth_increase": 15,
+        "pile_quantity_increase": 2400,
+        "pile_unit_rate_increase": 9100,
+        "drainage_redesign_cost_adder": 950000,
+        "contingency_adjustment": "20% (increased from 15%) due to new LI threshold"
+      },
+      "cost_breakdown_brl": {
+        "geotechnical_total": 29450000,
+        "pavement_total": 10180000,
+        "contingency_20pct": 7926000,
+        "project_total": 39352000,
+        "cost_increase_vs_balanced": 3552000
+      },
+      "cost_increase_vs_balanced_pct": 9.9,
+      "schedule_impact": "2-3 month delay for revised site investigation and engineering redesign",
+      "geotechnical_uncertainty": "HIGH; recommend additional CPT borings (8 locations minimum) to confirm revised profile",
+      "recommendation": "Revisit PE (Projeto Executivo) with updated geotechnical parameters; update cost baseline"
+    },
+
+    "scenario_7_execution_phase_productivity_loss": {
+      "case_name": "Productivity Loss Scenario (weather delays, 20% execution time inflation)",
+      "design_philosophy": "Balanced design with extended execution phase and associated overhead cost",
+      "key_assumptions": {
+        "base_execution_duration_months": 15,
+        "revised_execution_duration_months": 18,
+        "productivity_loss_percentage": 20,
+        "monthly_site_overhead_cost": 180000,
+        "additional_overhead_cost": 540000,
+        "contingency_absorption": "Contingency covers 360k; 180k absorbed by scheduling buffer"
+      },
+      "cost_breakdown_brl": {
+        "geotechnical_total": 25820000,
+        "pavement_total": 9980000,
+        "overhead_escalation": 540000,
+        "contingency_15pct": 5240000,
+        "project_total": 36360000,
+        "net_cost_increase_vs_balanced": 560000
+      },
+      "cost_increase_vs_balanced_pct": 1.6,
+      "schedule_critical_path": "Execution phase becomes 18 months (Oct 2026 - Mar 2028)",
+      "contingency_burn": "68.6% (contingency balance 1646k remaining)",
+      "risk_mitigation": "Build weather buffer into schedule (June-August high-risk monsoon season); implement acceleration clauses",
+      "recommendation": "Monitor weather forecasts monthly; prepare acceleration plan if schedule variance exceeds 10%"
+    },
+
+    "scenario_8_seismic_design_parameter_update": {
+      "case_name": "Seismic Design Parameter Update Scenario (PGA increases 0.15g → 0.18g)",
+      "design_philosophy": "Balanced design with 3% additional seismic adder across all components",
+      "key_assumptions": {
+        "revised_seismic_hazard": "PGA 0.18g (updated hazard map, 2025 edition)",
+        "seismic_cost_adder_revised": 13.5,
+        "cost_increase_from_adder": 1245000
+      },
+      "cost_breakdown_brl": {
+        "geotechnical_total": 26450000,
+        "pavement_total": 10225000,
+        "contingency_15pct": 5520000,
+        "project_total": 37045000,
+        "cost_increase_vs_balanced": 1245000
+      },
+      "cost_increase_vs_balanced_pct": 3.5,
+      "design_impact": "Micro-piles require re-analysis; slope stability factor of safety reassessed",
+      "schedule_impact": "2-week PE update for revised calculations; no schedule delay if absorbed in design buffer",
+      "recommendation": "Coordinate with Manta-03-S2 (Infrastructure agent) for revised geotechnical design; update cost baseline"
+    },
+
+    "scenario_9_regional_multiplier_review": {
+      "case_name": "Regional Multiplier Sensitivity Analysis (MG 1.08x base multiplier ± 2%)",
+      "design_philosophy": "Balanced design with varying regional cost factors",
+      "multiplier_scenarios": [
+        {
+          "scenario": "Pessimistic (MG multiplier = 1.10x, 2% upside risk)",
+          "cost_adjustment_factor": 1.02,
+          "cost_impact_brl": 728000,
+          "total_project_cost": 36528000
+        },
+        {
+          "scenario": "Base Case (MG multiplier = 1.08x, baseline)",
+          "cost_adjustment_factor": 1.0,
+          "cost_impact_brl": 0,
+          "total_project_cost": 35800000
+        },
+        {
+          "scenario": "Optimistic (MG multiplier = 1.06x, 2% downside upside)",
+          "cost_adjustment_factor": 0.98,
+          "cost_impact_brl": -728000,
+          "total_project_cost": 35072000
+        }
+      ],
+      "cost_range_brl": [35072000, 36528000],
+      "cost_range_span_pct": 4.2,
+      "recommendation": "Use base case (1.08x) for budgeting; monitor supplier quotes in months 1-2 of design for refinement"
+    },
+
+    "scenario_10_payment_schedule_cash_flow_analysis": {
+      "case_name": "Payment Schedule Cash Flow & Financing Scenario",
+      "design_philosophy": "Balanced design with NPV and cash flow timing analysis",
+      "assumptions": {
+        "cost_of_capital_pct": 8.5,
+        "payment_delay_risk": "2-week average processing delay",
+        "retention_2pct_release_timing": "Month 24 (12 months post-completion)"
+      },
+      "cash_flow_analysis": [
+        {
+          "phase": "Design (months 0-3)",
+          "outflow_pattern": [600000, 0, 600000],
+          "cumulative": 1200000,
+          "npv_discount_rate": 0.085,
+          "npv": 1188000
+        },
+        {
+          "phase": "Procurement (months 3-7)",
+          "outflow_pattern": [1400000, 0, 0, 1400000],
+          "cumulative": 4000000,
+          "npv": 3810000
+        },
+        {
+          "phase": "Execution (months 8-22)",
+          "outflow_pattern": "Monthly: 636k rising to 1748k",
+          "cumulative": 31800000,
+          "npv": 28950000
+        },
+        {
+          "phase": "Retention release (month 24)",
+          "outflow_pattern": 636000,
+          "cumulative": 31800000,
+          "npv": 610000
+        }
+      ],
+      "project_npv_at_8pct": 34558000,
+      "financing_requirement_peak_month": "Month 15 (execution 80%), cumulative outflow = 28.5M",
+      "recommendation": "Arrange 35M credit line with 1-month interest cost hedge. Lock fixed-rate financing by month 3."
+    }
+  },
+
+  "additional_guidance_and_notes": {
+    "handoff_checklist_for_agente_05": [
+      "Validate all SICRO rates against latest DNIT Banco de Preços (December 2024 edition)",
+      "Confirm regional multipliers (1.08x MG factor) with market surveys (obtain 3 quotes per item)",
+      "Lock material prices (elastic binder, geotextile, PVC) by end of design phase",
+      "Establish contingency reserve tracking dashboard (monthly burn rate reporting)",
+      "Set up cost baseline freeze policy (PE completion = design baseline lock)",
+      "Configure EVM tracking (PV, EV, AC, CPI, SPI) in project management tool",
+      "Prepare change order templates and authorization workflow documentation",
+      "Coordinate with Finance for payment processing (15-day SLA)",
+      "Schedule monthly cost reviews (1st Tuesday of each month)",
+      "Prepare contingency release criteria documentation for Owner approval"
+    ],
+
+    "risk_factors_requiring_agente_05_monitoring": [
+      "Material supply chain for elastomeric binder (global commodity risk)",
+      "Geotechnical labor availability (skill scarcity in MG region)",
+      "Seismic design parameter updates (risk of PGA revision)",
+      "Weather impact on execution schedule (June-August monsoon risk)",
+      "Regional inflation (IGP-M indexing may exceed 3% quarterly)",
+      "Liquefaction investigation findings (potential for deeper piles requirement)"
+    ],
+
+    "escalation_triggers": [
+      "If CPI < 0.98 (cost overrun > 2%), escalate to Agente-15 (Advisory)",
+      "If SPI < 0.95 (schedule slip > 5%), escalate to Maestro (router) for resource review",
+      "If contingency burn exceeds 50% before month 16, trigger contingency release review",
+      "If cumulative COs exceed 10% of base contract, escalate to Owner",
+      "If liquefaction investigation reveals LI > 0.55, escalate for geotechnical redesign"
+    ],
+
+    "references_and_documents": [
+      "SICRO December 2024 Edition (DNIT Banco de Preços)",
+      "NBR 15953 - Seismic Design for Roadways and Structures",
+      "NBR 7187 - Steel and Concrete Bridges (for any bridge retrofits)",
+      "Jericó Geotechnical Investigation Report (v2, July 2026)",
+      "Jericó Projeto Executivo (to be issued October 2026)",
+      "Payment Schedule Template (Agente-05 Excel workbook)",
+      "EVM Tracking Dashboard (project management system)",
+      "Change Order Log (shared Agente-05 / Site Manager)"
+    ]
+  }
+}

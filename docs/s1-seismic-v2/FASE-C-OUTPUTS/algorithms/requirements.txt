@@ -1,0 +1,35 @@
+# Core Dependencies
+numpy>=1.21.0              # Numerical computations (core algorithm math)
+
+# Testing & Quality Assurance
+pytest>=7.0.0              # Unit testing framework
+pytest-cov>=3.0.0          # Coverage analysis
+pytest-benchmark>=3.4.0    # Performance benchmarking
+pytest-timeout>=2.1.0      # Timeout handling for long tests
+pytest-xdist>=2.5.0        # Parallel test execution (optional)
+
+# Code Quality & Linting
+black>=22.0.0              # Code formatting
+isort>=5.10.0              # Import sorting
+pylint>=2.12.0             # Static code analysis
+flake8>=4.0.0              # PEP8 compliance
+mypy>=0.930                # Static type checking
+
+# Security
+bandit>=1.7.4              # Security issue detection
+safety>=1.10.0             # Dependency vulnerability scanning
+
+# Documentation
+sphinx>=4.5.0              # Documentation generation
+sphinx-rtd-theme>=1.0.0    # ReadTheDocs theme
+sphinx-autodoc-typehints>=1.18.0  # Type hints in docs
+
+# CI/CD & Deployment
+wheel>=0.37.0              # Package building
+twine>=3.4.0               # PyPI uploads (if publishing)
+
+# Development utilities
+ipython>=7.0.0             # Enhanced interactive shell
+jupyter>=1.0.0             # Jupyter notebooks (optional)
+matplotlib>=3.4.0          # Plotting (for result visualization)
+pandas>=1.3.0              # Data manipulation (for CSV export)
