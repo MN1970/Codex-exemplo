@@ -1,8 +1,8 @@
-# Observability Scripts — Manta Maestro v4.2
+# Observability Scripts — Manta Maestro v5.0
 
-Conjunto de 4 scripts Python para observabilidade e validação do Maestro (Manta 00) e agentes verticais (S1-S10).
+Conjunto de scripts Python para observabilidade, RAG e validação do Maestro (Manta 00) e agentes verticais (S1-S10).
 
-**Versão**: 1.0.0  
+**Versão**: 2.0.0 (com R6 Reranker)  
 **Data**: 2026-07-25  
 **Status**: Production Ready  
 
@@ -16,6 +16,8 @@ Conjunto de 4 scripts Python para observabilidade e validação do Maestro (Mant
 | `audit_agents.py` | Auditoria de divergência vs CLAUDE.md | `.claude/agents/*.md` | HTML/CSV/JSON | 0/1 |
 | `eval_routing.py` | Avalia acurácia de roteamento | `tests/routing/prompts.md` | JSON/CSV | 0/1 |
 | `init_rag_golden_set.py` | Cria 50 QA pairs para baseline RAG | Templates (hardcoded) | CSV + JSON | 0/1 |
+| `rag_reranker.py` | R6 — Cross-encoder Sonnet 5 para RAG | JSON (query + chunks) | JSON (reranked top-5) | 0/1 |
+| `eval_reranker_impact.py` | Avalia impacto de reranking em routing | `tests/routing/prompts.md` | JSON (A/B comparison) | 0/1 |
 
 ---
 
@@ -232,6 +234,169 @@ qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",
 
 ---
 
+### 5. `rag_reranker.py` — R6 Reranker (Sonnet 5 Cross-Encoder)
+
+**Objetivo**: Implementar R6 — reranking de top-20 chunks para top-5 usando Sonnet 5 cross-encoding.
+
+**Execução**:
+```bash
+# Rerank single query
+python scripts/rag_reranker.py \
+  --input examples/reranker_input_example.json \
+  --output rag_evals/reranker_output.json \
+  --top-k 5
+
+# Batch reranking (lista de queries)
+python scripts/rag_reranker.py \
+  --input batch_queries.json \
+  --batch \
+  --verbose
+
+# Com cache desabilitado
+python scripts/rag_reranker.py \
+  --input query.json \
+  --no-cache
+
+# Avaliar impacto em routing accuracy
+python scripts/rag_reranker.py \
+  --input query.json \
+  --eval-routing
+```
+
+**Input Format** (`examples/reranker_input_example.json`):
+```json
+{
+  "query": "Como dimensionar ETA completo para 200k habitantes?",
+  "chunks": [
+    {
+      "chunk_id": "san_001",
+      "text": "ETA inclui coagulação, decantação, filtração...",
+      "source": "NBR 12211:2022",
+      "bm25_score": 0.95
+    },
+    ...
+  ]
+}
+```
+
+**Output Format**:
+```json
+{
+  "query": "...",
+  "reranked_chunks": [
+    {
+      "chunk_id": "san_001",
+      "text": "...",
+      "source": "NBR 12211:2022",
+      "score": 0.98,
+      "rank": 1,
+      "reasoning": "Responde diretamente sobre dimensionamento"
+    },
+    ...
+  ],
+  "metrics": {
+    "latency_ms": 234.5,
+    "tokens_used": {"input": 1200, "output": 450},
+    "cache_hit": false,
+    "score_distribution": {
+      "min": 0.45,
+      "max": 0.98,
+      "mean": 0.75,
+      "stdev": 0.18
+    },
+    "top_k": 5
+  }
+}
+```
+
+**Componentes**:
+
+| Classe | Função | Notas |
+|--------|--------|-------|
+| `SonnetCrossEncoder` | Wrapper para Sonnet 5 prompt | Batch processing, fallback mock |
+| `RerankerCache` | Cache em memória com TTL | 7 dias TTL, hit rate tracking |
+| `RAGReranker` | Orquestrador principal | Batch rerank, métricas, stats |
+
+**Prompt engineering (Sonnet 5)**:
+- Contexto: Explica tarefa de reranking
+- Query: Pergunta original do usuário
+- Chunks: Lista de 20 chunks com ID, fonte, score BM25
+- Critérios: Score 0.0-1.0 com guidelines
+- Output: JSON estruturado {rankings: [{chunk_id, score, reasoning}]}
+
+**Métricas**:
+- Latência: ~200-300ms por reranking (Sonnet 5)
+- Cache hit rate: Típico 20-40% em workload repetitivo
+- Score distribution: Min/Max/Mean/Stdev dos scores retornados
+- Throughput: ~3-5 queries/segundo (single-threaded)
+
+**Casos de uso**:
+- Melhorar relevância dos chunks entregues ao agente
+- A/B testing: BM25 alone vs BM25+reranker
+- Integração com eval_routing.py (medir impacto em routing accuracy)
+- Fine-tuning de queries RAG críticas
+
+**Environment**:
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+---
+
+### 6. `eval_reranker_impact.py` — A/B Testing de Reranking
+
+**Objetivo**: Medir impacto do R6 reranker na acurácia de roteamento Maestro.
+
+**Execução**:
+```bash
+# Avalia impacto
+python scripts/eval_reranker_impact.py --verbose
+
+# Com test prompts customizados
+python scripts/eval_reranker_impact.py \
+  --test-prompts custom_prompts.md \
+  --output-dir rag_evals
+```
+
+**Output**:
+```json
+{
+  "evaluation_date": "2026-07-25T...",
+  "total_prompts": 30,
+  "baseline": {
+    "correct": 24,
+    "accuracy": 0.80,
+    "latency_mean_ms": 150.2,
+    "latency_p95_ms": 230.5
+  },
+  "with_reranker": {
+    "correct": 27,
+    "accuracy": 0.90,
+    "latency_mean_ms": 385.7,
+    "latency_p95_ms": 420.3
+  },
+  "impact": {
+    "accuracy_improvement": 10.0,
+    "latency_overhead_ms": 235.5,
+    "is_improvement": true
+  },
+  "detailed_results": [...]
+}
+```
+
+**Interpretação**:
+- `accuracy_improvement`: % de melhoria na routing accuracy
+- `latency_overhead_ms`: Custo adicional em latência
+- Trade-off: Accuracy vs Latency (típico: +10-15% acurácia, +200-300ms latência)
+
+**Casos de uso**:
+- Validar efetividade do reranker
+- Justificar custo adicional de Sonnet 5
+- A/B testing de diferentes cross-encoders
+- Benchmark antes/depois de atualizações
+
+---
+
 ## Ordem de Execução Recomendada
 
 ### Startup (quando novo agente é deployado):
@@ -243,12 +408,34 @@ python scripts/sp_healthcheck.py > /tmp/health.json
 python scripts/audit_agents.py --divergence-threshold 0
 if [ $? -ne 0 ]; then echo "Agents not synced!"; exit 1; fi
 
-# 3. Avalia roteamento
+# 3. Avalia roteamento (baseline sem reranker)
 python scripts/eval_routing.py
 if [ $? -ne 0 ]; then echo "Routing accuracy < 80%"; exit 1; fi
 
 # 4. Inicializa golden set (uma única vez ou update periódico)
 python scripts/init_rag_golden_set.py
+
+# 5. Avalia impacto de reranking (novo)
+python scripts/eval_reranker_impact.py
+# Verifica se improvement > 5% antes de ativar em produção
+```
+
+### RAG + Reranking Pipeline (novo v5.0):
+```bash
+# Teste de reranker com exemplo
+python scripts/rag_reranker.py \
+  --input examples/reranker_input_example.json \
+  --output rag_evals/reranker_output.json \
+  --verbose
+
+# Batch reranking
+python scripts/rag_reranker.py \
+  --input batch_queries.json \
+  --batch \
+  --eval-routing
+
+# Avalia impacto de reranking em routing accuracy
+python scripts/eval_reranker_impact.py --verbose
 ```
 
 ### CI/CD Integration:
@@ -354,15 +541,21 @@ python scripts/init_rag_golden_set.py --seed 999 --num-pairs 100
 | `audit_agents.py` | 0.1-0.2s | I/O local | Lê 5 arquivos .md + CLAUDE.md |
 | `eval_routing.py` | 2-5s | I/O + mock router | 30 prompts × ~100ms cada |
 | `init_rag_golden_set.py` | 0.5s | I/O | Gera CSV + JSON, sem I/O remoto |
+| `rag_reranker.py` | 200-300ms | Anthropic API (Sonnet 5) | 1 query × 20 chunks; cache hit = <50ms |
+| `eval_reranker_impact.py` | 10-15s | eval_routing.py + reranker | 30 prompts × (baseline + reranking) |
 
 ---
 
 ## Versionamento
 
-**Versão dos scripts**: 1.0.0  
-**Compatível com CLAUDE.md**: v4.2 (2026-07-05)  
+**Versão dos scripts**: 2.0.0 (com R6 Reranker)  
+**Compatível com CLAUDE.md**: v5.0 (2026-07-25)  
 **Python**: 3.8+  
-**Última atualização**: 2026-07-25  
+**Últimas adições**: rag_reranker.py, eval_reranker_impact.py (2026-07-25)  
+
+**Histórico**:
+- v2.0.0 (2026-07-25): R6 Reranker + eval_reranker_impact
+- v1.0.0 (2026-07-25): Base (4 scripts)
 
 ---
 

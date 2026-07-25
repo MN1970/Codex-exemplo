@@ -41,7 +41,7 @@ import argparse
 import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 import re
 import shutil
 

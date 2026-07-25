@@ -70,7 +70,7 @@ AGENT_TEMPLATE = """## {{ agent.codigo }} — {{ agent.nome | upper }}
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
-- **Aliases principais:** {{ agent.aliases | join(', ') }}
+- **Aliases principais:** {{ ', '.join(agent.aliases) if agent.aliases else 'N/A' }}
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** {% if agent.rag_collection %}{{ agent.rag_collection }}{% else %}N/A (horizontal){% endif %}
 
@@ -105,20 +105,14 @@ Roteia automaticamente para este agente se o usuário menciona:
 {% if agent.ciclo_vida %}
 Este agente suporta as seguintes fases de um projeto:
 
-{% for i, fase in enumerate([
-    ('Estudo prévio / EVTE', 'Diagnóstico, benchmarking, análise preliminar'),
-    ('Projeto básico', 'Conceitos, layouts, orçamento order-of-magnitude'),
-    ('Projeto executivo', 'Detalhamento, especificações, cronograma vinculante'),
-    ('Obra em execução', 'Acompanhamento, desvios, revisões de escopo'),
-    ('Operação & manutenção', 'Gestão de ativo, indicadores, OPEX'),
-    ('Processo competitivo / licitação', 'Edital, termo de referência, avaliação'),
-    ('Due diligence / M&A', 'Auditoria financeira, ambiental, legal, riscos'),
-    ('Encerramento / descomissionamento', 'Final de vida útil, passivos, reabilitação')
-], 1) %}
-{% if i in agent.ciclo_vida or fase[0] in agent.ciclo_vida %}
-{{ i }}. **{{ fase[0] }}** — {{ fase[1] }}
-{% endif %}
-{% endfor %}
+1. **Estudo prévio / EVTE** — Diagnóstico, benchmarking, análise preliminar
+2. **Projeto básico** — Conceitos, layouts, orçamento order-of-magnitude
+3. **Projeto executivo** — Detalhamento, especificações, cronograma vinculante
+4. **Obra em execução** — Acompanhamento, desvios, revisões de escopo
+5. **Operação & manutenção** — Gestão de ativo, indicadores, OPEX
+6. **Processo competitivo / licitação** — Edital, termo de referência, avaliação
+7. **Due diligence / M&A** — Auditoria financeira, ambiental, legal, riscos
+8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
 ```json
@@ -136,7 +130,7 @@ Este agente é **horizontal** (transversal) e não suporta ciclo de vida especí
 
 Palavras-chave que acionam este agente automaticamente:
 ```
-{{ agent.trigger_phrases | join(' | ') }}
+{{ ' | '.join(agent.trigger_phrases) if agent.trigger_phrases else 'N/A' }}
 ```
 
 ### Exemplos de Prompts (Golden Set)
@@ -152,8 +146,8 @@ Palavras-chave que acionam este agente automaticamente:
 
 ### Tiering Automático (R7)
 
-- **Entrada típica:** {{ 1500 if agent.tier_default == 'Haiku' else 4000 if agent.tier_default == 'Sonnet' else 8000 }} tokens
-- **Complexity score típica:** {{ 2.0 if agent.tier_default == 'Haiku' else 4.0 if agent.tier_default == 'Sonnet' else 6.0 }}
+- **Entrada típica:** {% if agent.tier_default == 'Haiku' %}1500{% elif agent.tier_default == 'Sonnet' %}4000{% else %}8000{% endif %} tokens
+- **Complexity score típica:** {% if agent.tier_default == 'Haiku' %}2.0{% elif agent.tier_default == 'Sonnet' %}4.0{% else %}6.0{% endif %}
 - **Fallback:** {{ agent.tier_default }} → Sonnet → Opus (se timeout > 60s)
 - **Custo estimado:** {% if agent.tier_default == 'Haiku' %}~$0.08/1M tokens{% elif agent.tier_default == 'Sonnet' %}~$3/1M tokens{% else %}~$15/1M tokens{% endif %}
 
@@ -180,7 +174,7 @@ Se timeout em {{ agent.tier_default }}:
 Este agente roteia automaticamente para pasta no SharePoint:
 - **Site:** Manta.net
 - **Drive:** Projetos
-- **Pasta:** {% if agent.category == 'vertical' %}03_Projetos/{{ agent.nome | replace('agente-', '') | title }}/{% if 'Saneamento' in agent.descricao %}2026-AySA{% elif 'Energia' in agent.descricao %}ANEEL-2026{% elif 'Portos' in agent.descricao %}ANTAQ{% elif 'Aeroportos' in agent.descricao %}ANAC-2026{% elif 'Barragens' in agent.descricao %}ICOLD-Registry{% elif 'Rodovias' in agent.descricao %}SICRO-2026{% elif 'OAE' in agent.descricao %}Estruturas{% elif 'Ferrovia' in agent.descricao %}Via-Permanente{% else %}Linha4-L5{% endif %}{% else %}05_{{ agent.nome | title }}{% endif %}
+- **Pasta sugerida:** 03_Projetos/{{ agent.nome | replace('agente-', '') | title }} ou 05_{{ agent.nome | title }}
 - **Tier acesso:** {{ 'Editor' if agent.category == 'vertical' else 'Viewer' }}
 
 ### Feedback Loop (R9)
