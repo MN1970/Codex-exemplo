@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-07-24T17:47:56.329213",
+  "test_suites": [
+    {
+      "name": "Entity Extraction",
+      "tests": [
+        {
+          "test": "Extract All Entities",
+          "status": "PASS",
+          "details": "Extracted 19 entity types"
+        },
+        {
+          "test": "Extract by Layer",
+          "status": "PASS",
+          "details": "Extracted 1 entities from 'rodovia-eixo'"
+        }
+      ]
+    },
+    {
+      "name": "Layer Analysis",
+      "tests": [
+        {
+          "test": "Get Layer Info",
+          "status": "FAIL",
+          "details": "Invalid DXF attribute \"frozen\" for entity LAYER"
+        },
+        {
+          "test": "Get Layer Hierarchy",
+          "status": "FAIL",
+          "details": "Invalid DXF attribute \"frozen\" for entity LAYER"
+        }
+      ]
+    },
+    {
+      "name": "Coordinate Extraction",
+      "tests": [
+        {
+          "test": "Extract Coordinates & Bounds",
+          "status": "PASS",
+          "details": "Extracted 43 coords, bbox=450.0x191.0"
+        },
+        {
+          "test": "Validate Coordinates",
+          "status": "FAIL",
+          "details": "setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (56,) + inhomogeneous part."
+        }
+      ]
+    },
+    {
+      "name": "Anomaly Detection",
+      "tests": [
+        {
+          "test": "Detect Anomalies",
+          "status": "FAIL",
+          "details": "setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (56,) + inhomogeneous part."
+        }
+      ]
+    },
+    {
+      "name": "Export Formats",
+      "tests": [
+        {
+          "test": "Export JSON",
+          "status": "FAIL",
+          "details": "Invalid DXF attribute \"frozen\" for entity LAYER"
+        },
+        {
+          "test": "Export CSV",
+          "status": "PASS",
+          "details": "Exported to output/ponte_export.csv"
+        },
+        {
+          "test": "Export GeoJSON",
+          "status": "PASS",
+          "details": "Exported to output/ferrovia_export.geojson"
+        }
+      ]
+    },
+    {
+      "name": "Batch Processing",
+      "tests": [
+        {
+          "test": "Batch Parse DXF",
+          "status": "FAIL",
+          "details": "Processed 0 files"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_tests": 11,
+    "passed": 5,
+    "failed": 6,
+    "skipped": 0
+  }
+}
