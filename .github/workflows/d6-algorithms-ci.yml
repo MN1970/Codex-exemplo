@@ -67,12 +67,13 @@ jobs:
         pytest test_d6_algorithms.py::TestIntegration::test_jerico_complete_workflow \
           -v --tb=short
 
-    - name: Publish test results
-      uses: EnricoMi/publish-unit-test-result-action@v2
+    - name: Report test summary
       if: always()
-      with:
-        files: test-results.xml
-        check_name: Test Results (${{ matrix.python-version }})
+      run: |
+        echo "Test execution completed for Python ${{ matrix.python-version }}"
+        if [ -f test-results.xml ]; then
+          echo "Test results file generated: test-results.xml"
+        fi
 
   performance:
     name: Performance & Stress Tests
