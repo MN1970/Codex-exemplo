@@ -99,9 +99,11 @@ jobs:
     - name: Run performance tests
       run: |
         cd docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms
-        pytest test_d6_algorithms.py::TestPerformance -v \
+        python -m pytest test_d6_algorithms.py::TestPerformance -v \
           --tb=short \
-          --timeout=30
+          --timeout=30 \
+          --capture=no
+      continue-on-error: false
 
   lint:
     name: Code Quality (Black, isort, Pylint)
