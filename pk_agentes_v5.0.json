@@ -1,0 +1,348 @@
+{
+  "version": "5.0",
+  "timestamp": "2026-07-25T12:00:00Z",
+  "description": "Primary Key — Fonte única de verdade para agent_id, tipos e mapeamento de fases",
+  "agents": [
+    {
+      "agent_id": "M00",
+      "nome": "Maestro",
+      "tipo": "router",
+      "tier_default": "haiku->sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Orquestrador central, roteia para S* e M*"
+    },
+    {
+      "agent_id": "M01",
+      "nome": "Claims",
+      "tipo": "funcional",
+      "tier_default": "opus",
+      "fases_suportadas": [1, 2, 3],
+      "ativo": true,
+      "observacao": "Legado 02-C, reclassificado"
+    },
+    {
+      "agent_id": "M02",
+      "nome": "Contratual",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [2, 3, 6, 7],
+      "ativo": true,
+      "observacao": "Legado 02"
+    },
+    {
+      "agent_id": "M03",
+      "nome": "Contratual-supp",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [2, 3, 6, 7],
+      "ativo": false,
+      "observacao": "Roadmap - novo"
+    },
+    {
+      "agent_id": "M04",
+      "nome": "Imobiliário",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 7],
+      "ativo": true,
+      "observacao": "Legado 04"
+    },
+    {
+      "agent_id": "M05",
+      "nome": "Orçamento",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [2, 3, 4],
+      "ativo": true,
+      "observacao": "Legado 05"
+    },
+    {
+      "agent_id": "M06",
+      "nome": "Modelagem",
+      "tipo": "funcional",
+      "tier_default": "sonnet/opus",
+      "fases_suportadas": [1, 2, 3],
+      "ativo": true,
+      "observacao": "Legado 06"
+    },
+    {
+      "agent_id": "M07",
+      "nome": "Cronograma",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [2, 3, 4, 5],
+      "ativo": true,
+      "observacao": "Legado 07"
+    },
+    {
+      "agent_id": "M08",
+      "nome": "[TBD]",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "M09",
+      "nome": "[TBD]",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "M10",
+      "nome": "[TBD]",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "M11",
+      "nome": "[TBD]",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "M12",
+      "nome": "[TBD]",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "M13",
+      "nome": "Business Development",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [6, 7],
+      "ativo": true,
+      "observacao": "Legado 13"
+    },
+    {
+      "agent_id": "M14",
+      "nome": "Apresentações",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 6],
+      "ativo": true,
+      "observacao": "Legado 14"
+    },
+    {
+      "agent_id": "M15",
+      "nome": "Advisory",
+      "tipo": "funcional",
+      "tier_default": "sonnet/opus",
+      "fases_suportadas": [1, 2, 3, 6, 7],
+      "ativo": true,
+      "observacao": "Legado 15 — resolveu colisão com manta-arquiteto-ia"
+    },
+    {
+      "agent_id": "M16",
+      "nome": "Arquiteto-IA",
+      "tipo": "funcional",
+      "tier_default": "opus",
+      "fases_suportadas": [1, 2, 3, 7],
+      "ativo": true,
+      "observacao": "Novo codigo para manta-arquiteto-ia (era M15)"
+    },
+    {
+      "agent_id": "M17",
+      "nome": "[TBD]",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "M18",
+      "nome": "[TBD]",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "M19",
+      "nome": "[TBD]",
+      "tipo": "funcional",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "S01",
+      "nome": "Rodovias",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Migrado de 03-S1"
+    },
+    {
+      "agent_id": "S02",
+      "nome": "OAE (Pontes e Viadutos)",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Migrado de 03-S2"
+    },
+    {
+      "agent_id": "S03",
+      "nome": "Ferrovia",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Migrado de 03-S3; conhecimento invisível ao RAG (S3)"
+    },
+    {
+      "agent_id": "S04",
+      "nome": "Metrô",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Migrado de 03-S4"
+    },
+    {
+      "agent_id": "S05",
+      "nome": "Túneis",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": false,
+      "observacao": "Migrado de 03-S5; roadmap (coberto por S2+S4)"
+    },
+    {
+      "agent_id": "S06",
+      "nome": "Portos",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Novo em v4.2 (jul 2026)"
+    },
+    {
+      "agent_id": "S07",
+      "nome": "Aeroportos",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Novo em v4.2 (jul 2026)"
+    },
+    {
+      "agent_id": "S08",
+      "nome": "Saneamento",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Novo em v4.2 (jul 2026) — PRIORIDADE AySA"
+    },
+    {
+      "agent_id": "S09",
+      "nome": "Energia (Transmissão)",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Novo em v4.2 (jul 2026) — ANEEL/State Grid; conhecimento invisível ao RAG (S3)"
+    },
+    {
+      "agent_id": "S10",
+      "nome": "Barragens",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ativo": true,
+      "observacao": "Novo em v4.2 (jul 2026); conhecimento invisível ao RAG (S3)"
+    },
+    {
+      "agent_id": "S11",
+      "nome": "[TBD]",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "S12",
+      "nome": "[TBD]",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    },
+    {
+      "agent_id": "S13",
+      "nome": "[TBD]",
+      "tipo": "setorial",
+      "tier_default": "sonnet",
+      "fases_suportadas": [],
+      "ativo": false,
+      "observacao": "Roadmap"
+    }
+  ],
+  "skills_registry": [
+    {
+      "skill_id": "aluci-guard",
+      "nome": "Aluci Guard",
+      "tipo": "validador",
+      "descricao": "Detecta alucinações em normas, URLs, DOIs, SICRO"
+    },
+    {
+      "skill_id": "consist-guard",
+      "nome": "Consist Guard",
+      "tipo": "validador",
+      "descricao": "Auditoria de coerência intra e inter-documento"
+    },
+    {
+      "skill_id": "context-guardian",
+      "nome": "Context Guardian",
+      "tipo": "validador",
+      "descricao": "Controle de contexto e confidencialidade"
+    }
+  ],
+  "mapeamento_legado": {
+    "02-C": "M01",
+    "02": "M02",
+    "04": "M04",
+    "05": "M05",
+    "06": "M06",
+    "07": "M07",
+    "13": "M13",
+    "14": "M14",
+    "15": "M15",
+    "03-S1": "S01",
+    "03-S2": "S02",
+    "03-S3": "S03",
+    "03-S4": "S04",
+    "03-S5": "S05",
+    "03-S6": "S06",
+    "03-S7": "S07",
+    "03-S8": "S08",
+    "03-S9": "S09",
+    "03-S10": "S10",
+    "03-S11": "S11",
+    "03-S12": "S12",
+    "03-S13": "S13"
+  }
+}
