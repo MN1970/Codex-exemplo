@@ -216,16 +216,19 @@ def test_reranker_stats():
     print("Test 8: Reranker statistics...")
     reranker = RAGReranker()
 
-    query = "Test"
+    query = "Test Unique Query 123"
     chunks = [{"chunk_id": "c1", "text": "Text", "source": "Src", "bm25_score": 0.9}]
 
+    # First call: cache miss and rerank
     reranker.rerank(query, chunks)
-    reranker.rerank(query, chunks)  # Cache hit
+    # Second call: cache hit (same query + chunks) - does not count as rerank
+    reranker.rerank(query, chunks)
 
     stats = reranker.stats()
 
-    assert stats["total_reranks"] == 2
-    assert stats["cache_hits"] == 1
+    # total_reranks only counts actual reranks (not cache hits)
+    assert stats["total_reranks"] == 1, f"Expected 1 total rerank (cache hit doesn't count), got {stats['total_reranks']}"
+    assert stats["cache_hits"] == 1, f"Expected 1 cache hit, got {stats['cache_hits']}"
     assert "latency_stats" in stats
     assert stats["latency_stats"]["count"] >= 1
 
