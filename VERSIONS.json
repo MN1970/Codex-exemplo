@@ -4,7 +4,7 @@
   "agent_skills": {
     "maestro": {
       "v5.0": {
-        "checksum": "d3a2f1c8e4b7a9d1f2c3e4b5a6d7e8f9",
+        "checksum": "a462c4bb4c3c33352b0931ffc10652fd",
         "pinned_by": ["prod"],
         "file": ".claude/agents/maestro.v5.0.md",
         "created_at": "2026-07-25T14:32:00Z",
@@ -20,7 +20,7 @@
     },
     "agente-saneamento": {
       "v5.0": {
-        "checksum": "f1a3d2b4c5e7a8b9c1d2e3f4a5b6c7d8",
+        "checksum": "3435f9cb8fa04b0048457010ff5c448a",
         "pinned_by": ["prod"],
         "file": ".claude/agents/agente-saneamento.v5.0.md",
         "created_at": "2026-07-25T14:32:00Z",
@@ -38,7 +38,7 @@
     },
     "agente-energia": {
       "v5.0": {
-        "checksum": "e2b5c3a1d6f4e7c8b9a1d2e3f4a5b6c7",
+        "checksum": "d8ca1b2bbc318c1ae987d772c426213e",
         "pinned_by": ["prod"],
         "file": ".claude/agents/agente-energia.v5.0.md",
         "created_at": "2026-07-25T14:32:00Z",
@@ -56,7 +56,7 @@
     },
     "agente-portos": {
       "v5.0": {
-        "checksum": "b7d3e5a2f1c4a6b8d1e3f5a7c9e1b3d5",
+        "checksum": "de56705e8f1bb369782468b549bbc0ca",
         "pinned_by": ["prod"],
         "file": ".claude/agents/agente-portos.v5.0.md",
         "created_at": "2026-07-25T14:32:00Z",
@@ -73,7 +73,7 @@
     },
     "agente-aeroportos": {
       "v5.0": {
-        "checksum": "a8e1f3c2d4b6a7e9c1d3f5a7b9e1c3d5",
+        "checksum": "b392e63c04110e987910fa39f2fa0ef8",
         "pinned_by": ["prod"],
         "file": ".claude/agents/agente-aeroportos.v5.0.md",
         "created_at": "2026-07-25T14:32:00Z",
@@ -90,7 +90,7 @@
     },
     "agente-barragens": {
       "v5.0": {
-        "checksum": "d3c4a2f5b1e6a8c9d2e4f6a8c1d3e5f7",
+        "checksum": "13c5e3ed80ff0a10f11e16f91ee3963c",
         "pinned_by": ["prod"],
         "file": ".claude/agents/agente-barragens.v5.0.md",
         "created_at": "2026-07-25T14:32:00Z",
