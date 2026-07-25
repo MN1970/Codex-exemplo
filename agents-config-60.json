@@ -1,0 +1,430 @@
+{
+  "version": "5.0.0",
+  "timestamp": "2026-07-22T00:00:00Z",
+  "total_agents": 60,
+  "description": "Manta Maestro — 60 Agentes IA com Orchestração em Paralelo",
+
+  "eixo_1_horizontais": {
+    "count": 11,
+    "description": "Agentes transversais a todos os segmentos",
+    "agents": [
+      {
+        "id": "manta-00",
+        "name": "maestro",
+        "aliases": ["router", "manta-router"],
+        "speciality": "Intake + routing semântico",
+        "tier": "Haiku→Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 1,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8]
+      },
+      {
+        "id": "manta-01",
+        "name": "claims",
+        "aliases": ["02-C", "manta-claims"],
+        "speciality": "Reclamações / sinistros / garantias",
+        "tier": "Opus",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 2,
+        "phase_support": [4, 5, 8]
+      },
+      {
+        "id": "manta-02",
+        "name": "contratual",
+        "aliases": ["manta-02"],
+        "speciality": "Contratos, RDC, concorrências",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 2,
+        "phase_support": [2, 3, 6, 7]
+      },
+      {
+        "id": "manta-04",
+        "name": "imobiliario",
+        "aliases": ["manta-04"],
+        "speciality": "Propriedades, zoneamento, ocupação",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 7, 8]
+      },
+      {
+        "id": "manta-05",
+        "name": "orcamento",
+        "aliases": ["manta-05"],
+        "speciality": "Custos, composições, licitação",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 6, 7]
+      },
+      {
+        "id": "manta-06",
+        "name": "modelagem",
+        "aliases": ["manta-06"],
+        "speciality": "BIM, análise estrutural, simulação",
+        "tier": "Sonnet/Opus",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 3,
+        "phase_support": [2, 3, 4]
+      },
+      {
+        "id": "manta-07",
+        "name": "cronograma",
+        "aliases": ["manta-07"],
+        "speciality": "Planejamento, sequência, recursos",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 2,
+        "phase_support": [3, 4, 5]
+      },
+      {
+        "id": "manta-13",
+        "name": "bd",
+        "aliases": ["business-dev"],
+        "speciality": "Oportunidades, pipeline, negociação",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 7]
+      },
+      {
+        "id": "manta-14",
+        "name": "apresentacoes",
+        "aliases": ["manta-14-pptx"],
+        "speciality": "Decks, relatórios executivos, pitch",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 6, 7]
+      },
+      {
+        "id": "manta-15",
+        "name": "advisory",
+        "aliases": ["advisory"],
+        "speciality": "Estratégia, direcionamento, valor",
+        "tier": "Sonnet/Opus",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 3,
+        "phase_support": [1, 7]
+      },
+      {
+        "id": "manta-16",
+        "name": "arquiteto-ia",
+        "aliases": ["manta-16-arq"],
+        "speciality": "Design de workflows, orquestração",
+        "tier": "Opus",
+        "status": "✅ Operacional",
+        "rag_access": ["san:", "ene:", "por:", "aer:", "bar:"],
+        "concurrency_weight": 1,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8]
+      }
+    ]
+  },
+
+  "eixo_2_verticais_por_segmento": {
+    "count": 9,
+    "description": "Especialistas setoriais (S1-S4, S6-S10)",
+    "agents": [
+      {
+        "id": "manta-03-s1",
+        "name": "agente-infraestrutura-s1",
+        "segment": "S1",
+        "segment_name": "Rodovias",
+        "speciality": "Pavimentação, terraplenagem, drenagem, DNIT",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["rod:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8]
+      },
+      {
+        "id": "manta-03-s2",
+        "name": "agente-infraestrutura-s2",
+        "segment": "S2",
+        "segment_name": "OAE",
+        "speciality": "Estruturas, fundações, cálculo estrutural",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["oae:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8]
+      },
+      {
+        "id": "manta-03-s3",
+        "name": "agente-infraestrutura-s3",
+        "segment": "S3",
+        "segment_name": "Ferrovia",
+        "speciality": "Via permanente, sinalização, estações",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["fer:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8]
+      },
+      {
+        "id": "manta-03-s4",
+        "name": "agente-infraestrutura-s4",
+        "segment": "S4",
+        "segment_name": "Metrô",
+        "speciality": "Estações, túneis, sistemas, sinalização",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["met:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8]
+      },
+      {
+        "id": "manta-03-s6",
+        "name": "agente-portos",
+        "segment": "S6",
+        "segment_name": "Portos",
+        "speciality": "Terminais, berços, dragagem, contêineres",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["por:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8],
+        "priority": "média"
+      },
+      {
+        "id": "manta-03-s7",
+        "name": "agente-aeroportos",
+        "segment": "S7",
+        "segment_name": "Aeroportos",
+        "speciality": "Pistas, taxiways, TPS, TECA, balizamento",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["aer:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8],
+        "priority": "média"
+      },
+      {
+        "id": "manta-03-s8",
+        "name": "agente-saneamento",
+        "segment": "S8",
+        "segment_name": "Saneamento",
+        "speciality": "ETA, ETE, adutoras, distribuição",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["san:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8],
+        "priority": "🔴 ALTA (AYSÁ)",
+        "update_frequency": "Mensal"
+      },
+      {
+        "id": "manta-03-s9",
+        "name": "agente-energia",
+        "segment": "S9",
+        "segment_name": "Energia",
+        "speciality": "Transmissão (LT), subestações, geração",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["ene:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8],
+        "priority": "🔴 ALTA (ANEEL)",
+        "update_frequency": "Semanal"
+      },
+      {
+        "id": "manta-03-s10",
+        "name": "agente-barragens",
+        "segment": "S10",
+        "segment_name": "Barragens",
+        "speciality": "Barragens, vertedouro, rejeitos, descomissionamento",
+        "tier": "Sonnet",
+        "status": "✅ Operacional",
+        "rag_access": ["bar:"],
+        "concurrency_weight": 2,
+        "phase_support": [1, 2, 3, 4, 5, 6, 7, 8],
+        "priority": "média",
+        "update_frequency": "Trimestral"
+      }
+    ]
+  },
+
+  "eixo_3_especializados_por_fase": {
+    "count": 40,
+    "description": "8 sub-agentes por segmento vertical (5 segmentos S6-S10 = 40 agentes)",
+    "structure": "Cada segmento vertical tem um agente especializado em cada fase do ciclo de vida",
+    "phases": [
+      { "phase": 1, "name": "estudo-previo", "description": "Pré-viabilidade, EVTE, conceitual" },
+      { "phase": 2, "name": "projeto-basico", "description": "Definição de soluções, custos estimados" },
+      { "phase": 3, "name": "projeto-executivo", "description": "Detalhamento completo, especificações" },
+      { "phase": 4, "name": "obra-execucao", "description": "Supervisão de implantação, fiscalização" },
+      { "phase": 5, "name": "operacao-manutencao", "description": "Gestão de ativo em funcionamento" },
+      { "phase": 6, "name": "licitacao-competicao", "description": "Edital, concorrência, RDC" },
+      { "phase": 7, "name": "due-diligence-ma", "description": "Avaliação para transação" },
+      { "phase": 8, "name": "encerramento", "description": "Descomissionamento, desativação" }
+    ],
+    "segments_with_subagents": [
+      {
+        "segment": "S6",
+        "segment_name": "Portos",
+        "prefix": "por:",
+        "subagents": [
+          { "id": "manta-03-s6-p1", "phase": 1, "name": "agente-portos-estudo-previo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s6-p2", "phase": 2, "name": "agente-portos-projeto-basico", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s6-p3", "phase": 3, "name": "agente-portos-projeto-executivo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s6-p4", "phase": 4, "name": "agente-portos-obra", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s6-p5", "phase": 5, "name": "agente-portos-operacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s6-p6", "phase": 6, "name": "agente-portos-licitacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s6-p7", "phase": 7, "name": "agente-portos-due-diligence", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s6-p8", "phase": 8, "name": "agente-portos-encerramento", "tier": "Sonnet", "concurrency_weight": 2 }
+        ]
+      },
+      {
+        "segment": "S7",
+        "segment_name": "Aeroportos",
+        "prefix": "aer:",
+        "subagents": [
+          { "id": "manta-03-s7-p1", "phase": 1, "name": "agente-aeroportos-estudo-previo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s7-p2", "phase": 2, "name": "agente-aeroportos-projeto-basico", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s7-p3", "phase": 3, "name": "agente-aeroportos-projeto-executivo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s7-p4", "phase": 4, "name": "agente-aeroportos-obra", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s7-p5", "phase": 5, "name": "agente-aeroportos-operacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s7-p6", "phase": 6, "name": "agente-aeroportos-licitacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s7-p7", "phase": 7, "name": "agente-aeroportos-due-diligence", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s7-p8", "phase": 8, "name": "agente-aeroportos-encerramento", "tier": "Sonnet", "concurrency_weight": 2 }
+        ]
+      },
+      {
+        "segment": "S8",
+        "segment_name": "Saneamento",
+        "prefix": "san:",
+        "priority": "🔴 ALTA (AYSÁ)",
+        "update_frequency": "Mensal",
+        "subagents": [
+          { "id": "manta-03-s8-p1", "phase": 1, "name": "agente-saneamento-estudo-previo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s8-p2", "phase": 2, "name": "agente-saneamento-projeto-basico", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s8-p3", "phase": 3, "name": "agente-saneamento-projeto-executivo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s8-p4", "phase": 4, "name": "agente-saneamento-obra", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s8-p5", "phase": 5, "name": "agente-saneamento-operacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s8-p6", "phase": 6, "name": "agente-saneamento-licitacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s8-p7", "phase": 7, "name": "agente-saneamento-due-diligence", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s8-p8", "phase": 8, "name": "agente-saneamento-encerramento", "tier": "Sonnet", "concurrency_weight": 2 }
+        ]
+      },
+      {
+        "segment": "S9",
+        "segment_name": "Energia",
+        "prefix": "ene:",
+        "priority": "🔴 ALTA (ANEEL)",
+        "update_frequency": "Semanal",
+        "subagents": [
+          { "id": "manta-03-s9-p1", "phase": 1, "name": "agente-energia-estudo-previo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s9-p2", "phase": 2, "name": "agente-energia-projeto-basico", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s9-p3", "phase": 3, "name": "agente-energia-projeto-executivo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s9-p4", "phase": 4, "name": "agente-energia-obra", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s9-p5", "phase": 5, "name": "agente-energia-operacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s9-p6", "phase": 6, "name": "agente-energia-licitacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s9-p7", "phase": 7, "name": "agente-energia-due-diligence", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s9-p8", "phase": 8, "name": "agente-energia-encerramento", "tier": "Sonnet", "concurrency_weight": 2 }
+        ]
+      },
+      {
+        "segment": "S10",
+        "segment_name": "Barragens",
+        "prefix": "bar:",
+        "priority": "média",
+        "update_frequency": "Trimestral",
+        "subagents": [
+          { "id": "manta-03-s10-p1", "phase": 1, "name": "agente-barragens-estudo-previo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s10-p2", "phase": 2, "name": "agente-barragens-projeto-basico", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s10-p3", "phase": 3, "name": "agente-barragens-projeto-executivo", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s10-p4", "phase": 4, "name": "agente-barragens-obra", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s10-p5", "phase": 5, "name": "agente-barragens-operacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s10-p6", "phase": 6, "name": "agente-barragens-licitacao", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s10-p7", "phase": 7, "name": "agente-barragens-due-diligence", "tier": "Sonnet", "concurrency_weight": 2 },
+          { "id": "manta-03-s10-p8", "phase": 8, "name": "agente-barragens-encerramento", "tier": "Sonnet", "concurrency_weight": 2 }
+        ]
+      }
+    ]
+  },
+
+  "rag_collections": {
+    "count": 5,
+    "collections": [
+      {
+        "prefix": "san:",
+        "name": "Saneamento",
+        "segments": ["S8"],
+        "estimated_documents": 200,
+        "sources": ["SNIS", "IWA", "NBR 12211-12218", "Lei 14.026", "BNDES editais"],
+        "priority": "🔴 ALTA (AYSÁ)",
+        "update_frequency": "Mensal",
+        "status": "Planejado"
+      },
+      {
+        "prefix": "ene:",
+        "name": "Energia",
+        "segments": ["S9"],
+        "estimated_documents": 300,
+        "sources": ["ANEEL editais", "R1-R5 EPE", "ONS", "IEEE", "State Grid"],
+        "priority": "🔴 ALTA (ANEEL)",
+        "update_frequency": "Semanal",
+        "status": "Planejado"
+      },
+      {
+        "prefix": "por:",
+        "name": "Portos",
+        "segments": ["S6"],
+        "estimated_documents": 150,
+        "sources": ["ANTAQ", "PIANC", "BNDES", "editais ANTAQ"],
+        "priority": "🟡 Média",
+        "update_frequency": "Semestral",
+        "status": "Planejado"
+      },
+      {
+        "prefix": "aer:",
+        "name": "Aeroportos",
+        "segments": ["S7"],
+        "estimated_documents": 120,
+        "sources": ["ANAC/RBAC", "ICAO Annex 14", "FAA ACs"],
+        "priority": "🟡 Média",
+        "update_frequency": "Semestral",
+        "status": "Planejado"
+      },
+      {
+        "prefix": "bar:",
+        "name": "Barragens",
+        "segments": ["S10"],
+        "estimated_documents": 180,
+        "sources": ["ICOLD", "CBDB", "SIGBM", "Lei 12.334"],
+        "priority": "🟡 Média",
+        "update_frequency": "Trimestral",
+        "status": "Planejado"
+      }
+    ]
+  },
+
+  "parallelization": {
+    "max_concurrent_agents": 20,
+    "total_available_agents": 60,
+    "batching_strategy": "Weighted Round-Robin (concurrency_weight)",
+    "orchestration_model": "maestro-parallel.sh",
+    "timeout_per_agent": "30s",
+    "retry_policy": "exponential_backoff (2s, 4s, 8s, 16s)",
+    "monitoring": "Supabase agent_execution_log table"
+  },
+
+  "deployment_status": {
+    "phase_1_agent_specs": "🆕 IN PROGRESS (60 agents defined)",
+    "phase_2_rag_population": "⏳ Scheduled",
+    "phase_3_parallel_orchestration": "⏳ Scheduled",
+    "phase_4_sharepoint_sync": "⏳ Scheduled",
+    "phase_5_monitoring_dashboard": "⏳ Scheduled"
+  }
+}
