@@ -4,8 +4,7 @@ on:
   push:
     branches: [ main, develop, feature/** ]
     paths:
-      - 'seismic_geotechnical_d6_algorithms.py'
-      - 'test_d6_algorithms.py'
+      - 'docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/**'
       - '.github/workflows/d6-algorithms-ci.yml'
   pull_request:
     branches: [ main, develop ]
@@ -40,6 +39,7 @@ jobs:
 
     - name: Run unit tests
       run: |
+        cd docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms
         pytest test_d6_algorithms.py -v \
           --tb=short \
           --timeout=10 \
@@ -48,6 +48,7 @@ jobs:
 
     - name: Run coverage analysis
       run: |
+        cd docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms
         pytest test_d6_algorithms.py \
           --cov=seismic_geotechnical_d6_algorithms \
           --cov-report=xml \
@@ -64,6 +65,7 @@ jobs:
 
     - name: Run integrated tests (Jericó case study)
       run: |
+        cd docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms
         pytest test_d6_algorithms.py::TestIntegration::test_jerico_complete_workflow \
           -v --tb=short
 
@@ -96,6 +98,7 @@ jobs:
 
     - name: Run performance tests
       run: |
+        cd docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms
         pytest test_d6_algorithms.py::TestPerformance -v \
           --benchmark-only \
           --benchmark-json=benchmark.json
@@ -129,16 +132,16 @@ jobs:
         pip install black isort pylint
 
     - name: Check code formatting (Black)
-      run: black --check seismic_geotechnical_d6_algorithms.py test_d6_algorithms.py
+      run: black --check docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/seismic_geotechnical_d6_algorithms.py docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/test_d6_algorithms.py
       continue-on-error: true
 
     - name: Check import sorting (isort)
-      run: isort --check-only seismic_geotechnical_d6_algorithms.py test_d6_algorithms.py
+      run: isort --check-only docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/seismic_geotechnical_d6_algorithms.py docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/test_d6_algorithms.py
       continue-on-error: true
 
     - name: Run pylint analysis
       run: |
-        pylint seismic_geotechnical_d6_algorithms.py \
+        pylint docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/seismic_geotechnical_d6_algorithms.py \
           --fail-under=8.0 \
           --output-format=colorized \
           || true
@@ -162,13 +165,13 @@ jobs:
 
     - name: Run Bandit security scan
       run: |
-        bandit -r seismic_geotechnical_d6_algorithms.py \
+        bandit -r docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/seismic_geotechnical_d6_algorithms.py \
           -f json -o bandit-report.json \
           || true
 
     - name: Check dependencies (Safety)
       run: |
-        pip install -r requirements.txt 2>/dev/null || true
+        pip install -r docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/requirements.txt 2>/dev/null || true
         safety check || true
 
   documentation:
@@ -207,8 +210,8 @@ jobs:
     - name: Prepare test deployment package
       run: |
         mkdir -p deployment/algorithms
-        cp seismic_geotechnical_d6_algorithms.py deployment/algorithms/
-        cp test_d6_algorithms.py deployment/algorithms/
+        cp docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/seismic_geotechnical_d6_algorithms.py deployment/algorithms/
+        cp docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms/test_d6_algorithms.py deployment/algorithms/
         cat > deployment/MANIFEST.txt << 'EOF'
         D6.2-D6.5 Seismic Geotechnical Algorithms
         Deployment Package
