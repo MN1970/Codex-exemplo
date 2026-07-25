@@ -9,13 +9,6 @@
         "file": ".claude/agents/maestro.v5.0.md",
         "created_at": "2026-07-25T14:32:00Z",
         "deprecated_at": null
-      },
-      "v4.9": {
-        "checksum": "c2b1e4d3a6f7c9e1b4d5a8f3c2e7b1d4",
-        "pinned_by": [],
-        "file": ".claude/agents/maestro.v4.9.md",
-        "created_at": "2026-07-15T10:00:00Z",
-        "deprecated_at": "2026-07-25T14:32:00Z"
       }
     },
     "agente-saneamento": {
@@ -27,13 +20,6 @@
         "deprecated_at": null,
         "rag_collection": "san:v5.0:chunks",
         "notes": "PRIORIDADE AySA — projeto Argentina"
-      },
-      "v4.2": {
-        "checksum": "e4c3b2a1f5d6e7c8b9a1d2e3f4a5b6c7",
-        "pinned_by": [],
-        "file": ".claude/agents/agente-saneamento.v4.2.md",
-        "created_at": "2026-07-05T08:00:00Z",
-        "deprecated_at": "2026-07-25T14:32:00Z"
       }
     },
     "agente-energia": {
@@ -45,13 +31,6 @@
         "deprecated_at": null,
         "rag_collection": "ene:v5.0:chunks",
         "notes": "ANEEL e State Grid focus"
-      },
-      "v4.2": {
-        "checksum": "d1a4f3c2b5e6a7d8e9f1a2b3c4d5e6f7",
-        "pinned_by": [],
-        "file": ".claude/agents/agente-energia.v4.2.md",
-        "created_at": "2026-07-05T08:00:00Z",
-        "deprecated_at": "2026-07-25T14:32:00Z"
       }
     },
     "agente-portos": {
@@ -62,13 +41,6 @@
         "created_at": "2026-07-25T14:32:00Z",
         "deprecated_at": null,
         "rag_collection": "por:v5.0:chunks"
-      },
-      "v4.2": {
-        "checksum": "a6c2d4f1b3e5a7c9d1e3f5a7c9e1b3d5",
-        "pinned_by": [],
-        "file": ".claude/agents/agente-portos.v4.2.md",
-        "created_at": "2026-07-05T08:00:00Z",
-        "deprecated_at": "2026-07-25T14:32:00Z"
       }
     },
     "agente-aeroportos": {
@@ -79,13 +51,6 @@
         "created_at": "2026-07-25T14:32:00Z",
         "deprecated_at": null,
         "rag_collection": "aer:v5.0:chunks"
-      },
-      "v4.2": {
-        "checksum": "b9f2e4d1c3a5b7d9e1f3a5c7d9e1b3f5",
-        "pinned_by": [],
-        "file": ".claude/agents/agente-aeroportos.v4.2.md",
-        "created_at": "2026-07-05T08:00:00Z",
-        "deprecated_at": "2026-07-25T14:32:00Z"
       }
     },
     "agente-barragens": {
@@ -96,150 +61,6 @@
         "created_at": "2026-07-25T14:32:00Z",
         "deprecated_at": null,
         "rag_collection": "bar:v5.0:chunks"
-      },
-      "v4.2": {
-        "checksum": "c2b3a1d4e6f8a9b1c3d5e7f9a1b3c5d7",
-        "pinned_by": [],
-        "file": ".claude/agents/agente-barragens.v4.2.md",
-        "created_at": "2026-07-05T08:00:00Z",
-        "deprecated_at": "2026-07-25T14:32:00Z"
-      }
-    },
-    "agente-rodovias": {
-      "v5.0": {
-        "checksum": "f7a3b2c1d4e6a8b9c1d3f5a7b9e1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-rodovias.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null,
-        "rag_collection": "rod:v5.0:chunks"
-      },
-      "v4.9": {
-        "checksum": "e6a2c1d3f5b7a9c1d3e5f7a9b1c3d5e7",
-        "pinned_by": [],
-        "file": ".claude/agents/agente-rodovias.v4.9.md",
-        "created_at": "2026-07-20T12:00:00Z",
-        "deprecated_at": "2026-07-25T14:32:00Z"
-      }
-    },
-    "agente-oae": {
-      "v5.0": {
-        "checksum": "e4c2b3a1f5d7a8b9c1d3e5f7a9b1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-oae.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null,
-        "rag_collection": "oae:v5.0:chunks"
-      }
-    },
-    "agente-ferrovia": {
-      "v5.0": {
-        "checksum": "d5b1a3f2c4e6a8b9c1d3e5f7a9b1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-ferrovia.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null,
-        "rag_collection": "fer:v5.0:chunks"
-      }
-    },
-    "agente-metro": {
-      "v5.0": {
-        "checksum": "c6a2f4b1d3e5a7b9c1d3e5f7a9b1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-metro.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null,
-        "rag_collection": "met:v5.0:chunks"
-      }
-    },
-    "agente-claims": {
-      "v5.0": {
-        "checksum": "c1f4b7d3a2e6a8c9d1e3f5a7c9e1b3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-claims.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-contratual": {
-      "v5.0": {
-        "checksum": "b2e5c3a1f7d4a6b8c1d3e5f7a9b1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-contratual.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-imobiliario": {
-      "v5.0": {
-        "checksum": "a4d7f2c1b3e8a6c9d1e3f5a7b9e1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-imobiliario.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-orcamento": {
-      "v5.0": {
-        "checksum": "f3c8e1a4d2b6a7c9d1e3f5a7b9c1d3e5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-orcamento.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-modelagem": {
-      "v5.0": {
-        "checksum": "e2b5d3a1c4f7a8b9c1d3e5f7a9b1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-modelagem.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-cronograma": {
-      "v5.0": {
-        "checksum": "d1a6f4c2b3e5a7c9d1e3f5a7b9e1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-cronograma.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-bd": {
-      "v5.0": {
-        "checksum": "c3f2a1d5e4b6a7c9d1e3f5a7b9e1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-bd.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-apresentacoes": {
-      "v5.0": {
-        "checksum": "b4e3c1a2f6d5a7c9d1e3f5a7b9e1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-apresentacoes.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-advisory": {
-      "v5.0": {
-        "checksum": "a5d2f3c1b4e7a8c9d1e3f5a7b9e1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-advisory.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
-      }
-    },
-    "agente-arquiteto-ia": {
-      "v5.0": {
-        "checksum": "f6b1e3d5a2c4a8b9c1d3e5f7a9b1c3d5",
-        "pinned_by": ["prod"],
-        "file": ".claude/agents/agente-arquiteto-ia.v5.0.md",
-        "created_at": "2026-07-25T14:32:00Z",
-        "deprecated_at": null
       }
     }
   },
@@ -251,15 +72,7 @@
       "checksum": "a1b2c3d4e5f6a7b8c9d1e2f3a4b5c6d7",
       "n_chunks": 2500,
       "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "SNIS (Ministério das Cidades)",
-        "IWA (International Water Association)",
-        "NBR 12211-12218 (ABNT)",
-        "Lei 14.026/2020",
-        "Editais BNDES saneamento",
-        "AySA documentação"
-      ],
-      "deprecated_at": null
+      "status": "active"
     },
     "ene_v5.0": {
       "prefix": "ene:",
@@ -268,15 +81,7 @@
       "checksum": "b2c3d4e5f6a7b8c9d1e2f3a4b5c6d7e8",
       "n_chunks": 3000,
       "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "ANEEL Editais (transmissão/distribuição)",
-        "EPE R1-R5 (Plano Decenal)",
-        "ONS (Operador Nacional)",
-        "IEEE standards",
-        "ABNT NBR 60909, 61294",
-        "PDE (Plano Decenal de Energia)"
-      ],
-      "deprecated_at": null
+      "status": "active"
     },
     "por_v5.0": {
       "prefix": "por:",
@@ -285,14 +90,7 @@
       "checksum": "c3d4e5f6a7b8c9d1e2f3a4b5c6d7e8f9",
       "n_chunks": 2000,
       "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "ANTAQ (Agência Nacional de Transportes Aquaviários)",
-        "PIANC (Permanent International Association of Navigation Congresses)",
-        "Editais BNDES portos",
-        "ICS (Integrated Container Service)",
-        "Portos do Brasil S.A."
-      ],
-      "deprecated_at": null
+      "status": "active"
     },
     "aer_v5.0": {
       "prefix": "aer:",
@@ -301,14 +99,7 @@
       "checksum": "d4e5f6a7b8c9d1e2f3a4b5c6d7e8f9a0",
       "n_chunks": 1800,
       "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "ANAC (Agência Nacional de Aviação Civil)",
-        "RBAC (Regulamento Brasileiro de Aviação Civil)",
-        "ICAO Annex 14 (Aerodromes)",
-        "FAA Advisory Circulars",
-        "INAC (Instituto Nacional de Aviação Civil Argentina)"
-      ],
-      "deprecated_at": null
+      "status": "active"
     },
     "bar_v5.0": {
       "prefix": "bar:",
@@ -317,85 +108,13 @@
       "checksum": "e5f6a7b8c9d1e2f3a4b5c6d7e8f9a0b1",
       "n_chunks": 2200,
       "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "ICOLD (International Commission on Large Dams)",
-        "CBDB (Comitê Brasileiro de Barragens)",
-        "SIGBM (Sistema de Informações de Barragens)",
-        "Lei 12.334/2010",
-        "COBRAMSEG (Comissão Brasileira de Grandes Barragens)"
-      ],
-      "deprecated_at": null
-    },
-    "rod_v5.0": {
-      "prefix": "rod:",
-      "version": "v5.0",
-      "created_at": "2026-07-25T14:32:00Z",
-      "checksum": "f6a7b8c9d1e2f3a4b5c6d7e8f9a0b1c2",
-      "n_chunks": 4000,
-      "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "DNIT (Departamento Nacional de Infraestrutura de Transportes)",
-        "SICRO (Sistema de Custos Rodoviários)",
-        "ABNT (normas de pavimentação)",
-        "Especificações DNIT",
-        "Casos históricos de rodovias"
-      ],
-      "deprecated_at": null
-    },
-    "oae_v5.0": {
-      "prefix": "oae:",
-      "version": "v5.0",
-      "created_at": "2026-07-25T14:32:00Z",
-      "checksum": "a7b8c9d1e2f3a4b5c6d7e8f9a0b1c2d3",
-      "n_chunks": 2000,
-      "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "NBR 7187 (Projeto de pontes)",
-        "DNIT especificações",
-        "Casos de OAE (Obras de Arte Especiais)",
-        "Estruturas metálicas (normas)",
-        "Estruturas de concreto protendido"
-      ],
-      "deprecated_at": null
-    },
-    "fer_v5.0": {
-      "prefix": "fer:",
-      "version": "v5.0",
-      "created_at": "2026-07-25T14:32:00Z",
-      "checksum": "b8c9d1e2f3a4b5c6d7e8f9a0b1c2d3e4",
-      "n_chunks": 1500,
-      "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "SuperVia (operador ferroviário RJ)",
-        "ABNT (normas ferroviárias)",
-        "Via permanente (especificações)",
-        "Inmetro normas",
-        "Casos ferroviários brasileiros"
-      ],
-      "deprecated_at": null
-    },
-    "met_v5.0": {
-      "prefix": "met:",
-      "version": "v5.0",
-      "created_at": "2026-07-25T14:32:00Z",
-      "checksum": "c9d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5",
-      "n_chunks": 2000,
-      "embedding_model": "intfloat/multilingual-e5-large-instruct",
-      "sources": [
-        "NATM (Novo Método Austríaco de Túneis)",
-        "PSD (Pressuremeter Dilatometer Sleeves)",
-        "Normas metrô (Brasil/Argentina)",
-        "Casos linha 4/5 São Paulo",
-        "VLT (Veículo Leve sobre Trilhos)"
-      ],
-      "deprecated_at": null
+      "status": "active"
     }
   },
   "metadata": {
     "maintainer": "mneves@mantaassociados.com",
     "last_updated": "2026-07-25T14:32:00Z",
-    "grace_period_deprecation_days": 30,
-    "backup_location": "s3://manta-backup/versions/",
-    "changelog_url": "https://github.com/mantaassociados/codex-exemplo/releases"
+    "deployment_status": "ready-for-go-live",
+    "notes": "v5.0 production deployment with 6 core agents (maestro, S8, S9, S6, S7, S10) ready. S1-S5 horizontal agents and legacy versions to be added in Phase 2."
   }
 }
