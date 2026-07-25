@@ -7,3 +7,7 @@ logs/rag-population/
 .rag-phase3-staging*/
 .rag-phase3-mock-chunks.json
 .rag-phase3-deployment-summary.txt
+
+# Draft/proposed files awaiting human approval
+scripts/rag/
+sql/proposed_*.sql
