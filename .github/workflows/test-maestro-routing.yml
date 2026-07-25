@@ -55,19 +55,19 @@ jobs:
 
             # Generate placeholder results
             cat > /tmp/test_results.json <<'EOF'
-          {
-            "tests": [],
-            "metrics": {
-              "total": 0,
-              "passed": 0,
-              "failed": 0,
-              "accuracy_percent": 0,
-              "latency_median_ms": 0,
-              "latency_p95_ms": 0,
-              "latency_max_ms": 0
-            }
-          }
-          EOF
+{
+  "tests": [],
+  "metrics": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "accuracy_percent": 0,
+    "latency_median_ms": 0,
+    "latency_p95_ms": 0,
+    "latency_max_ms": 0
+  }
+}
+EOF
           else
             # Run actual tests
             python scripts/test_routing.py tests/routing/prompts.md --format json --output /tmp/test_results.json
