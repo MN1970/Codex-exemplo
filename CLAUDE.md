@@ -9,38 +9,40 @@ Saneamento, Energia, Barragens).
 
 ---
 
-## MAPA COMPLETO DE AGENTES — 20 agentes, 3 eixos
+## MAPA COMPLETO DE AGENTES — 22 agentes, 2 eixos (taxonomia unificada v5.0)
+
+**STATUS RECONCILIAÇÃO:** v4.2 → v5.0 (2026-07-25) — taxonomia unificada, nomenclatura consolidada, 03-S* → S*.
 
 ### Eixo 1 — Horizontais (transversais a todos os segmentos)
 
 | Código | Agente | Aliases | Tier default | Status |
 |--------|--------|---------|--------------|--------|
-| Manta 00 | maestro (router) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
-| Manta 01 | claims | 02-C, manta-claims | Opus | ✅ Operacional |
-| Manta 02 | contratual | manta-02, contratual | Sonnet | ✅ Operacional |
-| Manta 04 | imobiliario | manta-04 | Sonnet | ✅ Operacional |
-| Manta 05 | orcamento | manta-05 | Sonnet | ✅ Operacional |
-| Manta 06 | modelagem | manta-06 | Sonnet/Opus | ✅ Operacional |
-| Manta 07 | cronograma | manta-07 | Sonnet | ✅ Operacional |
-| Manta 13 | bd | manta-13, business-dev | Sonnet | ✅ Operacional |
-| Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
-| Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
-| Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
+| M00 | maestro (router) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
+| M01 | claims | claims, manta-claims, 02-C | Opus | ✅ Operacional |
+| M02 | contratual | contratual, manta-02 | Sonnet | ✅ Operacional |
+| M03 | bd | business-dev, manta-13 | Sonnet | ✅ Operacional |
+| M04 | imobiliario | imobiliario, manta-04 | Sonnet | ✅ Operacional |
+| M05 | orcamento | orcamento, manta-05 | Sonnet | ✅ Operacional |
+| M06 | modelagem | modelagem, manta-06 | Sonnet/Opus | ✅ Operacional |
+| M07 | cronograma | cronograma, manta-07 | Sonnet | ✅ Operacional |
+| M08 | advisory | advisory, manta-advisory | Sonnet/Opus | ✅ Operacional |
+| M09 | arquiteto-ia | arquiteto-ia, manta-arquiteto | Opus | ✅ Operacional |
+| M10 | apresentacoes | apresentacoes, manta-14-pptx | Sonnet | ✅ Operacional |
 
-### Eixo 2 — Verticais por segmento (C3)
+### Eixo 2 — Setoriais (especializados por segmento)
 
-| Código | Segmento | Agente | Status |
-|--------|----------|--------|--------|
-| Manta 03-S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
-| Manta 03-S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
-| Manta 03-S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
-| Manta 03-S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| Manta 03-S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
-| Manta 03-S6 | Portos | agente-portos | 🆕 Criado 2026-07-05 |
-| Manta 03-S7 | Aeroportos | agente-aeroportos | 🆕 Criado 2026-07-05 |
-| Manta 03-S8 | Saneamento | agente-saneamento | 🆕 Criado 2026-07-05 — PRIORIDADE AySA |
-| Manta 03-S9 | Energia | agente-energia | 🆕 Criado 2026-07-05 — ANEEL/State Grid |
-| Manta 03-S10 | Barragens | agente-barragens | 🆕 Criado 2026-07-05 |
+| Código | Segmento | Agente | Status | Knowledge |
+|--------|----------|--------|--------|-----------|
+| S01 | Rodovias | agente-rodovias | ✅ Operacional | ✅ 9 KEs |
+| S02 | OAE (pontes, viadutos) | agente-oae | ✅ Operacional | ✅ 5 KEs |
+| S03 | Ferrovia | agente-ferrovia | ✅ Operacional | ⚠️ 5 KEs não-vetorizados |
+| S04 | Metrô | agente-metro | ✅ Operacional | ✅ 5 KEs |
+| S05 | Túneis | (coberto por S02/S04) | ⚡ Parcial | — |
+| S06 | Portos | agente-portos | 🆕 2026-07-05 | ⚠️ 0 KEs |
+| S07 | Aeroportos | agente-aeroportos | 🆕 2026-07-05 | ⚠️ 0 KEs |
+| S08 | Saneamento | agente-saneamento | 🆕 2026-07-05 — **PRIORIDADE AySA** | ✅ 7 KEs |
+| S09 | Energia | agente-energia | 🆕 2026-07-05 — ANEEL/State Grid | ⚠️ 5 KEs não-vetorizados |
+| S10 | Barragens | agente-barragens | 🆕 2026-07-05 | ⚠️ 5 KEs não-vetorizados |
 
 ### Eixo 3 — Ciclo de vida (8 fases)
 
@@ -56,38 +58,40 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 
 ---
 
-## ROUTING — Maestro (Manta 00)
+## ROUTING — Maestro (M00)
 
-Regra de roteamento atualizada para Q1 do intake:
+Regra de roteamento unificada com nomenclatura v5.0:
 
 ```
+# Setores prioritários (novos + conhecimento vetorizado)
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
-   → agente-saneamento (S8)
+   → S08 (agente-saneamento) — PRIORIDADE AySA
 
 IF menção a transmissão|LT|subestação|ANEEL|RAP|leilão transmissão|ONS|EPE
-   → agente-energia (S9)
+   → S09 (agente-energia) — ANEEL/State Grid
 
+# Infraestrutura clássica (operacional desde v4.0)
+IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
+   → S01 (agente-rodovias)
+
+IF menção a ponte|viaduto|OAE|NBR 7187|túnel rodoviário|pré-moldado
+   → S02 (agente-oae)
+
+IF menção a ferrovia|trilho|AMV|dormente|via permanente|CPTM|Supervia
+   → S03 (agente-ferrovia)
+
+IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT|transporte de massa
+   → S04 (agente-metro)
+
+# Portos, aeroportos, barragens (novos, sem conhecimento ainda)
 IF menção a porto|terminal|ANTAQ|dragagem|molhe|berço|calado|contêiner|granel
-   → agente-portos (S6)
+   → S06 (agente-portos) — conhecimento em construção
 
 IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
-   → agente-aeroportos (S7)
+   → S07 (agente-aeroportos) — conhecimento em construção
 
 IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
-   → agente-barragens (S10)
-
-# Regras existentes S1-S4 mantidas sem alteração
-IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
-   → agente-infraestrutura S1
-
-IF menção a ponte|viaduto|OAE|NBR 7187|túnel rodoviário
-   → agente-infraestrutura S2
-
-IF menção a ferrovia|trilho|AMV|dormente|via permanente
-   → agente-infraestrutura S3
-
-IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
-   → agente-infraestrutura S4
+   → S10 (agente-barragens) — conhecimento em construção
 ```
 
 ---
@@ -116,17 +120,37 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
-## DEPLOY CHECKLIST v4.2
+## DEPLOY CHECKLIST v5.0 (Reconciliação)
 
-- [x] Copiar 5 agent .md para `.claude/agents/`
-- [x] Aplicar patch no CLAUDE.md master (seção Agentes)
-- [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
-- [ ] Inserir 5 routing rules em `sp_agent_routing`
-- [ ] Criar pastas SP para novos segmentos
-- [ ] Registrar skills no catálogo (skill registry)
-- [ ] Testar routing do Maestro com prompts de cada segmento
-- [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
-- [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
+### Fase 1 — Unified Taxonomy
+- [x] Criar `pk_agentes.json` (unified primary key mapping)
+- [x] Atualizar CLAUDE.md com nova nomenclatura (03-S* → S*, Manta XX → MXX)
+- [ ] Auditar divergências: database vs skills map vs CLAUDE.md
+- [ ] Criar `RECONCILIACAO.md` (audit report + ações pendentes)
+
+### Fase 2 — Migrate Database Schema
+- [ ] Executar `2026_07_25_v5_0_reconciliation.sql` em Supabase
+  - Rename `03-S*` → `S*` em `manta_agent_capabilities`
+  - Remove guards (aluci-guard, consist-guard, context-guardian) da tabela agentes
+  - Resolver colisão Manta 15 (M08 advisory + M09 arquiteto-ia)
+- [ ] Update `sp_agent_routing` com novos agent_ids (S01-S10)
+- [ ] Update `maestro_routing_keywords` com novos agent_ids
+
+### Fase 3 — Update Agent .md Files
+- [ ] Atualizar frontmatter nos agentes setoriais (incluir agent_id unificado)
+- [ ] Atualizar agent names em `description` (03-S* → S*)
+
+### Fase 4 — Skills Registry
+- [ ] Move guards para skills table (se existir separada)
+- [ ] Registrar skills (aluci-guard, consist-guard, context-guardian) em registry
+
+### Fase 5 — Validation & Testing
+- [ ] Executar routing tests contra Maestro com novos agent_ids
+- [ ] Verificar cobertura de conhecimento (KEs) por agente
+- [ ] Testar RolePickerAgent com novas rotas
+
+### Fase 6 — Documentation & Sign-off
+- [ ] Atualizar docs (ARQUITETURA-AGENTES-IA.md, runbooks SP)
 - [ ] Gate humano: aprovação MN antes de merge
 
 ---
@@ -135,26 +159,35 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                         # este arquivo (master registry)
+├── CLAUDE.md                         # este arquivo (master registry v5.0)
+├── pk_agentes.json                   # 🆕 Unified primary key mapping (v5.0)
+├── RECONCILIACAO.md                  # 🆕 Audit report da migração 4.2→5.0
+├── supabase/
+│   └── migrations/
+│       ├── 2026_07_05_v4_2_agents_s6_s10.sql   # v4.2 — RAG + routing
+│       └── 2026_07_25_v5_0_reconciliation.sql  # 🆕 v5.0 — rename 03-S* → S*
 └── .claude/
     └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+        ├── agente-rodovias.md        # S01 — operacional
+        ├── agente-oae.md             # S02 — operacional
+        ├── agente-ferrovia.md        # S03 — operacional
+        ├── agente-metro.md           # S04 — operacional
+        ├── agente-portos.md          # S06 — novo (2026-07-05)
+        ├── agente-aeroportos.md      # S07 — novo (2026-07-05)
+        ├── agente-saneamento.md      # S08 — novo (2026-07-05), PRIORIDADE AySA
+        ├── agente-energia.md         # S09 — novo (2026-07-05)
+        └── agente-barragens.md       # S10 — novo (2026-07-05)
 ```
 
-Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
-no repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
-serve como referência canônica versionada dos agentes verticais e do
-mapa de routing.
+Os agentes horizontais (M00-M10) e a lógica do Maestro vivem no
+repositório operacional. Este repositório (`Codex-exemplo`) é a
+referência canônica para: (1) agentes setoriais (S01-S10), (2) routing
+rules, (3) unified taxonomy v5.0 em `pk_agentes.json`.
 
 ---
 
 ## Histórico de versões
 
-- **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-  Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
-  coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
+- **v5.0** (2026-07-25) — Reconciliação: taxonomia unificada, 03-S* → S*, guards removidos de agentes, colisão Manta 15 resolvida. Ticket: MNT-2026-AGENT-RECONCILIATION.
+- **v4.2** (2026-07-05) — Expansão S6–S10 (Portos, Aeroportos, Saneamento, Energia, Barragens). 5 novos agentes verticais + 5 coleções RAG. Ticket: MNT-2026-UPGRADE-AGENTS-S6S10.
 - **v4.1** (anterior) — 15 agentes: horizontais + S1–S4.

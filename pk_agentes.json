@@ -1,0 +1,273 @@
+{
+  "version": "5.0.0",
+  "timestamp": "2026-07-25T00:00:00Z",
+  "description": "Unified Primary Key (PK) mapping for Manta Maestro agents — single agent_id taxonomy across all layers (database, skills, subagents)",
+  "taxonomy": {
+    "M00": {
+      "name": "Maestro",
+      "aliases": ["maestro", "manta-router"],
+      "family": "horizontal",
+      "tier": "sonnet",
+      "status": "operacional",
+      "description": "Orquestrador central — roteia requisições para agentes especializados"
+    },
+    "M01": {
+      "name": "Claims",
+      "aliases": ["claims", "manta-claims", "02-C"],
+      "family": "horizontal",
+      "tier": "opus",
+      "status": "operacional",
+      "description": "Especialista em claims de projetos de infraestrutura"
+    },
+    "M02": {
+      "name": "Contratual",
+      "aliases": ["contratual", "manta-02"],
+      "family": "horizontal",
+      "tier": "sonnet",
+      "status": "operacional",
+      "description": "Análise contratual e jurídica de infraestrutura"
+    },
+    "M03": {
+      "name": "Business Development",
+      "aliases": ["bd", "business-dev"],
+      "family": "horizontal",
+      "tier": "sonnet",
+      "status": "operacional",
+      "description": "Desenvolvimento comercial e business case"
+    },
+    "M04": {
+      "name": "Imobiliário",
+      "aliases": ["imobiliario", "manta-04"],
+      "family": "horizontal",
+      "tier": "sonnet",
+      "status": "operacional",
+      "description": "Desenvolvimento imobiliário e urbanismo"
+    },
+    "M05": {
+      "name": "Orçamento",
+      "aliases": ["orcamento", "manta-05"],
+      "family": "horizontal",
+      "tier": "sonnet",
+      "status": "operacional",
+      "description": "Orçamentação e análise de custos de projetos"
+    },
+    "M06": {
+      "name": "Modelagem",
+      "aliases": ["modelagem", "manta-06"],
+      "family": "horizontal",
+      "tier": "sonnet",
+      "status": "operacional",
+      "description": "Modelagem financeira, econômica e de sensibilidade"
+    },
+    "M07": {
+      "name": "Cronograma",
+      "aliases": ["cronograma", "manta-07"],
+      "family": "horizontal",
+      "tier": "sonnet",
+      "status": "operacional",
+      "description": "Planejamento e gestão de cronogramas de projeto (MPM, Gantt)"
+    },
+    "M08": {
+      "name": "Advisory",
+      "aliases": ["advisory", "manta-advisory"],
+      "family": "horizontal",
+      "tier": "opus",
+      "status": "operacional",
+      "description": "Consultoria estratégica multi-domínio"
+    },
+    "M09": {
+      "name": "Arquiteto IA",
+      "aliases": ["arquiteto-ia", "manta-arquiteto", "manta-15-arq"],
+      "family": "horizontal",
+      "tier": "opus",
+      "status": "operacional",
+      "description": "Design de sistemas IA e arquitetura de agentes",
+      "note": "Anteriormente Manta 16; transferido de Manta 15 para resolver colisão"
+    },
+    "M10": {
+      "name": "Apresentações",
+      "aliases": ["apresentacoes", "manta-14-pptx"],
+      "family": "horizontal",
+      "tier": "sonnet",
+      "status": "operacional",
+      "description": "Geração de apresentações e visualizações"
+    },
+    "S01": {
+      "name": "Rodovias",
+      "aliases": ["agente-rodovias", "agente-infraestrutura-s1"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "operacional",
+      "segment": "Rodovias",
+      "description": "Especialista em projetos rodoviários",
+      "former_code": "03-S1"
+    },
+    "S02": {
+      "name": "OAE",
+      "aliases": ["agente-oae", "agente-infraestrutura-s2"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "operacional",
+      "segment": "Obras de Arte Especiais (pontes, viadutos, túneis)",
+      "description": "Especialista em pontes, viadutos e obras de arte especiais",
+      "former_code": "03-S2"
+    },
+    "S03": {
+      "name": "Ferrovia",
+      "aliases": ["agente-ferrovia", "agente-infraestrutura-s3"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "operacional",
+      "segment": "Ferrovia",
+      "description": "Especialista em projetos ferroviários",
+      "former_code": "03-S3"
+    },
+    "S04": {
+      "name": "Metrô",
+      "aliases": ["agente-metro", "agente-infraestrutura-s4"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "operacional",
+      "segment": "Metrô",
+      "description": "Especialista em sistemas metroviários e de transporte de massa urbano",
+      "former_code": "03-S4"
+    },
+    "S05": {
+      "name": "Túneis",
+      "aliases": ["agente-tuneis"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "parcial",
+      "segment": "Túneis",
+      "description": "Coberto por S02 (rodoviários) e S04 (metrô)",
+      "former_code": "03-S5",
+      "note": "Operado como subespecialidade de S02/S04, sem agente independente"
+    },
+    "S06": {
+      "name": "Portos",
+      "aliases": ["agente-portos"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "novo",
+      "segment": "Portos",
+      "description": "Especialista em projetos portuários e hidroviários",
+      "created": "2026-07-05",
+      "former_code": "03-S6"
+    },
+    "S07": {
+      "name": "Aeroportos",
+      "aliases": ["agente-aeroportos"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "novo",
+      "segment": "Aeroportos",
+      "description": "Especialista em infraestrutura aeroportuária",
+      "created": "2026-07-05",
+      "former_code": "03-S7"
+    },
+    "S08": {
+      "name": "Saneamento",
+      "aliases": ["agente-saneamento"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "novo",
+      "segment": "Saneamento",
+      "description": "Especialista em saneamento básico e ambiental",
+      "priority": "AySA (Argentina)",
+      "created": "2026-07-05",
+      "former_code": "03-S8"
+    },
+    "S09": {
+      "name": "Energia",
+      "aliases": ["agente-energia"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "novo",
+      "segment": "Energia",
+      "description": "Especialista em setor elétrico (geração, transmissão, distribuição)",
+      "priority": "ANEEL/State Grid",
+      "created": "2026-07-05",
+      "former_code": "03-S9"
+    },
+    "S10": {
+      "name": "Barragens",
+      "aliases": ["agente-barragens"],
+      "family": "setorial",
+      "tier": "sonnet",
+      "status": "novo",
+      "segment": "Barragens",
+      "description": "Especialista em projetos de barragens (concreto, terra, enrocamento, rejeitos)",
+      "created": "2026-07-05",
+      "former_code": "03-S10"
+    }
+  },
+  "guards_and_skills": {
+    "note": "Guards are registered as SKILLS in the skills registry, not as agents in manta_agent_capabilities",
+    "skill_registry": [
+      {
+        "skill_id": "aluci-guard",
+        "name": "Validador Anti-Alucinação Pacote A",
+        "description": "Detecta normas, leis, URLs, DOIs e códigos SICRO fabricados",
+        "category": "validation"
+      },
+      {
+        "skill_id": "consist-guard",
+        "name": "Validador de Consistência",
+        "description": "Verifica consistência de outputs técnicos e documentos",
+        "category": "validation"
+      },
+      {
+        "skill_id": "context-guardian",
+        "name": "Guardião de Contexto",
+        "description": "Gerencia contexto e memória de sessão para agentes",
+        "category": "context-management"
+      }
+    ]
+  },
+  "migration_actions": [
+    {
+      "action": "rename_agent_codes",
+      "description": "Migrate 03-S* to S* in manta_agent_capabilities table",
+      "mappings": {
+        "03-S1": "S01",
+        "03-S2": "S02",
+        "03-S3": "S03",
+        "03-S4": "S04",
+        "03-S5": "S05",
+        "03-S6": "S06",
+        "03-S7": "S07",
+        "03-S8": "S08",
+        "03-S9": "S09",
+        "03-S10": "S10",
+        "03-S11": null,
+        "03-S12": null,
+        "03-S13": null
+      }
+    },
+    {
+      "action": "remove_guards_from_agents",
+      "description": "Remove aluci-guard, consist-guard, context-guardian from manta_agent_capabilities",
+      "reason": "Guards are skills, not agents"
+    },
+    {
+      "action": "resolve_manta_15_collision",
+      "description": "Manta 15 (advisory) vs Manta 16 (arquiteto-ia)",
+      "resolution": "Manta 15 → M08 (advisory), Manta 16 → M09 (arquiteto-ia)",
+      "note": "Manta 16 in original code becomes M09 to free up M15 for future expansion"
+    },
+    {
+      "action": "consolidate_m_scheme",
+      "description": "Consolidate M02, M07, M12-M23 to stable M01-M10 space",
+      "decision": "Mark unused M* codes as 'roadmap' with ativo=false until they acquire knowledge"
+    }
+  ],
+  "statistics": {
+    "total_agents": 22,
+    "horizontal_agents": 10,
+    "setorial_agents": 10,
+    "skills_guards": 3,
+    "agents_with_knowledge": 4,
+    "agents_without_knowledge": 18,
+    "coverage_percentage": "18%"
+  }
+}
