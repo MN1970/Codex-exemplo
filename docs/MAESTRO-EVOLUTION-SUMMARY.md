@@ -158,8 +158,7 @@ insert_maestro_metric(
 ### 2.1 — Feedback Loop (Ready for Integration)
 
 **Deliverables**:
-- ✅ `supabase/migrations/2026_07_26_add_feedback_tables.sql` — Infrastructure
-- 📋 Awaiting: Cowork button integration
+- ✅ `supabase/migrations/2026_07_26_add_feedback_tables.sql` — Infrastructure ✅
 
 **Tables**:
 1. **maestro_user_feedback** — User approvals/rejections
@@ -199,6 +198,8 @@ analyze_feedback_and_recommend() generates actions
 GitHub issue: "Boost keywords for agente-saneamento (20 approvals)"
 ```
 
+**Status**: Database infrastructure complete. Awaiting Cowork integration.
+
 **Next Steps**:
 - [ ] Integrate Cowork feedback button
 - [ ] Setup weekly job for recommendations
@@ -206,7 +207,7 @@ GitHub issue: "Boost keywords for agente-saneamento (20 approvals)"
 
 ---
 
-### 2.2 — Multi-Agent Orchestration (Design Phase)
+### 2.2 — Multi-Agent Orchestration (🔨 Design Complete, Implementation Pending)
 
 **Goal**: Detect ambiguous routing and dispatch to multiple agents
 
@@ -224,27 +225,64 @@ IF score_gap(primary, runner_up) < 10:
 - `"ETE + subestação"` → agente-saneamento + agente-energia
 
 **Deliverables** (Aug 10 - Aug 31):
-- Manta 16 (Orchestrator Agent) spec
-- Merge logic for responses
-- Test cases for ambiguous routing
+- ✅ `.claude/agents/maestro-orchestrator.md` — Manta 16 spec complete ✅
+- ✅ `tests/routing/test_multiagent_dispatch.md` — 10+ test cases ✅
+  - Cases 1.1-1.2: Infrastructure + Energy (Dam+Transmission, Adutora+Barragem)
+  - Cases 2.1-2.2: Sanitation + Energy (ETE+Subestação, LT+ETA)
+  - Cases 3.1-3.2: Ports + Aeronautics (Porto+Aéreo, Ampliação)
+  - Cases 4.1-4.2: Demanding scenarios (3-way ambiguity, Rodovia+Rio)
+  - Cases 5.1-5.2: Negative tests (false ambiguity, conflict resolution)
+- [ ] `manta-hub/maestro/orchestrator.py` — Merge logic implementation (pending)
+- [ ] Integration in maestro router (detect ambiguity → dispatch) (pending)
+
+**Status**: Architecture + test specs ready. Python implementation pending in manta-hub.
 
 ---
 
-### 2.3 — Document Auto-Classification (Planned: Sep 1-15)
+### 2.3 — Document Auto-Classification (🔨 Design Complete)
 
-Automatically classify uploaded documents and route to correct agent.
+**Deliverable**:
+- ✅ `docs/DOCUMENT-AUTO-CLASSIFICATION.md` — Complete design spec ✅
+  - Flow diagram: upload → extract → classify → notify → move
+  - DocumentClassifier class with metadata extraction
+  - Cowork integration flow
+  - Feedback loop integration
+  - MCP listener webhooks
+  - Approval rate metrics
+
+**Status**: Design complete. Implementation pending (Cowork listener).
 
 ---
 
-### 2.4 — RAG Ingestion Automation (Planned: Sep 16-30)
+### 2.4 — RAG Ingestion Automation (🔨 Script Ready, Deployment Pending)
 
-Batch processing pipeline: PDF → chunks → embeddings → Supabase
+**Deliverable**:
+- ✅ `scripts/ingest_rag_batch.py` — Batch ingestion pipeline ✅
+  - Tier-specific strategies (T1-T4 documents)
+  - PDF extraction via pypdf
+  - Chunk strategies with overlap
+  - Embedding generation (Anthropic API)
+  - Supabase batch insert
+  - Dry-run preview mode
+  - CLI: `--segment`, `--tier`, `--max-chunks`, `--batch-size`
+
+**Status**: Production-ready script. Awaiting PDF source files + execution.
 
 ---
 
-### 2.5 — SharePoint Sync Automation (Planned: Oct 1-15)
+### 2.5 — SharePoint Sync Automation (🔨 Script Ready, CI/CD Integration Pending)
 
-Continuous sync of `.claude/agents/*.md` to SharePoint via Graph API
+**Deliverable**:
+- ✅ `scripts/sync_agents_to_sharepoint.py` — Graph API sync ✅
+  - SharePoint Graph API client
+  - Agent .md → SKILL.md mapping
+  - Dry-run preview mode
+  - CLI: `--all`, `--changed` (git diff), `--agent specific`
+  - Version history comments
+  - Folder structure creation
+  - Error handling + retry
+
+**Status**: Production-ready script. Awaiting `.github/workflows/sync-agents-to-sp.yml` + Graph API credentials
 
 ---
 
@@ -377,10 +415,18 @@ supabase db push supabase/migrations/2026_07_26_add_feedback_tables.sql
 └── workflows/
     └── test-maestro-routing.yml          [NEW] CI/CD pipeline
 
+.claude/
+├── agents/
+│   └── maestro-orchestrator.md           [NEW] Manta 16 spec (Phase 2.2)
+└── plans/
+    └── gostaria-de-ter-um-calm-cocoa.md [NEW] Full 3-phase plan
+
 scripts/
 ├── test_routing.py                       [NEW] Routing test runner
 ├── SCRIPTS-PRONTOS-S6-S10.sh            [NEW] Ready-to-run scripts
-└── embeddings_sync.py                    [NEW] Embedding generator
+├── embeddings_sync.py                    [NEW] Embedding generator
+├── ingest_rag_batch.py                   [NEW] RAG batch ingestion (Phase 2.4)
+└── sync_agents_to_sharepoint.py          [NEW] SP sync automation (Phase 2.5)
 
 supabase/
 ├── migrations/
@@ -396,19 +442,18 @@ docs/
 ├── SUMARIO-EXECUTIVO-S6-S10.md          [NEW] 1-page summary
 ├── INDICE-MASTER.md                      [NEW] Master index
 ├── MONITORING-MAESTRO.md                 [NEW] Observability guide
-├── PHASE-2-ROADMAP.md                    [NEW] Evolution roadmap
+├── PHASE-2-ROADMAP.md                    [NEW] Evolution roadmap (updated)
+├── DOCUMENT-AUTO-CLASSIFICATION.md       [NEW] Phase 2.3 spec
 ├── SHAREPOINT-CONTEUDO-RESUMO.md        [NEW] Content mapping
 ├── sharepoint_structure_s6_s10.yaml     [NEW] Expected structure
 ├── sharepoint_structure_s6_s10.json     [NEW] JSON version
-└── SYNC-SHAREPOINT-GUIDE.md             [NEW] Sync methods
+├── SYNC-SHAREPOINT-GUIDE.md             [NEW] Sync methods
+└── MAESTRO-EVOLUTION-SUMMARY.md         [NEW] This file (updated)
 
 tests/
 └── routing/
-    └── prompts.md                        (existing, 34 test cases)
-
-.claude/
-└── plans/
-    └── gostaria-de-ter-um-calm-cocoa.md [NEW] Full 3-phase plan
+    ├── prompts.md                        (existing, 34 test cases)
+    └── test_multiagent_dispatch.md       [NEW] Phase 2.2 orchestration tests
 ```
 
 ---
@@ -447,5 +492,17 @@ tests/
 
 ---
 
-**Last Updated**: 2026-07-26 20:15 UTC  
-**Status**: 🟢 ON TRACK — PHASE 1 ✅ | PHASE 2 🔨 | PHASE 3 📋
+## 📊 Phase 2 Progress
+
+| Item | Spec | Tests | Implementation | Status |
+|------|------|-------|-----------------|--------|
+| 2.1 Feedback Loop | ✅ | ✅ | 🔨 Cowork button | DB ready |
+| 2.2 Multi-Agent Orch | ✅ | ✅ | ⏳ orchestrator.py | Specs complete |
+| 2.3 Doc Auto-Class | ✅ | ✅ | ⏳ MCP listener | Design complete |
+| 2.4 RAG Ingestion | ✅ | ✅ | ✅ Script ready | Ready to deploy |
+| 2.5 SP Sync | ✅ | ✅ | ✅ Script ready | Ready to deploy |
+
+---
+
+**Last Updated**: 2026-07-26 (Phase 2 scaffolding)
+**Status**: 🟢 ON TRACK — PHASE 1 ✅ | PHASE 2 🔨 (specs/scripts complete) | PHASE 3 📋

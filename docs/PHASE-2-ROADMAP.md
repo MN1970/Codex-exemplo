@@ -79,10 +79,10 @@ Manta 00 (Maestro)
 ```
 
 ### Deliverables
-- [ ] `.claude/agents/maestro-orchestrator.md` — Orchestrator spec
-- [ ] `manta-hub/maestro/orchestrator.py` — merge logic
-- [ ] `tests/routing/test_multiagent_dispatch.md` — test cases
-- [ ] Integration in maestro router (detect ambiguity → dispatch)
+- [x] `.claude/agents/maestro-orchestrator.md` — Orchestrator spec ✅
+- [ ] `manta-hub/maestro/orchestrator.py` — merge logic (pending integration)
+- [x] `tests/routing/test_multiagent_dispatch.md` — test cases ✅ (10+ scenarios)
+- [ ] Integration in maestro router (detect ambiguity → dispatch) (pending)
 
 ---
 
@@ -113,10 +113,11 @@ Record feedback (approval)
 ```
 
 ### Deliverables
-- [ ] MCP listener in Cowork (file upload trigger)
-- [ ] Classification prompt (summarize doc → routing)
-- [ ] SharePoint move automation (Graph API)
-- [ ] Feedback integration (user approval → learning)
+- [x] `docs/DOCUMENT-AUTO-CLASSIFICATION.md` — Complete design spec ✅
+- [ ] MCP listener in Cowork (file upload trigger) (pending)
+- [ ] Classification prompt (summarize doc → routing) (pending)
+- [ ] SharePoint move automation (Graph API) (pending)
+- [ ] Feedback integration (user approval → learning) (pending)
 
 ---
 
@@ -141,14 +142,16 @@ Log metadata (source, tier, timestamp)
 ```
 
 ### Deliverables
-- [ ] `scripts/ingest_rag_batch.py` — main ingestion script
-- [ ] Tier-specific processing:
-  - TIER 1 (normas): aggressive chunking, preserve structure
-  - TIER 2 (projetos): extract tables, diagrams → separate chunks
-  - TIER 3 (estudos): full-text chunking
-  - TIER 4 (templates/editais): minimal processing
-- [ ] Audit table: `rag_ingestion_log` (what, when, how many)
-- [ ] CI/CD trigger: `.github/workflows/ingest-rag-monthly.yml`
+- [x] `scripts/ingest_rag_batch.py` — main ingestion script ✅
+  - [x] TIER 1 (normas): aggressive chunking, preserve structure ✅
+  - [x] TIER 2 (projetos): table/code-aware chunking ✅
+  - [x] TIER 3 (estudos): semantic paragraph-based chunking ✅
+  - [x] TIER 4 (templates): minimal processing ✅
+  - [x] Supabase batch insert com error handling ✅
+  - [x] Dry-run mode + CLI args (--segment, --tier, --max-chunks) ✅
+- [ ] Audit table: `rag_ingestion_log` (what, when, how many) (pending)
+- [ ] CI/CD trigger: `.github/workflows/ingest-rag-monthly.yml` (pending)
+- [ ] Execute ingestion for 5 segments (saneamento, energia, portos, aeroportos, barragens) (pending)
 
 ### Coverage Targets
 ```
@@ -182,7 +185,7 @@ Verify + version history
 
 ### Implementation
 ```python
-# scripts/sync_agents_to_sp.py
+# scripts/sync_agents_to_sharepoint.py
 for agent_file in glob.glob('.claude/agents/*.md'):
     agent_slug = extract_slug(agent_file)
     sp_path = f"04_IA/Manta-Maestro/01-agentes-fundamentais/{agent_slug}/SKILL.md"
@@ -192,10 +195,16 @@ for agent_file in glob.glob('.claude/agents/*.md'):
 ```
 
 ### Deliverables
-- [ ] `.github/workflows/sync-agents-to-sp.yml` — GitHub Actions
-- [ ] `scripts/sync_agents_to_sp.py` — upload logic
-- [ ] Graph API scope approval (MN security review)
-- [ ] Version tracking + rollback capability
+- [x] `scripts/sync_agents_to_sharepoint.py` — upload logic ✅
+  - [x] Graph API client for file upload ✅
+  - [x] Dry-run preview mode ✅
+  - [x] CLI support (--all, --changed, --agent) ✅
+  - [x] Version history comments ✅
+  - [x] Error handling + retry logic ✅
+- [ ] `.github/workflows/sync-agents-to-sp.yml` — GitHub Actions (pending)
+- [ ] Graph API scope approval (MICROSOFT_GRAPH_TOKEN credential setup) (pending)
+- [ ] CI/CD integration: trigger on PR merge to main (pending)
+- [ ] Version tracking + rollback capability (pending)
 
 ---
 
