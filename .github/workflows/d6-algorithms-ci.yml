@@ -100,19 +100,8 @@ jobs:
       run: |
         cd docs/s1-seismic-v2/FASE-C-OUTPUTS/algorithms
         pytest test_d6_algorithms.py::TestPerformance -v \
-          --benchmark-only \
-          --benchmark-json=benchmark.json
-
-    - name: Store benchmark results
-      uses: benchmark-action/github-action-benchmark@v1
-      with:
-        tool: 'pytest'
-        output-file-path: benchmark.json
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        auto-push: true
-        alert-threshold: '150%'
-        comment-on-alert: true
-        fail-on-alert: false
+          --tb=short \
+          --timeout=30
 
   lint:
     name: Code Quality (Black, isort, Pylint)
