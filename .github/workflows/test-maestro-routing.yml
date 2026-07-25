@@ -46,28 +46,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install anthropic python-dotenv supabase pydantic
 
-      - name: Check credentials
-        id: creds
+      - name: Run routing tests (or skip if no credentials)
+        id: test
         run: |
           if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-            echo "⚠️  ANTHROPIC_API_KEY not configured — skipping routing tests"
+            echo "ℹ️  ANTHROPIC_API_KEY not configured — skipping routing tests"
             echo "To enable: configure GitHub Secrets in Settings → Secrets and variables → Actions"
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
 
-      - name: Run routing tests
-        id: test
-        if: steps.creds.outputs.skip == 'false'
-        run: |
-          python scripts/test_routing.py tests/routing/prompts.md --format json --output /tmp/test_results.json
-          cat /tmp/test_results.json
-
-      - name: Generate test summary
-        if: steps.creds.outputs.skip == 'true'
-        run: |
-          cat > /tmp/test_results.json <<'EOF'
+            # Generate placeholder results
+            cat > /tmp/test_results.json <<'EOF'
           {
             "tests": [],
             "metrics": {
@@ -81,6 +68,12 @@ jobs:
             }
           }
           EOF
+          else
+            # Run actual tests
+            python scripts/test_routing.py tests/routing/prompts.md --format json --output /tmp/test_results.json
+          fi
+
+          cat /tmp/test_results.json
 
       - name: Parse test results
         id: parse
