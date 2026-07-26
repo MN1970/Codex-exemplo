@@ -1,135 +1,179 @@
 # SKILL.md — git-gitops-flow
 
-**GitOps Phase 2: Automated multi-repo sync across 5+ repositories with intelligent auto-merge, transactional rollback, scheduled syncs, and conflict resolution. Extends Phase 1 MVP to production-grade scale.**
+**GitOps Phase 3: ML-powered auto-merge confidence scoring with intelligent routing, fallback safety gates, and explainable recommendations. Extends Phase 2 production-grade syncs with machine-learning-driven decision gates.**
 
-Version: **2.0.0** | Tier: **Sonnet** | MCPs: **GitHub (create_branch, create_pull_request, list_commits, search_code, merge_pull_request, update_pull_request_branch), GitHub Actions (workflow dispatch)** | Output: **Auto-merged PR + Conflict Report + Transactional Rollback + Scheduled Syncs + Audit Log**
+Version: **3.0.0** | Tier: **Sonnet** | MCPs: **GitHub (create_branch, create_pull_request, list_commits, search_code, merge_pull_request, update_pull_request_branch), GitHub Actions (workflow dispatch), git-auto-merge-confidence (ML inference)** | Output: **Confidence-scored PR + ML Recommendation + Feature Importance + Fallback Safety Audit**
 
 ---
 
 ## Overview
 
-Production-grade GitOps synchronization that maintains state consistency across **up to 5+ repositories** using:
+Production-grade GitOps synchronization with **ML-driven confidence scoring** that maintains state consistency across **up to 5+ repositories** using:
 - **Drift Detection** — Compares files, branches, or structured data across N repos with fan-out pattern
-- **Intelligent Auto-Merge** — 5-condition safety checks before automatic PR merge (tests green, zero CRITICAL severities, low-risk patterns, ≤5 repos, audit-logged)
+- **ML-Based Auto-Merge** (v3.0) — Machine-learning confidence scoring replaces 5-condition gate (confidence ≥0.95 → auto-merge, 0.75–0.95 → escalate, <0.75 → reject)
+- **Intelligent Fallback** (v3.0) — If ML service unavailable, fall back to hardcoded 5-condition safety checks
+- **Explainability** (v3.0) — Feature importance breakdown for marginal confidence scores (shows top factors affecting merge decision)
 - **Sync Strategies** — Copy file, merge branch, rebase-onto-main, squash-fixups, three-way merge
 - **Transactional Rollback** — Atomic revert on merge failure; reverts all downstream syncs
 - **Conflict Resolution** — LCS-based three-way merge with smart escalation rules (package.json, Dockerfile, .tf files require human approval)
 - **Scheduled Syncs** — GitHub Actions-based recurring syncs (cron + event-driven triggers)
 - **Conflict Reporting** — JSON findings + human-readable issue if conflicts cannot auto-resolve
 - **Commit Graph** — Visual timeline of sync operations with contributor attribution
-- **Audit Logging** — Supabase-backed compliance log (who, what, when, risk level, rollback chain)
-- **MCP Integration** — GitHub create_branch/create_pull_request/merge_pull_request for fully automated workflows
+- **Audit Logging** — Supabase-backed compliance log (who, what, when, risk level, rollback chain, ML confidence score)
+- **MCP Integration** — GitHub create_branch/create_pull_request/merge_pull_request + git-auto-merge-confidence ML inference for fully automated workflows
 
-**Phase 2 use cases**: Sync configs across entire deployment pipeline (dev→staging→prod), multi-region rollout with conflict resolution, canary deployments to 5 repos, automated cost/schedule baselines across Manta projects, atomic infrastructure rollback on failed merge.
+**Phase 3 use cases**: ML-driven auto-merge across deployment pipeline (dev→staging→prod) with confidence-based escalation, multi-region rollout with explainable merge decisions, automated cost/schedule baselines with confidence scoring, infrastructure rollback with ML safety assurance, on-call escalation routing based on confidence tiers.
 
 ---
 
 ## Capability Matrix
 
-| Feature | Phase 1 | Phase 2 | Strategy | Output |
-|---|---|---|---|---|
-| **Drift Detection** | ✅ 1–2 repos | ✅ 5+ repos | Byte-exact hash compare + fan-out | JSON delta report |
-| **Branch Sync** | ✅ | ✅ | `git merge --ff-only` simulation | Auto-created PR or issue if not FFable |
-| **Rebase Sync** | ✅ Linear history | ✅ + squash-fixups | Simulate `git rebase --onto-main` + commit squashing | Auto-PR with linear history |
-| **Three-way Merge** | ✅ Basic | ✅ **Advanced LCS** | Full longest-common-subsequence algorithm (see § Three-way Merge LCS) | Issue with merge diff blocks + acceptance rules |
-| **File Copy** | ✅ | ✅ | Byte-exact replace or append | Direct commit + PR |
-| **Conflict Resolution** | ⚠ Semi-auto | ✅ **Smart escalation** | LCS merge + high-risk file detection | Labeled issue + suggested patches |
-| **Auto-Merge** | ❌ Draft only | ✅ **5-condition check** | Tests green + zero CRITICAL + low-risk pattern + ≤5 repos + audit-logged | Auto-merged PR + audit entry |
-| **Commit Graph** | ✅ Visualization | ✅ | DAG with timestamps + authors | SVG/Mermaid diagram embed |
-| **Scheduled Syncs** | ❌ Manual | ✅ **GitHub Actions** | Cron + event-driven workflows with retries | PR/merge on schedule |
-| **Transactional Rollback** | ✅ Single PR revert | ✅ **Atomic cascade** | On merge fail, revert all downstream syncs in reverse order | New PR + rollback chain audit log |
-| **Status Reporting** | ✅ Real-time | ✅ | GitHub check run + Slack notifications | PR comment + job summary |
-| **Escalation Rules** | ❌ All auto | ✅ **High-risk detection** | Detects package.json, Dockerfile, *.tf, secrets | Requires human approval before merge |
-| **Audit Logging** | ⚠ PR comments | ✅ **Supabase table** | JSON audit trail with risk level, actor, timestamp | Compliance-ready log + trend analytics |
+| Feature | Phase 1 | Phase 2 | Phase 3 | Strategy | Output |
+|---|---|---|---|---|---|
+| **Drift Detection** | ✅ 1–2 repos | ✅ 5+ repos | ✅ + ML-scored | Byte-exact hash compare + fan-out | JSON delta report |
+| **Branch Sync** | ✅ | ✅ | ✅ | `git merge --ff-only` simulation | Auto-created PR or issue if not FFable |
+| **Rebase Sync** | ✅ Linear history | ✅ + squash-fixups | ✅ | Simulate `git rebase --onto-main` + commit squashing | Auto-PR with linear history |
+| **Three-way Merge** | ✅ Basic | ✅ **Advanced LCS** | ✅ + ML input | Full longest-common-subsequence algorithm | Issue with merge diff blocks + acceptance rules |
+| **File Copy** | ✅ | ✅ | ✅ | Byte-exact replace or append | Direct commit + PR |
+| **Conflict Resolution** | ⚠ Semi-auto | ✅ **Smart escalation** | ✅ | LCS merge + high-risk file detection | Labeled issue + suggested patches |
+| **Auto-Merge** | ❌ Draft only | ✅ **5-condition** | ✅ **ML Confidence** | ML scoring (≥0.95) replaces 5-condition gate | Auto-merged PR + confidence score + feature importance |
+| **ML Confidence Scoring** | ❌ | ❌ | ✅ **NEW v3.0** | ML inference on 9 features (tests, security, files, etc.) | confidence_score + recommendation + feature_importance |
+| **Fallback Safety Gate** | ❌ | ✅ Hardcoded | ✅ **Automatic** | If ML unavailable, use Phase 2 5-condition gate | Audit entry: fallback_gate_used=true |
+| **Explainability** | ❌ | ❌ | ✅ **NEW v3.0** | Feature importance breakdown for marginal scores | Top 3 factors + contribution weights + actionable recommendations |
+| **Commit Graph** | ✅ Visualization | ✅ | ✅ | DAG with timestamps + authors | SVG/Mermaid diagram embed |
+| **Scheduled Syncs** | ❌ Manual | ✅ **GitHub Actions** | ✅ | Cron + event-driven workflows with retries | PR/merge on schedule |
+| **Transactional Rollback** | ✅ Single PR revert | ✅ **Atomic cascade** | ✅ | On merge fail, revert all downstream syncs in reverse order | New PR + rollback chain audit log |
+| **Status Reporting** | ✅ Real-time | ✅ | ✅ + ML confidence | GitHub check run + Slack notifications | PR comment + job summary + confidence % |
+| **Escalation Rules** | ❌ All auto | ✅ **High-risk detection** | ✅ **ML-driven** | Detects package.json, Dockerfile, *.tf, secrets + ML factors | Requires human approval before merge |
+| **Audit Logging** | ⚠ PR comments | ✅ **Supabase table** | ✅ **ML audit trail** | JSON audit trail + ML confidence + feature importance | Compliance-ready log + ML explainability audit |
 
 ---
 
-## Phase 2 — Auto-Merge Safety Gates
+## Phase 3 — ML-Based Auto-Merge Confidence Scoring
 
-**NEW in v2.0**: Intelligent PR auto-merge with 5-condition safety checks. Only when ALL conditions pass does the PR merge automatically.
+**NEW in v3.0**: Machine-learning-driven confidence scoring replaces the hardcoded 5-condition gate. Each PR receives a **confidence score (0.0–1.0)** and explicit recommendation.
 
-### The 5 Auto-Merge Conditions
+### ML Confidence Scoring Model
 
-A PR is **eligible for auto-merge** (and will merge without human approval) **only if**:
-
-1. **Tests Green** ✅
-   - All GitHub check runs (CI/CD, linters, tests) must pass
-   - No failed or pending checks
-   - Status: `success` for all checks
-   - Exemption: Allow user-configured "safe to ignore" checks (e.g., optional e2e tests)
-
-2. **Zero CRITICAL Severities** ✅
-   - Security scan (if enabled) reports zero CRITICAL/HIGH severity issues
-   - Dependency vulnerabilities: zero unpatched CRITICAL
-   - Code quality: no CRITICAL linting errors
-   - If a CRITICAL is found: escalate to manual review immediately
-
-3. **Low-Risk Pattern Detection** ✅
-   - Files changed must NOT include:
-     - `package.json`, `package-lock.json`, `yarn.lock`, `Gemfile`
-     - `Dockerfile`, `docker-compose.yml`, `.dockerignore`
-     - `*.tf`, `*.tfvars` (Terraform)
-     - `*.yml`, `*.yaml` in `k8s/`, `helm/`, `.github/workflows/`
-     - `.env*`, `*secret*`, `*credential*`, `*key*` files
-     - Any file matching user-configured high-risk patterns
-   - File count: ≤20 files changed (smaller changes = lower risk)
-   - Lines changed: ≤500 lines added/deleted (large diffs = human review)
-
-4. **Repo Count ≤ 5** ✅
-   - Fan-out syncs: if syncing to N target repos, N ≤ 5
-   - If N > 5: create issue "Syncing to {N} repos exceeds safety threshold. Requires human approval."
-   - Rationale: Larger fan-outs have higher cascade-failure risk
-
-5. **Audit Log Entry Created** ✅
-   - Before merge, insert entry into `gitops_audit` table with:
-     - `repo_source`, `repo_target`
-     - `pr_number`, `pr_url`
-     - `sync_strategy`, `condition_checks` (boolean array of 5 conditions)
-     - `actor` (GitOps bot), `timestamp`, `risk_level` (enum: low/medium/high)
-     - `auto_merge_eligible: true`
-   - If audit insert fails: hold PR, escalate to human
-
-### Decision Flowchart: Auto-Merge vs. Manual Review
+The `git-auto-merge-confidence` service analyzes PR metadata and predicts merge safety:
 
 ```
-Start: GitOps PR created
-  │
-  ├─ Condition 1: Tests Green?
-  │   ├─ No → HOLD PR, label "failing-tests", comment "CI failed"
-  │   └─ Yes ↓
-  │
-  ├─ Condition 2: Zero CRITICAL severities?
-  │   ├─ No → HOLD PR, label "security-issue", comment "CRITICAL found: {list}"
-  │   └─ Yes ↓
-  │
-  ├─ Condition 3: Low-Risk Pattern?
-  │   ├─ No (high-risk file detected) → HOLD PR, label "high-risk-files", comment "Escalating: {files} require approval"
-  │   └─ Yes ↓
-  │
-  ├─ Condition 4: ≤ 5 target repos?
-  │   ├─ No → HOLD PR, label "too-many-repos", comment "Syncing to {N} repos exceeds threshold"
-  │   └─ Yes ↓
-  │
-  ├─ Condition 5: Audit log created?
-  │   ├─ No → RETRY with exponential backoff; if 3 retries fail, escalate
-  │   └─ Yes ↓
-  │
-  └─ ✅ ALL conditions pass → AUTO-MERGE (with notification to #deployments Slack channel)
-      └─ Post merge: Update audit log `merged_at`, `auto_merged: true`
+Inputs to ML model:
+  - Test results (pass/fail/pending status)
+  - Security scan outcomes (CRITICAL/HIGH/MEDIUM/LOW)
+  - File change patterns (risk classification per file)
+  - Repo fan-out count (number of target repos)
+  - LCS similarity scores (for three-way merges)
+  - Commit message quality (conventional commits, linked issues)
+  - Author history (trusted committer vs. new contributor)
+  - Deployment history (success rate of past syncs)
+  - Time of day (off-peak syncs have lower risk)
+
+Output:
+  - confidence_score: float [0.0–1.0]
+  - recommendation: enum ["AUTO_MERGE", "ESCALATE", "REJECT"]
+  - feature_importance: dict {feature_name: importance_weight}
+  - explanation: string (human-readable reason)
 ```
 
-### Auto-Merge Configuration
+### Decision Logic: Confidence-Based Routing
+
+Based on ML confidence score:
+
+```
+┌─ Score ≥ 0.95
+│   └─ Recommendation: AUTO_MERGE
+│       └─ Action: Merge immediately (no human gate required)
+│       └─ Post: Audit log entry with confidence score
+│       └─ Notification: Silent merge to #deployments (optional)
+│
+├─ Score 0.75–0.95
+│   └─ Recommendation: ESCALATE
+│       └─ Action: Hold PR, request human approval
+│       └─ Post: Comment with confidence breakdown + feature importance
+│       └─ Assign: to escalation team (ops, infra, security per risk)
+│       └─ Timeout: 24 hours (auto-reject if no approval)
+│       └─ Notification: Alert #incident-response with confidence + reason
+│
+└─ Score < 0.75
+    └─ Recommendation: REJECT
+        └─ Action: Block PR, add label "confidence-too-low"
+        └─ Post: Comment explaining why confidence is low
+        └─ Require: Significant changes or risk reduction before re-evaluation
+        └─ Notification: Alert author + dev team
+```
+
+### Fallback Mechanism: Safety Hardcoded Gate
+
+If ML service is **unavailable** (timeout, error, degraded), fall back to hardcoded 5-condition gate:
+
+```yaml
+fallback:
+  enabled: true
+  trigger: ml_service_unavailable
+  
+  conditions:
+    - tests_passing: true
+    - zero_critical_severities: true
+    - low_risk_file_patterns: true
+    - repo_count_lte_5: true
+    - audit_logged: true
+  
+  behavior:
+    if_all_pass: "auto_merge"
+    if_any_fail: "escalate"
+    audit_entry: "fallback_gate_used: true"
+  
+  # Fallback is stricter than ML: requires ALL 5 conditions
+  # This ensures safety during ML service degradation
+```
+
+### ML Confidence Configuration
 
 ```yaml
 gitops:
   auto_merge:
     enabled: true
+    
+    # ===== NEW in v3.0: ML Scoring =====
+    ml_confidence:
+      enabled: true
+      service: "git-auto-merge-confidence"
+      endpoint: "https://ml.gitops.svc/confidence"
+      timeout_ms: 5000
+      
+      # Confidence thresholds
+      auto_merge_threshold: 0.95
+      escalate_threshold: 0.75
+      reject_threshold: 0.0  # anything below 0.75 is rejected
+      
+      # Feature weights (configurable)
+      feature_weights:
+        test_pass_rate: 0.25
+        security_clean: 0.20
+        file_risk_score: 0.20
+        repo_count: 0.10
+        lcs_similarity: 0.10
+        author_trustworthiness: 0.08
+        deployment_history: 0.04
+        time_of_day: 0.03
+      
+      # Fallback to hardcoded gate if ML fails
+      fallback:
+        enabled: true
+        use_hardcoded_5_conditions: true  # Fallback to Phase 2 5-condition gate
+        
+        # Fallback is STRICTER: all 5 conditions must pass to auto-merge
+        fallback_auto_merge_only_if_all_pass: true
+    
+    # ===== PHASE 2 Hardcoded Conditions (fallback) =====
     condition_checks:
       tests_required: true
       allow_ignored_checks: ["optional-e2e", "performance-benchmark"]
       security_scan_required: true
       max_critical_issues: 0
       max_high_issues: 0
+    
     risk_patterns:
       high_risk_files:
         - "package*.json"
@@ -140,6 +184,7 @@ gitops:
         - "k8s/**/*.yaml"
       max_files_changed: 20
       max_lines_changed: 500
+    
     max_target_repos: 5
     audit_table: "gitops_audit"
     audit_required: true
@@ -149,6 +194,125 @@ gitops:
     notify_channels:
       slack: "#deployments"
       github: "comment-on-pr"
+```
+
+### ML Scoring Decision Flowchart (v3.0)
+
+```
+START: GitOps PR Created
+  │
+  ├─── Call: git-auto-merge-confidence API
+  │    ├─ SUCCESS: Receive confidence_score [0.0–1.0]
+  │    │   └─ Proceed to routing (below)
+  │    │
+  │    └─ FAILED (timeout/error):
+  │        └─ Fallback: Use hardcoded 5-condition gate
+  │           ├─ Check all 5 conditions
+  │           ├─ If all pass → AUTO_MERGE
+  │           └─ If any fail → ESCALATE
+  │
+  ├─── ROUTING by Confidence Score
+  │
+  ├─── Score ≥ 0.95 (HIGH confidence)
+  │    ├─ Recommendation: AUTO_MERGE ✅
+  │    ├─ Add label: "auto-merge-confident"
+  │    ├─ Post comment: "ML Confidence: {score}% | {explanation}"
+  │    ├─ Update audit: {ml_confidence: score, recommendation: AUTO_MERGE}
+  │    ├─ Merge PR immediately
+  │    └─ On success:
+  │        ├─ Audit: {merged_at: timestamp, auto_merged: true, ml_scored: true}
+  │        └─ Slack: "✅ Auto-merged (confidence: {score}%)"
+  │
+  ├─── Score 0.75–0.95 (MEDIUM confidence)
+  │    ├─ Recommendation: ESCALATE ⚠️
+  │    ├─ Add label: "requires-human-approval"
+  │    ├─ Post comment: "ML Confidence: {score}% (below auto-merge threshold)"
+  │    ├─ Feature importance breakdown:
+  │    │   └─ Show top 3 factors affecting confidence (and their weights)
+  │    ├─ Assign to: escalation team (based on risk category)
+  │    ├─ Set timeout: 24 hours
+  │    ├─ Update audit: {ml_confidence: score, recommendation: ESCALATE, escalation_reason: ...}
+  │    │
+  │    └─ ON APPROVAL (within 24h):
+  │        ├─ Merge PR
+  │        └─ Audit: {manual_approval: true, approved_by: user, approval_timestamp}
+  │
+  │    └─ ON TIMEOUT (no approval in 24h):
+  │        ├─ Auto-reject PR
+  │        ├─ Add label: "escalation-timeout"
+  │        ├─ Comment: "Escalation expired. Requires manual re-submission."
+  │        └─ Audit: {escalation_timeout: true, auto_rejected: true}
+  │
+  └─── Score < 0.75 (LOW confidence)
+       ├─ Recommendation: REJECT ❌
+       ├─ Add label: "confidence-too-low"
+       ├─ Post comment: "ML Confidence: {score}% | Below rejection threshold"
+       ├─ Show feature importance: "Factors preventing merge:"
+       ├─ Update audit: {ml_confidence: score, recommendation: REJECT, reason: ...}
+       │
+       └─ Author Action Required:
+           ├─ Fix identified risks (see feature importance)
+           ├─ Request ML re-evaluation after changes
+           └─ Or: Escalate manually (rare)
+```
+
+### Feature Importance Output (NEW v3.0)
+
+When ML confidence is marginal (0.75–0.95), the system provides explainability:
+
+```json
+{
+  "confidence_score": 0.82,
+  "recommendation": "ESCALATE",
+  "feature_importance": {
+    "test_pass_rate": {
+      "weight": 0.25,
+      "contribution": -0.08,
+      "reason": "2 out of 10 checks still pending"
+    },
+    "file_risk_score": {
+      "weight": 0.20,
+      "contribution": -0.12,
+      "reason": "terraform/main.tf detected (high-risk file)"
+    },
+    "security_clean": {
+      "weight": 0.20,
+      "contribution": 0.20,
+      "reason": "No CRITICAL or HIGH vulnerabilities"
+    },
+    "lcs_similarity": {
+      "weight": 0.10,
+      "contribution": 0.08,
+      "reason": "LCS similarity 0.92 (high overlap with upstream)"
+    },
+    "author_trustworthiness": {
+      "weight": 0.08,
+      "contribution": 0.02,
+      "reason": "Author has 12 prior successful merges"
+    },
+    "repo_count": {
+      "weight": 0.10,
+      "contribution": 0.10,
+      "reason": "Syncing to 3 repos (below threshold of 5)"
+    },
+    "deployment_history": {
+      "weight": 0.04,
+      "contribution": 0.04,
+      "reason": "Recent syncs: 100% success rate (5/5)"
+    },
+    "time_of_day": {
+      "weight": 0.03,
+      "contribution": 0.02,
+      "reason": "Merge at 10:30 AM UTC (business hours, lower risk)"
+    }
+  },
+  "explanation": "Confidence below auto-merge threshold due to pending test checks and high-risk infrastructure file. Recommend: wait for test completion, then escalate infrastructure team for terraform review.",
+  "recommendations": [
+    "Wait for remaining 2 checks to complete",
+    "Request infrastructure team approval for terraform/main.tf changes",
+    "After approval, re-evaluate for auto-merge"
+  ]
+}
 ```
 
 ---
@@ -186,7 +350,17 @@ gitops:
 3. **Conflict Detection** — Flag overlapping changes using three-way merge algorithm
 4. **Auto-Resolution** — Apply selected strategy
 5. **PR/Branch Creation** — Use GitHub MCP to create branches and PRs
-6. **Reporting** — Generate commit graph + findings JSON
+6. **ML Confidence Scoring** (NEW v3.0):
+   - Extract PR metadata (tests, security, files, author, history, etc.)
+   - Call `git-auto-merge-confidence` ML inference service
+   - Receive confidence_score + recommendation + feature_importance
+   - If ML unavailable: fall back to hardcoded 5-condition gate
+   - Record ML audit entry
+7. **Confidence-Based Routing** (NEW v3.0):
+   - Score ≥ 0.95: proceed to auto-merge
+   - Score 0.75–0.95: escalate with feature importance breakdown
+   - Score < 0.75: reject with actionable recommendations
+8. **Reporting** — Generate commit graph + findings JSON + ML confidence audit
 
 ### Output Phase
 
@@ -1110,17 +1284,18 @@ gitops:
 
 | Tool | Purpose | Phase | Called by |
 |---|---|---|---|
-| `create_branch` | Create sync branch in target repo | 1, 2 | PR creation flow |
-| `create_pull_request` | Create sync PR with description | 1, 2 | Auto-merge flow |
-| `merge_pull_request` | Merge PR (auto-merge) | 2 | Phase 2 auto-merge gate |
-| `update_pull_request_branch` | Sync PR branch to main (rebase) | 2 | Rebase strategy |
-| `list_commits` | Get commit details (author, message, SHA) | 1, 2 | Commit graph generation |
-| `search_code` | Find files matching patterns | 1, 2 | File drift detection |
-| `get_file_contents` | Fetch file for diff | 1, 2 | Diff computation |
-| `list_branches` | Enumerate available branches | 1, 2 | Validation |
-| Supabase (INSERT/SELECT) | Audit logging (gitops_audit table) | 2 | Pre-merge audit gate & compliance |
-| GitHub Actions (workflow_dispatch) | Trigger scheduled syncs | 2 | Cron + event-driven scheduling |
-| Slack API | Notifications (optional) | 2 | Sync status + escalation alerts |
+| `create_branch` | Create sync branch in target repo | 1, 2, 3 | PR creation flow |
+| `create_pull_request` | Create sync PR with description | 1, 2, 3 | Auto-merge flow |
+| `merge_pull_request` | Merge PR (auto-merge) | 2, 3 | Phase 2/3 auto-merge decision |
+| `update_pull_request_branch` | Sync PR branch to main (rebase) | 2, 3 | Rebase strategy |
+| `list_commits` | Get commit details (author, message, SHA) | 1, 2, 3 | Commit graph generation + ML input |
+| `search_code` | Find files matching patterns | 1, 2, 3 | File drift detection |
+| `get_file_contents` | Fetch file for diff | 1, 2, 3 | Diff computation |
+| `list_branches` | Enumerate available branches | 1, 2, 3 | Validation |
+| `git-auto-merge-confidence` | **NEW v3.0**: ML inference for merge safety | 3 | Confidence scoring gate |
+| Supabase (INSERT/SELECT) | Audit logging (gitops_audit, gitops_ml_scores) | 2, 3 | Pre-merge audit + ML audit trail |
+| GitHub Actions (workflow_dispatch) | Trigger scheduled syncs | 2, 3 | Cron + event-driven scheduling |
+| Slack API | Notifications (optional) | 2, 3 | Sync status + escalation alerts + ML recommendations |
 
 ---
 
@@ -1575,6 +1750,228 @@ After approval:
 
 ---
 
+## Phase 3 Examples — ML Confidence Scoring
+
+### Example 3: ML-Scored Config Sync with Escalation — NEW Phase 3
+
+Same 5-region sync as Example 1, but with ML confidence scoring determining merge behavior.
+
+**Scenario**: Daily config sync to 5 regions. ML confidence varies due to test delays and infrastructure file changes.
+
+**Execution Flow with ML Scoring**:
+
+```
+Day 1: Standard Case (All Regions Confident)
+  10:00 UTC: Sync triggered
+  ├─ Create PR for each of 5 regions
+  │
+  ├─ Region: us-east
+  │   ├─ Call: git-auto-merge-confidence
+  │   ├─ Input:
+  │   │   - Tests: 10/10 passing ✅
+  │   │   - Security: 0 CRITICAL ✅
+  │   │   - Files: 5 config files (low-risk) ✅
+  │   │   - Repos: 1 target ✅
+  │   │   - Deployment history: 100% (12/12 past syncs) ✅
+  │   │   - Time: 10:00 AM UTC (business hours) ✅
+  │   │
+  │   ├─ Output: confidence_score = 0.98
+  │   ├─ Recommendation: AUTO_MERGE ✅
+  │   ├─ Audit: {region: us-east, pr: 500, ml_confidence: 0.98, recommendation: AUTO_MERGE}
+  │   └─ Action: Merge immediately
+  │       └─ Comment: "ML Confidence: 98% | Auto-merged"
+  │       └─ Slack: "✅ PR #500 (us-east) auto-merged (confidence: 98%)"
+  │
+  ├─ Region: eu-west
+  │   ├─ Call: git-auto-merge-confidence
+  │   ├─ Input:
+  │   │   - Tests: 8/10 passing (2 pending) ⚠️
+  │   │   - Security: 0 CRITICAL ✅
+  │   │   - Files: 3 config + 1 terraform file ⚠️
+  │   │   - Repos: 1 target ✅
+  │   │   - Author: trusted (20 prior merges) ✅
+  │   │
+  │   ├─ Output: confidence_score = 0.81
+  │   ├─ Recommendation: ESCALATE ⚠️
+  │   ├─ Feature importance:
+  │   │   - test_pass_rate: -0.10 (tests still pending)
+  │   │   - file_risk_score: -0.09 (terraform file)
+  │   │   - security_clean: +0.20
+  │   │   - author_trustworthiness: +0.08
+  │   │   - [others]: +0.22
+  │   │
+  │   ├─ Audit: {region: eu-west, pr: 501, ml_confidence: 0.81, recommendation: ESCALATE}
+  │   └─ Action: Hold for approval
+  │       ├─ Label: "requires-human-approval"
+  │       ├─ Assign: @team-eu-infrastructure
+  │       ├─ Comment:
+  │       │  ```
+  │       │  ML Confidence: 81% (below auto-merge threshold of 95%)
+  │       │  
+  │       │  Feature Importance:
+  │       │  - test_pass_rate: 2 checks still pending (weight: 0.25)
+  │       │  - file_risk_score: terraform/main.tf detected (weight: 0.20)
+  │       │  - security_clean: No CRITICAL/HIGH (weight: 0.20)
+  │       │  - author_trustworthiness: 20 prior successful merges (weight: 0.08)
+  │       │  
+  │       │  Recommendation: Wait for tests to complete, then approve for terraform review.
+  │       │  Escalation timeout: 24 hours
+  │       │  ```
+  │       └─ Slack: "⚠️ PR #501 (eu-west) escalated (confidence: 81%) — needs @team-eu-infrastructure approval"
+  │
+  ├─ Region: ap-southeast
+  │   ├─ Call: git-auto-merge-confidence
+  │   ├─ Output: confidence_score = 0.96
+  │   ├─ Recommendation: AUTO_MERGE ✅
+  │   └─ Action: Merge immediately
+  │
+  ├─ Region: ap-northeast
+  │   ├─ Call: git-auto-merge-confidence
+  │   ├─ Output: confidence_score = 0.72 ❌
+  │   ├─ Recommendation: REJECT
+  │   ├─ Reason: "LCS similarity too low (0.68) due to conflicting config changes in previous sync"
+  │   └─ Action: Hold (requires manual conflict resolution)
+  │       ├─ Label: "confidence-too-low"
+  │       ├─ Comment: "ML Confidence: 72% (below rejection threshold of 75%)"
+  │       └─ Audit: {region: ap-northeast, pr: 503, ml_confidence: 0.72, recommendation: REJECT}
+  │
+  └─ Region: us-west-dr
+      ├─ Call: git-auto-merge-confidence
+      ├─ ML service TIMEOUT (degraded) ⚠️
+      ├─ Fallback: Use hardcoded 5-condition gate
+      ├─ Check all 5 conditions:
+      │   ├─ Tests green? YES ✅
+      │   ├─ Zero CRITICAL? YES ✅
+      │   ├─ Low-risk pattern? YES ✅
+      │   ├─ ≤5 repos? YES ✅ (only 1)
+      │   └─ Audit logged? YES ✅
+      ├─ Fallback result: All 5 pass → AUTO_MERGE
+      └─ Action: Merge with fallback flag
+          ├─ Audit: {region: us-west-dr, pr: 504, fallback_gate_used: true, auto_merged: true}
+          └─ Slack: "✅ PR #504 (us-west-dr) auto-merged (ML unavailable, fallback gate used)"
+
+Summary:
+  ├─ Total PRs: 5
+  ├─ Auto-merged (ML ≥ 0.95): 3
+  ├─ Escalated (0.75–0.95): 1
+  ├─ Rejected (< 0.75): 1
+  ├─ Fallback used: 1
+  └─ Confidence distribution: [0.98, 0.81, 0.96, 0.72, fallback]
+```
+
+**Escalation Resolution (eu-west)**:
+
+```
+Day 1, 14:30 UTC (4.5 hours after sync):
+  ├─ Remaining 2 tests complete ✅
+  ├─ Team approves terraform changes
+  ├─ Comment from @alice:
+  │   "Approved. Terraform changes align with EU regional requirements."
+  │
+  ├─ Manual merge triggered
+  ├─ Audit updated:
+  │   {
+  │     "region": "eu-west",
+  │     "pr": 501,
+  │     "ml_confidence_initial": 0.81,
+  │     "recommendation_initial": "ESCALATE",
+  │     "manual_approval": true,
+  │     "approved_by": "alice@org.com",
+  │     "approval_timestamp": "2026-07-26T14:30:00Z",
+  │     "merged_at": "2026-07-26T14:31:00Z",
+  │     "resolution_time_minutes": 270
+  │   }
+  └─ Slack: "✅ PR #501 (eu-west) merged after manual approval (ML escalation resolved)"
+```
+
+**Output JSON** (shows ML confidence across sync batch):
+
+```json
+{
+  "sync_batch_id": "gitops-sync-daily-20260726-ml-v3",
+  "timestamp": "2026-07-26T10:00:00Z",
+  "ml_scoring_enabled": true,
+  "syncs": [
+    {
+      "target_repo": "org/deployed-infra-us",
+      "pr_number": 500,
+      "ml_confidence": 0.98,
+      "ml_recommendation": "AUTO_MERGE",
+      "status": "auto-merged",
+      "feature_importance_top3": [
+        {"feature": "deployment_history", "contribution": 0.12},
+        {"feature": "security_clean", "contribution": 0.20},
+        {"feature": "test_pass_rate", "contribution": 0.25}
+      ],
+      "merged_at": "2026-07-26T10:02:00Z"
+    },
+    {
+      "target_repo": "org/deployed-infra-eu",
+      "pr_number": 501,
+      "ml_confidence": 0.81,
+      "ml_recommendation": "ESCALATE",
+      "status": "escalated",
+      "escalation_reason": "ML confidence below auto-merge threshold (81% < 95%)",
+      "feature_importance_top3": [
+        {"feature": "test_pass_rate", "contribution": -0.10, "reason": "2/10 pending"},
+        {"feature": "file_risk_score", "contribution": -0.09, "reason": "terraform file"},
+        {"feature": "security_clean", "contribution": 0.20}
+      ],
+      "escalation_timeout_hours": 24,
+      "manual_approval_required": true,
+      "approved_by": "alice@org.com",
+      "merged_at": "2026-07-26T14:31:00Z"
+    },
+    {
+      "target_repo": "org/deployed-infra-asia",
+      "pr_number": 502,
+      "ml_confidence": 0.96,
+      "ml_recommendation": "AUTO_MERGE",
+      "status": "auto-merged",
+      "merged_at": "2026-07-26T10:05:00Z"
+    },
+    {
+      "target_repo": "org/deployed-infra-apac",
+      "pr_number": 503,
+      "ml_confidence": 0.72,
+      "ml_recommendation": "REJECT",
+      "status": "rejected",
+      "rejection_reason": "ML confidence below rejection threshold (72% < 75%)",
+      "feature_importance_top3": [
+        {"feature": "lcs_similarity", "contribution": -0.15, "reason": "LCS 0.68 due to prior conflict"},
+        {"feature": "file_risk_score", "contribution": -0.08},
+        {"feature": "test_pass_rate", "contribution": 0.20}
+      ]
+    },
+    {
+      "target_repo": "org/deployed-infra-dr",
+      "pr_number": 504,
+      "ml_confidence": null,
+      "ml_service_status": "timeout",
+      "fallback_gate_used": true,
+      "fallback_conditions_passed": [true, true, true, true, true],
+      "ml_recommendation": "FALLBACK_AUTO_MERGE",
+      "status": "auto-merged",
+      "merged_at": "2026-07-26T10:03:00Z",
+      "audit_note": "ML service unavailable; 5-condition hardcoded gate used (all conditions passed)"
+    }
+  ],
+  "summary": {
+    "total_prs": 5,
+    "auto_merged_via_ml": 2,
+    "escalated_via_ml": 1,
+    "rejected_via_ml": 1,
+    "auto_merged_via_fallback": 1,
+    "ml_service_availability": 0.8,
+    "average_confidence": 0.862,
+    "success_rate": 0.6,
+    "escalation_resolution_rate": 1.0
+  }
+}
+```
+
+---
+
 ## Usage Patterns — PHASE 1 (Still Supported)
 
 ### Pattern 1: Canonical Sync
@@ -1751,6 +2148,37 @@ GitHub Actions:
     - Track auto_merge_eligible → auto_merged success rate
     - Monitor escalation frequency; high escalations = process issue
 
+### Phase 3 Only (ML-Driven)
+
+14. **ML Confidence Scoring**
+    - Monitor ML confidence distribution: should be skewed toward ≥0.95 (>80% high confidence)
+    - If many PRs fall in 0.75–0.95 range: feature weights may need tuning
+    - If many PRs fall < 0.75: escalate to ML team for model debugging
+    - Track ML vs. fallback gate performance: confidence should outperform 5-condition gate by >10%
+
+15. **Fallback Gate Activation**
+    - If ML service unavailable: fallback gate is stricter (all 5 conditions must pass)
+    - Monitor fallback activation rate: >5% indicates ML service degradation (investigate)
+    - Set ML timeout conservatively (5–10 seconds); longer timeouts hurt user experience
+    - Keep Phase 2 5-condition gate well-maintained as fallback safety net
+
+16. **Feature Importance Interpretation**
+    - Share feature importance breakdowns with PRs in escalation tier (0.75–0.95)
+    - Use feature importance to guide author actions: "Add missing tests" vs. "Request security approval"
+    - Track feature importance trends: which factors most often block auto-merge? (signals process issue)
+    - Quarterly review: are the 9 ML features still relevant to your org's risk profile?
+
+17. **Confidence Tier Management**
+    - HIGH (≥0.95): Silent auto-merge is safe; monitor for false positives (rare merge failures)
+    - MEDIUM (0.75–0.95): Escalation timeout 24 hours; if frequently expired, increase auto-merge threshold
+    - LOW (<0.75): Author should fix issues; if many re-submissions, lower rejection threshold (make less strict)
+
+18. **Model Versioning & A/B Testing**
+    - Use audit log to track ML model version for each PR (enables A/B comparisons)
+    - When ML model updates: run A/B test window (e.g., 1 week) comparing old vs. new confidence scores
+    - Only deploy new model if: (1) false positive rate ≤ 0.5%, (2) confidence distribution improves
+    - Keep model changelog in audit table for compliance
+
 ---
 
 ## Outputs Summary
@@ -1761,70 +2189,103 @@ GitHub Actions:
 | **PR** | GitHub PR object | Review + merge sync changes |
 | **Conflict Issue** | GitHub issue with diff blocks | Human-guided conflict resolution |
 | **Commit Graph (Mermaid SVG)** | SVG diagram | Timeline of syncs + branch divergence |
-| **Audit Log** | JSON (Supabase) | Compliance + trend analysis |
+| **ML Confidence Score** | float [0.0–1.0] | Auto-merge decision gate (v3.0 NEW) |
+| **Feature Importance** | JSON dict | Explains ML decision for marginal scores (v3.0 NEW) |
+| **ML Recommendation** | enum [AUTO_MERGE, ESCALATE, REJECT] | Actionable merge guideline (v3.0 NEW) |
+| **Audit Log** | JSON (Supabase) | Compliance + trend analysis + ML audit trail (v3.0 enhanced) |
 
 ---
 
-## Decision Flowchart: Is It Safe to Merge? — NEW Phase 2
+## Decision Flowchart: Is It Safe to Merge? — Phase 3 (ML-Based)
 
-Use this flowchart to determine whether a GitOps PR should auto-merge or require manual review.
+**Updated for v3.0**: Use this flowchart to determine whether a GitOps PR should auto-merge based on **ML confidence scoring**.
+
+For the Phase 2 hardcoded 5-condition gate (used as fallback when ML unavailable), see the flowchart in § Phase 3 — ML-Based Auto-Merge Confidence Scoring → Fallback Mechanism.
 
 ```
+PRIMARY FLOW (v3.0): ML Confidence Scoring
+================================================
+
 START: GitOps Sync PR Created
   │
-  ├─── Q1: Tests Passing?
-  │    ├─ NO → Add label "failing-tests" → Create review issue → HOLD for manual fix
-  │    └─ YES ↓
+  ├─── Call: git-auto-merge-confidence API
+  │    ├─ SUCCESS: Receive confidence_score + recommendation
+  │    │   └─ Proceed to CONFIDENCE-BASED ROUTING (below)
+  │    │
+  │    └─ FAILED (timeout/degraded):
+  │        └─ FALLBACK: Use Phase 2 hardcoded 5-condition gate
+  │           ├─ Check: tests_passing AND zero_critical AND low_risk_files AND repo_count_le_5 AND audit_logged
+  │           ├─ If ALL pass → AUTO_MERGE
+  │           └─ If ANY fail → ESCALATE or REJECT
+  │           └─ Audit: {fallback_gate_used: true}
   │
-  ├─── Q2: Security Issues (CRITICAL)?
-  │    ├─ YES → Add label "security-issue" → Request security team review → HOLD
-  │    └─ NO ↓
   │
-  ├─── Q3: High-Risk Files Detected?
-  │    │    (package.json, Dockerfile, *.tf, secrets, workflows, etc.)
-  │    ├─ YES → Add label "high-risk-files" → Request ops/infra review → HOLD
-  │    └─ NO ↓
+  ├─── CONFIDENCE-BASED ROUTING
   │
-  ├─── Q4: File Count & Size Check
-  │    │    (≤20 files, ≤500 lines changed)
-  │    ├─ EXCEEDS → Add label "large-changeset" → Request review → HOLD
-  │    └─ OK ↓
+  ├─── TIER 1: Score ≥ 0.95 (HIGH CONFIDENCE)
+  │    │    Recommendation: AUTO_MERGE ✅
+  │    ├─ Label: "auto-merge-confident"
+  │    ├─ Comment: "ML Confidence: {score}% ✅ Auto-merging..."
+  │    ├─ Audit: {ml_confidence: score, recommendation: AUTO_MERGE, merged_at: timestamp}
+  │    ├─ Merge immediately
+  │    └─ Slack: "✅ Auto-merged (confidence: {score}%)"
   │
-  ├─── Q5: Number of Target Repos ≤ 5?
-  │    ├─ NO (N > 5) → Create issue "Exceeds repo threshold (N={N})" → HOLD
-  │    └─ YES ↓
+  ├─── TIER 2: Score 0.75–0.95 (MEDIUM CONFIDENCE)
+  │    │    Recommendation: ESCALATE ⚠️
+  │    ├─ Label: "requires-human-approval"
+  │    ├─ Comment:
+  │    │   ```
+  │    │   ML Confidence: {score}% (below auto-merge threshold)
+  │    │   Feature Importance:
+  │    │   - {top_factor}: {contribution} ({reason})
+  │    │   - {second_factor}: {contribution} ({reason})
+  │    │   - {third_factor}: {contribution} ({reason})
+  │    │   Recommendation: {actionable_recommendation}
+  │    │   ```
+  │    ├─ Assign: escalation_team (based on risk)
+  │    ├─ Timeout: 24 hours
+  │    ├─ Audit: {ml_confidence: score, recommendation: ESCALATE, escalation_reason: ...}
+  │    │
+  │    ├─ ON APPROVAL (within 24h):
+  │    │  ├─ Merge PR
+  │    │  └─ Audit: {manual_approval: true, approved_by: user}
+  │    │
+  │    └─ ON TIMEOUT (no approval):
+  │       ├─ Auto-reject
+  │       ├─ Label: "escalation-timeout"
+  │       └─ Comment: "Escalation expired. Requires re-submission."
   │
-  ├─── Q6: Audit Log Entry Created?
-  │    ├─ FAILED → Retry with backoff; if 3 retries fail → ESCALATE
-  │    └─ SUCCESS ↓
-  │
-  ├─── Q7: LCS Algorithm (if three-way merge)
-  │    │    Similarity > 75% OR No conflicting regions?
-  │    ├─ NO (complex conflict) → Add label "conflict" → Create issue → HOLD
-  │    └─ YES ↓
-  │
-  ├─── Q8: Conflict Strategy = auto-merge?
-  │    ├─ NO → HOLD for manual-review
-  │    └─ YES ↓
-  │
-  └─── ✅ ALL CHECKS PASSED → AUTO-MERGE
-       ├─ Set PR to auto-merge
-       ├─ Update audit log: {auto_merge_eligible: true}
-       ├─ Post comment: "All checks passed. Auto-merging..."
-       ├─ Merge with commit message: "GitOps: {strategy} {source} → {target}"
-       └─ On success:
-           ├─ Update audit: {merged_at: timestamp, auto_merged: true}
-           ├─ Notify Slack: ✅ Sync merged
-           └─ Continue to next target repo (if multi-repo sync)
+  └─── TIER 3: Score < 0.75 (LOW CONFIDENCE)
+       │    Recommendation: REJECT ❌
+       ├─ Label: "confidence-too-low"
+       ├─ Comment:
+       │   ```
+       │   ML Confidence: {score}% (below rejection threshold of 75%)
+       │   Factors preventing merge:
+       │   - {top_blocker}: {contribution} ({reason})
+       │   - {second_blocker}: {contribution} ({reason})
+       │   Action required: Fix {specific_issues} and re-submit.
+       │   ```
+       ├─ Audit: {ml_confidence: score, recommendation: REJECT, reason: ...}
+       │
+       └─ Author Action:
+           ├─ Address identified issues
+           ├─ Re-request ML evaluation
+           └─ Or escalate manually (requires override)
 
-       On merge failure:
-           ├─ ROLLBACK triggered (if enabled)
-           ├─ Revert all downstream syncs in reverse order
-           ├─ Create rollback audit entries
-           └─ Notify incident channel
-```
 
-### Decision Table
+DECISION TABLE (v3.0 ML-Based)
+==============================
+
+| Confidence | Decision | Action | Timeout | Audit |
+|---|---|---|---|---|
+| **≥ 0.95** | AUTO_MERGE | Merge immediately | None | auto_merged=true |
+| **0.75–0.95** | ESCALATE | Hold for approval | 24h | escalated + approval_required |
+| **< 0.75** | REJECT | Block merge | None | rejected + reason |
+| **ML unavailable** | FALLBACK | Use Phase 2 gate | None | fallback_gate_used=true |
+
+PHASE 2 FALLBACK: Hardcoded 5-Condition Gate (if ML unavailable)
+================================================================
 
 | Condition | Pass | Fail | Action |
 |-----------|------|------|--------|
@@ -1833,10 +2294,9 @@ START: GitOps Sync PR Created
 | Low-risk files | ✅ | ❌ | HOLD + ops review |
 | ≤20 files, ≤500 lines | ✅ | ❌ | HOLD + review |
 | ≤5 target repos | ✅ | ❌ | HOLD + comment |
-| Audit logged | ✅ | ❌ | RETRY + escalate |
-| LCS similarity >75% | ✅ | ❌ | HOLD + conflict issue |
-| auto-merge enabled | ✅ | ❌ | HOLD for manual |
-| **All pass** | **✅** | | **AUTO-MERGE** |
+| **All 5 pass** | **✅** | | **AUTO_MERGE (fallback)** |
+| **Any fail** | | **❌** | **ESCALATE or HOLD** |
+```
 
 ---
 
@@ -1844,34 +2304,73 @@ START: GitOps Sync PR Created
 
 ```
 Skill: git-gitops-flow
-Version: 2.0.0  # Phase 2 expansion
+Version: 3.0.0  # Phase 3: ML-powered confidence scoring
 Created: 2026-07-26
-Updated: 2026-07-26 (Phase 2 expansion)
+Updated: 2026-07-26 (Phase 3 expansion: ML confidence scoring)
 Tier: Sonnet
 MCP Servers: 
   - GitHub (create_branch, create_pull_request, merge_pull_request, list_commits, search_code, update_pull_request_branch)
   - GitHub Actions (workflow dispatch for scheduled syncs)
-  - Supabase (audit logging: gitops_audit, gitops_operations, gitops_conflicts)
+  - git-auto-merge-confidence (ML inference service for confidence scoring) — NEW v3.0
+  - Supabase (audit logging: gitops_audit, gitops_operations, gitops_conflicts, gitops_ml_scores) — NEW v3.0
 
-PHASE 2 ADDITIONS (v2.0):
+PHASE 3 ADDITIONS (v3.0) — ML-Based Confidence Scoring:
+  Auto-Merge Decision: ML confidence scoring replaces 5-condition hardcoded gate
+  Confidence Thresholds:
+    - ≥ 0.95: AUTO_MERGE (silent, immediate)
+    - 0.75–0.95: ESCALATE (hold for human approval, 24h timeout)
+    - < 0.75: REJECT (author must fix + re-submit)
+  
+  ML Model Inputs:
+    - Test results (pass/fail/pending)
+    - Security scan outcomes (CRITICAL/HIGH/MEDIUM/LOW)
+    - File change patterns (risk classification)
+    - Repo fan-out count (≤5 safety check)
+    - LCS similarity scores (three-way merge analysis)
+    - Commit message quality (conventional commits)
+    - Author history (trustworthiness score)
+    - Deployment history (success rate)
+    - Time of day (off-peak = lower risk)
+  
+  ML Model Outputs:
+    - confidence_score: [0.0–1.0] float
+    - recommendation: enum [AUTO_MERGE, ESCALATE, REJECT]
+    - feature_importance: dict {feature: weight, contribution, reason}
+    - explanation: human-readable interpretation
+  
+  Fallback Mechanism:
+    - If ML service unavailable (timeout > 5s): Use hardcoded 5-condition gate
+    - Fallback is STRICTER: all 5 conditions must pass (Phase 2)
+    - Audit: {fallback_gate_used: true}
+  
+  Explainability:
+    - Feature importance breakdown for marginal cases (0.75–0.95)
+    - Top 3 factors affecting confidence score
+    - Actionable recommendations for author
+  
+  Audit Trail (NEW):
+    - gitops_ml_scores: {pr_id, ml_confidence, recommendation, feature_importance, timestamp}
+    - Tracks ML model versions & inference latency
+    - Compliance-ready: explains every auto-merge decision
+
+PHASE 2 FEATURES (v2.0) — Still Supported:
   Sync Strategies: 6 (copy-file, merge-branch, rebase, rebase-onto-main, squash-fixups, three-way-merge)
   Conflict Detection: Advanced LCS-based three-way merge with similarity thresholds
-  Auto-Merge: 5-condition safety gates (tests green, zero CRITICAL, low-risk pattern, ≤5 repos, audit-logged)
   Scheduled Syncs: GitHub Actions (cron + event-driven)
   Transactional Rollback: Atomic cascade revert on merge failure
   Escalation Rules: High-risk file detection (package.json, Dockerfile, *.tf, secrets, etc.)
-  Decision Flowchart: is-it-safe-to-merge (8-point decision tree)
 
 Output Formats: 
-  - JSON (sync report, audit log)
-  - GitHub PR/Issue (with auto-merge status)
+  - JSON (sync report, audit log, ML scores + feature importance)
+  - GitHub PR/Issue (with auto-merge status + ML recommendation)
   - Mermaid SVG (commit graph + decision flowchart)
-  - Slack notifications (sync status, escalations, rollbacks)
-  - Audit trail (Supabase: compliance-ready)
+  - Slack notifications (sync status, escalations, rollbacks, ML confidence)
+  - Audit trail (Supabase: compliance-ready + ML explainability)
 
 Use Cases: 
   - Phase 1: GitOps multi-repo sync, draft PR creation
-  - Phase 2: Auto-merge production syncs, multi-region rollout, transactional rollback, scheduled deployments
+  - Phase 2: Auto-merge production syncs, multi-region rollout, transactional rollback
+  - Phase 3: ML-driven auto-merge (confidence-based routing), explainable decisions, fallback safety
 
 GitHub Scopes Required: 
   - contents:read, contents:write
@@ -1882,9 +2381,12 @@ GitHub Scopes Required:
 Logging: Supabase tables
   - `gitops_operations`: all sync operations (status, target_repos, strategy)
   - `gitops_conflicts`: conflict details + resolution (LCS analysis)
-  - `gitops_audit`: compliance log (actor, timestamp, risk_level, conditions_passed, auto_merged)
+  - `gitops_audit`: compliance log (actor, timestamp, risk_level, auto_merged)
+  - `gitops_ml_scores`: ML inference audit (pr_id, confidence, recommendation, feature_importance) — NEW v3.0
   - `gitops_rollbacks`: rollback chains (parent_op_id, reverted_prs, reason)
 
 Classification: Horizontal Skill — Manta Associados (Multi-Agent GitOps Infrastructure)
 Integration: Compatible with manta-05 (Orçamento), manta-07 (Cronograma), CI/CD workflows
+Depends On: git-auto-merge-confidence (ML inference service)
+Fallback: Hardcoded 5-condition gate (Phase 2)
 ```

@@ -1,8 +1,8 @@
 # SKILL.md — git-code-pattern-detection
 
-**Detect SQL injection, XSS, hardcoded secrets, deprecated APIs, TODOs across git repositories. Fase 1 MVP (10 OWASP) → Fase 2 (50+ CWE + AST + Semgrep + ML filtering).**
+**Detect SQL injection, XSS, hardcoded secrets, deprecated APIs, TODOs across git repositories. Fase 1 MVP (10 OWASP) → Fase 2 (50+ CWE + AST + Semgrep + ML filtering) → Fase 3 (Feedback learning loop + precision/recall tracking + dynamic threshold tuning).**
 
-Version: **2.0.0** | Tier: **Sonnet/Opus** | MCPs: **GitHub search_code + Bash grep + Semgrep CLI** | Output: **JSON + HTML dashboard + Remediation playbook**
+Version: **3.0.0** | Tier: **Sonnet** | MCPs: **GitHub search_code + Bash grep + Semgrep CLI + Supabase feedback storage** | Output: **JSON + HTML dashboard + Remediation playbook + Weekly Quality Report**
 
 ---
 
@@ -17,10 +17,11 @@ Automated security and code-quality scanning skill that identifies anti-patterns
 
 ---
 
-## Fase 1 → Fase 2 Evolution
+## Fase Evolution: v1.0 → v2.0 → v3.0
 
-**Fase 1 (MVP)**: 10 OWASP patterns, GitHub + Bash scanning, JSON + HTML dashboard  
-**Fase 2 (Current)**: 50+ CWE Top 25 patterns, AST analysis, Semgrep SAST integration, ML-based severity filtering, detailed remediation playbooks for Python/JavaScript/Go
+**Fase 1 (v1.0 MVP)**: 10 OWASP patterns, GitHub + Bash scanning, JSON + HTML dashboard  
+**Fase 2 (v2.0 Current)**: 50+ CWE Top 25 patterns, AST analysis, Semgrep SAST integration, ML-based severity filtering, detailed remediation playbooks  
+**Fase 3 (v3.0 — Feedback Learning)**: Human-in-the-loop feedback system, precision/recall per pattern, dynamic threshold auto-tuning, integration with git-auto-merge-confidence, weekly quality metrics
 
 ### What's New in Fase 2
 
@@ -34,6 +35,522 @@ Automated security and code-quality scanning skill that identifies anti-patterns
 | Language support | JS/TS/Python/PHP | Python/JavaScript/Go/Java + others | ✅ Implemented |
 | Configuration as code | Manual patterns | Semgrep YAML configs | ✅ Implemented |
 | Severity prediction | Fixed labels | ML confidence scoring | ✅ Implemented |
+
+---
+
+## Fase 3: Feedback Learning Loop & Dynamic Precision Tuning
+
+### Purpose
+
+Automatically improve detection quality by:
+1. **Capturing human feedback**: When a human marks a finding as false positive/negative
+2. **Retraining the ML model**: Incorporating feedback into future detections
+3. **Per-pattern metrics**: Track precision, recall, F1 score for each CWE pattern
+4. **Dynamic threshold tuning**: If pattern X has <85% precision, lower confidence threshold
+5. **Weekly quality reports**: Executive dashboard of detection performance
+6. **Integration with merge confidence**: High-precision patterns boost merge confidence scoring
+
+### Feedback Loop Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ SCAN PHASE: Semgrep + ML inference                             │
+│ Output: 50+ findings with ML confidence scores                  │
+└─────────────┬───────────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ HUMAN REVIEW PHASE: Engineer marks findings as TP/FP/FN        │
+│ Input: Detection findings + fix suggestions                     │
+│ Output: Feedback labels stored in Supabase                      │
+└─────────────┬───────────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ FEEDBACK STORAGE: Supabase (tbl_detection_feedback)             │
+│ Columns: finding_id, scan_id, pattern_id, feedback, confidence  │
+└─────────────┬───────────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ QUALITY METRICS CALCULATION (Weekly)                            │
+│ For each pattern_id:                                            │
+│   - TP count (correctly detected vulnerabilities)               │
+│   - FP count (false positive detections)                        │
+│   - FN count (missed vulnerabilities)                           │
+│   - Precision = TP / (TP + FP)                                  │
+│   - Recall = TP / (TP + FN)                                     │
+│   - F1 = 2 × (Precision × Recall) / (Precision + Recall)       │
+└─────────────┬───────────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ DYNAMIC THRESHOLD TUNING                                        │
+│ IF pattern.precision < 0.85:                                    │
+│   - Reduce confidence_threshold by 10% (e.g., 0.7 → 0.63)      │
+│   - Suppress LOW confidence findings for this pattern           │
+│ IF pattern.recall < 0.80:                                       │
+│   - Increase confidence_threshold by 5%                         │
+│   - Increase detection sensitivity (lower threshold = more FP)  │
+│ IF pattern.f1 > 0.92:                                           │
+│   - Mark pattern as HIGH_QUALITY                                │
+│   - Boost merge confidence if finding from this pattern         │
+└─────────────┬───────────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ RETRAINING: ML MODEL (Weekly or on-demand)                     │
+│ 1. Collect feedback: All labeled findings from past week        │
+│ 2. Feature engineering: Update pattern score embeddings         │
+│ 3. Model fit: sklearn.ensemble.RandomForestClassifier           │
+│ 4. Cross-validation: 5-fold CV, evaluate precision/recall       │
+│ 5. Deploy: If F1 > previous model, replace inference model      │
+└─────────────┬───────────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ OUTPUT: QUALITY REPORT (Weekly digest)                          │
+│ - Precision/recall per pattern                                  │
+│ - Trending patterns (improving vs degrading)                    │
+│ - FP/FN analysis & root causes                                  │
+│ - Model performance metrics                                     │
+│ - Threshold tuning adjustments                                  │
+│ - Confidence scores for git-auto-merge integration              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Feedback Storage Schema (Supabase)
+
+**Table: `tbl_detection_feedback`**
+
+```sql
+CREATE TABLE tbl_detection_feedback (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  scan_id TEXT NOT NULL,                           -- Links to original scan
+  finding_id TEXT NOT NULL,                        -- e.g., "FND-001"
+  pattern_id TEXT NOT NULL,                        -- e.g., "CWE-89-SQL-INJECT"
+  file_path TEXT NOT NULL,                         -- Source file
+  line_number INT,
+  ml_confidence_original FLOAT,                    -- Original ML confidence (0-1)
+  human_feedback TEXT NOT NULL,                    -- 'TRUE_POSITIVE' | 'FALSE_POSITIVE' | 'FALSE_NEGATIVE'
+  human_comment TEXT,                              -- Why human disagreed (optional)
+  feedback_timestamp TIMESTAMP DEFAULT NOW(),
+  feedback_by TEXT,                                -- GitHub username or email
+  
+  -- Quality tracking
+  is_exploitable BOOLEAN,                          -- Only for TP: Can it actually be exploited?
+  severity_override INT,                           -- 1-5 (if human disagrees with ML)
+  remediation_status TEXT,                         -- 'PENDING' | 'IN_PROGRESS' | 'FIXED' | 'WONT_FIX'
+  remediation_date TIMESTAMP,
+  
+  UNIQUE(scan_id, finding_id)
+);
+
+-- Index for fast pattern-based queries
+CREATE INDEX idx_feedback_pattern ON tbl_detection_feedback(pattern_id);
+CREATE INDEX idx_feedback_scan ON tbl_detection_feedback(scan_id);
+CREATE INDEX idx_feedback_timestamp ON tbl_detection_feedback(feedback_timestamp);
+```
+
+**Table: `tbl_pattern_quality_metrics`**
+
+```sql
+CREATE TABLE tbl_pattern_quality_metrics (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  pattern_id TEXT NOT NULL UNIQUE,                 -- CWE-89-SQL-INJECT, etc.
+  metric_date DATE NOT NULL,                       -- Weekly aggregation
+  
+  -- Confusion matrix
+  true_positives INT DEFAULT 0,
+  false_positives INT DEFAULT 0,
+  false_negatives INT DEFAULT 0,
+  true_negatives INT DEFAULT 0,
+  
+  -- Calculated metrics
+  precision FLOAT,                                 -- TP / (TP + FP)
+  recall FLOAT,                                    -- TP / (TP + FN)
+  f1_score FLOAT,                                  -- 2 × (P × R) / (P + R)
+  specificity FLOAT,                               -- TN / (TN + FP)
+  accuracy FLOAT,                                  -- (TP + TN) / Total
+  
+  -- Trend & status
+  confidence_threshold FLOAT,                      -- Current threshold (e.g., 0.7)
+  quality_status TEXT,                             -- 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR'
+  trend TEXT,                                      -- 'IMPROVING' | 'STABLE' | 'DEGRADING'
+  
+  -- Sampling data
+  total_findings_detected INT,
+  total_feedback_received INT,
+  feedback_rate FLOAT,                             -- Feedback / Detected %
+  
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+**Table: `tbl_ml_model_versions`**
+
+```sql
+CREATE TABLE tbl_ml_model_versions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  version_id TEXT UNIQUE,                          -- v3.0-2026-07-26-w1
+  created_at TIMESTAMP DEFAULT NOW(),
+  deployed_at TIMESTAMP,
+  
+  -- Model metadata
+  training_samples INT,                            -- Number of labeled feedback
+  training_date DATE,
+  model_filepath TEXT,                             -- Where model is stored (S3/local)
+  
+  -- Performance baseline
+  overall_f1_score FLOAT,
+  overall_precision FLOAT,
+  overall_recall FLOAT,
+  patterns_improved INT,
+  patterns_degraded INT,
+  
+  -- Comparison
+  previous_version_id TEXT,                        -- Links to prior version
+  f1_improvement FLOAT,                            -- % improvement vs previous
+  
+  is_active BOOLEAN DEFAULT false,
+  notes TEXT
+);
+```
+
+### Feedback Workflow (Step-by-Step)
+
+#### Step 1: Collect Feedback (Human Review)
+
+When an engineer reviews findings, they mark each as:
+- ✅ **TRUE_POSITIVE**: "Yes, this is a real vulnerability"
+- ❌ **FALSE_POSITIVE**: "This is not actually vulnerable (e.g., code is in test, input is validated, etc.)"
+- 🔍 **FALSE_NEGATIVE** (optional): "I found a vulnerability this scan missed"
+
+**Feedback UI (API call)**:
+```bash
+curl -X POST https://api.manta.local/v1/detection/feedback \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "scan_id": "scan-20260726-a1b2c3",
+    "finding_id": "FND-001",
+    "pattern_id": "CWE-89-SQL-INJECT",
+    "feedback": "TRUE_POSITIVE",
+    "human_comment": "User input flows directly to db.execute() without escaping",
+    "is_exploitable": true,
+    "severity_override": 5,
+    "remediation_status": "PENDING"
+  }'
+```
+
+#### Step 2: Aggregate Weekly Metrics
+
+**Automated job (Monday 9am UTC)**:
+```python
+# pseudocode
+from datetime import datetime, timedelta
+import pandas as pd
+
+def aggregate_weekly_metrics():
+    """Aggregate feedback from past 7 days into quality metrics"""
+    
+    # 1. Fetch all feedback from past week
+    end_date = datetime.utcnow()
+    start_date = end_date - timedelta(days=7)
+    
+    feedback_df = supabase.table('tbl_detection_feedback') \
+        .select('*') \
+        .gte('feedback_timestamp', start_date.isoformat()) \
+        .execute()
+    
+    # 2. Group by pattern_id
+    for pattern_id, group in feedback_df.groupby('pattern_id'):
+        tp = len(group[group['human_feedback'] == 'TRUE_POSITIVE'])
+        fp = len(group[group['human_feedback'] == 'FALSE_POSITIVE'])
+        fn = len(group[group['human_feedback'] == 'FALSE_NEGATIVE'])
+        
+        # 3. Calculate metrics
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+        recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+        f1 = 2 * (precision * recall) / (precision + recall) \
+            if (precision + recall) > 0 else 0
+        
+        # 4. Determine quality status
+        if f1 > 0.92:
+            quality_status = 'EXCELLENT'
+        elif f1 > 0.85:
+            quality_status = 'GOOD'
+        elif f1 > 0.75:
+            quality_status = 'FAIR'
+        else:
+            quality_status = 'POOR'
+        
+        # 5. Store in Supabase
+        supabase.table('tbl_pattern_quality_metrics').insert({
+            'pattern_id': pattern_id,
+            'metric_date': end_date.date(),
+            'true_positives': tp,
+            'false_positives': fp,
+            'false_negatives': fn,
+            'precision': precision,
+            'recall': recall,
+            'f1_score': f1,
+            'quality_status': quality_status,
+            'total_feedback_received': tp + fp + fn
+        }).execute()
+```
+
+#### Step 3: Auto-Tune Thresholds
+
+**Pseudo-code for dynamic threshold adjustment**:
+```python
+def auto_tune_thresholds():
+    """Adjust ML confidence thresholds based on precision/recall"""
+    
+    metrics = supabase.table('tbl_pattern_quality_metrics') \
+        .select('*') \
+        .eq('metric_date', date.today()) \
+        .execute()
+    
+    for metric_row in metrics.data:
+        pattern_id = metric_row['pattern_id']
+        precision = metric_row['precision']
+        recall = metric_row['recall']
+        current_threshold = metric_row['confidence_threshold'] or 0.7
+        
+        # Get current threshold setting
+        pattern_config = config['patterns'][pattern_id]
+        
+        # Adjust threshold
+        if precision < 0.85 and recall > 0.90:
+            # Too many false positives, increase threshold
+            new_threshold = current_threshold * 1.10  # Increase by 10%
+            adjustment = 'INCREASED (reduce false positives)'
+        elif recall < 0.80 and precision > 0.90:
+            # Missed detections, decrease threshold
+            new_threshold = current_threshold * 0.95  # Decrease by 5%
+            adjustment = 'DECREASED (improve recall)'
+        elif precision > 0.95 and recall > 0.90:
+            # Excellent pattern, mark as high confidence
+            new_threshold = current_threshold * 0.98
+            adjustment = 'MAINTAINED (high quality pattern)'
+            pattern_config['quality_tier'] = 'HIGH_QUALITY'
+        else:
+            new_threshold = current_threshold
+            adjustment = 'NO_CHANGE'
+        
+        # Store adjustment
+        config['patterns'][pattern_id]['confidence_threshold'] = new_threshold
+        
+        # Log adjustment
+        logger.info(f"Pattern {pattern_id}: threshold {adjustment} "
+                   f"({current_threshold:.2f} → {new_threshold:.2f})")
+        
+        # Update in config storage (Supabase or file)
+        save_pattern_config(pattern_id, {
+            'confidence_threshold': new_threshold,
+            'last_tuned': datetime.utcnow(),
+            'tuning_reason': f'P={precision:.2f}, R={recall:.2f}'
+        })
+```
+
+#### Step 4: Retrain ML Model (Weekly)
+
+**Model retraining pipeline**:
+```python
+import pickle
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+
+def retrain_ml_model():
+    """Retrain ML severity filter model using feedback data"""
+    
+    # 1. Collect labeled feedback
+    feedback = supabase.table('tbl_detection_feedback') \
+        .select('*') \
+        .gte('feedback_timestamp', 
+             (datetime.utcnow() - timedelta(days=30)).isoformat()) \
+        .execute()
+    
+    X_train = []  # Features
+    y_train = []  # Labels (1=TP, 0=FP/FN)
+    
+    for row in feedback.data:
+        # Extract features
+        features = extract_ml_features({
+            'pattern_id': row['pattern_id'],
+            'ml_confidence_original': row['ml_confidence_original'],
+            'file_path': row['file_path'],
+            'is_exploitable': row.get('is_exploitable', False),
+            'severity_override': row.get('severity_override', None)
+        })
+        
+        # Label: TP=1, FP=0
+        label = 1 if row['human_feedback'] == 'TRUE_POSITIVE' else 0
+        
+        X_train.append(features)
+        y_train.append(label)
+    
+    # 2. Train Random Forest model
+    model = RandomForestClassifier(
+        n_estimators=100,
+        max_depth=15,
+        random_state=42
+    )
+    model.fit(X_train, y_train)
+    
+    # 3. Cross-validate
+    cv_scores = cross_val_score(model, X_train, y_train, cv=5, 
+                                scoring='f1_weighted')
+    print(f"Cross-validation F1: {cv_scores.mean():.3f} "
+          f"(+/- {cv_scores.std():.3f})")
+    
+    # 4. Compare with previous model
+    previous_model = load_previous_model()
+    previous_f1 = evaluate_model(previous_model, X_train, y_train)
+    new_f1 = cv_scores.mean()
+    
+    f1_improvement = ((new_f1 - previous_f1) / previous_f1) * 100
+    
+    if new_f1 > previous_f1:
+        # Save and deploy new model
+        version_id = f"v3.0-{datetime.utcnow().date()}-retr{int(time.time())}"
+        
+        with open(f's3://models/{version_id}/model.pkl', 'wb') as f:
+            pickle.dump(model, f)
+        
+        # Record version
+        supabase.table('tbl_ml_model_versions').insert({
+            'version_id': version_id,
+            'training_samples': len(X_train),
+            'training_date': datetime.utcnow().date(),
+            'overall_f1_score': new_f1,
+            'overall_precision': precision_score(y_train, model.predict(X_train)),
+            'overall_recall': recall_score(y_train, model.predict(X_train)),
+            'previous_version_id': previous_model.version_id,
+            'f1_improvement': f1_improvement,
+            'is_active': True,
+            'notes': f'Trained on {len(X_train)} samples'
+        }).execute()
+        
+        logger.info(f"New model deployed: {version_id}, F1 improvement: {f1_improvement:.2f}%")
+    else:
+        logger.info(f"Model NOT updated: new F1 ({new_f1:.3f}) <= previous ({previous_f1:.3f})")
+```
+
+### Weekly Quality Report (Example)
+
+**Output format: Markdown + JSON + HTML dashboard**
+
+```markdown
+# Detection Quality Report
+**Week of**: 2026-07-26 to 2026-08-02  
+**Model Version**: v3.0-2026-08-02  
+**Generated**: 2026-08-03 09:00 UTC
+
+## Executive Summary
+
+| Metric | Value | Trend |
+|--------|-------|-------|
+| Overall F1 Score | 0.91 | ↗ +2.3% |
+| Overall Precision | 0.93 | ↗ +1.1% |
+| Overall Recall | 0.88 | ↗ +3.2% |
+| Patterns Tracked | 50 | - |
+| Feedback Received | 287 | ↗ +23% |
+| Model Accuracy | 92.1% | ↗ +1.8% |
+
+## Pattern Rankings (Top 10)
+
+### EXCELLENT (F1 > 0.92)
+| Pattern | Precision | Recall | F1 | Status |
+|---------|-----------|--------|----|----|
+| CWE-89-SQL-INJECT | 0.96 | 0.91 | 0.93 | Stable |
+| CWE-79-XSS-DOM | 0.94 | 0.89 | 0.91 | Improving |
+| CWE-611-XXE | 0.97 | 0.93 | 0.95 | Improving |
+| CWE-434-FILE-UPLOAD | 0.92 | 0.94 | 0.93 | Stable |
+| CWE-502-DESERIALIZE | 0.95 | 0.90 | 0.92 | Stable |
+
+### GOOD (F1 0.85–0.92)
+| Pattern | Precision | Recall | F1 | Trend |
+|---------|-----------|--------|----|----|
+| CWE-352-CSRF | 0.88 | 0.84 | 0.86 | Improving |
+| CWE-327-WEAK-CRYPTO | 0.91 | 0.81 | 0.86 | Stable |
+| CWE-287-AUTH-BYPASS | 0.86 | 0.85 | 0.85 | Degrading |
+
+### FAIR (F1 0.75–0.85)
+| Pattern | Precision | Recall | F1 | Issue |
+|---------|-----------|--------|----|----|
+| CWE-400-RESOURCE-DOS | 0.78 | 0.72 | 0.75 | High FP rate |
+| CWE-601-URL-REDIRECT | 0.81 | 0.68 | 0.74 | Low recall |
+
+### POOR (F1 < 0.75)
+| Pattern | Precision | Recall | F1 | Action |
+|---------|-----------|--------|----|----|
+| CWE-345-DATA-AUTH | 0.72 | 0.61 | 0.66 | Threshold decreased 5% |
+| CWE-306-MISSING-AUTH | 0.68 | 0.70 | 0.69 | Needs rule review |
+
+## Threshold Adjustments This Week
+
+| Pattern | Previous | New | Reason |
+|---------|----------|-----|--------|
+| CWE-89-SQL-INJECT | 0.70 | 0.72 | Precision excellent (0.96) |
+| CWE-400-RESOURCE-DOS | 0.75 | 0.68 | Precision low (0.78), need more FP tolerance |
+| CWE-306-MISSING-AUTH | 0.72 | 0.65 | Recall low (0.70), increase detection |
+
+## False Positive Analysis
+
+**Top FP generators** (patterns with high false positive rate):
+1. **CWE-400-RESOURCE-DOS**: 23 FP out of 142 detections (16.2%)
+   - Root cause: Detects ANY loop, not unsafe resource exhaustion
+   - Action: Tighten regex to exclude validated bounds
+2. **CWE-601-URL-REDIRECT**: 18 FP out of 78 detections (23%)
+   - Root cause: Detects URL params, not actual open redirects
+   - Action: Add data flow analysis to exclude validated URLs
+
+## False Negative Analysis (Missed Vulnerabilities)
+
+**Patterns with low recall**:
+1. **CWE-601-URL-REDIRECT**: Recall 0.68 (missed 10 vulns)
+   - Causes: Obfuscated redirects, indirect parameter passing
+   - Action: Add pattern variants for common obfuscation
+2. **CWE-345-DATA-AUTH**: Recall 0.61 (missed 8 vulns)
+   - Causes: Custom authentication schemes not in ruleset
+   - Action: Expand rules to include domain-specific auth patterns
+
+## Integration with git-auto-merge-confidence
+
+**Quality boost mapping**:
+- Pattern in EXCELLENT tier → +3% merge confidence
+- Pattern in GOOD tier → +1% merge confidence
+- Pattern in FAIR tier → +0% merge confidence
+- Pattern in POOR tier → -1% merge confidence
+
+Example:
+```
+Finding: CWE-89-SQL-INJECT detected in PR
+Pattern quality: EXCELLENT (F1=0.93, precision=0.96)
+Merge confidence boost: +3%
+```
+
+## Model Deployment Status
+
+**Current model**: v3.0-2026-08-02-retr1722643200
+- Training samples: 1,247
+- F1 improvement vs previous: +2.1%
+- Deployed: 2026-08-03
+- Expected next retraining: 2026-08-10
+
+## Recommendations
+
+1. ✅ CWE-89 (SQL Injection) — No action, excellent performance
+2. ⚠️ CWE-400 (Resource DoS) — Review false positive generator, consider disabling or refine rule
+3. ⚠️ CWE-306 (Missing Auth) — Expand rule coverage for custom auth patterns
+4. ✅ CWE-611 (XXE) — Maintain current threshold, achieving excellent results
+
+---
+
+Report generated by Manta Detection Quality System  
+Next report: 2026-08-10 09:00 UTC
+```
 
 ---
 
@@ -1549,6 +2066,148 @@ IF user asks "scan repository", "security audit", "find vulnerabilities"
 
 ---
 
+## Fase 3 Implementation Roadmap (Week 9–12)
+
+### Week 9: Feedback Infrastructure & Supabase Schema
+**Goal**: Set up feedback collection system, database schema, and API endpoints
+
+- [ ] Design feedback UI component (React)
+- [ ] Create Supabase tables:
+  - `tbl_detection_feedback` (finding labels + human comments)
+  - `tbl_pattern_quality_metrics` (precision/recall per pattern)
+  - `tbl_ml_model_versions` (model deployment tracking)
+- [ ] Build feedback API endpoints:
+  - `POST /api/v1/detection/feedback` (submit feedback)
+  - `GET /api/v1/detection/{finding_id}/feedback` (view feedback)
+  - `GET /api/v1/patterns/{pattern_id}/metrics` (view quality metrics)
+- [ ] Integrate feedback submission into HTML dashboard
+- [ ] Add TP/FP/FN buttons to finding cards
+- [ ] **Deliverable**: Feedback UI + Supabase schema + API endpoints
+
+### Week 10: Metrics Aggregation & Quality Dashboard
+**Goal**: Implement weekly metrics calculation and quality reporting
+
+- [ ] Build weekly metrics aggregation job (Cron or Cloud Function)
+- [ ] Implement precision/recall/F1 calculation
+- [ ] Create quality status classification (EXCELLENT/GOOD/FAIR/POOR)
+- [ ] Build weekly quality report generator:
+  - Markdown report with pattern rankings
+  - JSON export for programmatic access
+  - HTML dashboard with charts (trend, distribution)
+- [ ] Implement pattern ranking by F1 score
+- [ ] Add false positive / false negative root cause analysis
+- [ ] Create email digest (Monday morning summary)
+- [ ] **Deliverable**: Quality report generator + automated weekly emails
+
+### Week 11: Dynamic Threshold Tuning & Model Retraining
+**Goal**: Auto-adjust detection thresholds and retrain ML model weekly
+
+- [ ] Implement threshold auto-tuning algorithm:
+  - IF precision < 0.85: increase threshold by 10%
+  - IF recall < 0.80: decrease threshold by 5%
+- [ ] Build model retraining pipeline:
+  - Collect feedback samples from past week
+  - Extract ML features (pattern type, context, exploitability)
+  - Train RandomForestClassifier with sklearn
+  - 5-fold cross-validation and evaluation
+  - Deploy if F1 > previous model
+- [ ] Set up scheduled retraining job (weekly on Sunday)
+- [ ] Create model version tracking system
+- [ ] Implement model rollback capability
+- [ ] Add performance metrics to tbl_ml_model_versions
+- [ ] **Deliverable**: Automated threshold tuning + weekly retraining pipeline
+
+### Week 12: Integration with git-auto-merge-confidence
+**Goal**: Connect detection quality to merge confidence scoring
+
+- [ ] Implement quality-score mapping:
+  - EXCELLENT patterns (F1 > 0.92): +3% merge confidence
+  - GOOD patterns (F1 > 0.85): +1% merge confidence
+  - FAIR patterns (F1 > 0.75): +0% merge confidence
+  - POOR patterns (F1 < 0.75): -1% merge confidence
+- [ ] Integrate with git-auto-merge-confidence API:
+  - For each finding in PR, lookup pattern quality tier
+  - Apply confidence boost/penalty based on tier
+  - Aggregated confidence = base + boosts/penalties
+- [ ] Document integration for git-auto-merge-confidence maintainers
+- [ ] Test on sample PRs with various finding types
+- [ ] Create debugging tools:
+  - "Explain my merge confidence" endpoint
+  - Show breakdown of boost/penalty by finding
+- [ ] Add documentation to git-auto-merge-confidence README
+- [ ] **Deliverable**: Integration working end-to-end, documented
+
+### Fase 3 Success Criteria
+
+- ✅ 100+ samples of human feedback per week (target by W12)
+- ✅ Per-pattern metrics tracked and reported weekly
+- ✅ ML model retraining working automatically (>90% uptime)
+- ✅ Threshold auto-tuning improving F1 by 2%+ per pattern
+- ✅ git-auto-merge-confidence integration live in production
+- ✅ False positive rate reduced by 15%+ (vs Fase 2 baseline)
+- ✅ False negative rate reduced by 10%+ (via better recall)
+- ✅ Weekly quality report generated and shared
+- ✅ All EXCELLENT tier patterns documented
+
+---
+
+## Integration with git-auto-merge-confidence
+
+### High-Precision Detection Boost
+
+When a security finding is detected by a **high-quality pattern** (EXCELLENT or GOOD tier), it boosts merge confidence scoring:
+
+```
+MERGE_CONFIDENCE = base_confidence + quality_boosts
+
+Where quality_boosts = SUM(
+  finding.pattern.quality_tier == EXCELLENT ? +3% : 0,
+  finding.pattern.quality_tier == GOOD ? +1% : 0,
+  finding.pattern.quality_tier == FAIR ? 0% : 0,
+  finding.pattern.quality_tier == POOR ? -1% : 0
+)
+```
+
+### Example: PR with Security Finding
+
+```
+PR #1234: Add user authentication
+├─ Detected finding: CWE-89-SQL-INJECT (line 45)
+│  └─ Pattern quality: EXCELLENT (F1=0.93, precision=0.96)
+│     └─ Merge confidence boost: +3%
+│
+├─ Detected finding: CWE-352-CSRF (line 78)
+│  └─ Pattern quality: GOOD (F1=0.88, precision=0.88)
+│     └─ Merge confidence boost: +1%
+│
+└─ Merged confidence = base (75%) + boosts (+4%) = 79%
+   Status: ALLOW_MERGE (>75% confidence)
+```
+
+### Quality Tiers Impact on Merge
+
+| Tier | F1 Range | Boosts Finding | Notes |
+|------|----------|---|---|
+| EXCELLENT | > 0.92 | Yes, +3% | High confidence, trust detection |
+| GOOD | 0.85–0.92 | Yes, +1% | Good confidence, worth reviewing |
+| FAIR | 0.75–0.85 | No boost | Manual review recommended |
+| POOR | < 0.75 | -1% penalty | Low confidence, suppress or disable |
+
+### Feedback Loop Improves Merge Confidence Over Time
+
+As patterns improve (via feedback retraining), their merge confidence impact grows:
+
+```
+Week 1: CWE-79-XSS has F1=0.88 (GOOD) → +1% boost
+Week 2: After feedback, CWE-79-XSS has F1=0.93 (EXCELLENT) → +3% boost
+        Same detection, but now trusted more due to improved quality
+
+This incentivizes teams to provide feedback on findings,
+which improves quality metrics, which increases merge confidence.
+```
+
+---
+
 ## Performance Notes
 
 | Repo Size | Scan Time | Output |
@@ -1762,7 +2421,19 @@ Weekly scan (Monday 9am UTC):
 
 ## Changelog
 
-- **v2.0.0** (2026-07-26 – IN DEVELOPMENT) — Fase 2 Major Expansion:
+- **v3.0.0** (2026-08-09 – IN DEVELOPMENT) — Fase 3 Feedback Learning & Auto-Tuning:
+  - Human-in-the-loop feedback system (TP/FP/FN labeling via UI)
+  - Per-pattern precision/recall/F1 tracking (weekly aggregation)
+  - Dynamic threshold auto-tuning (adjust confidence based on quality metrics)
+  - ML model retraining pipeline (weekly or on-demand, sklearn RandomForest)
+  - Weekly quality report (markdown + JSON + HTML dashboard)
+  - Integration with git-auto-merge-confidence (high-precision patterns boost merge confidence)
+  - Supabase feedback storage (tbl_detection_feedback, tbl_pattern_quality_metrics, tbl_ml_model_versions)
+  - Per-pattern quality tiers (EXCELLENT/GOOD/FAIR/POOR)
+  - Root cause analysis for FP/FN (automated insights on why detection fails)
+  - 4-week implementation roadmap (W9–W12 for Fase 3)
+
+- **v2.0.0** (2026-07-26) — Fase 2 Major Expansion:
   - 50+ CWE Top 25 patterns (vs 10 OWASP in v1.0)
   - AST (Abstract Syntax Tree) analysis for semantic code checking
   - Semgrep SAST integration (configuration-as-code rulesets)
