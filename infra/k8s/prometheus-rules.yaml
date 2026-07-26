@@ -1,0 +1,79 @@
+# PrometheusRule + ServiceMonitor for Maestro Router.
+# Complements the Supabase-level SQL alerting in docs/MONITORING-MAESTRO.md
+# with cluster/infra-level alerting (pod health, latency, resource pressure).
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: maestro-router
+  namespace: maestro
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: maestro-router
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 15s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: maestro-router-alerts
+  namespace: maestro
+  labels:
+    release: prometheus
+spec:
+  groups:
+    - name: maestro-router.rules
+      rules:
+        - alert: MaestroHighLatencyP95
+          expr: histogram_quantile(0.95, sum(rate(maestro_routing_latency_seconds_bucket[5m])) by (le, agent_slug)) > 0.5
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Maestro P95 latency > 500ms for {{ $labels.agent_slug }}"
+            runbook: "docs/TRAINING-GUIDE-DEVOPS-DATA-TEAMS.md#troubleshooting-latency"
+
+        - alert: MaestroHighFallbackRate
+          expr: sum(rate(maestro_fallback_total[15m])) by (agent_slug) / sum(rate(maestro_requests_total[15m])) by (agent_slug) > 0.05
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Maestro fallback rate > 5% for {{ $labels.agent_slug }}"
+            runbook: "docs/TRAINING-GUIDE-DEVOPS-DATA-TEAMS.md#troubleshooting-fallback"
+
+        - alert: MaestroPodCrashLooping
+          expr: increase(kube_pod_container_status_restarts_total{namespace="maestro"}[15m]) > 3
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Pod {{ $labels.pod }} restarting repeatedly"
+
+        - alert: MaestroHPAMaxedOut
+          expr: kube_horizontalpodautoscaler_status_current_replicas{namespace="maestro"} >= kube_horizontalpodautoscaler_spec_max_replicas{namespace="maestro"}
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Maestro HPA at max replicas — check capacity plan (docs §2.1)"
+
+        - alert: MaestroDBConnectionPoolNearLimit
+          expr: pgbouncer_pools_client_active_connections / pgbouncer_pools_max_client_conn > 0.85
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Supabase/PgBouncer connection pool > 85% utilized"
+
+        - alert: MaestroOpusUsageSpike
+          expr: sum(rate(maestro_requests_total{model_tier="opus"}[1h])) / sum(rate(maestro_requests_total[1h])) > 0.30
+          for: 30m
+          labels:
+            severity: info
+          annotations:
+            summary: "Opus tier > 30% of traffic — cost review trigger (docs §2.3)"

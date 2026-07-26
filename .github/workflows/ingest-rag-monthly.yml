@@ -1,0 +1,216 @@
+name: RAG Batch Ingestion — Monthly
+
+on:
+  schedule:
+    # Run on first day of month at 2 AM UTC
+    - cron: '0 2 1 * *'
+  workflow_dispatch:
+    inputs:
+      segment:
+        description: 'Segment to ingest (e.g., saneamento, energia)'
+        required: false
+        default: 'all'
+      tier:
+        description: 'TIER to ingest (T1-T4 or all)'
+        required: false
+        default: 'all'
+
+jobs:
+  ingest-rag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+    strategy:
+      matrix:
+        segment: [saneamento, energia, portos, aeroportos, barragens]
+      max-parallel: 2  # Throttle to avoid rate limiting
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pypdf anthropic supabase python-dotenv
+
+      - name: Ingest RAG batch — ${{ matrix.segment }}
+        id: ingest
+        run: |
+          echo "🚀 Starting RAG ingestion for ${{ matrix.segment }}"
+
+          # Determine source directory
+          SOURCE_DIR="docs/rag-sources/${{ matrix.segment }}"
+
+          if [ ! -d "$SOURCE_DIR" ]; then
+            echo "⚠️  Source directory not found: $SOURCE_DIR"
+            echo "status=skipped" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Run ingestion for each TIER
+          for tier in T1 T2 T3 T4; do
+            TIER_DIR="$SOURCE_DIR/$tier-*"
+            if ls $TIER_DIR 1> /dev/null 2>&1; then
+              echo "📄 Processing TIER $tier..."
+              python scripts/ingest_rag_batch.py \
+                --segment ${{ matrix.segment }} \
+                --tier $tier \
+                --source "$TIER_DIR" \
+                --batch-size 50
+            else
+              echo "⊘ No TIER $tier directory found"
+            fi
+          done
+
+          echo "status=completed" >> $GITHUB_OUTPUT
+
+      - name: Log ingestion results
+        if: steps.ingest.outputs.status == 'completed'
+        run: |
+          echo "✅ Ingestion completed for ${{ matrix.segment }}"
+
+          # Query Supabase to show what was added
+          python - <<'EOF'
+          import os
+          from supabase import create_client, Client
+
+          url = os.environ.get('SUPABASE_URL')
+          key = os.environ.get('SUPABASE_ANON_KEY')
+
+          if url and key:
+            supabase: Client = create_client(url, key)
+
+            # Count chunks by segment
+            result = supabase.table('rag_chunks').select(
+              'count', count='exact'
+            ).eq('collection_slug', '${{ matrix.segment }}').execute()
+
+            count = result.count or 0
+            print(f"Total chunks in ${{ matrix.segment }}: {count}")
+          EOF
+
+      - name: Post to Slack (optional)
+        if: always()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "RAG Ingestion: ${{ matrix.segment }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*RAG Batch Ingestion*\n*Segment:* ${{ matrix.segment }}\n*Status:* ${{ steps.ingest.outputs.status }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  aggregate-results:
+    needs: ingest-rag
+    runs-on: ubuntu-latest
+    if: always()
+
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+    steps:
+      - name: Aggregate ingestion metrics
+        run: |
+          python - <<'EOF'
+          import os
+          import json
+          from supabase import create_client, Client
+          from datetime import datetime
+
+          url = os.environ.get('SUPABASE_URL')
+          key = os.environ.get('SUPABASE_ANON_KEY')
+
+          if not url or not key:
+            print("⚠️  Skipping metrics — credentials not configured")
+            exit(0)
+
+          supabase: Client = create_client(url, key)
+
+          segments = ['saneamento', 'energia', 'portos', 'aeroportos', 'barragens']
+          total_chunks = 0
+
+          print("📊 RAG Ingestion Summary\n")
+          print("| Segment | Chunks | Status |")
+          print("|---------|--------|--------|")
+
+          for segment in segments:
+            result = supabase.table('rag_chunks').select(
+              'count', count='exact'
+            ).eq('collection_slug', segment).execute()
+
+            count = result.count or 0
+            total_chunks += count
+
+            status = "✅" if count > 0 else "⊘"
+            print(f"| {segment:12} | {count:6} | {status} |")
+
+          print(f"\nTotal chunks across all segments: {total_chunks}")
+          print(f"Ingestion timestamp: {datetime.utcnow().isoformat()}")
+
+          # Store summary in artifact
+          summary = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "total_chunks": total_chunks,
+            "by_segment": {s: 0 for s in segments}
+          }
+
+          # Re-fetch counts
+          for segment in segments:
+            result = supabase.table('rag_chunks').select(
+              'count', count='exact'
+            ).eq('collection_slug', segment).execute()
+            summary["by_segment"][segment] = result.count or 0
+
+          with open('/tmp/rag_summary.json', 'w') as f:
+            json.dump(summary, f, indent=2)
+          EOF
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## 📊 RAG Batch Ingestion Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Ingestion completed for all segments." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Segment | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| saneamento | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| energia | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| portos | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| aeroportos | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| barragens | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check logs above for detailed metrics." >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload summary artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: rag-ingestion-summary
+          path: /tmp/rag_summary.json
+          retention-days: 30

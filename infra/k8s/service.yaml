@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: maestro-router
+  namespace: maestro
+  labels:
+    app: maestro-router
+spec:
+  type: ClusterIP
+  selector:
+    app: maestro-router
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: metrics
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maestro-config
+  namespace: maestro
+data:
+  MODEL_TIER_DEFAULT: "haiku"          # maestro (00) default tier — escalates per CLAUDE.md
+  SUPABASE_URL: "https://<project-ref>.supabase.co"
+  RAG_COLLECTIONS: "saneamento,energia,portos,aeroportos,barragens"
+  LOG_LEVEL: "info"
+  MAX_FALLBACK_RETRIES: "2"
+---
+# maestro-secrets is intentionally NOT defined here — create out-of-band with:
+#   kubectl create secret generic maestro-secrets -n maestro \
+#     --from-literal=ANTHROPIC_API_KEY=*** \
+#     --from-literal=SUPABASE_SERVICE_ROLE_KEY=*** \
+#   or, preferably, sync from a secret manager via External Secrets Operator.

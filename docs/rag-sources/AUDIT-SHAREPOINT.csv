@@ -1,0 +1,10 @@
+Segmento,Nome,Status,Total Arquivos,Tamanho Total (MB),RAG Prefix,Chunks Potenciais,Projetos,Normas,Estudos,Templates,Editais
+S1,Rodovias,OK,0,0,rod:,0,0,0,0,0,0
+S2,OAE,OK,0,0,oae:,0,0,0,0,0,0
+S3,Ferrovia,OK,0,0,fer:,0,0,0,0,0,0
+S4,Metrô,OK,0,0,mtr:,0,0,0,0,0,0
+S6,Portos,OK,0,0,por:,0,0,0,0,0,0
+S7,Aeroportos,OK,0,0,aer:,0,0,0,0,0,0
+S8,Saneamento,OK,0,0,san:,0,0,0,0,0,0
+S9,Energia,OK,0,0,ene:,0,0,0,0,0,0
+S10,Barragens,OK,0,0,bar:,0,0,0,0,0,0
