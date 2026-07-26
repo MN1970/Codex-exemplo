@@ -4,8 +4,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-07-26) — expansão S6–S10 (Portos, Aeroportos,
+Saneamento, Energia, Barragens) + Manta 17 (GitOps).
 
 ---
 
@@ -41,6 +41,7 @@ Saneamento, Energia, Barragens).
 | Manta 03-S8 | Saneamento | agente-saneamento | 🆕 Criado 2026-07-05 — PRIORIDADE AySA |
 | Manta 03-S9 | Energia | agente-energia | 🆕 Criado 2026-07-05 — ANEEL/State Grid |
 | Manta 03-S10 | Barragens | agente-barragens | 🆕 Criado 2026-07-05 |
+| Manta 17 | Git/GitHub (transversal) | agente-gitops | 🆕 Criado 2026-07-26 |
 
 ### Eixo 3 — Ciclo de vida (8 fases)
 
@@ -76,6 +77,9 @@ IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
 IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
    → agente-barragens (S10)
 
+IF menção a git|repo|github|gitops|ci/cd|pull request|pr|commit
+   → agente-gitops (17)
+
 # Regras existentes S1-S4 mantidas sem alteração
 IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
    → agente-infraestrutura S1
@@ -101,6 +105,7 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | portos | por: | ANTAQ, PIANC, editais BNDES/ANTAQ | 🆕 v4.2 |
 | aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
+| gitops | git: | GitHub docs, git-scm.com, GitOps Foundation | 🆕 v4.3 |
 
 ---
 
@@ -137,12 +142,20 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
 └── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+    ├── agents/
+    │   ├── agente-portos.md          # 🆕 S6
+    │   ├── agente-aeroportos.md      # 🆕 S7
+    │   ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
+    │   ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
+    │   ├── agente-barragens.md       # 🆕 S10
+    │   └── agente-gitops.md          # 🆕 Manta 17 — Git/GitHub workflows
+    └── skills/
+        ├── git-repository-analytics.md     # 🆕 Manta 17 skill 1
+        ├── git-pr-autoreview.md            # 🆕 Manta 17 skill 2
+        ├── git-code-pattern-detection.md   # 🆕 Manta 17 skill 3
+        ├── git-gitops-flow.md              # 🆕 Manta 17 skill 4
+        ├── git-multi-repo-workflows.md     # 🆕 Manta 17 skill 5
+        └── git-commit-optimizer.md         # 🆕 Manta 17 skill 6
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
