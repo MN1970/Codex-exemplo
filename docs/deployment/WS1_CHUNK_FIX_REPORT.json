@@ -1,0 +1,12 @@
+{
+  "total_chunks": 58,
+  "fixed_chunks": 58,
+  "validation_errors": [],
+  "stats": {
+    "word_count_mismatches": 0,
+    "placeholder_removals": 0,
+    "expansions": 14,
+    "avg_words_before": 170.86206896551724,
+    "avg_words_after": 170.86206896551724
+  }
+}
