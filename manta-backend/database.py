@@ -85,10 +85,13 @@ from config import get_settings
 settings = get_settings()
 
 # Dimensão do vetor de embedding — mantida em sincronia com
-# `settings.embedding_dimensions` (config.py, default 1536 para
-# text-embedding-3-small). As migrations Alembic fixam o valor
-# numericamente (schema não pode depender de env var em runtime), então
-# ao mudar de modelo de embedding é preciso uma migration nova.
+# `settings.embedding_dimensions` (config.py, default 384 para
+# all-MiniLM-L6-v2 — ver ml/embeddings.py::EMBEDDING_DIMENSIONS). As
+# migrations Alembic fixam o valor numericamente (schema não pode
+# depender de env var em runtime): 0002_initial_schema cria a coluna em
+# 1536 (text-embedding-3-small, modelo original do skeleton) e
+# 0004_embedding_dim_384 migra para 384 (all-MiniLM-L6-v2, modelo atual).
+# Ao mudar de modelo de embedding de novo é preciso outra migration.
 EMBEDDING_DIM: int = settings.embedding_dimensions
 
 

@@ -89,8 +89,14 @@ class Settings(BaseSettings):
     claude_streaming_timeout: int = 120
 
     # --- ML ---
-    embedding_model: str = "text-embedding-3-small"
-    embedding_dimensions: int = 1536
+    # all-MiniLM-L6-v2 (Sentence Transformers, local, sem API externa) —
+    # ver ml/embeddings.py::EMBEDDING_MODEL_NAME/EMBEDDING_DIMENSIONS.
+    # dimensions=384 precisa bater com a coluna `vector(N)` das
+    # migrations Alembic (0002 + 0004_embedding_dim_384) e com
+    # scripts/init.sql — trocar de modelo exige atualizar todos esses
+    # pontos + uma migration nova.
+    embedding_model: str = "all-MiniLM-L6-v2"
+    embedding_dimensions: int = 384
 
 
 @lru_cache

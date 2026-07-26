@@ -316,6 +316,25 @@ def _guess_file_type(filename: str) -> str:
     return filename.rsplit(".", 1)[-1].lower()
 
 
+def _sanitize_extracted_text(text: str) -> str:
+    """Remove bytes NUL (Postgres/asyncpg rejeitam `\\x00` em `text` com
+    `CharacterNotInRepertoireError`) e detecta lixo binário: se uma
+    fração grande dos caracteres for de controle (fora de \\t\\n\\r),
+    o "texto" provavelmente veio de um arquivo binário mal identificado
+    como texto puro (ex.: .bin enviado sem PDF/DOCX reconhecido) —
+    nesse caso devolve string vazia, e o endpoint de upload responde
+    422 em vez de indexar lixo ou derrubar a inserção no banco."""
+    cleaned = text.replace("\x00", "")
+    if not cleaned:
+        return ""
+
+    sample = cleaned[:5000]
+    control_chars = sum(1 for ch in sample if ord(ch) < 32 and ch not in "\t\n\r")
+    if control_chars / len(sample) > 0.05:
+        return ""
+    return cleaned
+
+
 def _extract_text(raw: bytes, filename: str, content_type: str) -> str:
     """Extrai texto do arquivo enviado. PDF via pypdf; txt/md como
     utf-8 direto; qualquer outro tipo tenta utf-8 best-effort (funciona
@@ -329,15 +348,17 @@ def _extract_text(raw: bytes, filename: str, content_type: str) -> str:
 
             reader = PdfReader(io.BytesIO(raw))
             pages_text = [page.extract_text() or "" for page in reader.pages]
-            return "\n\n".join(pages_text)
+            text = "\n\n".join(pages_text)
         except Exception:  # noqa: BLE001
             logger.exception("rag.upload: falha ao extrair texto do PDF '%s'", filename)
-            return ""
+            text = ""
+    else:
+        try:
+            text = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            text = raw.decode("latin-1", errors="ignore")
 
-    try:
-        return raw.decode("utf-8")
-    except UnicodeDecodeError:
-        return raw.decode("latin-1", errors="ignore")
+    return _sanitize_extracted_text(text)
 
 
 def _chunk_text(text: str, max_len: int = 900, overlap: int = 150) -> List[str]:

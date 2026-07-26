@@ -25,3 +25,13 @@ pgvector==0.5.0
 alembic==1.18.5
 # Migrations versionadas (alembic/versions/) — schema, extensão pgvector
 # e RLS multi-org do database.py.
+pypdf==5.1.0
+# Extração de texto de PDF no upload do Knowledge Hub (routers/rag.py,
+# POST /rag/upload). Import é feito localmente dentro da função para
+# manter a dependência opcional/isolada dos demais endpoints.
+sentence-transformers==3.3.1
+# ml/embeddings.py — carrega all-MiniLM-L6-v2 localmente (dim 384) para
+# gerar os embeddings do RAG (sem depender de API externa). Puxa torch
+# como dependência transitiva; para instalar só a wheel CPU (bem menor
+# que a build CUDA) em ambientes sem GPU, instale antes:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
