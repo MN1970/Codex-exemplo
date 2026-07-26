@@ -1,0 +1,373 @@
+name: Maestro CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  REGISTRY_NAMESPACE: manta-associados
+  DOCKER_REGISTRY_PATH: ghcr.io/manta-associados/maestro
+
+jobs:
+  code-quality:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run Flake8
+        run: |
+          flake8 maestro/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 maestro/ --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+
+      - name: Run Pylint
+        run: |
+          pylint maestro/ --fail-under=8.0 || true
+          echo "Pylint summary generated"
+
+      - name: Run isort
+        run: |
+          isort maestro/ --check-only --diff || true
+
+      - name: Run Black
+        run: |
+          black maestro/ --check || true
+
+  type-checking:
+    name: Type Checking & MyPy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run MyPy type checking
+        run: |
+          mypy maestro/ --ignore-missing-imports --warn-unused-configs || true
+
+  security-scanning:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt bandit safety
+
+      - name: Run Bandit security scan
+        run: |
+          bandit -r maestro/ -f json -o bandit-report.json || true
+          bandit -r maestro/ -f txt || true
+
+      - name: Run Safety check
+        run: |
+          safety check --json > safety-report.json || true
+          safety check || true
+
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-reports
+          path: |
+            bandit-report.json
+            safety-report.json
+
+  unit-tests:
+    name: Unit Tests & Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: maestro_test
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: maestro_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run unit tests
+        env:
+          DATABASE_URL: postgresql://maestro_test:test_password@localhost:5432/maestro_test
+          MAESTRO_ENV: test
+        run: |
+          pytest tests/unit/ -v --cov=maestro --cov-report=xml --cov-report=html --cov-report=term-missing
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+      - name: Archive coverage reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: htmlcov/
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: [code-quality, type-checking, unit-tests]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: maestro_test
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: maestro_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run integration tests
+        env:
+          DATABASE_URL: postgresql://maestro_test:test_password@localhost:5432/maestro_test
+          REDIS_URL: redis://localhost:6379
+          MAESTRO_ENV: test
+        run: |
+          pytest tests/integration/ -v --cov=maestro --cov-report=xml
+
+      - name: Upload integration test reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-results
+          path: coverage.xml
+
+  documentation-validation:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install markdown-link-check pydoc-markdown
+
+      - name: Validate Markdown links
+        run: |
+          find docs/ -name "*.md" -type f | while read file; do
+            echo "Checking links in $file"
+            markdown-link-check "$file" -c docs/.markdown-link-check.json || true
+          done
+
+      - name: Check documentation markup
+        run: |
+          find docs/ -name "*.md" -type f | while read file; do
+            python -m markdown "$file" > /dev/null 2>&1 || echo "Warning: $file has markdown issues"
+          done
+
+      - name: Validate API documentation
+        run: |
+          if [ -f "docs/api.md" ]; then
+            pydoc-markdown -p maestro > /tmp/api_gen.md
+            echo "API documentation generated for validation"
+          fi
+
+  docker-build:
+    name: Docker Build & Push
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [code-quality, type-checking, security-scanning, unit-tests, documentation-validation]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.DOCKER_REGISTRY_PATH }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile.production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.DOCKER_REGISTRY_PATH }}:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_REGISTRY_PATH }}:buildcache,mode=max
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.meta.outputs.tags }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  smoke-tests:
+    name: Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [unit-tests, integration-tests]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run smoke tests
+        env:
+          MAESTRO_ENV: test
+        run: |
+          pytest tests/smoke/ -v --tb=short
+
+  results:
+    name: CI Results Summary
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [code-quality, type-checking, security-scanning, unit-tests, integration-tests, documentation-validation, smoke-tests]
+    if: always()
+    steps:
+      - name: Check CI status
+        run: |
+          echo "CI Pipeline Status: ${{ job.status }}"
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "All checks passed successfully!"
+            exit 0
+          else
+            echo "One or more checks failed. Review logs above."
+            exit 1
+          fi

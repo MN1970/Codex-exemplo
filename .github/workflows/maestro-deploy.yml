@@ -1,0 +1,455 @@
+name: Maestro Deployment Pipeline
+
+on:
+  push:
+    tags:
+      - 'v6.0.*'
+  workflow_dispatch:
+    inputs:
+      deployment_environment:
+        description: 'Target environment (staging or production)'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      image_tag:
+        description: 'Docker image tag to deploy'
+        required: true
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+  REGISTRY_NAMESPACE: manta-associados
+  DOCKER_REGISTRY_PATH: ghcr.io/manta-associados/maestro
+  DEPLOYMENT_TIMEOUT: 900
+
+jobs:
+  pre-deployment-checks:
+    name: Pre-Deployment Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      image_tag: ${{ steps.extract.outputs.image_tag }}
+      deployment_env: ${{ steps.extract.outputs.environment }}
+      checklist_status: ${{ steps.checklist.outputs.status }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract deployment parameters
+        id: extract
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${{ github.ref#refs/tags/}}"
+            ENV="production"
+          else
+            TAG="${{ github.event.inputs.image_tag }}"
+            ENV="${{ github.event.inputs.deployment_environment }}"
+          fi
+          echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "environment=${ENV}" >> $GITHUB_OUTPUT
+          echo "Deployment target: ${ENV}, Image: ${TAG}"
+
+      - name: Validate deployment checklist
+        id: checklist
+        run: |
+          echo "Validating pre-deployment checklist..."
+
+          # Verify git tag exists
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${{ github.ref#refs/tags/}}"
+            if git rev-parse "$TAG" >/dev/null 2>&1; then
+              echo "Tag $TAG verified"
+            else
+              echo "::error::Tag not found: $TAG"
+              exit 1
+            fi
+          fi
+
+          # Verify CHANGELOG
+          if [ ! -f "CHANGELOG.md" ]; then
+            echo "::warning::CHANGELOG.md not found"
+          fi
+
+          # Verify deployment configs exist
+          if [ ! -f "k8s/overlays/${{ steps.extract.outputs.environment }}/kustomization.yaml" ]; then
+            echo "::error::Deployment config not found for ${{ steps.extract.outputs.environment }}"
+            exit 1
+          fi
+
+          # Check for required environment variables in CI
+          if [ -z "${{ secrets.DOCKER_REGISTRY_USERNAME }}" ]; then
+            echo "::warning::Docker registry credentials not configured"
+          fi
+
+          echo "status=passed" >> $GITHUB_OUTPUT
+          echo "Pre-deployment checklist passed"
+
+  build-and-push-image:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: pre-deployment-checks
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.pre-deployment-checks.outputs.image_tag }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.DOCKER_REGISTRY_PATH }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ needs.pre-deployment-checks.outputs.image_tag }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.pre-deployment-checks.outputs.image_tag }}
+            type=raw,value=latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile.production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.DOCKER_REGISTRY_PATH }}:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_REGISTRY_PATH }}:buildcache,mode=max
+
+      - name: Verify image
+        run: |
+          docker pull ${{ steps.meta.outputs.tags }}
+          echo "Image successfully pushed and verified"
+
+  deploy-to-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [pre-deployment-checks, build-and-push-image]
+    if: always() && needs.build-and-push-image.result == 'success'
+    environment:
+      name: staging
+      url: https://maestro-staging.manta-associados.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.27'
+
+      - name: Set up Kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Configure Kubernetes context
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+          kubectl cluster-info
+
+      - name: Deploy to Kubernetes
+        run: |
+          cd k8s
+          kustomize edit set image maestro=${{ env.DOCKER_REGISTRY_PATH }}:${{ needs.pre-deployment-checks.outputs.image_tag }}
+          kustomize build overlays/staging | kubectl apply -f -
+          echo "Deployment manifest applied to staging"
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/maestro -n maestro-staging --timeout=${{ env.DEPLOYMENT_TIMEOUT }}s
+          echo "Staging rollout completed"
+
+      - name: Verify deployment
+        run: |
+          kubectl get pods -n maestro-staging -l app=maestro
+          kubectl get svc -n maestro-staging -l app=maestro
+
+  smoke-tests-staging:
+    name: Smoke Tests - Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [pre-deployment-checks, deploy-to-staging]
+    if: always() && needs.deploy-to-staging.result == 'success'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run smoke tests against staging
+        env:
+          MAESTRO_API_URL: https://maestro-staging.manta-associados.com
+          MAESTRO_API_KEY: ${{ secrets.STAGING_API_KEY }}
+        run: |
+          pytest tests/smoke/staging_smoke_tests.py -v --tb=short
+
+      - name: Health check
+        run: |
+          curl -f https://maestro-staging.manta-associados.com/health || exit 1
+          echo "Staging health check passed"
+
+      - name: Verify routing
+        run: |
+          curl -f https://maestro-staging.manta-associados.com/api/v1/agents/status || exit 1
+          echo "Agent routing verified on staging"
+
+  approval-gate:
+    name: Manual Approval Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440
+    needs: [pre-deployment-checks, smoke-tests-staging]
+    if: needs.pre-deployment-checks.outputs.deployment_env == 'production'
+    environment:
+      name: production
+    steps:
+      - name: Wait for approval
+        run: |
+          echo "Deployment to production requires manual approval"
+          echo "Environment: ${{ needs.pre-deployment-checks.outputs.deployment_env }}"
+          echo "Image Tag: ${{ needs.pre-deployment-checks.outputs.image_tag }}"
+          echo "Approval timeout: 24 hours"
+
+  deploy-to-production:
+    name: Deploy to Production (Blue-Green)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: [pre-deployment-checks, approval-gate]
+    if: always() && (needs.pre-deployment-checks.outputs.deployment_env == 'production' || github.event_name == 'workflow_dispatch')
+    environment:
+      name: production
+      url: https://maestro.manta-associados.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.27'
+
+      - name: Set up Kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Configure Kubernetes context
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_PRODUCTION }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+          kubectl cluster-info
+
+      - name: Backup current deployment
+        run: |
+          kubectl get deployment maestro-green -n maestro-prod -o yaml > /tmp/maestro-green-backup.yaml || true
+          echo "Current production deployment backed up"
+
+      - name: Deploy to blue environment
+        run: |
+          cd k8s
+          kustomize edit set image maestro=${{ env.DOCKER_REGISTRY_PATH }}:${{ needs.pre-deployment-checks.outputs.image_tag }}
+          kustomize build overlays/production | kubectl apply -f - --selector=deployment=maestro-blue
+          echo "Blue deployment started"
+
+      - name: Wait for blue rollout
+        run: |
+          kubectl rollout status deployment/maestro-blue -n maestro-prod --timeout=${{ env.DEPLOYMENT_TIMEOUT }}s
+          echo "Blue deployment completed"
+
+      - name: Switch traffic to blue
+        run: |
+          kubectl patch service maestro -n maestro-prod -p '{"spec":{"selector":{"deployment":"maestro-blue"}}}'
+          echo "Traffic switched to blue deployment"
+          sleep 10
+
+      - name: Verify blue is healthy
+        run: |
+          BLUE_READY=$(kubectl get deployment maestro-blue -n maestro-prod -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')
+          if [ "$BLUE_READY" != "True" ]; then
+            echo "::error::Blue deployment is not healthy"
+            exit 1
+          fi
+          echo "Blue deployment verified as healthy"
+
+      - name: Archive green deployment
+        run: |
+          kubectl scale deployment maestro-green -n maestro-prod --replicas=0 || true
+          echo "Green deployment archived (scaled to 0)"
+
+  post-deployment-validation:
+    name: Post-Deployment Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [pre-deployment-checks, deploy-to-production]
+    if: always() && needs.deploy-to-production.result == 'success'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run production smoke tests
+        env:
+          MAESTRO_API_URL: https://maestro.manta-associados.com
+          MAESTRO_API_KEY: ${{ secrets.PRODUCTION_API_KEY }}
+        run: |
+          pytest tests/smoke/production_smoke_tests.py -v --tb=short
+
+      - name: Health check
+        run: |
+          for i in {1..10}; do
+            if curl -f https://maestro.manta-associados.com/health; then
+              echo "Production health check passed"
+              exit 0
+            fi
+            echo "Attempt $i/10 failed, retrying..."
+            sleep 5
+          done
+          echo "::error::Production health check failed after 10 attempts"
+          exit 1
+
+      - name: Verify agent routing
+        run: |
+          curl -f https://maestro.manta-associados.com/api/v1/agents/status || exit 1
+          echo "Agent routing verified in production"
+
+      - name: Check database connectivity
+        run: |
+          curl -f https://maestro.manta-associados.com/api/v1/system/db-health || exit 1
+          echo "Database connectivity verified"
+
+  rollback-safety-check:
+    name: Rollback Safety Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [pre-deployment-checks, post-deployment-validation]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Configure Kubernetes context
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_PRODUCTION }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Verify rollback capability
+        run: |
+          echo "Verifying rollback capability..."
+          kubectl get deployment maestro-green -n maestro-prod || exit 1
+          kubectl get deployment maestro-blue -n maestro-prod || exit 1
+          echo "Both blue and green deployments exist - rollback is possible"
+
+      - name: Document deployment
+        run: |
+          kubectl annotate deployment maestro-blue -n maestro-prod \
+            deployment-version="${{ needs.pre-deployment-checks.outputs.image_tag }}" \
+            deployment-date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+            deployment-by="${{ github.actor }}" \
+            --overwrite || true
+          echo "Deployment metadata recorded"
+
+  deployment-notification:
+    name: Send Deployment Notification
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [pre-deployment-checks, post-deployment-validation]
+    if: always()
+    steps:
+      - name: Prepare notification
+        run: |
+          cat > /tmp/deployment-report.txt << EOF
+          Deployment Report
+          =================
+          Image Tag: ${{ needs.pre-deployment-checks.outputs.image_tag }}
+          Environment: ${{ needs.pre-deployment-checks.outputs.deployment_env }}
+          Status: ${{ job.status }}
+          Deployed by: ${{ github.actor }}
+          Timestamp: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          EOF
+          cat /tmp/deployment-report.txt
+
+      - name: Send Slack notification
+        if: always()
+        uses: slackapi/slack-github-action@v1.24
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_DEPLOYMENTS }}
+          payload: |
+            {
+              "text": "Maestro Deployment",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Maestro Deployment Complete"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Image Tag:*\n${{ needs.pre-deployment-checks.outputs.image_tag }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\n${{ needs.pre-deployment-checks.outputs.deployment_env }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Status:*\n${{ job.status }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Deployed By:*\n${{ github.actor }}"
+                    }
+                  ]
+                }
+              ]
+            }
+
+      - name: Upload deployment report
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-report
+          path: /tmp/deployment-report.txt

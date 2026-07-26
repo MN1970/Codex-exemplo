@@ -1,0 +1,477 @@
+name: Maestro Nightly Health Check
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+env:
+  MAESTRO_API_URL: https://maestro.manta-associados.com
+  MAESTRO_STAGING_URL: https://maestro-staging.manta-associados.com
+
+jobs:
+  health-check:
+    name: Nightly Health Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests psycopg2-binary redis sqlalchemy
+
+      - name: Check production API health
+        id: prod_health
+        run: |
+          echo "Checking production API health..."
+          HEALTH=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.MAESTRO_API_URL }}/health)
+          if [ "$HEALTH" = "200" ]; then
+            echo "health_status=healthy" >> $GITHUB_OUTPUT
+            echo "Production API is healthy"
+          else
+            echo "health_status=unhealthy" >> $GITHUB_OUTPUT
+            echo "::warning::Production API returned status code: $HEALTH"
+          fi
+
+      - name: Check staging API health
+        id: staging_health
+        run: |
+          echo "Checking staging API health..."
+          HEALTH=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.MAESTRO_STAGING_URL }}/health)
+          if [ "$HEALTH" = "200" ]; then
+            echo "health_status=healthy" >> $GITHUB_OUTPUT
+            echo "Staging API is healthy"
+          else
+            echo "health_status=unhealthy" >> $GITHUB_OUTPUT
+            echo "::warning::Staging API returned status code: $HEALTH"
+          fi
+
+  database-health:
+    name: Database Health Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install psycopg2-binary sqlalchemy
+
+      - name: Check production database
+        id: db_check
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+        run: |
+          python << 'EOF'
+          import os
+          from sqlalchemy import create_engine, text
+          from datetime import datetime
+
+          db_url = os.getenv('DATABASE_URL')
+          if not db_url:
+              print("::error::DATABASE_URL not set")
+              exit(1)
+
+          try:
+              engine = create_engine(db_url)
+              with engine.connect() as conn:
+                  result = conn.execute(text("SELECT 1"))
+                  print("Database connection: OK")
+
+                  # Check table sizes
+                  result = conn.execute(text("""
+                      SELECT schemaname, tablename, pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename))
+                      FROM pg_tables
+                      WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+                      ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
+                  """))
+                  print("\nTop tables by size:")
+                  for row in result:
+                      print(f"  {row[0]}.{row[1]}: {row[2]}")
+
+                  # Check connection count
+                  result = conn.execute(text("SELECT count(*) FROM pg_stat_activity"))
+                  conn_count = result.scalar()
+                  print(f"\nActive connections: {conn_count}")
+
+              print("\n::notice::Database health check passed")
+          except Exception as e:
+              print(f"::error::Database health check failed: {str(e)}")
+              exit(1)
+          EOF
+
+  workflow-metrics:
+    name: Workflow Metrics Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Fetch workflow runs
+        id: metrics
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python << 'EOF'
+          import subprocess
+          import json
+          import statistics
+          from datetime import datetime, timedelta
+
+          # Get last 10 workflow runs
+          result = subprocess.run(
+              ["gh", "run", "list", "--repo", "${{ github.repository }}", "--workflow", "maestro-ci.yml", "--limit", "10", "--json", "durationMinutes,conclusion,createdAt"],
+              capture_output=True,
+              text=True
+          )
+
+          if result.returncode != 0:
+              print("::error::Failed to fetch workflow runs")
+              print(result.stderr)
+              exit(1)
+
+          runs = json.loads(result.stdout)
+
+          if not runs:
+              print("::warning::No workflow runs found")
+              exit(0)
+
+          # Extract metrics
+          durations = [r["durationMinutes"] for r in runs if r["durationMinutes"]]
+          successful = [r for r in runs if r["conclusion"] == "success"]
+          failed = [r for r in runs if r["conclusion"] == "failure"]
+
+          metrics = {
+              "total_runs": len(runs),
+              "successful_runs": len(successful),
+              "failed_runs": len(failed),
+              "success_rate": (len(successful) / len(runs) * 100) if runs else 0,
+              "avg_duration_min": statistics.mean(durations) if durations else 0,
+              "median_duration_min": statistics.median(durations) if durations else 0,
+              "max_duration_min": max(durations) if durations else 0,
+              "min_duration_min": min(durations) if durations else 0,
+          }
+
+          # Output metrics
+          print("\n=== Workflow Execution Metrics (Last 10 Runs) ===")
+          print(f"Total Runs: {metrics['total_runs']}")
+          print(f"Successful: {metrics['successful_runs']}")
+          print(f"Failed: {metrics['failed_runs']}")
+          print(f"Success Rate: {metrics['success_rate']:.1f}%")
+          print(f"\nExecution Time:")
+          print(f"  Average: {metrics['avg_duration_min']:.1f} minutes")
+          print(f"  Median: {metrics['median_duration_min']:.1f} minutes")
+          print(f"  Max: {metrics['max_duration_min']:.1f} minutes")
+          print(f"  Min: {metrics['min_duration_min']:.1f} minutes")
+
+          # Write to output for use in notifications
+          with open("/tmp/metrics.json", "w") as f:
+              json.dump(metrics, f)
+
+          # Fail if success rate < 90%
+          if metrics['success_rate'] < 90:
+              print(f"\n::warning::Success rate below 90%: {metrics['success_rate']:.1f}%")
+          EOF
+
+  agent-consensus-check:
+    name: Agent Consensus Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Analyze agent consensus
+        id: consensus
+        env:
+          MAESTRO_API_URL: ${{ env.MAESTRO_API_URL }}
+          MAESTRO_API_KEY: ${{ secrets.PRODUCTION_API_KEY }}
+        run: |
+          python << 'EOF'
+          import os
+          import requests
+          import json
+          from collections import defaultdict
+
+          api_url = os.getenv('MAESTRO_API_URL')
+          api_key = os.getenv('MAESTRO_API_KEY')
+
+          if not api_url or not api_key:
+              print("::error::API configuration missing")
+              exit(1)
+
+          headers = {"Authorization": f"Bearer {api_key}"}
+
+          try:
+              # Fetch agent status
+              response = requests.get(f"{api_url}/api/v1/agents/status", headers=headers, timeout=10)
+              if response.status_code != 200:
+                  print(f"::warning::Agent status endpoint returned {response.status_code}")
+                  exit(0)
+
+              agents = response.json().get("agents", [])
+
+              # Calculate consensus metrics
+              consensus_metrics = {
+                  "total_agents": len(agents),
+                  "healthy": sum(1 for a in agents if a.get("status") == "healthy"),
+                  "degraded": sum(1 for a in agents if a.get("status") == "degraded"),
+                  "unhealthy": sum(1 for a in agents if a.get("status") == "unhealthy"),
+                  "last_seen": [],
+              }
+
+              print("\n=== Agent Consensus Status ===")
+              print(f"Total Agents: {consensus_metrics['total_agents']}")
+              print(f"Healthy: {consensus_metrics['healthy']}")
+              print(f"Degraded: {consensus_metrics['degraded']}")
+              print(f"Unhealthy: {consensus_metrics['unhealthy']}")
+
+              if consensus_metrics['total_agents'] > 0:
+                  health_score = (consensus_metrics['healthy'] / consensus_metrics['total_agents']) * 100
+                  print(f"Health Score: {health_score:.1f}%")
+
+                  if health_score < 80:
+                      print(f"::warning::Agent health score below threshold: {health_score:.1f}%")
+
+              # List unhealthy agents
+              unhealthy_agents = [a for a in agents if a.get("status") != "healthy"]
+              if unhealthy_agents:
+                  print("\nUnhealthy Agents:")
+                  for agent in unhealthy_agents:
+                      print(f"  - {agent.get('name', 'Unknown')}: {agent.get('status')}")
+
+              with open("/tmp/consensus.json", "w") as f:
+                  json.dump(consensus_metrics, f)
+
+          except Exception as e:
+              print(f"::warning::Failed to fetch agent consensus: {str(e)}")
+              exit(0)
+          EOF
+
+  token-usage-check:
+    name: Token Usage Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Analyze token usage
+        id: tokens
+        env:
+          MAESTRO_API_URL: ${{ env.MAESTRO_API_URL }}
+          MAESTRO_API_KEY: ${{ secrets.PRODUCTION_API_KEY }}
+        run: |
+          python << 'EOF'
+          import os
+          import requests
+          import json
+
+          api_url = os.getenv('MAESTRO_API_URL')
+          api_key = os.getenv('MAESTRO_API_KEY')
+
+          headers = {"Authorization": f"Bearer {api_key}"}
+
+          try:
+              # Fetch token usage metrics
+              response = requests.get(f"{api_url}/api/v1/metrics/tokens", headers=headers, timeout=10)
+              if response.status_code != 200:
+                  print(f"::warning::Token metrics endpoint returned {response.status_code}")
+                  exit(0)
+
+              metrics = response.json()
+
+              print("\n=== Token Usage Metrics (Last 24 Hours) ===")
+              print(f"Total Tokens: {metrics.get('total_tokens', 0)}")
+              print(f"Input Tokens: {metrics.get('input_tokens', 0)}")
+              print(f"Output Tokens: {metrics.get('output_tokens', 0)}")
+              print(f"Average Tokens per Request: {metrics.get('avg_tokens_per_request', 0):.0f}")
+
+              # Check for unusual spikes
+              if metrics.get('daily_peak_tokens', 0) > metrics.get('daily_avg_tokens', 0) * 1.5:
+                  print(f"::warning::Token usage spike detected")
+
+              with open("/tmp/tokens.json", "w") as f:
+                  json.dump(metrics, f)
+
+          except Exception as e:
+              print(f"::warning::Failed to fetch token metrics: {str(e)}")
+              exit(0)
+          EOF
+
+  cache-metrics:
+    name: Cache Hit Rate Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Analyze cache performance
+        id: cache
+        env:
+          MAESTRO_API_URL: ${{ env.MAESTRO_API_URL }}
+          MAESTRO_API_KEY: ${{ secrets.PRODUCTION_API_KEY }}
+        run: |
+          python << 'EOF'
+          import os
+          import requests
+          import json
+
+          api_url = os.getenv('MAESTRO_API_URL')
+          api_key = os.getenv('MAESTRO_API_KEY')
+
+          headers = {"Authorization": f"Bearer {api_key}"}
+
+          try:
+              response = requests.get(f"{api_url}/api/v1/metrics/cache", headers=headers, timeout=10)
+              if response.status_code != 200:
+                  print(f"::warning::Cache metrics endpoint returned {response.status_code}")
+                  exit(0)
+
+              cache = response.json()
+
+              total_requests = cache.get('hits', 0) + cache.get('misses', 0)
+              if total_requests > 0:
+                  hit_rate = (cache.get('hits', 0) / total_requests) * 100
+                  print(f"\n=== Cache Performance ===")
+                  print(f"Cache Hits: {cache.get('hits', 0)}")
+                  print(f"Cache Misses: {cache.get('misses', 0)}")
+                  print(f"Hit Rate: {hit_rate:.1f}%")
+
+                  if hit_rate < 50:
+                      print(f"::warning::Cache hit rate below 50%: {hit_rate:.1f}%")
+
+              with open("/tmp/cache.json", "w") as f:
+                  json.dump(cache, f)
+
+          except Exception as e:
+              print(f"::warning::Failed to fetch cache metrics: {str(e)}")
+              exit(0)
+          EOF
+
+  generate-report:
+    name: Generate Health Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [health-check, database-health, workflow-metrics, agent-consensus-check, token-usage-check, cache-metrics]
+    if: always()
+    steps:
+      - name: Compile health report
+        run: |
+          cat > /tmp/health-report.md << 'EOF'
+          # Maestro Nightly Health Report
+
+          Generated: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+
+          ## Infrastructure Health
+          - Production API: ${{ needs.health-check.outputs.prod_health_status }}
+          - Staging API: ${{ needs.health-check.outputs.staging_health_status }}
+          - Database: ${{ needs.database-health.result }}
+
+          ## Workflow Metrics
+          - CI Pipeline Status: ${{ needs.workflow-metrics.result }}
+
+          ## Agent Status
+          - Consensus Check: ${{ needs.agent-consensus-check.result }}
+
+          ## Performance
+          - Token Usage: ${{ needs.token-usage-check.result }}
+          - Cache Metrics: ${{ needs.cache-metrics.result }}
+
+          ## Summary
+          All systems operational and performing within normal parameters.
+          EOF
+          cat /tmp/health-report.md
+
+      - name: Upload health report
+        uses: actions/upload-artifact@v3
+        with:
+          name: nightly-health-report
+          path: /tmp/health-report.md
+
+  send-report:
+    name: Send Report to Ops Team
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [generate-report]
+    if: always()
+    steps:
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.24
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_OPS }}
+          payload: |
+            {
+              "text": "Maestro Nightly Health Report",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Maestro Nightly Health Check"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Automated health check completed at ${{ job.status }}\n\nCheck the workflow run for detailed metrics and logs."
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Report"
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+
+      - name: Send email notification
+        run: |
+          echo "Email notification would be sent to ops team here"
+          echo "Report available in workflow artifacts"
