@@ -1,0 +1,120 @@
+{
+  "version_format": "v5.0",
+  "generated_at": "2026-07-25T14:32:00Z",
+  "agent_skills": {
+    "maestro": {
+      "v5.0": {
+        "checksum": "a462c4bb4c3c33352b0931ffc10652fd",
+        "pinned_by": ["prod"],
+        "file": ".claude/agents/maestro.v5.0.md",
+        "created_at": "2026-07-25T14:32:00Z",
+        "deprecated_at": null
+      }
+    },
+    "agente-saneamento": {
+      "v5.0": {
+        "checksum": "3435f9cb8fa04b0048457010ff5c448a",
+        "pinned_by": ["prod"],
+        "file": ".claude/agents/agente-saneamento.v5.0.md",
+        "created_at": "2026-07-25T14:32:00Z",
+        "deprecated_at": null,
+        "rag_collection": "san:v5.0:chunks",
+        "notes": "PRIORIDADE AySA — projeto Argentina"
+      }
+    },
+    "agente-energia": {
+      "v5.0": {
+        "checksum": "d8ca1b2bbc318c1ae987d772c426213e",
+        "pinned_by": ["prod"],
+        "file": ".claude/agents/agente-energia.v5.0.md",
+        "created_at": "2026-07-25T14:32:00Z",
+        "deprecated_at": null,
+        "rag_collection": "ene:v5.0:chunks",
+        "notes": "ANEEL e State Grid focus"
+      }
+    },
+    "agente-portos": {
+      "v5.0": {
+        "checksum": "de56705e8f1bb369782468b549bbc0ca",
+        "pinned_by": ["prod"],
+        "file": ".claude/agents/agente-portos.v5.0.md",
+        "created_at": "2026-07-25T14:32:00Z",
+        "deprecated_at": null,
+        "rag_collection": "por:v5.0:chunks"
+      }
+    },
+    "agente-aeroportos": {
+      "v5.0": {
+        "checksum": "b392e63c04110e987910fa39f2fa0ef8",
+        "pinned_by": ["prod"],
+        "file": ".claude/agents/agente-aeroportos.v5.0.md",
+        "created_at": "2026-07-25T14:32:00Z",
+        "deprecated_at": null,
+        "rag_collection": "aer:v5.0:chunks"
+      }
+    },
+    "agente-barragens": {
+      "v5.0": {
+        "checksum": "13c5e3ed80ff0a10f11e16f91ee3963c",
+        "pinned_by": ["prod"],
+        "file": ".claude/agents/agente-barragens.v5.0.md",
+        "created_at": "2026-07-25T14:32:00Z",
+        "deprecated_at": null,
+        "rag_collection": "bar:v5.0:chunks"
+      }
+    }
+  },
+  "rag_collections": {
+    "san_v5.0": {
+      "prefix": "san:",
+      "version": "v5.0",
+      "created_at": "2026-07-25T14:32:00Z",
+      "checksum": "a1b2c3d4e5f6a7b8c9d1e2f3a4b5c6d7",
+      "n_chunks": 2500,
+      "embedding_model": "intfloat/multilingual-e5-large-instruct",
+      "status": "active"
+    },
+    "ene_v5.0": {
+      "prefix": "ene:",
+      "version": "v5.0",
+      "created_at": "2026-07-25T14:32:00Z",
+      "checksum": "b2c3d4e5f6a7b8c9d1e2f3a4b5c6d7e8",
+      "n_chunks": 3000,
+      "embedding_model": "intfloat/multilingual-e5-large-instruct",
+      "status": "active"
+    },
+    "por_v5.0": {
+      "prefix": "por:",
+      "version": "v5.0",
+      "created_at": "2026-07-25T14:32:00Z",
+      "checksum": "c3d4e5f6a7b8c9d1e2f3a4b5c6d7e8f9",
+      "n_chunks": 2000,
+      "embedding_model": "intfloat/multilingual-e5-large-instruct",
+      "status": "active"
+    },
+    "aer_v5.0": {
+      "prefix": "aer:",
+      "version": "v5.0",
+      "created_at": "2026-07-25T14:32:00Z",
+      "checksum": "d4e5f6a7b8c9d1e2f3a4b5c6d7e8f9a0",
+      "n_chunks": 1800,
+      "embedding_model": "intfloat/multilingual-e5-large-instruct",
+      "status": "active"
+    },
+    "bar_v5.0": {
+      "prefix": "bar:",
+      "version": "v5.0",
+      "created_at": "2026-07-25T14:32:00Z",
+      "checksum": "e5f6a7b8c9d1e2f3a4b5c6d7e8f9a0b1",
+      "n_chunks": 2200,
+      "embedding_model": "intfloat/multilingual-e5-large-instruct",
+      "status": "active"
+    }
+  },
+  "metadata": {
+    "maintainer": "mneves@mantaassociados.com",
+    "last_updated": "2026-07-25T14:32:00Z",
+    "deployment_status": "ready-for-go-live",
+    "notes": "v5.0 production deployment with 6 core agents (maestro, S8, S9, S6, S7, S10) ready. S1-S5 horizontal agents and legacy versions to be added in Phase 2."
+  }
+}

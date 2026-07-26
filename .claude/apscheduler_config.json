@@ -1,0 +1,73 @@
+{
+  "enabled": true,
+  "timezone": "UTC",
+  "description": "APScheduler Configuration — P7 Background Orchestration (v5.0)",
+  "version": "5.0",
+  "jobs": [
+    {
+      "id": "rag-reindex",
+      "name": "RAG Reindex (R6)",
+      "enabled": true,
+      "trigger": "cron",
+      "cron": "0 2 * * *",
+      "description": "Reindex all RAG collections, validate embeddings, update cache metadata",
+      "max_instances": 1,
+      "coalesce": true,
+      "module": "scripts.rag_reindex_job",
+      "function": "rag_reindex_job"
+    },
+    {
+      "id": "agent-memory-purge",
+      "name": "Agent Memory Purge (R10)",
+      "enabled": true,
+      "trigger": "cron",
+      "cron": "0 3 * * *",
+      "description": "Delete expired chunks (TTL) and low-rating entries (age > 7 days, rating < 2)",
+      "max_instances": 1,
+      "coalesce": true,
+      "module": "scripts.agent_memory_purge_job",
+      "function": "agent_memory_purge_job"
+    },
+    {
+      "id": "feedback-loop",
+      "name": "Feedback Loop & Retraining (R9)",
+      "enabled": true,
+      "trigger": "cron",
+      "cron": "0 3 * * 0",
+      "description": "Extract user feedback (rating >= 4), retrain reranker, update VERSIONS.json checksum",
+      "max_instances": 1,
+      "coalesce": true,
+      "day_of_week": 0,
+      "module": "scripts.feedback_loop_job",
+      "function": "FeedbackLoopExecutor"
+    },
+    {
+      "id": "health-check",
+      "name": "Health Check",
+      "enabled": true,
+      "trigger": "cron",
+      "cron": "0 */6 * * *",
+      "description": "Validate maestro_runs schema, indexes, RLS; check agent_memory size; verify skill checksums; alert Slack if issues",
+      "max_instances": 1,
+      "coalesce": true,
+      "module": "scripts.health_check_job",
+      "function": "HealthCheckJobExecutor"
+    }
+  ],
+  "environment_variables": {
+    "SUPABASE_URL": "Set via .env or SUPABASE_URL env",
+    "SUPABASE_KEY": "Set via .env or SUPABASE_KEY env (service_role)",
+    "SLACK_WEBHOOK_URL": "Optional: Set via .env or SLACK_WEBHOOK_URL env"
+  },
+  "scheduling_notes": {
+    "rag_reindex": "Daily @ 02:00 UTC — After midnight, low traffic window",
+    "agent_memory_purge": "Daily @ 03:00 UTC — After RAG reindex completes",
+    "feedback_loop": "Sunday @ 03:00 UTC — Weekly cycle for retraining",
+    "health_check": "Every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)"
+  },
+  "deployment": {
+    "systemd_service": "apscheduler-manta.service",
+    "docker": "docker run -d --env-file .env manta/apscheduler:v5.0",
+    "command": "python scripts/apscheduler_setup.py --run-scheduler"
+  }
+}

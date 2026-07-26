@@ -1,0 +1,33 @@
+# Maestro APScheduler v5.0 — Python Dependencies
+# Usage: pip install -r requirements.txt
+
+# Core scheduler
+schedule==1.2.0
+APScheduler==3.10.4
+pytz==2023.3
+
+# HTTP & Networking
+requests==2.31.0
+urllib3==2.0.6
+
+# Metrics & Monitoring
+prometheus-client==0.19.0
+
+# Configuration & Secrets
+python-dotenv==1.0.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Database
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.23
+
+# Logging & Observability
+python-json-logger==2.0.7
+
+# Development (optional)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+black==23.12.0
+flake8==6.1.0
+mypy==1.7.1

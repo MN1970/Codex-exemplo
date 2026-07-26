@@ -1,0 +1,450 @@
+{
+  "/**": "Maestro v5.0 Security Architecture — Settings",
+  "schema_version": "v5.0",
+  "revision": "2026-07-25",
+
+  "// ====== 1. MODEL TIERING ======": "",
+  "model_defaults": {
+    "default_model": "claude-sonnet-5-20250701",
+    "fallback_model": "claude-haiku-4-5-20251001",
+    "tier_horizontal": {
+      "manta_00_maestro": "claude-sonnet-5-20250701",
+      "manta_01_claims": "claude-opus-5-20250701",
+      "manta_02_contratual": "claude-sonnet-5-20250701",
+      "manta_04_imobiliario": "claude-sonnet-5-20250701",
+      "manta_05_orcamento": "claude-sonnet-5-20250701",
+      "manta_06_modelagem": "claude-opus-5-20250701",
+      "manta_07_cronograma": "claude-sonnet-5-20250701",
+      "manta_13_bd": "claude-sonnet-5-20250701",
+      "manta_14_apresentacoes": "claude-sonnet-5-20250701",
+      "manta_15_advisory": "claude-opus-5-20250701",
+      "manta_16_arquiteto_ia": "claude-opus-5-20250701"
+    },
+    "tier_vertical": {
+      "agente_infraestrutura_s1": "claude-sonnet-5-20250701",
+      "agente_infraestrutura_s2": "claude-sonnet-5-20250701",
+      "agente_infraestrutura_s3": "claude-sonnet-5-20250701",
+      "agente_infraestrutura_s4": "claude-sonnet-5-20250701",
+      "agente_portos_s6": "claude-sonnet-5-20250701",
+      "agente_aeroportos_s7": "claude-sonnet-5-20250701",
+      "agente_saneamento_s8": "claude-opus-5-20250701",
+      "agente_energia_s9": "claude-opus-5-20250701",
+      "agente_barragens_s10": "claude-sonnet-5-20250701"
+    },
+    "comment": "Opus 5 para agentes de risco P3/P4 (Claims, Saneamento, Energia, Arquiteto); Sonnet 5 default"
+  },
+
+  "// ====== 2. PRE-TOOL-USE BLOCKLIST ======": "",
+  "security": {
+    "pre_tool_use": {
+      "blocked_patterns": [
+        {
+          "pattern": "^git\\s+push\\s+--force",
+          "reason": "Force push requires manual approval",
+          "action": "confirm",
+          "message": "Force push detected. Confirm approval from MN or team lead"
+        },
+        {
+          "pattern": "^git\\s+push\\s+-f",
+          "reason": "Force push (-f alias) requires manual approval",
+          "action": "confirm"
+        },
+        {
+          "pattern": "rm\\s+(-rf|-r|-f)\\s+/home/user/Codex-exemplo",
+          "reason": "Destruction of project root directory",
+          "action": "deny"
+        },
+        {
+          "pattern": "^DROP\\s+TABLE",
+          "reason": "DDL destructive: DROP TABLE",
+          "action": "deny",
+          "exception": "only_in_test_transaction"
+        },
+        {
+          "pattern": "^DELETE\\s+FROM",
+          "reason": "DDL destructive: DELETE FROM (no WHERE clause)",
+          "action": "deny",
+          "exception": "only_in_test_transaction"
+        },
+        {
+          "pattern": "^TRUNCATE",
+          "reason": "DDL destructive: TRUNCATE",
+          "action": "deny"
+        },
+        {
+          "pattern": "^ALTER\\s+TABLE.*(DROP|RENAME)",
+          "reason": "DDL destructive: ALTER TABLE with DROP/RENAME",
+          "action": "deny"
+        },
+        {
+          "pattern": "exec\\(|eval\\(|system\\(|subprocess\\.Popen\\(.*shell=True",
+          "reason": "Unsigned script execution (exec, eval, system)",
+          "action": "deny"
+        },
+        {
+          "pattern": "curl.*\\|\\s*bash|wget.*\\|\\s*bash",
+          "reason": "Unsafe pipe-to-shell (curl/wget | bash)",
+          "action": "deny"
+        },
+        {
+          "pattern": "chmod\\s+777",
+          "reason": "Overly permissive chmod 777",
+          "action": "warn"
+        }
+      ],
+      "allowed_tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Edit",
+        "Write",
+        "Agent",
+        "Artifact",
+        "Skill",
+        "ToolSearch"
+      ],
+      "restricted_bash": {
+        "enabled": true,
+        "allowed_commands": [
+          "git",
+          "npm",
+          "python",
+          "node",
+          "ls",
+          "pwd",
+          "cd",
+          "mkdir",
+          "cat",
+          "grep",
+          "find",
+          "curl",
+          "jq",
+          "date",
+          "echo"
+        ],
+        "timeout_seconds": 60,
+        "memory_limit_mb": 512
+      }
+    }
+  },
+
+  "// ====== 3. HOOKS — LIFECYCLE ======": "",
+  "hooks": {
+    "session_start": {
+      "enabled": true,
+      "label": "SessionStart v5.0",
+      "steps": [
+        {
+          "step": 1,
+          "name": "validate_skill_versions",
+          "description": "Validate installed skills against pk_versions table",
+          "script": "validate_skills.py",
+          "on_error": "warn",
+          "details": "Check .claude/agents/*.md hash against Supabase pk_versions.sha256"
+        },
+        {
+          "step": 2,
+          "name": "healthcheck_sp",
+          "description": "Run sp_healthcheck.py to validate SharePoint token TTL",
+          "script": "sp_healthcheck.py",
+          "on_error": "warn",
+          "details": "Alert if M365 token expires within 30 days. Fetch from env M365_TENANT_ID"
+        },
+        {
+          "step": 3,
+          "name": "load_agent_memory",
+          "description": "Load agent_memory cache from Supabase",
+          "mcp_server": "supabase",
+          "query": "SELECT * FROM agent_memory WHERE agent_id = $1 ORDER BY created_at DESC LIMIT 100",
+          "on_error": "warn",
+          "cache_ttl_minutes": 30
+        },
+        {
+          "step": 4,
+          "name": "audit_log",
+          "description": "Write session start event to maestro_runs table",
+          "mcp_server": "supabase",
+          "table": "maestro_runs",
+          "fields": {
+            "session_id": "$SESSION_ID",
+            "event_type": "session_start",
+            "timestamp": "now()",
+            "user_email": "$USER_EMAIL",
+            "agent_id": "$AGENT_ID"
+          }
+        }
+      ]
+    },
+
+    "pre_tool_use": {
+      "enabled": true,
+      "label": "PreToolUse v5.0",
+      "steps": [
+        {
+          "step": 1,
+          "name": "check_blocklist",
+          "description": "Check tool call against pre_tool_use.blocked_patterns",
+          "on_violation": "confirm_or_deny"
+        },
+        {
+          "step": 2,
+          "name": "git_force_push_gate",
+          "description": "Require human approval for git push --force",
+          "on_match": "ask_confirmation",
+          "message": "⚠️ Force push detected. Confirm approval (requires MN or team lead)."
+        },
+        {
+          "step": 3,
+          "name": "ddl_transaction_check",
+          "description": "Allow DDL (DROP/DELETE/TRUNCATE) only within explicit test transaction",
+          "on_match": "check_context",
+          "details": "Must see 'BEGIN TEST TRANSACTION' in prior context"
+        }
+      ]
+    },
+
+    "subagent_stop": {
+      "enabled": true,
+      "label": "SubagentStop v5.0",
+      "steps": [
+        {
+          "step": 1,
+          "name": "log_run_metrics",
+          "description": "Write metrics to maestro_runs after agent completes",
+          "mcp_server": "supabase",
+          "table": "maestro_runs",
+          "fields": {
+            "session_id": "$SESSION_ID",
+            "agent_id": "$AGENT_ID",
+            "agent_name": "$AGENT_NAME",
+            "skill_used": "$SKILL_NAME",
+            "model_used": "$MODEL_ID",
+            "input_tokens": "$TOKENS_INPUT",
+            "output_tokens": "$TOKENS_OUTPUT",
+            "total_tokens": "$TOKENS_TOTAL",
+            "estimated_cost_usd": "$COST_USD",
+            "duration_seconds": "$DURATION",
+            "status": "$STATUS",
+            "timestamp": "now()",
+            "user_email": "$USER_EMAIL"
+          }
+        },
+        {
+          "step": 2,
+          "name": "alert_on_cost_spike",
+          "description": "Alert if single run cost > USD 50",
+          "on_condition": "estimated_cost_usd > 50",
+          "action": "warn_to_user"
+        }
+      ]
+    }
+  },
+
+  "// ====== 3.5. SECRETS ROTATION (APScheduler) ======": "",
+  "secrets_rotation": {
+    "enabled": true,
+    "label": "SecretsRotation v5.0",
+    "policy_file": "scripts/rotation_policy.json",
+    "log_file": "rotation_log.json",
+    "pre_rotation": {
+      "enabled": true,
+      "script": "scripts/validate_secret.py",
+      "timeout_seconds": 60,
+      "on_failure": "abort"
+    },
+    "post_rotation": {
+      "enabled": true,
+      "script": "scripts/verify_secret.py",
+      "timeout_seconds": 60,
+      "on_failure": "alert"
+    },
+    "scheduled_tasks": [
+      {
+        "name": "rotate_m365_client_secret",
+        "secret": "M365_CLIENT_SECRET",
+        "cron": "0 2 * * 0",
+        "description": "Rotate M365_CLIENT_SECRET every Sunday at 02:00 UTC",
+        "enabled": true,
+        "notify_slack": true,
+        "slack_channel": "#agent-ops"
+      },
+      {
+        "name": "rotate_mantahub_token",
+        "secret": "MANTAHUB_TOKEN",
+        "cron": "0 3 * * 1",
+        "description": "Rotate MANTAHUB_TOKEN every Monday at 03:00 UTC",
+        "enabled": true,
+        "notify_slack": true,
+        "slack_channel": "#agent-ops"
+      },
+      {
+        "name": "rotate_supabase_key",
+        "secret": "SUPABASE_KEY",
+        "cron": "0 4 1,15 * *",
+        "description": "Rotate SUPABASE_KEY on 1st and 15th of month at 04:00 UTC",
+        "enabled": true,
+        "notify_slack": true,
+        "slack_channel": "#agent-ops"
+      },
+      {
+        "name": "rotate_mantabase_password",
+        "secret": "MANTABASE_PASSWORD",
+        "cron": "0 5 1 */3 *",
+        "description": "Rotate MANTABASE_PASSWORD on 1st of every 3rd month at 05:00 UTC",
+        "enabled": true,
+        "notify_slack": true,
+        "slack_channel": "#agent-ops",
+        "requires_approval": true
+      },
+      {
+        "name": "check_secret_expiry_daily",
+        "script": "scripts/rotate_secrets.py check-expiry",
+        "cron": "0 7 * * *",
+        "description": "Daily check for secrets expiring within 7-21 days at 07:00 UTC",
+        "enabled": true,
+        "notify_slack": true,
+        "slack_channel": "#agent-ops"
+      }
+    ],
+    "integrations": {
+      "azure_keyvault": {
+        "enabled": true,
+        "vault_name": "${AZURE_KEYVAULT_NAME}",
+        "api_version": "7.3",
+        "timeout_seconds": 30
+      },
+      "slack": {
+        "enabled": true,
+        "webhook_url": "${SLACK_WEBHOOK_URL}",
+        "channel": "#agent-ops",
+        "notify_on": ["rotation_success", "rotation_failed", "expiring_soon"]
+      },
+      "audit_log": {
+        "enabled": true,
+        "table": "secret_rotation_audit",
+        "database": "supabase",
+        "retention_days": 365,
+        "immutable_log": true
+      }
+    }
+  },
+
+  "// ====== 4. ALLOWLIST — DEFAULT TOOLS ======": "",
+  "tools": {
+    "default_allowlist": [
+      {
+        "name": "Read",
+        "description": "Read file contents",
+        "restricted_paths": [
+          ".env",
+          ".env.local",
+          ".env.production",
+          "secrets.json",
+          "credentials.json"
+        ],
+        "comment": "Allowed with path restrictions (secrets hidden)"
+      },
+      {
+        "name": "Grep",
+        "description": "Search file contents",
+        "restricted_patterns": [
+          "password|secret|token|api.?key|credential"
+        ],
+        "comment": "Allowed with pattern restrictions (hide secrets)"
+      },
+      {
+        "name": "Glob",
+        "description": "Find files by pattern",
+        "allowed": true
+      },
+      {
+        "name": "Bash",
+        "description": "Execute shell commands",
+        "allowed": true,
+        "restrictions": {
+          "allowed_commands": "see security.restricted_bash.allowed_commands",
+          "timeout_seconds": 60,
+          "memory_limit_mb": 512
+        }
+      },
+      {
+        "name": "Edit",
+        "description": "Edit file contents",
+        "allowed": true
+      },
+      {
+        "name": "Write",
+        "description": "Write file contents",
+        "allowed": true
+      },
+      {
+        "name": "Agent",
+        "description": "Launch subagent",
+        "allowed": true
+      },
+      {
+        "name": "Artifact",
+        "description": "Publish HTML/Markdown artifact",
+        "allowed": true
+      },
+      {
+        "name": "Skill",
+        "description": "Invoke skill",
+        "allowed": true
+      },
+      {
+        "name": "ToolSearch",
+        "description": "Load deferred tool schema",
+        "allowed": true
+      }
+    ],
+    "mcp_tools": {
+      "comment": "MCP tools require .mcp.json config + runtime auth",
+      "required_config": ".mcp.json"
+    }
+  },
+
+  "// ====== 5. COMPLIANCE & AUDIT ======": "",
+  "audit": {
+    "enabled": true,
+    "log_destination": "Supabase:maestro_runs",
+    "retention_days": 90,
+    "fields_logged": [
+      "session_id",
+      "user_email",
+      "agent_id",
+      "skill_name",
+      "model_id",
+      "input_tokens",
+      "output_tokens",
+      "total_cost_usd",
+      "duration_seconds",
+      "status",
+      "error_message",
+      "timestamp"
+    ]
+  },
+
+  "// ====== 6. ENVIRONMENT & CREDENTIALS ======": "",
+  "credentials": {
+    "comment": "Credentials loaded from env vars (never hardcoded). See .mcp.json for details.",
+    "sources": {
+      "dev": ".env.local (git-ignored)",
+      "staging": "Key Vault staging-maestro-v5",
+      "production": "Key Vault prod-maestro-v5"
+    },
+    "required_vars": [
+      "M365_TENANT_ID",
+      "M365_CLIENT_ID",
+      "M365_CLIENT_SECRET",
+      "SUPABASE_URL",
+      "SUPABASE_KEY",
+      "MANTABASE_URL",
+      "MANTABASE_USER",
+      "MANTABASE_PASSWORD",
+      "MANTAHUB_API_URL",
+      "MANTAHUB_TOKEN"
+    ]
+  }
+}
