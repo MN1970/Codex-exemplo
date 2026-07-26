@@ -34,6 +34,35 @@
     "comment": "Opus 5 para agentes de risco P3/P4 (Claims, Saneamento, Energia, Arquiteto); Sonnet 5 default"
   },
 
+  "// ====== 1.5. SKILL VERSION PINNING ======": "",
+  "skill_version_pin": {
+    "maestro": "v5.0",
+    "agente-saneamento": "v5.0",
+    "agente-energia": "v5.0",
+    "agente-portos": "v5.0",
+    "agente-aeroportos": "v5.0",
+    "agente-barragens": "v5.0"
+  },
+  "skill_version_roadmap": {
+    "comment": "Phase 2 (post-go-live): S1-S4 (rodovias, oae, ferrovia, metro) + horizontal agents to v5.0",
+    "pending": [
+      "agente-rodovias",
+      "agente-oae",
+      "agente-ferrovia",
+      "agente-metro",
+      "agente-claims",
+      "agente-contratual",
+      "agente-imobiliario",
+      "agente-orcamento",
+      "agente-modelagem",
+      "agente-cronograma",
+      "agente-bd",
+      "agente-apresentacoes",
+      "agente-advisory",
+      "agente-arquiteto-ia"
+    ]
+  },
+
   "// ====== 2. PRE-TOOL-USE BLOCKLIST ======": "",
   "security": {
     "pre_tool_use": {
