@@ -25,6 +25,12 @@ export function Header() {
           <Link to="/" className="hover:text-foreground">
             Home
           </Link>
+          <Link to="/canvas" className="hover:text-foreground">
+            Canvas
+          </Link>
+          <Link to="/knowledge-hub" className="hover:text-foreground">
+            Knowledge Hub
+          </Link>
           <ThemeToggle />
           {isAuthenticated ? (
             <div className="flex items-center gap-3">

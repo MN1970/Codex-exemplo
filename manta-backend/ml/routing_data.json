@@ -1,0 +1,365 @@
+{
+  "manta-00-maestro": {
+    "name": "Maestro (Router)",
+    "tier": "Haiku→Sonnet",
+    "keywords": [
+      "routing",
+      "orchestration",
+      "intake",
+      "agent recommendation",
+      "maestro",
+      "router",
+      "agent selection",
+      "dispatch"
+    ],
+    "description": "Master router and orchestrator for all Manta agents. Routes requests to appropriate vertical or horizontal agents."
+  },
+  "manta-01-claims": {
+    "name": "Claims",
+    "tier": "Opus",
+    "keywords": [
+      "claims",
+      "sinistro",
+      "indenization",
+      "liability",
+      "damages",
+      "loss assessment",
+      "claim analysis",
+      "insurance"
+    ],
+    "description": "Specialized in claims analysis, sinistro assessment, and liability evaluation."
+  },
+  "manta-02-contratual": {
+    "name": "Contratual",
+    "tier": "Sonnet",
+    "keywords": [
+      "contratual",
+      "contract",
+      "agreement",
+      "terms",
+      "conditions",
+      "compliance",
+      "legal review",
+      "negotiation"
+    ],
+    "description": "Contract analysis, legal review, negotiation terms."
+  },
+  "manta-04-imobiliario": {
+    "name": "Imobiliário",
+    "tier": "Sonnet",
+    "keywords": [
+      "imobiliario",
+      "real estate",
+      "property",
+      "land",
+      "zoning",
+      "valuation",
+      "acquisition",
+      "lease"
+    ],
+    "description": "Real estate, property valuation, land acquisition and zoning analysis."
+  },
+  "manta-05-orcamento": {
+    "name": "Orçamento",
+    "tier": "Sonnet",
+    "keywords": [
+      "orcamento",
+      "budget",
+      "cost estimate",
+      "pricing",
+      "financial estimate",
+      "SICRO",
+      "cost analysis",
+      "budget planning"
+    ],
+    "description": "Budget estimation, cost analysis, SICRO-based pricing."
+  },
+  "manta-06-modelagem": {
+    "name": "Modelagem",
+    "tier": "Sonnet/Opus",
+    "keywords": [
+      "modelagem",
+      "modeling",
+      "financial model",
+      "simulation",
+      "forecast",
+      "projection",
+      "scenario analysis",
+      "VPL"
+    ],
+    "description": "Financial modeling, simulations, forecasting, and scenario analysis."
+  },
+  "manta-07-cronograma": {
+    "name": "Cronograma",
+    "tier": "Sonnet",
+    "keywords": [
+      "cronograma",
+      "schedule",
+      "timeline",
+      "project management",
+      "gantt",
+      "critical path",
+      "scheduling",
+      "milestones"
+    ],
+    "description": "Project scheduling, timeline management, Gantt charts, critical path analysis."
+  },
+  "manta-13-bd": {
+    "name": "Business Development",
+    "tier": "Sonnet",
+    "keywords": [
+      "business development",
+      "bd",
+      "market analysis",
+      "opportunity",
+      "partnership",
+      "strategy",
+      "growth",
+      "commercial"
+    ],
+    "description": "Business development, market analysis, partnership and growth strategy."
+  },
+  "manta-14-apresentacoes": {
+    "name": "Apresentações",
+    "tier": "Sonnet",
+    "keywords": [
+      "apresentacao",
+      "presentation",
+      "pptx",
+      "slide",
+      "pitch",
+      "visual communication",
+      "deck",
+      "storytelling"
+    ],
+    "description": "Presentation creation, PowerPoint generation, visual communication."
+  },
+  "manta-15-advisory": {
+    "name": "Advisory",
+    "tier": "Sonnet/Opus",
+    "keywords": [
+      "advisory",
+      "consulting",
+      "advice",
+      "strategy",
+      "expert opinion",
+      "recommendation",
+      "guidance",
+      "counseling"
+    ],
+    "description": "Strategic advisory, consulting, expert recommendations across sectors."
+  },
+  "manta-16-arquiteto-ia": {
+    "name": "Arquiteto IA",
+    "tier": "Opus",
+    "keywords": [
+      "arquiteto",
+      "architecture",
+      "ai architecture",
+      "system design",
+      "technical design",
+      "infrastructure design",
+      "agent design"
+    ],
+    "description": "AI architecture design, system design, technical infrastructure planning."
+  },
+  "manta-03-s1-rodovias": {
+    "name": "Infraestrutura - Rodovias (S1)",
+    "tier": "Sonnet",
+    "keywords": [
+      "rodovia",
+      "road",
+      "highway",
+      "pavimento",
+      "pavement",
+      "CBUQ",
+      "BGS",
+      "terraplenagem",
+      "embankment",
+      "SICRO",
+      "DNIT",
+      "asfalto",
+      "bituminous"
+    ],
+    "description": "Road infrastructure, highway design, pavements, CBUQ, BGS, earthworks, DNIT standards."
+  },
+  "manta-03-s2-oae": {
+    "name": "Infraestrutura - OAE (S2)",
+    "tier": "Sonnet",
+    "keywords": [
+      "ponte",
+      "bridge",
+      "viaduto",
+      "viaduct",
+      "oae",
+      "obra de arte especial",
+      "NBR 7187",
+      "tunel",
+      "tunnel",
+      "tunel rodoviario",
+      "estrutura",
+      "structural"
+    ],
+    "description": "Bridges, viaducts, OAE (special structures), tunnels, NBR 7187 standards."
+  },
+  "manta-03-s3-ferrovia": {
+    "name": "Infraestrutura - Ferrovia (S3)",
+    "tier": "Sonnet",
+    "keywords": [
+      "ferrovia",
+      "railway",
+      "trilho",
+      "rail",
+      "AMV",
+      "dormente",
+      "sleeper",
+      "via permanente",
+      "permanent way",
+      "locomotiva",
+      "vagao"
+    ],
+    "description": "Railway infrastructure, tracks, permanent way, AMV, dormer sleepers."
+  },
+  "manta-03-s4-metro": {
+    "name": "Infraestrutura - Metrô (S4)",
+    "tier": "Sonnet",
+    "keywords": [
+      "metro",
+      "subway",
+      "estacao",
+      "station",
+      "NATM",
+      "New Austrian Tunnelling Method",
+      "PSD",
+      "secante pile wall",
+      "linha",
+      "line",
+      "linha 4",
+      "linha 5",
+      "VLT",
+      "light rail"
+    ],
+    "description": "Metro/subway systems, stations, NATM tunneling, PSD construction, light rail."
+  },
+  "manta-03-s6-portos": {
+    "name": "Portos (S6)",
+    "tier": "Sonnet",
+    "keywords": [
+      "porto",
+      "port",
+      "terminal",
+      "ANTAQ",
+      "dragagem",
+      "dredging",
+      "molhe",
+      "breakwater",
+      "berco",
+      "berth",
+      "calado",
+      "draft",
+      "conteiner",
+      "container",
+      "granel",
+      "bulk cargo",
+      "marinas"
+    ],
+    "description": "Port infrastructure, terminals, dredging, breakwaters, berths, cargo handling."
+  },
+  "manta-03-s7-aeroportos": {
+    "name": "Aeroportos (S7)",
+    "tier": "Sonnet",
+    "keywords": [
+      "aeroporto",
+      "airport",
+      "pista",
+      "runway",
+      "pouso",
+      "landing",
+      "ANAC",
+      "National Civil Aviation Agency",
+      "ICAO",
+      "TPS",
+      "Terminal Passageiros",
+      "TECA",
+      "Terminal Cargas",
+      "balizamento",
+      "marking",
+      "taxiway"
+    ],
+    "description": "Airport infrastructure, runways, terminals, ANAC/ICAO compliance, navigation."
+  },
+  "manta-03-s8-saneamento": {
+    "name": "Saneamento (S8)",
+    "tier": "Sonnet",
+    "keywords": [
+      "saneamento",
+      "sanitation",
+      "wastewater",
+      "ETA",
+      "water treatment",
+      "ETE",
+      "sewage treatment",
+      "adutora",
+      "water main",
+      "esgoto",
+      "sewage",
+      "AySA",
+      "drenagem",
+      "drainage",
+      "SNIS",
+      "NBR 12211",
+      "NBR 12218",
+      "Lei 14.026"
+    ],
+    "description": "Sanitation, water treatment (ETA), sewage treatment (ETE), water distribution, drainage."
+  },
+  "manta-03-s9-energia": {
+    "name": "Energia (S9)",
+    "tier": "Sonnet",
+    "keywords": [
+      "energia",
+      "energy",
+      "transmissao",
+      "transmission",
+      "LT",
+      "transmission line",
+      "subestacao",
+      "substation",
+      "ANEEL",
+      "RAP",
+      "leilao",
+      "auction",
+      "ONS",
+      "EPE",
+      "distribuicao",
+      "distribution",
+      "geracao",
+      "generation"
+    ],
+    "description": "Energy infrastructure, transmission lines, substations, ANEEL regulations, power generation."
+  },
+  "manta-03-s10-barragens": {
+    "name": "Barragens (S10)",
+    "tier": "Sonnet",
+    "keywords": [
+      "barragem",
+      "dam",
+      "vertedouro",
+      "spillway",
+      "CFRD",
+      "roller compacted concrete",
+      "CCR",
+      "rejeitos",
+      "tailings",
+      "PNSB",
+      "National Dam Safety Policy",
+      "ICOLD",
+      "CBDB",
+      "TSF",
+      "tail storage",
+      "hidrica",
+      "hydraulic"
+    ],
+    "description": "Dam infrastructure, spillways, tailings management, ICOLD standards, PNSB compliance."
+  }
+}

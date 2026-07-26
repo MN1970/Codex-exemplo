@@ -81,6 +81,13 @@ class Settings(BaseSettings):
     microsoft_365_mcp_url: str = ""
     microsoft_365_mcp_token: str = ""
 
+    # --- Claude API (agent executor) ---
+    claude_api_key: str = ""
+    claude_default_model: str = "claude-3-5-sonnet-20241022"
+    claude_opus_model: str = "claude-3-opus-20250219"
+    claude_max_tokens: int = 4096
+    claude_streaming_timeout: int = 120
+
     # --- ML ---
     embedding_model: str = "text-embedding-3-small"
     embedding_dimensions: int = 1536

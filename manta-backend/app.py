@@ -17,7 +17,7 @@ from pg_pool import close_pool, create_pool
 from mcp.client import MCPClient
 from mcp.integration import MCPServer, build_default_registry, build_remote_clients
 from mcp.integration import router as mcp_router
-from routers import admin, agents, feedback, rag, routing
+from routers import admin, agents, executor, feedback, rag, routing
 from routers import auth as auth_router
 
 logging.basicConfig(level=logging.INFO)
@@ -34,6 +34,11 @@ async def lifespan(app: FastAPI):
     logger.info("startup: %s v%s (%s)", settings.app_name, settings.app_version, settings.environment)
 
     app.state.db_pool = await create_pool()
+
+    # Garante o schema de documentos do Knowledge Hub (rag_documents +
+    # colunas novas em rag_chunks). Best-effort — não derruba o startup
+    # se o Postgres ainda não estiver acessível (ver rag.ensure_schema).
+    await rag.ensure_schema(app.state.db_pool)
 
     try:
         # Cria as tabelas de auth (users/roles/organizations/...) se não
@@ -100,6 +105,7 @@ app.add_middleware(
 )
 
 app.include_router(agents.router)
+app.include_router(executor.router)
 app.include_router(rag.router)
 app.include_router(routing.router)
 app.include_router(feedback.router)
