@@ -1,0 +1,55 @@
+{
+  "$schema_note": "Plano de deploy SharePoint para agentes verticais S6-S10. Ver docs/DEPLOY-v4.2.md secao 3.",
+  "site_hostname": "mnassociados.sharepoint.com",
+  "site_path": "/sites/Engenharia",
+  "drive_name": "Documentos Compartilhados",
+  "agent_folders": [
+    {
+      "slug": "agente-portos",
+      "sp_path": "04_IA/Manta-Maestro/01-agentes-fundamentais/agente-portos",
+      "upload": {
+        "local_path": "sharepoint/01-agentes-fundamentais/agente-portos/SKILL.md",
+        "remote_name": "SKILL.md"
+      }
+    },
+    {
+      "slug": "agente-aeroportos",
+      "sp_path": "04_IA/Manta-Maestro/01-agentes-fundamentais/agente-aeroportos",
+      "upload": {
+        "local_path": "sharepoint/01-agentes-fundamentais/agente-aeroportos/SKILL.md",
+        "remote_name": "SKILL.md"
+      }
+    },
+    {
+      "slug": "agente-saneamento",
+      "sp_path": "04_IA/Manta-Maestro/01-agentes-fundamentais/agente-saneamento",
+      "upload": {
+        "local_path": "sharepoint/01-agentes-fundamentais/agente-saneamento/SKILL.md",
+        "remote_name": "SKILL.md"
+      }
+    },
+    {
+      "slug": "agente-energia",
+      "sp_path": "04_IA/Manta-Maestro/01-agentes-fundamentais/agente-energia",
+      "upload": {
+        "local_path": "sharepoint/01-agentes-fundamentais/agente-energia/SKILL.md",
+        "remote_name": "SKILL.md"
+      }
+    },
+    {
+      "slug": "agente-barragens",
+      "sp_path": "04_IA/Manta-Maestro/01-agentes-fundamentais/agente-barragens",
+      "upload": {
+        "local_path": "sharepoint/01-agentes-fundamentais/agente-barragens/SKILL.md",
+        "remote_name": "SKILL.md"
+      }
+    }
+  ],
+  "project_folders": [
+    { "slug": "agente-portos", "sp_path": "03_Projetos/Portos" },
+    { "slug": "agente-aeroportos", "sp_path": "03_Projetos/Aeroportos" },
+    { "slug": "agente-saneamento", "sp_path": "03_Projetos/Saneamento" },
+    { "slug": "agente-energia", "sp_path": "03_Projetos/Energia" },
+    { "slug": "agente-barragens", "sp_path": "03_Projetos/Barragens" }
+  ]
+}

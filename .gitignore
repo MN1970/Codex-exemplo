@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+deploy-report.json
+
+# manta-backend
+manta-backend/.venv/
+manta-backend/.env
+manta-backend/*.egg-info/

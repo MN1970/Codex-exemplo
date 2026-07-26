@@ -1,0 +1,121 @@
+name: Deploy SKILL.md to SharePoint
+
+# Dispara quando um PR que toca .claude/agents/** e MERGEADO em main
+# (o merge do PR em si já passou pelo gate humano normal de code review —
+# ver docs/DEPLOY-v4.2.md secao 1, "Gate humano: aprovacao MN").
+#
+# Tambem aceita workflow_dispatch manual, para permitir testar o pipeline
+# inteiro (job `test` + job `deploy` em modo dry-run) sem precisar mergear
+# nada — util para validar em um PR fake / branch de teste.
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+    paths:
+      - ".claude/agents/**"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Forcar dry-run (nao chama o Graph API de verdade)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: deploy-skillmd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Testes do graph_api_wrapper (mocked)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r scripts/requirements-dev.txt
+
+      - name: Rodar testes unitarios (sem rede, tudo mocked)
+        run: pytest tests/graph_api -v
+
+  deploy:
+    name: Criar pastas + upload SKILL.md no SharePoint
+    needs: test
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    # `environment` permite (opcionalmente) configurar required reviewers
+    # no repo -> segundo gate humano (pos-merge, antes de tocar produção),
+    # alem dos Secrets ficarem escopados a este environment.
+    environment: sharepoint-production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r scripts/requirements.txt
+
+      - name: Resolver modo dry-run
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "flag=--dry-run" >> "$GITHUB_OUTPUT"
+          else
+            echo "flag=--live" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Executar deploy (cria 10 pastas + upload 5 SKILL.md)
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        run: |
+          python scripts/graph_api_wrapper.py \
+            --config config/sharepoint_deploy.json \
+            --repo-root . \
+            --report-out deploy-report.json \
+            ${{ steps.mode.outputs.flag }}
+        # Nota de seguranca: mesmo se `flag` for --live, o script
+        # (resolve_dry_run) cai de volta pra dry-run automaticamente caso
+        # AZURE_TENANT_ID/AZURE_CLIENT_ID/AZURE_CLIENT_SECRET nao estejam
+        # configurados como secret no environment `sharepoint-production`.
+        # Isso é o que torna seguro rodar este workflow num repo/PR fake.
+
+      - name: Upload do relatorio de deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-report
+          path: deploy-report.json
+
+      - name: Comentar no PR com o resultado
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('deploy-report.json', 'utf8'));
+            const lines = [
+              `### Deploy SKILL.md -> SharePoint`,
+              `- modo: **${report.dry_run ? 'DRY-RUN (nenhuma chamada real)' : 'LIVE'}**`,
+              `- site: \`${report.site}\``,
+              `- pastas planejadas: ${report.folders_planned.length}`,
+              `- uploads planejados: ${report.uploads_planned.length}`,
+              `- status: ${report.ok ? '✅ ok' : '❌ falhou (ver artifact deploy-report)'}`,
+            ];
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: lines.join('\n'),
+            });
