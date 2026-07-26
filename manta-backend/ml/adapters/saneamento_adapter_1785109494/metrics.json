@@ -1,0 +1,10 @@
+{
+  "segment": "saneamento",
+  "base_model": "demo-tiny-gpt2-offline",
+  "loss": 6.597142696380615,
+  "perplexity": 736.8951398982191,
+  "epoch": 1.0,
+  "num_train_steps": 4,
+  "learning_rate": 0.0003,
+  "total_time_seconds": 0.2150859832763672
+}
