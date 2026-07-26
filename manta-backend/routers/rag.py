@@ -222,7 +222,7 @@ def _snippet(content: str, max_len: int = 280) -> str:
 @router.post("/search", response_model=List[SearchResult], summary="Busca semântica com resultados em cards (título, snippet, score, agente, fonte)")
 async def search(payload: SearchRequest, request: Request) -> List[SearchResult]:
     collection = _normalize_collection_filter(payload.collection)
-    embedding = await embed_text(payload.query)
+    embedding = _vector_literal(await embed_text(payload.query))
 
     async with acquire_optional(request) as conn:
         if conn is None:
@@ -466,7 +466,7 @@ async def upload_document(
             )
 
             for idx, chunk in enumerate(chunks):
-                embedding = await embed_text(chunk)
+                embedding = _vector_literal(await embed_text(chunk))
                 await conn.execute(
                     """
                     INSERT INTO rag_chunks (collection, prefix, content, embedding, document_id, chunk_index)
