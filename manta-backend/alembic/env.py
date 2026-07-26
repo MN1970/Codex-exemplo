@@ -27,8 +27,11 @@ from alembic import context
 # independente do diretório de onde `alembic` é invocado.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config import get_settings  # noqa: E402
-from database import Base, to_async_dsn  # noqa: E402  (importa também Agent/RagChunk/... via database)
+from config import get_settings
+from database import (
+    Base,
+    to_async_dsn,
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

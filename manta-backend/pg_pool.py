@@ -22,11 +22,11 @@ compose), o pool falha ao conectar e a app ainda sobe — os endpoints
 que precisam de DB retornam 503 em vez de derrubar o processo inteiro.
 """
 import logging
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, Optional
 
 import asyncpg
-from fastapi import Request, HTTPException, status
+from fastapi import HTTPException, Request, status
 
 from config import get_settings
 
@@ -35,7 +35,7 @@ logger = logging.getLogger("manta.pg_pool")
 _settings = get_settings()
 
 
-async def create_pool() -> Optional[asyncpg.Pool]:
+async def create_pool() -> asyncpg.Pool | None:
     """Cria o pool de conexões. Retorna None se a conexão falhar,
     permitindo que a aplicação suba mesmo sem banco disponível
     (útil em dev/preview do skeleton)."""
@@ -54,7 +54,7 @@ async def create_pool() -> Optional[asyncpg.Pool]:
         return None
 
 
-async def close_pool(pool: Optional[asyncpg.Pool]) -> None:
+async def close_pool(pool: asyncpg.Pool | None) -> None:
     if pool is not None:
         await pool.close()
         logger.info("pg_pool: pool encerrado")
@@ -62,7 +62,7 @@ async def close_pool(pool: Optional[asyncpg.Pool]) -> None:
 
 async def get_db(request: Request) -> AsyncIterator[asyncpg.Connection]:
     """Dependency: empresta uma conexão do pool para o request atual."""
-    pool: Optional[asyncpg.Pool] = getattr(request.app.state, "db_pool", None)
+    pool: asyncpg.Pool | None = getattr(request.app.state, "db_pool", None)
     if pool is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -73,10 +73,10 @@ async def get_db(request: Request) -> AsyncIterator[asyncpg.Connection]:
 
 
 @asynccontextmanager
-async def acquire_optional(request: Request) -> AsyncIterator[Optional[asyncpg.Connection]]:
+async def acquire_optional(request: Request) -> AsyncIterator[asyncpg.Connection | None]:
     """Variante que não lança 503 — devolve None se o pool não existir.
     Útil em endpoints que têm um caminho de fallback (ex.: rag.py)."""
-    pool: Optional[asyncpg.Pool] = getattr(request.app.state, "db_pool", None)
+    pool: asyncpg.Pool | None = getattr(request.app.state, "db_pool", None)
     if pool is None:
         yield None
         return

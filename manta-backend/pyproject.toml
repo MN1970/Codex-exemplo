@@ -8,12 +8,14 @@ packages = [
     { include = "app.py" },
     { include = "config.py" },
     { include = "database.py" },
+    { include = "pg_pool.py" },
     { include = "db.py" },
     { include = "models.py" },
     { include = "auth.py" },
     { include = "routers" },
     { include = "mcp" },
     { include = "ml" },
+    { include = "alembic" },
 ]
 
 [tool.poetry.dependencies]
@@ -30,6 +32,8 @@ bcrypt = "4.0.1"  # pin: bcrypt>=4.1 quebra o probe de versão de passlib==1.7.4
 python-multipart = "^0.0.12"
 sqlalchemy = { extras = ["asyncio"], version = "^2.0.35" }
 email-validator = "^2.2.0"
+pgvector = "^0.5.0"    # tipo Vector do SQLAlchemy — database.py (RagChunk.embedding)
+alembic = "^1.18.0"    # migrations versionadas — alembic/versions/
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"

@@ -29,3 +29,17 @@ CREATE TABLE IF NOT EXISTS sp_agent_routing (
     sp_folder   TEXT NOT NULL,
     pattern     TEXT NOT NULL
 );
+
+-- Sessões de invocação do Canvas (POST /agents/{slug}/invoke): uma linha
+-- por prompt+resposta completa, gravada quando o streaming SSE termina.
+CREATE TABLE IF NOT EXISTS agent_sessions (
+    id          UUID PRIMARY KEY,
+    agent_code  TEXT NOT NULL,
+    agent_slug  TEXT NOT NULL,
+    prompt      TEXT NOT NULL,
+    response    TEXT NOT NULL,
+    user_email  TEXT,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_agent_sessions_slug ON agent_sessions (agent_slug);

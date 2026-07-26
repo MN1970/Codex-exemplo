@@ -56,15 +56,15 @@ Revision ID: 0003_rls_policies
 Revises: 0002_initial_schema
 Create Date: 2026-07-26
 """
-from typing import Sequence, Union
+from collections.abc import Sequence
 
 from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "0003_rls_policies"
-down_revision: Union[str, None] = "0002_initial_schema"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = "0002_initial_schema"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 # Tabelas com FK org_id NOT NULL — isolamento estrito (só a própria org).
 _STRICT_ORG_TABLES: tuple[str, ...] = ("agents", "rag_chunks", "sessions", "feedback")

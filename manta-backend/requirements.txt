@@ -17,4 +17,11 @@ python-multipart==0.0.12
 sqlalchemy[asyncio]==2.0.35
 email-validator==2.2.0
 # asyncpg==0.29.0 acima já cobre o driver async Postgres usado tanto
-# pelo pool "cru" de database.py quanto pelo engine SQLAlchemy de db.py.
+# pelo pool "cru" de pg_pool.py quanto pelo engine SQLAlchemy de
+# db.py/database.py.
+pgvector==0.5.0
+# Driver Python do pgvector (tipo `Vector` para SQLAlchemy) — usado por
+# database.py (RagChunk.embedding) e pelas migrations Alembic.
+alembic==1.18.5
+# Migrations versionadas (alembic/versions/) — schema, extensão pgvector
+# e RLS multi-org do database.py.

@@ -52,9 +52,9 @@ Uso fora do FastAPI (scripts, testes — ver test_connection.py):
 from __future__ import annotations
 
 import uuid
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from datetime import datetime
-from typing import AsyncIterator, Optional
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
@@ -155,14 +155,14 @@ class Organization(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    users: Mapped[list["User"]] = relationship(back_populates="organization", cascade="all, delete-orphan")
-    agents: Mapped[list["Agent"]] = relationship(back_populates="organization", cascade="all, delete-orphan")
-    rag_chunks: Mapped[list["RagChunk"]] = relationship(back_populates="organization", cascade="all, delete-orphan")
-    sessions: Mapped[list["Session"]] = relationship(back_populates="organization", cascade="all, delete-orphan")
-    feedback_entries: Mapped[list["Feedback"]] = relationship(
+    users: Mapped[list[User]] = relationship(back_populates="organization", cascade="all, delete-orphan")
+    agents: Mapped[list[Agent]] = relationship(back_populates="organization", cascade="all, delete-orphan")
+    rag_chunks: Mapped[list[RagChunk]] = relationship(back_populates="organization", cascade="all, delete-orphan")
+    sessions: Mapped[list[Session]] = relationship(back_populates="organization", cascade="all, delete-orphan")
+    feedback_entries: Mapped[list[Feedback]] = relationship(
         back_populates="organization", cascade="all, delete-orphan"
     )
-    ml_models: Mapped[list["MLModel"]] = relationship(back_populates="organization", cascade="all, delete-orphan")
+    ml_models: Mapped[list[MLModel]] = relationship(back_populates="organization", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Organization id={self.id!r} slug={self.slug!r}>"
@@ -182,7 +182,7 @@ class Role(Base):
     description: Mapped[str] = mapped_column(String(255), default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    users: Mapped[list["User"]] = relationship(back_populates="role")
+    users: Mapped[list[User]] = relationship(back_populates="role")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Role name={self.name!r}>"
@@ -216,10 +216,10 @@ class User(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    organization: Mapped["Organization"] = relationship(back_populates="users")
-    role: Mapped["Role"] = relationship(back_populates="users")
-    sessions: Mapped[list["Session"]] = relationship(back_populates="user")
-    feedback_entries: Mapped[list["Feedback"]] = relationship(back_populates="user")
+    organization: Mapped[Organization] = relationship(back_populates="users")
+    role: Mapped[Role] = relationship(back_populates="users")
+    sessions: Mapped[list[Session]] = relationship(back_populates="user")
+    feedback_entries: Mapped[list[Feedback]] = relationship(back_populates="user")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<User id={self.id!r} email={self.email!r} org_id={self.org_id!r}>"
@@ -245,7 +245,7 @@ class Agent(Base):
     slug: Mapped[str] = mapped_column(String(100), nullable=False)  # "agente-saneamento"
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     axis: Mapped[str] = mapped_column(String(20), nullable=False, default="horizontal")  # horizontal|vertical
-    segment: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)  # S1..S10
+    segment: Mapped[str | None] = mapped_column(String(10), nullable=True)  # S1..S10
     tier_default: Mapped[str] = mapped_column(String(50), nullable=False, default="Sonnet")
     status: Mapped[str] = mapped_column(String(30), nullable=False, default="operational")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -253,10 +253,10 @@ class Agent(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    organization: Mapped["Organization"] = relationship(back_populates="agents")
-    rag_chunks: Mapped[list["RagChunk"]] = relationship(back_populates="agent")
-    sessions: Mapped[list["Session"]] = relationship(back_populates="agent")
-    feedback_entries: Mapped[list["Feedback"]] = relationship(back_populates="agent")
+    organization: Mapped[Organization] = relationship(back_populates="agents")
+    rag_chunks: Mapped[list[RagChunk]] = relationship(back_populates="agent")
+    sessions: Mapped[list[Session]] = relationship(back_populates="agent")
+    feedback_entries: Mapped[list[Feedback]] = relationship(back_populates="agent")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Agent code={self.code!r} org_id={self.org_id!r}>"
@@ -287,18 +287,18 @@ class RagChunk(Base):
     org_id: Mapped[str] = mapped_column(
         ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    agent_id: Mapped[Optional[str]] = mapped_column(
+    agent_id: Mapped[str | None] = mapped_column(
         ForeignKey("agents.id", ondelete="SET NULL"), nullable=True, index=True
     )
     collection: Mapped[str] = mapped_column(String(50), nullable=False)  # saneamento|energia|portos|...
     prefix: Mapped[str] = mapped_column(String(10), nullable=False)  # san:|ene:|por:|aer:|bar:
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    embedding: Mapped[Optional[list[float]]] = mapped_column(Vector(EMBEDDING_DIM), nullable=True)
+    embedding: Mapped[list[float] | None] = mapped_column(Vector(EMBEDDING_DIM), nullable=True)
     meta: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    organization: Mapped["Organization"] = relationship(back_populates="rag_chunks")
-    agent: Mapped[Optional["Agent"]] = relationship(back_populates="rag_chunks")
+    organization: Mapped[Organization] = relationship(back_populates="rag_chunks")
+    agent: Mapped[Agent | None] = relationship(back_populates="rag_chunks")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<RagChunk id={self.id!r} collection={self.collection!r}>"
@@ -319,24 +319,24 @@ class Session(Base):
     org_id: Mapped[str] = mapped_column(
         ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    agent_id: Mapped[Optional[str]] = mapped_column(
+    agent_id: Mapped[str | None] = mapped_column(
         ForeignKey("agents.id", ondelete="SET NULL"), nullable=True, index=True
     )
-    user_id: Mapped[Optional[str]] = mapped_column(
+    user_id: Mapped[str | None] = mapped_column(
         ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
     )
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="active")  # active|completed|error
-    input_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    output_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    input_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    output_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
     tokens_used: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     meta: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb"))
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-    ended_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    organization: Mapped["Organization"] = relationship(back_populates="sessions")
-    agent: Mapped[Optional["Agent"]] = relationship(back_populates="sessions")
-    user: Mapped[Optional["User"]] = relationship(back_populates="sessions")
-    feedback_entries: Mapped[list["Feedback"]] = relationship(back_populates="session")
+    organization: Mapped[Organization] = relationship(back_populates="sessions")
+    agent: Mapped[Agent | None] = relationship(back_populates="sessions")
+    user: Mapped[User | None] = relationship(back_populates="sessions")
+    feedback_entries: Mapped[list[Feedback]] = relationship(back_populates="session")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Session id={self.id!r} status={self.status!r}>"
@@ -356,23 +356,23 @@ class Feedback(Base):
     org_id: Mapped[str] = mapped_column(
         ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    session_id: Mapped[Optional[str]] = mapped_column(
+    session_id: Mapped[str | None] = mapped_column(
         ForeignKey("sessions.id", ondelete="SET NULL"), nullable=True, index=True
     )
-    agent_id: Mapped[Optional[str]] = mapped_column(
+    agent_id: Mapped[str | None] = mapped_column(
         ForeignKey("agents.id", ondelete="SET NULL"), nullable=True, index=True
     )
-    user_id: Mapped[Optional[str]] = mapped_column(
+    user_id: Mapped[str | None] = mapped_column(
         ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
     )
     rating: Mapped[int] = mapped_column(SmallInteger, nullable=False)  # -1 ruim | 0 neutro | 1 bom
-    comment: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    comment: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    organization: Mapped["Organization"] = relationship(back_populates="feedback_entries")
-    session: Mapped[Optional["Session"]] = relationship(back_populates="feedback_entries")
-    agent: Mapped[Optional["Agent"]] = relationship(back_populates="feedback_entries")
-    user: Mapped[Optional["User"]] = relationship(back_populates="feedback_entries")
+    organization: Mapped[Organization] = relationship(back_populates="feedback_entries")
+    session: Mapped[Session | None] = relationship(back_populates="feedback_entries")
+    agent: Mapped[Agent | None] = relationship(back_populates="feedback_entries")
+    user: Mapped[User | None] = relationship(back_populates="feedback_entries")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Feedback id={self.id!r} rating={self.rating!r}>"
@@ -391,7 +391,7 @@ class MLModel(Base):
     __table_args__ = (UniqueConstraint("org_id", "model_id", name="uq_ml_models_org_model_id"),)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_new_uuid)
-    org_id: Mapped[Optional[str]] = mapped_column(
+    org_id: Mapped[str | None] = mapped_column(
         ForeignKey("organizations.id", ondelete="CASCADE"), nullable=True, index=True
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -406,7 +406,7 @@ class MLModel(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    organization: Mapped[Optional["Organization"]] = relationship(back_populates="ml_models")
+    organization: Mapped[Organization | None] = relationship(back_populates="ml_models")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<MLModel model_id={self.model_id!r} org_id={self.org_id!r}>"
@@ -451,6 +451,33 @@ async def set_org_context(session: AsyncSession, org_id: str) -> None:
         text("SELECT set_config('app.current_org_id', :org_id, true)"),
         {"org_id": org_id},
     )
+
+
+async def create_organization(
+    session: AsyncSession, *, name: str, slug: str, plan: str = "standard"
+) -> Organization:
+    """Cria uma Organization respeitando a RLS da migration 0003.
+
+    Pegadinha que esta função existe para evitar: a policy de SELECT de
+    `organizations` (que a inserção via SQLAlchemy também precisa
+    satisfazer, por causa do `RETURNING` implícito que o dialeto
+    postgresql usa para ler de volta `created_at`/`updated_at`) só
+    libera a linha cujo `id` bate com `app.current_org_id`. Como esse
+    id normalmente só existiria DEPOIS do insert (default gerado no
+    flush), setar o contexto "depois" é tarde demais — o servidor já
+    rejeitou a linha antes de você conseguir lê-la de volta.
+
+    Por isso, aqui o id é gerado ANTES, em Python, e o contexto é
+    setado para esse valor antes do `flush()` — ao contrário do padrão
+    usual (criar a linha e só depois entrar no contexto dela), que
+    funciona bem para Agent/RagChunk/Session/Feedback (cujo `org_id`
+    referencia uma organização que já existe)."""
+    org_id = _new_uuid()
+    await set_org_context(session, org_id)
+    organization = Organization(id=org_id, name=name, slug=slug, plan=plan)
+    session.add(organization)
+    await session.flush()
+    return organization
 
 
 @asynccontextmanager

@@ -23,12 +23,13 @@ import sys
 import uuid
 
 import pytest
+import pytest_asyncio
 from sqlalchemy import select, text
 
 from database import (
     Agent,
-    Organization,
     SessionLocal,
+    create_organization,
     engine,
     set_org_context,
 )
@@ -108,17 +109,31 @@ async def _rls_enabled_and_forced() -> None:
 async def _rls_isolation_roundtrip() -> None:
     """Cria 2 orgs + 1 agent cada, confirma que a RLS (com o contexto
     certo) só devolve o agent da própria org — e desfaz tudo com
-    ROLLBACK ao final, mesmo se as asserções falharem."""
+    ROLLBACK ao final, mesmo se as asserções falharem.
+
+    Usa `create_organization()` (não `Organization(...)` direto) para
+    cada uma das 2 orgs — ver a docstring dessa função em database.py
+    sobre por que a criação da organização precisa setar o contexto
+    RLS *antes* do insert, ao contrário das demais tabelas.
+
+    A policy de `agents` é `FOR ALL` (mesma condição para
+    SELECT/INSERT/UPDATE/DELETE) — diferente de `organizations`, aqui
+    o contexto já precisa bater com `org_id` NO MOMENTO DO INSERT, não
+    só na leitura. Por isso cada Agent é inserido logo após o
+    `set_org_context`/`create_organization` da sua própria org, um de
+    cada vez — inserir os dois no mesmo `flush()` com um único
+    contexto ativo derrubaria o que estivesse com `org_id` diferente."""
     async with SessionLocal() as session:
         suffix = uuid.uuid4().hex[:8]
-        org_a = Organization(name="Org A (smoke test)", slug=f"smoke-test-org-a-{suffix}")
-        org_b = Organization(name="Org B (smoke test)", slug=f"smoke-test-org-b-{suffix}")
-        session.add_all([org_a, org_b])
+
+        org_a = await create_organization(session, name="Org A (smoke test)", slug=f"smoke-test-org-a-{suffix}")
+        agent_a = Agent(org_id=org_a.id, code="Manta 00", slug="maestro", name="Maestro (smoke A)")
+        session.add(agent_a)
         await session.flush()
 
-        agent_a = Agent(org_id=org_a.id, code="Manta 00", slug="maestro", name="Maestro (smoke A)")
+        org_b = await create_organization(session, name="Org B (smoke test)", slug=f"smoke-test-org-b-{suffix}")
         agent_b = Agent(org_id=org_b.id, code="Manta 00", slug="maestro", name="Maestro (smoke B)")
-        session.add_all([agent_a, agent_b])
+        session.add(agent_b)
         await session.flush()
 
         try:
@@ -140,6 +155,19 @@ CHECKS = [
     ("RLS habilitada + forçada nas tabelas multi-org", _rls_enabled_and_forced),
     ("Isolamento RLS multi-org (round-trip, com rollback)", _rls_isolation_roundtrip),
 ]
+
+
+@pytest_asyncio.fixture(autouse=True)
+async def _dispose_engine_pool_after_test():
+    """`engine` (database.py) é criado uma vez, no import do módulo, e
+    suas conexões pooladas ficam presas ao event loop em que foram
+    abertas. Sob pytest-asyncio (uma nova event loop por teste, no
+    modo default), reusar o mesmo pool no teste seguinte estoura
+    `RuntimeError: ... attached to a different loop`. Descartar o pool
+    ao final de cada teste força o próximo a abrir conexões novas, já
+    na loop certa — sem isso, só o primeiro teste do arquivo passaria."""
+    yield
+    await engine.dispose()
 
 
 @pytest.mark.asyncio

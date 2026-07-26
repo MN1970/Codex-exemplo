@@ -19,7 +19,7 @@ Revision ID: 0002_initial_schema
 Revises: 0001_pgvector_extension
 Create Date: 2026-07-26
 """
-from typing import Sequence, Union
+from collections.abc import Sequence
 
 import sqlalchemy as sa
 from pgvector.sqlalchemy import Vector
@@ -29,9 +29,9 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "0002_initial_schema"
-down_revision: Union[str, None] = "0001_pgvector_extension"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = "0001_pgvector_extension"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 # Dimensão do vetor de embedding — mantenha em sincronia com
 # `database.EMBEDDING_DIM` / `config.Settings.embedding_dimensions`
