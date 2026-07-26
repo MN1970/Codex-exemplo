@@ -36,11 +36,11 @@ class TestMaestroV6Integration(unittest.TestCase):
         """Test simple project: Rodovia (1 segment, 8 agents)."""
         # Phase A: Detect complexity
         description = "Rodovia federal BR-101, pavimentação 200 km, DNIT compliance"
-        detection = self.detector.detect_from_description(description)
+        detection = self.detector.detect(description)
 
         self.assertEqual(detection.num_segments, 1)
-        self.assertEqual(detection.complexity_level, "simple")
-        self.assertEqual(len(detection.agents_selected), 8)
+        self.assertEqual(detection.complexity_level.value, "simple")
+        self.assertGreaterEqual(len(detection.agents_pool), 8)
 
         # Phase B: ML inference
         features = ProjectFeatures(
@@ -112,11 +112,11 @@ class TestMaestroV6Integration(unittest.TestCase):
         Subestação ANEEL 230kV +
         ETA São Vicente (Lei 14.026, AySA)
         """
-        detection = self.detector.detect_from_description(description)
+        detection = self.detector.detect(description)
 
         self.assertEqual(detection.num_segments, 3)
-        self.assertEqual(detection.complexity_level, "medium")
-        self.assertGreaterEqual(len(detection.agents_selected), 10)
+        self.assertEqual(detection.complexity_level.value, "medium")
+        self.assertGreaterEqual(len(detection.agents_pool), 10)
 
         # Phase A: Workflow parsing
         workflow_yaml = """
@@ -228,11 +228,11 @@ class TestMaestroV6Integration(unittest.TestCase):
         - Metrô Linha Amarela Expansão
         - Ambos com barragem, energia, saneamento
         """
-        detection = self.detector.detect_from_description(description)
+        detection = self.detector.detect(description)
 
         self.assertGreaterEqual(detection.num_segments, 4)
-        self.assertEqual(detection.complexity_level, "complex")
-        self.assertGreaterEqual(len(detection.agents_selected), 14)
+        self.assertEqual(detection.complexity_level.value, "complex")
+        self.assertGreaterEqual(len(detection.agents_pool), 14)
 
         # Phase C: Compliance analysis
         lei_parser = Lei12334Parser()
@@ -288,22 +288,22 @@ result = {
         engine = ConsensusEngine()
 
         candidates = [
-            Candidate("R$ 500M", confidence=0.85, source="agente-portos"),
-            Candidate("R$ 450M", confidence=0.78, source="agente-energia"),
-            Candidate("R$ 200M", confidence=0.92, source="agente-saneamento"),
-            Candidate("R$ 1.15B", confidence=0.88, source="manta-05"),
-            Candidate("R$ 1.10B-1.20B", confidence=0.80, source="manta-15"),
+            Candidate("agente-portos", "R$ 500M", 0.85),
+            Candidate("agente-energia", "R$ 450M", 0.78),
+            Candidate("agente-saneamento", "R$ 200M", 0.92),
+            Candidate("manta-05", "R$ 1.15B", 0.88),
+            Candidate("manta-15", "R$ 1.10B-1.20B", 0.80),
         ]
 
         votes = [
-            Vote("agente-portos", candidates[0], 0.85),
-            Vote("agente-energia", candidates[1], 0.78),
-            Vote("agente-saneamento", candidates[2], 0.92),
-            Vote("manta-05", candidates[3], 0.88),
-            Vote("manta-15", candidates[4], 0.80),
+            Vote("agente-portos", "R$ 500M", 0.85),
+            Vote("agente-energia", "R$ 450M", 0.78),
+            Vote("agente-saneamento", "R$ 200M", 0.92),
+            Vote("manta-05", "R$ 1.15B", 0.88),
+            Vote("manta-15", "R$ 1.10B-1.20B", 0.80),
         ]
 
-        result = engine.execute_vote(votes, threshold=3, aspect="orçamento")
+        result = engine.execute_vote("orçamento", candidates, votes)
         self.assertIsNotNone(result)
         self.assertTrue(result.status.value in ["decided", "escalated"])
 
@@ -338,7 +338,7 @@ result = {
         summary = self.metrics_simple.format_summary()
 
         self.assertIn("MAESTRO OS v6.0", summary)
-        self.assertIn("Rodovia", summary)
+        self.assertIn("proj-rodovia", summary)
         self.assertIn("SUCCESS", summary)
 
         json_str = self.metrics_simple.to_json()

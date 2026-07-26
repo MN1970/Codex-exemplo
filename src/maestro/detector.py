@@ -56,7 +56,7 @@ SEGMENT_PATTERNS = {
     "S1": {
         "keywords": [
             r"\brodovia\b", r"\bpavimentação\b", r"\bcbuq\b", r"\bbgs\b",
-            r"\bdn[i-1]t\b", r"\bterraplenagem\b", r"\bsicro\b",
+            r"\bdn[i1]t\b", r"\bterraplenagem\b", r"\bsicro\b",
             r"\basfalto\b", r"\bacesso\b", r"\bestrada\b"
         ],
         "agent": "agente-infraestrutura-rodovias"
