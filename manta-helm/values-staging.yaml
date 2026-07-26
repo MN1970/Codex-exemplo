@@ -1,0 +1,138 @@
+# Staging-specific values for Manta Maestro
+# Override default values.yaml with: helm install -f values-staging.yaml
+
+namespace: manta-staging
+namespaceCreate: true
+
+global:
+  domain: manta-staging.example.com
+  environment: staging
+  imagePullSecrets: []
+
+# FastAPI staging configuration
+fastapi:
+  replicas: 2
+  image:
+    repository: docker.io/mantaassociados/manta-fastapi
+    tag: "latest"  # or specific dev tag
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-staging"
+      nginx.ingress.kubernetes.io/rate-limit: "200"
+    hosts:
+      - host: api-staging.manta.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: manta-api-tls-staging
+        hosts:
+          - api-staging.manta.example.com
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+  env:
+    LOG_LEVEL: "DEBUG"
+    DATABASE_URL: "postgresql://manta:manta@postgres-staging.manta-staging.svc.cluster.local:5432/manta"
+    API_WORKERS: "4"
+
+  podDisruptionBudget:
+    enabled: false  # Not required for staging
+
+# React staging configuration
+react:
+  replicas: 1
+  image:
+    repository: docker.io/mantaassociados/manta-react
+    tag: "latest"
+    pullPolicy: Always
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  env:
+    REACT_APP_API_URL: "https://api-staging.manta.example.com"
+    REACT_APP_ENVIRONMENT: "staging"
+
+# PostgreSQL staging configuration
+postgres:
+  replicas: 1
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    size: 20Gi
+
+  auth:
+    database: "manta"
+    username: "manta"
+    existingSecret: "manta-db-secret"
+    secretKey: "postgres-password"
+
+  config:
+    maxConnections: 200
+    sharedBuffers: "256MB"
+    effectiveCacheSize: "1GB"
+
+# HPA - staging settings (minimal)
+autoscaling:
+  fastapi:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+  react:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+
+# RBAC
+rbac:
+  enabled: true
+
+# Network policies (less restrictive for staging)
+networkPolicies:
+  enabled: false  # Can be more permissive in staging
+
+# Secrets
+secrets:
+  sealed:
+    enabled: true
+    sealer: "sealed-secrets"
+
+# Monitoring (optional for staging)
+monitoring:
+  enabled: false
+
+commonLabels:
+  app.kubernetes.io/name: "manta"
+  app.kubernetes.io/version: "1.0.0"
+  environment: "staging"
+  team: "platform"
+
+commonAnnotations:
+  manta.io/tier: "staging"

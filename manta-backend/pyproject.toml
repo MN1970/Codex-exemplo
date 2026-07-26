@@ -37,6 +37,9 @@ pgvector = "^0.5.0"    # tipo Vector do SQLAlchemy — database.py (RagChunk.emb
 alembic = "^1.18.0"    # migrations versionadas — alembic/versions/
 pypdf = "^5.1.0"       # extração de texto de PDF — routers/rag.py (POST /rag/upload)
 sentence-transformers = "^3.3.0"  # ml/embeddings.py — all-MiniLM-L6-v2 local (dim 384)
+huggingface-hub = ">=0.34,<1.0"    # pin: transformers 4.57.x exige <1.0; ver comentário em requirements.txt
+scikit-learn = "^1.9.0"  # ml/routing.py + ml/routing_classifier.py — LogisticRegression
+joblib = "^1.5.3"         # ml/routing.py — pickle versionado do modelo de roteamento
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"

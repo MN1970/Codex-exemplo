@@ -1,0 +1,332 @@
+{{- if .Values.rbac.enabled }}
+
+# ============================================================================
+# SERVICE ACCOUNTS
+# ============================================================================
+
+{{- if .Values.rbac.serviceAccounts.fastapi.create }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.rbac.serviceAccounts.fastapi.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+  {{- if .Values.rbac.serviceAccounts.fastapi.annotations }}
+  annotations:
+    {{- toYaml .Values.rbac.serviceAccounts.fastapi.annotations | nindent 4 }}
+  {{- end }}
+automountServiceAccountToken: false
+{{- end }}
+
+{{- if .Values.rbac.serviceAccounts.react.create }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.rbac.serviceAccounts.react.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+  {{- if .Values.rbac.serviceAccounts.react.annotations }}
+  annotations:
+    {{- toYaml .Values.rbac.serviceAccounts.react.annotations | nindent 4 }}
+  {{- end }}
+automountServiceAccountToken: false
+{{- end }}
+
+{{- if .Values.rbac.serviceAccounts.postgres.create }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.rbac.serviceAccounts.postgres.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  {{- if .Values.rbac.serviceAccounts.postgres.annotations }}
+  annotations:
+    {{- toYaml .Values.rbac.serviceAccounts.postgres.annotations | nindent 4 }}
+  {{- end }}
+automountServiceAccountToken: false
+{{- end }}
+
+# ============================================================================
+# ROLES - Minimal permissions per component
+# ============================================================================
+
+{{- if .Values.rbac.serviceAccounts.fastapi.create }}
+---
+# Role for FastAPI: Read ConfigMaps, access Secrets
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "manta.fullname" . }}-fastapi
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+rules:
+  # Read ConfigMaps (agent routing, nginx config)
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+    resourceNames:
+      - {{ include "manta.fullname" . }}-agent-routing
+
+  # Read Secrets (API keys, credentials)
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+    resourceNames:
+      - {{ .Values.secrets.existing.apiSecrets }}
+      - {{ .Values.secrets.existing.dbSecret }}
+
+  # Read pods (for pod metadata)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+
+{{- end }}
+
+{{- if .Values.rbac.serviceAccounts.react.create }}
+---
+# Role for React: Read ConfigMaps
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "manta.fullname" . }}-react
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+rules:
+  # Read ConfigMaps (nginx config)
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+    resourceNames:
+      - {{ .Values.configMaps.nginxConfig.configMapName }}
+
+{{- end }}
+
+# ============================================================================
+# ROLE BINDINGS
+# ============================================================================
+
+{{- if .Values.rbac.serviceAccounts.fastapi.create }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "manta.fullname" . }}-fastapi
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "manta.fullname" . }}-fastapi
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.rbac.serviceAccounts.fastapi.name }}
+    namespace: {{ .Values.namespace }}
+
+{{- end }}
+
+{{- if .Values.rbac.serviceAccounts.react.create }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "manta.fullname" . }}-react
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "manta.fullname" . }}-react
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.rbac.serviceAccounts.react.name }}
+    namespace: {{ .Values.namespace }}
+
+{{- end }}
+
+# ============================================================================
+# NETWORK POLICIES (Kubernetes native firewall)
+# ============================================================================
+
+{{- if .Values.networkPolicies.enabled }}
+
+{{- if .Values.networkPolicies.fastapi.enabled }}
+---
+# NetworkPolicy: Allow ingress only from Nginx/Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "manta.fullname" . }}-fastapi-ingress
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "manta.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from Ingress Controller
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8000
+    # Allow from Prometheus (monitoring)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+        - podSelector:
+            matchLabels:
+              app: prometheus
+      ports:
+        - protocol: TCP
+          port: 8000
+  egress:
+    # Allow to PostgreSQL
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "manta.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: database
+      ports:
+        - protocol: TCP
+          port: 5432
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+    # Allow external API calls (Claude, MCP servers)
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 443
+
+{{- end }}
+
+{{- if .Values.networkPolicies.react.enabled }}
+---
+# NetworkPolicy: Allow ingress only from Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "manta.fullname" . }}-react-ingress
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "manta.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: web
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from Ingress Controller
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 80
+  egress:
+    # Allow to FastAPI backend
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "manta.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: api
+      ports:
+        - protocol: TCP
+          port: 8000
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+
+{{- end }}
+
+{{- if .Values.networkPolicies.postgres.enabled }}
+---
+# NetworkPolicy: Allow connections only from FastAPI
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "manta.fullname" . }}-postgres-ingress
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "manta.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: database
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from FastAPI
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "manta.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: api
+      ports:
+        - protocol: TCP
+          port: 5432
+    # Allow from init containers (same pod)
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "manta.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: database
+      ports:
+        - protocol: TCP
+          port: 5432
+  egress:
+    # Deny all egress (PostgreSQL server doesn't initiate connections)
+    []
+
+{{- end }}
+
+{{- end }}
+
+{{- end }}

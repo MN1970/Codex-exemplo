@@ -72,43 +72,41 @@ def _mock_embeddings(monkeypatch):
     monkeypatch.setattr(rag_store, "embed_text", _fake_embed_text)
 
 
-@pytest_asyncio.fixture(scope="module")
-async def engine():
-    eng = create_async_engine(TEST_DATABASE_URL, future=True)
+@pytest_asyncio.fixture
+async def db_session():
+    """Engine + schema + sessão, tudo criado e destruído DENTRO do
+    mesmo teste (função). asyncpg prende a conexão ao event loop em
+    que foi criada — pytest-asyncio (modo `auto`) cria um event loop
+    novo por função de teste, então um engine com escopo maior que
+    "function" (module/session) sobrevive ao loop que o criou e quebra
+    com `InterfaceError: another operation is in progress` no teste
+    seguinte. Recriar o schema a cada teste custa alguns ms a mais,
+    mas é a forma robusta de isolar cada teste no seu próprio loop."""
+    engine = create_async_engine(TEST_DATABASE_URL, future=True)
     try:
-        async with eng.begin() as conn:
+        async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
     except Exception as exc:  # noqa: BLE001
-        await eng.dispose()
+        await engine.dispose()
         pytest.skip(
             f"Postgres de teste indisponível em {TEST_DATABASE_URL} ({exc}). "
             "Suba um Postgres com pgvector e exporte RAG_STORE_TEST_DATABASE_URL "
             "para rodar esta suíte de integração."
         )
-    yield eng
-    await eng.dispose()
+        return
 
-
-@pytest_asyncio.fixture(scope="module", autouse=True)
-async def _schema(engine):
     async with engine.begin() as conn:
         await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         await conn.run_sync(Base.metadata.create_all)
-    yield
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
 
-
-@pytest_asyncio.fixture
-async def session_factory(engine):
-    return async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-
-
-@pytest_asyncio.fixture
-async def db_session(session_factory):
+    session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
     async with session_factory() as session:
         yield session
         await session.rollback()
+
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    await engine.dispose()
 
 
 async def _make_org(session: AsyncSession, slug_prefix: str) -> Organization:
@@ -175,7 +173,7 @@ async def test_search_similar_ranks_matching_topic_first(db_session):
     )
     await rag_store.create_rag_chunk(
         db_session, org_id=org.id, collection="portos", prefix="por:",
-        content="Dragagem e berços de atracação no porto de Santos.",
+        content="Dragagem e berços de atracação em portos como o de Santos.",
     )
     await db_session.flush()
 
@@ -213,7 +211,7 @@ async def test_search_similar_respects_top_k(db_session):
 
     for i in range(5):
         await rag_store.create_rag_chunk(
-            db_session, org_id=org.id, collection="barragens", prefix="bar:", content=f"barragem número {i}",
+            db_session, org_id=org.id, collection="barragens", prefix="bar:", content=f"barragens, projeto número {i}",
         )
     await db_session.flush()
 
@@ -252,16 +250,16 @@ async def test_search_similar_excludes_chunks_without_embedding(db_session):
     # Chunk sem embedding (ainda não processado por tasks/embed_rag_chunks.py)
     # inserido diretamente via ORM, sem passar por create_rag_chunk.
     pending_chunk = RagChunk(
-        org_id=org.id, collection="portos", prefix="por:", content="porto pendente de embarque", embedding=None,
+        org_id=org.id, collection="portos", prefix="por:", content="portos pendentes de embarque", embedding=None,
     )
     db_session.add(pending_chunk)
 
     await rag_store.create_rag_chunk(
-        db_session, org_id=org.id, collection="portos", prefix="por:", content="porto já embarcado",
+        db_session, org_id=org.id, collection="portos", prefix="por:", content="portos já embarcados",
     )
     await db_session.flush()
 
     results = await rag_store.search_similar(db_session, org_id=org.id, query="portos", top_k=10)
 
     assert len(results) == 1
-    assert results[0].chunk.content == "porto já embarcado"
+    assert results[0].chunk.content == "portos já embarcados"

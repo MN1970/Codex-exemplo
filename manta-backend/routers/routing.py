@@ -3,8 +3,15 @@ routers/routing.py — Motor de roteamento do Maestro (Manta 00).
 
 ML-based semantic routing with fallback to keyword matching.
 Implementa as regras de Q1 do intake descritas no CLAUDE.md master
-(seção "ROUTING — Maestro") usando classification via TF-IDF + Logistic
-Regression com fallback para regex keyword matching.
+(seção "ROUTING — Maestro"). O endpoint POST /route-semantic usa o
+classificador semântico de ml/routing.py (Sentence Transformers +
+Logistic Regression, treinado sobre os 20 agentes) com fallback
+determinístico para keyword matching quando a confiança fica abaixo do
+threshold — ver ml/routing.py::predict_agent().
+
+O endpoint GET /rules e POST /classify continuam sendo o motor de
+keyword/regex puro (Q1 do intake, sem ML) — usado como fallback e como
+rota independente para quem só quer a regra determinística.
 """
 import logging
 import re
@@ -21,14 +28,21 @@ router_dir = Path(__file__).parent
 backend_dir = router_dir.parent
 sys.path.insert(0, str(backend_dir))
 
-from ml.routing_classifier import RoutingClassifier
+from ml.routing import (
+    RoutingModel,
+    load_routing_model,
+    predict_agent as ml_predict_agent,
+)
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/routing", tags=["routing"])
 
-# Global classifier instance
-_classifier: Optional[RoutingClassifier] = None
+# Cache do modelo semântico (lazy — carregado no primeiro request de
+# /route-semantic, não bloqueia o startup da app se o modelo ainda não
+# tiver sido treinado). Ver initialize_semantic_model().
+_semantic_model: Optional[RoutingModel] = None
+_semantic_model_load_failed: bool = False
 
 
 class RoutingRule(BaseModel):
@@ -96,25 +110,35 @@ class RoutingResponse(BaseModel):
     count: int
 
 
-def initialize_classifier(model_dir: Optional[str] = None) -> Optional[RoutingClassifier]:
+def initialize_semantic_model(force_reload: bool = False) -> Optional[RoutingModel]:
     """
-    Initialize the global classifier instance.
+    Carrega (e cacheia) o modelo semântico de ml/routing.py.
+
+    Chamado lazily no primeiro POST /route-semantic — não bloqueia o
+    startup da app se o modelo ainda não tiver sido treinado
+    (`python -m ml.routing train`). Nesse caso, o endpoint degrada para
+    keyword-based routing puro (mesma lógica de /classify).
 
     Args:
-        model_dir: Path to model directory. Defaults to ./models
+        force_reload: ignora o cache e tenta carregar de novo (útil depois
+            de treinar uma nova versão em runtime).
     """
-    global _classifier
+    global _semantic_model, _semantic_model_load_failed
 
-    if _classifier is not None:
-        return _classifier
+    if _semantic_model is not None and not force_reload:
+        return _semantic_model
 
     try:
-        _classifier = RoutingClassifier(model_dir=model_dir)
-        _classifier.load_model()
-        logger.info("ML Classifier initialized and loaded")
-        return _classifier
+        _semantic_model = load_routing_model()
+        _semantic_model_load_failed = False
+        logger.info(
+            "Semantic routing model loaded: v%d (%s, %d agentes)",
+            _semantic_model.version, _semantic_model.embedding_model, len(_semantic_model.agent_data),
+        )
+        return _semantic_model
     except Exception as e:
-        logger.warning(f"Model files not found or error loading: {e}. Using keyword-based routing only.")
+        _semantic_model_load_failed = True
+        logger.warning(f"Semantic routing model not available ({e}). Using keyword-based routing only.")
         return None
 
 
@@ -140,19 +164,21 @@ async def classify(payload: ClassifyRequest) -> ClassifyResponse:
 @router.post("/route-semantic", response_model=RoutingResponse)
 async def route_semantic(request: RoutingRequest) -> RoutingResponse:
     """
-    Semantic routing endpoint using ML classifier.
+    Endpoint de roteamento semântico (Sentence Transformers + Logistic
+    Regression — ver ml/routing.py::predict_agent()).
 
-    Takes a user query and returns top-3 agent recommendations with confidence.
-    Falls back to keyword matching if ML confidence scores are too low.
+    Recebe uma query e devolve até `top_k` agentes recomendados com
+    confiança. Se a confiança do top-1 do embedding ficar abaixo de
+    `confidence_threshold` (default 0.7) e `use_fallback=True`, a decisão
+    cai para keyword matching determinístico sobre as keywords dos 20
+    agentes.
 
     Args:
-        request: RoutingRequest with query, org_id, and optional parameters
+        request: RoutingRequest com query, org_id e parâmetros opcionais
 
     Returns:
-        RoutingResponse with list of recommended agents
+        RoutingResponse com a lista de agentes recomendados
     """
-    global _classifier
-
     # Validate input
     if not request.query or not request.query.strip():
         raise HTTPException(status_code=400, detail="Query cannot be empty")
@@ -160,10 +186,10 @@ async def route_semantic(request: RoutingRequest) -> RoutingResponse:
     if len(request.query) > 2000:
         raise HTTPException(status_code=400, detail="Query exceeds maximum length (2000 chars)")
 
-    # Check classifier is loaded
-    if _classifier is None:
-        logger.warning("ML classifier not available, falling back to keyword-based routing")
-        # Fallback to keyword-based classification
+    model = initialize_semantic_model()
+
+    if model is None:
+        logger.warning("Semantic model not available, falling back to keyword-based routing")
         classify_req = ClassifyRequest(text=request.query)
         classify_resp = await classify(classify_req)
 
@@ -185,22 +211,15 @@ async def route_semantic(request: RoutingRequest) -> RoutingResponse:
         )
 
     try:
-        # Get predictions from ML classifier
-        if request.use_fallback:
-            predictions = _classifier.predict_with_fallback(
-                query=request.query,
-                top_k=request.top_k,
-                confidence_threshold=request.confidence_threshold,
-            )
-        else:
-            predictions = _classifier.predict(
-                query=request.query,
-                top_k=request.top_k,
-                confidence_threshold=request.confidence_threshold,
-            )
+        _, _, top_predictions = ml_predict_agent(
+            request.query,
+            top_k=request.top_k,
+            confidence_threshold=request.confidence_threshold,
+            model=model,
+            use_fallback=request.use_fallback,
+        )
 
-        # Convert to response model
-        agents = [AgentPrediction(**pred) for pred in predictions]
+        agents = [AgentPrediction(**pred) for pred in top_predictions]
 
         response = RoutingResponse(
             agents=agents,
@@ -212,6 +231,8 @@ async def route_semantic(request: RoutingRequest) -> RoutingResponse:
         logger.info(f"Routed query (org: {request.org_id}, agents: {len(agents)})")
         return response
 
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logger.error(f"Error during routing: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Routing error: {str(e)}")
@@ -220,23 +241,25 @@ async def route_semantic(request: RoutingRequest) -> RoutingResponse:
 @router.get("/route-semantic/health")
 async def health_check() -> Dict:
     """
-    Health check for routing service.
+    Health check do roteamento semântico.
 
     Returns:
-        Status and metrics if classifier is loaded
+        Status e metadados do modelo (versão, encoder, métricas) se carregado.
     """
-    global _classifier
+    model = initialize_semantic_model()
 
-    if _classifier is None:
+    if model is None:
         return {
             "status": "partial",
-            "message": "ML classifier not loaded, using keyword-based routing",
-            "classifier_loaded": False,
+            "message": "Semantic model not loaded, using keyword-based routing",
+            "model_loaded": False,
         }
 
     return {
         "status": "healthy",
-        "classifier_loaded": True,
-        "metrics": _classifier.metrics,
-        "num_agents": len(_classifier.agent_data),
+        "model_loaded": True,
+        "model_version": model.version,
+        "embedding_model": model.embedding_model,
+        "metrics": {k: v for k, v in model.metrics.items() if k != "classification_report"},
+        "num_agents": len(model.agent_data),
     }

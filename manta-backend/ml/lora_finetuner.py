@@ -333,7 +333,11 @@ class LoRAFinetuner:
             epoch=num_epochs,
             num_train_steps=train_result.global_step,
             learning_rate=learning_rate,
-            total_time_seconds=train_result.training_time_in_seconds,
+            # `TrainOutput` (transformers) só expõe (global_step, training_loss,
+            # metrics) — não existe atributo `training_time_in_seconds`.
+            # O tempo de parede real vem de metrics["train_runtime"] (chave
+            # populada pelo Trainer ao final de `.train()`).
+            total_time_seconds=train_result.metrics.get("train_runtime", 0.0),
         )
 
         logger.info(f"Training completed. Metrics: {asdict(self.metrics)}")

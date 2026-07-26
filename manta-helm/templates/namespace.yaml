@@ -1,0 +1,10 @@
+{{- if .Values.namespaceCreate }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+  annotations:
+    description: "Manta Maestro - AI agent orchestration platform"
+{{- end }}

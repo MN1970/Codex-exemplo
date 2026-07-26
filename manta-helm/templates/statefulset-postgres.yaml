@@ -1,0 +1,265 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "manta.fullname" . }}-postgres
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  annotations:
+    {{- toYaml .Values.commonAnnotations | nindent 4 }}
+spec:
+  serviceName: {{ include "manta.fullname" . }}-postgres-headless
+  replicas: {{ .Values.postgres.replicas }}
+  selector:
+    matchLabels:
+      {{- include "manta.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: database
+
+  template:
+    metadata:
+      labels:
+        {{- include "manta.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: database
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- toYaml .Values.commonAnnotations | nindent 8 }}
+        {{- end }}
+
+    spec:
+      {{- if .Values.postgres.securityContext }}
+      securityContext:
+        {{- toYaml .Values.postgres.securityContext | nindent 8 }}
+      {{- end }}
+
+      serviceAccountName: {{ .Values.rbac.serviceAccounts.postgres.name }}
+      automountServiceAccountToken: false
+
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+
+      # Init container for pgvector extension and schema setup
+      initContainers:
+        - name: init-pgvector
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              # Wait for PostgreSQL to start
+              until pg_isready -h localhost -U {{ .Values.postgres.auth.username }}; do
+                echo "Waiting for PostgreSQL to be ready..."
+                sleep 2
+              done
+
+              # Create pgvector extension if not exists
+              PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost -U {{ .Values.postgres.auth.username }} -d {{ .Values.postgres.auth.database }} <<EOF
+              CREATE EXTENSION IF NOT EXISTS pgvector;
+              CREATE EXTENSION IF NOT EXISTS uuid-ossp;
+              CREATE EXTENSION IF NOT EXISTS pg_trgm;
+              EOF
+
+              echo "Extensions initialized successfully"
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.auth.username }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existing.dbSecret }}
+                  key: {{ .Values.postgres.auth.secretKey }}
+            - name: POSTGRES_DB
+              value: {{ .Values.postgres.auth.database }}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+      containers:
+        - name: postgres
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+
+          ports:
+            - name: postgresql
+              containerPort: {{ .Values.postgres.service.targetPort }}
+              protocol: TCP
+
+          {{- if .Values.postgres.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.postgres.livenessProbe | nindent 12 }}
+          {{- end }}
+
+          {{- if .Values.postgres.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.postgres.readinessProbe | nindent 12 }}
+          {{- end }}
+
+          resources:
+            {{- toYaml .Values.postgres.resources | nindent 12 }}
+
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.auth.username }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existing.dbSecret }}
+                  key: {{ .Values.postgres.auth.secretKey }}
+            - name: POSTGRES_DB
+              value: {{ .Values.postgres.auth.database }}
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_INITDB_ARGS
+              value: "-c shared_preload_libraries=pgvector"
+
+          volumeMounts:
+            # Data persistence
+            - name: postgresql-data
+              mountPath: {{ .Values.postgres.persistence.mountPath }}
+            # PostgreSQL configuration
+            - name: postgresql-config
+              mountPath: /etc/postgresql
+              readOnly: true
+
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            fsGroup: 999
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+
+      volumes:
+        # PostgreSQL configuration from ConfigMap
+        - name: postgresql-config
+          configMap:
+            name: {{ include "manta.fullname" . }}-postgres-config
+            defaultMode: 0644
+
+      # Graceful shutdown
+      terminationGracePeriodSeconds: 60
+
+  # Persistent Volume Claim template
+  volumeClaimTemplates:
+    - metadata:
+        name: postgresql-data
+        labels:
+          {{- include "manta.labels" . | nindent 10 }}
+          app.kubernetes.io/component: database
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- if .Values.postgres.persistence.storageClass }}
+        storageClassName: {{ .Values.postgres.persistence.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.postgres.persistence.size }}
+
+---
+# Headless Service for StatefulSet DNS
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "manta.fullname" . }}-postgres-headless
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  clusterIP: None
+  selector:
+    {{- include "manta.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  ports:
+    - name: postgresql
+      port: {{ .Values.postgres.service.port }}
+      targetPort: {{ .Values.postgres.service.targetPort }}
+      protocol: TCP
+  publishNotReadyAddresses: true
+
+---
+# PostgreSQL Configuration ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "manta.fullname" . }}-postgres-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+data:
+  postgresql.conf: |
+    # PostgreSQL Configuration for Manta Maestro
+
+    # Connection settings
+    max_connections = {{ .Values.postgres.config.maxConnections }}
+    superuser_reserved_connections = 3
+
+    # Memory settings
+    shared_buffers = {{ .Values.postgres.config.sharedBuffers }}
+    effective_cache_size = {{ .Values.postgres.config.effectiveCacheSize }}
+    maintenance_work_mem = {{ .Values.postgres.config.maintenanceWorkMemory }}
+    work_mem = 32MB
+
+    # Checkpoint settings
+    checkpoint_completion_target = {{ .Values.postgres.config.checkpointCompletionTarget }}
+    wal_buffers = {{ .Values.postgres.config.walBuffers }}
+    min_wal_size = 2GB
+    max_wal_size = 8GB
+
+    # WAL settings
+    wal_level = replica
+    max_wal_senders = 10
+    max_replication_slots = 10
+
+    # Query planning
+    random_page_cost = 1.1
+    default_statistics_target = {{ .Values.postgres.config.defaultStatisticsTarget }}
+
+    # Logging
+    log_min_duration_statement = 5000
+    log_connections = on
+    log_disconnections = on
+    log_duration = off
+    log_lock_waits = on
+
+    # Extensions
+    shared_preload_libraries = '{{ .Values.postgres.config.sharedPreloadLibraries }}'
+
+    # Performance settings for vector operations (pgvector)
+    jit = on
+    jit_above_cost = 100000
+    jit_inline_above_cost = 500000
+    jit_optimize_above_cost = 500000
+
+  pg_hba.conf: |
+    # PostgreSQL Client Authentication Configuration
+    # TYPE  DATABASE        USER            ADDRESS                 METHOD
+    local   all             all                                     trust
+    host    all             all             127.0.0.1/32            md5
+    host    all             all             ::1/128                 md5
+    host    replication     all             0.0.0.0/0               md5
+    host    replication     all             ::/0                    md5
+
+{{- end }}

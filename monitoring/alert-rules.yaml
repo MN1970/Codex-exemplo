@@ -1,0 +1,268 @@
+# Prometheus alert rules for Manta Maestro
+# Defines SLO-based alerts for latency, accuracy, availability, and infrastructure
+
+groups:
+  - name: manta_maestro_alerts
+    interval: 30s
+    rules:
+      # ===== API Latency Alerts =====
+
+      - alert: HighAPILatencyP95
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 5
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: latency
+          slo_window: "5s"
+        annotations:
+          summary: "High API latency (p95 > 5s)"
+          description: "API p95 latency is {{ $value | humanizeDuration }} (threshold: 5s)"
+          runbook_url: "https://wiki.manta.local/runbooks/high-latency"
+
+      - alert: HighAPILatencyP99
+        expr: histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m])) > 10
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: latency
+          slo_window: "10s"
+        annotations:
+          summary: "Very high API latency (p99 > 10s)"
+          description: "API p99 latency is {{ $value | humanizeDuration }} (threshold: 10s)"
+          runbook_url: "https://wiki.manta.local/runbooks/high-latency"
+
+      # ===== Request Rate & Error Alerts =====
+
+      - alert: HighErrorRate
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: errors
+        annotations:
+          summary: "High error rate (> 5%)"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 5%)"
+          runbook_url: "https://wiki.manta.local/runbooks/high-error-rate"
+
+      - alert: ServiceErrorRateSpike
+        expr: increase(http_requests_total{status=~"5.."}[5m]) > 10
+        for: 1m
+        labels:
+          severity: critical
+          alert_type: errors
+        annotations:
+          summary: "Error rate spike detected"
+          description: "{{ $value }} errors detected in the last 5 minutes"
+          runbook_url: "https://wiki.manta.local/runbooks/error-spike"
+
+      # ===== Routing Accuracy Alerts =====
+
+      - alert: LowRoutingAccuracy
+        expr: routing_accuracy < 0.90
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: accuracy
+        annotations:
+          summary: "Low routing accuracy for {{ $labels.agent }} (< 90%)"
+          description: "Agent {{ $labels.agent }} accuracy is {{ $value | humanizePercentage }} (target: 90%)"
+          runbook_url: "https://wiki.manta.local/runbooks/routing-accuracy"
+
+      - alert: CriticalRoutingAccuracy
+        expr: routing_accuracy < 0.80
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: accuracy
+        annotations:
+          summary: "Critical routing accuracy drop for {{ $labels.agent }} (< 80%)"
+          description: "Agent {{ $labels.agent }} accuracy is {{ $value | humanizePercentage }} (critical: 80%)"
+          runbook_url: "https://wiki.manta.local/runbooks/routing-accuracy-critical"
+
+      # ===== Model Inference Alerts =====
+
+      - alert: HighModelLatency
+        expr: histogram_quantile(0.95, rate(model_inference_duration_seconds_bucket[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: model
+        annotations:
+          summary: "High model inference latency (p95 > 5s)"
+          description: "Model {{ $labels.model_type }} inference p95 is {{ $value | humanizeDuration }} (threshold: 5s)"
+          runbook_url: "https://wiki.manta.local/runbooks/model-latency"
+
+      - alert: ModelInferenceTimeout
+        expr: increase(model_inference_duration_seconds_bucket{le="+Inf"}[5m]) == 0 and increase(model_inference_duration_seconds_bucket[5m]) > 0
+        for: 10m
+        labels:
+          severity: critical
+          alert_type: model
+        annotations:
+          summary: "Model inference timeouts detected"
+          description: "Model {{ $labels.model_type }} is experiencing timeouts"
+          runbook_url: "https://wiki.manta.local/runbooks/model-timeouts"
+
+      # ===== Database Alerts =====
+
+      - alert: DatabaseConnectionPoolExhausted
+        expr: database_connection_pool_size{status="active"} / database_connection_pool_size{status="total"} > 0.9
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: database
+        annotations:
+          summary: "Database connection pool near exhaustion"
+          description: "Connection pool usage is {{ $value | humanizePercentage }} (threshold: 90%)"
+          runbook_url: "https://wiki.manta.local/runbooks/db-connection-pool"
+
+      - alert: DatabaseUnavailable
+        expr: up{job="postgres-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          alert_type: database
+        annotations:
+          summary: "Database is unreachable"
+          description: "PostgreSQL instance {{ $labels.instance }} is down"
+          runbook_url: "https://wiki.manta.local/runbooks/db-unavailable"
+
+      - alert: HighDatabaseQueryLatency
+        expr: histogram_quantile(0.95, rate(database_query_duration_seconds_bucket[5m])) > 1
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: database
+        annotations:
+          summary: "High database query latency ({{ $labels.operation }})"
+          description: "{{ $labels.operation }} queries p95 is {{ $value | humanizeDuration }} (threshold: 1s)"
+          runbook_url: "https://wiki.manta.local/runbooks/db-slow-queries"
+
+      - alert: DatabaseSlowQueryDetected
+        expr: pg_stat_statements_mean_time > 1000
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: database
+        annotations:
+          summary: "Slow queries detected in database"
+          description: "Mean query time is {{ $value | humanizeDuration }}"
+          runbook_url: "https://wiki.manta.local/runbooks/db-slow-queries"
+
+      # ===== Infrastructure Alerts =====
+
+      - alert: HighCPUUsage
+        expr: (100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 85
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: infrastructure
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}% (threshold: 85%)"
+          runbook_url: "https://wiki.manta.local/runbooks/high-cpu"
+
+      - alert: CriticalCPUUsage
+        expr: (100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 95
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: infrastructure
+        annotations:
+          summary: "Critical CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}% (critical: 95%)"
+          runbook_url: "https://wiki.manta.local/runbooks/critical-cpu"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: infrastructure
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanizePercentage }} (threshold: 85%)"
+          runbook_url: "https://wiki.manta.local/runbooks/high-memory"
+
+      - alert: CriticalMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.95
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: infrastructure
+        annotations:
+          summary: "Critical memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanizePercentage }} (critical: 95%)"
+          runbook_url: "https://wiki.manta.local/runbooks/critical-memory"
+
+      - alert: LowDiskSpace
+        expr: (node_filesystem_avail_bytes{fstype!~"tmpfs"} / node_filesystem_size_bytes) < 0.15
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: infrastructure
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Available disk space is {{ $value | humanizePercentage }} (threshold: 15%)"
+          runbook_url: "https://wiki.manta.local/runbooks/low-disk-space"
+
+      - alert: CriticalDiskSpace
+        expr: (node_filesystem_avail_bytes{fstype!~"tmpfs"} / node_filesystem_size_bytes) < 0.05
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: infrastructure
+        annotations:
+          summary: "Critical disk space on {{ $labels.instance }}"
+          description: "Available disk space is {{ $value | humanizePercentage }} (critical: 5%)"
+          runbook_url: "https://wiki.manta.local/runbooks/critical-disk"
+
+      - alert: HighNetworkIOWait
+        expr: rate(node_network_transmit_errs_total[5m]) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: infrastructure
+        annotations:
+          summary: "High network transmission errors on {{ $labels.instance }}"
+          description: "Network errors: {{ $value | humanize }} per second"
+          runbook_url: "https://wiki.manta.local/runbooks/network-errors"
+
+      # ===== Cache Alerts =====
+
+      - alert: LowCacheHitRate
+        expr: rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m])) < 0.80
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: performance
+        annotations:
+          summary: "Low cache hit rate (< 80%)"
+          description: "Cache hit rate is {{ $value | humanizePercentage }} (target: 80%)"
+          runbook_url: "https://wiki.manta.local/runbooks/cache-performance"
+
+      # ===== Service Health Alerts =====
+
+      - alert: ServiceDown
+        expr: up{job="manta-maestro-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          alert_type: service
+        annotations:
+          summary: "Manta Maestro API is down"
+          description: "API service {{ $labels.instance }} is unreachable"
+          runbook_url: "https://wiki.manta.local/runbooks/service-down"
+
+      # ===== Availability Alerts =====
+
+      - alert: AvailabilityBelowSLO
+        expr: (sum(rate(http_requests_total{status!~"5.."}[5m])) / sum(rate(http_requests_total[5m]))) < 0.999
+        for: 15m
+        labels:
+          severity: warning
+          alert_type: slo
+        annotations:
+          summary: "Availability below SLO (< 99.9%)"
+          description: "Service availability is {{ $value | humanizePercentage }} (SLO: 99.9%)"
+          runbook_url: "https://wiki.manta.local/runbooks/slo-breach"

@@ -1,0 +1,48 @@
+apiVersion: v2
+name: manta
+description: >-
+  Manta Maestro - Production-ready Kubernetes deployment for intelligent
+  agent orchestration, multi-segment infrastructure consulting platform.
+  Includes FastAPI backend, React SPA frontend, PostgreSQL database with
+  pgvector extension for agent embeddings.
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+kubeVersion: ">=1.24.0"
+
+keywords:
+  - manta
+  - maestro
+  - agents
+  - orchestration
+  - infrastructure
+  - consulting
+  - api
+  - kubernetes
+
+home: https://github.com/mantaassociados/manta-maestro
+sources:
+  - https://github.com/mantaassociados/manta-maestro
+  - https://mantaassociados.com
+
+maintainers:
+  - name: Manta Associados
+    email: devops@mantaassociados.com
+    url: https://mantaassociados.com
+
+dependencies: []
+
+annotations:
+  # Artifact Hub metadata
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Initial production release of Manta Helm chart"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/recommendations: |
+    - Install sealed-secrets or HashiCorp Vault for secret management
+    - Use StorageClass with replication for PostgreSQL persistence
+    - Enable network policies for multi-tenant isolation
+  artifacthub.io/links: |
+    - name: CLAUDE.md Agent Registry
+      url: https://github.com/mantaassociados/manta-maestro/blob/main/CLAUDE.md

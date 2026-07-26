@@ -1,0 +1,554 @@
+# Manta Maestro Helm Chart - Default Values
+# Production-ready configuration for Kubernetes deployment
+
+namespace: manta
+namespaceCreate: true
+
+# Global configuration
+global:
+  # Domain for Ingress (TLS certificate will be provisioned for this domain)
+  domain: manta.example.com
+  # Environment: development, staging, production
+  environment: production
+  # Image pull secrets for private registries
+  imagePullSecrets: []
+  # Example:
+  # - name: docker-registry-secret
+
+# ============================================================================
+# FASTAPI BACKEND SERVICE
+# ============================================================================
+fastapi:
+  enabled: true
+  replicas: 2
+
+  image:
+    repository: docker.io/mantaassociados/manta-fastapi
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: LoadBalancer
+    port: 8000
+    targetPort: 8000
+    # Annotations for cloud provider load balancer
+    annotations: {}
+    # example:
+    #   cloud.google.com/load-balancer-type: "Internal"
+
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      nginx.ingress.kubernetes.io/rate-limit: "100"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: api.manta.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: manta-api-tls
+        hosts:
+          - api.manta.example.com
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+  # Health probes
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+      scheme: HTTP
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: 8000
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 2
+
+  # Environment variables
+  env:
+    # Logging
+    LOG_LEVEL: "INFO"
+    # Database
+    DATABASE_URL: "postgresql://manta:manta@postgres.manta.svc.cluster.local:5432/manta"
+    # API Configuration
+    API_WORKERS: "4"
+    API_HOST: "0.0.0.0"
+    # Agent routing (configmap reference)
+    AGENT_ROUTING_CONFIG: "/etc/config/agent-routing.yaml"
+    # Redis (optional, for caching)
+    REDIS_URL: "redis://redis.manta.svc.cluster.local:6379/0"
+
+  # Environment variables from Secrets
+  envFrom:
+    - secretRef:
+        name: manta-api-secrets
+
+  # Volume mounts
+  volumeMounts:
+    - name: agent-routing
+      mountPath: /etc/config
+      readOnly: true
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+  # Pod disruption budget
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+
+# ============================================================================
+# REACT SPA FRONTEND SERVICE
+# ============================================================================
+react:
+  enabled: true
+  replicas: 1
+
+  image:
+    repository: docker.io/mantaassociados/manta-react
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        more_set_headers "Cache-Control: no-cache, no-store, must-revalidate";
+    hosts:
+      - host: manta.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: manta-web-tls
+        hosts:
+          - manta.example.com
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+  # Health probes
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 80
+      scheme: HTTP
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 80
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 2
+
+  # Environment
+  env:
+    REACT_APP_API_URL: "https://api.manta.example.com"
+    REACT_APP_ENVIRONMENT: "production"
+
+  # Nginx configuration via ConfigMap
+  nginxConfig:
+    enabled: true
+    configMapName: manta-nginx-config
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 101
+    fsGroup: 101
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+
+# ============================================================================
+# POSTGRESQL DATABASE (StatefulSet)
+# ============================================================================
+postgres:
+  enabled: true
+  replicas: 1
+
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 5432
+    targetPort: 5432
+
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+  # Persistence
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    size: 20Gi
+    # Use existing PVC instead of creating new
+    existingClaim: null
+    # Data mount path
+    mountPath: /var/lib/postgresql/data
+
+  # Database credentials (from Secret)
+  auth:
+    database: "manta"
+    username: "manta"
+    # PASSWORD MUST BE IN SECRET - not here
+    existingSecret: "manta-db-secret"
+    secretKey: "postgres-password"
+
+  # Initialization
+  initdb:
+    # Schema migration image (alembic)
+    enabled: true
+    image: docker.io/mantaassociados/manta-alembic
+    tag: "1.0.0"
+
+  # PostgreSQL configuration
+  config:
+    # pgvector extension for agent embeddings
+    sharedPreloadLibraries: "pgvector"
+    maxConnections: 200
+    sharedBuffers: "256MB"
+    effectiveCacheSize: "1GB"
+    maintenanceWorkMemory: "64MB"
+    checkpointCompletionTarget: 0.9
+    walBuffers: "16MB"
+    defaultStatisticsTarget: 100
+
+  # Health probes
+  livenessProbe:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - pg_isready -U manta -h localhost
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - pg_isready -U manta -h localhost
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 2
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 999
+    fsGroup: 999
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+# ============================================================================
+# HORIZONTAL POD AUTOSCALER (HPA)
+# ============================================================================
+autoscaling:
+  fastapi:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  react:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+# ============================================================================
+# RBAC (Role-Based Access Control)
+# ============================================================================
+rbac:
+  enabled: true
+  # Service accounts
+  serviceAccounts:
+    fastapi:
+      create: true
+      name: manta-fastapi
+      annotations: {}
+    react:
+      create: true
+      name: manta-react
+      annotations: {}
+    postgres:
+      create: true
+      name: manta-postgres
+      annotations: {}
+
+# ============================================================================
+# SECRETS MANAGEMENT
+# ============================================================================
+secrets:
+  # sealed-secrets or vault configuration
+  sealed:
+    enabled: true
+    sealer: sealed-secrets  # or 'vault'
+    namespace: kube-system
+
+  # Existing secret names (if pre-created)
+  existing:
+    # API secrets (database credentials, API keys)
+    apiSecrets: "manta-api-secrets"
+    # Database secrets
+    dbSecret: "manta-db-secret"
+
+# ============================================================================
+# CONFIGMAPS
+# ============================================================================
+configMaps:
+  # Agent routing rules from CLAUDE.md
+  agentRouting:
+    enabled: true
+    # Inline YAML - will be mounted to /etc/config/agent-routing.yaml
+    routing: |
+      routing_rules:
+        - segment: saneamento
+          keywords: ["saneamento", "ETA", "ETE", "adutora", "esgoto", "AySA", "drenagem"]
+          agent: "agente-saneamento"
+        - segment: energia
+          keywords: ["transmissão", "LT", "subestação", "ANEEL", "RAP", "leilão", "ONS"]
+          agent: "agente-energia"
+        - segment: portos
+          keywords: ["porto", "terminal", "ANTAQ", "dragagem", "molhe", "berço"]
+          agent: "agente-portos"
+        - segment: aeroportos
+          keywords: ["aeroporto", "pista pouso", "ANAC", "ICAO", "TPS"]
+          agent: "agente-aeroportos"
+        - segment: barragens
+          keywords: ["barragem", "vertedouro", "CFRD", "CCR", "rejeitos", "PNSB"]
+          agent: "agente-barragens"
+        - segment: rodovias
+          keywords: ["rodovia", "pavimento", "CBUQ", "terraplenagem", "SICRO"]
+          agent: "agente-infraestrutura-s1"
+        - segment: oae
+          keywords: ["ponte", "viaduto", "OAE", "NBR 7187", "túnel"]
+          agent: "agente-infraestrutura-s2"
+
+  # Agent definitions (JSON)
+  agentDefinitions:
+    enabled: true
+    configMapName: manta-agents
+
+  # Nginx configuration for React SPA
+  nginxConfig:
+    enabled: true
+    configMapName: manta-nginx-config
+    # Inline nginx.conf
+    config: |
+      user www-data;
+      worker_processes auto;
+      pid /var/run/nginx.pid;
+
+      events {
+        worker_connections 1024;
+      }
+
+      http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for"';
+
+        access_log /var/log/nginx/access.log main;
+
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        gzip on;
+        gzip_vary on;
+        gzip_types text/plain text/css text/xml text/javascript
+                   application/x-javascript application/xml+rss;
+
+        # Rate limiting
+        limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+        limit_req_zone $binary_remote_addr zone=web:10m rate=50r/s;
+
+        upstream fastapi_backend {
+          least_conn;
+          server manta-fastapi.manta.svc.cluster.local:8000;
+        }
+
+        server {
+          listen 80;
+          server_name _;
+          root /usr/share/nginx/html;
+          index index.html;
+
+          # API reverse proxy
+          location /api/ {
+            limit_req zone=api burst=20 nodelay;
+            proxy_pass http://fastapi_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_redirect off;
+          }
+
+          # SPA routing
+          location / {
+            limit_req zone=web burst=100 nodelay;
+            try_files $uri $uri/ /index.html;
+            add_header Cache-Control "no-cache, no-store, must-revalidate";
+          }
+
+          # Health check endpoint
+          location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+          }
+        }
+      }
+
+# ============================================================================
+# NETWORK POLICIES
+# ============================================================================
+networkPolicies:
+  enabled: true
+  # Restrict egress to FastAPI and Postgres only
+  fastapi:
+    enabled: true
+  # Restrict ingress to Nginx only
+  react:
+    enabled: true
+  # Restrict ingress to FastAPI only
+  postgres:
+    enabled: true
+
+# ============================================================================
+# MONITORING & LOGGING
+# ============================================================================
+monitoring:
+  enabled: false
+  # Prometheus scrape config
+  prometheus:
+    enabled: false
+    interval: 30s
+    path: /metrics
+  # ELK Stack / CloudWatch / Stackdriver
+  logging:
+    enabled: false
+    driver: "json-file"
+
+# ============================================================================
+# POD SECURITY & POLICIES
+# ============================================================================
+podSecurityPolicy:
+  enabled: false
+  # Kubernetes 1.25+ uses Pod Security Standards
+
+podSecurityStandard: "restricted"
+
+# ============================================================================
+# ADDITIONAL SETTINGS
+# ============================================================================
+# Node affinity / pod affinity rules
+affinity:
+  fastapi:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - manta-fastapi
+            topologyKey: kubernetes.io/hostname
+
+# Node selector
+nodeSelector: {}
+# Example:
+# node-type: compute
+
+# Tolerations
+tolerations: []
+# Example:
+# - key: "dedicated"
+#   operator: "Equal"
+#   value: "manta"
+#   effect: "NoSchedule"
+
+# Labels applied to all resources
+commonLabels:
+  app.kubernetes.io/name: "manta"
+  app.kubernetes.io/version: "1.0.0"
+  app.kubernetes.io/part-of: "manta-maestro"
+  app.kubernetes.io/managed-by: "Helm"
+
+# Annotations applied to all resources
+commonAnnotations:
+  manta.io/segment: "maestro"
+  manta.io/tier: "production"

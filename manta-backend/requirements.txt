@@ -35,3 +35,20 @@ sentence-transformers==3.3.1
 # como dependência transitiva; para instalar só a wheel CPU (bem menor
 # que a build CUDA) em ambientes sem GPU, instale antes:
 #   pip install torch --index-url https://download.pytorch.org/whl/cpu
+huggingface-hub<1.0,>=0.34
+# Pin explícito: transformers==4.57.x (dependência de sentence-transformers)
+# exige huggingface-hub<1.0 em runtime (`require_version_core`), mas sem
+# este pin o resolver do pip instala huggingface-hub 1.x (mais novo,
+# quebra compatibilidade de API) e `import sentence_transformers` falha
+# com `ImportError: huggingface-hub>=0.34.0,<1.0 is required` — bug real,
+# reproduzido durante o desenvolvimento deste módulo (mesma classe de
+# problema do pin de bcrypt acima).
+numpy>=1.26,<3
+# Usado diretamente por ml/embeddings.py (ndarray dos embeddings) e por
+# ml/routing_classifier.py. Já vem transitivo de sentence-transformers/
+# scikit-learn, mas pinamos explicitamente por ser um import direto.
+scikit-learn==1.9.0
+joblib==1.5.3
+# ml/routing.py (roteamento semântico: Sentence Transformers + Logistic
+# Regression) e ml/routing_classifier.py (motor legado TF-IDF). joblib é
+# usado para o pickle versionado do modelo (ml/models/routing_model_v*.joblib).

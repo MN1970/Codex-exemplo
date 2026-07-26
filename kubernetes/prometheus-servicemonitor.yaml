@@ -1,0 +1,575 @@
+---
+# ServiceMonitor for Prometheus Operator to scrape Manta Maestro API
+# Prerequisites: Prometheus Operator CRDs installed in cluster
+# Install via: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#              helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: manta
+  labels:
+    app: manta-maestro
+    monitoring: enabled
+
+---
+# RBAC for Prometheus to scrape endpoints
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-manta
+  namespace: monitoring
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+    verbs: ["get", "list", "watch"]
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs: ["get", "list", "watch"]
+  - nonResourceURLs: ["/metrics"]
+    verbs: ["get"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-manta
+  namespace: monitoring
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-manta
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-operator
+    namespace: monitoring
+
+---
+# ServiceMonitor for Manta Maestro API
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: manta-maestro-api
+  namespace: manta
+  labels:
+    app: manta-maestro
+    component: api
+    monitoring: enabled
+spec:
+  # Match services with label app=manta-maestro
+  selector:
+    matchLabels:
+      app: manta-maestro
+      component: api
+
+  # Scrape the metrics endpoint
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 10s
+      scrapeTimeout: 5s
+      scheme: http
+
+      # Relabel configs for enrichment
+      relabelings:
+        # Add cluster label
+        - source_labels: [__meta_kubernetes_cluster_name]
+          target_label: cluster
+          replacement: production
+
+        # Add namespace
+        - source_labels: [__meta_kubernetes_namespace]
+          target_label: kubernetes_namespace
+
+        # Add pod name
+        - source_labels: [__meta_kubernetes_pod_name]
+          target_label: kubernetes_pod_name
+
+        # Add deployment/statefulset
+        - source_labels: [__meta_kubernetes_pod_controller_name]
+          target_label: kubernetes_controller
+
+      # Drop metrics with high cardinality
+      metricRelabelings:
+        - source_labels: [__name__]
+          regex: '.*_total|.*_duration_seconds|.*_requests.*'
+          action: keep
+
+        # Sample limiting to prevent TSDB explosion
+        - source_labels: [__name__]
+          regex: 'http_requests_total'
+          target_label: __tmp_cardinality
+          action: labelmap
+
+---
+# ServiceMonitor for PostgreSQL Exporter
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: postgres-exporter
+  namespace: manta
+  labels:
+    app: postgres-exporter
+    monitoring: enabled
+spec:
+  selector:
+    matchLabels:
+      app: postgres-exporter
+
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+      scheme: http
+
+      relabelings:
+        - source_labels: [__meta_kubernetes_namespace]
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          target_label: kubernetes_pod_name
+
+      metricRelabelings:
+        - source_labels: [__name__]
+          regex: 'pg_stat_activity_count|pg_connections_total|pg_database_size_bytes|pg_stat_user_tables_n_tup.*'
+          action: keep
+
+---
+# ServiceMonitor for Node Exporter
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: node-exporter
+  namespace: manta
+  labels:
+    app: node-exporter
+    monitoring: enabled
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+      scheme: http
+
+      relabelings:
+        - source_labels: [__meta_kubernetes_node_name]
+          target_label: node
+
+---
+# PrometheusRule for alerting
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: manta-maestro-alerts
+  namespace: manta
+  labels:
+    app: manta-maestro
+    prometheus: kube-prometheus
+spec:
+  groups:
+    # API Performance Alerts
+    - name: manta.api.performance
+      interval: 30s
+      rules:
+        - alert: HighAPILatencyP95
+          expr: |
+            histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 5
+          for: 5m
+          labels:
+            severity: critical
+            alert_type: latency
+            slo_window: "5s"
+          annotations:
+            summary: "High API latency (p95 > 5s)"
+            description: "API p95 latency is {{ $value | humanizeDuration }}"
+            runbook_url: "https://wiki.manta.local/runbooks/high-latency"
+
+        - alert: HighAPILatencyP99
+          expr: |
+            histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m])) > 10
+          for: 10m
+          labels:
+            severity: warning
+            alert_type: latency
+          annotations:
+            summary: "Very high API latency (p99 > 10s)"
+            description: "API p99 latency is {{ $value | humanizeDuration }}"
+            runbook_url: "https://wiki.manta.local/runbooks/high-latency"
+
+        - alert: HighErrorRate
+          expr: |
+            sum(rate(http_requests_total{status=~"5.."}[5m])) /
+            sum(rate(http_requests_total[5m])) > 0.05
+          for: 5m
+          labels:
+            severity: critical
+            alert_type: errors
+          annotations:
+            summary: "High error rate (> 5%)"
+            description: "Error rate is {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/high-error-rate"
+
+    # Routing Accuracy Alerts
+    - name: manta.routing.accuracy
+      interval: 30s
+      rules:
+        - alert: LowRoutingAccuracy
+          expr: |
+            routing_accuracy < 0.90
+          for: 10m
+          labels:
+            severity: warning
+            alert_type: accuracy
+          annotations:
+            summary: "Low routing accuracy (< 90%)"
+            description: "Agent {{ $labels.agent }} accuracy: {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/routing-accuracy"
+
+        - alert: CriticalRoutingAccuracy
+          expr: |
+            routing_accuracy < 0.80
+          for: 5m
+          labels:
+            severity: critical
+            alert_type: accuracy
+          annotations:
+            summary: "Critical routing accuracy (< 80%)"
+            description: "Agent {{ $labels.agent }} accuracy: {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/routing-accuracy-critical"
+
+    # Model Performance Alerts
+    - name: manta.model.performance
+      interval: 30s
+      rules:
+        - alert: HighModelLatency
+          expr: |
+            histogram_quantile(0.95, rate(model_inference_duration_seconds_bucket[5m])) > 5
+          for: 5m
+          labels:
+            severity: warning
+            alert_type: model
+          annotations:
+            summary: "High model inference latency (p95 > 5s)"
+            description: "Model {{ $labels.model_type }} p95: {{ $value | humanizeDuration }}"
+            runbook_url: "https://wiki.manta.local/runbooks/model-latency"
+
+        - alert: ModelInferenceErrors
+          expr: |
+            rate(model_inference_duration_seconds_bucket{status="error"}[5m]) > 0.01
+          for: 5m
+          labels:
+            severity: warning
+            alert_type: model
+          annotations:
+            summary: "Model inference errors detected"
+            description: "Model {{ $labels.model_type }} error rate: {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/model-errors"
+
+    # Database Alerts
+    - name: manta.database
+      interval: 30s
+      rules:
+        - alert: DatabaseConnectionPoolExhausted
+          expr: |
+            database_connection_pool_size{status="active"} /
+            database_connection_pool_size{status="total"} > 0.9
+          for: 5m
+          labels:
+            severity: critical
+            alert_type: database
+          annotations:
+            summary: "Database connection pool near exhaustion"
+            description: "Pool utilization: {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/db-connection-pool"
+
+        - alert: DatabaseUnavailable
+          expr: |
+            up{job="postgres-exporter"} == 0
+          for: 1m
+          labels:
+            severity: critical
+            alert_type: database
+          annotations:
+            summary: "Database is unreachable"
+            description: "PostgreSQL instance {{ $labels.instance }} is down"
+            runbook_url: "https://wiki.manta.local/runbooks/db-unavailable"
+
+        - alert: HighDatabaseQueryLatency
+          expr: |
+            histogram_quantile(0.95, rate(database_query_duration_seconds_bucket[5m])) > 1
+          for: 10m
+          labels:
+            severity: warning
+            alert_type: database
+          annotations:
+            summary: "High database query latency ({{ $labels.operation }})"
+            description: "Query p95: {{ $value | humanizeDuration }}"
+            runbook_url: "https://wiki.manta.local/runbooks/db-slow-queries"
+
+    # Infrastructure Alerts
+    - name: manta.infrastructure
+      interval: 30s
+      rules:
+        - alert: HighCPUUsage
+          expr: |
+            (100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 85
+          for: 10m
+          labels:
+            severity: warning
+            alert_type: infrastructure
+          annotations:
+            summary: "High CPU usage on {{ $labels.instance }}"
+            description: "CPU: {{ $value | humanize }}%"
+            runbook_url: "https://wiki.manta.local/runbooks/high-cpu"
+
+        - alert: CriticalCPUUsage
+          expr: |
+            (100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 95
+          for: 5m
+          labels:
+            severity: critical
+            alert_type: infrastructure
+          annotations:
+            summary: "Critical CPU usage on {{ $labels.instance }}"
+            description: "CPU: {{ $value | humanize }}%"
+            runbook_url: "https://wiki.manta.local/runbooks/critical-cpu"
+
+        - alert: HighMemoryUsage
+          expr: |
+            (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85
+          for: 10m
+          labels:
+            severity: warning
+            alert_type: infrastructure
+          annotations:
+            summary: "High memory usage on {{ $labels.instance }}"
+            description: "Memory: {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/high-memory"
+
+        - alert: LowDiskSpace
+          expr: |
+            (node_filesystem_avail_bytes{fstype!~"tmpfs"} / node_filesystem_size_bytes) < 0.15
+          for: 10m
+          labels:
+            severity: warning
+            alert_type: infrastructure
+          annotations:
+            summary: "Low disk space on {{ $labels.instance }}"
+            description: "Available: {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/low-disk-space"
+
+        - alert: CriticalDiskSpace
+          expr: |
+            (node_filesystem_avail_bytes{fstype!~"tmpfs"} / node_filesystem_size_bytes) < 0.05
+          for: 5m
+          labels:
+            severity: critical
+            alert_type: infrastructure
+          annotations:
+            summary: "Critical disk space on {{ $labels.instance }}"
+            description: "Available: {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/critical-disk"
+
+    # Availability SLO Alerts
+    - name: manta.slo
+      interval: 30s
+      rules:
+        - alert: AvailabilityBelowSLO
+          expr: |
+            (sum(rate(http_requests_total{status!~"5.."}[5m])) /
+             sum(rate(http_requests_total[5m]))) < 0.999
+          for: 15m
+          labels:
+            severity: warning
+            alert_type: slo
+          annotations:
+            summary: "Availability below SLO (< 99.9%)"
+            description: "Current: {{ $value | humanizePercentage }}"
+            runbook_url: "https://wiki.manta.local/runbooks/slo-breach"
+
+        - alert: SLOBurnRateTooHigh
+          expr: |
+            (1 - (sum(rate(http_requests_total{status!~"5.."}[5m])) /
+                   sum(rate(http_requests_total[5m])))) > 0.001
+          for: 5m
+          labels:
+            severity: warning
+            alert_type: slo
+          annotations:
+            summary: "SLO error budget burn rate too high"
+            description: "Current burn rate: {{ $value | humanizePercentage }}/sec"
+            runbook_url: "https://wiki.manta.local/runbooks/slo-burn-rate"
+
+---
+# PodMonitor for pod-level metrics (optional)
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: manta-maestro-pods
+  namespace: manta
+  labels:
+    app: manta-maestro
+spec:
+  selector:
+    matchLabels:
+      app: manta-maestro
+
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: 10s
+      scrapeTimeout: 5s
+
+      relabelings:
+        - source_labels: [__meta_kubernetes_namespace]
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          target_label: kubernetes_pod_name
+        - source_labels: [__meta_kubernetes_pod_label_version]
+          target_label: pod_version
+
+---
+# Prometheus custom resource to scrape endpoints
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: manta-prometheus
+  namespace: manta
+  labels:
+    app: manta-maestro
+spec:
+  # Service Account for Prometheus
+  serviceAccountName: prometheus-manta
+
+  # Replicas for HA
+  replicas: 2
+
+  # Retention
+  retention: 30d
+  retentionSize: "50GB"
+
+  # Storage
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 100Gi
+
+  # Service monitors to include
+  serviceMonitorSelector:
+    matchLabels:
+      monitoring: enabled
+
+  # Pod monitors to include
+  podMonitorSelector:
+    matchLabels:
+      monitoring: enabled
+
+  # Rule selectors
+  ruleSelector:
+    matchLabels:
+      prometheus: kube-prometheus
+
+  # External labels
+  externalLabels:
+    cluster: production
+    environment: production
+
+  # External URL for Grafana links
+  externalUrl: "https://prometheus.manta.local"
+
+  # Alerting configuration
+  alerting:
+    alertmanagers:
+      - namespace: monitoring
+        name: alertmanager
+        port: web
+        pathPrefix: /
+
+---
+# ServiceAccount for Prometheus
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-manta
+  namespace: manta
+  labels:
+    app: manta-maestro
+
+---
+# Service to expose Prometheus metrics
+apiVersion: v1
+kind: Service
+metadata:
+  name: manta-maestro-api
+  namespace: manta
+  labels:
+    app: manta-maestro
+    component: api
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+    - name: metrics
+      port: 8001
+      targetPort: 8001
+      protocol: TCP
+  selector:
+    app: manta-maestro
+    component: api
+
+---
+# Service for PostgreSQL exporter
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-exporter
+  namespace: manta
+  labels:
+    app: postgres-exporter
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 9187
+      targetPort: 9187
+      protocol: TCP
+  selector:
+    app: postgres-exporter
+
+---
+# Service for Node exporter
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-exporter
+  namespace: manta
+  labels:
+    app: node-exporter
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 9100
+      targetPort: 9100
+      protocol: TCP
+  selector:
+    app: node-exporter
