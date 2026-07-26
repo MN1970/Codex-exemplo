@@ -56,6 +56,36 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 
 ---
 
+## EXECUÇÃO EM PARALELO — 8 Agentes Sonnet
+
+Configuração otimizada para processamento paralelo de requests (v4.2+):
+
+**Pool de 8 agentes Sonnet** (executam concorrentemente):
+
+### Horizontais (6 agentes)
+| Código | Agente | Função |
+|--------|--------|--------|
+| Manta 02 | contratual | Análise documental e contratos |
+| Manta 04 | imobiliario | Projetos imobiliários |
+| Manta 05 orcamento | Estimativa de custos e orçamentos |
+| Manta 07 | cronograma | Planejamento temporal |
+| Manta 13 | bd | Business development e viabilidade |
+| Manta 14 | apresentacoes | Documentação e apresentações |
+
+### Verticais (2 agentes)
+| Código | Agente | Segmento |
+|--------|--------|----------|
+| Manta 03-S8 | agente-saneamento | Saneamento + AySA (PRIORIDADE) |
+| Manta 03-S9 | agente-energia | Energia + ANEEL/State Grid |
+
+**Configuração de execução**:
+- Modelo padrão: Claude Sonnet 5
+- Modo: request paralelo via fan-out
+- Timeout: 120s por agente
+- Fallback: Haiku para queries leves, Opus para síntese
+
+---
+
 ## ROUTING — Maestro (Manta 00)
 
 Regra de roteamento atualizada para Q1 do intake:
@@ -154,6 +184,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-07-26) — paralelização de 8 agentes Sonnet (6 horizontais + 
+  2 verticais). Fan-out concurrent execution para intake multi-disciplina.
+  Auditoria aluci-guard KE-053 a KE-072 completa (gate G1 liberado).
+  Ticket MNT-2026-MAESTRO-PARALELO-8-SONNET.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
