@@ -1,0 +1,448 @@
+{
+  "dashboard": {
+    "title": "Fase 3 — ML Confidence Scoring & Chaos Engineering",
+    "description": "Production monitoring for Fase 3 deployment with ML model metrics, chaos engineering results, and cost tracking",
+    "tags": ["fase3", "ml", "gitops", "production"],
+    "timezone": "UTC",
+    "schemaVersion": 30,
+    "version": 1,
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "ML Model Accuracy (Precision/Recall)",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "gitops_ml_precision_score",
+            "legendFormat": "Precision"
+          },
+          {
+            "refId": "B",
+            "expr": "gitops_ml_recall_score",
+            "legendFormat": "Recall"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "hideFrom": {
+                "tooltip": false,
+                "viz": false,
+                "legend": false
+              }
+            },
+            "unit": "percentunit",
+            "min": 0,
+            "max": 1,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 0.88},
+                {"color": "green", "value": 0.92}
+              ]
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "calcs": ["mean", "last"],
+            "displayMode": "table",
+            "placement": "right"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "False Positive Rate (hourly)",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "rate(gitops_ml_false_positives_total[1h])",
+            "legendFormat": "FP Rate"
+          },
+          {
+            "refId": "B",
+            "expr": "0.03",
+            "legendFormat": "Threshold (3%)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "unit": "percentunit",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 0.02},
+                {"color": "red", "value": 0.03}
+              ]
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "calcs": ["mean", "last", "max"],
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Post-Merge Defect Rate",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "rate(gitops_post_merge_failures_total[1h])",
+            "legendFormat": "Defect Rate"
+          },
+          {
+            "refId": "B",
+            "expr": "0.05",
+            "legendFormat": "Target (<5%)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "unit": "percentunit",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 0.03},
+                {"color": "red", "value": 0.05}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Workflow Execution Duration (p50/p95/p99)",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "histogram_quantile(0.50, gitops_parallel_duration_seconds)",
+            "legendFormat": "p50"
+          },
+          {
+            "refId": "B",
+            "expr": "histogram_quantile(0.95, gitops_parallel_duration_seconds)",
+            "legendFormat": "p95"
+          },
+          {
+            "refId": "C",
+            "expr": "histogram_quantile(0.99, gitops_parallel_duration_seconds)",
+            "legendFormat": "p99"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "unit": "s",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 3},
+                {"color": "red", "value": 5}
+              ]
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "calcs": ["mean", "last", "max"],
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Chaos Engineering — Last 5 Runs",
+        "type": "table",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 16
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "topk(5, gitops_chaos_run_status)",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": [
+            {
+              "matcher": {"id": "byName", "options": "Value"},
+              "properties": [
+                {
+                  "id": "mappings",
+                  "value": [
+                    {"type": "value", "options": {"1": {"text": "PASSED", "color": "green"}}},
+                    {"type": "value", "options": {"0": {"text": "FAILED", "color": "red"}}}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": 6,
+        "title": "ML Model Inference Latency (p99)",
+        "type": "gauge",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 16
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "histogram_quantile(0.99, gitops_ml_inference_latency_ms)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms",
+            "max": 1000,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 300},
+                {"color": "red", "value": 500}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "auto",
+          "textMode": "auto",
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"]
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Cost Tracking (daily budget vs actual)",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 24
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "gitops_cost_actual",
+            "legendFormat": "Actual"
+          },
+          {
+            "refId": "B",
+            "expr": "gitops_cost_budget",
+            "legendFormat": "Budget"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "unit": "currencyUSD"
+          }
+        },
+        "options": {
+          "legend": {
+            "calcs": ["mean", "last", "max"],
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Escalation Rate (human review requests/hour)",
+        "type": "gauge",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 24
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "rate(gitops_escalations_total[1h])"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "max": 10,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 1},
+                {"color": "red", "value": 2}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "auto",
+          "textMode": "auto",
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"]
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "ML Model Drift Detection",
+        "type": "stat",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 32
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "abs(gitops_ml_precision_score - 0.924) / 0.924 * 100",
+            "legendFormat": "Drift %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 1},
+                {"color": "red", "value": 2}
+              ]
+            }
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "orientation": "auto",
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"]
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Phase Progress (Phase 0 → 1 → 2 → 3)",
+        "type": "stat",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 32
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "gitops_phase_current",
+            "legendFormat": "Current Phase"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {
+                "type": "value",
+                "options": {
+                  "0": {"text": "Phase 0 (Audit)", "color": "blue"},
+                  "1": {"text": "Phase 1 (5 low-risk)", "color": "green"},
+                  "2": {"text": "Phase 2 (10 medium-risk)", "color": "orange"},
+                  "3": {"text": "Phase 3 (Full)", "color": "purple"}
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "annotations": {
+      "list": [
+        {
+          "datasource": "-- Prometheus --",
+          "enable": true,
+          "expr": "ALERTS{severity=\"critical\"}",
+          "name": "Critical Alerts",
+          "tagKeys": "severity",
+          "textFormat": "{{ alertname }}"
+        }
+      ]
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "datasource",
+          "type": "datasource",
+          "datasource": "Prometheus",
+          "current": {"text": "Prometheus", "value": "Prometheus"}
+        }
+      ]
+    }
+  }
+}

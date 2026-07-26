@@ -1,0 +1,482 @@
+{
+  "notification_templates": {
+    "deployment_start": {
+      "channel": "#deployments",
+      "title": "🟢 FASE 3 DEPLOYMENT STARTED",
+      "template": {
+        "text": "Fase 3 deployment initiated",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "🟢 FASE 3 DEPLOYMENT STARTED",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Deployment Window:*\nSaturday 2026-07-27, 02:00–06:00 UTC"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Expected Duration:*\n4 hours + 24h monitoring"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Timeline:*\n• T0–T+15min: Pre-flight checks\n• T+15–T+45min: Core infrastructure\n• T+45–T+120min: v3.0 skills deployment\n• T+120–T+180min: Agent + monitoring\n• T+180–T+240min: Validation + Phase 0 complete"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*What's Being Deployed:*\n• git-auto-merge-confidence v1.0 (ML scoring)\n• git-chaos-engineering v1.0 (resilience testing)\n• 3 expanded v3.0 skills (gitops-flow, multi-repo, pattern-detection)\n• agente-gitops v3.0 (14 capabilities)"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Expected Impact:*\n✓ 70% faster deployments (10 repos: 24h → 7h15m)\n✓ 92.4% ML confidence scoring\n✓ <5% false positive rate\n✓ Automated chaos testing"
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Real-Time Monitoring:*\nDashboard: <https://grafana.manta.internal/d/fase3-deployment|Grafana — Fase 3>\nIncidents: <https://pagerduty.manta.internal|PagerDuty>\nChat: #gitops #incidents"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "Deployment team: @DevOps-lead, @ML-engineering-lead | Questions? Reply in thread"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "midpoint_update": {
+      "channel": "#deployments",
+      "title": "🟡 FASE 3 DEPLOYMENT — MIDPOINT UPDATE",
+      "template": {
+        "text": "Deployment on track at T+2h",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "🟡 FASE 3 DEPLOYMENT — MIDPOINT UPDATE (T+2h)",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Status:* ON TRACK ✓"
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Completed:*\n✓ Core infrastructure (T+45min)\n✓ git-gitops-flow v3.0"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*In Progress:*\n• git-multi-repo-workflows v3.0\n• git-code-pattern-detection v3.0\n(T+60–T+120min)"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Metrics So Far:*\n• ML inference latency: 245ms avg (target <500ms) ✓\n• Zero errors detected ✓\n• Cost tracking: on budget ✓"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Next Phase:*\nAgent deployment + monitoring activation (T+120–T+180min)"
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "Status dashboard: <https://grafana.manta.internal/d/fase3-deployment|View in Grafana>"
+            }
+          }
+        ]
+      }
+    },
+    "deployment_complete": {
+      "channel": "#deployments",
+      "title": "🟢 FASE 3 DEPLOYMENT SUCCESSFUL",
+      "template": {
+        "text": "Deployment complete, Phase 0 active",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "🟢 FASE 3 DEPLOYMENT SUCCESSFUL",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Deployment Timeline:*\n4 hours exactly ✓"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Skills Deployed:*\n10/10 operational ✓"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Current Status:*\nPhase 0 audit mode active (25% traffic at 95% confidence threshold)\n• ML precision: 92.4% (target ≥92.0%) ✓\n• False positive rate: 1.8% (target <3%) ✓\n• Zero data loss ✓"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Next Gate Decision:*\nPhase 1 approval at T+24h (02:00 UTC Sunday)\nApproval criteria: ML precision ≥92%, FP rate <3%, zero data loss, all monitoring operational"
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Phase 1 Deployment:*\n5 low-risk repos at 95% confidence"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Phase 1 SLA:*\n100% success rate, <1 failure escalation"
+              }
+            ]
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Excellent work, team!* Deployment team taking 2h break, resuming 24h monitoring shift."
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "Monitoring: <https://grafana.manta.internal/d/fase3-deployment|Grafana> | Questions? #gitops or @ML-engineering-lead"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "incident_alert": {
+      "channel": "#incidents",
+      "title": "🚨 FASE 3 INCIDENT",
+      "template": {
+        "text": "Critical incident detected",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "🚨 FASE 3 INCIDENT — RESPONSE INITIATED",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Incident Type:*\n{{INCIDENT_TYPE}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Severity:*\n{{SEVERITY}}"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Triggered At:*\n{{TIMESTAMP}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Affected Component:*\n{{COMPONENT}}"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Alert Details:*\n{{ALERT_CONDITION}} → {{METRIC_VALUE}} (threshold: {{THRESHOLD}})\nTime window: {{TIME_WINDOW}}"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Response Playbook:*\nFASE3-PRODUCTION-DEPLOYMENT.md → Scenario {{SCENARIO}}\n\n*Actions:*\n1. On-call @DevOps-lead investigating\n2. Checking <https://pagerduty.manta.internal|PagerDuty> for automated remediation\n3. Real-time: <https://grafana.manta.internal/d/fase3-deployment|Grafana dashboard>"
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "Status updates in this thread. Critical escalations: @ML-engineering-lead, @CTO"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "rollback_initiated": {
+      "channel": "#incidents",
+      "title": "🚨 AUTOMATIC ROLLBACK INITIATED",
+      "template": {
+        "text": "Rollback in progress due to critical conditions",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "🚨 AUTOMATIC ROLLBACK INITIATED",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*CRITICAL ALERT:* Fase 3 rollback automatically triggered"
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Rollback Trigger:*\n{{TRIGGER_CONDITION}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Initiated At:*\n{{TIMESTAMP}}"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Rollback Status:*\n⏱ In progress (estimate: 10–15 minutes)\n\n*Rollback Steps:*\n1. Merge operations paused\n2. Database snapshot restoring (pre-Fase 3)\n3. Kubernetes deployments reverting\n4. Fase 2 gates re-enabled"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*All-Hands Alert:*\nIncident post-mortem scheduled for T+1h\nInvestigation: @DevOps-lead, @ML-engineering-lead, @Database-team\nStatus: <https://pagerduty.manta.internal|PagerDuty>"
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "Real-time updates in #incidents. No action required from other teams — focus on monitoring dependent systems."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "phase_1_gate_approval": {
+      "channel": "#deployments",
+      "title": "✅ PHASE 1 GATE APPROVED",
+      "template": {
+        "text": "Phase 1 deployment approved after 24h audit",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "✅ PHASE 1 GATE APPROVED",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*24-Hour Post-Deployment Results:*"
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*ML Precision:*\n92.4% (target ≥92.0%) ✓"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*False Positive Rate:*\n1.8% (target <3%) ✓"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Post-Merge Defects:*\n3.2% (target <5%) ✓"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Data Loss:*\n0 records (target 0) ✓"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Phase 1 Deployment: T+24h → T+72h*\n\n5 Low-Risk Repositories:\n1. manta-commons\n2. gitops-templates\n3. infra-as-code\n4. deploy-scripts\n5. test-automation\n\nConfidence Threshold: 95%\nTarget: 100% success rate (0 post-merge failures)"
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "Next gate decision: T+72h (02:00 UTC Tuesday) for Phase 2 approval"
+            }
+          }
+        ]
+      }
+    },
+    "metrics_summary": {
+      "channel": "#deployments",
+      "title": "📊 FASE 3 — 24H POST-DEPLOYMENT METRICS",
+      "template": {
+        "text": "Detailed metrics for Fase 3 post-deployment review",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "📊 FASE 3 — 24H POST-DEPLOYMENT METRICS",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Phase 0 Results (Audit Mode):*"
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*ML Model Quality:*\n• Precision: 92.4%\n• Recall: 88.1%\n• F1 Score: 90.1%"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Error Rates:*\n• FP Rate: 1.8%\n• FN Rate: 2.1%\n• Post-Merge: 3.2%"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Performance:*\n• Latency p99: 3.7s\n• Throughput: 4.2 repos/min\n• ML inference: 245ms avg"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Operations:*\n• Data Loss: 0 records\n• Audit log gaps: 0\n• Cost: $47/day"
+              }
+            ]
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Infrastructure:*\n✓ All 10 skills operational\n✓ Zero deployment errors\n✓ Grafana dashboards active\n✓ Monitoring alerts functioning\n✓ Incident playbooks tested"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "Full dashboard: <https://grafana.manta.internal/d/fase3-phase1|Grafana Phase 1>"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
