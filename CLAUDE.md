@@ -4,8 +4,7 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.3** (2026-07-26) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens) + Manta 17 (GitOps).
+Versão: **v4.4** (2026-08-09) — Fase 2: GitOps (security, threat modeling, incident response).
 
 ---
 
@@ -80,6 +79,9 @@ IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
 IF menção a git|repo|github|gitops|ci/cd|pull request|pr|commit
    → agente-gitops (17)
 
+IF menção a threat|vulnerabilidade|risk assessment|incident response|chaos engineering|security posture|CVSS|CVE
+   → agente-gitops (17) — threat modeling & incident response
+
 # Regras existentes S1-S4 mantidas sem alteração
 IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
    → agente-infraestrutura S1
@@ -105,7 +107,22 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | portos | por: | ANTAQ, PIANC, editais BNDES/ANTAQ | 🆕 v4.2 |
 | aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
-| gitops | git: | GitHub docs, git-scm.com, GitOps Foundation | 🆕 v4.3 |
+| gitops | git: | GitHub docs, git-scm.com, GitOps Foundation, CISA threat models, NIST incident response | ✅ v4.4 |
+| gitops-automation | gitops-auto: | Automation playbooks, CI/CD patterns, declarative infrastructure | 🆕 Fase 2 |
+| gitops-security | gitops-sec: | Threat models, incident response runbooks, security posture | 🆕 Fase 2 |
+
+---
+
+## Fase 2 ROADMAP — Security & Operations (W5–W12, Aug–Oct 2026)
+
+| Week | Focus | Deliverables | Gate |
+|------|-------|--------------|------|
+| W5–W6 (Aug 9–22) | Threat modeling infrastructure | git-threat-modeling.md v1.0 + CVSS/CVE lookup | Tech review |
+| W7–W8 (Aug 23–Sep 5) | Incident response automation | git-incident-response.md + runbooks + Slack webhooks | Security sign-off |
+| W9 (Sep 6–12) | Enhanced PR analysis | git-pr-autoreview.md v2.0 (+ SAST/SCA integrations) | QA test cycle |
+| W10 (Sep 13–19) | Anti-pattern detection v2 | git-code-pattern-detection.md v2.0 (+ risk scoring) | Peer review |
+| W11 (Sep 20–26) | Metrics & dashboards | git-repository-analytics.md v2.0 (+ security KPIs) | DevOps validation |
+| W12 (Sep 27–Oct 3) | Chaos & resilience testing | git-incident-response.md enhancements + drills | Load test + gate |
 
 ---
 
@@ -136,6 +153,40 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## DEPLOY CHECKLIST Fase 2 (Security & Incident Response)
+
+**Infrastructure & Onboarding**
+- [ ] Criar 2 coleções RAG em Supabase: `gitops-automation`, `gitops-security`
+- [ ] Carregar threat models (CISA, NIST) em `gitops-sec:threat-models`
+- [ ] Carregar automation playbooks em `gitops-auto:automation-playbooks`
+- [ ] Registrar 2 novos skills no catálogo (skill registry)
+
+**Agent & Routing**
+- [ ] Aplicar patch: routing rule para threat|risk assessment|incident response
+- [ ] Atualizar agente-gitops.md com threat modeling + incident response personas
+- [ ] Validar maestro routing com 5 prompts de security & incident response
+
+**Skill Development**
+- [ ] Elevar git-repository-analytics para v2.0 (+ CVSS metrics)
+- [ ] Elevar git-pr-autoreview para v2.0 (+ SAST/SCA hooks)
+- [ ] Elevar git-code-pattern-detection para v2.0 (+ risk scoring)
+- [ ] Criar git-threat-modeling.md (v1.0) com CVSS/CVE lookup
+- [ ] Criar git-incident-response.md (v1.0) com runbooks + Slack integration
+
+**Testing & Validation**
+- [ ] E2E test: threat model generation (10 repos sample)
+- [ ] E2E test: incident response workflow (mock incident + runbook)
+- [ ] Load test: concurrent PR reviews com SAST/SCA enabled
+- [ ] Security audit: Fase 2 skills vs. OWASP Top 10
+
+**Documentation & Approval**
+- [ ] Atualizar ARQUITETURA-AGENTES-IA.md no SP (v2.0.0 → v2.1.0)
+- [ ] Criar runbooks no SP: `Incident Response Workflows` + `Threat Modeling Guide`
+- [ ] Gate humano: aprovação MN + Security Officer antes de merge
+- [ ] Update CLAUDE.md version tag (v4.4) + date (2026-08-09)
+
+---
+
 ## Arquivos deste repositório
 
 ```
@@ -148,14 +199,16 @@ Codex-exemplo/
     │   ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
     │   ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
     │   ├── agente-barragens.md       # 🆕 S10
-    │   └── agente-gitops.md          # 🆕 Manta 17 — Git/GitHub workflows
+    │   └── agente-gitops.md          # ✅ Manta 17 — Git/GitHub workflows (v2.0)
     └── skills/
-        ├── git-repository-analytics.md     # 🆕 Manta 17 skill 1
-        ├── git-pr-autoreview.md            # 🆕 Manta 17 skill 2
-        ├── git-code-pattern-detection.md   # 🆕 Manta 17 skill 3
-        ├── git-gitops-flow.md              # 🆕 Manta 17 skill 4
-        ├── git-multi-repo-workflows.md     # 🆕 Manta 17 skill 5
-        └── git-commit-optimizer.md         # 🆕 Manta 17 skill 6
+        ├── git-repository-analytics.md     # v2.0 — Fase 2 enhanced metrics
+        ├── git-pr-autoreview.md            # v2.0 — Fase 2 security checks
+        ├── git-code-pattern-detection.md   # v2.0 — Fase 2 AST + CWE patterns (50+)
+        ├── git-threat-modeling.md          # 🆕 Fase 2 — architectural threat analysis
+        ├── git-incident-response.md        # 🆕 Fase 2 — incident & chaos workflows
+        ├── git-gitops-flow.md              # ✅ Fase 1 — declarative operations (v2.0)
+        ├── git-multi-repo-workflows.md     # ✅ Fase 1 — polyrepo automation (v2.0)
+        └── git-commit-optimizer.md         # ✅ Fase 1 — commit message & history
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
@@ -167,6 +220,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.4** (2026-08-09) — Fase 2: Segurança & Resposta a Incidentes.
+  5 skills (3 expandidos v2.0 + 2 novos) + 2 coleções RAG + threat modeling +
+  incident response automation. Ticket MNT-2026-FASE2-GITOPS-SECURITY.
+- **v4.3** (2026-07-26) — Agente Manta 17 (GitOps) com 6 skills iniciais.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
