@@ -1,0 +1,80 @@
+# Maestro Router — Kubernetes Deployment (GKE alternative to Cloud Run)
+# Used when workloads need persistent connections (pgvector warm cache) or
+# sidecar containers (Prometheus exporter) not supported cleanly by Cloud Run.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maestro-router
+  namespace: maestro
+  labels:
+    app: maestro-router
+    tier: horizontal
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0        # never drop below desired replica count
+      maxSurge: 1              # roll one extra pod at a time
+  selector:
+    matchLabels:
+      app: maestro-router
+  template:
+    metadata:
+      labels:
+        app: maestro-router
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: maestro-router
+          image: us-docker.pkg.dev/manta-prod/maestro/manta-maestro:latest
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 9090
+              name: metrics
+          envFrom:
+            - configMapRef:
+                name: maestro-config
+            - secretRef:
+                name: maestro-secrets
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            failureThreshold: 30   # allow up to 5min for cold start / model warmup
+            periodSeconds: 10
+      # Spread replicas across zones so a single-zone outage doesn't drop capacity
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: maestro-router

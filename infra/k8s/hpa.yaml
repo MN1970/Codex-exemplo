@@ -1,0 +1,59 @@
+# Horizontal Pod Autoscaler — scale on CPU + custom routing-queue metric.
+# See docs/TRAINING-GUIDE-DEVOPS-DATA-TEAMS.md §2.2 for the tuning rationale.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: maestro-router-hpa
+  namespace: maestro
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: maestro-router
+  minReplicas: 3
+  maxReplicas: 20
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 30      # react fast to spikes
+      policies:
+        - type: Percent
+          value: 100                       # can double pod count per step
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300      # wait 5min before scaling down
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 120
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 65
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 75
+    - type: Pods
+      pods:
+        metric:
+          name: maestro_routing_latency_p95_ms   # exported by /metrics, scraped via Prometheus adapter
+        target:
+          type: AverageValue
+          averageValue: "400"
+---
+# PodDisruptionBudget — guarantee capacity survives voluntary node drains
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: maestro-router-pdb
+  namespace: maestro
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: maestro-router
