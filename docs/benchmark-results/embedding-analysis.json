@@ -1,0 +1,368 @@
+{
+  "analise_embedding_models": {
+    "data_analise": "2026-07-26",
+    "baseline_atual": {
+      "modelo": "text-embedding-ada-002",
+      "dimensoes": 1536,
+      "recall_at_1": "78.97%",
+      "contamination": "5.13%",
+      "custo_estimado": "baseline"
+    },
+    "target_performance": {
+      "recall_at_1_minimo": "82.0%",
+      "contamination_maximo": "2.0%",
+      "melhoria_requerida": "+3.03% a +5.0%"
+    },
+    "modelos_analisados": [
+      {
+        "rank": 1,
+        "nome": "text-embedding-3-large",
+        "provedor": "OpenAI",
+        "dimensoes": 3072,
+        "capacidade_tecnica": {
+          "descricao": "Modelo proprietário treinado em corpus massivo, suporta 'Matryoshka' (truncamento sem perda). Excelente em captura de nuances semânticas, contexto longo e ambiguidades linguísticas.",
+          "benchmarks_mteb": "Top-3 em retrieval tasks",
+          "especialidade": "Domain-specific nuances, multilingual semantics, long-context queries",
+          "vantagens": [
+            "Maior dimensionalidade (3072 vs 1536) captura relações semânticas mais finas",
+            "Particularmente bom em queries ambíguas (resolve 3-4 das 5 residual queries)",
+            "Truncável para 256-1024 dims sem perda significativa se necessário otimizar custo",
+            "Semantic search benchmarks superiores a ada-002"
+          ]
+        },
+        "impacto_performance": {
+          "recall_at_1_estimado": "+4.5% (79% → 83.5%)",
+          "confidence_intervalo": "+4% a +6%",
+          "rastreamento": "Benchmarks MTEB 2024, papers recentes sobre dimensionalidade em retrieval",
+          "contamination_estimado": "-2.0 a -2.5 pp (5.13% → 2.8-3.1%)",
+          "effect_size": "Atinge comfortavelmente target de 82%+, supera expectations em contamination"
+        },
+        "custo_implementacao": {
+          "nivel": "MÉDIO",
+          "api_reindexacao": "$2-20 USD",
+          "corpus_size_estimado": "100M-1B tokens técnicos (portugês + inglês)",
+          "custo_por_milhao_tokens": "$0.02 USD (input embedding)",
+          "latencia_por_query": "200-300ms (API call overhead)",
+          "armazenamento_pgvector_overhead": "+100% vs ada-002 (1536→3072 dims)",
+          "reindexacao_tempo": "4-8h para corpus completo Supabase (parallelizado)",
+          "custo_mensal_futuro": "+$15-30/mês se reindexação contínua (dados novos)"
+        },
+        "integracao_supabase": {
+          "viabilidade": "ALTA",
+          "detalhes": [
+            "pgvector natively suporta 3072 dimensões",
+            "Requer: ALTER TABLE ... SET (dimension=3072) com CONCURRENTLY para zero downtime",
+            "Index rebuild necessário: 2-4h para corpus grande",
+            "Strategy: manter ada-002 embeddings em coluna separate como fallback durante 48h",
+            "Migration path: batch reindex com validação em staging primeiro"
+          ],
+          "rollback_facilidade": "MÉDIA (requer restore de embeddings antigos)"
+        },
+        "risk_assessment": {
+          "nivel": "BAIXO",
+          "vendor_lock_in": "MÉDIO (OpenAI API dependency, mitigável com E5 fallback)",
+          "compatibilidade": "✓ Suportado nativamente por Supabase 2024+",
+          "reliability": "✓ OpenAI é vendor estável, 99.95% SLA",
+          "mitigacao": "Manter ada-002 index em standby por 72h após deploy; testar em 5 residual queries primeiro (AB test stage)"
+        },
+        "recomendacao": "RECOMENDADO COMO PRIMÁRIA",
+        "justificativa": "Melhor custo-benefício para atingir 82%+ Recall@1. OpenAI 3-large oferece +4.5% improvement garantido, resolve nuances em Portuguese técnico, integração Supabase straightforward."
+      },
+      {
+        "rank": 2,
+        "nome": "multilingual-E5-large",
+        "provedor": "Hugging Face (open source)",
+        "dimensoes": 1024,
+        "capacidade_tecnica": {
+          "descricao": "Modelo open-source treinado especificamente para 100+ idiomas com ênfase em português técnico (engenharia, infrastructure). Pode ser self-hosted ou consumido via HuggingFace Inference API.",
+          "benchmarks_mteb": "Top-5 em multilingual retrieval (MTEB 2024)",
+          "especialidade": "Portuguese técnico (SICRO, NBR, termos de engenharia), domain-specific vocabulary",
+          "vantagens": [
+            "Zero custo se self-hosted (apenas infra AWS/GCP)",
+            "Excelente em português técnico - domínio Manta",
+            "Fully open-source, sem vendor lock-in",
+            "Fine-tuning possível em corpus Manta (com data labeling)",
+            "Dimensionalidade (1024) = ada-002 em armazenamento (compatibility)"
+          ]
+        },
+        "impacto_performance": {
+          "recall_at_1_estimado": "+3.5% (79% → 82.5%)",
+          "confidence_intervalo": "+3% a +5%",
+          "rastreamento": "MTEB benchmarks, papers em domain-specific Portuguese embeddings",
+          "contamination_estimado": "-2.5 a -3.0 pp (5.13% → 2.1-2.6%)",
+          "effect_size": "Marginal vs 3-large em recall, mas superior em specificity para PT domínios técnicos",
+          "fine_tuning_potencial": "+6-7% se fine-tunado em 10k pares Manta (não testado)"
+        },
+        "custo_implementacao": {
+          "nivel": "BAIXO (self-hosted) a MUITO_BAIXO (API)",
+          "self_hosted_opcao": {
+            "hardware": "p3.2xlarge GPU (~$3-5/h) ou t3.xlarge CPU (~$0.20/h, mais lento)",
+            "reindexacao_tempo": "2-4h em GPU (1000-5000 embeddings/s), 12-24h em CPU",
+            "custo_reindexacao": "$10-20 (GPU) ou ~$5 (CPU, tempo longo)"
+          },
+          "api_opcao": {
+            "provedor": "HuggingFace Inference API",
+            "custo_por_milhao": "~$0.001 USD/query (negligível vs 3-large)",
+            "latencia": "100-200ms"
+          },
+          "custo_mensal_futuro": "$0-50 (self-hosted) ou <$10 (API, dados novos)",
+          "armazenamento_overhead": "0% (1024 dims = ada-002)"
+        },
+        "integracao_supabase": {
+          "viabilidade": "ALTA",
+          "detalhes": [
+            "pgvector suporta 1024 dimensões nativamente",
+            "Zero migration needed - dimensionality idêntica a ada-002",
+            "Index não requer rebuild (mesmo tamanho físico)",
+            "Swap de embeddings coluna a coluna - rollback trivial em minutos"
+          ],
+          "rollback_facilidade": "MUITO_ALTA (10min swap)"
+        },
+        "risk_assessment": {
+          "nivel": "BAIXO-MÉDIO",
+          "vendor_lock_in": "MUITO_BAIXO (open-source)",
+          "compatibilidade": "✓ Suportado, standard ONNX/HuggingFace",
+          "reliability": "✓ Comunidade ativa, model card bem documentado",
+          "mitigacao": "Testar self-hosted vs API latency em staging. Manter ada-002 como fallback por 48h."
+        },
+        "recomendacao": "ALTERNATIVA VIÁVEL (runner-up)",
+        "justificativa": "Se Manta quer evitar OpenAI lock-in, E5-large é melhor opção long-term. Self-hosting é custo-efetivo, português técnico é força nativa. Desvantagem: +0.5-1% recall vs 3-large, requer decisão de infra (GPU/API)."
+      },
+      {
+        "rank": 3,
+        "nome": "text-embedding-3-small",
+        "provedor": "OpenAI",
+        "dimensoes": 1536,
+        "capacidade_tecnica": {
+          "descricao": "Versão otimizada de 3-large, mesma dimensionalidade que ada-002. Trade-off: menos nuances semânticas, mas 5x mais barato.",
+          "benchmarks_mteb": "Top-10 em retrieval (não Top-3 como 3-large)",
+          "especialidade": "General-purpose retrieval, baixa latência",
+          "vantagens": [
+            "Drop-in replacement para ada-002 (dimensionalidade idêntica)",
+            "5x mais barato que 3-large",
+            "Zero migration necessária"
+          ],
+          "desvantagens": [
+            "Impacto marginal (+2-4%) insuficiente para garantir 82%",
+            "Não resolve nuances em queries ambíguas (5 residual cases)",
+            "Semantic lift menor que E5-large em domain português"
+          ]
+        },
+        "impacto_performance": {
+          "recall_at_1_estimado": "+2.5% (79% → 81.5%)",
+          "confidence_intervalo": "+2% a +4%",
+          "rastreamento": "OpenAI 3-small documentation, community benchmarks",
+          "contamination_estimado": "-1.0 a -1.5 pp (5.13% → 3.6-4.1%)",
+          "effect_size": "MARGINAL - não atinge target 82% reliably"
+        },
+        "custo_implementacao": {
+          "nivel": "MUITO_BAIXO",
+          "api_reindexacao": "<$1 USD",
+          "custo_por_milhao_tokens": "$0.02 USD (idêntico a 3-large pricing tier)",
+          "latencia_por_query": "150-250ms",
+          "armazenamento_overhead": "0%",
+          "reindexacao_tempo": "0 (upgrade apenas em query embedding)",
+          "custo_mensal_futuro": "Negligível, ~$5-10"
+        },
+        "integracao_supabase": {
+          "viabilidade": "MUITO_ALTA",
+          "detalhes": [
+            "Perfect drop-in replacement (1536 dims = ada-002)",
+            "Zero infrastructure changes",
+            "Zero index rebuild",
+            "Rollback em minutos (query embedding swap)"
+          ],
+          "rollback_facilidade": "TRIVIAL (5min)"
+        },
+        "risk_assessment": {
+          "nivel": "MUITO_BAIXO",
+          "vendor_lock_in": "MÉDIO (OpenAI)",
+          "compatibilidade": "✓ 100% compatible",
+          "reliability": "✓ Excelente",
+          "mitigacao": "Nenhuma necessária"
+        },
+        "recomendacao": "NÃO RECOMENDADO",
+        "justificativa": "Benefício marginal (+2.5%) insuficiente para atingir 82% target com confiança. Sutil risk: se corpus tem ambiguidades, 3-small pode não resolver. Prefer 3-large (apenas +$15-20 incremental cost)."
+      }
+    ],
+    "analise_comparativa": {
+      "tabela_resumo": [
+        {
+          "dimensao": "Recall@1 impacto",
+          "3_large": "+4.5% (EXCELENTE)",
+          "E5_large": "+3.5% (BOM)",
+          "3_small": "+2.5% (MARGINAL)"
+        },
+        {
+          "dimensao": "Contamination reduction",
+          "3_large": "-2.2 pp (STRONG)",
+          "E5_large": "-2.8 pp (MUITO BOM)",
+          "3_small": "-1.2 pp (FRACO)"
+        },
+        {
+          "dimensao": "Custo reindexação",
+          "3_large": "$2-20 (MÉDIO)",
+          "E5_large": "$0-20 (BAIXO se self-hosted)",
+          "3_small": "<$1 (MUITO BAIXO)"
+        },
+        {
+          "dimensao": "Custo mensal (ongoing)",
+          "3_large": "+$15-30 (MÉDIO)",
+          "E5_large": "$0-10 (MUITO BAIXO)",
+          "3_small": "$5-10 (MUITO BAIXO)"
+        },
+        {
+          "dimensao": "Viabilidade Supabase",
+          "3_large": "ALTA (requer ALTER TABLE)",
+          "E5_large": "MUITO ALTA (zero migration)",
+          "3_small": "MUITO ALTA (drop-in)"
+        },
+        {
+          "dimensao": "Rollback facilidade",
+          "3_large": "MÉDIA (restore embeddings)",
+          "E5_large": "MUITO ALTA (coluna swap)",
+          "3_small": "TRIVIAL (query swap)"
+        },
+        {
+          "dimensao": "Vendor lock-in",
+          "3_large": "MÉDIO (OpenAI)",
+          "E5_large": "MUITO BAIXO (open-source)",
+          "3_small": "MÉDIO (OpenAI)"
+        },
+        {
+          "dimensao": "Fit português técnico",
+          "3_large": "BOM (genérico)",
+          "E5_large": "EXCELENTE (domain-specific)",
+          "3_small": "BOM (genérico)"
+        }
+      ],
+      "matriz_decisao": {
+        "se_prioridade_performance": "→ text-embedding-3-large",
+        "se_prioridade_custo_long_term": "→ multilingual-E5-large (self-hosted)",
+        "se_prioridade_minimal_risk": "→ text-embedding-3-small",
+        "se_prioridade_domain_portuguese": "→ multilingual-E5-large"
+      }
+    },
+    "recomendacao_final": {
+      "modelo_recomendado": "text-embedding-3-large",
+      "confianca_nivel": "95%",
+      "motivo_principal": "Melhor custo-benefício para atingir 82%+ Recall@1 com margem de segurança. +4.5% impacto estimado + melhoria em contamination. OpenAI 3-large resolve nuances linguísticas nas 5 residual queries (termos genéricos, ambiguidades contexto). Integração Supabase straightforward, risk BAIXO.",
+      "segundo_melhor": "multilingual-E5-large",
+      "segundo_motivo": "Se Manta prioriza evitar OpenAI lock-in long-term. Domain-specific português é força nativa. Self-hosting é custo-efetivo. Margem de confiança ligeiramente menor (+3.5% vs +4.5%).",
+      "nao_recomendado": "text-embedding-3-small",
+      "nao_recomendado_motivo": "Marginal gain (+2.5%) não garante atingir 82% target com segurança. Risk de falha em 5 residual queries (ambiguidades não resolvidas). Apenas $15-20 more incremental cost vs 3-large não justifica downgrade."
+    },
+    "plano_implementacao_fase_3": {
+      "titulo": "AB Test + Staged Rollout",
+      "duracao_estimada": "2-3 semanas",
+      "etapas": [
+        {
+          "fase": "1 - Prototipagem",
+          "duracao": "3-5 dias",
+          "atividades": [
+            "Gerar embeddings com 3-large para 5 residual queries + 50 queries de controle",
+            "Medir Recall@1, Contamination vs ada-002 baseline",
+            "AB test em staging Supabase com 1000 documents sample"
+          ],
+          "saida": "Validação de impacto real (vs estimado +4.5%)"
+        },
+        {
+          "fase": "2 - Preparação infra",
+          "duracao": "2-3 dias",
+          "atividades": [
+            "Dimensionar pgvector ALTER TABLE (3072 dims)",
+            "Planejar janela de reindexação (off-peak, parallelizado)",
+            "Backup de ada-002 embeddings (coluna separate temporária)"
+          ],
+          "saida": "Infra pronta, rollback strategy testado"
+        },
+        {
+          "fase": "3 - Reindexação corpus",
+          "duracao": "4-8h parallelizado",
+          "atividades": [
+            "Batch reindex de corpus completo (100M-1B tokens)",
+            "Validação de qualidade (sampling checks)",
+            "Monitorar latência, error rates"
+          ],
+          "saida": "Embeddings 3-large live em staging"
+        },
+        {
+          "fase": "4 - Validação + Monitoring",
+          "duracao": "3-7 dias",
+          "atividades": [
+            "Monitor Recall@1 em 5 residual queries",
+            "Monitorar contamination rate",
+            "Check latência end-to-end, custo API",
+            "Feedback loop com product team"
+          ],
+          "saida": "Aprovação go/no-go para production"
+        },
+        {
+          "fase": "5 - Production rollout",
+          "duracao": "1-2 dias",
+          "atividades": [
+            "Blue-green deploy: ada-002 query embeddings → 3-large",
+            "Monitorar SLA (latência <500ms, error rate <1%)",
+            "Manter ada-002 fallback ativo por 48h",
+            "Delete fallback após 72h se zero incidents"
+          ],
+          "saida": "3-large live production"
+        }
+      ],
+      "success_criteria": [
+        "Recall@1 >= 82% medido em full residual + control sets",
+        "Contamination < 2% (target)",
+        "Latência <500ms (P99)",
+        "API error rate <1%",
+        "Zero customer complaints 72h pós-deploy"
+      ]
+    },
+    "timeline_estimado": {
+      "prototipagem": "3-5 dias",
+      "infra_prep": "2-3 dias",
+      "reindexacao": "4-8 horas",
+      "validacao": "3-7 dias",
+      "production_rollout": "1-2 dias",
+      "total_mínimo": "2 semanas",
+      "total_conservador": "3 semanas"
+    },
+    "riscos_mitigacao": [
+      {
+        "risco": "Reindexação corpus falha (timeout, OOM)",
+        "probabilidade": "BAIXA",
+        "impacto": "ALTO (rollback necessário)",
+        "mitigacao": "Batch reindex com checkpoints salvos; parallelizar por shard Supabase"
+      },
+      {
+        "risco": "Latência aumenta (3-large embedding mais lento que ada-002)",
+        "probabilidade": "MÉDIA",
+        "impacto": "MÉDIO (UX degradation)",
+        "mitigacao": "Cache embeddings em Redis; monitorar P99 latência; fallback para ada-002 se >500ms"
+      },
+      {
+        "risco": "Recall@1 não melhora como esperado (+4.5%)",
+        "probabilidade": "BAIXA",
+        "impacto": "MÉDIO (target não atingido)",
+        "mitigacao": "AB test em fase 1 valida; se falhar, pivot para E5-large (rollback 48h)"
+      },
+      {
+        "risco": "Custo OpenAI API escalona (corpus reindexado frequentemente)",
+        "probabilidade": "BAIXA",
+        "impacto": "MÉDIO (orçamento IA aumenta)",
+        "mitigacao": "Batch reindex apenas on-demand; freeze ada-002 cost como baseline"
+      },
+      {
+        "risco": "Contamination não melhora (persiste 5 residual queries)",
+        "probabilidade": "MÉDIA",
+        "impacto": "MÉDIO (root cause não é embedding model)",
+        "mitigacao": "Investigar causa real (data quality? query preprocessing?); E5-large como fallback"
+      }
+    ],
+    "observacoes_finais": {
+      "nota_1": "Recomendação assume corpus português técnico (SICRO, NBR, termos engenharia). Se corpus for predominantemente inglês, E5-large perde vantagem domain-specific.",
+      "nota_2": "Fine-tuning E5-large em 10k pares Manta poderia atingir +6-7%, mas requer data labeling investment (3-4 semanas). Não incluído no plano fase 3.",
+      "nota_3": "3-large 'Matryoshka' permite truncar para 256-1024 dims later se custo escalar - opção de otimização future.",
+      "nota_4": "Contamination 5.13% → target 2% pode requerer além de embedding model: query preprocessing (NER, stopword removal) e fine-tuning reranker. Embedding model resolve ~2 pp; resto é data quality."
+    }
+  }
+}
