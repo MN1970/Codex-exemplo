@@ -43,6 +43,25 @@ CREATE TABLE IF NOT EXISTS agent_feedback (
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS feedback_alerts (
+    id          UUID PRIMARY KEY,
+    org_id      UUID NOT NULL,
+    agent_id    UUID,
+    agent_slug  TEXT NOT NULL,
+    avg_rating  FLOAT NOT NULL,
+    feedback_count INTEGER NOT NULL DEFAULT 0,
+    trend       TEXT NOT NULL DEFAULT 'down',
+    threshold   FLOAT NOT NULL DEFAULT 3.5,
+    action_taken TEXT NOT NULL,
+    metadata    JSONB NOT NULL DEFAULT '{}',
+    triggered_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_feedback_alerts_org_id ON feedback_alerts (org_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_alerts_agent_id ON feedback_alerts (agent_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_alerts_agent_slug ON feedback_alerts (agent_slug);
+CREATE INDEX IF NOT EXISTS idx_feedback_alerts_triggered_at ON feedback_alerts (triggered_at);
+
 CREATE TABLE IF NOT EXISTS sp_agent_routing (
     id          BIGSERIAL PRIMARY KEY,
     agent_code  TEXT NOT NULL,

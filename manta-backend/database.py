@@ -140,6 +140,7 @@ ORG_SCOPED_TABLES: tuple[str, ...] = (
     "rag_chunks",
     "sessions",
     "feedback",
+    "feedback_alerts",
     "ml_models",
 )
 
@@ -168,6 +169,9 @@ class Organization(Base):
     rag_chunks: Mapped[list[RagChunk]] = relationship(back_populates="organization", cascade="all, delete-orphan")
     sessions: Mapped[list[Session]] = relationship(back_populates="organization", cascade="all, delete-orphan")
     feedback_entries: Mapped[list[Feedback]] = relationship(
+        back_populates="organization", cascade="all, delete-orphan"
+    )
+    feedback_alerts: Mapped[list[FeedbackAlert]] = relationship(
         back_populates="organization", cascade="all, delete-orphan"
     )
     ml_models: Mapped[list[MLModel]] = relationship(back_populates="organization", cascade="all, delete-orphan")
@@ -268,6 +272,7 @@ class Agent(Base):
     rag_chunks: Mapped[list[RagChunk]] = relationship(back_populates="agent")
     sessions: Mapped[list[Session]] = relationship(back_populates="agent")
     feedback_entries: Mapped[list[Feedback]] = relationship(back_populates="agent")
+    feedback_alerts: Mapped[list[FeedbackAlert]] = relationship(back_populates="agent")
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Agent code={self.code!r} org_id={self.org_id!r}>"
@@ -387,6 +392,41 @@ class Feedback(Base):
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Feedback id={self.id!r} rating={self.rating!r}>"
+
+
+# ---------------------------------------------------------------------------
+# FeedbackAlert
+# ---------------------------------------------------------------------------
+class FeedbackAlert(Base):
+    """Alerta disparado quando um agente cai abaixo do threshold de
+    rating médio (padrão 3.5 stars). Trigger: FeedbackAnalytics (tarefa
+    semanal em tasks/feedback_analytics.py) dispara alerta se avg_rating
+    < 3.5 por 2 semanas consecutivas. Armazena ação tomada (ex.:
+    "retraining_job_submitted", "slack_notified", etc.) para auditoria."""
+
+    __tablename__ = "feedback_alerts"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_new_uuid)
+    org_id: Mapped[str] = mapped_column(
+        ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    agent_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agents.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    agent_slug: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    avg_rating: Mapped[float] = mapped_column(nullable=False)  # p.ex. 3.2
+    feedback_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    trend: Mapped[str] = mapped_column(String(20), nullable=False, default="down")  # up|down|stable
+    threshold: Mapped[float] = mapped_column(nullable=False, default=3.5)
+    action_taken: Mapped[str] = mapped_column(String(100), nullable=False)  # slack_notified|retraining_job_submitted|...
+    metadata: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb"))
+    triggered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    organization: Mapped[Organization] = relationship(back_populates="feedback_alerts")
+    agent: Mapped[Agent | None] = relationship(back_populates="feedback_alerts")
+
+    def __repr__(self) -> str:  # pragma: no cover - debug helper
+        return f"<FeedbackAlert agent_slug={self.agent_slug!r} avg_rating={self.avg_rating!r}>"
 
 
 # ---------------------------------------------------------------------------

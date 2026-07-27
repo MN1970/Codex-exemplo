@@ -266,3 +266,79 @@ groups:
           summary: "Availability below SLO (< 99.9%)"
           description: "Service availability is {{ $value | humanizePercentage }} (SLO: 99.9%)"
           runbook_url: "https://wiki.manta.local/runbooks/slo-breach"
+
+      # ===== HPA/Auto-scaling Alerts =====
+
+      - alert: HPAReachedMaxReplicas
+        expr: |
+          kube_hpa_status_current_replicas / kube_hpa_status_desired_replicas >= 0.99
+          and kube_hpa_status_current_replicas >= kube_hpa_status_max_replicas - 1
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: scaling
+        annotations:
+          summary: "HPA {{ $labels.hpa }} reached max replicas"
+          description: |
+            HPA {{ $labels.hpa }} is at or near maximum replicas ({{ $value | humanize }}/{{ $labels.max_replicas }}).
+            Consider manually scaling the cluster or raising the max replica limit.
+          runbook_url: "https://wiki.manta.local/runbooks/hpa-max-replicas"
+
+      - alert: HPAThrashing
+        expr: |
+          increase(kube_hpa_status_desired_replicas[10m]) >= 3
+          or increase(kube_hpa_status_desired_replicas[10m]) <= -3
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: scaling
+        annotations:
+          summary: "HPA {{ $labels.hpa }} is thrashing (rapid scaling)"
+          description: |
+            HPA {{ $labels.hpa }} has scaled up/down 3+ times in the last 10 minutes.
+            This indicates unstable conditions or misconfigured thresholds.
+          runbook_url: "https://wiki.manta.local/runbooks/hpa-thrashing"
+
+      - alert: HPAScalingFailed
+        expr: |
+          increase(hpa_scaling_failures_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: scaling
+        annotations:
+          summary: "HPA {{ $labels.hpa }} scaling operation failed"
+          description: |
+            HPA {{ $labels.hpa }} failed to scale: {{ $value | humanize }} failures in last 5 minutes.
+            Check cluster resources (CPU, memory, nodes) and HPA configuration.
+          runbook_url: "https://wiki.manta.local/runbooks/hpa-scaling-failed"
+
+      - alert: HighMetricValue
+        expr: |
+          scalar(topk(1, histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))))
+          > 5
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: scaling
+        annotations:
+          summary: "Metric approaching HPA threshold"
+          description: |
+            API latency p95 is {{ $value | humanizeDuration }}.
+            HPA may trigger soon. Monitor scaling events.
+          runbook_url: "https://wiki.manta.local/runbooks/hpa-threshold-warning"
+
+      - alert: ClusterNodeCapacityLow
+        expr: |
+          (sum(kube_node_labels{label_node_role_kubernetes_io_master!="true"}) or vector(0))
+          / count(kube_node_labels{label_node_role_kubernetes_io_master!="true"}) < 3
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: infrastructure
+        annotations:
+          summary: "Low cluster node capacity (< 3 nodes)"
+          description: |
+            Cluster has {{ $value | humanize }} available nodes.
+            HPA may not be able to scale workloads if nodes are exhausted.
+          runbook_url: "https://wiki.manta.local/runbooks/low-node-capacity"
