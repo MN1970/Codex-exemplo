@@ -1,0 +1,121 @@
+# Platform Abstraction Layer Configuration Schema
+# Version: 1.0.0
+
+platform_abstraction_layer:
+  version: "1.0.0"
+  detection:
+    timeout_ms: 15000
+    cache_ttl_seconds: 3600
+    fallback_to_git_cli: true
+
+  platforms:
+    github:
+      enabled: true
+      api_version: "2022-11-28"
+      base_urls:
+        api: "https://api.github.com"
+        web: "https://github.com"
+      timeout_seconds: 30
+      retry_attempts: 3
+      retry_backoff_factor: 2.0
+      rate_limit_handling: "backoff"
+      detection_patterns:
+        - "github.com"
+        - "raw.githubusercontent.com"
+        - "api.github.com"
+      capabilities:
+        - pull_requests
+        - issues
+        - commits
+        - workflows
+        - webhooks
+        - statuses
+        - checks
+        - deployments
+        - environments
+        - discussions
+
+    gitlab:
+      enabled: true
+      api_version: "v4"
+      base_urls:
+        api: "https://gitlab.com/api/v4"
+        web: "https://gitlab.com"
+      timeout_seconds: 30
+      retry_attempts: 3
+      retry_backoff_factor: 2.0
+      rate_limit_handling: "backoff"
+      detection_patterns:
+        - "gitlab.com"
+        - "gitlab-ci.com"
+      capabilities:
+        - merge_requests
+        - issues
+        - commits
+        - pipelines
+        - webhooks
+        - deployments
+        - environments
+        - discussions
+        - packages
+
+    bitbucket:
+      enabled: true
+      api_version: "2.0"
+      base_urls:
+        api: "https://api.bitbucket.org/2.0"
+        web: "https://bitbucket.org"
+      timeout_seconds: 30
+      retry_attempts: 3
+      retry_backoff_factor: 2.0
+      rate_limit_handling: "backoff"
+      detection_patterns:
+        - "bitbucket.org"
+        - "bitbucket.io"
+      capabilities:
+        - pull_requests
+        - issues
+        - commits
+        - pipelines
+        - webhooks
+        - deployments
+        - environments
+
+    gitea:
+      enabled: true
+      api_version: "1.0"
+      base_urls:
+        api: "https://gitea.example.com/api/v1"
+        web: "https://gitea.example.com"
+      timeout_seconds: 30
+      retry_attempts: 3
+      retry_backoff_factor: 2.0
+      rate_limit_handling: "backoff"
+      detection_patterns:
+        - "gitea.io"
+        - "gitea.example.com"
+      capabilities:
+        - pull_requests
+        - issues
+        - commits
+        - actions
+        - webhooks
+        - deployments
+        - packages
+
+  authentication:
+    token_env_prefix: "PLATFORM_TOKEN"
+    webhook_secret_env_prefix: "WEBHOOK_SECRET"
+    verify_ssl: true
+    ca_bundle_path: null
+
+  monitoring:
+    health_check_interval_seconds: 60
+    metrics_enabled: true
+    trace_enabled: true
+    log_level: "INFO"
+
+  fallback:
+    use_git_cli: true
+    git_timeout_seconds: 10
+    max_retries: 3

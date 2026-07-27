@@ -1,0 +1,146 @@
+# Pillar D — Advanced ML Features & Ensemble
+# Model Configuration v2.0 (Fase 4)
+
+model:
+  name: "gitops-merge-confidence-v2.0"
+  version: "2.0.0"
+  type: "ensemble"
+  created_at: "2026-09-13"
+  status: "production"
+  description: "50-feature ensemble (65% RF + 35% XGB) with confidence intervals and active learning"
+
+ensemble:
+  random_forest:
+    weight: 0.65
+    config:
+      n_estimators: 200
+      max_depth: 25
+      min_samples_split: 5
+      min_samples_leaf: 2
+      max_features: "sqrt"
+      n_jobs: -1
+      random_state: 42
+      class_weight: "balanced"
+      bootstrap: true
+      oob_score: true
+
+  xgboost:
+    weight: 0.35
+    config:
+      n_estimators: 150
+      max_depth: 8
+      learning_rate: 0.1
+      subsample: 0.8
+      colsample_bytree: 0.8
+      min_child_weight: 1
+      gamma: 1.0
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+      objective: "binary:logistic"
+      eval_metric: "logloss"
+      tree_method: "hist"
+      random_state: 42
+
+training:
+  test_size: 0.2
+  validation_size: 0.1
+  cv_folds: 10
+  random_state: 42
+  target_metric: "accuracy"
+  target_threshold: 0.935
+  batch_size: 256
+  epochs: 1
+  early_stopping_patience: 10
+
+feature_engineering:
+  n_features_total: 50
+  n_features_phase3: 31
+  n_features_new: 19
+  feature_scaling: "standardscaler"
+  feature_selection: "variance_threshold"
+  variance_threshold: 0.01
+
+quantile_regression:
+  enabled: true
+  quantiles: [0.05, 0.25, 0.5, 0.75, 0.95]
+  model_type: "quantile_forest"
+
+active_learning:
+  enabled: true
+  strategy: "uncertainty_sampling"
+  uncertainty_threshold: 0.4
+  batch_size: 100
+  target_coverage: 0.80
+  feedback_loop_frequency: "weekly"
+
+inference:
+  batch:
+    max_batch_size: 1000
+    target_latency_ms: 6000
+    parallelism: 4
+    timeout_ms: 10000
+
+  online:
+    max_latency_p99_ms: 200
+    max_latency_p95_ms: 150
+    cache_enabled: true
+    cache_ttl_seconds: 3600
+    fallback_enabled: true
+    fallback_latency_threshold_ms: 300
+
+model_versioning:
+  storage_backend: "local"  # options: local, s3, gcs
+  models_dir: "./models"
+  archive_dir: "./models/archive"
+  max_versions_retained: 5
+  versioning_scheme: "semantic"
+
+monitoring:
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+    - auc_roc
+    - confusion_matrix
+    - feature_importance
+    - prediction_latency
+    - model_drift
+    - data_drift
+
+  drift_detection:
+    enabled: true
+    check_frequency: "daily"
+    kolmogorov_smirnov_threshold: 0.1
+    population_stability_index_threshold: 0.25
+
+bias_assessment:
+  protected_attributes:
+    - "repo_region"
+    - "repo_org_type"
+    - "repo_language"
+
+  fairness_metrics:
+    - "demographic_parity"
+    - "equal_opportunity"
+    - "calibration"
+    - "theil_index"
+
+retraining:
+  schedule: "quarterly"
+  trigger_conditions:
+    - model_drift_detected
+    - accuracy_below_threshold
+    - new_training_data_size_gt_1000
+  min_data_for_retraining: 1000
+  holdout_test_set_size: 0.2
+
+database:
+  mlflow_uri: "sqlite:///./models/mlflow.db"
+  postgres_uri: "postgresql://user:pass@localhost/gitops_ml"
+
+fallback:
+  enabled: true
+  strategy: "phase3_model"
+  latency_threshold_ms: 300
+  error_handling: "graceful_degradation"
