@@ -204,8 +204,8 @@ prefixo de storage único:
 | metro | mtr: | ABNT NBR-NM, ARTESP, manual STM | ✅ Operacional |
 | **portos** | **por:** | ANTAQ, PIANC, ROM, editais BNDES | 🆕 **v2.0.0** |
 | **aeroportos** | **aer:** | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 **v2.0.0** |
-| **saneamento** | **san:** | SNIS, IWA, NBR 12211-12218, Lei 14.026, ERAS/AySA | 🆕 **v2.0.0** |
-| **energia** | **ene:** | ANEEL editais, R1-R5 EPE, ONS, IEEE, IEC | 🆕 **v2.0.0** |
+| **saneamento** | **san:** | SNIS, IWA, NBR 12211–12218 (normas abastecimento água), Lei 14.026, ERAS/AySA | 🆕 **v2.0.0** |
+| **energia** | **ene:** | ANEEL editais, EPE (Empresa de Pesquisa Energética — Relatórios R1–R5), ONS, IEEE, IEC | 🆕 **v2.0.0** |
 | **barragens** | **bar:** | ICOLD, CBDB, SIGBM, Lei 12.334, PNSB | 🆕 **v2.0.0** |
 
 Sub-prefixos de contexto:

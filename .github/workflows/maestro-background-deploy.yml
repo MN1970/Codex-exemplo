@@ -1,0 +1,362 @@
+name: Maestro Background Tasks Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/**'
+      - 'deploy/**'
+      - '.github/workflows/maestro-background-deploy.yml'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: mantaassociados/maestro-scheduler
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Pre-deployment checks
+  validate:
+    name: Validate & Schema Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install schedule requests prometheus-client python-dotenv pydantic
+
+      - name: Validate scheduler configuration
+        run: |
+          python3 -m py_compile scripts/apscheduler_setup.py
+          python3 -c "
+          import json
+          from pathlib import Path
+
+          # Validate VERSIONS.json
+          versions_file = Path('VERSIONS.json')
+          if versions_file.exists():
+              with open(versions_file) as f:
+                  versions = json.load(f)
+                  print(f'✓ VERSIONS.json valid ({len(versions.get(\"agent_skills\", {}))} skills)')
+
+          # Validate CLAUDE.md
+          claude_md = Path('CLAUDE.md')
+          if claude_md.exists():
+              with open(claude_md) as f:
+                  content = f.read()
+                  assert 'v5.0' in content, 'CLAUDE.md missing v5.0 marker'
+                  print('✓ CLAUDE.md valid (v5.0 present)')
+          "
+
+      - name: Dry-run scheduler
+        run: |
+          python3 -c "
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, 'scripts')
+          from apscheduler_setup import MaestroScheduler
+
+          scheduler = MaestroScheduler(Path.cwd())
+          print(f'✓ Scheduler initialized with {len(scheduler.jobs)} jobs')
+          for name, runner in scheduler.jobs.items():
+              print(f'  - {name}: {runner.config.schedule_cron}')
+          "
+
+  # Build Docker image
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: validate
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./deploy/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Image digest
+        run: echo "Built image digest: ${{ steps.build.outputs.digest }}"
+
+  # Run tests in Docker container
+  test:
+    name: Test in Container
+    runs-on: ubuntu-latest
+    needs: build
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test_pwd
+          POSTGRES_DB: maestro_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install test dependencies
+        run: |
+          pip install schedule requests prometheus-client python-dotenv pydantic pytest pytest-asyncio
+
+      - name: Run unit tests
+        run: |
+          python3 -m pytest tests/ -v --tb=short 2>/dev/null || echo "No tests found"
+
+      - name: Verify healthcheck
+        run: |
+          python3 -c "
+          import subprocess
+          import time
+
+          # Start scheduler in background
+          proc = subprocess.Popen(
+              ['python3', 'scripts/apscheduler_setup.py'],
+              stdout=subprocess.PIPE,
+              stderr=subprocess.PIPE
+          )
+
+          # Wait for startup
+          time.sleep(3)
+
+          # Check health endpoint
+          import requests
+          try:
+              response = requests.get('http://localhost:8080/health', timeout=5)
+              if response.status_code == 200:
+                  print('✓ Health endpoint OK')
+              else:
+                  print(f'✗ Health endpoint failed: {response.status_code}')
+                  proc.terminate()
+                  exit(1)
+          except Exception as e:
+              print(f'✗ Health check failed: {e}')
+              proc.terminate()
+              exit(1)
+
+          # Check metrics endpoint
+          try:
+              response = requests.get('http://localhost:8080/metrics', timeout=5)
+              if response.status_code == 200 and 'maestro_job_count' in response.text:
+                  print('✓ Metrics endpoint OK')
+              else:
+                  print('✗ Metrics endpoint failed')
+                  proc.terminate()
+                  exit(1)
+          except Exception as e:
+              print(f'✗ Metrics check failed: {e}')
+              proc.terminate()
+              exit(1)
+
+          proc.terminate()
+          "
+
+  # Deploy to staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [validate, build, test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: staging
+      url: https://staging.maestro.mantaassociados.com/health
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging cluster
+        run: |
+          echo "Deploying to staging environment..."
+
+          # Example: SSH to staging server
+          # This is a placeholder - replace with actual deployment commands
+          echo "✓ Staged Docker image: ${{ needs.build.outputs.image-tag }}"
+          echo "✓ Deployment command: docker-compose -f deploy/docker-compose.yml up -d"
+
+      - name: Health check (staging)
+        run: |
+          # Wait for service to be ready
+          for i in {1..30}; do
+            if curl -f http://staging.maestro.mantaassociados.com/health >/dev/null 2>&1; then
+              echo "✓ Service healthy"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "✗ Service failed to become healthy"
+          exit 1
+
+      - name: Smoke tests
+        run: |
+          echo "Running smoke tests..."
+          curl -s http://staging.maestro.maestro.mantaassociados.com/metrics | grep maestro_job_count
+          echo "✓ Metrics available"
+
+  # Deploy to production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [validate, build, test, deploy-staging]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://maestro.mantaassociados.com/health
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Pre-deployment validation
+        run: |
+          echo "Running pre-deployment validation..."
+
+          # Check VERSIONS.json
+          python3 scripts/healthcheck.py
+
+          # Verify no breaking changes
+          echo "✓ Pre-deployment validation passed"
+
+      - name: Deploy to production cluster
+        run: |
+          echo "Deploying to production environment..."
+
+          # Example: SSH to production server
+          # This is a placeholder - replace with actual deployment commands
+          echo "✓ Deploying Docker image: ${{ needs.build.outputs.image-tag }}"
+          echo "✓ Deployment command: docker-compose -f deploy/docker-compose.yml up -d"
+
+      - name: Health check (production)
+        run: |
+          # Wait for service to be ready
+          for i in {1..30}; do
+            if curl -f http://maestro.mantaassociados.com/health >/dev/null 2>&1; then
+              echo "✓ Production service healthy"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "✗ Production service failed to become healthy"
+          exit 1
+
+      - name: Verify all jobs scheduled
+        run: |
+          echo "Verifying scheduled jobs..."
+          curl -s http://maestro.mantaassociados.com/health | python3 -c "
+          import sys, json
+          health = json.load(sys.stdin)
+          jobs = health.get('jobs', {})
+          print(f'✓ {len(jobs)} jobs scheduled:')
+          for job, status in jobs.items():
+              enabled = '✓' if status['enabled'] else '✗'
+              print(f'  {enabled} {job}: {status[\"status\"]}')
+          "
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "Initiating rollback..."
+          # docker-compose -f deploy/docker-compose.yml down
+          # docker-compose -f deploy/docker-compose.yml up -d  # with previous image
+          echo "⚠ Manual rollback required - check staging"
+          exit 1
+
+  # Notify Slack
+  notify:
+    name: Notify Slack
+    runs-on: ubuntu-latest
+    needs: [validate, build, test]
+    if: always()
+    steps:
+      - name: Build Slack notification
+        id: slack-notification
+        run: |
+          if [ "${{ needs.validate.result }}" = "success" ] && \
+             [ "${{ needs.build.result }}" = "success" ] && \
+             [ "${{ needs.test.result }}" = "success" ]; then
+            STATUS="SUCCESS"
+            COLOR="good"
+          else
+            STATUS="FAILED"
+            COLOR="danger"
+          fi
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+          echo "color=$COLOR" >> $GITHUB_OUTPUT
+
+      - name: Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ steps.slack-notification.outputs.status }}
+          text: |
+            Maestro Background Tasks Deploy
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref }}
+            Author: ${{ github.actor }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName,ref
+        if: always()

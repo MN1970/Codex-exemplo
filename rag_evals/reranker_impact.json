@@ -1,0 +1,503 @@
+{
+  "evaluation_date": "2026-07-25T02:19:48.316259+00:00",
+  "total_prompts": 32,
+  "baseline": {
+    "correct": 17,
+    "accuracy": 0.5312,
+    "latency_mean_ms": 0.01,
+    "latency_p95_ms": 0.01
+  },
+  "with_reranker": {
+    "correct": 18,
+    "accuracy": 0.5625,
+    "latency_mean_ms": 204.15,
+    "latency_p95_ms": 297.55
+  },
+  "impact": {
+    "accuracy_improvement": 3.12,
+    "latency_overhead_ms": 204.14,
+    "is_improvement": true
+  },
+  "detailed_results": [
+    {
+      "prompt": "Preciso de um preliminar de dragagem para o terminal de cont",
+      "expected": "agente-portos",
+      "baseline": {
+        "routed_agent": "agente-portos",
+        "status": "pass",
+        "latency_ms": 0.02
+      },
+      "with_reranker": {
+        "routed_agent": "agente-portos",
+        "status": "pass",
+        "latency_ms": 258.8
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Como dimensiono a defensa de um ber\u00e7o para navio Panamax?",
+      "expected": "agente-portos",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 146.49
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "A ANTAQ pede um cronograma de arrendamento para o TUP; ajuda",
+      "expected": "agente-portos",
+      "baseline": {
+        "routed_agent": "agente-portos",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-portos",
+        "status": "pass",
+        "latency_ms": 278.15
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Qual PIANC bulletin cobre projeto de quebra-mar em enrocamen",
+      "expected": "agente-portos",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 243.07
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Estamos com calado insuficiente no canal \u2014 preciso de plano ",
+      "expected": "agente-portos",
+      "baseline": {
+        "routed_agent": "agente-portos",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-portos",
+        "status": "pass",
+        "latency_ms": 299.68
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Quero dimensionar a pista de pouso do aeroporto regional (c\u00f3",
+      "expected": "agente-aeroportos",
+      "baseline": {
+        "routed_agent": "agente-aeroportos",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-aeroportos",
+        "status": "pass",
+        "latency_ms": 109.97
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Qual RBAC cobre projeto de p\u00e1tio de aeronaves?",
+      "expected": "agente-aeroportos",
+      "baseline": {
+        "routed_agent": "agente-aeroportos",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-aeroportos",
+        "status": "pass",
+        "latency_ms": 114.96
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Preciso do PCN da pista para opera\u00e7\u00e3o de A320neo.",
+      "expected": "agente-aeroportos",
+      "baseline": {
+        "routed_agent": "agente-aeroportos",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-aeroportos",
+        "status": "pass",
+        "latency_ms": 294.45
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Como projeto o balizamento CAT II para opera\u00e7\u00e3o noturna?",
+      "expected": "agente-aeroportos",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 132.25
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "ICAO Annex 14 permite offset lateral de RWY na minha configu",
+      "expected": "agente-aeroportos",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 297.55
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Preciso projetar uma ETA de ciclo completo para 200 mil hab.",
+      "expected": "agente-saneamento",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 290.37
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Como calculo golpe de ar\u00edete na adutora de 800mm?",
+      "expected": "agente-saneamento",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 106.04
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "AySA me pediu um estudo de reabilita\u00e7\u00e3o da Planta Norte.",
+      "expected": "agente-saneamento",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 284.4
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Qual m\u00e9todo de dimensionamento de rede de esgoto pela NBR 96",
+      "expected": "agente-saneamento",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 117.89
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Estou preparando o PMSB do munic\u00edpio; por onde come\u00e7ar?",
+      "expected": "agente-saneamento",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 177.97
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "A Lei 14.026 exige quais m\u00e9tricas do SNIS para universaliza\u00e7",
+      "expected": "agente-saneamento",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 200.68
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Estamos avaliando um leil\u00e3o de transmiss\u00e3o da ANEEL em 2027,",
+      "expected": "agente-energia",
+      "baseline": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 230.46
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Preciso da RAP referencial para uma LT de 500kV, 250km.",
+      "expected": "agente-energia",
+      "baseline": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 285.97
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Como fa\u00e7o o estudo de ampacidade para condutor ACSR 636 MCM?",
+      "expected": "agente-energia",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 110.56
+      },
+      "improvement": "yes"
+    },
+    {
+      "prompt": "Qual arranjo de subesta\u00e7\u00e3o recomenda para 230kV?",
+      "expected": "agente-energia",
+      "baseline": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 118.79
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "ONS pede um estudo de fluxo \u2014 pode revisar minha modelagem?",
+      "expected": "agente-energia",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 234.9
+      },
+      "improvement": "yes"
+    },
+    {
+      "prompt": "EPE liberou o R3 do projeto; preciso conferir contra o edita",
+      "expected": "agente-energia",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "pass",
+        "latency_ms": 221.98
+      },
+      "improvement": "yes"
+    },
+    {
+      "prompt": "Preciso projetar uma barragem CFRD de 80m de altura.",
+      "expected": "agente-barragens",
+      "baseline": {
+        "routed_agent": "agente-barragens",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-barragens",
+        "status": "pass",
+        "latency_ms": 159.94
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Como fa\u00e7o dam breach analysis p\u00f3s-Brumadinho?",
+      "expected": "agente-barragens",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 155.77
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Qual bulletin ICOLD cobre rejeitos filtrados (dry stack)?",
+      "expected": "agente-barragens",
+      "baseline": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 115.58
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "PNSB exige quais entreg\u00e1veis para revis\u00e3o peri\u00f3dica?",
+      "expected": "agente-barragens",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 212.03
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Tenho uma barragem TSF a montante que precisa descaracteriza",
+      "expected": "agente-barragens",
+      "baseline": {
+        "routed_agent": "agente-barragens",
+        "status": "pass",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-barragens",
+        "status": "pass",
+        "latency_ms": 173.95
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "O SIGBM da ANM me alertou sobre categoria de risco \u2014 o que f",
+      "expected": "agente-barragens",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 259.47
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Preciso do or\u00e7amento SICRO para pavimento CBUQ 5cm.",
+      "expected": "agente-infraestrutura S1",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 264.09
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Como projeto uma viga PRP para viaduto sobre a rodovia?",
+      "expected": "agente-infraestrutura S2",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 287.56
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Qual AMV recomenda para p\u00e1tio ferrovi\u00e1rio?",
+      "expected": "agente-infraestrutura S3",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 114.87
+      },
+      "improvement": "no"
+    },
+    {
+      "prompt": "Vou escavar uma esta\u00e7\u00e3o de metr\u00f4 pelo m\u00e9todo NATM.",
+      "expected": "agente-infraestrutura S4",
+      "baseline": {
+        "routed_agent": "agente-saneamento",
+        "status": "fail",
+        "latency_ms": 0.01
+      },
+      "with_reranker": {
+        "routed_agent": "agente-energia",
+        "status": "fail",
+        "latency_ms": 234.09
+      },
+      "improvement": "no"
+    }
+  ]
+}

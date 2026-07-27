@@ -30,10 +30,11 @@ DD e descomissionamento.
   Normativas), procedimentos de distribuição (PRODIST), procedimentos
   de rede (ONS).
 - **ONS** (Operador Nacional do Sistema) — despacho centralizado, MRE.
-- **EPE** (Empresa de Pesquisa Energética) — PDE (Plano Decenal de
-  Expansão de Energia), R1 (estudos de sistema), R2 (projeto
-  básico ambiental), R3 (projeto básico eletromecânico), R4 (relatório
-  ANEEL para autorizar leilão), R5 (edital de leilão).
+- **EPE** (Empresa de Pesquisa Energética — órgão federal de planejamento) —
+  PDE (Plano Decenal de Expansão de Energia). Relatórios de planejamento
+  de geração (tipo A/B — estudos de viabilidade): R1 (Estudos de Sistema),
+  R2 (Projeto Básico Ambiental), R3 (Projeto Básico Eletromecânico),
+  R4 (Relatório EPE para autorizar leilão), R5 (Edital de Leilão).
 - **CCEE** — Câmara de Comercialização de Energia Elétrica; ACR
   (Ambiente de Contratação Regulada) × ACL (Ambiente de Contratação
   Livre).
