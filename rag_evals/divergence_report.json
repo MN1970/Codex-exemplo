@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-07-25T02:20:21.040323+00:00",
+  "summary": {
+    "total_agents_scanned": 5,
+    "agents_with_drift": 5,
+    "total_divergences": 5
+  },
+  "divergences": [
+    {
+      "agent_id": "agente-aeroportos",
+      "status": "drift",
+      "divergence_reasons": [
+        "CHECKSUM_MISMATCH (expected=a8e1f3c2, actual=b392e63c)"
+      ],
+      "checksum_actual": "b392e63c04110e987910fa39f2fa0ef8",
+      "checksum_expected": "a8e1f3c2d4b6a7e9c1d3f5a7b9e1c3d5",
+      "remediation_command": "python scripts/regenerate_skill.py --agent agente-aeroportos"
+    },
+    {
+      "agent_id": "agente-barragens",
+      "status": "drift",
+      "divergence_reasons": [
+        "CHECKSUM_MISMATCH (expected=d3c4a2f5, actual=13c5e3ed)"
+      ],
+      "checksum_actual": "13c5e3ed80ff0a10f11e16f91ee3963c",
+      "checksum_expected": "d3c4a2f5b1e6a8c9d2e4f6a8c1d3e5f7",
+      "remediation_command": "python scripts/regenerate_skill.py --agent agente-barragens"
+    },
+    {
+      "agent_id": "agente-energia",
+      "status": "drift",
+      "divergence_reasons": [
+        "CHECKSUM_MISMATCH (expected=e2b5c3a1, actual=d8ca1b2b)"
+      ],
+      "checksum_actual": "d8ca1b2bbc318c1ae987d772c426213e",
+      "checksum_expected": "e2b5c3a1d6f4e7c8b9a1d2e3f4a5b6c7",
+      "remediation_command": "python scripts/regenerate_skill.py --agent agente-energia"
+    },
+    {
+      "agent_id": "agente-portos",
+      "status": "drift",
+      "divergence_reasons": [
+        "CHECKSUM_MISMATCH (expected=b7d3e5a2, actual=de56705e)"
+      ],
+      "checksum_actual": "de56705e8f1bb369782468b549bbc0ca",
+      "checksum_expected": "b7d3e5a2f1c4a6b8d1e3f5a7c9e1b3d5",
+      "remediation_command": "python scripts/regenerate_skill.py --agent agente-portos"
+    },
+    {
+      "agent_id": "agente-saneamento",
+      "status": "drift",
+      "divergence_reasons": [
+        "CHECKSUM_MISMATCH (expected=f1a3d2b4, actual=3435f9cb)"
+      ],
+      "checksum_actual": "3435f9cb8fa04b0048457010ff5c448a",
+      "checksum_expected": "f1a3d2b4c5e7a8b9c1d2e3f4a5b6c7d8",
+      "remediation_command": "python scripts/regenerate_skill.py --agent agente-saneamento"
+    }
+  ],
+  "remediation": {
+    "auto_sync_command": "python scripts/regenerate_skill.py --all --dry-run",
+    "agents_to_fix": [
+      {
+        "agent_id": "agente-aeroportos",
+        "command": "python scripts/regenerate_skill.py --agent agente-aeroportos"
+      },
+      {
+        "agent_id": "agente-barragens",
+        "command": "python scripts/regenerate_skill.py --agent agente-barragens"
+      },
+      {
+        "agent_id": "agente-energia",
+        "command": "python scripts/regenerate_skill.py --agent agente-energia"
+      },
+      {
+        "agent_id": "agente-portos",
+        "command": "python scripts/regenerate_skill.py --agent agente-portos"
+      },
+      {
+        "agent_id": "agente-saneamento",
+        "command": "python scripts/regenerate_skill.py --agent agente-saneamento"
+      }
+    ]
+  }
+}

@@ -1,0 +1,156 @@
+groups:
+  - name: maestro_scheduler
+    interval: 30s
+    rules:
+      # Job Failure Alert
+      - alert: MaestroJobFailure
+        expr: increase(maestro_job_failure_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+          service: maestro
+          component: scheduler
+        annotations:
+          summary: "Maestro job {{ $labels.job_name }} failed"
+          description: "Job {{ $labels.job_name }} has failed {{ $value }} times in the last 5 minutes"
+          runbook_url: "https://manta.wiki/maestro-v5/troubleshooting#job-failures"
+
+      # Job Timeout Alert
+      - alert: MaestroJobTimeout
+        expr: maestro_last_job_duration_ms > 600000
+        for: 2m
+        labels:
+          severity: critical
+          service: maestro
+          component: scheduler
+          job_name: "{{ $labels.job_name }}"
+        annotations:
+          summary: "Job {{ $labels.job_name }} timeout"
+          description: "Job {{ $labels.job_name }} exceeded 10 minutes ({{ $value }}ms)"
+          runbook_url: "https://manta.wiki/maestro-v5/troubleshooting#high-execution-time"
+
+      # Scheduler Down Alert
+      - alert: MaestroSchedulerDown
+        expr: up{job="maestro-scheduler"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          service: maestro
+          component: scheduler
+        annotations:
+          summary: "Maestro scheduler is down"
+          description: "The maestro APScheduler service is unreachable for the last 5 minutes"
+          runbook_url: "https://manta.wiki/maestro-v5/troubleshooting#service-wont-start"
+
+      # High Failure Rate
+      - alert: MaestroHighFailureRate
+        expr: |
+          (
+            sum(rate(maestro_job_failure_total[1h]))
+            /
+            (sum(rate(maestro_job_success_total[1h])) + sum(rate(maestro_job_failure_total[1h])))
+          ) > 0.2
+        for: 10m
+        labels:
+          severity: warning
+          service: maestro
+          component: scheduler
+        annotations:
+          summary: "High job failure rate (>20%)"
+          description: "Maestro jobs have >20% failure rate over the last hour"
+          runbook_url: "https://manta.wiki/maestro-v5/troubleshooting"
+
+      # RAG Collection Missing
+      - alert: RAGCollectionMissing
+        expr: |
+          maestro_rag_collections < 8
+        for: 5m
+        labels:
+          severity: warning
+          service: maestro
+          component: rag
+        annotations:
+          summary: "RAG collections count is low"
+          description: "Expected 9 RAG collections, found {{ $value }}"
+          runbook_url: "https://manta.wiki/maestro-v5/rag-collections"
+
+      # Agent Memory High
+      - alert: AgentMemoryHigh
+        expr: maestro_agent_memory_mb > 100
+        for: 10m
+        labels:
+          severity: warning
+          service: maestro
+          component: agent
+          agent_id: "{{ $labels.agent_id }}"
+        annotations:
+          summary: "Agent {{ $labels.agent_id }} memory high"
+          description: "Agent memory usage is {{ $value }}MB (threshold: 100MB)"
+          runbook_url: "https://manta.wiki/maestro-v5/troubleshooting#high-memory-usage"
+
+      # Database Connection Error
+      - alert: MaestroDBConnectionError
+        expr: |
+          increase(maestro_db_connection_errors_total[5m]) > 0
+        for: 2m
+        labels:
+          severity: critical
+          service: maestro
+          component: database
+        annotations:
+          summary: "Database connection errors"
+          description: "Maestro is unable to connect to PostgreSQL database"
+          runbook_url: "https://manta.wiki/maestro-v5/troubleshooting#database-connection-errors"
+
+      # Prometheus Alert Manager Connectivity
+      - alert: AlertManagerUnreachable
+        expr: |
+          up{job="alertmanager"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          service: maestro
+          component: monitoring
+        annotations:
+          summary: "AlertManager is unreachable"
+          description: "Cannot reach AlertManager for the last 5 minutes"
+          runbook_url: "https://manta.wiki/maestro-v5/monitoring#prometheus-alerts"
+
+  - name: maestro_sla
+    interval: 1m
+    rules:
+      # SLA: 95% uptime
+      - alert: MaestroUptimeSLAViolation
+        expr: |
+          (
+            sum(rate(maestro_job_success_total[24h]))
+            /
+            (sum(rate(maestro_job_success_total[24h])) + sum(rate(maestro_job_failure_total[24h])))
+          ) < 0.95
+        for: 30m
+        labels:
+          severity: warning
+          service: maestro
+          component: sla
+        annotations:
+          summary: "Maestro SLA violation (uptime < 95%)"
+          description: "24-hour uptime is {{ $value | humanizePercentage }} (threshold: 95%)"
+          runbook_url: "https://manta.wiki/maestro-v5/sla-monitoring"
+
+  - name: maestro_performance
+    interval: 30s
+    rules:
+      # High Percentile Latency
+      - alert: MaestroHighP95Latency
+        expr: |
+          histogram_quantile(0.95, rate(maestro_job_duration_ms_bucket[5m])) > 5000
+        for: 10m
+        labels:
+          severity: warning
+          service: maestro
+          component: performance
+          job_name: "{{ $labels.job_name }}"
+        annotations:
+          summary: "High P95 latency for {{ $labels.job_name }}"
+          description: "P95 job latency is {{ $value }}ms (threshold: 5000ms)"
+          runbook_url: "https://manta.wiki/maestro-v5/performance-tuning"
