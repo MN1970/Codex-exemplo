@@ -1,0 +1,268 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: manta-fase4-prod
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'manta-fase4-prod'
+        environment: 'production'
+
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+
+    rule_files:
+    - /etc/prometheus/rules/*.yml
+
+    scrape_configs:
+    - job_name: 'prometheus'
+      static_configs:
+      - targets: ['localhost:9090']
+
+    - job_name: 'platform-router'
+      kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+          - manta-fase4-prod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: platform-router
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+
+    - job_name: 'code-refactor-engine'
+      kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+          - manta-fase4-prod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: code-refactor-engine
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+
+    - job_name: 'ml-inference'
+      kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+          - manta-fase4-prod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: ml-inference
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+
+    - job_name: 'jaeger-collector'
+      static_configs:
+      - targets: ['jaeger-collector:14269']
+
+    - job_name: 'kube-state-metrics'
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: kube-state-metrics
+
+  rules.yml: |
+    groups:
+    - name: fase4_alerts
+      interval: 30s
+      rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }}"
+
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, http_request_duration_seconds) > 5
+        for: 5m
+        annotations:
+          summary: "High latency detected"
+          description: "P95 latency is {{ $value }}s"
+
+      - alert: MLModelDrift
+        expr: ml_model_drift_score > 0.3
+        for: 10m
+        annotations:
+          summary: "ML model drift detected"
+          description: "Drift score is {{ $value }}"
+
+      - alert: AnomalyDetected
+        expr: anomaly_score > 0.7
+        for: 1m
+        annotations:
+          summary: "Anomaly detected in service"
+          description: "Anomaly score is {{ $value }}"
+
+      - alert: PodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+        for: 5m
+        annotations:
+          summary: "Pod is crash looping"
+          description: "Pod {{ $labels.pod }} in {{ $labels.namespace }} is restarting"
+
+      - alert: PersistentVolumeFillingUp
+        expr: kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes > 0.8
+        for: 5m
+        annotations:
+          summary: "PersistentVolume filling up"
+          description: "PVC {{ $labels.persistentvolumeclaim }} is {{ $value | humanizePercentage }} full"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: manta-fase4-prod
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 5m
+      slack_api_url: 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+
+    route:
+      receiver: 'default'
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 12h
+      routes:
+      - match:
+          severity: critical
+        receiver: 'critical'
+        continue: true
+      - match:
+          severity: warning
+        receiver: 'default'
+        continue: true
+
+    receivers:
+    - name: 'default'
+      slack_configs:
+      - channel: '#alerts'
+        title: '{{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+    - name: 'critical'
+      slack_configs:
+      - channel: '#critical-alerts'
+        title: 'CRITICAL: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+      pagerduty_configs:
+      - service_key: 'YOUR_PAGERDUTY_KEY'
+
+    inhibit_rules:
+    - source_match:
+        severity: 'critical'
+      target_match:
+        severity: 'warning'
+      equal: ['alertname', 'cluster', 'service']
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: manta-fase4-prod
+data:
+  prometheus.yaml: |
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      access: proxy
+      url: http://prometheus:9090
+      isDefault: true
+      editable: true
+    - name: Jaeger
+      type: jaeger
+      access: proxy
+      url: http://jaeger-query:16686
+      jsonData:
+        spanNameSource: "tags"
+        tagNameMappings:
+          http.method: "http.method"
+          http.url: "http.url"
+          http.status_code: "http.status_code"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-secrets
+  namespace: manta-fase4-prod
+type: Opaque
+stringData:
+  admin-password: "changeme"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: manta-fase4-prod
+data:
+  fase4-overview.json: |
+    {
+      "dashboard": {
+        "title": "Fase 4 - Git Evolution Suite Overview",
+        "panels": [
+          {
+            "title": "Request Rate",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total[5m])) by (job)"
+              }
+            ]
+          },
+          {
+            "title": "Error Rate",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (job)"
+              }
+            ]
+          },
+          {
+            "title": "P95 Latency",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, http_request_duration_seconds) by (job)"
+              }
+            ]
+          },
+          {
+            "title": "ML Model Confidence",
+            "targets": [
+              {
+                "expr": "avg(ml_model_confidence_score) by (model_version)"
+              }
+            ]
+          }
+        ]
+      }
+    }

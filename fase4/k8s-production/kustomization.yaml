@@ -1,0 +1,122 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: fase4-production
+  namespace: manta-fase4-prod
+
+commonLabels:
+  app.kubernetes.io/name: fase4
+  app.kubernetes.io/version: "1.0.0"
+  app.kubernetes.io/managed-by: kustomize
+
+commonAnnotations:
+  manta.com/owner: "Platform Engineering"
+  manta.com/contact: "platform-team@manta.com"
+  manta.com/environment: "production"
+
+namespace: manta-fase4-prod
+
+# Resources in deployment order
+resources:
+- namespace.yaml
+- storage.yaml
+- monitoring-configs.yaml
+- pillar-c-observability.yaml
+- pillar-a-router.yaml
+- pillar-b-refactor.yaml
+- pillar-d-ml-model.yaml
+- ingress-and-networking.yaml
+
+# Secrets - must be created separately via secure mechanism
+# - secrets-template.yaml
+
+# Image configurations
+images:
+- name: manta-fase4/platform-router
+  newTag: "1.0.0"
+- name: manta-fase4/code-refactor-engine
+  newTag: "1.0.0"
+- name: manta-fase4/ml-inference-service
+  newTag: "2.0.0"
+- name: manta-fase4/ml-model-loader
+  newTag: "1.0.0"
+- name: manta-fase4/ml-daily-scorer
+  newTag: "2.0.0"
+
+# Replica overrides for different environments
+replicas:
+- name: platform-router
+  count: 3
+- name: code-refactor-engine
+  count: 2
+- name: ml-inference
+  count: 3
+
+# ConfigMap generator for local file references
+configMapGenerator:
+- name: jaeger-config
+  files:
+  - sampling.json
+  behavior: replace
+- name: refactor-rules
+  files:
+  - detection-rules.json
+  behavior: replace
+- name: ml-model-config
+  files:
+  - model-config.yaml
+  behavior: replace
+- name: ml-anomaly-config
+  files:
+  - anomaly-detection.yaml
+  behavior: replace
+
+# Patches for environment-specific overrides
+patchesStrategicMerge:
+- |
+  apiVersion: v1
+  kind: ResourceQuota
+  metadata:
+    name: manta-fase4-quota
+    namespace: manta-fase4-prod
+  spec:
+    hard:
+      requests.cpu: "32"
+      requests.memory: "64Gi"
+      limits.cpu: "64"
+      limits.memory: "128Gi"
+
+# Vars for reference values
+vars:
+- name: NAMESPACE
+  objref:
+    kind: Namespace
+    name: manta-fase4-prod
+    apiVersion: v1
+  fieldref:
+    fieldpath: metadata.name
+- name: SERVICE_ACCOUNT
+  objref:
+    kind: ServiceAccount
+    name: manta-fase4-sa
+    apiVersion: v1
+    namespace: manta-fase4-prod
+  fieldref:
+    fieldpath: metadata.name
+
+# Label selectors for grouping
+labelSelector:
+  matchLabels:
+    app.kubernetes.io/name: fase4
+
+# Metadata to include in all resources
+generatorOptions:
+  disableNameSuffixHash: false
+  annotations:
+    kustomize.config.k8s.io/generated: "true"
+    kustomize.config.k8s.io/version: "4.5.0"
+
+# Sort manifests before applying
+sortOptions:
+  order: fifo

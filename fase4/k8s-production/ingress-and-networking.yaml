@@ -1,0 +1,274 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fase4-ingress
+  namespace: manta-fase4-prod
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/limit-rps: "50"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+spec:
+  tls:
+  - hosts:
+    - router.manta.local
+    - refactor.manta.local
+    - observability.manta.local
+    - ml.manta.local
+    secretName: fase4-tls-cert
+  rules:
+  - host: router.manta.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: platform-router
+            port:
+              number: 80
+  - host: refactor.manta.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: code-refactor-engine
+            port:
+              number: 8081
+  - host: observability.manta.local
+    http:
+      paths:
+      - path: /jaeger
+        pathType: Prefix
+        backend:
+          service:
+            name: jaeger-query
+            port:
+              number: 16686
+      - path: /grafana
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+      - path: /prometheus
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus
+            port:
+              number: 9090
+      - path: /alertmanager
+        pathType: Prefix
+        backend:
+          service:
+            name: alertmanager
+            port:
+              number: 9093
+  - host: ml.manta.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ml-inference
+            port:
+              number: 8082
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: platform-router-pdb
+  namespace: manta-fase4-prod
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: platform-router
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ml-inference-pdb
+  namespace: manta-fase4-prod
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: ml-inference
+---
+apiVersion: v1
+kind: NetworkPolicy
+metadata:
+  name: platform-router-netpol
+  namespace: manta-fase4-prod
+spec:
+  podSelector:
+    matchLabels:
+      app: platform-router
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: manta-fase4-prod
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8080
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+  - to:
+    - podSelector:
+        matchLabels:
+          app: code-refactor-engine
+    ports:
+    - protocol: TCP
+      port: 8081
+  - to:
+    - podSelector:
+        matchLabels:
+          app: ml-inference
+    ports:
+    - protocol: TCP
+      port: 8082
+  - to:
+    - podSelector:
+        matchLabels:
+          app: jaeger-collector
+    ports:
+    - protocol: TCP
+      port: 4317
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+---
+apiVersion: v1
+kind: NetworkPolicy
+metadata:
+  name: code-refactor-netpol
+  namespace: manta-fase4-prod
+spec:
+  podSelector:
+    matchLabels:
+      app: code-refactor-engine
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: platform-router
+    ports:
+    - protocol: TCP
+      port: 8081
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: jaeger-collector
+    ports:
+    - protocol: TCP
+      port: 4317
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+---
+apiVersion: v1
+kind: NetworkPolicy
+metadata:
+  name: ml-inference-netpol
+  namespace: manta-fase4-prod
+spec:
+  podSelector:
+    matchLabels:
+      app: ml-inference
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: platform-router
+    ports:
+    - protocol: TCP
+      port: 8082
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: jaeger-collector
+    ports:
+    - protocol: TCP
+      port: 4317
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+---
+apiVersion: v1
+kind: NetworkPolicy
+metadata:
+  name: observability-netpol
+  namespace: manta-fase4-prod
+spec:
+  podSelector:
+    matchLabels:
+      component: observability
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: manta-fase4-prod
+    ports:
+    - protocol: TCP
+      port: 4317
+    - protocol: TCP
+      port: 4318
+    - protocol: TCP
+      port: 9411
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 9200
+    - protocol: TCP
+      port: 5432
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53

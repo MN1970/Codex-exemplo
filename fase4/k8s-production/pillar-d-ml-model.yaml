@@ -1,0 +1,328 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ml-model-config
+  namespace: manta-fase4-prod
+data:
+  model-config.yaml: |
+    model:
+      name: "fase4-ml-ensemble-v2.0"
+      version: "2.0.0"
+      ensemble:
+        random_forest:
+          weight: 0.65
+          params:
+            n_estimators: 500
+            max_depth: 30
+            min_samples_split: 5
+            random_state: 42
+        xgboost:
+          weight: 0.35
+          params:
+            n_estimators: 300
+            max_depth: 8
+            learning_rate: 0.05
+            subsample: 0.8
+      features:
+        count: 50
+        categories:
+          - merge_metadata: 8
+          - code_metrics: 12
+          - author_history: 10
+          - repository_state: 9
+          - ci_signals: 11
+      accuracy_metrics:
+        precision: 0.9365
+        recall: 0.8847
+        f1_score: 0.9098
+        auc_roc: 0.9721
+      thresholds:
+        phase_0_audit: 0.95
+        phase_1_auto_merge: 0.90
+        phase_2_medium_risk: 0.85
+        phase_3_full_deployment: 0.75
+      fallback:
+        enabled: true
+        trigger_accuracy: 0.924
+        model_version: "1.0"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ml-anomaly-config
+  namespace: manta-fase4-prod
+data:
+  anomaly-detection.yaml: |
+    latency_anomaly:
+      detector: "isolation_forest"
+      window_size: 3600
+      contamination: 0.05
+      features:
+        - end_to_end_latency_ms
+        - inference_latency_ms
+        - queue_wait_ms
+      alert_threshold_p95: 5000
+    ml_drift:
+      detector: "dbscan"
+      window_size: 86400
+      eps: 0.5
+      min_samples: 10
+      features:
+        - prediction_entropy
+        - feature_distribution_kl_divergence
+        - class_distribution_change
+      alert_threshold: 0.3
+    model_quality:
+      detector: "statistical"
+      baseline_f1: 0.9098
+      degradation_threshold: 0.02
+      retraining_trigger: 0.90
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-inference
+  namespace: manta-fase4-prod
+  labels:
+    app: ml-inference
+    version: v2.0.0
+    component: pillar-d
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: ml-inference
+  template:
+    metadata:
+      labels:
+        app: ml-inference
+        version: v2.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9092"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: manta-fase4-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      initContainers:
+      - name: model-loader
+        image: manta-fase4/ml-model-loader:1.0.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+        env:
+        - name: MODEL_NAME
+          value: "fase4-ml-ensemble-v2.0"
+        - name: MODEL_VERSION
+          value: "2.0.0"
+      containers:
+      - name: inference
+        image: manta-fase4/ml-inference-service:2.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8082
+          protocol: TCP
+        - name: metrics
+          containerPort: 9092
+          protocol: TCP
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: ENVIRONMENT
+          value: "production"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: MODEL_PATH
+          value: "/models/fase4-ml-ensemble-v2.0"
+        - name: MODEL_VERSION
+          value: "2.0.0"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://jaeger-collector:4317"
+        - name: OTEL_SERVICE_NAME
+          value: "ml-inference"
+        - name: INFERENCE_TIMEOUT_MS
+          value: "30000"
+        - name: BATCH_SIZE
+          value: "32"
+        - name: ENABLE_ANOMALY_DETECTION
+          value: "true"
+        - name: ENABLE_ACTIVE_LEARNING
+          value: "true"
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+          readOnly: true
+        - name: cache
+          mountPath: /var/cache/ml
+        resources:
+          requests:
+            cpu: "2"
+            memory: "2Gi"
+          limits:
+            cpu: "4"
+            memory: "4Gi"
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8082
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: 8082
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 30
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: ml-model-pvc
+      - name: cache
+        emptyDir:
+          sizeLimit: 1Gi
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - ml-inference
+              topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ml-inference
+  namespace: manta-fase4-prod
+  labels:
+    app: ml-inference
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8082
+    targetPort: 8082
+    protocol: TCP
+  - name: metrics
+    port: 9092
+    targetPort: 9092
+    protocol: TCP
+  selector:
+    app: ml-inference
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ml-inference-hpa
+  namespace: manta-fase4-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ml-inference
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 30
+      selectPolicy: Max
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ml-daily-scoring
+  namespace: manta-fase4-prod
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: manta-fase4-sa
+          containers:
+          - name: daily-scorer
+            image: manta-fase4/ml-daily-scorer:2.0.0
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: MODEL_PATH
+              value: "/models/fase4-ml-ensemble-v2.0"
+            - name: BATCH_SIZE
+              value: "100"
+            - name: OUTPUT_PATH
+              value: "/output/daily-scores"
+            volumeMounts:
+            - name: model-storage
+              mountPath: /models
+              readOnly: true
+            - name: output
+              mountPath: /output
+            resources:
+              requests:
+                cpu: "2"
+                memory: "2Gi"
+              limits:
+                cpu: "4"
+                memory: "4Gi"
+          volumes:
+          - name: model-storage
+            persistentVolumeClaim:
+              claimName: ml-model-pvc
+          - name: output
+            emptyDir: {}
+          restartPolicy: OnFailure
+          backoffLimit: 3

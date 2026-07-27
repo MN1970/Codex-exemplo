@@ -1,0 +1,235 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: refactor-rules
+  namespace: manta-fase4-prod
+data:
+  detection-rules.json: |
+    {
+      "javascript": {
+        "rules": [
+          {"id": "JS001", "name": "unused_variable", "severity": "low", "enabled": true},
+          {"id": "JS002", "name": "unused_function", "severity": "low", "enabled": true},
+          {"id": "JS003", "name": "unreachable_code", "severity": "medium", "enabled": true},
+          {"id": "JS004", "name": "empty_catch_block", "severity": "high", "enabled": true},
+          {"id": "JS005", "name": "duplicate_code_block", "severity": "medium", "enabled": true},
+          {"id": "JS006", "name": "async_await_deadlock", "severity": "high", "enabled": true},
+          {"id": "JS007", "name": "memory_leak_listener", "severity": "high", "enabled": true},
+          {"id": "JS008", "name": "callback_hell", "severity": "medium", "enabled": true},
+          {"id": "JS009", "name": "implicit_globals", "severity": "high", "enabled": true},
+          {"id": "JS010", "name": "typeof_null", "severity": "medium", "enabled": true},
+          {"id": "JS011", "name": "missing_await", "severity": "high", "enabled": true},
+          {"id": "JS012", "name": "race_condition", "severity": "high", "enabled": true},
+          {"id": "JS013", "name": "buffer_overflow_risk", "severity": "critical", "enabled": true},
+          {"id": "JS014", "name": "prototype_pollution", "severity": "critical", "enabled": true},
+          {"id": "JS015", "name": "timing_attack_vulnerability", "severity": "high", "enabled": true}
+        ]
+      },
+      "python": {
+        "rules": [
+          {"id": "PY001", "name": "unused_import", "severity": "low", "enabled": true},
+          {"id": "PY002", "name": "undefined_variable", "severity": "high", "enabled": true},
+          {"id": "PY003", "name": "except_bare", "severity": "high", "enabled": true},
+          {"id": "PY004", "name": "infinite_loop", "severity": "medium", "enabled": true},
+          {"id": "PY005", "name": "mutable_default_argument", "severity": "medium", "enabled": true},
+          {"id": "PY006", "name": "pickle_deserialization", "severity": "critical", "enabled": true},
+          {"id": "PY007", "name": "eval_execution", "severity": "critical", "enabled": true},
+          {"id": "PY008", "name": "sql_injection", "severity": "critical", "enabled": true},
+          {"id": "PY009", "name": "path_traversal", "severity": "critical", "enabled": true},
+          {"id": "PY010", "name": "insecure_random", "severity": "high", "enabled": true},
+          {"id": "PY011", "name": "weak_hash_algorithm", "severity": "high", "enabled": true},
+          {"id": "PY012", "name": "hardcoded_credentials", "severity": "critical", "enabled": true},
+          {"id": "PY013", "name": "command_injection", "severity": "critical", "enabled": true},
+          {"id": "PY014", "name": "xxe_vulnerability", "severity": "critical", "enabled": true},
+          {"id": "PY015", "name": "unsafe_yaml_load", "severity": "critical", "enabled": true}
+        ]
+      },
+      "java": {
+        "rules": [
+          {"id": "JV001", "name": "unused_field", "severity": "low", "enabled": true},
+          {"id": "JV002", "name": "null_pointer_dereference", "severity": "high", "enabled": true},
+          {"id": "JV003", "name": "unchecked_exception", "severity": "medium", "enabled": true},
+          {"id": "JV004", "name": "resource_leak", "severity": "high", "enabled": true},
+          {"id": "JV005", "name": "thread_safety_violation", "severity": "high", "enabled": true},
+          {"id": "JV006", "name": "sql_injection", "severity": "critical", "enabled": true},
+          {"id": "JV007", "name": "xxe_vulnerability", "severity": "critical", "enabled": true},
+          {"id": "JV008", "name": "insecure_deserialization", "severity": "critical", "enabled": true},
+          {"id": "JV009", "name": "weak_cipher_algorithm", "severity": "high", "enabled": true},
+          {"id": "JV010", "name": "hardcoded_credentials", "severity": "critical", "enabled": true},
+          {"id": "JV011", "name": "command_injection", "severity": "critical", "enabled": true},
+          {"id": "JV012", "name": "path_traversal", "severity": "critical", "enabled": true},
+          {"id": "JV013", "name": "race_condition", "severity": "high", "enabled": true},
+          {"id": "JV014", "name": "information_disclosure", "severity": "medium", "enabled": true},
+          {"id": "JV015", "name": "dos_attack_vector", "severity": "high", "enabled": true}
+        ]
+      },
+      "golang": {
+        "rules": [
+          {"id": "GO001", "name": "unused_variable", "severity": "low", "enabled": true},
+          {"id": "GO002", "name": "nil_dereference", "severity": "high", "enabled": true},
+          {"id": "GO003", "name": "unclosed_resource", "severity": "high", "enabled": true},
+          {"id": "GO004", "name": "goroutine_leak", "severity": "high", "enabled": true},
+          {"id": "GO005", "name": "race_condition", "severity": "high", "enabled": true},
+          {"id": "GO006", "name": "sql_injection", "severity": "critical", "enabled": true},
+          {"id": "GO007", "name": "command_injection", "severity": "critical", "enabled": true},
+          {"id": "GO008", "name": "path_traversal", "severity": "critical", "enabled": true},
+          {"id": "GO009", "name": "weak_cryptography", "severity": "high", "enabled": true},
+          {"id": "GO010", "name": "hardcoded_credentials", "severity": "critical", "enabled": true},
+          {"id": "GO011", "name": "insecure_deserialization", "severity": "critical", "enabled": true},
+          {"id": "GO012", "name": "insecure_tls_configuration", "severity": "high", "enabled": true},
+          {"id": "GO013", "name": "buffer_overflow_potential", "severity": "high", "enabled": true},
+          {"id": "GO014", "name": "memory_leak", "severity": "medium", "enabled": true},
+          {"id": "GO015", "name": "dos_vulnerability", "severity": "high", "enabled": true}
+        ]
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-refactor-engine
+  namespace: manta-fase4-prod
+  labels:
+    app: code-refactor-engine
+    version: v1.0.0
+    component: pillar-b
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: code-refactor-engine
+  template:
+    metadata:
+      labels:
+        app: code-refactor-engine
+        version: v1.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9091"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: manta-fase4-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: refactor
+        image: manta-fase4/code-refactor-engine:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8081
+          protocol: TCP
+        - name: metrics
+          containerPort: 9091
+          protocol: TCP
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: ENVIRONMENT
+          value: "production"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://jaeger-collector:4317"
+        - name: OTEL_SERVICE_NAME
+          value: "code-refactor-engine"
+        - name: AST_ANALYSIS_TIMEOUT_MS
+          value: "30000"
+        - name: MAX_FILE_SIZE_MB
+          value: "50"
+        volumeMounts:
+        - name: rules
+          mountPath: /etc/refactor/rules
+          readOnly: true
+        - name: analysis-cache
+          mountPath: /var/cache/analysis
+        resources:
+          requests:
+            cpu: "1"
+            memory: "1Gi"
+          limits:
+            cpu: "4"
+            memory: "4Gi"
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+      volumes:
+      - name: rules
+        configMap:
+          name: refactor-rules
+      - name: analysis-cache
+        emptyDir:
+          sizeLimit: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-refactor-engine
+  namespace: manta-fase4-prod
+  labels:
+    app: code-refactor-engine
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8081
+    targetPort: 8081
+    protocol: TCP
+  - name: metrics
+    port: 9091
+    targetPort: 9091
+    protocol: TCP
+  selector:
+    app: code-refactor-engine
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: code-refactor-hpa
+  namespace: manta-fase4-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: code-refactor-engine
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

@@ -1,0 +1,128 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: manta-fase4-prod
+  labels:
+    environment: production
+    version: 1.0.0
+    managed-by: gitops
+  annotations:
+    description: "Production namespace for Fase 4 - Git Evolution Suite"
+    owner: "Platform Engineering"
+    contact: "platform-team@manta.com"
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: manta-fase4-quota
+  namespace: manta-fase4-prod
+spec:
+  hard:
+    requests.cpu: "32"
+    requests.memory: "64Gi"
+    limits.cpu: "64"
+    limits.memory: "128Gi"
+    pods: "100"
+    persistentvolumeclaims: "20"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: manta-fase4-limits
+  namespace: manta-fase4-prod
+spec:
+  limits:
+  - max:
+      cpu: "4"
+      memory: "8Gi"
+    min:
+      cpu: "100m"
+      memory: "128Mi"
+    type: Container
+  - max:
+      cpu: "8"
+      memory: "16Gi"
+    min:
+      cpu: "200m"
+      memory: "256Mi"
+    type: Pod
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: manta-fase4-network-policy
+  namespace: manta-fase4-prod
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: manta-fase4-prod
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 5432
+    - protocol: TCP
+      port: 6379
+  - to:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: manta-fase4-sa
+  namespace: manta-fase4-prod
+  annotations:
+    description: "Service account for Fase 4 deployments"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: manta-fase4-role
+  namespace: manta-fase4-prod
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "pods/status"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "statefulsets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: manta-fase4-rolebinding
+  namespace: manta-fase4-prod
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: manta-fase4-role
+subjects:
+- kind: ServiceAccount
+  name: manta-fase4-sa
+  namespace: manta-fase4-prod
