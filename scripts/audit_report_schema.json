@@ -1,0 +1,248 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Manta Maestro Agent Audit Report v5.0",
+  "description": "Output schema for audit_agents.py v2 — validates agent synchronization against canonical CLAUDE.md + VERSIONS.json",
+  "type": "object",
+  "required": [
+    "records",
+    "divergence_summary",
+    "timestamp",
+    "claude_md_version",
+    "expected_agents",
+    "expected_count"
+  ],
+  "properties": {
+    "records": {
+      "type": "array",
+      "description": "Audit record for each scanned agent",
+      "items": {
+        "type": "object",
+        "required": [
+          "agent_id",
+          "agent_name",
+          "status",
+          "model",
+          "tools",
+          "checksum_md5",
+          "canonical_checksum",
+          "divergences",
+          "num_divergences",
+          "last_validated_at"
+        ],
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "pattern": "^(maestro|agente-[a-z-]+)$",
+            "description": "Unique agent identifier (e.g., agente-saneamento)"
+          },
+          "agent_name": {
+            "type": "string",
+            "description": "Display name from frontmatter"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "synced",
+              "drift",
+              "not_in_registry",
+              "missing_version",
+              "incomplete"
+            ],
+            "description": "Agent sync status"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "haiku",
+              "sonnet",
+              "opus",
+              null
+            ],
+            "description": "Model tier from frontmatter"
+          },
+          "tools": {
+            "type": "string",
+            "description": "Comma-separated list of available tools"
+          },
+          "checksum_md5": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$|^ERROR$",
+            "description": "Current MD5 checksum of agent file"
+          },
+          "canonical_checksum": {
+            "type": "string",
+            "description": "Expected checksum from VERSIONS.json (or N/A)"
+          },
+          "divergences": {
+            "type": "array",
+            "description": "List of detected divergences",
+            "items": {
+              "type": "string",
+              "enum": [
+                "NOT_IN_CANONICAL_20",
+                "CHECKSUM_MISMATCH",
+                "NO_V5_SPEC_IN_VERSIONS_JSON",
+                "MODEL_MISMATCH",
+                "SKILL_PIN_MISMATCH",
+                "MISSING_RAG_COLLECTION_SPEC"
+              ]
+            }
+          },
+          "num_divergences": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Count of divergences"
+          },
+          "last_validated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of audit"
+          },
+          "remediation_suggest": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Suggested remediation command (null if synced)"
+          }
+        }
+      }
+    },
+    "divergence_summary": {
+      "type": "object",
+      "required": [
+        "total",
+        "synced",
+        "drift",
+        "not_in_registry",
+        "missing_version",
+        "incomplete"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "description": "Total agents scanned"
+        },
+        "synced": {
+          "type": "integer",
+          "description": "Agents without divergences"
+        },
+        "drift": {
+          "type": "integer",
+          "description": "Agents with checksum/spec mismatches"
+        },
+        "not_in_registry": {
+          "type": "integer",
+          "description": "Agents not in canonical 20"
+        },
+        "missing_version": {
+          "type": "integer",
+          "description": "Agents without v5.0 spec in VERSIONS.json"
+        },
+        "incomplete": {
+          "type": "integer",
+          "description": "Agents missing optional specs (e.g., RAG collection)"
+        }
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 audit report timestamp"
+    },
+    "claude_md_version": {
+      "type": "string",
+      "pattern": "^v[0-9]+\\.[0-9]+$",
+      "description": "CLAUDE.md schema version"
+    },
+    "expected_agents": {
+      "type": "array",
+      "description": "List of 20 canonical agent IDs",
+      "items": {
+        "type": "string",
+        "pattern": "^(maestro|agente-[a-z-]+)$"
+      },
+      "minItems": 20,
+      "maxItems": 20
+    },
+    "expected_count": {
+      "type": "integer",
+      "const": 20,
+      "description": "Always 20 agents in v5.0 spec"
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message if audit failed (optional)"
+    }
+  },
+  "examples": [
+    {
+      "records": [
+        {
+          "agent_id": "agente-saneamento",
+          "agent_name": "agente-saneamento",
+          "status": "synced",
+          "model": "sonnet",
+          "tools": "Read, Grep, Glob, Bash, WebSearch, WebFetch",
+          "checksum_md5": "f1a3d2b4c5e7a8b9c1d2e3f4a5b6c7d8",
+          "canonical_checksum": "f1a3d2b4c5e7a8b9c1d2e3f4a5b6c7d8",
+          "divergences": [],
+          "num_divergences": 0,
+          "last_validated_at": "2026-07-25T14:32:00Z",
+          "remediation_suggest": null
+        },
+        {
+          "agent_id": "agente-energia",
+          "agent_name": "agente-energia",
+          "status": "drift",
+          "model": "sonnet",
+          "tools": "Read, Grep, Glob, Bash",
+          "checksum_md5": "d1a4f3c2b5e6a7d8e9f1a2b3c4d5e6f7",
+          "canonical_checksum": "e2b5c3a1d6f4e7c8b9a1d2e3f4a5b6c7",
+          "divergences": [
+            "CHECKSUM_MISMATCH"
+          ],
+          "num_divergences": 1,
+          "last_validated_at": "2026-07-25T14:32:00Z",
+          "remediation_suggest": "Run: python scripts/regenerate_skill.py --agent agente-energia"
+        }
+      ],
+      "divergence_summary": {
+        "total": 2,
+        "synced": 1,
+        "drift": 1,
+        "not_in_registry": 0,
+        "missing_version": 0,
+        "incomplete": 0
+      },
+      "timestamp": "2026-07-25T14:32:00Z",
+      "claude_md_version": "v5.0",
+      "expected_agents": [
+        "maestro",
+        "agente-claims",
+        "agente-contratual",
+        "agente-imobiliario",
+        "agente-orcamento",
+        "agente-modelagem",
+        "agente-cronograma",
+        "agente-bd",
+        "agente-apresentacoes",
+        "agente-advisory",
+        "agente-arquiteto-ia",
+        "agente-rodovias",
+        "agente-oae",
+        "agente-ferrovia",
+        "agente-metro",
+        "agente-portos",
+        "agente-aeroportos",
+        "agente-saneamento",
+        "agente-energia",
+        "agente-barragens"
+      ],
+      "expected_count": 20
+    }
+  ]
+}

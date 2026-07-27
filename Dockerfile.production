@@ -1,0 +1,80 @@
+# Maestro OS v6.0 — Production Docker Image
+# Multi-stage build for optimized production image
+
+FROM python:3.11-slim as builder
+
+WORKDIR /build
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Build wheels in isolated environment
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements.txt
+
+# Production stage
+FROM python:3.11-slim
+
+LABEL maintainer="Manta Associados"
+LABEL version="6.0"
+LABEL description="Maestro OS v6.0 - Multi-Agent Infrastructure Orchestration"
+
+WORKDIR /opt/maestro-os
+
+# Install runtime dependencies only
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    postgresql-client \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy wheels from builder
+COPY --from=builder /build/wheels /wheels
+COPY --from=builder /build/requirements.txt .
+
+# Install Python dependencies from wheels
+RUN pip install --no-cache /wheels/* && rm -rf /wheels
+
+# Copy application code
+COPY src/ ./src/
+COPY tests/ ./tests/
+COPY examples/ ./examples/
+COPY docs/ ./docs/
+COPY maestro.sh ./
+COPY CLAUDE.md QUICKSTART-v6.md PRODUCTION-DEPLOYMENT.md ./
+COPY settings.json ./
+
+# Create non-root user for security
+RUN useradd -m -u 1000 maestro && \
+    chown -R maestro:maestro /opt/maestro-os
+
+# Create necessary directories
+RUN mkdir -p /var/log/maestro-os /var/lib/maestro-os/artifacts && \
+    chown -R maestro:maestro /var/log/maestro-os /var/lib/maestro-os
+
+# Make maestro.sh executable
+RUN chmod +x maestro.sh
+
+# Switch to non-root user
+USER maestro
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD ./maestro.sh status || exit 1
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1 \
+    MAESTRO_ENV=production \
+    LOG_DIR=/var/log/maestro-os \
+    ARTIFACTS_DIR=/var/lib/maestro-os/artifacts
+
+# Expose port (for future API service)
+EXPOSE 8080
+
+# Default command: health check
+CMD ["./maestro.sh", "healthcheck"]

@@ -1,0 +1,34 @@
+# Maestro E2E Test Suite Dependencies (v5.0)
+# Install: pip install -r requirements-test.txt
+
+# Core testing framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-xdist>=3.3.0
+pytest-timeout>=2.1.0
+pytest-benchmark>=4.0.0
+
+# Mocking & fixtures
+pytest-mock>=3.11.1
+
+# Code quality
+coverage>=7.2.0
+
+# Utilities
+python-dotenv>=1.0.0
+
+# Optional: for detailed reporting
+pytest-html>=3.2.0
+pytest-json-report>=1.5.0
+
+# Optional: for performance profiling
+memory-profiler>=0.61.0
+line-profiler>=4.0.0
+
+# Optional: for parallel execution
+pytest-asyncio>=0.21.0
+
+# Project-specific (mock as needed)
+# supabase>=1.39.0  # Real Supabase integration
+# elasticsearch>=8.9.0  # Real ES queries
+# qdrant-client>=2.4.0  # Real vector DB
