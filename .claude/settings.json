@@ -1,0 +1,78 @@
+{
+  "name": "Manta Maestro — Protocolos P1 + P2",
+  "version": "4.3",
+  "description": "Settings com Protocolos Operacionais: P1 (Banco+Data) e P2 (Paralelo 16x Sonnet)",
+
+  "hooks": {
+    "on_message_received": {
+      "enabled": true,
+      "triggers": [
+        {
+          "pattern": "SICRO|DER-SP|ORSE|SINAPI|orçamento|preço unitário",
+          "action": "p1-confirm-banco-data",
+          "description": "P1: Confirma banco de dados + data antes de executar"
+        },
+        {
+          "pattern": "execute com 16 agentes|16x sonnet|/maestro-parallel|paralelo.*16",
+          "action": "p2-parallel-16-sonnet",
+          "description": "P2: Dispara executor paralelo com até 16 agentes Sonnet"
+        }
+      ]
+    }
+  },
+
+  "protocols": {
+    "p1": {
+      "name": "Confirmação de Banco de Dados + Data",
+      "enabled": true,
+      "aplicacao": "Sempre que mencionar SICRO, DER-SP, ORSE, SINAPI ou orçamento",
+      "fluxo": [
+        "❓ Qual banco: SICRO / DER-SP / ORSE / SINAPI / outro?",
+        "❓ Qual data: JAN/2026 / DEZ/2025 / outra?",
+        "ℹ️ Se vazio: usar disponível",
+        "✅ Confirmar antes de executar"
+      ],
+      "roteamento": ["Manta 05 (orçamento)", "agentes S1-S10"]
+    },
+    "p2": {
+      "name": "Execução Paralela 16x Sonnet",
+      "enabled": true,
+      "aplicacao": "Tarefas independentes com paralelização",
+      "capacidade": {
+        "maximo": 16,
+        "recomendacao": 15,
+        "modelo": "Sonnet",
+        "modo": "parallel() ou pipeline()",
+        "overhead_worktree": "3-8s"
+      },
+      "uso": "skill maestro-protocolos ou /maestro-parallel 16"
+    }
+  },
+
+  "agents": {
+    "parallel_config": {
+      "max_concurrent": 16,
+      "default_tier": "medium",
+      "agents_medium": 15,
+      "agents_max": 16,
+      "model": "sonnet",
+      "isolation_mode": "worktree_optional"
+    }
+  },
+
+  "maestro_routing": {
+    "p1_banco_keywords": ["SICRO", "DER-SP", "ORSE", "SINAPI", "preço unitário", "TPU", "orçamento"],
+    "p2_parallel_keywords": ["16 agentes", "paralelo", "execute com 16", "maestro-parallel"],
+    "default_banco": "SICRO",
+    "default_data_format": "MONTH/YEAR"
+  },
+
+  "workflow_defaults": {
+    "parallel_16_agentes": {
+      "file": ".claude/workflows/maestro-16-agentes-paralelo.js",
+      "model": "sonnet",
+      "effort": "medium",
+      "phases": 2
+    }
+  }
+}
