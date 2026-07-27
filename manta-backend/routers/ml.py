@@ -21,13 +21,14 @@ já usado por routers/feedback.py e routers/executor.py — em vez de
 falhar o request.
 """
 import asyncio
+import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 
@@ -40,6 +41,9 @@ router = APIRouter(prefix="/ml", tags=["ml"])
 # Fallback em memória (não sobrevive a restart) — usado só quando
 # database.SessionLocal não consegue falar com o Postgres.
 _MEMORY_JOBS: Dict[str, dict] = {}
+
+# WebSocket connections para streaming de eventos (job_id -> lista de connections)
+_WS_CONNECTIONS: Dict[str, List[WebSocket]] = {}
 
 
 # ---------------------------------------------------------------------------
@@ -273,3 +277,126 @@ async def get_finetune_job(job_id: str) -> FineTuneJobOut:
 async def list_finetune_jobs(segment: Optional[str] = None, limit: int = 20) -> List[FineTuneJobOut]:
     records = await _list_jobs(segment, limit)
     return [FineTuneJobOut(**r) for r in records]
+
+
+# ---------------------------------------------------------------------------
+# WebSocket para monitoramento em tempo real
+# ---------------------------------------------------------------------------
+
+
+async def _broadcast_event(job_id: str, event_type: str, data: dict) -> None:
+    """Envia evento a todos os clientes WebSocket conectados a um job."""
+    if job_id not in _WS_CONNECTIONS:
+        return
+
+    message = {
+        "type": event_type,
+        "data": data,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    message_json = json.dumps(message)
+
+    # Remove conexões inativas
+    dead_connections = []
+    for ws in _WS_CONNECTIONS[job_id]:
+        try:
+            await ws.send_text(message_json)
+        except Exception as e:  # noqa: BLE001
+            logger.warning("ml.finetune: WebSocket send failed for job %s: %s", job_id, e)
+            dead_connections.append(ws)
+
+    # Limpa conexões mortas
+    if dead_connections:
+        _WS_CONNECTIONS[job_id] = [ws for ws in _WS_CONNECTIONS[job_id] if ws not in dead_connections]
+
+
+async def _on_job_status_change(job_id: str, old_status: str, new_status: str) -> None:
+    """Callback quando o status do job muda."""
+    await _broadcast_event(
+        job_id,
+        "status_update",
+        {
+            "old_status": old_status,
+            "new_status": new_status,
+            "job_id": job_id,
+        },
+    )
+
+
+async def _on_job_metrics(job_id: str, metrics: dict) -> None:
+    """Callback quando métricas de treino são atualizadas."""
+    await _broadcast_event(job_id, "metrics", metrics)
+
+
+async def _on_job_error(job_id: str, error_message: str) -> None:
+    """Callback quando ocorre erro no job."""
+    await _broadcast_event(job_id, "error", {"error": error_message, "job_id": job_id})
+
+
+@router.websocket("/ws/finetune/{job_id}")
+async def websocket_finetune_monitor(websocket: WebSocket, job_id: str) -> None:
+    """
+    WebSocket endpoint para monitoramento em tempo real de job de fine-tuning.
+
+    Tipos de mensagens enviadas:
+    - status_update: Mudança de status (queued -> running -> completed|failed)
+    - metrics: Métricas de treino em progresso
+    - error: Erro durante execução
+    - job_status: Status atual quando cliente conecta
+
+    Uso (JavaScript):
+        const ws = new WebSocket(`ws://localhost:8000/ml/ws/finetune/${jobId}`);
+        ws.onmessage = (event) => {
+            const msg = JSON.parse(event.data);
+            console.log(`Event type: ${msg.type}`, msg.data);
+        };
+    """
+    await websocket.accept()
+
+    # Registra conexão
+    if job_id not in _WS_CONNECTIONS:
+        _WS_CONNECTIONS[job_id] = []
+    _WS_CONNECTIONS[job_id].append(websocket)
+
+    logger.info("ml.finetune: WebSocket client connected to job %s", job_id)
+
+    try:
+        # Envia status atual imediatamente
+        job = await _get_job(job_id)
+        if job:
+            await websocket.send_text(
+                json.dumps(
+                    {
+                        "type": "job_status",
+                        "data": job,
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                    }
+                )
+            )
+        else:
+            await websocket.send_text(
+                json.dumps(
+                    {
+                        "type": "error",
+                        "data": {"error": f"Job not found: {job_id}"},
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                    }
+                )
+            )
+
+        # Mantém conexão aberta para rejeição de mensagens inbound
+        # (servidor apenas envia eventos, não recebe)
+        while True:
+            _ = await websocket.receive_text()  # Ignora qualquer mensagem recebida
+
+    except WebSocketDisconnect:
+        logger.info("ml.finetune: WebSocket client disconnected from job %s", job_id)
+        _WS_CONNECTIONS[job_id].remove(websocket)
+        if not _WS_CONNECTIONS[job_id]:
+            del _WS_CONNECTIONS[job_id]
+    except Exception as e:  # noqa: BLE001
+        logger.error("ml.finetune: WebSocket error for job %s: %s", job_id, e, exc_info=True)
+        try:
+            await websocket.close(code=1011)  # Server error
+        except Exception:  # noqa: BLE001
+            pass
