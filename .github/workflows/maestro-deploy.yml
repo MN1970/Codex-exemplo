@@ -529,8 +529,9 @@ jobs:
           cat /tmp/deployment-report.txt
 
       - name: Send Slack notification
-        if: always()
+        if: always() && secrets.SLACK_WEBHOOK_DEPLOYMENTS != ''
         uses: slackapi/slack-github-action@v1.24
+        continue-on-error: true
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_DEPLOYMENTS }}
           payload: |
