@@ -1,8 +1,9 @@
 """
 database.py — Camada de persistência canônica SQLAlchemy (async, 2.0
-style) do Manta Backend: engine, sessão, os 8 modelos ORM pedidos
-(Organization, Agent, RagChunk, Session, Feedback, MLModel, User, Role)
-e o helper de contexto multi-organização usado pelas RLS policies.
+style) do Manta Backend: engine, sessão, os 9 modelos ORM pedidos
+(Organization, Agent, RagChunk, Session, Feedback, MLModel, FineTuneJob,
+User, Role) e o helper de contexto multi-organização usado pelas RLS
+policies.
 
 Desenho (multi-tenant simples, sem tabela de associação):
 
@@ -12,7 +13,8 @@ Desenho (multi-tenant simples, sem tabela de associação):
          │  │  │  └─────< Session
          │  │  └────────< RagChunk
          │  └───────────< Agent
-         └──────────────< MLModel (org_id opcional — catálogo global)
+         ├──────────────< MLModel (org_id opcional — catálogo global)
+         └──────────────< FineTuneJob (org_id opcional — ver ml/finetuning.py)
 
 Toda tabela "operacional" (agents, rag_chunks, sessions, feedback,
 ml_models) carrega `org_id` — é a coluna que a migration
@@ -20,6 +22,9 @@ ml_models) carrega `org_id` — é a coluna que a migration
 Security no Postgres. `users`/`roles` ficam FORA da RLS de propósito:
 login precisa localizar o usuário pelo e-mail antes de saber qual é a
 "organização ativa" da conexão — ver docstring da migration 0003.
+`fine_tune_jobs` segue o mesmo desenho org_id-opcional de `ml_models`
+(catálogo/job global quando org_id é nulo) e por isso também fica fora
+da lista de RLS abaixo, igual a `ml_models`.
 
 Este módulo convive com `pg_pool.py` (pool asyncpg cru, usado pelos
 routers legados `rag.py`/`feedback.py` contra as tabelas do
@@ -166,6 +171,9 @@ class Organization(Base):
         back_populates="organization", cascade="all, delete-orphan"
     )
     ml_models: Mapped[list[MLModel]] = relationship(back_populates="organization", cascade="all, delete-orphan")
+    fine_tune_jobs: Mapped[list[FineTuneJob]] = relationship(
+        back_populates="organization", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Organization id={self.id!r} slug={self.slug!r}>"
@@ -413,6 +421,69 @@ class MLModel(Base):
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<MLModel model_id={self.model_id!r} org_id={self.org_id!r}>"
+
+
+# ---------------------------------------------------------------------------
+# FineTuneJob
+# ---------------------------------------------------------------------------
+class FineTuneJob(Base):
+    """Job assíncrono de fine-tuning LoRA de um agente vertical (ver
+    ml/finetuning.py — `run_finetuning_pipeline()`), disparado por
+    `POST /ml/finetune {segment, epochs}` (routers/ml.py). O request
+    HTTP volta imediatamente com `status="queued"`; o treino roda em
+    background e atualiza esta linha conforme progride
+    (queued -> running -> completed|failed).
+
+    Segue o mesmo desenho `org_id` opcional do `MLModel` logo acima
+    (nulo = job disparado fora de um contexto multi-org, ex.: CLI/dev;
+    preenchido = job de uma organização específica) — por isso também
+    fica de fora de `ORG_SCOPED_TABLES`/RLS, igual a `ml_models`.
+    """
+
+    __tablename__ = "fine_tune_jobs"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_new_uuid)
+    org_id: Mapped[str | None] = mapped_column(
+        ForeignKey("organizations.id", ondelete="CASCADE"), nullable=True, index=True
+    )
+    segment: Mapped[str] = mapped_column(String(50), nullable=False, index=True)  # saneamento|energia|portos|aeroportos|barragens
+    base_model: Mapped[str] = mapped_column(String(255), nullable=False, default="mistralai/Mistral-7B-v0.1")
+    epochs: Mapped[int] = mapped_column(Integer, nullable=False, default=3)
+    # queued -> running -> completed|failed (ver routers/ml.py::_run_finetune_job)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="queued", index=True)
+    adapter_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    adapter_path: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    loss: Mapped[float | None] = mapped_column(nullable=True)
+    perplexity: Mapped[float | None] = mapped_column(nullable=True)
+    num_train_steps: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    organization: Mapped[Organization | None] = relationship(back_populates="fine_tune_jobs")
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "org_id": self.org_id,
+            "segment": self.segment,
+            "base_model": self.base_model,
+            "epochs": self.epochs,
+            "status": self.status,
+            "adapter_name": self.adapter_name,
+            "adapter_path": self.adapter_path,
+            "loss": self.loss,
+            "perplexity": self.perplexity,
+            "num_train_steps": self.num_train_steps,
+            "error_message": self.error_message,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "started_at": self.started_at.isoformat() if self.started_at else None,
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+        }
+
+    def __repr__(self) -> str:  # pragma: no cover - debug helper
+        return f"<FineTuneJob id={self.id!r} segment={self.segment!r} status={self.status!r}>"
 
 
 # ---------------------------------------------------------------------------

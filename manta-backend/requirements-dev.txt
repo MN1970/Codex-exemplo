@@ -7,3 +7,8 @@ ruff==0.6.9
 # rodar o schema de auth (models.py) sem precisar de Postgres real.
 aiosqlite==0.20.0
 greenlet==3.1.1
+pytest-cov==7.1.0
+# Coverage (--cov=ml.embeddings --cov=ml.routing --cov=ml.lora_finetuner)
+# usado por tests/test_embeddings.py, tests/test_routing.py e
+# tests/test_finetuning.py + CI (.github/workflows/ml-tests.yml). Config
+# de threshold/omit em pyproject.toml ([tool.coverage.*]).

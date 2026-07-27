@@ -17,7 +17,7 @@ from pg_pool import close_pool, create_pool
 from mcp.client import MCPClient
 from mcp.integration import MCPServer, build_default_registry, build_remote_clients
 from mcp.integration import router as mcp_router
-from routers import admin, agents, executor, feedback, rag, routing
+from routers import admin, agents, executor, feedback, ml, rag, routing
 from routers import auth as auth_router
 
 logging.basicConfig(level=logging.INFO)
@@ -89,6 +89,7 @@ app = FastAPI(
         {"name": "agents", "description": "Registro dos agentes (Eixos 1, 2 e 3)."},
         {"name": "rag", "description": "Coleções RAG e busca semântica (pgvector)."},
         {"name": "routing", "description": "Motor de roteamento do Maestro (Q1 do intake)."},
+        {"name": "ml", "description": "Fine-tuning LoRA por segmento (POST /ml/finetune) e catálogo de adapters."},
         {"name": "feedback", "description": "Feedback de uso dos agentes."},
         {"name": "admin", "description": "Health check, checklist de deploy e auth de dev."},
         {"name": "mcp", "description": "MCP server (tools do Manta) + MCP client (GitHub/Supabase/MS365)."},
@@ -108,6 +109,7 @@ app.include_router(agents.router)
 app.include_router(executor.router)
 app.include_router(rag.router)
 app.include_router(routing.router)
+app.include_router(ml.router)
 app.include_router(feedback.router)
 app.include_router(admin.router)
 app.include_router(mcp_router)

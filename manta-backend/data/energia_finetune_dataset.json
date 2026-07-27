@@ -1,0 +1,42 @@
+[
+  {
+    "instruction": "What is RAP in the context of an ANEEL transmission auction?",
+    "output": "RAP (Receita Anual Permitida / Permitted Annual Revenue) is the yearly regulated revenue a transmission concessionaire is entitled to receive for building, operating and maintaining a transmission facility (LT, subestacao). In an ANEEL leilao de transmissao, bidders compete by offering a discount (desagio) on the RAP teto (ceiling RAP) published in the edital; the lowest RAP bid wins the lote/sublote, subject to minimum technical and financial qualification."
+  },
+  {
+    "instruction": "What technical studies does ONS require before energizing a new LT?",
+    "output": "ONS (Operador Nacional do Sistema Eletrico) requires load flow studies, short-circuit analysis, transient/dynamic stability studies, and protection coordination studies before energizing a new LT or subestacao. These studies confirm the new asset integrates safely with the SIN (Sistema Interligado Nacional) without violating voltage, thermal or stability limits."
+  },
+  {
+    "instruction": "What is the role of EPE in a transmissao expansion project?",
+    "output": "EPE (Empresa de Pesquisa Energetica) plans the expansion of the transmission and generation system, publishing planning reports (R1 through R5) that identify which LTs and subestacoes are needed. These reports feed directly into the ANEEL leilao de transmissao editais, defining the technical scope, RAP teto and commissioning deadlines bidders must meet."
+  },
+  {
+    "instruction": "What ampacity considerations apply to an ACSR 636 MCM conductor?",
+    "output": "Ampacity (capacidade de corrente) for an ACSR conductor like 636 MCM depends on conductor temperature limit (typically 75-90C), ambient temperature, wind speed, solar radiation and conductor surface emissivity/absorptivity. IEEE 738 provides the standard thermal model used to size LT capacity for a given subestacao interconnection under ANEEL/ONS technical rules."
+  },
+  {
+    "instruction": "What subestacao arrangement is typical for a 230kV bay?",
+    "output": "Common subestacao arrangements at 230kV include single busbar, double busbar with bus coupler, and breaker-and-a-half. Breaker-and-a-half offers the highest reliability (no single breaker failure isolates more than one circuit) and is often specified by ONS for critical interconnection points in the transmissao network."
+  },
+  {
+    "instruction": "What must a bidder confirm before submitting a deságio bid in an ANEEL leilao?",
+    "output": "Before bidding, a participant must confirm technical qualification (engineering capability to build the LT/subestacao), financial qualification (guarantees, minimum net worth), environmental licensing feasibility for the proposed route, and full understanding of the RAP teto, penalties for delay, and commissioning schedule defined in the edital and its anexos tecnicos."
+  },
+  {
+    "instruction": "How does distribuicao differ from transmissao in the Brazilian electricity sector?",
+    "output": "Transmissao moves bulk energia at high voltage (typically >=230kV) from geracao sources to load centers via LTs regulated by ONS/ANEEL under RAP-based remuneration. Distribuicao delivers energia at medium/low voltage directly to end consumers through local networks, regulated by ANEEL under a different tariff methodology (revisao tarifaria periodica) tied to distribution utility performance."
+  },
+  {
+    "instruction": "What is a leilao de transmissao lote/sublote?",
+    "output": "A lote is a bundle of transmission facilities (LTs and/or subestacoes) auctioned together as a single concession in an ANEEL leilao de transmissao; a sublote is a smaller technical subdivision within that lote used for phased commissioning or partial qualification. Bidders submit a single desagio/RAP bid per lote, not per sublote."
+  },
+  {
+    "instruction": "What environmental licensing steps precede LT construction in Brazil?",
+    "output": "LT construction requires sequential environmental licenses: Licenca Previa (LP, confirms route viability), Licenca de Instalacao (LI, authorizes construction) and Licenca de Operacao (LO, authorizes energization). IBAMA or state agencies issue these; delays here are a leading cause of RAP schedule penalties in ANEEL transmission concessions."
+  },
+  {
+    "instruction": "What does geracao distribuida mean for the transmissao/distribuicao grid?",
+    "output": "Geracao distribuida (distributed generation, e.g. rooftop solar) injects energia directly into the distribuicao network rather than the transmissao grid, changing power flow direction and requiring distribution utilities to reassess protection settings, voltage regulation and hosting capacity, all under ANEEL's net-metering (compensacao de energia) regulation."
+  }
+]

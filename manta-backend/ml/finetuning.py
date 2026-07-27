@@ -9,7 +9,7 @@ Salva só o adapter (poucos MB) em vez do modelo inteiro — é assim que o
 LoRA barateia o fine-tuning: o peso base nunca é reescrito.
 
 Pipeline (nomes literais usados pelo endpoint POST /ml/finetune e pelos
-testes — ver tests/test_finetuning.py):
+testes — ver tests/test_finetuning_pipeline.py):
 
     tokenizer            = load_base_model(base_model_name)[1]
     dataset              = prepare_dataset(segment, tokenizer)
@@ -40,8 +40,10 @@ confundido com um fine-tune real de Mistral-7B.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
+import os
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -187,6 +189,48 @@ def _lora_config_from_dict(cfg: Dict[str, Any]) -> LoRAAdapterConfig:
         lora_dropout=lora.get("dropout", 0.05),
         bias=lora.get("bias", "none"),
     )
+
+
+def _is_demo_model(model) -> bool:
+    """Detecta se `model` (base ou PeftModel) veio de
+    build_demo_base_model_and_tokenizer() — usado para decidir se
+    save_adapter()/load_adapter() devem forçar HF_HUB_OFFLINE (ver
+    _hf_offline_guard) e evitar retries contra huggingface.co por causa
+    de um `name_or_path` que não é um repo real do Hub."""
+    if getattr(model, "name_or_path", None) == DEMO_BASE_MODEL_NAME:
+        return True
+    peft_config = getattr(model, "peft_config", None)
+    if isinstance(peft_config, dict):
+        return any(
+            getattr(cfg, "base_model_name_or_path", None) == DEMO_BASE_MODEL_NAME
+            for cfg in peft_config.values()
+        )
+    return False
+
+
+@contextlib.contextmanager
+def _hf_offline_guard(active: bool):
+    """Força `HF_HUB_OFFLINE=1` (restaurando o valor anterior ao sair)
+    enquanto `active=True`. `peft`/`huggingface_hub` fazem um HEAD
+    remoto best-effort para checar arquivos extras (config.json) mesmo
+    quando o `base_model_name_or_path` gravado não é um repo real do
+    Hub (caso do modelo demo offline) — sem isso, cada save/load do
+    adapter demo gasta ~30s em retries contra o proxy deste sandbox sem
+    egress antes de desistir e seguir (best-effort, não afeta o
+    resultado, só a latência)."""
+    if not active:
+        yield
+        return
+
+    previous = os.environ.get("HF_HUB_OFFLINE")
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    try:
+        yield
+    finally:
+        if previous is None:
+            os.environ.pop("HF_HUB_OFFLINE", None)
+        else:
+            os.environ["HF_HUB_OFFLINE"] = previous
 
 
 def resolve_dataset_path(segment: str, data_dir: Optional[Path] = None) -> Path:
@@ -620,7 +664,8 @@ def save_adapter(
     out_path = Path(path)
     out_path.mkdir(parents=True, exist_ok=True)
 
-    model.save_pretrained(str(out_path))
+    with _hf_offline_guard(_is_demo_model(model)):
+        model.save_pretrained(str(out_path))
     if tokenizer is not None:
         tokenizer.save_pretrained(str(out_path))
 
@@ -660,8 +705,6 @@ def load_adapter(
     Returns:
         PeftModel (adapter + base) pronto para inferência.
     """
-    import os
-
     from peft import PeftModel
 
     adapter_path = Path(path)
@@ -690,24 +733,8 @@ def load_adapter(
         )
 
     logger.info("finetuning: carregando adapter de %s", adapter_path)
-    # `base_model_name_or_path` de um adapter demo não é um repo real do
-    # HF Hub — sem HF_HUB_OFFLINE, PeftModel.from_pretrained ainda tenta
-    # um HEAD remoto para checar arquivos extras (config.json) antes de
-    # desistir, gastando ~30s em retries contra o proxy neste sandbox
-    # sem egress. Força modo offline só para esta chamada quando for
-    # claramente um adapter demo (evita esse custo sem afetar o
-    # carregamento de adapters reais, que precisam do Hub disponível).
-    previous_offline_flag = os.environ.get("HF_HUB_OFFLINE")
-    if is_demo_adapter:
-        os.environ["HF_HUB_OFFLINE"] = "1"
-    try:
+    with _hf_offline_guard(is_demo_adapter or _is_demo_model(base_model)):
         model = PeftModel.from_pretrained(base_model, str(adapter_path))
-    finally:
-        if is_demo_adapter:
-            if previous_offline_flag is None:
-                os.environ.pop("HF_HUB_OFFLINE", None)
-            else:
-                os.environ["HF_HUB_OFFLINE"] = previous_offline_flag
     return model
 
 

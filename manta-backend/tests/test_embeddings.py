@@ -191,6 +191,59 @@ def test_load_model_reuses_existing_singleton(monkeypatch):
     assert loaded is sentinel  # não deve tentar (re)carregar/baixar nada
 
 
+def test_get_device_returns_a_valid_device_string():
+    """Chamada direta (sem mock) — `_get_device` só decide entre
+    cuda/mps/cpu consultando `torch`, nunca baixa nem carrega nada, então
+    é seguro rodar de verdade neste ambiente (CPU-only) para cobrir seu
+    corpo por completo."""
+    device = embeddings_module._get_device()
+    assert device in ("cuda", "mps", "cpu")
+
+
+def test_load_model_success_path_builds_and_caches_singleton(monkeypatch):
+    """Cobre o caminho feliz de `_load_model` (linha `_model =
+    SentenceTransformer(...)` incluída) sem baixar o modelo real —
+    troca a CLASSE `SentenceTransformer` por um dublê leve que só
+    precisa aceitar `(model_name, device=...)`."""
+    monkeypatch.setattr(embeddings_module, "_model", None)
+    monkeypatch.setattr(embeddings_module, "_model_device", None)
+
+    class _FakeConstructedSentenceTransformer:
+        def __init__(self, model_name, device=None):
+            self.model_name = model_name
+            self.device = device
+
+    monkeypatch.setattr(embeddings_module, "SentenceTransformer", _FakeConstructedSentenceTransformer)
+
+    loaded = embeddings_module._load_model()
+
+    assert isinstance(loaded, _FakeConstructedSentenceTransformer)
+    assert loaded.model_name == EMBEDDING_MODEL_NAME
+    assert embeddings_module._model is loaded  # singleton cacheado
+
+
+async def test_embed_text_wraps_encode_failures_in_runtime_error(monkeypatch):
+    class _BoomOnEncode:
+        def encode(self, *args, **kwargs):
+            raise RuntimeError("falha simulada no encode")
+
+    monkeypatch.setattr(embeddings_module, "_model", _BoomOnEncode())
+
+    with pytest.raises(RuntimeError, match="Falha ao gerar embedding"):
+        await embed_text("texto qualquer")
+
+
+async def test_embed_texts_wraps_encode_failures_in_runtime_error(monkeypatch):
+    class _BoomOnEncode:
+        def encode(self, *args, **kwargs):
+            raise RuntimeError("falha simulada no encode em lote")
+
+    monkeypatch.setattr(embeddings_module, "_model", _BoomOnEncode())
+
+    with pytest.raises(RuntimeError, match="Falha ao gerar embeddings em batch"):
+        await embed_texts(["texto 1", "texto 2"])
+
+
 def test_load_model_wraps_failures_in_runtime_error(monkeypatch):
     monkeypatch.setattr(embeddings_module, "_model", None)
 
@@ -203,3 +256,146 @@ def test_load_model_wraps_failures_in_runtime_error(monkeypatch):
 
     with pytest.raises(RuntimeError, match="Falha ao carregar embedding model"):
         embeddings_module._load_model()
+
+
+# ---------------------------------------------------------------------------
+# Similaridade de cosseno — shape (norma L2) e comportamento da métrica.
+#
+# `_FakeSentenceTransformer` (acima) gera um vetor pseudo-aleatório por
+# texto (via hash) — ótimo para testar shape/determinismo/ordem, mas sem
+# nenhuma relação semântica real entre textos parecidos. Para testar a
+# MÉTRICA de similaridade (não só o shape do vetor), usamos aqui um
+# segundo dublê — `_WordOverlapEncoder` — que constrói vetores bag-of-
+# words determinísticos: textos que compartilham palavras ficam com
+# cosine similarity alta; textos sem nenhuma palavra em comum ficam
+# próximos de zero. Continua 100% offline/determinístico, só isola uma
+# propriedade diferente do contrato (similaridade, não só dimensão).
+# ---------------------------------------------------------------------------
+
+
+def _cosine_similarity(a, b) -> float:
+    a_arr = np.asarray(a, dtype=np.float64)
+    b_arr = np.asarray(b, dtype=np.float64)
+    denom = np.linalg.norm(a_arr) * np.linalg.norm(b_arr)
+    if denom == 0:
+        return 0.0
+    return float(np.dot(a_arr, b_arr) / denom)
+
+
+class _WordOverlapEncoder:
+    """Dublê determinístico bag-of-words: cosine similarity alta para
+    textos com palavras em comum, baixa para textos sem overlap nenhum."""
+
+    def _vector_for(self, text: str) -> np.ndarray:
+        vec = np.zeros(EMBEDDING_DIMENSIONS, dtype=np.float64)
+        for word in text.lower().split():
+            idx = abs(hash(word)) % EMBEDDING_DIMENSIONS
+            vec[idx] += 1.0
+        norm = np.linalg.norm(vec)
+        if norm > 0:
+            vec = vec / norm
+        return vec
+
+    def encode(
+        self,
+        texts,
+        convert_to_numpy: bool = True,
+        normalize_embeddings: bool = True,
+        batch_size: int | None = None,
+        show_progress_bar: bool | None = None,
+    ):
+        is_batch = isinstance(texts, list)
+        inputs = texts if is_batch else [texts]
+        vectors = [self._vector_for(t) for t in inputs]
+        result = np.stack(vectors)
+        return result if is_batch else result[0]
+
+
+async def test_embed_text_vectors_are_l2_normalized():
+    """normalize_embeddings=True (ml/embeddings.py) — todo vetor não-vazio
+    tem que ter norma L2 ~= 1.0, senão cosine similarity != dot product."""
+    vector = await embed_text("saneamento e drenagem urbana")
+    norm = float(np.linalg.norm(np.asarray(vector)))
+    assert norm == pytest.approx(1.0, abs=1e-5)
+
+
+async def test_cosine_similarity_of_identical_text_with_itself_is_one():
+    vector = await embed_text("edital ANEEL de transmissão")
+    similarity = _cosine_similarity(vector, vector)
+    assert similarity == pytest.approx(1.0, abs=1e-6)
+
+
+async def test_cosine_similarity_of_near_duplicate_text_is_very_high():
+    """Mesmo texto com espaçamento/whitespace diferente é normalizado
+    (strip) antes de embarcar — o vetor resultante é idêntico, então a
+    similaridade tem que ser exatamente 1.0, não só 'alta'."""
+    v1 = await embed_text("aeroporto")
+    v2 = await embed_text("  aeroporto  ")
+    assert _cosine_similarity(v1, v2) == pytest.approx(1.0, abs=1e-6)
+
+
+def test_cosine_similarity_is_higher_for_texts_sharing_vocabulary(monkeypatch):
+    """Com um encoder cuja similaridade É semanticamente significativa
+    (bag-of-words), dois textos que compartilham palavras-chave de
+    domínio devem ficar mais próximos entre si do que qualquer um deles
+    fica de um texto de domínio totalmente diferente."""
+    monkeypatch.setattr(embeddings_module, "_model", _WordOverlapEncoder())
+
+    saneamento_a = np.asarray(_WordOverlapEncoder()._vector_for("saneamento adutora esgoto tratamento"))
+    saneamento_b = np.asarray(_WordOverlapEncoder()._vector_for("saneamento drenagem urbana SNIS"))
+    barragem = np.asarray(_WordOverlapEncoder()._vector_for("barragem vertedouro CFRD rejeitos"))
+
+    sim_related = _cosine_similarity(saneamento_a, saneamento_b)
+    sim_unrelated = _cosine_similarity(saneamento_a, barragem)
+
+    assert sim_related > sim_unrelated
+    assert sim_unrelated == pytest.approx(0.0, abs=1e-9)  # nenhuma palavra em comum
+
+
+async def test_cosine_similarity_is_higher_for_texts_sharing_vocabulary_via_embed_text(monkeypatch):
+    """Mesma asserção acima, mas passando pelo contrato público
+    embed_text (não só o encoder cru) — garante que embed_text não
+    introduz nenhuma distorção (ex.: normalização extra) que quebre a
+    ordenação relativa de similaridade."""
+    monkeypatch.setattr(embeddings_module, "_model", _WordOverlapEncoder())
+
+    v_saneamento_a = await embed_text("saneamento adutora esgoto tratamento")
+    v_saneamento_b = await embed_text("saneamento drenagem urbana SNIS")
+    v_barragem = await embed_text("barragem vertedouro CFRD rejeitos")
+
+    sim_related = _cosine_similarity(v_saneamento_a, v_saneamento_b)
+    sim_unrelated = _cosine_similarity(v_saneamento_a, v_barragem)
+
+    assert sim_related > sim_unrelated
+
+
+def test_cosine_similarity_is_bounded_between_zero_and_one_for_nonnegative_vectors():
+    """Vetores bag-of-words têm contagens >= 0, então o cosseno entre
+    dois deles nunca é negativo (e nunca excede 1, por Cauchy-Schwarz)."""
+    encoder = _WordOverlapEncoder()
+    pairs = [
+        ("porto e dragagem", "aeroporto e pista"),
+        ("metro e NATM", "ferrovia e trilho"),
+        ("barragem e CFRD", "barragem e CFRD"),
+    ]
+    for text_a, text_b in pairs:
+        sim = _cosine_similarity(encoder._vector_for(text_a), encoder._vector_for(text_b))
+        assert -1e-9 <= sim <= 1.0 + 1e-9
+
+
+async def test_embed_texts_similarity_matrix_diagonal_is_self_similarity():
+    """Constrói a matriz de similaridade par-a-par de um pequeno batch e
+    confirma shape (NxN), simetria e diagonal == 1.0 (cada texto é
+    perfeitamente similar a si mesmo)."""
+    texts = ["rodovia e pavimento", "ferrovia e trilho", "metrô e NATM"]
+    vectors = await embed_texts(texts)
+
+    n = len(texts)
+    matrix = [[_cosine_similarity(vectors[i], vectors[j]) for j in range(n)] for i in range(n)]
+
+    assert len(matrix) == n and all(len(row) == n for row in matrix)
+    for i in range(n):
+        assert matrix[i][i] == pytest.approx(1.0, abs=1e-6)
+    for i in range(n):
+        for j in range(n):
+            assert matrix[i][j] == pytest.approx(matrix[j][i], abs=1e-9)  # simetria

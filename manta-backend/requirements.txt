@@ -52,3 +52,21 @@ joblib==1.5.3
 # ml/routing.py (roteamento semântico: Sentence Transformers + Logistic
 # Regression) e ml/routing_classifier.py (motor legado TF-IDF). joblib é
 # usado para o pickle versionado do modelo (ml/models/routing_model_v*.joblib).
+transformers==4.57.6
+# ml/finetuning.py — load_base_model()/build_demo_base_model_and_tokenizer()
+# (AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer). Já vinha
+# transitivo de sentence-transformers; pinado aqui por ser um import direto
+# de ml/finetuning.py e ml/lora_finetuner.py.
+peft==0.19.1
+# ml/finetuning.py — LoraConfig/get_peft_model/PeftModel (adapter LoRA sobre
+# o modelo base, ver create_trainer()/load_adapter()).
+datasets==5.0.0
+# ml/finetuning.py::prepare_dataset() — datasets.Dataset (tokenização +
+# train_test_split do dataset de cada segmento).
+accelerate==1.14.0
+# Dependência do transformers.Trainer para device_map/dispatch de modelo
+# (usada implicitamente por create_trainer()/train() em ml/finetuning.py).
+tokenizers==0.22.2
+# ml/finetuning.py::build_demo_base_model_and_tokenizer() — ByteLevelBPETokenizer
+# treinado localmente (modo --demo/demo_mode=True, sem download do HF Hub).
+# Já vem transitivo de transformers; pinado por ser um import direto.

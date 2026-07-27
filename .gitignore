@@ -7,3 +7,12 @@ deploy-report.json
 manta-backend/.venv/
 manta-backend/.env
 manta-backend/*.egg-info/
+# Adapters LoRA gerados por ml/finetuning.py (run_finetuning_pipeline)/
+# ml/lora_finetuner.py — artefatos de treino (safetensors + tokenizer),
+# não código-fonte; nunca commitar (ver ml/finetuning.py::DEFAULT_OUTPUT_DIR).
+manta-backend/ml/adapters/
+# Coverage (pytest --cov, ver .github/workflows/ml-tests.yml) — gerado
+# localmente/no CI, nunca código-fonte.
+manta-backend/.coverage
+manta-backend/coverage.xml
+manta-backend/htmlcov/

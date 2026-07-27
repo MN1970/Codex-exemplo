@@ -1,0 +1,42 @@
+[
+  {
+    "instruction": "What is the role of ANTAQ in a Brazilian port concession?",
+    "output": "ANTAQ (Agencia Nacional de Transportes Aquaviarios) regulates and oversees port concessions, TUPs (Terminais de Uso Privado) and arrendamentos, publishing editais for new terminals, approving tariffs, and enforcing performance/investment obligations throughout the concession term."
+  },
+  {
+    "instruction": "What determines the required calado (draft) at a container berco?",
+    "output": "Required calado is driven by the design vessel (e.g. Panamax, Post-Panamax), tidal range, under-keel clearance margins, and maintenance dredging (dragagem) frequency. PIANC guidelines recommend under-keel clearance of 10-20% of vessel draft depending on seabed type and wave exposure at the berco."
+  },
+  {
+    "instruction": "What is a molhe and why is it built at a port entrance?",
+    "output": "A molhe (breakwater) is a rubble-mound or caisson structure built to protect the port entrance and berco area from waves and littoral sediment drift, ensuring safe navigation and calado stability. PIANC bulletins on breakwater design cover armor unit sizing (e.g. Hudson/Van der Meer formulas) for the enrocamento (rock armor) layer."
+  },
+  {
+    "instruction": "What triggers a dragagem (dredging) campaign at a port channel?",
+    "output": "Dragagem is triggered when bathymetric surveys show sedimentation reducing the channel or berco below the design calado for the largest vessel calling at the terminal. ANTAQ requires a dredging plan (plano de dragagem) with disposal site approval before capital or maintenance dredging begins."
+  },
+  {
+    "instruction": "What defensa (fender) design is appropriate for a Panamax berco?",
+    "output": "A Panamax berco typically uses cone or cell-type rubber fenders sized for the vessel's approach velocity and berthing energy, calculated per PIANC's berthing energy formulas (using displacement, approach angle and virtual mass/added-mass coefficients). Fender reaction force must stay below the quay structure's design capacity."
+  },
+  {
+    "instruction": "What cargo-handling metrics matter for a granel (bulk) terminal?",
+    "output": "Key metrics include berth throughput (tons/berth-hour), storage yard capacity (silos/pátios), ship turnaround time, and conveyor/loader capacity. ANTAQ performance contracts often set minimum annual throughput targets tied to the arrendamento's investment obligations."
+  },
+  {
+    "instruction": "How does a conteiner (container) terminal layout differ from a granel terminal?",
+    "output": "A conteiner terminal is organized around a stacking yard (TEUs), quay cranes (STS) and horizontal transport (yard trucks/RTGs), optimized for box turnover and gate throughput. A granel terminal instead centers on silos/stockpiles, conveyor systems and ship-loaders, optimized for continuous bulk flow rather than discrete unit handling."
+  },
+  {
+    "instruction": "What environmental studies are required before dredging near marinas?",
+    "output": "Dredging near marinas typically requires an EIA/RIMA (environmental impact study) covering turbidity plumes, sediment contamination testing, and impact on nearby marina navigation and water quality, plus IBAMA/state agency licensing before any dragagem campaign starts."
+  },
+  {
+    "instruction": "What is the difference between a TUP and a public port terminal under ANTAQ rules?",
+    "output": "A TUP (Terminal de Uso Privado) is built and operated by a private company primarily for its own cargo, licensed directly by ANTAQ. A public port terminal operates inside a porto organizado under an arrendamento contract, subject to public-port governance (Porto Autoridade) and open, non-discriminatory access rules."
+  },
+  {
+    "instruction": "What structural checks matter for a new berco quay wall?",
+    "output": "Quay wall design must check bearing capacity of the foundation soil, lateral earth pressure from the backfill, mooring/fender load reactions, seismic loading where applicable, and settlement limits that keep crane rails within tolerance — all cross-checked against the terminal's design vessel (calado, displacement) and berthing/mooring loads."
+  }
+]

@@ -40,6 +40,11 @@ sentence-transformers = "^3.3.0"  # ml/embeddings.py — all-MiniLM-L6-v2 local 
 huggingface-hub = ">=0.34,<1.0"    # pin: transformers 4.57.x exige <1.0; ver comentário em requirements.txt
 scikit-learn = "^1.9.0"  # ml/routing.py + ml/routing_classifier.py — LogisticRegression
 joblib = "^1.5.3"         # ml/routing.py — pickle versionado do modelo de roteamento
+transformers = "^4.57.0"  # ml/finetuning.py — load_base_model()/Trainer/TrainingArguments
+peft = "^0.19.0"          # ml/finetuning.py — LoraConfig/get_peft_model/PeftModel (adapter LoRA)
+datasets = "^5.0.0"       # ml/finetuning.py::prepare_dataset() — datasets.Dataset
+accelerate = "^1.14.0"    # dependência do transformers.Trainer (device_map/dispatch)
+tokenizers = "^0.22.0"    # ml/finetuning.py — tokenizer BPE do modo demo offline
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"
@@ -48,6 +53,7 @@ httpx = "^0.27.0"
 ruff = "^0.6.0"
 aiosqlite = "^0.20.0"
 greenlet = "^3.1.1"
+pytest-cov = "^7.1.0"  # coverage da suíte (ver [tool.coverage] abaixo + CI ml-tests.yml)
 
 [build-system]
 requires = ["poetry-core"]
@@ -55,3 +61,16 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+
+# Escopo de coverage: os 3 módulos de ML cobertos por
+# tests/test_embeddings.py, tests/test_routing.py e tests/test_finetuning.py
+# (ver ticket de testing/eval — meta >80% nestes módulos). Não mede o
+# backend inteiro (routers/, auth.py etc. têm suítes próprias e módulos
+# como ml/model_registry.py, ml/routing_classifier.py e ml/finetuning.py
+# não fazem parte deste escopo de testing+eval).
+[tool.coverage.run]
+source = ["ml.embeddings", "ml.routing", "ml.lora_finetuner"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80

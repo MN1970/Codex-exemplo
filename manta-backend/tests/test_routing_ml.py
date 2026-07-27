@@ -17,11 +17,17 @@ import pytest
 import pytest_asyncio
 from fastapi import FastAPI
 
+import ml.routing as routing_module
 from ml.routing import (
     DEFAULT_N_PER_AGENT,
+    SentenceTransformerEncoder,
+    _keyword_fallback,
     generate_synthetic_dataset,
+    get_default_encoder,
+    get_encoder,
     load_agent_data,
     load_routing_model,
+    main as routing_cli_main,
     predict_agent,
     train_and_save,
 )
@@ -286,3 +292,132 @@ async def test_classify_endpoint_still_works_standalone(routing_client):
     body = resp.json()
     assert body["matched"] is True
     assert body["agent_name"] == "agente-portos"
+
+
+# ---------------------------------------------------------------------------
+# get_encoder / get_default_encoder — factory/cache de encoders
+# ---------------------------------------------------------------------------
+
+
+def test_get_encoder_sentence_transformers_returns_encoder_instance():
+    """Só o __init__ é exercitado aqui (nenhum encode/rede) — o objeto
+    SentenceTransformerEncoder é leve de construir, o custo real é lazy
+    (só na primeira chamada a .encode(), coberta em outro teste abaixo)."""
+    encoder = get_encoder("sentence-transformers")
+    assert isinstance(encoder, SentenceTransformerEncoder)
+    assert encoder.dimensions == 384
+    # segunda chamada tem que devolver o MESMO objeto cacheado
+    assert get_encoder("sentence-transformers") is encoder
+
+
+def test_get_encoder_unknown_name_raises_value_error():
+    with pytest.raises(ValueError, match="Encoder desconhecido"):
+        get_encoder("modelo-que-nao-existe")
+
+
+def test_get_default_encoder_returns_and_caches_sentence_transformer_encoder():
+    encoder = get_default_encoder()
+    assert isinstance(encoder, SentenceTransformerEncoder)
+    assert get_default_encoder() is encoder
+
+
+def test_sentence_transformer_encoder_encode_uses_faked_st_model(monkeypatch):
+    """Cobre SentenceTransformerEncoder._load()/.encode() ponta a ponta
+    sem baixar all-MiniLM-L6-v2 real — troca a classe `SentenceTransformer`
+    do pacote `sentence_transformers` por um dublê leve. O import local
+    (`from sentence_transformers import SentenceTransformer`) dentro de
+    `_load()` pega o atributo já trocado no módulo, então não precisa
+    monkeypatchar nada dentro de ml.routing."""
+    import sentence_transformers
+
+    class _FakeSTModel:
+        def __init__(self, model_name, device=None):
+            self.model_name = model_name
+            self.device = device
+
+        def encode(self, texts, batch_size=32, convert_to_numpy=True, normalize_embeddings=True, show_progress_bar=False):
+            import numpy as np
+
+            return np.ones((len(texts), 384), dtype=np.float64)
+
+    monkeypatch.setattr(sentence_transformers, "SentenceTransformer", _FakeSTModel)
+
+    encoder = SentenceTransformerEncoder(model_name="fake-st-model", device=None)
+    vectors = encoder.encode(["primeiro texto", "segundo texto"])
+    assert vectors.shape == (2, 384)
+
+    # segunda chamada reaproveita o cache de modelo (mesma cache_key) —
+    # cobre o branch `if cached is not None: return cached`.
+    vectors_again = encoder.encode(["terceiro texto"])
+    assert vectors_again.shape == (1, 384)
+
+
+# ---------------------------------------------------------------------------
+# generate_synthetic_dataset — ciclo de templates quando n_per_agent > 10
+# ---------------------------------------------------------------------------
+
+
+def test_generate_synthetic_dataset_repeats_templates_when_n_exceeds_available(agent_data):
+    texts, labels = generate_synthetic_dataset(agent_data, n_per_agent=15)
+    assert len(texts) == len(agent_data) * 15
+    for slug in agent_data:
+        assert labels.count(slug) == 15
+
+
+# ---------------------------------------------------------------------------
+# _keyword_fallback — agente sem keywords é ignorado (branch `continue`)
+# ---------------------------------------------------------------------------
+
+
+def test_keyword_fallback_skips_agents_with_no_keywords(agent_data):
+    keywords_with_one_empty = {"agente-sem-keywords": [], "manta-03-s6-portos": ["porto", "dragagem"]}
+    results = _keyword_fallback(
+        "preciso de dragagem no porto",
+        agent_data,
+        keywords_with_one_empty,
+    )
+    assert all(r["agent_slug"] != "agente-sem-keywords" for r in results)
+    assert results[0]["agent_slug"] == "manta-03-s6-portos"
+
+
+# ---------------------------------------------------------------------------
+# load_routing_model — versão explícita inexistente no manifesto
+# ---------------------------------------------------------------------------
+
+
+def test_load_routing_model_unknown_version_raises(trained_model_dir):
+    with pytest.raises(FileNotFoundError, match="não encontrada no manifesto"):
+        load_routing_model(version=9999, model_dir=trained_model_dir)
+
+
+# ---------------------------------------------------------------------------
+# CLI (main / _cli_train / _cli_predict) — end-to-end offline via
+# monkeypatch de ml.routing.MODEL_DIR (nunca toca ml/models/ real)
+# ---------------------------------------------------------------------------
+
+
+def test_cli_train_then_predict_end_to_end_offline(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(routing_module, "MODEL_DIR", tmp_path)
+    routing_module._model_cache.clear()
+
+    monkeypatch.setattr(
+        "sys.argv",
+        ["routing-cli", "train", "--encoder", "hashing", "--notes", "cli offline test"],
+    )
+    exit_code = routing_cli_main()
+    assert exit_code == 0
+    train_output = capsys.readouterr().out
+    assert "Modelo salvo" in train_output
+    assert (tmp_path / "routing_manifest.json").exists()
+
+    monkeypatch.setattr(
+        "sys.argv",
+        ["routing-cli", "predict", "preciso de dragagem no porto, calado e berco"],
+    )
+    exit_code = routing_cli_main()
+    assert exit_code == 0
+    predict_output = capsys.readouterr().out
+    assert "Agente:" in predict_output
+    assert "Top-3:" in predict_output
+
+    routing_module._model_cache.clear()
