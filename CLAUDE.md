@@ -102,6 +102,27 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
 
+### Knowledge Extractions (KE) — Indexação de Embeddings
+
+**Base:** 86 KEs, modelo `BAAI/bge-small-en-v1.5` (384-dimensional, L2-normalized)
+
+**Infraestrutura de indexação paralela:** ✅ Operacional (v4.3)
+- **Orchestrator:** `scripts/parallel_ke_embeddings_indexer.py`
+- **Discovery:** detecta KEs sem embedding via SQL
+- **Sharding:** divide em N shards (~15 KEs/shard)
+- **Dispatch:** subagents em paralelo geram embeddings + inserem no Supabase
+- **Verification:** auditoria final com COUNT agregado
+
+**Documentação:**
+- Runbook técnico: `PARALLEL_KE_EMBEDDINGS.md`
+- Quick start: `README_KE_INDEXING.md`
+- Demo: `scripts/run_ke_indexing_demo.py`
+
+**Regras críticas:**
+- Modelo imutável em coluna `embedding` (384d, L2-normalized)
+- `ON CONFLICT DO NOTHING` (nunca sobrescrever)
+- `chunk_text` = texto completo usado para gerar embedding (auditoria)
+
 ---
 
 ## SHAREPOINT — Routing rules (sp_agent_routing)
@@ -116,8 +137,9 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
-## DEPLOY CHECKLIST v4.2
+## DEPLOY CHECKLIST v4.3
 
+### v4.2 (S6–S10) — Em progresso
 - [x] Copiar 5 agent .md para `.claude/agents/`
 - [x] Aplicar patch no CLAUDE.md master (seção Agentes)
 - [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
@@ -129,31 +151,58 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 - [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
 - [ ] Gate humano: aprovação MN antes de merge
 
+### v4.3 (Parallel KE Embeddings) — ✅ Completo
+- [x] Implementar `KeIndexerOrchestrator` (discovery, sharding, dispatch)
+- [x] Demo end-to-end com dados fictícios
+- [x] Test de geração SQL
+- [x] Runbook técnico (`PARALLEL_KE_EMBEDDINGS.md`)
+- [x] Quick start (`README_KE_INDEXING.md`)
+- [x] 86 KEs verificadas (100% indexadas)
+- [x] Atualizar CLAUDE.md master (RAG — Knowledge Extractions)
+- [ ] Criar cron/webhook para discovery automático 1x/dia
+- [ ] Dashboard de status de indexação
+- [ ] Integração com aluci-guard para KEs que citam normas/leis
+
 ---
 
 ## Arquivos deste repositório
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                         # este arquivo (master registry)
+├── CLAUDE.md                                 # este arquivo (master registry v4.3)
+├── PARALLEL_KE_EMBEDDINGS.md                 # 🆕 Runbook de indexação paralela de embeddings
+├── README_KE_INDEXING.md                     # 🆕 Quick start de indexação KE
+├── .gitignore
 └── .claude/
     └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+        ├── agente-portos.md                  # S6
+        ├── agente-aeroportos.md              # S7
+        ├── agente-saneamento.md              # S8 — prioridade AySA
+        ├── agente-energia.md                 # S9 — ANEEL/State Grid
+        └── agente-barragens.md               # S10
+
+scripts/
+├── parallel_ke_embeddings_indexer.py         # 🆕 Orchestrator (KeIndexerOrchestrator)
+├── run_ke_indexing_demo.py                   # 🆕 Demo end-to-end
+└── test_sql_generation.py                    # 🆕 Test de geração SQL
 ```
 
+**Estrutura:**
+- Agentes S6–S10 (.claude/agents/) — referência canônica versionada
+- Infraestrutura de embeddings (scripts/, .md) — ready-to-fire
+- Este repositório serve como source-of-truth para v4.2+ do Manta Maestro
+
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
-no repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
-serve como referência canônica versionada dos agentes verticais e do
-mapa de routing.
+no repositório operacional do Maestro.
 
 ---
 
 ## Histórico de versões
 
+- **v4.3** (2026-07-27) — infraestrutura de indexação paralela de embeddings KE.
+  Orchestrator `KeIndexerOrchestrator`, discovery → sharding → dispatch paralelo →
+  verification. Modelo `BAAI/bge-small-en-v1.5` (384d, L2-normalized). 86 KEs,
+  100% indexadas. Ticket MNT-2026-KE-EMBEDDINGS-PARALLEL.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
