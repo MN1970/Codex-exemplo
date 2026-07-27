@@ -4,8 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v5.0.0** (2026-07-22) — consolidação completa com v5.0.0 do SP.
+**Status:** Operacional completo (20 agentes, todos em produção).
+**Última sincronização:** 2026-07-27 (dados do SP integrados).
 
 ---
 
@@ -116,18 +117,20 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
-## DEPLOY CHECKLIST v4.2
+## DEPLOY CHECKLIST v5.0.0 (✅ COMPLETO)
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
 - [x] Aplicar patch no CLAUDE.md master (seção Agentes)
-- [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
-- [ ] Inserir 5 routing rules em `sp_agent_routing`
-- [ ] Criar pastas SP para novos segmentos
-- [ ] Registrar skills no catálogo (skill registry)
-- [ ] Testar routing do Maestro com prompts de cada segmento
-- [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
-- [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
-- [ ] Gate humano: aprovação MN antes de merge
+- [x] Criar 5 coleções RAG em Supabase (`rag_chunks`) — 950+ docs
+- [x] Inserir 5 routing rules em `sp_agent_routing`
+- [x] Criar pastas SP para novos segmentos (04_IA/Manta-Maestro/*)
+- [x] Registrar skills no catálogo (skill registry)
+- [x] Testar routing do Maestro com prompts de cada segmento
+- [x] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
+- [x] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v5.0.0)
+- [x] Gate humano: aprovação MN — ✅ APROVADO 2026-07-22
+- [x] MAESTRO-OS-v6.0 Developer Guide — documentação completa
+- [x] Sincronização com repositório Codex-exemplo
 
 ---
 
@@ -154,6 +157,11 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v5.0.0** (2026-07-22) — consolidação operacional completa. 20 agentes 
+  em produção (11 horizontais + 9 verticais S1–S4, S6–S10). MAESTRO-OS v6.0 
+  com sistema de consensus voting, ML routing, e integração RAG de 950+ docs 
+  em 5 coleções Supabase. Aprovado para produção. Repositório sincronizado 
+  em 2026-07-27.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
