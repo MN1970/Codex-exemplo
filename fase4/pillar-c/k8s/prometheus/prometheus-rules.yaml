@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: observability
+data:
+  manta-alerts.yml: |
+    groups:
+      - name: manta.rules
+        interval: 15s
+        rules:
+          # Git metrics alerts
+          - alert: PRMergeSuccessRateLow
+            expr: manta_git_merge_success_rate < 0.85
+            for: 5m
+            labels:
+              severity: warning
+              component: git-gitops
+            annotations:
+              summary: "PR merge success rate below 85%"
+              description: "Merge success rate is {{ $value | humanizePercentage }} (threshold: 85%)"
+              runbook_url: "https://manta.internal/docs/runbooks/merge-rate-low"
+
+          - alert: PRReviewTimeHigh
+            expr: histogram_quantile(0.95, manta_git_pr_review_time_seconds) > 3600
+            for: 10m
+            labels:
+              severity: warning
+              component: git-gitops
+            annotations:
+              summary: "PR review time p95 exceeds 1 hour"
+              description: "P95 review time: {{ $value | humanizeDuration }}"
+
+          - alert: ConflictResolutionTimeLong
+            expr: manta_git_conflict_resolution_time_seconds > 7200
+            for: 5m
+            labels:
+              severity: critical
+              component: git-gitops
+            annotations:
+              summary: "Merge conflict resolution exceeds 2 hours"
+              description: "Latest conflict resolution: {{ $value | humanizeDuration }}"
+
+          # ML metrics alerts
+          - alert: MLModelAccuracyDrift
+            expr: |
+              abs(manta_ml_model_accuracy - manta_ml_model_accuracy_baseline) > 0.05
+            for: 10m
+            labels:
+              severity: warning
+              component: ml-inference
+            annotations:
+              summary: "ML model accuracy drifted > 5%"
+              description: "Current accuracy: {{ $value | humanizePercentage }}"
+
+          - alert: MLInferenceLateneyHigh
+            expr: histogram_quantile(0.99, manta_ml_inference_latency_ms) > 2000
+            for: 5m
+            labels:
+              severity: critical
+              component: ml-inference
+            annotations:
+              summary: "ML inference latency p99 exceeds 2 seconds"
+              description: "P99 latency: {{ $value | humanizeDuration }}"
+
+          - alert: AnomaliesUnresolved
+            expr: manta_anomaly_detection_unresolved_count > 5
+            for: 60m
+            labels:
+              severity: warning
+              component: anomaly-detection
+            annotations:
+              summary: "More than 5 unresolved anomalies detected"
+              description: "Unresolved anomalies: {{ $value }}"
+
+          # Cost metrics alerts
+          - alert: CostSpike
+            expr: |
+              (manta_cost_monthly - (manta_cost_monthly offset 30d)) / (manta_cost_monthly offset 30d) > 0.2
+            for: 5m
+            labels:
+              severity: critical
+              component: cost-calculator
+            annotations:
+              summary: "Monthly cost spike > 20%"
+              description: "Cost increase: {{ $value | humanizePercentage }}"
+
+          - alert: DBSCANMassiveDriftDetected
+            expr: manta_anomaly_dbscan_cluster_size > 100
+            for: 5m
+            labels:
+              severity: critical
+              component: anomaly-detection
+            annotations:
+              summary: "Massive drift detected via DBSCAN (cluster > 100)"
+              description: "Cluster size: {{ $value }}"
+
+          - alert: CanaryRolloutStuck
+            expr: time() - manta_canary_rollout_last_phase_change_timestamp > 1800
+            for: 5m
+            labels:
+              severity: warning
+              component: gitops-automation
+            annotations:
+              summary: "Canary rollout phase stuck for > 30 minutes"
+              description: "Last phase change: {{ $value | humanizeDuration }} ago"
+
+          - alert: JaegerSpanErrorRateHigh
+            expr: |
+              manta_jaeger_span_error_rate > 0.02
+            for: 5m
+            labels:
+              severity: critical
+              component: tracing
+            annotations:
+              summary: "Jaeger span error rate exceeds 2%"
+              description: "Error rate: {{ $value | humanizePercentage }}"
+
+          # Infrastructure alerts
+          - alert: PrometheusDataDiskUsageCritical
+            expr: |
+              (1 - (node_filesystem_avail_bytes{mountpoint="/prometheus"} / node_filesystem_size_bytes{mountpoint="/prometheus"})) > 0.9
+            for: 5m
+            labels:
+              severity: critical
+              component: prometheus
+            annotations:
+              summary: "Prometheus disk usage above 90%"
+              description: "Available space: {{ $value | humanizePercentage }}"

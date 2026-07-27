@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse
+  namespace: observability
+  labels:
+    app: clickhouse
+spec:
+  type: ClusterIP
+  selector:
+    app: clickhouse
+  ports:
+    - name: http
+      port: 8123
+      targetPort: http
+      protocol: TCP
+    - name: native
+      port: 9000
+      targetPort: native
+      protocol: TCP
+    - name: replication
+      port: 9009
+      targetPort: replication
+      protocol: TCP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clickhouse-config
+  namespace: observability
+data:
+  otel-traces.xml: |
+    <yandex>
+      <storage_configuration>
+        <disks>
+          <default>
+            <path>/var/lib/clickhouse/</path>
+          </default>
+        </disks>
+        <policies>
+          <default>
+            <volumes>
+              <main>
+                <disk>default</disk>
+              </main>
+            </volumes>
+          </default>
+        </policies>
+      </storage_configuration>
+      <remote_servers>
+        <otel>
+          <shard>
+            <replica>
+              <host>clickhouse</host>
+              <port>9000</port>
+            </replica>
+          </shard>
+        </otel>
+      </remote_servers>
+    </yandex>
+  otel-traces-tables.sql: |
+    CREATE DATABASE IF NOT EXISTS otel_traces;
+
+    CREATE TABLE IF NOT EXISTS otel_traces.otel_traces (
+      timestamp DateTime,
+      trace_id String,
+      span_id String,
+      parent_span_id String,
+      service_name String,
+      operation_name String,
+      status_code String,
+      span_kind String,
+      duration_nano Int64,
+      tags Map(String, String),
+      logs Array(Tuple(timestamp DateTime, message String)),
+      resource_attributes Map(String, String)
+    ) ENGINE = MergeTree()
+    ORDER BY (timestamp, trace_id, span_id)
+    TTL timestamp + INTERVAL 30 DAY;
+
+    CREATE TABLE IF NOT EXISTS otel_traces.otel_metrics (
+      timestamp DateTime,
+      metric_name String,
+      metric_type String,
+      value Float64,
+      resource_attributes Map(String, String),
+      attributes Map(String, String)
+    ) ENGINE = MergeTree()
+    ORDER BY (timestamp, metric_name)
+    TTL timestamp + INTERVAL 90 DAY;

@@ -1,0 +1,55 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: observability
+
+resources:
+  - namespace.yaml
+  - jaeger/jaeger-configmap.yaml
+  - jaeger/jaeger-deployment.yaml
+  - jaeger/jaeger-service.yaml
+  - clickhouse/clickhouse-pvc.yaml
+  - clickhouse/clickhouse-deployment.yaml
+  - clickhouse/clickhouse-service.yaml
+  - prometheus/prometheus-configmap.yaml
+  - prometheus/prometheus-deployment.yaml
+  - prometheus/prometheus-rules.yaml
+  - prometheus/prometheus-service.yaml
+  - grafana/grafana-deployment.yaml
+  - grafana/grafana-datasources.yaml
+  - grafana/grafana-configmap.yaml
+  - alertmanager/alertmanager-deployment.yaml
+  - alertmanager/alertmanager-configmap.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: manta-observability
+      app.kubernetes.io/version: v1.0
+      app.kubernetes.io/component: monitoring
+      app.kubernetes.io/managed-by: kustomize
+
+commonLabels:
+  environment: production
+  observability-stack: true
+
+commonAnnotations:
+  project: "Manta Maestro Fase 4 - Pillar C"
+  description: "OpenTelemetry Observability Stack"
+  version: "1.0.0"
+  owner: "manta-team@mantaassociados.com"
+
+secretGenerator:
+  - name: clickhouse-credentials
+    behavior: replace
+    literals:
+      - password=ClickHouse@2026Secure
+
+replicas:
+  - name: prometheus
+    count: 2
+  - name: grafana
+    count: 2
+  - name: alertmanager
+    count: 2
+  - name: jaeger
+    count: 2
