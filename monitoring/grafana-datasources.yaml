@@ -1,0 +1,29 @@
+# Grafana datasource configuration - provisioned automatically
+apiVersion: 1
+
+datasources:
+  # Prometheus datasource
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 30s
+      httpMethod: GET
+    version: 1
+    editable: true
+
+  # Loki datasource (optional: for log aggregation)
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+    version: 1
+    editable: true
+
+deleteDatasources:
+  - name: TestData DB
+    orgId: 1

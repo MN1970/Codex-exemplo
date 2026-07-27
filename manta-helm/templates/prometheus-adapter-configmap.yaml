@@ -1,0 +1,110 @@
+{{- if .Values.customMetrics.prometheusAdapter.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "manta.fullname" . }}-prometheus-adapter
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+data:
+  config.yaml: |
+    # Prometheus Adapter configuration for Manta Maestro custom metrics
+    # Maps Prometheus metrics to Kubernetes custom metrics API
+
+    rules:
+      # ===== Custom Resource Metrics (for HPA) =====
+
+      # Request Per Second metric (FastAPI)
+      - seriesQuery: 'manta_api_requests_per_second{<<.LabelMatchers>>}'
+        seriesFilters: []
+        resources:
+          overrides:
+            namespace: {resource: "namespace"}
+            pod: {resource: "pod"}
+        name:
+          matches: "^manta_api_requests_per_second"
+          as: "requests_per_second"
+        metricsQuery: 'manta_api_requests_per_second{<<.LabelMatchers>>}'
+
+      # Semantic search latency p95 metric
+      - seriesQuery: 'manta_semantic_search_latency_p95{<<.LabelMatchers>>}'
+        seriesFilters: []
+        resources:
+          overrides:
+            namespace: {resource: "namespace"}
+            pod: {resource: "pod"}
+        name:
+          matches: "^manta_semantic_search_latency_p95"
+          as: "search_latency_p95"
+        metricsQuery: 'manta_semantic_search_latency_p95{<<.LabelMatchers>>}'
+
+      # Model inference queue depth
+      - seriesQuery: 'manta_model_inference_queue_depth{<<.LabelMatchers>>}'
+        seriesFilters: []
+        resources:
+          overrides:
+            namespace: {resource: "namespace"}
+            pod: {resource: "pod"}
+        name:
+          matches: "^manta_model_inference_queue_depth"
+          as: "model_queue_depth"
+        metricsQuery: 'manta_model_inference_queue_depth{<<.LabelMatchers>>}'
+
+      # Database active connections
+      - seriesQuery: 'pg_stat_activity_count{state="active",<<.LabelMatchers>>}'
+        seriesFilters: []
+        resources:
+          overrides:
+            namespace: {resource: "namespace"}
+            pod: {resource: "pod"}
+        name:
+          matches: "^pg_stat_activity_count"
+          as: "db_active_connections"
+        metricsQuery: 'pg_stat_activity_count{state="active",<<.LabelMatchers>>}'
+
+      # Agent routing accuracy
+      - seriesQuery: 'manta_routing_accuracy{<<.LabelMatchers>>}'
+        seriesFilters: []
+        resources:
+          overrides:
+            namespace: {resource: "namespace"}
+            pod: {resource: "pod"}
+        name:
+          matches: "^manta_routing_accuracy"
+          as: "routing_accuracy"
+        metricsQuery: 'manta_routing_accuracy{<<.LabelMatchers>>}'
+
+      # ===== External Metrics (for HPA across workloads) =====
+
+      - seriesQuery: '{__name__=~"^manta_.*",job="prometheus"}'
+        seriesFilters: []
+        resources:
+          template: <<.Resource>>
+        name:
+          matches: "^manta_(.*)"
+          as: "<<.Group>>"
+        metricsQuery: '<<.Series>>{<<.LabelMatchers>>}'
+
+    # Default resource limits for metrics evaluation
+    resourceRules:
+      cpu:
+        containerQuery: 'rate(container_cpu_usage_seconds_total[5m])'
+        nodeQuery: 'sum(rate(container_cpu_usage_seconds_total[5m])) by (<<.LabelMatchers>>, node)'
+        resources:
+          overrides:
+            node: {resource: "node"}
+            namespace: {resource: "namespace"}
+            pod: {resource: "pod"}
+        containerLabel: container
+      memory:
+        containerQuery: 'container_memory_working_set_bytes'
+        nodeQuery: 'sum(container_memory_working_set_bytes) by (<<.LabelMatchers>>, node)'
+        resources:
+          overrides:
+            node: {resource: "node"}
+            namespace: {resource: "namespace"}
+            pod: {resource: "pod"}
+        containerLabel: container
+      window: 5m
+{{- end }}

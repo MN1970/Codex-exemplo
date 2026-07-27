@@ -1,0 +1,197 @@
+# Production-specific values for Manta Maestro
+# Override default values.yaml with: helm install -f values-production.yaml
+
+namespace: manta
+namespaceCreate: true
+
+global:
+  domain: manta.example.com
+  environment: production
+  imagePullSecrets:
+    - name: docker-registry-secret
+
+# FastAPI production configuration
+fastapi:
+  replicas: 3
+  image:
+    repository: docker.io/mantaassociados/manta-fastapi
+    tag: "1.0.0"
+    pullPolicy: Always  # Always pull in production
+
+  service:
+    type: LoadBalancer
+    annotations:
+      cloud.google.com/load-balancer-type: "Internal"  # GCP example
+
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      nginx.ingress.kubernetes.io/rate-limit: "100"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    hosts:
+      - host: api.manta.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: manta-api-tls-prod
+        hosts:
+          - api.manta.example.com
+
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+  env:
+    LOG_LEVEL: "INFO"
+    DATABASE_URL: "postgresql://manta:manta@postgres.manta.svc.cluster.local:5432/manta"
+    API_WORKERS: "8"
+    REDIS_URL: "redis://redis.manta.svc.cluster.local:6379/0"
+
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+
+# React production configuration
+react:
+  replicas: 2
+  image:
+    repository: docker.io/mantaassociados/manta-react
+    tag: "1.0.0"
+    pullPolicy: Always
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+  env:
+    REACT_APP_API_URL: "https://api.manta.example.com"
+    REACT_APP_ENVIRONMENT: "production"
+
+# PostgreSQL production configuration
+postgres:
+  replicas: 1
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+
+  persistence:
+    enabled: true
+    storageClass: "fast-ssd"  # Production: use SSD for better performance
+    size: 100Gi  # Larger size for production data
+
+  auth:
+    database: "manta"
+    username: "manta"
+    existingSecret: "manta-db-secret"
+    secretKey: "postgres-password"
+
+  config:
+    maxConnections: 500
+    sharedBuffers: "512MB"
+    effectiveCacheSize: "4GB"
+    maintenanceWorkMemory: "256MB"
+
+# Horizontal Pod Autoscaling - production settings
+autoscaling:
+  fastapi:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 20
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  react:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+
+# RBAC and security
+rbac:
+  enabled: true
+
+networkPolicies:
+  enabled: true
+  fastapi:
+    enabled: true
+  react:
+    enabled: true
+  postgres:
+    enabled: true
+
+# Secrets management
+secrets:
+  sealed:
+    enabled: true
+    sealer: "sealed-secrets"
+    namespace: "kube-system"
+  existing:
+    apiSecrets: "manta-api-secrets"
+    dbSecret: "manta-db-secret"
+
+# Monitoring (enable for production)
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    interval: 30s
+  logging:
+    enabled: true
+    driver: "json-file"
+
+# Pod disruption budgets
+affinity:
+  fastapi:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                    - manta
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                    - api
+            topologyKey: kubernetes.io/hostname
+
+# Node affinity for dedicated node pool (optional)
+nodeSelector:
+  # node-pool: manta-production
+
+# Pod scheduling constraints (optional)
+tolerations:
+  # - key: "dedicated"
+  #   operator: "Equal"
+  #   value: "manta"
+  #   effect: "NoSchedule"
+
+# Common labels and annotations
+commonLabels:
+  app.kubernetes.io/name: "manta"
+  app.kubernetes.io/version: "1.0.0"
+  app.kubernetes.io/part-of: "manta-maestro"
+  app.kubernetes.io/managed-by: "Helm"
+  environment: "production"
+  team: "platform"
+
+commonAnnotations:
+  manta.io/segment: "maestro"
+  manta.io/tier: "production"
+  manta.io/sla: "99.95%"

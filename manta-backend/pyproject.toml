@@ -1,0 +1,76 @@
+[tool.poetry]
+name = "manta-backend"
+version = "0.1.0"
+description = "Backend FastAPI async do Manta Maestro (Agent Registry) — Manta Associados"
+authors = ["Manta Associados"]
+readme = "README.md"
+packages = [
+    { include = "app.py" },
+    { include = "config.py" },
+    { include = "database.py" },
+    { include = "rag_store.py" },
+    { include = "pg_pool.py" },
+    { include = "db.py" },
+    { include = "models.py" },
+    { include = "auth.py" },
+    { include = "routers" },
+    { include = "mcp" },
+    { include = "ml" },
+    { include = "alembic" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+uvicorn = { extras = ["standard"], version = "^0.30.0" }
+pydantic = "^2.9.0"
+pydantic-settings = "^2.5.0"
+asyncpg = "^0.29.0"
+aiohttp = "^3.10.0"
+python-jose = { extras = ["cryptography"], version = "^3.3.0" }
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+bcrypt = "4.0.1"  # pin: bcrypt>=4.1 quebra o probe de versão de passlib==1.7.4
+python-multipart = "^0.0.12"
+sqlalchemy = { extras = ["asyncio"], version = "^2.0.35" }
+email-validator = "^2.2.0"
+pgvector = "^0.5.0"    # tipo Vector do SQLAlchemy — database.py (RagChunk.embedding)
+alembic = "^1.18.0"    # migrations versionadas — alembic/versions/
+pypdf = "^5.1.0"       # extração de texto de PDF — routers/rag.py (POST /rag/upload)
+sentence-transformers = "^3.3.0"  # ml/embeddings.py — all-MiniLM-L6-v2 local (dim 384)
+huggingface-hub = ">=0.34,<1.0"    # pin: transformers 4.57.x exige <1.0; ver comentário em requirements.txt
+scikit-learn = "^1.9.0"  # ml/routing.py + ml/routing_classifier.py — LogisticRegression
+joblib = "^1.5.3"         # ml/routing.py — pickle versionado do modelo de roteamento
+transformers = "^4.57.0"  # ml/finetuning.py — load_base_model()/Trainer/TrainingArguments
+peft = "^0.19.0"          # ml/finetuning.py — LoraConfig/get_peft_model/PeftModel (adapter LoRA)
+datasets = "^5.0.0"       # ml/finetuning.py::prepare_dataset() — datasets.Dataset
+accelerate = "^1.14.0"    # dependência do transformers.Trainer (device_map/dispatch)
+tokenizers = "^0.22.0"    # ml/finetuning.py — tokenizer BPE do modo demo offline
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+pytest-asyncio = "^0.24.0"
+httpx = "^0.27.0"
+ruff = "^0.6.0"
+aiosqlite = "^0.20.0"
+greenlet = "^3.1.1"
+pytest-cov = "^7.1.0"  # coverage da suíte (ver [tool.coverage] abaixo + CI ml-tests.yml)
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+# Escopo de coverage: os 3 módulos de ML cobertos por
+# tests/test_embeddings.py, tests/test_routing.py e tests/test_finetuning.py
+# (ver ticket de testing/eval — meta >80% nestes módulos). Não mede o
+# backend inteiro (routers/, auth.py etc. têm suítes próprias e módulos
+# como ml/model_registry.py, ml/routing_classifier.py e ml/finetuning.py
+# não fazem parte deste escopo de testing+eval).
+[tool.coverage.run]
+source = ["ml.embeddings", "ml.routing", "ml.lora_finetuner"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80

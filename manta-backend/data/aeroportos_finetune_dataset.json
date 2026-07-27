@@ -1,0 +1,42 @@
+[
+  {
+    "instruction": "What does the ICAO Annex 14 aerodrome reference code define?",
+    "output": "ICAO Annex 14 defines the aerodrome reference code as a pair (code number 1-4 for reference field length, code letter A-F for wingspan/outer main gear width) that sets minimum runway, taxiway and pista clearances for the aircraft the airport is designed to serve, e.g. code 4E/4F for wide-body jets."
+  },
+  {
+    "instruction": "What is PCN and why does it matter for pista pavement?",
+    "output": "PCN (Pavement Classification Number) expresses a pista's load-bearing capacity relative to an aircraft's ACN (Aircraft Classification Number); an aircraft may operate on a pavement without special ANAC authorization only if its ACN does not exceed the pista's published PCN under the relevant subgrade/pressure category."
+  },
+  {
+    "instruction": "What balizamento (marking/lighting) does ICAO require for CAT II approach operations?",
+    "output": "CAT II operations require precision approach path indicator lights, high-intensity approach lighting (e.g. ALSF-2), touchdown zone and centerline lighting, and RVR (runway visual range) reporting equipment, per ICAO Annex 14 and RBAC standards, enabling safe landing with decision heights as low as 30m and reduced visibility."
+  },
+  {
+    "instruction": "What determines runway length for an A320neo operation?",
+    "output": "Required runway (pista) length depends on aircraft weight, airport elevation, temperature, runway slope, and wind — computed via the manufacturer's performance charts for takeoff/landing field length, then checked against ANAC/ICAO Annex 14 declared distances (TORA, TODA, ASDA, LDA) for the aerodromo."
+  },
+  {
+    "instruction": "What is the role of ANAC in Brazilian airport certification?",
+    "output": "ANAC (Agencia Nacional de Aviacao Civil) certifies aerodromos under RBAC 139, approves airport operating manuals, oversees PCN/ACN compliance, and enforces ICAO Annex 14 physical characteristics (pista, taxiway, TPS/TECA) before an airport is authorized for commercial operations."
+  },
+  {
+    "instruction": "What distinguishes a TPS from a TECA at an airport?",
+    "output": "TPS (Terminal de Passageiros) handles passenger processing (check-in, security, boarding), while TECA (Terminal de Cargas) handles air cargo operations (customs, warehousing, ramp handling). Both must comply with ANAC/ICAO capacity and safety standards but serve entirely different traffic types."
+  },
+  {
+    "instruction": "What taxiway design standards apply near a code 4F pista?",
+    "output": "Code 4F aircraft (e.g. A380) require wider taxiway width, greater taxiway-to-taxiway and taxiway-to-object clearances, and larger fillet radii at turns than lower codes, per ICAO Annex 14 tables — critical for airports planning to receive very large aircraft."
+  },
+  {
+    "instruction": "What runway strip and RESA requirements does ICAO Annex 14 impose?",
+    "output": "ICAO Annex 14 requires a graded runway strip extending beyond the pista edges and ends, plus a RESA (Runway End Safety Area) extending at least 90m (recommended 240m) beyond the strip, to reduce risk of damage to aircraft overrunning or undershooting the runway."
+  },
+  {
+    "instruction": "What FAA Advisory Circular guidance parallels ICAO Annex 14 for pista design?",
+    "output": "FAA AC 150/5300-13A covers airport design (runway/taxiway geometry, separation standards) largely analogous to ICAO Annex 14, and is often referenced alongside RBAC/ANAC standards on projects following US-influenced design practice or serving US-registered aircraft."
+  },
+  {
+    "instruction": "What capacity factors limit a TPS terminal's peak-hour passenger throughput?",
+    "output": "TPS peak-hour throughput is limited by check-in counter count, security lane throughput, immigration/customs processing rate, gate/apron capacity, and baggage handling system rate — all sized against the design peak-hour passenger (PHP) figure defined in the airport master plan."
+  }
+]

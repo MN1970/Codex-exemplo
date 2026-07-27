@@ -1,0 +1,43 @@
+services:
+  backend:
+    build: .
+    container_name: manta-backend
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: development
+      DEBUG: "true"
+      HOST: 0.0.0.0
+      PORT: 8000
+      DATABASE_URL: postgresql://manta:manta@db:5432/manta
+      JWT_SECRET: change-me-in-production
+      MCP_GATEWAY_URL: http://mcp-gateway:8765
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: manta-backend-db
+    environment:
+      POSTGRES_USER: manta
+      POSTGRES_PASSWORD: manta
+      POSTGRES_DB: manta
+    ports:
+      - "5432:5432"
+    volumes:
+      - manta_db_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U manta -d manta"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  manta_db_data:

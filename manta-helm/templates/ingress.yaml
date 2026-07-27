@@ -1,0 +1,89 @@
+{{- if .Values.fastapi.enabled }}
+---
+# FastAPI API Ingress with TLS
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "manta.fullname" . }}-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+  annotations:
+    {{- if .Values.fastapi.ingress.annotations }}
+    {{- toYaml .Values.fastapi.ingress.annotations | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.fastapi.ingress.className }}
+  ingressClassName: {{ .Values.fastapi.ingress.className }}
+  {{- end }}
+
+  {{- if .Values.fastapi.ingress.tls }}
+  tls:
+    {{- toYaml .Values.fastapi.ingress.tls | nindent 4 }}
+  {{- end }}
+
+  rules:
+    {{- if .Values.fastapi.ingress.hosts }}
+    {{- range .Values.fastapi.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "manta.fullname" . }}-fastapi-internal
+                port:
+                  number: {{ $.Values.fastapi.service.port }}
+          {{- end }}
+    {{- end }}
+    {{- end }}
+
+{{- end }}
+
+---
+{{- if .Values.react.enabled }}
+# React SPA Ingress with TLS
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "manta.fullname" . }}-web
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+  annotations:
+    {{- if .Values.react.ingress.annotations }}
+    {{- toYaml .Values.react.ingress.annotations | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.react.ingress.className }}
+  ingressClassName: {{ .Values.react.ingress.className }}
+  {{- end }}
+
+  {{- if .Values.react.ingress.tls }}
+  tls:
+    {{- toYaml .Values.react.ingress.tls | nindent 4 }}
+  {{- end }}
+
+  rules:
+    {{- if .Values.react.ingress.hosts }}
+    {{- range .Values.react.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "manta.fullname" . }}-react
+                port:
+                  number: {{ $.Values.react.service.port }}
+          {{- end }}
+    {{- end }}
+    {{- end }}
+
+{{- end }}

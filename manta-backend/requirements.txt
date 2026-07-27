@@ -1,0 +1,72 @@
+# Fallback pip (equivalente ao pyproject.toml, para quem não usa Poetry)
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+pydantic-settings==2.5.2
+asyncpg==0.29.0
+aiohttp==3.10.10
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+# Pin explícito: bcrypt>=4.1 removeu `bcrypt.__about__`, que o probe de
+# versão de passlib==1.7.4 acessa incondicionalmente — sem este pin, um
+# `pip install` resolve bcrypt 4.1+/5.x e QUALQUER hash/verify de senha
+# lança ValueError em runtime (bug real, não hipotético — reproduzido
+# durante o desenvolvimento deste módulo).
+bcrypt==4.0.1
+python-multipart==0.0.12
+sqlalchemy[asyncio]==2.0.35
+email-validator==2.2.0
+# asyncpg==0.29.0 acima já cobre o driver async Postgres usado tanto
+# pelo pool "cru" de pg_pool.py quanto pelo engine SQLAlchemy de
+# db.py/database.py.
+pgvector==0.5.0
+# Driver Python do pgvector (tipo `Vector` para SQLAlchemy) — usado por
+# database.py (RagChunk.embedding) e pelas migrations Alembic.
+alembic==1.18.5
+# Migrations versionadas (alembic/versions/) — schema, extensão pgvector
+# e RLS multi-org do database.py.
+pypdf==5.1.0
+# Extração de texto de PDF no upload do Knowledge Hub (routers/rag.py,
+# POST /rag/upload). Import é feito localmente dentro da função para
+# manter a dependência opcional/isolada dos demais endpoints.
+sentence-transformers==3.3.1
+# ml/embeddings.py — carrega all-MiniLM-L6-v2 localmente (dim 384) para
+# gerar os embeddings do RAG (sem depender de API externa). Puxa torch
+# como dependência transitiva; para instalar só a wheel CPU (bem menor
+# que a build CUDA) em ambientes sem GPU, instale antes:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+huggingface-hub<1.0,>=0.34
+# Pin explícito: transformers==4.57.x (dependência de sentence-transformers)
+# exige huggingface-hub<1.0 em runtime (`require_version_core`), mas sem
+# este pin o resolver do pip instala huggingface-hub 1.x (mais novo,
+# quebra compatibilidade de API) e `import sentence_transformers` falha
+# com `ImportError: huggingface-hub>=0.34.0,<1.0 is required` — bug real,
+# reproduzido durante o desenvolvimento deste módulo (mesma classe de
+# problema do pin de bcrypt acima).
+numpy>=1.26,<3
+# Usado diretamente por ml/embeddings.py (ndarray dos embeddings) e por
+# ml/routing_classifier.py. Já vem transitivo de sentence-transformers/
+# scikit-learn, mas pinamos explicitamente por ser um import direto.
+scikit-learn==1.9.0
+joblib==1.5.3
+# ml/routing.py (roteamento semântico: Sentence Transformers + Logistic
+# Regression) e ml/routing_classifier.py (motor legado TF-IDF). joblib é
+# usado para o pickle versionado do modelo (ml/models/routing_model_v*.joblib).
+transformers==4.57.6
+# ml/finetuning.py — load_base_model()/build_demo_base_model_and_tokenizer()
+# (AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer). Já vinha
+# transitivo de sentence-transformers; pinado aqui por ser um import direto
+# de ml/finetuning.py e ml/lora_finetuner.py.
+peft==0.19.1
+# ml/finetuning.py — LoraConfig/get_peft_model/PeftModel (adapter LoRA sobre
+# o modelo base, ver create_trainer()/load_adapter()).
+datasets==5.0.0
+# ml/finetuning.py::prepare_dataset() — datasets.Dataset (tokenização +
+# train_test_split do dataset de cada segmento).
+accelerate==1.14.0
+# Dependência do transformers.Trainer para device_map/dispatch de modelo
+# (usada implicitamente por create_trainer()/train() em ml/finetuning.py).
+tokenizers==0.22.2
+# ml/finetuning.py::build_demo_base_model_and_tokenizer() — ByteLevelBPETokenizer
+# treinado localmente (modo --demo/demo_mode=True, sem download do HF Hub).
+# Já vem transitivo de transformers; pinado por ser um import direto.

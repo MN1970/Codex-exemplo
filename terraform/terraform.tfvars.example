@@ -1,0 +1,91 @@
+# ====================
+# Terraform Variables Example Configuration
+# ====================
+# Copy this file to terraform.tfvars and update values for your environment
+
+# ====================
+# General Configuration
+# ====================
+aws_region   = "us-east-1"
+environment  = "prod"  # dev, staging, prod
+project_name = "manta-platform"
+
+# ====================
+# Network Configuration
+# ====================
+vpc_cidr                = "10.0.0.0/16"
+enable_nat_gateway      = true
+single_nat_gateway      = false  # Set to true to save costs (single point of failure)
+enable_vpn_gateway      = false
+enable_flow_logs        = true
+
+# ====================
+# Database Configuration
+# ====================
+db_instance_class           = "db.t3.medium"   # For prod: db.m6i.large or larger
+db_allocated_storage        = 100             # GB
+db_max_allocated_storage    = 500             # GB (auto-scaling max)
+db_backup_retention_days    = 30              # 7-35 days
+db_multi_az                 = true            # HA for production
+db_username                 = "manta_admin"
+db_password                 = "CHANGE_ME_TO_SECURE_PASSWORD_MIN_8_CHARS"  # *** IMPORTANT: CHANGE THIS ***
+enable_enhanced_monitoring  = true
+
+# ====================
+# ECS Configuration
+# ====================
+fastapi_container_image        = "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/fastapi:latest"
+fastapi_container_port         = 8000
+fastapi_desired_count          = 2      # Number of FastAPI replicas
+react_container_image          = "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/react:latest"
+react_container_port           = 3000
+react_desired_count            = 1
+ecs_task_cpu                   = 512    # 256, 512, 1024, 2048, 4096
+ecs_task_memory                = 1024   # MB
+container_cpu_target_utilization = 70   # Auto-scaling threshold
+container_memory_target_utilization = 80
+
+# ====================
+# ALB Configuration
+# ====================
+enable_https              = true
+acm_certificate_arn       = ""  # Leave empty for self-signed (dev/staging), or provide ACM cert ARN
+alb_health_check_path     = "/health"
+alb_health_check_interval = 30
+alb_health_check_timeout  = 5
+
+# ====================
+# S3 & CloudFront Configuration
+# ====================
+s3_bucket_versioning_enabled    = true
+s3_cloudfront_enabled           = true
+cloudfront_default_ttl          = 3600   # 1 hour
+cloudfront_max_ttl              = 86400  # 1 day
+s3_lifecycle_transition_days    = 90     # Days before transition to Glacier
+
+# ====================
+# Monitoring Configuration
+# ====================
+enable_monitoring        = true
+enable_backups           = true
+log_retention_days       = 30   # CloudWatch log retention
+alarm_email              = "ops-team@mantaassociados.com"
+
+# ====================
+# Additional Tags
+# ====================
+additional_tags = {
+  MaintainedBy = "Manta-Associados"
+  CostCenter   = "Infrastructure"
+  Environment  = "Production"
+  BackupPolicy = "Daily"
+}
+
+# ====================
+# GCP Variables (if using GCP instead of AWS)
+# ====================
+# Uncomment the following and set values if deploying to GCP
+
+# gcp_project_id = "manta-platform-prod"
+# gcp_region     = "us-central1"
+# gcp_db_tier    = "db-custom-4-16384"  # 4 vCPU, 16GB RAM

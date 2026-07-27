@@ -1,0 +1,259 @@
+{{- if .Values.configMaps.agentRouting.enabled }}
+# Agent Routing Configuration (from CLAUDE.md v4.2)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "manta.fullname" . }}-agent-routing
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: config
+data:
+  agent-routing.yaml: |
+{{ .Values.configMaps.agentRouting.routing | indent 4 }}
+
+  # Full routing rules with all segments (S1-S10)
+  routing-rules.yaml: |
+    # Manta Maestro Agent Routing Rules (v4.2)
+    # Master registry: CLAUDE.md
+    #
+    # 3 eixos:
+    # - Eixo 1: Agentes horizontais (transversais)
+    # - Eixo 2: Agentes verticais por segmento (S1-S10)
+    # - Eixo 3: Ciclo de vida (8 fases)
+
+    routing_rules:
+      # Horizontal Agents
+      maestro:
+        agent_id: "manta-00"
+        name: "Manta Maestro (Router)"
+        tier: "Haiku→Sonnet"
+        role: "Agent orchestration, intake Q2, routing"
+        aliases: ["maestro", "manta-router"]
+
+      claims:
+        agent_id: "manta-01"
+        name: "Manta Claims"
+        tier: "Opus"
+        role: "Claims analysis, liability assessment"
+        aliases: ["02-C", "manta-claims"]
+
+      contratual:
+        agent_id: "manta-02"
+        name: "Manta Contratual"
+        tier: "Sonnet"
+        role: "Contract analysis, legal review"
+        aliases: ["manta-02", "contratual"]
+
+      imobiliario:
+        agent_id: "manta-04"
+        name: "Manta Imobiliário"
+        tier: "Sonnet"
+        role: "Real estate valuation"
+        aliases: ["manta-04"]
+
+      orcamento:
+        agent_id: "manta-05"
+        name: "Manta Orçamento"
+        tier: "Sonnet"
+        role: "Budget estimation, cost analysis (SICRO)"
+        aliases: ["manta-05"]
+
+      modelagem:
+        agent_id: "manta-06"
+        name: "Manta Modelagem"
+        tier: "Sonnet/Opus"
+        role: "Numerical modeling, FEM analysis"
+        aliases: ["manta-06"]
+
+      cronograma:
+        agent_id: "manta-07"
+        name: "Manta Cronograma"
+        tier: "Sonnet"
+        role: "Project scheduling, timeline management"
+        aliases: ["manta-07"]
+
+      bd:
+        agent_id: "manta-13"
+        name: "Manta Business Development"
+        tier: "Sonnet"
+        role: "Market analysis, BD proposals"
+        aliases: ["manta-13", "business-dev"]
+
+      apresentacoes:
+        agent_id: "manta-14"
+        name: "Manta Apresentações"
+        tier: "Sonnet"
+        role: "PowerPoint creation, slide deck"
+        aliases: ["manta-14-pptx"]
+
+      advisory:
+        agent_id: "manta-15"
+        name: "Manta Advisory"
+        tier: "Sonnet/Opus"
+        role: "Strategic advisory, feasibility"
+        aliases: ["manta-15", "advisory"]
+
+      arquiteto_ia:
+        agent_id: "manta-16"
+        name: "Manta Arquiteto IA"
+        tier: "Opus"
+        role: "LLM architecture, model selection"
+        aliases: ["manta-15-arq"]
+
+      # Vertical Agents by Segment
+      s1_rodovias:
+        agent_id: "manta-03-s1"
+        segment: "Rodovias"
+        name: "Agente Infraestrutura S1"
+        tier: "Sonnet"
+        keywords: ["rodovia", "pavimento", "CBUQ", "BGS", "terraplenagem", "SICRO", "DNIT"]
+        rag_prefix: "rod:"
+        rag_collections:
+          - "DNIT"
+          - "ABNT NBR 7207"
+          - "SICRO"
+          - "Orçamento Rodoviário"
+
+      s2_oae:
+        agent_id: "manta-03-s2"
+        segment: "OAE (Pontes/Viadutos)"
+        name: "Agente Infraestrutura S2"
+        tier: "Sonnet"
+        keywords: ["ponte", "viaduto", "OAE", "NBR 7187", "túnel rodoviário", "CAP"]
+        rag_prefix: "oae:"
+        rag_collections:
+          - "ABNT NBR 7187"
+          - "Projeto Ponte"
+          - "Patologia de Estruturas"
+
+      s3_ferrovia:
+        agent_id: "manta-03-s3"
+        segment: "Ferrovia"
+        name: "Agente Infraestrutura S3"
+        tier: "Sonnet"
+        keywords: ["ferrovia", "trilho", "AMV", "dormente", "via permanente"]
+        rag_prefix: "fer:"
+        rag_collections:
+          - "ABNT E04"
+          - "VALEC"
+          - "Projeto Ferroviário"
+
+      s4_metro:
+        agent_id: "manta-03-s4"
+        segment: "Metrô"
+        name: "Agente Infraestrutura S4"
+        tier: "Sonnet"
+        keywords: ["metrô", "estação", "NATM", "PSD", "linha", "VLT"]
+        rag_prefix: "met:"
+        rag_collections:
+          - "NATM Manual"
+          - "Projeto Metro"
+          - "Estações Subterrâneas"
+
+      s6_portos:
+        agent_id: "manta-03-s6"
+        segment: "Portos"
+        name: "Agente Portos"
+        tier: "Sonnet"
+        status: "Novo (2026-07-05)"
+        keywords: ["porto", "terminal", "ANTAQ", "dragagem", "molhe", "berço", "calado", "contêiner", "granel"]
+        rag_prefix: "por:"
+        rag_collections:
+          - "ANTAQ"
+          - "PIANC"
+          - "Editais BNDES"
+
+      s7_aeroportos:
+        agent_id: "manta-03-s7"
+        segment: "Aeroportos"
+        name: "Agente Aeroportos"
+        tier: "Sonnet"
+        status: "Novo (2026-07-05)"
+        keywords: ["aeroporto", "pista pouso", "ANAC", "ICAO", "TPS", "TECA", "balizamento"]
+        rag_prefix: "aer:"
+        rag_collections:
+          - "ANAC/RBAC"
+          - "ICAO Annex 14"
+          - "FAA ACs"
+
+      s8_saneamento:
+        agent_id: "manta-03-s8"
+        segment: "Saneamento"
+        name: "Agente Saneamento"
+        tier: "Sonnet"
+        status: "Novo (2026-07-05) — PRIORIDADE AySA"
+        keywords: ["saneamento", "ETA", "ETE", "adutora", "esgoto", "AySA", "drenagem urbana", "SNIS"]
+        rag_prefix: "san:"
+        rag_collections:
+          - "SNIS"
+          - "IWA"
+          - "NBR 12211-12218"
+          - "Lei 14.026"
+          - "Editais BNDES"
+
+      s9_energia:
+        agent_id: "manta-03-s9"
+        segment: "Energia"
+        name: "Agente Energia"
+        tier: "Sonnet"
+        status: "Novo (2026-07-05) — ANEEL/State Grid"
+        keywords: ["transmissão", "LT", "subestação", "ANEEL", "RAP", "leilão transmissão", "ONS", "EPE"]
+        rag_prefix: "ene:"
+        rag_collections:
+          - "ANEEL Editais"
+          - "R1-R5 EPE"
+          - "ONS"
+          - "IEEE"
+
+      s10_barragens:
+        agent_id: "manta-03-s10"
+        segment: "Barragens"
+        name: "Agente Barragens"
+        tier: "Sonnet"
+        status: "Novo (2026-07-05)"
+        keywords: ["barragem", "vertedouro", "CFRD", "CCR", "rejeitos", "PNSB", "ICOLD", "CBDB", "TSF"]
+        rag_prefix: "bar:"
+        rag_collections:
+          - "ICOLD"
+          - "CBDB"
+          - "SIGBM"
+          - "Lei 12.334"
+
+    # Lifecycle Phases (8 phases supported by all vertical agents)
+    lifecycle_phases:
+      - name: "Estudo Prévio / EVTE"
+        phase_id: 1
+      - name: "Projeto Básico"
+        phase_id: 2
+      - name: "Projeto Executivo"
+        phase_id: 3
+      - name: "Obra em Execução"
+        phase_id: 4
+      - name: "Operação & Manutenção"
+        phase_id: 5
+      - name: "Processo Competitivo / Licitação"
+        phase_id: 6
+      - name: "Due Diligence / M&A"
+        phase_id: 7
+      - name: "Encerramento / Descomissionamento"
+        phase_id: 8
+
+{{- end }}
+
+---
+{{- if .Values.configMaps.nginxConfig.enabled }}
+# Nginx Configuration for React SPA (reverse proxy to FastAPI)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMaps.nginxConfig.configMapName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: config
+data:
+  nginx.conf: |
+{{ .Values.configMaps.nginxConfig.config | indent 4 }}
+
+{{- end }}

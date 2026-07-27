@@ -1,0 +1,268 @@
+{{- if .Values.fastapi.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "manta.fullname" . }}-fastapi
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+  annotations:
+    {{- toYaml .Values.commonAnnotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.fastapi.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      {{- include "manta.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
+
+  template:
+    metadata:
+      labels:
+        {{- include "manta.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+        {{- if .Values.commonAnnotations }}
+        {{- toYaml .Values.commonAnnotations | nindent 8 }}
+        {{- end }}
+
+    spec:
+      {{- if .Values.fastapi.securityContext }}
+      securityContext:
+        {{- toYaml .Values.fastapi.securityContext | nindent 8 }}
+      {{- end }}
+
+      serviceAccountName: {{ .Values.rbac.serviceAccounts.fastapi.name }}
+      automountServiceAccountToken: false
+
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.affinity.fastapi }}
+      affinity:
+        {{- toYaml .Values.affinity.fastapi | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+
+      initContainers:
+        # Database migration init container
+        - name: db-migrate
+          image: "{{ .Values.postgres.initdb.image }}:{{ .Values.postgres.initdb.tag }}"
+          imagePullPolicy: {{ .Values.fastapi.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h postgres -p 5432 -U {{ .Values.postgres.auth.username }}; do
+                echo 'Waiting for PostgreSQL to be ready...'
+                sleep 2
+              done
+              alembic upgrade head
+          env:
+            - name: SQLALCHEMY_DATABASE_URL
+              value: {{ .Values.fastapi.env.DATABASE_URL }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existing.dbSecret }}
+                  key: {{ .Values.postgres.auth.secretKey }}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+      containers:
+        - name: fastapi
+          image: "{{ .Values.fastapi.image.repository }}:{{ .Values.fastapi.image.tag }}"
+          imagePullPolicy: {{ .Values.fastapi.image.pullPolicy }}
+
+          ports:
+            - name: http
+              containerPort: {{ .Values.fastapi.service.targetPort }}
+              protocol: TCP
+
+          {{- if .Values.fastapi.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.fastapi.livenessProbe | nindent 12 }}
+          {{- end }}
+
+          {{- if .Values.fastapi.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.fastapi.readinessProbe | nindent 12 }}
+          {{- end }}
+
+          resources:
+            {{- toYaml .Values.fastapi.resources | nindent 12 }}
+
+          env:
+            {{- range $key, $value := .Values.fastapi.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            # Database password from secret
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existing.dbSecret }}
+                  key: {{ .Values.postgres.auth.secretKey }}
+            # Instance name for pod identification
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+
+          {{- if .Values.fastapi.envFrom }}
+          envFrom:
+            {{- toYaml .Values.fastapi.envFrom | nindent 12 }}
+          {{- end }}
+
+          volumeMounts:
+            {{- if .Values.fastapi.volumeMounts }}
+            {{- toYaml .Values.fastapi.volumeMounts | nindent 12 }}
+            {{- end }}
+            # Mount agent routing config
+            - name: agent-routing
+              mountPath: /etc/config
+              readOnly: true
+
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+
+      volumes:
+        # Agent routing configuration
+        - name: agent-routing
+          configMap:
+            name: {{ include "manta.fullname" . }}-agent-routing
+            defaultMode: 0444
+
+      {{- if .Values.fastapi.podDisruptionBudget.enabled }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - "{{ include "manta.name" . }}"
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                        - "api"
+                topologyKey: kubernetes.io/hostname
+      {{- end }}
+
+      # Graceful shutdown
+      terminationGracePeriodSeconds: 30
+---
+# Horizontal Pod Autoscaler for FastAPI
+{{- if .Values.autoscaling.fastapi.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "manta.fullname" . }}-fastapi
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "manta.fullname" . }}-fastapi
+  minReplicas: {{ .Values.autoscaling.fastapi.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.fastapi.maxReplicas }}
+  metrics:
+    {{- if .Values.autoscaling.fastapi.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.fastapi.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.autoscaling.fastapi.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.fastapi.targetMemoryUtilizationPercentage }}
+    {{- end }}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 30
+        - type: Pods
+          value: 2
+          periodSeconds: 30
+      selectPolicy: Max
+{{- end }}
+
+---
+# Pod Disruption Budget for FastAPI
+{{- if .Values.fastapi.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "manta.fullname" . }}-fastapi
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  minAvailable: {{ .Values.fastapi.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "manta.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
+{{- end }}
+{{- end }}

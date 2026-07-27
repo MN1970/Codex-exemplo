@@ -1,0 +1,42 @@
+[
+  {
+    "instruction": "What is a CFRD dam and when is it preferred?",
+    "output": "CFRD (Concrete Face Rockfill Dam) uses a compacted rockfill embankment with a reinforced concrete slab on the upstream face for watertightness. It is preferred where suitable rockfill is locally abundant, foundation conditions favor an embankment over a concrete gravity structure, and dam height makes CCR less economical."
+  },
+  {
+    "instruction": "How does a CCR gravity dam differ from a CFRD?",
+    "output": "A CCR (Concreto Compactado a Rolo / Roller Compacted Concrete) dam is a mass concrete gravity structure relying on its own weight for stability, built in thin compacted lifts. A CFRD instead relies on a rockfill embankment for mass/stability with only a thin concrete face for sealing — CCR suits narrower valleys with good rock foundations, CFRD suits sites with abundant rockfill."
+  },
+  {
+    "instruction": "What does a vertedouro need to handle safely?",
+    "output": "A vertedouro (spillway) must safely pass the design flood (often the PMF, probable maximum flood) without overtopping the dam crest, while controlling energy dissipation (via stilling basin, ski-jump or stepped chute) to prevent erosion at the toe that could undermine the dam foundation."
+  },
+  {
+    "instruction": "What is a TSF and what special design requirements apply?",
+    "output": "A TSF (Tailings Storage Facility) stores mining rejeitos (tailings) behind an embankment, often raised in upstream, downstream or centerline stages. Post-Brumadinho, PNSB and ICOLD/CBDB guidance push toward safer downstream/centerline raising methods, dry-stacking, and mandatory dam-break studies and independent review panels for TSFs."
+  },
+  {
+    "instruction": "What does PNSB require for periodic dam safety review?",
+    "output": "PNSB (Politica Nacional de Seguranca de Barragens, Lei 12.334) requires classified dams to undergo periodic safety inspections, updated PAEBM (emergency action plans) for high-risk/high-damage-potential dams, and regular resubmission of the dam safety report (RSB) to the responsible regulatory agency (ANM, ANA or state agency)."
+  },
+  {
+    "instruction": "What is dam-break analysis and why is it required after Brumadinho?",
+    "output": "Dam-break analysis models the flood wave from a hypothetical breach of a barragem or TSF, mapping inundation extent, arrival time and depth downstream to define the self-rescue zone (ZAS) and evacuation plans. Post-Brumadinho, ANM/PNSB mandate dam-break studies and updated PAEBM for tailings dams classified as high risk."
+  },
+  {
+    "instruction": "What role do ICOLD and CBDB play in dam safety practice?",
+    "output": "ICOLD (International Commission on Large Dams) publishes technical bulletins covering design, monitoring and safety practice for large dams and tailings facilities worldwide; CBDB (Comite Brasileiro de Barragens) adapts and disseminates that guidance within Brazil, often referenced directly in PNSB-related regulatory submissions."
+  },
+  {
+    "instruction": "What instrumentation is typical for monitoring barragem hidrica safety?",
+    "output": "Typical instrumentation includes piezometers (pore pressure), inclinometers (lateral movement), settlement markers/plates, seepage weirs (flow monitoring), and surface survey monuments — all feeding into the dam's periodic safety inspection and, increasingly, real-time monitoring systems required for high-risk classifications under PNSB."
+  },
+  {
+    "instruction": "What is dry stacking and why is it considered safer for rejeitos disposal?",
+    "output": "Dry stacking filters tailings to a low-moisture cake before stacking without a retaining embankment holding back a water pond, eliminating the liquefaction/breach risk associated with conventional upstream-raised tailings dams. ICOLD and post-Brumadinho Brazilian regulation increasingly favor dry stacking or filtered tailings for new TSF projects."
+  },
+  {
+    "instruction": "What freeboard and overtopping protection does a CFRD dam need?",
+    "output": "A CFRD dam needs sufficient freeboard above the design flood level (routed through the vertedouro) to prevent wave run-up from overtopping the crest, plus a well-protected downstream slope or auxiliary spillway to survive an overtopping event without triggering rapid embankment erosion and breach."
+  }
+]

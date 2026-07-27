@@ -1,0 +1,127 @@
+{{- if .Values.fastapi.enabled }}
+# FastAPI External Service (LoadBalancer)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "manta.fullname" . }}-fastapi
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+  annotations:
+    {{- if .Values.fastapi.service.annotations }}
+    {{- toYaml .Values.fastapi.service.annotations | nindent 4 }}
+    {{- end }}
+spec:
+  type: {{ .Values.fastapi.service.type }}
+  {{- if eq .Values.fastapi.service.type "LoadBalancer" }}
+  loadBalancerIP: null
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: Local
+  {{- end }}
+  ports:
+    - port: {{ .Values.fastapi.service.port }}
+      targetPort: {{ .Values.fastapi.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "manta.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+
+---
+# FastAPI Internal Service (ClusterIP for Ingress/internal access)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "manta.fullname" . }}-fastapi-internal
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.fastapi.service.port }}
+      targetPort: {{ .Values.fastapi.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "manta.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+
+{{- end }}
+
+---
+{{- if .Values.react.enabled }}
+# React SPA Service (ClusterIP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "manta.fullname" . }}-react
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  type: {{ .Values.react.service.type }}
+  ports:
+    - port: {{ .Values.react.service.port }}
+      targetPort: {{ .Values.react.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "manta.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+  sessionAffinity: None
+
+{{- end }}
+
+---
+{{- if .Values.postgres.enabled }}
+# PostgreSQL Service (ClusterIP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "manta.fullname" . }}-postgres
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    {{- include "manta.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  ports:
+    - port: {{ .Values.postgres.service.port }}
+      targetPort: {{ .Values.postgres.service.targetPort }}
+      protocol: TCP
+      name: postgresql
+
+---
+# PostgreSQL Regular Service (for client connections)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "manta.fullname" . }}-postgres-client
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "manta.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "manta.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  ports:
+    - port: {{ .Values.postgres.service.port }}
+      targetPort: {{ .Values.postgres.service.targetPort }}
+      protocol: TCP
+      name: postgresql
+
+{{- end }}

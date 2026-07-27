@@ -1,0 +1,131 @@
+# AlertManager configuration for Manta Maestro
+# Handles alert routing, grouping, deduplication, and notifications
+
+global:
+  resolve_timeout: 5m
+  slack_api_url: '${SLACK_WEBHOOK_URL}'
+  pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
+
+# The root route with all parameters, which are inherited by the child routes if they are not overwritten
+route:
+  receiver: 'default'
+  group_by: ['alertname', 'cluster', 'environment', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  # Child routes for specific alert types
+  routes:
+    # High latency alerts
+    - match:
+        severity: critical
+        alert_type: latency
+      receiver: 'pagerduty'
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 30m
+      continue: true
+
+    # Routing accuracy alerts
+    - match:
+        severity: warning
+        alert_type: accuracy
+      receiver: 'slack-engineering'
+      group_wait: 1m
+      group_interval: 5m
+      repeat_interval: 2h
+
+    # Database alerts
+    - match:
+        severity: critical
+        alert_type: database
+      receiver: 'pagerduty'
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 30m
+
+    # Infrastructure alerts
+    - match:
+        severity: warning
+        alert_type: infrastructure
+      receiver: 'slack-ops'
+      group_wait: 2m
+      group_interval: 10m
+      repeat_interval: 4h
+
+    # Low priority alerts
+    - match:
+        severity: info
+      receiver: 'slack-general'
+      group_wait: 5m
+      group_interval: 30m
+      repeat_interval: 12h
+
+# Receivers define where to send notifications
+receivers:
+  - name: 'default'
+    slack_configs:
+      - channel: '#alerts'
+        title: 'Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+
+  - name: 'pagerduty'
+    pagerduty_configs:
+      - service_key: '${PAGERDUTY_SERVICE_KEY}'
+        description: '{{ .GroupLabels.alertname }} on {{ .GroupLabels.environment }}'
+        details:
+          firing: '{{ template "pagerduty.default.instances" .Alerts.Firing }}'
+        client: 'Manta Maestro AlertManager'
+        client_url: '{{ .ExternalURL }}'
+
+  - name: 'slack-engineering'
+    slack_configs:
+      - channel: '#engineering-alerts'
+        title: 'Routing Alert: {{ .GroupLabels.alertname }}'
+        text: 'Agent: {{ .GroupLabels.agent }}\nAccuracy: {{ .GroupLabels.accuracy }}\n{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+        color: 'warning'
+        actions:
+          - type: button
+            text: 'View in Grafana'
+            url: 'https://grafana.manta.local/d/manta-maestro-observability'
+
+  - name: 'slack-ops'
+    slack_configs:
+      - channel: '#ops-alerts'
+        title: 'Infrastructure Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}\nRunbook: {{ .Annotations.runbook_url }}{{ end }}'
+        send_resolved: true
+        color: 'warning'
+
+  - name: 'slack-general'
+    slack_configs:
+      - channel: '#general'
+        title: 'Info: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: false
+
+# Inhibition rules prevent firing alerts if other alerts match
+inhibit_rules:
+  # Don't alert on latency if the service is down
+  - source_match:
+      severity: 'critical'
+      alert_type: 'database'
+    target_match:
+      severity: 'warning'
+      alert_type: 'latency'
+    equal: ['environment', 'service']
+
+  # Don't alert on routing accuracy if the service is degraded
+  - source_match:
+      severity: 'critical'
+      alert_type: 'latency'
+    target_match:
+      severity: 'warning'
+      alert_type: 'accuracy'
+    equal: ['environment']
+
+templates:
+  - '/etc/alertmanager/template.tmpl'

@@ -1,0 +1,229 @@
+name: Agent Validation
+
+# Valida o registro mestre de agentes (CLAUDE.md + .claude/agents/*.md)
+# em todo PR que toque o registro. 5 checks rodam em paralelo; ao
+# final, um job separado sempre roda (mesmo se algum check falhar) e
+# comenta um resumo em markdown no PR.
+#
+# Estes checks são de LINT/INTEGRIDADE do repositório de referência —
+# não substituem o "Gate humano: aprovação MN antes de merge" já
+# exigido no CLAUDE.md (seção DEPLOY CHECKLIST). Em especial, o check
+# de breaking changes é informativo: ele sinaliza remoções/renames
+# para o revisor humano decidir, não bloqueia por si só o merge.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "CLAUDE.md"
+      - ".claude/agents/**"
+      - "supabase/migrations/**"
+      - "tests/routing/**"
+      - "scripts/validate-syntax.sh"
+      - "scripts/check-routing.py"
+      - "scripts/test-routing.py"
+      - "scripts/detect-breaking.sh"
+      - ".github/workflows/agent-validation.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: agent-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # -----------------------------------------------------------------
+  # Check 1/5 — sintaxe (front-matter YAML, tabelas markdown, fences)
+  # -----------------------------------------------------------------
+  syntax:
+    name: "1/5 · Syntax"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar PyYAML (validação de front-matter)
+        run: pip install pyyaml
+
+      - name: Rodar validate-syntax.sh
+        run: |
+          chmod +x scripts/validate-syntax.sh
+          ./scripts/validate-syntax.sh .
+
+  # -----------------------------------------------------------------
+  # Check 2/5 — integridade do routing (CLAUDE.md <-> .claude/agents)
+  # -----------------------------------------------------------------
+  routing-integrity:
+    name: "2/5 · Routing integrity"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar PyYAML
+        run: pip install pyyaml
+
+      - name: Rodar check-routing.py routing-integrity
+        run: python3 scripts/check-routing.py routing-integrity --root .
+
+  # -----------------------------------------------------------------
+  # Check 3/5 — 24 prompts de routing (tests/routing/prompts.md)
+  # -----------------------------------------------------------------
+  routing-test:
+    name: "3/5 · Routing test (24 prompts)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar PyYAML
+        run: pip install pyyaml
+
+      - name: Rodar test-routing.py
+        run: python3 scripts/test-routing.py --root . --verbose
+
+  # -----------------------------------------------------------------
+  # Check 4/5 — colisão de coleções RAG / prefixos / keywords
+  # -----------------------------------------------------------------
+  rag-collision:
+    name: "4/5 · RAG collision"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar PyYAML
+        run: pip install pyyaml
+
+      - name: Rodar check-routing.py rag-collision
+        run: python3 scripts/check-routing.py rag-collision --root .
+
+  # -----------------------------------------------------------------
+  # Check 5/5 — breaking changes vs. branch base
+  # -----------------------------------------------------------------
+  breaking-changes:
+    name: "5/5 · Breaking changes"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Buscar ref base
+        run: git fetch origin "${{ github.event.pull_request.base.ref || 'main' }}" --depth=1000
+
+      - name: Rodar detect-breaking.sh
+        env:
+          BASE_REF: origin/${{ github.event.pull_request.base.ref || 'main' }}
+        run: |
+          chmod +x scripts/detect-breaking.sh
+          ./scripts/detect-breaking.sh .
+
+  # -----------------------------------------------------------------
+  # Comentário de status no PR — roda sempre, mesmo com falhas acima
+  # -----------------------------------------------------------------
+  comment:
+    name: Comentar status no PR
+    needs: [syntax, routing-integrity, routing-test, rag-collision, breaking-changes]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comentar resumo markdown no PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = {
+              "1/5 · Syntax": "${{ needs.syntax.result }}",
+              "2/5 · Routing integrity": "${{ needs['routing-integrity'].result }}",
+              "3/5 · Routing test (24 prompts)": "${{ needs['routing-test'].result }}",
+              "4/5 · RAG collision": "${{ needs['rag-collision'].result }}",
+              "5/5 · Breaking changes": "${{ needs['breaking-changes'].result }}",
+            };
+
+            const icon = (r) => ({
+              success: "✅",
+              failure: "❌",
+              cancelled: "⏹️",
+              skipped: "⏭️",
+            }[r] || "❓");
+
+            const rows = Object.entries(results)
+              .map(([name, r]) => `| ${name} | ${icon(r)} ${r} |`)
+              .join("\n");
+
+            const anyFailed = Object.values(results).includes("failure");
+            const breakingFailed = results["5/5 · Breaking changes"] === "failure";
+
+            const lines = [
+              "### Agent Validation — Manta Maestro",
+              "",
+              "| Check | Status |",
+              "|---|---|",
+              rows,
+              "",
+              anyFailed
+                ? "**Resultado: FALHOU** — ver logs do job correspondente para detalhes."
+                : "**Resultado: OK** — todos os checks passaram.",
+            ];
+
+            if (breakingFailed) {
+              lines.push(
+                "",
+                "> ⚠️ O check **Breaking changes** encontrou remoções/renames no " +
+                  "registro de agentes. Isso não bloqueia automaticamente — mas " +
+                  "exige o **gate humano de aprovação MN** citado no `CLAUDE.md` " +
+                  "antes do merge."
+              );
+            }
+
+            const body = lines.join("\n");
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const marker = "### Agent Validation — Manta Maestro";
+            const existing = comments.find((c) => c.body && c.body.startsWith(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Falhar o job se algum check falhou
+        if: |
+          needs.syntax.result == 'failure' ||
+          needs['routing-integrity'].result == 'failure' ||
+          needs['routing-test'].result == 'failure' ||
+          needs['rag-collision'].result == 'failure' ||
+          needs['breaking-changes'].result == 'failure'
+        run: |
+          echo "Pelo menos um check de agent-validation falhou — ver comentário no PR."
+          exit 1

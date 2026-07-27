@@ -1,0 +1,274 @@
+# Fine-Tuning Configuration for Manta LoRA Models
+# Segment-specific hyperparameters and training settings
+
+# Default configuration (applied to all segments unless overridden)
+defaults:
+  # Base model selection
+  base_model: "mistralai/Mistral-7B-v0.1"
+
+  # LoRA parameters
+  lora:
+    rank: 8                    # LoRA rank (r) - smaller for faster training
+    alpha: 16                  # LoRA scaling factor (lora_alpha)
+    dropout: 0.05              # LoRA dropout to prevent overfitting
+    target_modules:            # Modules to apply LoRA
+      - "q_proj"
+      - "v_proj"
+    bias: "none"               # Bias mode (none, all, lora_only)
+
+  # Quantization for QLoRA (memory efficient)
+  quantization:
+    enabled: true
+    bits: 4                    # 4-bit quantization
+    bnb_4bit_use_double_quant: true
+    bnb_4bit_quant_type: "nf4"
+    bnb_4bit_compute_dtype: "bfloat16"
+
+  # Training hyperparameters
+  training:
+    learning_rate: 2.0e-4      # Typical for LoRA fine-tuning
+    batch_size: 4              # Per-device batch size (adjust for VRAM)
+    gradient_accumulation_steps: 1
+    num_epochs: 3              # Full passes through dataset
+    max_steps: -1              # -1 means use all data
+    warmup_steps: 100          # Linear warmup steps
+    weight_decay: 0.01         # L2 regularization
+
+    # Learning rate scheduler
+    lr_scheduler_type: "cosine"
+
+    # Gradient checkpointing for memory efficiency
+    gradient_checkpointing: true
+
+    # Mixed precision training
+    fp16: false                # Use bfloat16 instead for stability
+    bf16: true
+
+    # Optimizer
+    optim: "paged_adamw_32bit"
+
+    # Regularization
+    max_grad_norm: 1.0
+    dropout: 0.1
+
+  # Evaluation and saving
+  evaluation:
+    validation_split: 0.1      # 10% of data for validation
+    eval_steps: 50             # Evaluate every N steps
+    save_steps: 50             # Save checkpoint every N steps
+    save_total_limit: 3        # Keep only 3 best checkpoints
+    load_best_model_at_end: true
+    metric_for_best_model: "eval_loss"
+    greater_is_better: false
+
+  # Data processing
+  data:
+    max_seq_length: 512        # Maximum token sequence
+    preprocessing_num_workers: 4
+    dataloader_pin_memory: true
+    dataloader_num_workers: 0
+
+  # Logging
+  logging:
+    logging_steps: 10          # Log metrics every N steps
+    logging_dir: "./lora_adapters/logs"
+    report_to: ["tensorboard"]
+
+  # Output directory
+  output_dir: "./lora_adapters"
+
+
+# Segment-specific overrides
+segments:
+
+  saneamento:
+    # Water and wastewater domain
+    description: "Fine-tuning for saneamento (water supply, sewage, drainage)"
+    dataset_path: "./manta-backend/data/saneamento_finetune_dataset.json"
+
+    # Saneamento prefers slightly higher learning rate
+    # (more diverse domain, complex terminology)
+    training:
+      learning_rate: 3.0e-4    # Slightly higher for saneamento
+      num_epochs: 4            # Extra epoch for complex domain
+      warmup_steps: 150        # Longer warmup
+      batch_size: 4
+
+    lora:
+      rank: 8
+      alpha: 16
+
+    notes: "Priority segment for AySA. Covers ETA, ETE, SNIS, NBR standards."
+
+  energia:
+    # Energy and power domain
+    description: "Fine-tuning for energia (power generation, transmission, distribution)"
+    dataset_path: "./manta-backend/data/energia_finetune_dataset.json"
+
+    training:
+      learning_rate: 2.5e-4    # Moderate for energy technical content
+      num_epochs: 3
+      warmup_steps: 100
+      batch_size: 4
+
+    lora:
+      rank: 8
+      alpha: 16
+
+    notes: "Covers ANEEL regulations, leilão transmission, ONS protocols."
+
+  portos:
+    # Port and maritime domain
+    description: "Fine-tuning for portos (ports, terminals, maritime)"
+    dataset_path: "./manta-backend/data/portos_finetune_dataset.json"
+
+    training:
+      learning_rate: 2.0e-4    # Standard for technical specs
+      num_epochs: 3
+      batch_size: 4
+
+    lora:
+      rank: 8
+      alpha: 16
+
+    notes: "ANTAQ regulations, port operations, berth design, container handling."
+
+  aeroportos:
+    # Airport domain
+    description: "Fine-tuning for aeroportos (airport infrastructure)"
+    dataset_path: "./manta-backend/data/aeroportos_finetune_dataset.json"
+
+    training:
+      learning_rate: 2.0e-4
+      num_epochs: 3
+      batch_size: 4
+
+    lora:
+      rank: 8
+      alpha: 16
+
+    notes: "ANAC standards, runway design, ICAO annexes, terminal capacity."
+
+  barragens:
+    # Dam and water resources domain
+    description: "Fine-tuning for barragens (dams, water resources)"
+    dataset_path: "./manta-backend/data/barragens_finetune_dataset.json"
+
+    training:
+      learning_rate: 2.0e-4
+      num_epochs: 3
+      warmup_steps: 150        # Complex geotechnical content
+      batch_size: 4
+
+    lora:
+      rank: 8
+      alpha: 16
+
+    notes: "ICOLD guidelines, CBDB, tailings dams, CFRD design, PNSB compliance."
+
+
+# Advanced configurations (experimental)
+advanced:
+
+  # Use DoRA (Doubly Residual Adapter) instead of pure LoRA
+  use_dora: false
+
+  # Layer-wise adaptation rate
+  layers_to_adapt:
+    - "up_proj"
+    - "down_proj"
+    - "q_proj"
+    - "v_proj"
+
+  # Merge and unload LoRA after training
+  merge_and_unload: false       # Set true if deploying as single model
+
+  # Flash attention for faster training
+  use_flash_attention_2: true
+
+  # Quantization aware training (QAT)
+  qat_enabled: false
+
+  # Distributed training
+  ddp_enabled: false            # Multi-GPU data parallel
+  num_gpus: 1
+
+
+# Inference configuration (after training)
+inference:
+  # Load and generate configuration
+  max_new_tokens: 256
+  temperature: 0.7
+  top_p: 0.95
+  top_k: 50
+  do_sample: true
+  repetition_penalty: 1.0
+
+  # Quantization for inference
+  load_in_4bit: true
+  bnb_4bit_use_double_quant: true
+  bnb_4bit_quant_type: "nf4"
+
+
+# Deployment configuration
+deployment:
+  # Model serving backend
+  backend: "vllm"              # Options: vllm, transformers, llama.cpp
+
+  # Quantization for deployment
+  quantize_for_deployment: true
+
+  # Batch inference
+  max_batch_size: 16
+
+  # API configuration
+  api_host: "0.0.0.0"
+  api_port: 8000
+
+  # Model registry
+  registry_db: "sqlite:///./manta_ml_registry.db"
+  adapter_storage: "local"     # Options: local, s3
+
+
+# Monitoring and metrics
+monitoring:
+  # Track training metrics
+  track_training_loss: true
+  track_eval_metrics: true
+
+  # Logging backends
+  use_wandb: false             # Weights & Biases (set true if API key available)
+  use_tensorboard: true
+
+  # Performance profiling
+  profile_training: false
+
+  # Save model checkpoints to S3 (optional)
+  s3_checkpoint_bucket: null   # Set to bucket name if using S3
+
+
+# Data augmentation (optional)
+data_augmentation:
+  # Backtranslation for Portuguese-English domains
+  enable_backtranslation: false
+
+  # Paraphrase augmentation
+  enable_paraphrase: false
+
+  # Token masking
+  enable_mlm_augmentation: false
+
+
+# Post-training evaluation
+evaluation:
+  # Perplexity threshold for acceptance
+  max_acceptable_perplexity: 15.0
+
+  # Minimum accuracy requirement
+  min_accuracy: 0.70
+
+  # Benchmark datasets (optional)
+  benchmark_against_base_model: true
+
+  # Human evaluation prompts
+  evaluation_prompts_file: "./manta-backend/data/evaluation_prompts.json"
