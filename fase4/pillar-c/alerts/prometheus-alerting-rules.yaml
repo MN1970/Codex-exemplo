@@ -1,0 +1,312 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-alerting-rules
+  namespace: observability
+data:
+  manta-alerts.yml: |
+    groups:
+      - name: manta_critical_alerts
+        interval: 15s
+        rules:
+          # ALERT 1: PR Merge Success Rate Low
+          - alert: PRMergeSuccessRateLow
+            expr: manta_git_merge_success_rate < 0.85
+            for: 5m
+            labels:
+              severity: critical
+              component: git-gitops
+              team: devops
+            annotations:
+              summary: "PR merge success rate below 85%"
+              description: "Current merge success rate: {{ $value | humanizePercentage }}. Threshold: 85%. This indicates a problem with PR merging process (conflicts, CI failures, or review rejections)."
+              runbook_url: "https://manta.internal/docs/runbooks/merge-rate-low"
+              dashboard_url: "https://grafana:3000/d/git-analytics"
+              escalation: "PagerDuty (critical) → Slack #manta-alerts → email"
+
+          # ALERT 2: ML Model Inference Latency High
+          - alert: MLInferenceLatencyHigh
+            expr: histogram_quantile(0.99, rate(manta_ml_inference_latency_ms_bucket[5m])) > 2000
+            for: 5m
+            labels:
+              severity: critical
+              component: ml-inference
+              team: ml-engineering
+            annotations:
+              summary: "ML inference latency p99 exceeds 2 seconds"
+              description: "P99 latency: {{ $value | humanizeDuration }}. SLO threshold: 2000ms. This may indicate model performance degradation or resource contention."
+              runbook_url: "https://manta.internal/docs/runbooks/ml-latency-high"
+              dashboard_url: "https://grafana:3000/d/ml-health"
+              escalation: "PagerDuty (critical) → Slack #manta-ml → email"
+
+          # ALERT 3: Unresolved Anomalies
+          - alert: AnomaliesUnresolvedCritical
+            expr: manta_anomaly_detection_unresolved_count > 5
+            for: 60m
+            labels:
+              severity: critical
+              component: anomaly-detection
+              team: platform-reliability
+            annotations:
+              summary: "More than 5 unresolved anomalies detected for 1 hour"
+              description: "Current unresolved count: {{ $value }}. This indicates potential ongoing system issues requiring immediate investigation."
+              runbook_url: "https://manta.internal/docs/runbooks/anomalies-unresolved"
+              dashboard_url: "https://grafana:3000/d/anomalies"
+              escalation: "PagerDuty (critical) → Slack #manta-observability → email"
+
+          # ALERT 4: Cost Spike
+          - alert: CostSpikeCritical
+            expr: |
+              (manta_cost_monthly - (manta_cost_monthly offset 30d)) / (manta_cost_monthly offset 30d) > 0.2
+            for: 5m
+            labels:
+              severity: critical
+              component: cost-calculator
+              team: finance
+            annotations:
+              summary: "Monthly cost spike detected > 20%"
+              description: "Cost increase: {{ $value | humanizePercentage }}. This may indicate runaway resource consumption or new deployments."
+              runbook_url: "https://manta.internal/docs/runbooks/cost-spike"
+              dashboard_url: "https://grafana:3000/d/cost-attribution"
+              escalation: "Slack #manta-finance (critical) → email CFO"
+
+          # ALERT 5: ML Model Accuracy Drift
+          - alert: MLModelAccuracyDrift
+            expr: |
+              abs(manta_ml_model_accuracy - manta_ml_model_accuracy_baseline) > 0.05
+            for: 10m
+            labels:
+              severity: warning
+              component: ml-inference
+              team: ml-engineering
+            annotations:
+              summary: "ML model accuracy drifted > 5% from baseline"
+              description: "Baseline accuracy: {{ manta_ml_model_accuracy_baseline }}. Current: {{ manta_ml_model_accuracy }}. Difference: {{ $value | humanizePercentage }}. Consider retraining or rolling back model version."
+              runbook_url: "https://manta.internal/docs/runbooks/ml-accuracy-drift"
+              dashboard_url: "https://grafana:3000/d/ml-health"
+              escalation: "Slack #manta-ml (warning) → email"
+
+          # ALERT 6: DBSCAN Massive Drift
+          - alert: DBSCANMassiveDriftDetected
+            expr: manta_anomaly_dbscan_cluster_size > 100
+            for: 5m
+            labels:
+              severity: critical
+              component: anomaly-detection
+              team: platform-reliability
+            annotations:
+              summary: "CRITICAL: Massive drift detected via DBSCAN (cluster > 100)"
+              description: "Largest DBSCAN cluster size: {{ $value }}. This indicates a major distribution shift in metrics. Immediate investigation required."
+              runbook_url: "https://manta.internal/docs/runbooks/dbscan-drift"
+              dashboard_url: "https://grafana:3000/d/anomalies"
+              escalation: "PagerDuty (critical) + Slack #manta-incident → all-hands alert"
+
+          # ALERT 7: Canary Rollout Stuck
+          - alert: CanaryRolloutStuck
+            expr: |
+              time() - manta_canary_rollout_last_phase_change_timestamp > 1800
+            for: 5m
+            labels:
+              severity: warning
+              component: gitops-automation
+              team: devops
+            annotations:
+              summary: "Canary rollout phase stuck for > 30 minutes"
+              description: "Last phase change: {{ $value | humanizeDuration }} ago. Current phase may be waiting for success threshold or encountering persistent errors."
+              runbook_url: "https://manta.internal/docs/runbooks/canary-stuck"
+              dashboard_url: "https://grafana:3000/d/git-analytics"
+              escalation: "Slack #manta-deployments (warning) → email"
+
+          # ALERT 8: Jaeger Span Error Rate High
+          - alert: JaegerSpanErrorRateHigh
+            expr: manta_jaeger_span_error_rate > 0.02
+            for: 5m
+            labels:
+              severity: critical
+              component: tracing
+              team: observability
+            annotations:
+              summary: "Jaeger span error rate exceeds 2%"
+              description: "Current error rate: {{ $value | humanizePercentage }}. SLO threshold: 2%. Check Jaeger logs and application error rates."
+              runbook_url: "https://manta.internal/docs/runbooks/jaeger-errors"
+              dashboard_url: "https://grafana:3000/d/jaeger-health"
+              escalation: "PagerDuty (critical) → Slack #manta-observability → email"
+
+      - name: manta_warning_alerts
+        interval: 30s
+        rules:
+          - alert: PRReviewTimeHigh
+            expr: histogram_quantile(0.95, rate(manta_git_pr_review_time_seconds_bucket[1h])) > 3600
+            for: 10m
+            labels:
+              severity: warning
+              component: git-gitops
+              team: devops
+            annotations:
+              summary: "PR review time p95 exceeds 1 hour"
+              description: "P95 review time: {{ $value | humanizeDuration }}. Consider increasing reviewer availability or implementing auto-merge for simple PRs."
+              runbook_url: "https://manta.internal/docs/runbooks/pr-review-slow"
+              dashboard_url: "https://grafana:3000/d/git-analytics"
+
+          - alert: ConflictResolutionTimeLong
+            expr: manta_git_conflict_resolution_time_seconds > 7200
+            for: 5m
+            labels:
+              severity: warning
+              component: git-gitops
+              team: devops
+            annotations:
+              summary: "Merge conflict resolution exceeds 2 hours"
+              description: "Resolution time: {{ $value | humanizeDuration }}. Long conflict resolution may indicate complex merges. Consider rebasing strategy."
+
+          - alert: PrometheusDataDiskUsageCritical
+            expr: |
+              (1 - (node_filesystem_avail_bytes{mountpoint="/prometheus"} / node_filesystem_size_bytes{mountpoint="/prometheus"})) > 0.9
+            for: 5m
+            labels:
+              severity: warning
+              component: prometheus
+              team: observability
+            annotations:
+              summary: "Prometheus disk usage above 90%"
+              description: "Available space: {{ $value | humanizePercentage }} of total. Metrics retention may be affected. Consider increasing PVC size."
+
+          - alert: ClickHouseDiskUsageHigh
+            expr: manta_clickhouse_disk_usage_gb > 40
+            for: 10m
+            labels:
+              severity: warning
+              component: clickhouse
+              team: observability
+            annotations:
+              summary: "ClickHouse disk usage exceeds 40GB"
+              description: "Current usage: {{ $value }}GB. Trace retention or compression may need adjustment."
+
+          - alert: AlertsFireCount
+            expr: manta_alert_firing_count > 3
+            for: 5m
+            labels:
+              severity: warning
+              component: alerting
+              team: observability
+            annotations:
+              summary: "More than 3 alerts firing simultaneously"
+              description: "Currently firing alerts: {{ $value }}. System may be experiencing cascading failures."
+
+---
+# Escalation routing configuration for Alertmanager
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-escalation-config
+  namespace: observability
+data:
+  escalation-guide.md: |
+    # Alert Escalation Matrix
+
+    ## Severity Levels
+
+    ### CRITICAL
+    - **Detection:** Real-time (< 1 minute)
+    - **Primary:** PagerDuty on-call engineer
+    - **Secondary:** Slack #manta-incident (all + @channel)
+    - **Tertiary:** Email to team leads + VP Engineering
+    - **Action:** Immediate investigation required
+    - **SLA:** 15 minute response, 1 hour resolution
+
+    Alerts:
+    - PRMergeSuccessRateLow
+    - MLInferenceLatencyHigh
+    - AnomaliesUnresolvedCritical (after 1h)
+    - CostSpikeCritical
+    - DBSCANMassiveDriftDetected
+    - JaegerSpanErrorRateHigh
+
+    ### WARNING
+    - **Detection:** 5-10 minute delay allowed
+    - **Primary:** Slack #manta-alerts (team-specific channel)
+    - **Secondary:** Email to team
+    - **Action:** Investigate within business hours
+    - **SLA:** 2 hour response, 24 hour resolution
+
+    Alerts:
+    - PRReviewTimeHigh
+    - ConflictResolutionTimeLong
+    - MLModelAccuracyDrift
+    - CanaryRolloutStuck
+    - PrometheusDataDiskUsageCritical
+    - ClickHouseDiskUsageHigh
+    - AlertsFireCount
+
+    ### INFO
+    - **Detection:** Next business day
+    - **Primary:** Email to relevant team
+    - **Action:** Review and plan remediation
+    - **SLA:** 48 hour review
+
+    ## Escalation Flow
+
+    ```
+    Alert Fired (t=0)
+         ↓
+    Severity Check (< 1s)
+         ├─→ CRITICAL → PagerDuty + Slack #manta-incident
+         ├─→ WARNING → Slack #manta-alerts + email
+         └─→ INFO → Email only
+         ↓
+    Notification Sent (t=1m)
+         ↓
+    Auto-Remediation Check (t=5m)
+         ├─→ Can Auto-Remediate
+         │   ├─→ Scale pods/resources
+         │   ├─→ Clear cache
+         │   ├─→ Rollback canary
+         │   └─→ Update alert to "RESOLVED"
+         │
+         └─→ Requires Manual Action
+             ├─→ On-Call Engineer Assigned (t=5-15m)
+             ├─→ Investigation & Mitigation (t=15-60m)
+             └─→ Resolution & Post-Mortem (t=60m+)
+    ```
+
+    ## Escalation Destinations
+
+    ### PagerDuty
+    - Endpoint: https://events.pagerduty.com/v2/enqueue
+    - Service: Manta-Maestro-Critical
+    - Policy: Round-robin on-call rotation
+
+    ### Slack Channels
+    - #manta-incident: Critical incidents
+    - #manta-alerts: Warnings and info
+    - #manta-observability: Observability team
+    - #manta-ml: ML/AI team
+    - #manta-finance: Cost-related alerts
+
+    ### Email
+    - manta-team@mantaassociados.com
+    - team-leads@mantaassociados.com
+    - engineering-vp@mantaassociados.com (critical only)
+
+    ## Auto-Remediation Playbooks
+
+    | Alert | Auto-Remediate? | Action |
+    |-------|-----------------|--------|
+    | PRMergeSuccessRateLow | No | Manual review required |
+    | MLInferenceLatencyHigh | Yes | Scale ML pods 2x temporarily |
+    | AnomaliesUnresolved | No | Requires analysis |
+    | CostSpike | No | Cost review required |
+    | DBSCANDrift | No | Incident response |
+    | JaegerErrors | Yes | Restart Jaeger pods |
+    | CanaryStuck | No | Manual phase progression |
+    | PrometheusHighDisk | Yes | Increase retention or storage |
+
+    ## Follow-up Actions
+
+    1. Alert fires
+    2. Team responds (within SLA)
+    3. Mitigation applied
+    4. Alert resolved (metric improves)
+    5. Post-mortem scheduled (if CRITICAL)
+    6. Runbook updated with learnings
+    7. Prevention measures implemented

@@ -1,0 +1,143 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pal-service
+  namespace: default
+  labels:
+    app: pal
+    component: service
+    version: v1.0.0
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: pal
+      component: service
+  template:
+    metadata:
+      labels:
+        app: pal
+        component: service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: pal-service
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: pal-service
+        image: manta/pal:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        env:
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: pal-config
+              key: log_level
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: PYTHONDONTWRITEBYTECODE
+          value: "1"
+        # GitHub token
+        - name: PLATFORM_TOKEN_GITHUB
+          valueFrom:
+            secretKeyRef:
+              name: pal-credentials
+              key: github-token
+              optional: true
+        # GitLab token
+        - name: PLATFORM_TOKEN_GITLAB
+          valueFrom:
+            secretKeyRef:
+              name: pal-credentials
+              key: gitlab-token
+              optional: true
+        # Bitbucket token
+        - name: PLATFORM_TOKEN_BITBUCKET
+          valueFrom:
+            secretKeyRef:
+              name: pal-credentials
+              key: bitbucket-token
+              optional: true
+        # Gitea token
+        - name: PLATFORM_TOKEN_GITEA
+          valueFrom:
+            secretKeyRef:
+              name: pal-credentials
+              key: gitea-token
+              optional: true
+        volumeMounts:
+        - name: config
+          mountPath: /app/config_schema.yaml
+          subPath: config.yaml
+          readOnly: true
+        - name: ca-bundle
+          mountPath: /etc/ssl/certs/ca-bundle.crt
+          subPath: ca-bundle.crt
+          readOnly: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: config
+        configMap:
+          name: pal-config
+          items:
+          - key: config.yaml
+            path: config.yaml
+      - name: ca-bundle
+        secret:
+          secretName: pal-ca-bundle
+          optional: true
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - pal
+              topologyKey: kubernetes.io/hostname

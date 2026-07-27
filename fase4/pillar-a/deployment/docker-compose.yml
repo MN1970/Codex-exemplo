@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Platform Abstraction Layer Service
+  pal-service:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: pal-service
+    image: manta/pal:latest
+    ports:
+      - "8000:8000"
+    environment:
+      LOG_LEVEL: "INFO"
+      PLATFORM_TOKEN_GITHUB: "${PLATFORM_TOKEN_GITHUB:-}"
+      PLATFORM_TOKEN_GITLAB: "${PLATFORM_TOKEN_GITLAB:-}"
+      PLATFORM_TOKEN_BITBUCKET: "${PLATFORM_TOKEN_BITBUCKET:-}"
+      PLATFORM_TOKEN_GITEA: "${PLATFORM_TOKEN_GITEA:-}"
+    volumes:
+      - ../config_schema.yaml:/app/config_schema.yaml:ro
+      - ../platform_abstraction_layer.py:/app/platform_abstraction_layer.py:ro
+      - ../drivers:/app/drivers:ro
+      - ../detection:/app/detection:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - pal-network
+    restart: unless-stopped
+
+  # Development/Testing container
+  pal-test:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: pal-test
+    command: pytest tests/ -v --cov=drivers --cov=detection --cov-report=html
+    volumes:
+      - ..:/app
+    environment:
+      PYTHONPATH: "/app"
+    networks:
+      - pal-network
+    depends_on:
+      - pal-service
+    profiles:
+      - test
+
+  # Documentation server
+  pal-docs:
+    image: python:3.11-slim
+    container_name: pal-docs
+    working_dir: /docs
+    command: python -m http.server 8080
+    volumes:
+      - ../docs:/docs:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - pal-network
+    profiles:
+      - docs
+
+networks:
+  pal-network:
+    driver: bridge
+
+volumes:
+  pal-cache:
+    driver: local

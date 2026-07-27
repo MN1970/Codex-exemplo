@@ -1,0 +1,299 @@
+# Prometheus metrics definitions for Manta Maestro observability
+# 50+ metrics covering: Git, ML, Infrastructure, Business, Anomaly domains
+
+---
+# Git/GitOps Metrics (8 metrics)
+- metric_name: manta_git_merge_success_total
+  help: "Total number of successful PR merges"
+  type: counter
+  unit: "1"
+
+- metric_name: manta_git_merge_failure_total
+  help: "Total number of failed PR merges"
+  type: counter
+  unit: "1"
+
+- metric_name: manta_git_merge_success_rate
+  help: "PR merge success rate (0-1)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_git_pr_review_time_seconds
+  help: "Time taken to review a PR from creation to merge"
+  type: histogram
+  unit: "s"
+  buckets: [60, 300, 900, 1800, 3600, 7200]
+
+- metric_name: manta_git_conflict_resolution_time_seconds
+  help: "Time to resolve merge conflicts"
+  type: histogram
+  unit: "s"
+  buckets: [60, 300, 900, 1800, 3600, 7200]
+
+- metric_name: manta_git_commit_size_lines
+  help: "Number of lines changed per commit"
+  type: histogram
+  unit: "1"
+  buckets: [10, 50, 100, 500, 1000, 5000]
+
+- metric_name: manta_git_ci_duration_seconds
+  help: "CI/CD pipeline execution duration"
+  type: histogram
+  unit: "s"
+  buckets: [30, 60, 120, 300, 600, 1200]
+
+- metric_name: manta_git_author_commits_total
+  help: "Total commits by author"
+  type: counter
+  unit: "1"
+
+---
+# ML Metrics (10 metrics)
+- metric_name: manta_ml_model_accuracy
+  help: "Current ML model accuracy (0-1)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_ml_model_accuracy_baseline
+  help: "Baseline ML model accuracy for drift detection"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_ml_model_precision
+  help: "ML model precision metric"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_ml_model_recall
+  help: "ML model recall metric"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_ml_model_f1_score
+  help: "ML model F1 score"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_ml_inference_latency_ms
+  help: "ML model inference latency"
+  type: histogram
+  unit: "ms"
+  buckets: [10, 50, 100, 500, 1000, 2000]
+
+- metric_name: manta_ml_training_duration_hours
+  help: "ML model training duration"
+  type: histogram
+  unit: "h"
+  buckets: [0.5, 1, 2, 4, 8, 24]
+
+- metric_name: manta_ml_feature_importance
+  help: "Importance score of individual features (top 10)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_ml_predictions_total
+  help: "Total number of ML model predictions"
+  type: counter
+  unit: "1"
+
+- metric_name: manta_ml_training_loss
+  help: "ML model training loss"
+  type: gauge
+  unit: "1"
+
+---
+# Infrastructure Metrics (8 metrics)
+- metric_name: manta_infrastructure_cpu_usage_percent
+  help: "CPU usage percentage (0-100)"
+  type: gauge
+  unit: "%"
+
+- metric_name: manta_infrastructure_memory_usage_mb
+  help: "Memory usage in megabytes"
+  type: gauge
+  unit: "MB"
+
+- metric_name: manta_infrastructure_memory_limit_mb
+  help: "Memory limit in megabytes"
+  type: gauge
+  unit: "MB"
+
+- metric_name: manta_infrastructure_disk_io_operations_total
+  help: "Total disk I/O operations"
+  type: counter
+  unit: "1"
+
+- metric_name: manta_infrastructure_disk_io_latency_ms
+  help: "Disk I/O latency"
+  type: histogram
+  unit: "ms"
+  buckets: [1, 5, 10, 50, 100]
+
+- metric_name: manta_infrastructure_network_throughput_mbps
+  help: "Network throughput in Mbps"
+  type: gauge
+  unit: "Mbps"
+
+- metric_name: manta_infrastructure_pod_restarts_total
+  help: "Total number of pod restarts"
+  type: counter
+  unit: "1"
+
+- metric_name: manta_infrastructure_container_build_duration_seconds
+  help: "Container image build duration"
+  type: histogram
+  unit: "s"
+  buckets: [30, 60, 120, 300, 600]
+
+---
+# Business/Cost Metrics (6 metrics)
+- metric_name: manta_cost_per_merge_dollars
+  help: "Infrastructure cost per successful merge"
+  type: gauge
+  unit: "$"
+
+- metric_name: manta_roi_per_feature
+  help: "Return on investment per feature deployed"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_velocity_merges_per_day
+  help: "Average merges per day (deployment velocity)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_cost_monthly
+  help: "Monthly infrastructure cost"
+  type: gauge
+  unit: "$"
+
+- metric_name: manta_cost_per_service_dollars
+  help: "Monthly cost breakdown per service"
+  type: gauge
+  unit: "$"
+
+- metric_name: manta_feature_deployment_time_days
+  help: "Time from feature creation to production deployment"
+  type: histogram
+  unit: "d"
+  buckets: [0.5, 1, 3, 7, 14, 30]
+
+---
+# Anomaly Detection Metrics (10 metrics)
+- metric_name: manta_anomaly_detection_latency_ms
+  help: "Latency of anomaly detection inference"
+  type: histogram
+  unit: "ms"
+  buckets: [10, 50, 100, 500, 1000]
+
+- metric_name: manta_anomaly_score
+  help: "Raw anomaly score from Isolation Forest (0-1)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_pattern_quality_score
+  help: "Quality score of detected patterns (0-100)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_canary_rollout_progress_percent
+  help: "Canary rollout progress percentage (0-100)"
+  type: gauge
+  unit: "%"
+
+- metric_name: manta_anomaly_detection_unresolved_count
+  help: "Number of unresolved anomalies"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_anomaly_dbscan_cluster_size
+  help: "Size of largest DBSCAN cluster (indicates drift magnitude)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_canary_rollout_last_phase_change_timestamp
+  help: "Unix timestamp of last canary phase change"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_jaeger_span_error_rate
+  help: "Jaeger span error rate (0-1)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_anomaly_isolation_forest_detections_total
+  help: "Total anomalies detected by Isolation Forest"
+  type: counter
+  unit: "1"
+
+- metric_name: manta_anomaly_dbscan_drift_detections_total
+  help: "Total drift events detected by DBSCAN"
+  type: counter
+  unit: "1"
+
+---
+# Canary Deployment Metrics (5 metrics)
+- metric_name: manta_canary_phase_0_duration_minutes
+  help: "Audit phase duration for canary rollout"
+  type: gauge
+  unit: "min"
+
+- metric_name: manta_canary_phase_1_success_rate
+  help: "Success rate for Phase 1 (5 low-risk at 95%)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_canary_phase_2_success_rate
+  help: "Success rate for Phase 2 (10 medium at 90%)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_canary_phase_3_success_rate
+  help: "Success rate for Phase 3 (full deployment at 75%)"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_canary_rollback_count_total
+  help: "Total number of canary rollbacks"
+  type: counter
+  unit: "1"
+
+---
+# Performance & Tracing Metrics (7 metrics)
+- metric_name: manta_span_processing_latency_ms
+  help: "Latency of span processing in Jaeger"
+  type: histogram
+  unit: "ms"
+  buckets: [1, 5, 10, 50, 100, 500]
+
+- metric_name: manta_span_ingestion_rate_per_second
+  help: "Rate of span ingestion into Jaeger"
+  type: gauge
+  unit: "1/s"
+
+- metric_name: manta_trace_storage_queries_latency_ms
+  help: "Latency of queries to trace storage (ClickHouse)"
+  type: histogram
+  unit: "ms"
+  buckets: [10, 50, 100, 500, 1000, 5000]
+
+- metric_name: manta_clickhouse_disk_usage_gb
+  help: "ClickHouse disk usage for trace storage"
+  type: gauge
+  unit: "GB"
+
+- metric_name: manta_alert_firing_count
+  help: "Number of currently firing alerts"
+  type: gauge
+  unit: "1"
+
+- metric_name: manta_alert_evaluation_duration_ms
+  help: "Time taken to evaluate alert rules"
+  type: histogram
+  unit: "ms"
+  buckets: [10, 50, 100, 500]
+
+- metric_name: manta_slo_compliance_percent
+  help: "Service Level Objective compliance percentage"
+  type: gauge
+  unit: "%"
