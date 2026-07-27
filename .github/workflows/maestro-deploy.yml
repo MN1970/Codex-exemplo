@@ -274,7 +274,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     needs: [pre-deployment-checks, approval-gate]
-    if: always() && (needs.pre-deployment-checks.outputs.deployment_env == 'production' || github.event_name == 'workflow_dispatch')
+    if: needs.pre-deployment-checks.outputs.deployment_env == 'production'
     environment:
       name: production
       url: https://maestro.manta-associados.com
