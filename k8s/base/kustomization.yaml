@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  app: maestro
+  version: v6.0
+
+commonAnnotations:
+  description: "Maestro OS v6.0 — Parallel agent orchestration system"
+  managed-by: "Claude Code"
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - configmap.yaml
+
+images:
+  - name: maestro
+    newName: ghcr.io/manta-associados/maestro
+    newTag: latest
