@@ -1,0 +1,68 @@
+# Multi-stage build for Maestro OS v6.0
+
+# Stage 1: Builder
+FROM python:3.11-slim as builder
+
+WORKDIR /build
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies to build directory
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Stage 2: Runtime
+FROM python:3.11-slim
+
+LABEL maintainer="mneves@mantaassociados.com"
+LABEL description="Maestro OS v6.0 - Parallel Agent Orchestration System"
+LABEL version="6.0.0"
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    jq \
+    git \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create maestro user for security
+RUN useradd -m -u 1000 maestro
+
+# Set working directory
+WORKDIR /opt/maestro
+
+# Copy Python dependencies from builder
+COPY --from=builder --chown=maestro:maestro /root/.local /home/maestro/.local
+
+# Copy application code
+COPY --chown=maestro:maestro . /opt/maestro/
+
+# Set Python path
+ENV PATH=/home/maestro/.local/bin:$PATH \
+    PYTHONPATH=/opt/maestro:$PYTHONPATH \
+    PYTHONUNBUFFERED=1 \
+    APP_ENV=production
+
+# Create required directories
+RUN mkdir -p /var/log/maestro /var/cache/maestro && \
+    chown -R maestro:maestro /var/log/maestro /var/cache/maestro
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Expose ports
+EXPOSE 8080 8081 9090
+
+# Switch to maestro user (non-root for security)
+USER maestro
+
+# Run Maestro orchestrator
+CMD ["python3", "-m", "maestro.orchestrator"]
