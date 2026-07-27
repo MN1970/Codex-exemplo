@@ -1,0 +1,299 @@
+# Phase 4.2 Advanced Analytics — Configuration
+
+# ============================================================================
+# Database Configuration
+# ============================================================================
+database:
+  # Primary analytics database
+  url: ${DB_URL:-postgresql://localhost:5432/maestro}
+
+  # Connection pooling
+  pool_size: 20
+  max_overflow: 40
+  pool_recycle: 3600
+
+  # Timeouts
+  pool_pre_ping: true
+  echo: false
+
+# ============================================================================
+# Data Pipeline Configuration
+# ============================================================================
+pipeline:
+  # Event ingestion
+  batch_size: 1000
+  batch_timeout_seconds: 60
+
+  # Retention policy
+  retention_days: 365
+  archive_to_s3: true
+
+  # Aggregation windows
+  aggregation:
+    daily: true
+    weekly: true
+    monthly: true
+
+  # S3 export
+  s3:
+    bucket: maestro-analytics
+    region: us-east-1
+    prefix: "analytics/{org_id}/"
+    format: parquet
+    compression: snappy
+
+# ============================================================================
+# BI Dashboard Configuration
+# ============================================================================
+dashboards:
+  # Looker integration
+  looker:
+    enabled: true
+    url: ${LOOKER_URL}
+    client_id: ${LOOKER_CLIENT_ID}
+    client_secret: ${LOOKER_CLIENT_SECRET}
+    timeout: 30
+
+  # Tableau integration
+  tableau:
+    enabled: true
+    server: ${TABLEAU_SERVER}
+    site_id: maestro
+    username: ${TABLEAU_USERNAME}
+    password: ${TABLEAU_PASSWORD}
+    timeout: 30
+
+  # Dashboard deployment
+  auto_deploy: true
+  templates:
+    - template_id: executive_overview
+      enabled: true
+      refresh_interval_minutes: 60
+    - template_id: routing_intelligence
+      enabled: true
+      refresh_interval_minutes: 30
+    - template_id: user_analytics
+      enabled: true
+      refresh_interval_minutes: 120
+    - template_id: cost_tracking
+      enabled: true
+      refresh_interval_minutes: 60
+    - template_id: regulatory_compliance
+      enabled: true
+      refresh_interval_minutes: 30
+
+# ============================================================================
+# Predictive Models Configuration
+# ============================================================================
+models:
+  # Volume Forecaster (exponential smoothing)
+  volume_forecaster:
+    enabled: true
+    alpha: 0.3
+    forecast_days: 7
+    retraining_interval_days: 7
+
+  # Drift Detector (novelty detection)
+  drift_detector:
+    enabled: true
+    drift_threshold: 2.0
+    embedding_dim: 768
+    retraining_interval_days: 7
+
+  # Anomaly Detector (Isolation Forest)
+  anomaly_detector:
+    enabled: true
+    contamination: 0.05
+    n_estimators: 100
+    retraining_interval_days: 7
+    features:
+      - input_tokens
+      - output_tokens
+      - cost_usd
+      - routing_confidence
+
+  # Model storage
+  storage:
+    type: s3  # 's3' or 'local'
+    location: s3://maestro-models/v1
+    versioning: true
+
+# ============================================================================
+# Monitoring & Alerting Configuration
+# ============================================================================
+monitoring:
+  # Health checks
+  health_check_interval_minutes: 5
+
+  checks:
+    dashboard_availability:
+      enabled: true
+      timeout_seconds: 10
+
+    query_latency:
+      enabled: true
+      threshold_p95_ms: 500
+      threshold_p99_ms: 1000
+
+    routing_accuracy:
+      enabled: true
+      threshold_percent: 85.0
+      warning_percent: 87.0
+
+    cost_anomaly:
+      enabled: true
+      threshold_ratio: 1.5
+      baseline_days: 30
+
+    webhook_lag:
+      enabled: true
+      threshold_minutes: 30
+      alert_after_minutes: 15
+
+    database_connection:
+      enabled: true
+      timeout_seconds: 5
+      threshold_latency_ms: 100
+
+# ============================================================================
+# Alerting Configuration
+# ============================================================================
+alerting:
+  # Notification channels
+  channels:
+    slack:
+      enabled: true
+      webhook_url: ${SLACK_WEBHOOK_URL}
+      default_channel: "#maestro-alerts"
+      retry_count: 3
+
+    email:
+      enabled: true
+      smtp_server: ${SMTP_SERVER}
+      smtp_port: 587
+      from_address: alerts@mantaassociados.com
+      to_addresses:
+        - ops-team@mantaassociados.com
+        - maestro@mantaassociados.com
+
+    pagerduty:
+      enabled: true
+      api_key: ${PAGERDUTY_API_KEY}
+      service_key: ${PAGERDUTY_SERVICE_KEY}
+
+    datadog:
+      enabled: true
+      api_key: ${DATADOG_API_KEY}
+      site: datadoghq.com
+
+  # Alert routing by severity
+  routing:
+    info:
+      channels: [slack]
+    warning:
+      channels: [slack, email]
+    critical:
+      channels: [slack, email, datadog]
+    page:
+      channels: [pagerduty, slack, email]
+
+  # Deduplication
+  alert_cooldown_minutes: 30
+  alert_aggregation_window_minutes: 5
+
+# ============================================================================
+# Incident Management Configuration
+# ============================================================================
+incidents:
+  # Escalation policy
+  escalation_rules:
+    routing_accuracy:
+      escalate_after_minutes: 15
+      page_after_minutes: 30
+
+    database_connection:
+      escalate_after_minutes: 5
+      page_after_minutes: 10
+
+    cost_anomaly:
+      escalate_after_minutes: 60
+      page_after_minutes: 120
+
+  # Slack incident channel
+  incident_channel: "#maestro-incidents"
+
+  # Post-incident review
+  postmortem_template: true
+
+# ============================================================================
+# Logging Configuration
+# ============================================================================
+logging:
+  level: INFO
+  format: json  # 'text' or 'json'
+
+  # File logging
+  file:
+    enabled: true
+    path: /var/log/maestro/analytics.log
+    max_size_mb: 100
+    backup_count: 10
+
+  # Cloud logging (optional)
+  cloud:
+    enabled: false
+    provider: google_cloud_logging
+    project_id: ${GCP_PROJECT_ID}
+
+# ============================================================================
+# Performance & Limits
+# ============================================================================
+performance:
+  # Query timeouts
+  query_timeout_seconds: 300
+
+  # Batch processing limits
+  max_batch_size: 10000
+  max_memory_gb: 8
+
+  # API rate limits (Phase 3.1)
+  rate_limit_requests_per_minute: 1000
+  rate_limit_burst: 100
+
+# ============================================================================
+# Feature Flags
+# ============================================================================
+features:
+  # Phase 2 features
+  feedback_loop: true
+  multi_agent_orchestration: true
+  document_auto_classification: true
+  sharepoint_sync: true
+
+  # Phase 3 features
+  public_api: false
+  regulatory_webhooks: false
+  conversation_api: false
+  llm_tie_breaker: false
+
+  # Phase 4 features
+  agent_federation: false
+  advanced_analytics: true
+  agent_learning: false
+  marketplace: false
+
+# ============================================================================
+# Development & Testing
+# ============================================================================
+development:
+  # Debug mode
+  debug: false
+
+  # Mock external services
+  mock_looker: false
+  mock_tableau: false
+  mock_slack: false
+
+  # Test data generation
+  generate_test_data: false
+  test_data_days: 30

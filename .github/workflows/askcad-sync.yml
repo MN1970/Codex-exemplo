@@ -1,0 +1,326 @@
+name: AskCAD Persona Sync
+
+# Trigger on changes to agent files or manual dispatch
+on:
+  push:
+    paths:
+      - '.claude/agents/*.md'
+      - 'scripts/extract_agent_metadata.py'
+      - 'scripts/askcad_sync_client.py'
+      - '.github/workflows/askcad-sync.yml'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '.claude/agents/*.md'
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (no actual sync)'
+        required: false
+        default: 'true'
+
+jobs:
+  validate:
+    name: Validate Agent Metadata
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.detect.outputs.has_changes }}
+      changed_agents: ${{ steps.detect.outputs.changed_agents }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml requests
+
+      - name: Detect changed agent files
+        id: detect
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }})
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1)
+          fi
+
+          AGENT_FILES=$(echo "$CHANGED_FILES" | grep '^\.claude/agents/.*\.md$' || echo "")
+
+          if [ -n "$AGENT_FILES" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "changed_agents=$AGENT_FILES" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract and validate metadata
+        if: steps.detect.outputs.has_changes == 'true'
+        run: |
+          python scripts/extract_agent_metadata.py \
+            --validate \
+            --output /tmp/agents_metadata.json \
+            --report
+
+      - name: Upload metadata artifact
+        if: steps.detect.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: agent-metadata
+          path: /tmp/agents_metadata.json
+          retention-days: 7
+
+  sync:
+    name: Sync to AskCAD
+    runs-on: ubuntu-latest
+    needs: validate
+    if: |
+      needs.validate.outputs.has_changes == 'true' &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml requests
+
+      - name: Download metadata artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: agent-metadata
+          path: /tmp
+
+      - name: Determine dry-run mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+              echo "dry_run=--dry-run" >> $GITHUB_OUTPUT
+              echo "mode=DRY-RUN" >> $GITHUB_OUTPUT
+            else
+              echo "dry_run=" >> $GITHUB_OUTPUT
+              echo "mode=SYNC" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "dry_run=" >> $GITHUB_OUTPUT
+            echo "mode=SYNC" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Sync agent personas
+        env:
+          ASKCAD_API_KEY: ${{ secrets.ASKCAD_API_KEY }}
+          ASKCAD_API_URL: ${{ secrets.ASKCAD_API_URL || 'https://api.askcad.com' }}
+        run: |
+          python << 'EOF'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          # Read extracted metadata
+          metadata_file = Path('/tmp/agents_metadata.json')
+          if not metadata_file.exists():
+              print("Error: Metadata file not found")
+              sys.exit(1)
+
+          metadata = json.loads(metadata_file.read_text())
+
+          # Sync each agent
+          results = []
+          for agent_code, agent_metadata in metadata.items():
+              print(f"\n{'='*60}")
+              print(f"Syncing {agent_code}...")
+              print('='*60)
+
+              cmd = [
+                  'python', 'scripts/askcad_sync_client.py',
+                  'sync',
+                  '--agent-code', agent_code,
+                  '--metadata', '/dev/stdin'
+              ]
+
+              # Add dry-run flag if set
+              dry_run = "${{ steps.mode.outputs.dry_run }}"
+              if dry_run:
+                  cmd.append(dry_run)
+
+              try:
+                  result = subprocess.run(
+                      cmd,
+                      input=json.dumps(agent_metadata),
+                      capture_output=True,
+                      text=True,
+                      check=True
+                  )
+                  print(result.stdout)
+                  results.append({
+                      'agent': agent_code,
+                      'status': 'success'
+                  })
+              except subprocess.CalledProcessError as e:
+                  print(f"Error: {e.stderr}", file=sys.stderr)
+                  results.append({
+                      'agent': agent_code,
+                      'status': 'failed',
+                      'error': e.stderr
+                  })
+
+          # Summary
+          print(f"\n{'='*60}")
+          print("SYNC SUMMARY")
+          print('='*60)
+          successful = sum(1 for r in results if r['status'] == 'success')
+          print(f"Synced: {successful}/{len(results)}")
+          for r in results:
+              status_icon = "✓" if r['status'] == 'success' else "✗"
+              print(f"  {status_icon} {r['agent']}")
+
+          # Exit with error if any failed
+          if any(r['status'] == 'failed' for r in results):
+              sys.exit(1)
+          EOF
+
+      - name: Verify sync
+        env:
+          ASKCAD_API_KEY: ${{ secrets.ASKCAD_API_KEY }}
+        run: |
+          python << 'EOF'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          metadata_file = Path('/tmp/agents_metadata.json')
+          metadata = json.loads(metadata_file.read_text())
+
+          print("\n" + "="*60)
+          print("VERIFICATION")
+          print("="*60)
+
+          all_verified = True
+          for agent_code in metadata.keys():
+              result = subprocess.run(
+                  ['python', 'scripts/askcad_sync_client.py',
+                   'verify', '--agent-code', agent_code],
+                  capture_output=True,
+                  text=True
+              )
+
+              if result.returncode == 0:
+                  data = json.loads(result.stdout)
+                  if data.get('verified'):
+                      print(f"✓ {agent_code}: Verified")
+                  else:
+                      print(f"✗ {agent_code}: Verification failed")
+                      all_verified = False
+              else:
+                  print(f"✗ {agent_code}: Error during verification")
+                  all_verified = False
+
+          if not all_verified:
+              sys.exit(1)
+          EOF
+
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [validate, sync]
+    if: always()
+    steps:
+      - name: Determine status
+        id: status
+        run: |
+          if [ "${{ needs.validate.result }}" == "failure" ]; then
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "message=Validation failed" >> $GITHUB_OUTPUT
+          elif [ "${{ needs.sync.result }}" == "failure" ]; then
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "message=Sync failed" >> $GITHUB_OUTPUT
+          else
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "message=AskCAD personas synced successfully" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment on PR (if PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## AskCAD Sync Report
+
+**Status:** ${{ steps.status.outputs.status == 'success' && '✓ Ready' || '✗ Issues' }}
+
+${{ steps.status.outputs.message }}
+
+Validation: ${{ needs.validate.result }}
+Artifacts: [Agent Metadata](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+            })
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request
+            const message = `⚠️ AskCAD Persona Sync Failed
+
+Details: ${{ steps.status.outputs.message }}
+Logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`
+
+            if (pr) {
+              github.rest.issues.createComment({
+                issue_number: pr.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: message
+              })
+            }
+
+  metrics:
+    name: Record Metrics
+    runs-on: ubuntu-latest
+    needs: [validate, sync]
+    if: always() && github.event_name == 'push'
+    steps:
+      - name: Record sync metrics
+        run: |
+          cat > /tmp/sync_metrics.json << 'EOF'
+          {
+            "timestamp": "$(date -Iseconds)",
+            "workflow": "askcad-sync",
+            "event": "${{ github.event_name }}",
+            "ref": "${{ github.ref }}",
+            "status": "${{ job.status }}",
+            "validate_result": "${{ needs.validate.result }}",
+            "sync_result": "${{ needs.sync.result }}"
+          }
+          EOF
+          cat /tmp/sync_metrics.json
+
+      - name: Upload metrics (optional)
+        # This could push to monitoring system
+        run: |
+          echo "Metrics would be uploaded to monitoring system"

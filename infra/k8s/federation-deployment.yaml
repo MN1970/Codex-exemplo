@@ -1,0 +1,220 @@
+---
+# Federation Broker Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: federation-broker
+  namespace: manta-maestro
+  labels:
+    app: federation-broker
+    phase: 4.1
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: federation-broker
+  template:
+    metadata:
+      labels:
+        app: federation-broker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8001"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: federation-broker
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: broker
+        image: manta/federation-broker:5.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: api
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 8001
+          protocol: TCP
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: federation-secrets
+              key: database-url
+        - name: MANTA_ORG_ID
+          value: "org-1"
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: FEDERATION_MODE
+          value: "production"
+        - name: METRICS_ENABLED
+          value: "true"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        volumeMounts:
+        - name: mtls-ca
+          mountPath: /etc/federation/ca
+          readOnly: true
+        - name: broker-cert
+          mountPath: /etc/federation/broker
+          readOnly: true
+        - name: audit-log
+          mountPath: /var/log/federation
+      volumes:
+      - name: mtls-ca
+        secret:
+          secretName: federation-ca-cert
+          defaultMode: 0400
+      - name: broker-cert
+        secret:
+          secretName: federation-broker-cert
+          defaultMode: 0400
+      - name: audit-log
+        emptyDir:
+          medium: Memory
+          sizeLimit: 1Gi
+
+---
+# Federation Broker Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: federation-broker
+  namespace: manta-maestro
+  labels:
+    app: federation-broker
+spec:
+  type: ClusterIP
+  ports:
+  - name: api
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: metrics
+    port: 8001
+    targetPort: 8001
+    protocol: TCP
+  selector:
+    app: federation-broker
+
+---
+# HorizontalPodAutoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: federation-broker-hpa
+  namespace: manta-maestro
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: federation-broker
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+# ServiceMonitor for Prometheus
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: federation-broker
+  namespace: manta-maestro
+spec:
+  selector:
+    matchLabels:
+      app: federation-broker
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+
+---
+# NetworkPolicy: Restrict federation broker traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: federation-broker-netpolicy
+  namespace: manta-maestro
+spec:
+  podSelector:
+    matchLabels:
+      app: federation-broker
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: manta-maestro
+    - namespaceSelector:
+        matchLabels:
+          name: federation-partners
+    ports:
+    - protocol: TCP
+      port: 8080
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: manta-maestro
+    ports:
+    - protocol: TCP
+      port: 5432  # Postgres
+    - protocol: TCP
+      port: 6379  # Redis (cache)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: federation-partners
+    ports:
+    - protocol: TCP
+      port: 8080  # Partner agent APIs
+  - to:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 53   # DNS
+    - protocol: UDP
+      port: 53
