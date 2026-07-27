@@ -1,0 +1,122 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: fase4-staging
+  namespace: manta-fase4-staging
+
+commonLabels:
+  app.kubernetes.io/name: fase4
+  app.kubernetes.io/version: "1.0.0"
+  app.kubernetes.io/environment: staging
+  app.kubernetes.io/managed-by: kustomize
+
+commonAnnotations:
+  manta.com/owner: "Platform Engineering"
+  manta.com/contact: "platform-team@manta.com"
+  manta.com/environment: "staging"
+
+namespace: manta-fase4-staging
+
+# Base resources from production
+bases:
+- ../k8s-production
+
+# Patches for staging-specific configurations
+patchesStrategicMerge:
+- |
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: manta-fase4-staging
+  metadata:
+    labels:
+      environment: staging
+      version: 1.0.0
+      managed-by: gitops
+
+# Override replica counts for staging (lower than production)
+replicas:
+- name: platform-router
+  count: 2
+- name: code-refactor-engine
+  count: 1
+- name: ml-inference
+  count: 2
+
+# Staging-specific resource limits (lower than production)
+patchesJson6902:
+- target:
+    group: v1
+    version: v1
+    kind: ResourceQuota
+    name: manta-fase4-quota
+    namespace: manta-fase4-staging
+  patch: |-
+    - op: replace
+      path: /spec/hard/requests.cpu
+      value: "16"
+    - op: replace
+      path: /spec/hard/requests.memory
+      value: "32Gi"
+    - op: replace
+      path: /spec/hard/limits.cpu
+      value: "32"
+    - op: replace
+      path: /spec/hard/limits.memory
+      value: "64Gi"
+    - op: replace
+      path: /spec/hard/pods
+      value: "50"
+
+# Image overrides for staging
+images:
+- name: manta-fase4/platform-router
+  newTag: "1.0.0-staging"
+- name: manta-fase4/code-refactor-engine
+  newTag: "1.0.0-staging"
+- name: manta-fase4/ml-inference-service
+  newTag: "2.0.0-staging"
+- name: manta-fase4/ml-model-loader
+  newTag: "1.0.0-staging"
+- name: manta-fase4/ml-daily-scorer
+  newTag: "2.0.0-staging"
+
+# Staging-specific environment variables
+patchesJson6902:
+- target:
+    group: apps/v1
+    kind: Deployment
+    name: platform-router
+    namespace: manta-fase4-staging
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/env/2/value
+      value: "staging"
+    - op: replace
+      path: /spec/template/spec/containers/0/env/3/value
+      value: "debug"
+
+# HPA overrides for staging
+patchesJson6902:
+- target:
+    group: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    name: platform-router-hpa
+    namespace: manta-fase4-staging
+  patch: |-
+    - op: replace
+      path: /spec/minReplicas
+      value: 2
+    - op: replace
+      path: /spec/maxReplicas
+      value: 5
+
+# Metadata overrides
+generatorOptions:
+  disableNameSuffixHash: false
+  annotations:
+    kustomize.config.k8s.io/generated: "true"
+    kustomize.config.k8s.io/version: "4.5.0"
+    environment: "staging"
+    deployment-date: "2026-07-27"
