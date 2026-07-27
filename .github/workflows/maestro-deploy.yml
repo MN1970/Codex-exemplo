@@ -42,7 +42,7 @@ jobs:
         id: extract
         run: |
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            TAG="${{ github.ref#refs/tags/}}"
+            TAG=$(echo "${{ github.ref }}" | sed 's|refs/tags/||')
             ENV="production"
           else
             TAG="${{ github.event.inputs.image_tag }}"
@@ -59,7 +59,7 @@ jobs:
 
           # Verify git tag exists
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            TAG="${{ github.ref#refs/tags/}}"
+            TAG=$(echo "${{ github.ref }}" | sed 's|refs/tags/||')
             if git rev-parse "$TAG" >/dev/null 2>&1; then
               echo "Tag $TAG verified"
             else
