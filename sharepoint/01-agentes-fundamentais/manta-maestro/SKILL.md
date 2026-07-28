@@ -3,10 +3,10 @@ name: manta-maestro
 display_name: "Manta Maestro"
 manta_code: "Manta 00 (roteador) / Manta 12 (kernel-agent)"
 aliases: ["manta", "maestro", "manta-agente", "manta-router", "/manta", "/maestro", "manta 12", "manta-12", "kernel-manta"]
-version: 4.7.0
-updated: 2026-07-13
+version: 4.9.0
+updated: 2026-07-19
 author: Manta Associados
-supersedes: 4.6.1 (2026-07-12 F2 SP fallback), 4.6.0 (2026-07-12 primeira versao do dia), 3.0.0 (2026-07-09), 2.2.0 (2026-07-06), 2.0.0 (2026-07-04), 1.0.0 (2026-06-21)
+supersedes: 4.7.0 (2026-07-13 Agentic Intelligence), 4.6.1 (2026-07-12 F2 SP fallback), 4.6.0 (2026-07-12 primeira versao do dia), 3.0.0 (2026-07-09), 2.2.0 (2026-07-06), 2.0.0 (2026-07-04), 1.0.0 (2026-06-21)
 description: >
   Manta Maestro — roteador e regente do agentic OS proprietario da Manta
   Associados. Recebe o pedido, le as fontes (F4 Extracao), sintetiza objetivo,
@@ -20,6 +20,21 @@ description: >
   episódica em agent_episodes (Upgrade C), P2 Prompt Contract padronizado
   (Upgrade B), primitivas /goal e /loop (Upgrade D), model tiering explícito
   com cost_log (Upgrade E) e SkillForge auto-geração de skills (Upgrade F).
+  v4.8 (2026-07-14) adiciona hardening pos-v4.7: cron diario consolidate_
+  old_episodes com dedup, backend quantitativo com POST /field-measurement
+  (Bruckner realizado vs projeto + SPI), learned router hard-coded contra
+  manta_rag_ml_predictions em prod, seed Manta Cases v4.9 (3 projetos x 23
+  KEs canonicos), refator judge feedback v4.6 com trigger para akp_curation
+  _backlog + view v_judge_feedback_health.
+  v4.9 (2026-07-19) FECHA O LOOP DE APRENDIZADO: aplicado em prod as 5 pipes
+  do v4.8 com adaptacao D1' ao schema real (manta_rag_queries direto, sem
+  agent_response_flags). Trigger trg_judge_flag_to_backlog dispara em
+  judge_score<3 e cria ticket AKP-JF em akp_curation_backlog. promote_gaps
+  _to_backlog(INT, FLOAT, INT) estendida com branch judge_pattern. View
+  v_judge_feedback_health com security_invoker para tier promotion / prompt
+  refinement / Reflexion Loop / SkillForge. Hardening pos-apply: REVOKE
+  grants excessivos, sequences race-safe (nunca MAX+1), UNIQUE INDEXes
+  parciais para dedup. Gate humano MN completado 2026-07-19.
   Use SEMPRE que o usuario disser "maestro", "/maestro", "Manta Maestro",
   "orquestre", "qual agente cuida", "ativa agente", "carregar agente", ou
   citar um codigo "Manta NN" / "S{n}.A{m}.D{k}". Tom tecnico, sem floreio.
@@ -64,7 +79,46 @@ trigger_phrases:
   - "Manta 00"
 ---
 
-# manta-maestro — roteador + regente do agentic OS Manta (v4.7)
+# manta-maestro — roteador + regente do agentic OS Manta (v4.9)
+
+> **Nota de versao (v4.9.0 — 2026-07-19).** Sprint "Fechar loop de
+> aprendizado" APLICADO em prod (Supabase project ogxxgvgtulrbbppshjie).
+> 5 pipes paralelas + hardening pos-apply, todas idempotentes e com gate
+> humano MN completado. **Pipe 1** cron diario `consolidate_old_episodes()`
+> com dedup por `(agent_id, task_context_hash)` — GH Action
+> `.github/workflows/episodes-consolidation-daily.yml`. **Pipe 2** backend
+> quantitativo com endpoint `POST /api/quantitativo/field-measurement` para
+> ingestao pos-obra (Bruckner realizado vs projeto + SPI, 9 testes verdes).
+> **Pipe 3** learned router SKIP formal — `maestro_learned_router.py`
+> ja hard-coda `/rest/v1/manta_rag_ml_predictions` em prod, restaurar
+> `maestro_routing_predictions` desnecessario. **Pipe 4** seed Manta Cases
+> `scripts/seed_manta_cases_v4_9.py` (3 projetos x 23 KEs canonicos: OAE 622
+> + EPR BR-365 + AySA anonimizado). **Pipe 5** judge feedback loop D1'
+> aplicado: trigger `trg_judge_flag_to_backlog AFTER INSERT OR UPDATE OF
+> judge_score` em `manta_rag_queries` WHEN score<3 cria ticket AKP-JF em
+> `akp_curation_backlog` (ticket_type='judge_flag', priority escala com
+> severidade). `promote_gaps_to_backlog(INT, FLOAT, INT)` estendida com
+> branch `judge_pattern` (agrega >=N flags/30d por agente/segmento).
+> View `v_judge_feedback_health` com `security_invoker=true` alimenta
+> tier promotion, prompt refinement, Reflexion Loop e SkillForge.
+> Hardening pos-apply: REVOKE grants excessivos em view e funcao (SO
+> service_role tem acesso apos remocao de anon/authenticated/PUBLIC), 3
+> sequences race-safe (`akp_judge_flag_seq`, `akp_judge_pattern_seq`,
+> `akp_gap_candidate_seq` — nunca MAX+1), 2 UNIQUE INDEXes parciais para
+> dedup (query_id em judge_flag, agent_slug+segmento em judge_pattern
+> aberto). View v4.6 antiga `v_akp_judge_health` mantida com COMMENT
+> "superseded by v_judge_feedback_health em v4.9. Deprecar em v5.0 se 90d
+> sem consumer". Smoke test end-to-end passou (AKP-JF-00001 criado com
+> priority=1 para score=0, idempotencia OK, cleanup limpo). Refs:
+> `docs/JUDGE-FEEDBACK-LOOP-v4.9-ADAPTED-RUNBOOK.md`,
+> `docs/V4.9-BACKFILL-RUNBOOK.md`, `docs/SPRINT-RETROSPECTIVE-v4.9.md`,
+> `docs/ROADMAP-v5.0.md`. Migration em prod:
+> `supabase/migrations/2026_07_13_judge_feedback_loop_v4_9_adapted.sql`.
+
+> **Nota de versao anterior (v4.8.0 — 2026-07-14).** Hardening pos-v4.7 +
+> preparacao das 5 pipes do sprint v4.9. Todas em modo idempotente com
+> gate humano MN antes de aplicar em prod. Ver Historico de versoes no
+> CLAUDE.md master para detalhes de cada pipe.
 
 > **Nota de versao (v4.7.0 — 2026-07-13).** Sprint de evolucao Maestro em
 > 6 upgrades paralelos do roadmap MNT-IA-20260712-001 — **Agentic
@@ -1120,25 +1174,40 @@ consolida as 6 metricas com update semanal. Threshold breach dispara
 ```
 Skill        : manta-maestro
 Codigo       : Manta 00 (roteador) / Manta 12 (kernel-agent)
-Versao       : 4.7.0
-Substitui    : 4.6.1 (2026-07-12), 4.6.0 (2026-07-12), 3.0.0 (2026-07-09)
-Atualizada   : 2026-07-13
+Versao       : 4.9.0
+Substitui    : 4.7.0 (2026-07-13), 4.6.1 (2026-07-12), 4.6.0 (2026-07-12), 3.0.0 (2026-07-09)
+Atualizada   : 2026-07-19
 Arquitetura  : 4 eixos (S x A x D x F) + Agentic Intelligence Layer v4.7
-               ver 00-arquitetura/manta-maestro-arquitetura-v4.7.md
+               + Learning Loop Fechado v4.9
+               ver 00-arquitetura/ARQUITETURA-AGENTES-IA.md v3.0.0
 Plataformas  : Claude.ai (web/desktop) com conector M365 + Claude Code + Cowork
-Distribuicao : github.com/MN1970/Codex-exemplo Release v4.7.0
+Distribuicao : github.com/MN1970/Codex-exemplo Release v4.9.0
 Classificacao: Interno — Manta Associados
 Mantenedor operacional: agente-projeto-claude (F9)
+Backup v4.7.0: 99-backup/SKILL-maestro-v4.7.0-20260713.md
 Backup v4.6.1: 99-backup/SKILL-maestro-v4.6.1-20260712.md
 Backup v4.6.0: 99-backup/SKILL-maestro-v4.6.0-20260712.md
 Backup v3.0  : 99-backup/SKILL-maestro-v3.0-20260709.md
 Backup v2.2  : 99-backup/SKILL-maestro-v2.2-20260709.md
-Schema Supabase: projeto manta-maestro (ogxxgvgtulrbbppshjie), 22 migracoes v4.6
-                 + migracoes v4.7 (agent_episodes, maestro_cost_log,
-                 skillforge_pending_review) — a aplicar
-                 bge-m3 1024d, HNSW cosine (m=16, ef_construction=64),
-                 RPCs: match_kes_hybrid, match_manta_cases_hybrid,
-                 manta_rag_agent_search, select_queries_for_judging,
-                 get_relevant_episodes (v4.7)
-Roadmap      : MNT-IA-20260712-001 (Agentic Intelligence Layer)
+Schema Supabase: projeto manta-maestro (ogxxgvgtulrbbppshjie)
+                 v4.6 (22 migracoes): bge-m3 1024d, HNSW cosine (m=16,
+                 ef_construction=64), RPCs match_kes_hybrid,
+                 match_manta_cases_hybrid, manta_rag_agent_search,
+                 select_queries_for_judging.
+                 v4.7 (aplicado): agent_episodes, maestro_cost_log,
+                 skillforge_pending_review, get_relevant_episodes.
+                 v4.9 (APLICADO 2026-07-19): 4 colunas aditivas em
+                 akp_curation_backlog (ticket_type, agent_slug, evidence,
+                 priority) + trigger trg_judge_flag_to_backlog + funcao
+                 promote_gaps_to_backlog(INT,FLOAT,INT) estendida +
+                 view v_judge_feedback_health (security_invoker) + 3
+                 sequences race-safe + 5 indexes (2 UNIQUE parciais) +
+                 RLS policy + REVOKE hardening + COMMENT v4.6 view.
+Migration v4.9: supabase/migrations/2026_07_13_judge_feedback_loop_v4_9_adapted.sql
+Runbooks v4.9: docs/JUDGE-FEEDBACK-LOOP-v4.9-ADAPTED-RUNBOOK.md
+               docs/V4.9-BACKFILL-RUNBOOK.md
+               docs/SMOKE-TEST-v4.9-RUNBOOK.md
+               docs/SPRINT-RETROSPECTIVE-v4.9.md
+Roadmap v5.0 : docs/ROADMAP-v5.0.md (8 vetores priorizados)
+Roadmap v4.7 : MNT-IA-20260712-001 (Agentic Intelligence Layer)
 ```

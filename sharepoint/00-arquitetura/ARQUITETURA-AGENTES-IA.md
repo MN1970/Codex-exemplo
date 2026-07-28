@@ -2,11 +2,12 @@
 
 **Sistema Manta Maestro — Arquitetura de Agentes IA**
 
-- **Versão**: 2.0.0
-- **Data**: 2026-07-05
+- **Versão**: 3.0.0
+- **Data**: 2026-07-19
 - **Autor**: Manta Associados
-- **Substitui**: v1.0.0 (2026-06-24)
-- **Ticket**: MNT-2026-UPGRADE-AGENTS-S6S10
+- **Substitui**: v2.0.0 (2026-07-05 expansão S6–S10), v1.0.0 (2026-06-24)
+- **Ticket**: MNT-2026-UPGRADE-LEARNING-LOOP-v4.9
+- **Sprint aplicado**: v4.9 — Fechar loop de aprendizado (2026-07-19)
 
 ## Sumário
 
@@ -19,7 +20,7 @@
 - [7. Knowledge Engine (RAG)](#7-knowledge-engine-rag)
 - [8. SharePoint routing](#8-sharepoint-routing)
 - [9. Diagrama de fluxo](#9-diagrama-de-fluxo-agente-vertical)
-- [10. Changelog v1→v2](#10-changelog-v10--v20)
+- [10. Changelog v1→v2→v3](#10-changelog-v10--v20--v30)
 - [11. Referências](#11-referências)
 
 ---
@@ -31,9 +32,31 @@ O **Manta Maestro** é o sistema de agentes IA da Manta Associados —
 estudo prévio ao descomissionamento, organizados em um **hub-and-spoke**
 com um router central (Manta 00, o Maestro).
 
-A v2.0.0 promove os 5 agentes verticais **S6–S10** (Portos, Aeroportos,
-Saneamento, Energia, Barragens) de "novos" para **operacional**,
+A v2.0.0 (2026-07-05) promoveu os 5 agentes verticais **S6–S10** (Portos,
+Aeroportos, Saneamento, Energia, Barragens) de "novos" para **operacional**,
 completando a cobertura de 10 segmentos de infraestrutura.
+
+A **v3.0.0 (2026-07-19)** adiciona as camadas **Agentic Intelligence
+Layer** (v4.7) e **Learning Loop Fechado** (v4.9) sobre a arquitetura
+hub-and-spoke. As entregas principais:
+
+- **v4.7 Agentic Intelligence Layer** (2026-07-13) — Reflexion Loop pré-
+  entrega, Memória Episódica (`agent_episodes` + HNSW 384d), P2 Prompt
+  Contract padronizado, Loop Primitives (sequential/parallel/race DAG),
+  Model Tiering explícito com `maestro_cost_log`, SkillForge auto-geração.
+- **v4.9 Learning Loop Fechado** (2026-07-19, APLICADO EM PROD) —
+  Trigger `trg_judge_flag_to_backlog` promove automaticamente respostas
+  com `judge_score < 3` para tickets `AKP-JF` em `akp_curation_backlog`.
+  `promote_gaps_to_backlog(INT, FLOAT, INT)` estendida com branch
+  `judge_pattern` (agrega padrões crônicos por agente/segmento em 30d).
+  View `v_judge_feedback_health` com `security_invoker` alimenta tier
+  promotion, prompt refinement, Reflexion Loop e SkillForge.
+
+**Estado prod (Supabase project ogxxgvgtulrbbppshjie):** infraestrutura
+completa aplicada, sequences race-safe, UNIQUE INDEXes parciais para
+dedup, RLS + grants mínimos (só `service_role` executa a trigger fn),
+smoke test passou (AKP-JF-00001 criado com priority=1 para score=0,
+idempotência OK).
 
 ## 2. 3 eixos do sistema
 
@@ -267,6 +290,75 @@ Usuário ─────► Maestro (Manta 00)
                    ▼
               Usuário ← resposta com fontes, quantitativos, risco
 ```
+
+## 10. Changelog v1.0 → v2.0 → v3.0
+
+### v3.0.0 (2026-07-19) — Learning Loop Fechado + Agentic Intelligence
+
+#### Adicionado (v4.7 Agentic Intelligence, sobreposto em v4.6.1)
+
+- **Reflexion Loop pré-entrega** (`maestro_reflexion.py`): output → aluci-guard
+  → consist-guard → autocrítica + lição em `agent_episodes` → refina (max 3
+  iterações). Só em tier `star2`/`star3` (30-100% custo extra); `star1`
+  permanece single-shot.
+- **Memória episódica** — tabela `agent_episodes` + `v_high_quality_episodes`
+  + índice HNSW 384d. Cada execução de sub-agente registra `task_id`,
+  `p2_contract`, `tools_used`, `outcome`, `custos`.
+- **P2 Prompt Contract** — 4 elementos obrigatórios em delegação a
+  sub-agentes: `objective`, `output_format`, `tools_and_sources`,
+  `boundaries`. System prompt dedicado + brief estruturado.
+- **Loop Primitives** (`manta_shared/loop_primitives.py`): sequential,
+  parallel, race. Maestro emite DAG de execução usando os 3 primitives.
+- **Model Tiering explícito** — campo `tier_policy` em cada SKILL.md
+  (`haiku_for/sonnet_for/opus_for`) + enforcement no dispatcher.
+  `maestro_cost_log` registra custos por execução.
+- **SkillForge** — pipeline em `sharepoint/03-skills-forjadas/` gera
+  skills automaticamente de padrões em `agent_episodes` (cron 03:00 UTC
+  + gate humano MN via `skillforge_pending_review`).
+
+#### Adicionado (v4.9 Learning Loop Fechado, aplicado 2026-07-19)
+
+- **Trigger real-time `trg_judge_flag_to_backlog`** em `manta_rag_queries`
+  (`AFTER INSERT OR UPDATE OF judge_score` `WHEN judge_score < 3`). Cria
+  ticket `AKP-JF-NNNNN` em `akp_curation_backlog` com `priority` escalando
+  com severidade (score 0 → priority 1, score 1 → priority 2).
+- **`akp_curation_backlog` estendido** com 4 colunas aditivas:
+  `ticket_type` ∈ {gap_candidate, judge_flag, judge_pattern}, `agent_slug`,
+  `evidence` (JSONB com query_id/trace_id/judge_notes), `priority` (1-5).
+- **`promote_gaps_to_backlog(INT, FLOAT, INT)`** — assinatura estendida,
+  branch `judge_pattern` agrega ≥N flags/30d por `(agent_slug, segmento)`
+  em UM ticket agregado.
+- **View `v_judge_feedback_health`** com `security_invoker=true` — saúde
+  do juiz LLM por agente/segmento em 30d (8 métricas + `health_status`
+  critical/warn/ok/healthy). Alimenta tier promotion, prompt refinement,
+  Reflexion Loop, SkillForge.
+- **3 sequences race-safe** (`akp_judge_flag_seq`, `akp_judge_pattern_seq`,
+  `akp_gap_candidate_seq`) — nunca usa MAX+1.
+- **2 UNIQUE INDEXes parciais** — dedup por `query_id` em `judge_flag` +
+  dedup por `(agent_slug, segmento)` em `judge_pattern` aberto.
+- **RLS + hardening** — REVOKE de grants excessivos em view e função,
+  só `service_role` (+ `postgres` owner) executa a trigger function.
+  `authenticated` mantém SELECT na view; `anon` sem acesso.
+
+#### Mudado (v4.9)
+
+- **v_akp_judge_health** (v4.6) marcado com `COMMENT ON VIEW`: "superseded
+  by v_judge_feedback_health em v4.9. Mantida por compat com dashboards
+  legados. Deprecar em v5.0 se 90d sem consumer."
+- **Cron `akp-daily-cron.yml`** — body do RPC atualizado da assinatura
+  antiga `max_top_sim` para a nova `max_avg_hits` + `min_judge_flags`.
+
+#### Mantido (sem alteração)
+
+- Estrutura de 5 camadas (C0-C5).
+- Hub-and-spoke com Manta 00 (Maestro) no centro.
+- Model tiering (Haiku → Sonnet → Opus).
+- Todos os agentes horizontais + verticais S1-S13.
+- Coleções RAG existentes (`saneamento`, `energia`, `portos`, `aeroportos`,
+  `barragens`, `academic-knowledge`, `tuneis`, `mineracao`, `oleo-gas`,
+  `edificacoes`, `mcs:` Manta Cases).
+
+---
 
 ## 10. Changelog v1.0 → v2.0
 
