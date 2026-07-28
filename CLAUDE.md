@@ -57,6 +57,32 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 
 ---
 
+## PROTOCOLOS OPERACIONAIS — v4.3
+
+### P1: Confirmação de Banco de Dados + Data
+**Aplicação:** Sempre que usuário menciona SICRO, DER-SP, ORSE, SINAPI ou orçamento.
+
+**Fluxo obrigatório:**
+1. ❓ Qual banco: SICRO / DER-SP / ORSE / SINAPI / outro?
+2. ❓ Qual data: JAN/2026 / DEZ/2025 / outra?
+3. ℹ️ Se não houver data: "Usando [BANCO] [data disponível]"
+4. ✅ Confirmar antes de executar
+
+**Roteamento:** Manta 05 (orçamento) + agentes verticais S1-S10
+
+### P2: Execução Paralela com até 16 Agentes Sonnet
+**Aplicação:** Quando tarefas são independentes e precisam de paralelização.
+
+**Capacidade:**
+- Máximo: 16 agentes Sonnet simultâneos
+- Recomendação: 15 agentes (medium tier, default)
+- Modo: `parallel()` (independentes) ou `pipeline()` (séries)
+- Overhead worktree: ~3-8s total se usado
+
+**Uso:** Via skill `maestro-protocolos` ou `/maestro-parallel 16`
+
+---
+
 ## ROUTING — Maestro (Manta 00)
 
 Regra de roteamento atualizada para Q1 do intake:
@@ -76,6 +102,13 @@ IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
 
 IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
    → agente-barragens (S10)
+
+# P1 + P2: Banco de Dados + Paralelo
+IF menção a SICRO|DER-SP|ORSE|SINAPI|orçamento|preço unitário
+   → P1 (confirmar banco+data) → Manta 05 (orçamento) + roteamento
+   
+IF menção a "16 agentes" | "paralelo" | "/maestro-parallel"
+   → P2 (executor paralelo com 16x Sonnet)
 
 # Regras existentes S1-S4 mantidas sem alteração
 IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
@@ -162,6 +195,10 @@ mapa de routing.
   com sistema de consensus voting, ML routing, e integração RAG de 950+ docs 
   em 5 coleções Supabase. Aprovado para produção. Repositório sincronizado 
   em 2026-07-27.
+  - **v5.0.1** (2026-07-27) — Integração Protocolos P1 + P2. 
+    Banco de dados + data obrigatório (P1). Execução paralela 16x Sonnet (P2).
+    Skill maestro-protocolos. Workflow maestro-16-agentes-paralelo.
+    Hooks P1+P2 em settings.json v5.0. Ticket MNT-2026-PROTOCOLOS-P1P2.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
