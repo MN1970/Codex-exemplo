@@ -1,6 +1,6 @@
-# 🚀 Deployment — Manta Maestro v4.3
+# 🚀 Deployment — Manta Maestro v5.0.1
 
-Guia completo de deployment dos Protocolos P1 + P2 com Seed Supabase DER-SP + SICRO.
+Guia completo de deployment dos Protocolos P1 + P2 com **MCP Supabase Connector** (sem .env).
 
 ---
 
