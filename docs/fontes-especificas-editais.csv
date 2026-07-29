@@ -1,0 +1,26 @@
+Órgão,Projeto/Edital,Tipo,Período,URL Principal,Contenção de Custos,Análise de Propostas,Dispositivos Viários,Status
+ARTESP,SPVias,Concessão Rodovia,1998-Ativo,https://dadosabertos.artesp.sp.gov.br/dataset/editais-e-contratos-de-concessoes-rodoviarias,✓ Planilha Completa,✓ Sim,✓ Detalhado,Público
+ARTESP,Autoban,Concessão Rodovia,1998-Ativo,https://dadosabertos.artesp.sp.gov.br/dataset/editais-e-contratos-de-concessoes-rodoviarias,✓ Planilha Completa,✓ Sim,✓ Detalhado,Público
+ARTESP,Ecovias Leste,Concessão Rodovia,1998-Ativo,https://dadosabertos.artesp.sp.gov.br/dataset/editais-e-contratos-de-concessoes-rodoviarias,✓ Planilha Completa,✓ Sim,✓ Detalhado,Público
+ARTESP,Autovias,Concessão Rodovia,1998-Ativo,https://dadosabertos.artesp.sp.gov.br/dataset/editais-e-contratos-de-concessoes-rodoviarias,✓ Planilha Completa,✓ Sim,✓ Detalhado,Público
+ARTESP,Via Oeste,Concessão Rodovia,1998-Ativo,https://dadosabertos.artesp.sp.gov.br/dataset/editais-e-contratos-de-concessoes-rodoviarias,✓ Planilha Completa,✓ Sim,✓ Detalhado,Público
+ARTESP,Tebe,Concessão Rodovia,2000-Ativo,https://dadosabertos.artesp.sp.gov.br/dataset/editais-e-contratos-de-concessoes-rodoviarias,✓ Planilha Completa,✓ Sim,✓ Detalhado,Público
+ARTESP,Novo Litoral,Concessão Rodovia,2023-Ativo,https://dadosabertos.artesp.sp.gov.br/dataset/editais-e-contratos-de-concessoes-rodoviarias,✓ Planilha Completa,✓ Sim,✓ Detalhado,Público
+DNIT,Superintendências Regionais,Obras Públicas,2018-2026,https://www.gov.br/dnit/pt-br/assuntos/licitacoes,✓ Por Projeto,✓ Sim,✓ Variável,Público
+DNIT,SICRO - Sistema de Custos,Referência Unitária,Mensal,https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/custos-referenciais,✓ Tabela Completa,× Não,✓ Completo,Público
+DNIT,Edital 0355/19-26,Rodovia,2019-2026,http://www1.dnit.gov.br/anexo/Termo%20de%20Refer%C3%AAncia/Termo%20de%20Refer%C3%AAncia_edital0355_19-26_0.pdf,✓ Sim,✓ Sim,✓ Sim,Público
+DNIT,Edital 0124/2020,Rodovia,2020,http://www1.dnit.gov.br/anexo/Edital/Edital_edital0124_20-05_0.pdf,✓ Sim,✓ Sim,✓ Sim,Público
+DNIT,Edital 0411/20-21,Rodovia,2020-2021,http://www1.dnit.gov.br/anexo/Edital/Edital_edital0411_20-21_0.pdf,✓ Sim,✓ Sim,✓ Sim,Público
+DNIT,Edital 0373/21-09,Rodovia,2021,http://www1.dnit.gov.br/anexo/Edital/Edital_edital0373_21-09_0.pdf,✓ Sim,✓ Sim,✓ Sim,Público
+DNIT,Edital 0078/18-19,Rodovia,2018-2019,http://www1.dnit.gov.br/anexo/Edital/Edital_edital0078_18-19_0.pdf,✓ Sim,✓ Sim,✓ Sim,Público
+TCU,BR-040 Cristalina,Concessão Rodovia,2024-2025,https://portal.tcu.gov.br/imprensa/noticias/,✓ Análise Técnica,✓ Sim,✓ Implícito,Público
+TCU,BR-040 Rio-JF,Concessão Rodovia,2024-2025,https://portal.tcu.gov.br/imprensa/noticias/,✓ Análise Técnica,✓ Sim,✓ Implícito,Público
+TCU,BR-116 Diversos,Concessão Rodovia,Variável,https://pesquisa.apps.tcu.gov.br/,✓ Análise Técnica,✓ Sim,✓ Implícito,Público
+TCU,BR-364-365 GO/MG,Concessão Rodovia,2024-2025,https://portal.tcu.gov.br/imprensa/noticias/,✓ Análise Técnica,✓ Sim,✓ Implícito,Público
+Portal Transparência,DNIT Orçamento,Despesas Públicas,2024-2026,https://portaldatransparencia.gov.br/,✓ Agregado,× Não,× Não,Público
+BID,Projetos de Infraestrutura,Concessão/Financiamento,2024-2026,https://www.iadb.org/en/project-search,✓ Documentos,✓ Sim,✓ Variável,Público
+BNDES,Concessões Rodoviárias,Concessão,2023-2026,https://hubdeprojetos.bndes.gov.br/pt/setores/Highways,✓ Documentos,× Limitado,× Não,Público
+BNDES,Planilha Custos,Referência,Histórico,https://www.bndes.gov.br/sbn/BNDES_online,✓ Sim,× Não,✓ Limitado,Público
+DER-SP,Licitações SP,Obras Estaduais,2023-2026,https://www.der.sp.gov.br/Website/Arquivos/dengen/,✓ Planilha,✓ Sim,✓ Sim,Público
+DER-SE,TP-2-2024,Rodovia,2024,https://www.der.se.gov.br/gesinf/,✓ Sim,✓ Sim,✓ Sim,Público
+DETRAN-PR,Sinalização Viária,Obras Públicas,2026,https://www.detran.pr.gov.br/,✓ Sim,× Não,✓ Específico,Público
