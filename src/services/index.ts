@@ -88,12 +88,14 @@ export {
   type ValidationResult,
 } from "./intent-parser";
 
-// CI/CD Orchestrator
+// CI/CD Orchestrator (Phase 3 - CI Integration)
 export {
   CIOrchestratorService,
   createCIOrchestratorService,
   WorkflowRunStatus,
   WorkflowConclusion,
+  BuildPriority,
+  LockStatus,
   type CIOrchestratorConfig,
   type OrchestrationResult,
   type WorkflowRun,
@@ -102,6 +104,11 @@ export {
   type CoverageResult,
   type LintError,
   type CIMetrics,
+  type BuildStatus,
+  type JobResult,
+  type BuildQueueItem,
+  type BuildEvent,
+  type BuildWebhook,
 } from "./ci-orchestrator";
 
 // PR Automation Engine
@@ -120,7 +127,7 @@ export {
   type PRAutomationConfig,
 } from "./pr-automation";
 
-// Feedback Engine
+// Feedback Engine (Phase 3 - Complete Feedback Loop)
 export {
   FeedbackEngine,
   createFeedbackEngine,
@@ -131,8 +138,146 @@ export {
   type CIOutput,
   type CorrectionSuggestion,
   type PRComment,
-  type RetryPolicy,
   type FeedbackAttempt,
   type FeedbackTracking,
   type FeedbackEngineConfig,
+  // Phase 3 additions
+  type BuildStatus,
+  type Feedback,
+  type Recommendation,
+  type PRAnalysis,
+  type Metrics,
+  type Reviewer,
+  type MetricsAggregate,
 } from "./feedback-engine";
+
+// LLM Judge (Phase 4 - Decision Engine)
+export {
+  LLMJudge,
+  createLLMJudge,
+  judgePR,
+  translateAction,
+  translateRiskLevel,
+  translateConfidenceLevel,
+  translateMergeDecision,
+  translateIssueSeverity,
+  JudgeAction,
+  type PRJudgment,
+  type PRData,
+  type LLMJudgeConfig,
+  type RiskLevel,
+  type RiskCategory,
+  type MergeDecisionType,
+  type ConfidenceLevel,
+  type IssueSeverity,
+  type Evaluation,
+  type CodeReview,
+  type CodeIssue,
+  type SecurityRisk,
+  type PerformanceRisk,
+  type TestabilityScore,
+  type MaintainabilityScore,
+  type DocumentationScore,
+  type MergeDecision,
+  type QualityScore,
+  type AuditTrailEntry,
+} from "./llm-judge";
+
+// Code Reviewer Service (Phase 4 - Main Service)
+export {
+  CodeReviewer,
+  createCodeReviewer,
+  reviewCodeFast,
+  reviewCodeDeep,
+  analyzeSecurity,
+  analyzePerformance,
+  suggestRefactors,
+  type SecurityIssue,
+  type PerformanceIssue,
+  type Refactoring,
+  type ReviewComment,
+  type Review,
+  type ReviewContext,
+  type ReviewStats,
+  type CodeReviewerConfig,
+  type IssueSeverity,
+  type IssueCategory,
+} from "./code-reviewer";
+
+// Rollback Orchestrator (Phase 5 - Failure Recovery)
+export {
+  RollbackOrchestratorService,
+  createRollbackOrchestratorService,
+  RollbackMonitorStatus,
+  RollbackExecutionStatus,
+  NotificationType,
+  FailureSeverity,
+  type MergedPR,
+  type CIFailure,
+  type FailedTest,
+  type LintErrorDetail,
+  type RollbackProposal,
+  type RollbackImpact,
+  type RollbackExecution,
+  type ApprovalRequest,
+  type AuditTrailEntry,
+  type RollbackMetrics,
+  type RollbackOrchestratorConfig,
+} from "./rollback";
+
+// Rollback Service (Phase 4 - Safety Mechanism)
+export {
+  Rollback,
+  createRollback,
+  type RollbackConfig,
+  type Issue,
+  type RevertResult,
+  type RollbackEvent,
+} from "./rollback";
+
+// Auto-Merge Controller (Phase 5 - Auto-Merge Automation)
+export {
+  AutoMergeController,
+  createAutoMergeController,
+  MergeStatus,
+  BlockReason,
+  type AutoMergeConfig,
+  type MergeResult,
+  type PrerequisiteCheckResult,
+  type AuditEvent,
+} from "./auto-merge";
+
+// Auto-Merge Service (Phase 4 - Advanced Merge Automation)
+export {
+  AutoMerge,
+  createAutoMerge,
+  LockStatus,
+  ScheduleStatus,
+  type MergeStrategy,
+  type ConflictType,
+  type RequirementType,
+  type Conflict,
+  type Requirement,
+  type ScheduleResult,
+  type DistributedLock,
+  type AuditLogEntry,
+  type MergeMetrics,
+  type AutoMergeServiceConfig,
+} from "./auto-merge-service";
+
+// Master Orchestrator (Pipeline Orchestrator - Coordena todo o fluxo)
+export {
+  MasterOrchestrator,
+  createMasterOrchestrator,
+  OrchestratorState,
+  ErrorSeverity,
+  TelemetryEventType,
+  type OrchestratorInput,
+  type OrchestratorResult,
+  type OrchestratorConfig,
+  type OrchestratorMetrics,
+  type TelemetryEvent,
+  type TrackedError,
+  type RetryAttempt,
+  type RetryPolicy,
+} from "./orchestrator";

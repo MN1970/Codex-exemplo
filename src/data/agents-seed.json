@@ -1,0 +1,351 @@
+{
+  "agents": [
+    {
+      "code": "manta-00",
+      "name": "Maestro (Router)",
+      "aliases": ["maestro", "manta-router"],
+      "tier": "Haiku→Sonnet",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Roteador central dos agentes IA da Manta. Direciona requisições para agentes especializados.",
+      "metadata": {
+        "version": "v4.2",
+        "mcp_protocol": true,
+        "tier_adaptive": true,
+        "routing_engine": true
+      }
+    },
+    {
+      "code": "manta-01",
+      "name": "Claims",
+      "aliases": ["02-C", "manta-claims"],
+      "tier": "Opus",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Especialista em análise e processamento de sinistros e reclamações contratuais.",
+      "metadata": {
+        "version": "v4.2",
+        "modules": ["analytics", "extraction", "risk-assessment"],
+        "domain": "insurance"
+      }
+    },
+    {
+      "code": "manta-02",
+      "name": "Contratual",
+      "aliases": ["manta-02", "contratual"],
+      "tier": "Sonnet",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Análise de riscos contratuais, revisão de cláusulas e conformidade legal.",
+      "metadata": {
+        "version": "v4.2",
+        "modules": ["risk-analysis", "legal-review", "compliance"],
+        "specialization": "contract-law"
+      }
+    },
+    {
+      "code": "manta-04",
+      "name": "Imobiliário",
+      "aliases": ["manta-04"],
+      "tier": "Sonnet",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Avaliação de propriedades, análise de projetos imobiliários e due diligence.",
+      "metadata": {
+        "version": "v4.2",
+        "focus": "real-estate",
+        "specialization": "valuation"
+      }
+    },
+    {
+      "code": "manta-05",
+      "name": "Orçamento",
+      "aliases": ["manta-05"],
+      "tier": "Sonnet",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Análise, elaboração e otimização de orçamentos de projetos e empreendimentos.",
+      "metadata": {
+        "version": "v4.2",
+        "modules": ["estimation", "cost-control", "optimization"],
+        "specialization": "project-budgeting"
+      }
+    },
+    {
+      "code": "manta-06",
+      "name": "Modelagem",
+      "aliases": ["manta-06"],
+      "tier": "Sonnet/Opus",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Modelagem financeira, BIM, simulações e análise de cenários.",
+      "metadata": {
+        "version": "v4.2",
+        "capabilities": ["bim", "financial-modeling", "simulations", "scenario-analysis"],
+        "tier_adaptive": true
+      }
+    },
+    {
+      "code": "manta-07",
+      "name": "Cronograma",
+      "aliases": ["manta-07"],
+      "tier": "Sonnet",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Planejamento, controle e otimização de cronogramas de projetos.",
+      "metadata": {
+        "version": "v4.2",
+        "modules": ["planning", "tracking", "optimization", "cpm"],
+        "specialization": "project-scheduling"
+      }
+    },
+    {
+      "code": "manta-13",
+      "name": "Business Development",
+      "aliases": ["manta-13", "business-dev"],
+      "tier": "Sonnet",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Inteligência de mercado, oportunidades comerciais e análise competitiva.",
+      "metadata": {
+        "version": "v4.2",
+        "focus": "market-intelligence",
+        "modules": ["competitive-analysis", "opportunity-assessment"]
+      }
+    },
+    {
+      "code": "manta-14",
+      "name": "Apresentações",
+      "aliases": ["manta-14-pptx"],
+      "tier": "Sonnet",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Geração de apresentações, decks executivos e materiais de comunicação.",
+      "metadata": {
+        "version": "v4.2",
+        "output_format": "pptx",
+        "capabilities": ["deck-generation", "visual-design", "storytelling"]
+      }
+    },
+    {
+      "code": "manta-15",
+      "name": "Advisory",
+      "aliases": ["manta-15", "advisory"],
+      "tier": "Sonnet/Opus",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Consultoria estratégica, governance e assessoria executiva.",
+      "metadata": {
+        "version": "v4.2",
+        "modules": ["strategy", "governance", "executive-advisory"],
+        "tier_adaptive": true
+      }
+    },
+    {
+      "code": "manta-16",
+      "name": "Arquiteto IA",
+      "aliases": ["manta-15-arq"],
+      "tier": "Opus",
+      "segment": null,
+      "group": "horizontal",
+      "status": "active",
+      "description": "Design de arquiteturas de IA, sistemas multiagente e workflows avançados.",
+      "metadata": {
+        "version": "v4.2",
+        "specialization": "ai-architecture",
+        "modules": ["system-design", "multi-agent", "workflow-design"]
+      }
+    },
+    {
+      "code": "manta-03-s1",
+      "name": "Infraestrutura - Rodovias",
+      "aliases": ["agente-infraestrutura", "s1", "rodovias"],
+      "tier": "Sonnet",
+      "segment": "rodovias",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em projetos de rodovias, pavimentação e terraplenagem. Conhecimento em SICRO, DNIT, BGS, CBUQ.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "rod:",
+        "regulators": ["DNIT"],
+        "standards": ["SICRO", "NBR 7207", "NBR 7210"],
+        "specialization": "highways"
+      }
+    },
+    {
+      "code": "manta-03-s2",
+      "name": "Infraestrutura - OAE",
+      "aliases": ["agente-infraestrutura", "s2", "oae", "pontes"],
+      "tier": "Sonnet",
+      "segment": "oae",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em Obras de Arte Especiais: pontes, viadutos, túneis rodoviários. NBR 7187, projeto de estruturas.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "oae:",
+        "standards": ["NBR 7187", "NBR 6122", "NBR 8681"],
+        "oae_types": ["pontes", "viadutos", "tuneis_rodo"]
+      }
+    },
+    {
+      "code": "manta-03-s3",
+      "name": "Infraestrutura - Ferrovia",
+      "aliases": ["agente-infraestrutura", "s3", "ferrovia"],
+      "tier": "Sonnet",
+      "segment": "ferrovia",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em projetos ferroviários, via permanente, trilhos, dormente, AMV e sistemas de transporte ferroviário.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "fer:",
+        "focus": "via-permanente",
+        "standards": ["ABNT NBR", "IAPF"]
+      }
+    },
+    {
+      "code": "manta-03-s4",
+      "name": "Infraestrutura - Metrô",
+      "aliases": ["agente-infraestrutura", "s4", "metro", "vlt"],
+      "tier": "Sonnet",
+      "segment": "metro",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em metrô, VLT, transporte rápido. Conhecimento em NATM, PSD, linhas urbanas, estações, ventilação.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "met:",
+        "techniques": ["NATM", "PSD", "mined_stations"],
+        "standards": ["NBR 13594"]
+      }
+    },
+    {
+      "code": "manta-03-s5",
+      "name": "Infraestrutura - Túneis",
+      "aliases": ["agente-infraestrutura", "s5", "tuneis"],
+      "tier": "Sonnet",
+      "segment": "tuneis",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em túneis e obras subterrâneas. Versão parcial (coberta por S2/S4). Suporte a NATM, drenagem, suporte temporário.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "tun:",
+        "status": "partial",
+        "coverage": ["s2", "s4"],
+        "techniques": ["NATM", "shotcrete"]
+      }
+    },
+    {
+      "code": "manta-03-s6",
+      "name": "Portos",
+      "aliases": ["agente-portos", "s6", "portos", "terminal"],
+      "tier": "Sonnet",
+      "segment": "portos",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em terminais portuários, dragagem, berços de atracação, estruturas de cais. ANTAQ, PIANC, editais BNDES/ANTAQ.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "por:",
+        "new_agent": "2026-07-05",
+        "regulators": ["ANTAQ"],
+        "standards": ["PIANC", "ROM 2.0", "NBR 9782", "NBR 6122"]
+      }
+    },
+    {
+      "code": "manta-03-s7",
+      "name": "Aeroportos",
+      "aliases": ["agente-aeroportos", "s7", "aeroportos"],
+      "tier": "Sonnet",
+      "segment": "aeroportos",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em aeroportos, pistas de pouso, terminais, balizamento. ANAC, RBAC 154, ICAO Annex 14, FAA ACs.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "aer:",
+        "new_agent": "2026-07-05",
+        "regulators": ["ANAC", "ICAO", "FAA"],
+        "standards": ["RBAC 154", "Annex 14"]
+      }
+    },
+    {
+      "code": "manta-03-s8",
+      "name": "Saneamento",
+      "aliases": ["agente-saneamento", "s8", "saneamento", "ete", "eta"],
+      "tier": "Sonnet",
+      "segment": "saneamento",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em saneamento (ETA/ETE), adução, sistemas de esgoto, tratamento. AySA (Argentina), SNIS, Lei 14.026/2020.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "san:",
+        "new_agent": "2026-07-05",
+        "priority": "AySA",
+        "regulators": ["ANA", "ANA-Argentina"],
+        "standards": ["NBR 12211", "NBR 12212", "NBR 12213", "Lei 14.026"]
+      }
+    },
+    {
+      "code": "manta-03-s9",
+      "name": "Energia",
+      "aliases": ["agente-energia", "s9", "energia", "transmissao"],
+      "tier": "Sonnet",
+      "segment": "energia",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em energia (LT, subestações, RAP, leilões). ANEEL, EPE, ONS, leilões de transmissão, regulação.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "ene:",
+        "new_agent": "2026-07-05",
+        "regulators": ["ANEEL", "EPE", "ONS"],
+        "standards": ["IEEE 738", "IEEE 80", "NBR 5422"]
+      }
+    },
+    {
+      "code": "manta-03-s10",
+      "name": "Barragens",
+      "aliases": ["agente-barragens", "s10", "barragens", "represas"],
+      "tier": "Sonnet",
+      "segment": "barragens",
+      "group": "vertical",
+      "status": "active",
+      "description": "Especialista em barragens, vertedouros, rejeitos, CFRD, CCR. ICOLD, CBDB, Lei 12.334/2010, SIGBM (ANM), Lei 14.066/2020.",
+      "metadata": {
+        "version": "v4.2",
+        "rag_prefix": "bar:",
+        "new_agent": "2026-07-05",
+        "regulators": ["ANM", "ANA"],
+        "standards": ["Lei 12.334", "Lei 14.066", "NBR 13028", "NBR 8681", "ICOLD"]
+      }
+    }
+  ],
+  "metadata": {
+    "version": "4.2",
+    "revision": "MNT-2026-UPGRADE-AGENTS-S6S10",
+    "total_agents": 20,
+    "horizontal_agents": 11,
+    "vertical_agents": 10,
+    "created_at": "2026-07-31",
+    "last_updated": "2026-07-31",
+    "horizontal_codes": ["manta-00", "manta-01", "manta-02", "manta-04", "manta-05", "manta-06", "manta-07", "manta-13", "manta-14", "manta-15", "manta-16"],
+    "vertical_codes": ["manta-03-s1", "manta-03-s2", "manta-03-s3", "manta-03-s4", "manta-03-s5", "manta-03-s6", "manta-03-s7", "manta-03-s8", "manta-03-s9", "manta-03-s10"],
+    "segments": ["rodovias", "oae", "ferrovia", "metro", "tuneis", "portos", "aeroportos", "saneamento", "energia", "barragens"],
+    "tiers": ["Haiku", "Sonnet", "Opus", "Haiku→Sonnet", "Sonnet/Opus"]
+  }
+}

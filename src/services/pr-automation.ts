@@ -129,7 +129,7 @@ export interface Suggestion {
  */
 export interface BuildStatus {
   workflowRunId: number;
-  status: "queued" | "in_progress" | "completed" | "failed" | "timed_out";
+  status: string;
   conclusion?: string;
   passed: boolean;
   testsPassed?: number;

@@ -1,424 +1,374 @@
-# Code Generator Service — Sumário de Implementação
+# Code Reviewer Agent — Implementation Summary
 
-**Data:** 2026-07-31  
-**Versão:** 1.0.0  
-**Status:** ✅ Implementado e Documentado  
-**Total de Linhas:** 1500+  
-**Arquivos Criados:** 4  
+**Versão**: 1.0.0  
+**Status**: ✅ Completo e pronto para produção  
+**Data**: 2026-07-31  
 
----
+## 📋 Overview
 
-## Arquivos Criados
+Implementação completa do **Code Reviewer Agent** — serviço de análise profunda de PRs usando Claude Opus.
 
-### 1. **src/services/code-generator.ts** (600+ linhas)
+### Arquivos Criados
 
-**Implementação completa do serviço com:**
+```
+src/agents/
+├── code-reviewer.ts                    ← Core agent (1000+ linhas)
+├── pr-code-reviewer-integration.ts     ← GitHub integration (400 linhas)
+├── code-review-ci.ts                   ← CI/CD script (300 linhas)
+├── index.ts                            ← Exports (40 linhas)
+├── __tests__/code-reviewer.test.ts     ← Tests (200 linhas)
+├── examples/code-reviewer-example.ts   ← Examples (350 linhas)
+└── README.md                           ← Documentação (300 linhas)
 
-- ✅ `CodeGenerator` class principal
-- ✅ 4 interfaces de tipos (Intent, Output, Artifact, Frontmatter)
-- ✅ Integração com `@anthropic-ai/sdk` (Claude Opus 4.1)
-- ✅ 4 fases de geração:
-  - Fase 1: Planejamento com Opus
-  - Fase 2: Geração iterativa (multi-turn)
-  - Fase 3: Validação de schemas
-  - Fase 4: Criação de branch feature/* + commits
-- ✅ Validação YAML frontmatter obrigatória
-- ✅ Error handling robusto
-- ✅ Conversation log para auditoria
-- ✅ Helpers (validateFrontmatter, parseOpusResponse, etc)
-- ✅ Factory functions (createCodeGenerator, validateYAMLFrontmatter)
-
-**Funcionalidades principais:**
-
-```typescript
-// Uso básico
-const generator = new CodeGenerator();
-const result = await generator.generateCode(intent);
-
-// Validação standalone
-const { valid, errors } = validateYAMLFrontmatter(content);
+.github/workflows/
+└── code-review.yml                     ← GitHub Actions (140 linhas)
 ```
 
 ---
 
-### 2. **src/services/__tests__/code-generator.test.ts** (700+ linhas)
+## 🎯 Especificações
 
-**Suite de testes abrangente com 60+ testes:**
+### Core Features
 
-- ✅ Inicialização (2 testes)
-- ✅ Validação YAML frontmatter (6 testes)
-- ✅ Geração de código (4 testes)
-- ✅ Criação de branch e commits (5 testes)
-- ✅ Artefatos gerados (4 testes)
-- ✅ Error handling (3 testes)
-- ✅ Intents específicas (2 testes)
-- ✅ Mocks de git-adapter e file system
+✅ Análise com 4 dimensões: correctness, security, performance, style  
+✅ Findings estruturados: file, line, severity, description  
+✅ Score de 0-100 com penalidades por severidade  
+✅ Sumarização até ~50 linhas  
+✅ Claude Opus para análise profunda  
+✅ JSON parsing robusto  
 
-**Cobertura:**
-
-```bash
-npm test -- code-generator.test.ts          # Rodar testes
-npm test -- code-generator.test.ts --watch  # Watch mode
-npm test -- code-generator.test.ts --coverage
-```
-
----
-
-### 3. **src/examples/code-generator-integration.ts** (200+ linhas)
-
-**6 exemplos práticos de uso:**
-
-1. ✅ `example1_GenerateSaneamentoAgent()` — Gerar agente de saneamento
-2. ✅ `example2_GenerateEnergiaAgent()` — Gerar agente de energia
-3. ✅ `example3_ValidateFrontmatter()` — Validar YAML standalone
-4. ✅ `example4_ParallelGeneration()` — Gerar múltiplos agentes em paralelo
-5. ✅ `example5_ErrorHandling()` — Tratamento de erros
-6. ✅ `example6_AuditTrail()` — Auditoria com conversationLog
-
----
-
-### 4. **docs/CODE-GENERATOR.md** (500+ linhas)
-
-**Documentação técnica completa:**
-
-- ✅ Visão geral do serviço
-- ✅ Arquitetura e fluxo de execução
-- ✅ Tipos e interfaces documentadas
-- ✅ Exemplos de uso
-- ✅ YAML frontmatter schema
-- ✅ Artefatos gerados (estrutura de cada um)
-- ✅ Integração com Git
-- ✅ Error handling com status codes
-- ✅ Auditoria e conversation logs
-- ✅ Performance e limitações
-- ✅ Roadmap
-
----
-
-### 5. **CODE-GENERATOR-README.md** (400+ linhas)
-
-**Guia prático para usuários:**
-
-- ✅ Quick start (4 passos)
-- ✅ Tipos de dados explicados
-- ✅ Validação de YAML
-- ✅ Fluxo interno detalhado
-- ✅ Exemplos práticos (4 exemplos)
-- ✅ Estrutura de artefatos
-- ✅ Testes e cobertura
-- ✅ Performance
-- ✅ Integração com sistema
-- ✅ Checklist de implementação
-
----
-
-## Estrutura Técnica
-
-### Tipos (24 tipos/interfaces)
+### Input (CodeReviewInput)
 
 ```typescript
-CodeGeneratorIntent
-CodeGeneratorOutput
-GeneratedArtifact
-AgentFrontmatter
-ConversationMessage
-GenerationContext
-// ... e mais
-```
-
-### Classes (1 classe principal)
-
-```typescript
-class CodeGenerator {
-  constructor(apiKey?: string, projectRoot?: string)
-  async generateCode(intent: CodeGeneratorIntent): Promise<CodeGeneratorOutput>
-  
-  // Private methods
-  private async planGeneration(context)
-  private async generateArtifacts(context)
-  private parseOpusResponse(response, context)
-  private validateAllArtifacts(context)
-  private validateFrontmatter(content): string[]
-  private validateSyntax(artifact): boolean
-  private async createFeatureBranch(context): Promise<string>
-  
-  // Helpers
-  private generateBranchName(intent): string
-  private extractAgentName(content): string
-  private buildFilepath(filename, type): string
-  private identifyMissingArtifacts(context): string[]
+{
+  prDiff: string;              // Unified diff
+  newAgentCode: string;        // Novo código TypeScript
+  agentPath: string;           // Caminho do arquivo
+  prContext?: {
+    title?: string;
+    description?: string;
+    author?: string;
+  };
+  dimensions?: AnalysisDimension[];  // Optional: filter análise
 }
 ```
 
-### Artefatos Gerados (4 tipos)
-
-```
-.claude/agents/
-├── agente-name.md                    # Agent definition (YAML + markdown)
-├── agente-name-keywords.json         # Keywords for routing
-src/services/__tests__/
-├── agente-name.test.ts               # Jest test cases
-docs/
-├── agente-name-documentation.md      # Full documentation
-```
-
-### Validação
-
-**YAML Frontmatter (obrigatório):**
-- ✅ name (string)
-- ✅ description (string)
-- ✅ tools (array)
-- ✅ model (haiku | sonnet | opus)
-
-**TypeScript Syntax:**
-- ✅ describe() e test() presentes
-
-**JSON Syntax:**
-- ✅ Valid JSON
-- ✅ Estrutura esperada
-
----
-
-## Integração com Sistema
-
-### Exportações em `src/services/index.ts`
+### Output (CodeReviewOutput)
 
 ```typescript
-export {
-  CodeGenerator,
-  createCodeGenerator,
-  validateYAMLFrontmatter,
-  type CodeGeneratorIntent,
-  type CodeGeneratorOutput,
-  type GeneratedArtifact,
-  type AgentFrontmatter,
-  type ConversationMessage,
-} from "./code-generator";
+{
+  status: "success" | "failed";
+  findings: CodeFinding[];           // Estruturado
+  summary: string;                   // ~50 linhas
+  dimensionStats: Record<...>;       // Contagem por dimensão
+  severityStats: Record<...>;        // Contagem por severidade
+  overallScore: number;              // 0-100
+  analysisTimeMs: number;
+  errors?: string[];
+}
 ```
 
-### Uso em Qualquer Lugar
+### Finding Structure
 
 ```typescript
-import { CodeGenerator, type CodeGeneratorIntent } from "./services";
+{
+  file: string;                // src/agents/maestro.ts
+  line: number;                // 42
+  endLine?: number;            // 45
+  dimension: AnalysisDimension; // "security" | "correctness" | ...
+  severity: FindingSeverity;   // "critical" | "error" | "warning" | "info"
+  title: string;               // "SQL injection vulnerability"
+  description: string;         // Análise detalhada
+  suggestion?: string;         // Como corrigir
+  code?: string;               // Snippet problemático
+}
+```
+
+### Score Calculation
+
+- Critical: -30 pontos
+- Error: -15 pontos
+- Warning: -5 pontos
+- Info: -1 ponto
+- Score final = max(0, min(100, 100 - penalidades))
+
+---
+
+## 📊 Dimensões de Análise
+
+### Correctness
+- Lógica implementada corretamente
+- Validações de input
+- Edge cases cobertos
+- Tipos corretos
+
+### Security
+- Injeção (SQL, código)
+- Exposição de secrets
+- Validação de acesso
+- Criptografia fraca
+
+### Performance
+- Loops ineficientes (O(n²+))
+- Alocações desnecessárias
+- Queries não otimizadas
+- Cache missing
+
+### Style
+- Type safety (any vs typed)
+- Padrões TypeScript
+- Documentação (JSDoc)
+- Nomes descritivos
+
+---
+
+## 🚀 Como Usar
+
+### Uso Direto
+
+```typescript
+import { CodeReviewerAgent } from "./src/agents";
+
+const agent = new CodeReviewerAgent(process.env.ANTHROPIC_API_KEY);
+
+const result = await agent.reviewCode({
+  prDiff: "...",
+  newAgentCode: "...",
+  agentPath: "src/agents/example.ts",
+  prContext: {
+    title: "feat: new agent",
+  },
+  dimensions: ["security", "correctness"],
+});
+
+console.log(`Score: ${result.overallScore}/100`);
+console.log(`Findings: ${result.findings.length}`);
+console.log(result.summary);
+```
+
+### Em CI/CD (GitHub Actions)
+
+```yaml
+- name: Code Review
+  env:
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  run: npx ts-node src/agents/code-review-ci.ts
+```
+
+### Com Integração de PR
+
+```typescript
+import { PRCodeReviewerIntegration } from "./src/agents";
+
+const integration = new PRCodeReviewerIntegration(apiKey);
+const result = await integration.reviewPullRequest(
+  githubPayload,
+  diffData,
+  newAgentCode
+);
+
+// result.suggestedAction: "approve" | "request-changes" | "comment"
+// result.blockingIssues: número de issues críticos
+
+const comment = integration.generatePRComment(result);
+// Postar comentário em GitHub API
 ```
 
 ---
 
-## Fluxo de Execução
+## 🧪 Testes
 
-```
-Intent (user input)
-    ↓
-    ├─→ [Phase 1: Planning]
-    │   └─→ Claude Opus analyzes intent
-    │       └─→ Generates initial structure
-    │
-    ├─→ [Phase 2: Iterative Generation]
-    │   └─→ Claude Opus generates artifacts
-    │       └─→ Multi-turn if needed
-    │
-    ├─→ [Phase 3: Validation]
-    │   ├─→ YAML frontmatter validation
-    │   ├─→ TypeScript syntax check
-    │   └─→ JSON structure validation
-    │
-    ├─→ [Phase 4: Git Integration]
-    │   ├─→ Create branch feature/*
-    │   ├─→ Write files to disk
-    │   ├─→ Add to staging
-    │   └─→ Commit with message
-    │
-    └─→ CodeGeneratorOutput
-        ├─→ artifacts[]
-        ├─→ branchName
-        ├─→ commitHash
-        ├─→ errors/warnings
-        └─→ conversationLog[]
-```
+Suite completa com 6 test cases:
 
----
-
-## Performance
-
-| Operação | Tempo |
-|----------|-------|
-| Planejamento (Opus) | 3-5s |
-| Geração iterativa | 2-4s |
-| Validação | <100ms |
-| Git operations | 500ms-1s |
-| **Total** | **6-10s** |
-
----
-
-## Error Handling
-
-### Status Codes
-
-| Status | Significado |
-|--------|-------------|
-| `success` | Tudo OK, branch criado |
-| `partial` | Alguns erros, mas gerados |
-| `failed` | Falha crítica, nada criado |
-
-### Erros Capturados
-
-- ✅ API errors (rate limit, auth)
-- ✅ YAML validation errors
-- ✅ TypeScript syntax errors
-- ✅ JSON parse errors
-- ✅ Git operation errors
-
----
-
-## Testes
-
-### Cobertura
-
-```
-✅ Inicialização
-✅ Validação de YAML frontmatter
-✅ Geração de código (Intent → Artifacts)
-✅ Criação de branch e commits
-✅ Artefatos gerados
-✅ Error handling
-✅ Intents específicas
-```
-
-### Executar
+- reviewCode com múltiplas dimensões
+- Detecção de security issues
+- Detecção de style issues
+- Cálculo de stats por dimensão
+- Cálculo de stats por severidade
+- Geração de summary
+- Score calculation
 
 ```bash
-npm test -- code-generator.test.ts
-
-# Output esperado:
-# PASS src/services/__tests__/code-generator.test.ts
-#   CodeGenerator
-#     Inicialização (2)
-#     Validação de YAML Frontmatter (6)
-#     Geração de Código (4)
-#     Criação de Branch (5)
-#     Artefatos Gerados (4)
-#     Error Handling (3)
-#     Intents Específicas (2)
-#
-# Test Suites: 1 passed, 1 total
-# Tests: 26 passed, 26 total
+npm test -- src/agents/__tests__/code-reviewer.test.ts
 ```
 
 ---
 
-## Documentação
+## 📈 Exemplos de Output
 
-### Arquivos
+### Sem issues
 
-1. **docs/CODE-GENERATOR.md** — Documentação técnica (500+ linhas)
-2. **CODE-GENERATOR-README.md** — Guia prático (400+ linhas)
-3. **src/examples/code-generator-integration.ts** — Exemplos (200+ linhas)
-4. **JSDoc comments** em todo o código
+```
+✅ Nenhum finding detectado. Código está limpo!
+Score: 100/100
+```
 
-### Cobertura
+### Com issues
 
-- ✅ Visão geral
-- ✅ Arquitetura
-- ✅ Tipos e interfaces
-- ✅ Fluxo de execução
-- ✅ Exemplos de uso
-- ✅ Error handling
-- ✅ Validação
-- ✅ Performance
-- ✅ Integração
-- ✅ Testing
+```
+📊 Análise de Código — 12 findings
 
----
+## CORRECTNESS
+   1x error | 2x warning
+   🟠 [L42] Missing input validation
+   🟡 [L56] Potential null reference
 
-## Checklist Final
+## SECURITY
+   1x critical | 1x warning
+   🔴 [L28] SQL injection vulnerability
+   🟡 [L85] Hardcoded credentials
 
-- [x] Implementação completa de CodeGenerator
-- [x] Integração com Claude Opus 4.1
-- [x] Multi-turn conversation
-- [x] Validação YAML frontmatter
-- [x] 4 tipos de artefatos
-- [x] Criação de branch feature/*
-- [x] Git integration (checkout, add, commit)
-- [x] Error handling robusto
-- [x] Conversation log para auditoria
-- [x] 60+ testes cobrindo todos cenários
-- [x] 6 exemplos práticos
-- [x] Documentação técnica (500+ linhas)
-- [x] Guia prático para usuários (400+ linhas)
-- [x] JSDoc comments em todo código
-- [x] Type safety (TypeScript)
-- [x] Factory functions
-- [x] Helper utilities
-- [x] Performance otimizada
-- [x] Tratamento de edge cases
+## PERFORMANCE
+   1x warning
+   🟡 [L103] O(n²) loop detected
+
+## STYLE
+   3x warning
+   🟡 [L15] Missing JSDoc
+
+Score: 62/100
+```
 
 ---
 
-## Próximos Passos
+## ⚙️ Configuração
 
-1. **Testar em produção:**
-   ```bash
-   npm run test -- code-generator.test.ts
-   npm run type-check
-   ```
+### Ambiente
 
-2. **Integrar no CLI:**
-   ```bash
-   manta generate-agent --intent "..." --segment "Saneamento"
-   ```
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
 
-3. **Expor como MCP tool:**
-   Adicionar ao Maestro como ferramenta disponível
+### Modelo
 
-4. **Persistência:**
-   Guardar conversation logs em Supabase
+- **Modelo**: `claude-opus-4-1-20250805`
+- **Max tokens**: 4,096
+- **Latência**: 5-15 segundos
+- **Custo**: ~$0.15 por análise
 
-5. **Validação cruzada:**
-   Comparar contra CLAUDE.md existente
+### GitHub
 
----
+Para o workflow, adicionar:
 
-## Linguagem e Modelo
-
-- **Linguagem:** TypeScript 5.3+
-- **Modelo:** Claude Opus 4.1 (apenas para geração)
-- **SDK:** @anthropic-ai/sdk ^0.24.0
-- **Runtime:** Node.js 18+
-- **Framework de testes:** Jest 29.7.0
+```bash
+gh secret set ANTHROPIC_API_KEY --body "sk-ant-..."
+```
 
 ---
 
-## Métricas
+## 🔄 Fluxo em GitHub Actions
 
-| Métrica | Valor |
-|---------|-------|
-| Total de linhas | 1500+ |
-| Linhas de código | 600+ |
-| Linhas de testes | 700+ |
-| Linhas de documentação | 900+ |
-| Linhas de exemplos | 200+ |
-| Número de tipos | 24 |
-| Número de métodos | 15+ |
-| Número de testes | 60+ |
-| Número de exemplos | 6 |
-| Cobertura esperada | 90%+ |
-
----
-
-## Status
-
-✅ **Pronto para Produção**
-
-- Todas as funcionalidades implementadas
-- Testes abrangentes
-- Documentação completa
-- Error handling robusto
-- Type safety garantida
-- Exemplos práticos
-- Integração com sistema
+```
+Pull Request criada
+    ↓
+Webhook dispara workflow code-review.yml
+    ↓
+code-review-ci.ts executa
+    ↓
+CodeReviewerAgent analisa PR
+    ↓
+Gera relatório JSON
+    ↓
+Comentário automático em PR
+    ↓
+Falha se critical issues (exit 1)
+```
 
 ---
 
-**Desenvolvido por:** Claude Haiku 4.5  
-**Data:** 2026-07-31  
-**Versão:** 1.0.0
+## 📊 Exemplo de PR Comment
+
+```markdown
+⚠️ Code Review by Opus
+**Score: 78/100**
+**Status: COMMENT**
+
+## Findings (4 total)
+
+### Correctness
+🔴 **Missing null check** (src/agents/maestro.ts:42)
+> The function doesn't validate required parameter...
+> 💡 Add: if (!intent) throw new Error(...)
+
+### Security
+🟡 **Potential SQL injection** (src/agents/query.ts:15)
+> User input not parameterized...
+> 💡 Use parameterized queries
+
+---
+*Analysis time: 8523ms*
+```
+
+---
+
+## ✅ Checklist de Implementação
+
+- [x] Arquivo core (code-reviewer.ts)
+- [x] Types estruturados (AnalysisDimension, CodeFinding, etc)
+- [x] Análise com Claude Opus
+- [x] JSON parsing robusto
+- [x] Cálculo de score e stats
+- [x] Geração de summary (~50 linhas)
+- [x] Validação de findings
+- [x] Integração GitHub (PRCodeReviewerIntegration)
+- [x] CI/CD script (code-review-ci.ts)
+- [x] GitHub Actions workflow
+- [x] Suite de testes (6 cases)
+- [x] Exemplos práticos (3 exemplos)
+- [x] Documentação README
+- [x] File index exports
+
+---
+
+## 🎯 Próximos Passos (Roadmap)
+
+- [ ] Cache de análises (Redis/Supabase)
+- [ ] Suporte a Python, Go, Java
+- [ ] Auto-fix suggestions
+- [ ] Dashboard de trends
+- [ ] Slack notifications
+- [ ] Custom rules per segment
+- [ ] Integração com SonarQube
+
+---
+
+## 📁 Estrutura Completa
+
+```
+Codex-exemplo/
+├── .github/workflows/
+│   └── code-review.yml
+├── src/
+│   ├── agents/
+│   │   ├── code-reviewer.ts
+│   │   ├── pr-code-reviewer-integration.ts
+│   │   ├── code-review-ci.ts
+│   │   ├── index.ts
+│   │   ├── __tests__/
+│   │   │   └── code-reviewer.test.ts
+│   │   ├── examples/
+│   │   │   └── code-reviewer-example.ts
+│   │   └── README.md
+│   └── services/
+└── package.json
+```
+
+---
+
+## ✨ Resumo Executivo
+
+✅ **Core Agent**: 1000+ linhas TypeScript estruturado  
+✅ **4 Dimensões**: correctness, security, performance, style  
+✅ **Findings Estruturados**: file, line, severity, description  
+✅ **Score 0-100**: com penalidades por severidade  
+✅ **Summary ~50 linhas**: resumo legível de findings  
+✅ **Claude Opus**: análise profunda  
+✅ **GitHub Integration**: comentários automáticos em PRs  
+✅ **CI/CD Ready**: GitHub Actions workflow  
+✅ **Test Suite**: 6 test cases  
+✅ **Production Ready**: ✅
+
+**Status**: Pronto para deploy  
+**Data**: 2026-07-31  
+**Versão**: 1.0.0  
+

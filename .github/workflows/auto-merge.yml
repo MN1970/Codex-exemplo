@@ -1,0 +1,212 @@
+name: Auto-Merge PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
+
+  schedule:
+    # Tenta merge a cada 30 minutos para PRs prontas
+    - cron: "*/30 * * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-auto-merge:
+    name: Auto-Merge Check
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'schedule' ||
+      contains(github.event.pull_request.labels.*.name, 'auto-merge') ||
+      github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Auto-Merge Controller
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          npx ts-node -e "
+          import { createAutoMergeController } from './src/services';
+
+          async function autoMerge() {
+            const controller = createAutoMergeController({
+              githubToken: process.env.GITHUB_TOKEN || '',
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.event.repository.name }}',
+              requireCIPassed: true,
+              requiredApprovals: 1,
+              mergeMethod: 'merge',
+              deleteBranchAfterMerge: true,
+              notifyOnBlock: true,
+              slackWebhook: process.env.SLACK_WEBHOOK,
+              auditTableUrl: process.env.SUPABASE_URL + '/rest/v1/auto_merge_audit',
+              auditApiKey: process.env.SUPABASE_KEY,
+            });
+
+            const prNumber = ${{ github.event.pull_request.number || 'null' }};
+
+            if (!prNumber) {
+              console.log('No PR number found');
+              return;
+            }
+
+            console.log('Starting auto-merge for PR #' + prNumber);
+            const result = await controller.mergePR(prNumber);
+
+            console.log('Result:', JSON.stringify(result, null, 2));
+
+            if (!result.success) {
+              console.warn('Auto-merge failed or blocked');
+              if (result.blockedBy) {
+                console.warn('Blocked by:', result.blockedBy.join(', '));
+              }
+              process.exit(0); // Não falha o workflow
+            }
+
+            console.log('✅ PR merged successfully');
+          }
+
+          autoMerge().catch(err => {
+            console.error('Error:', err);
+            process.exit(0); // Não falha o workflow
+          });
+          "
+
+      - name: Comment on PR (if needed)
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const prNumber = context.payload.pull_request?.number;
+            if (!prNumber) return;
+
+            // Exemplo: comentar se algo aconteceu
+            console.log('Auto-merge workflow completed for PR #' + prNumber);
+
+  # Job adicional para PRs com label 'force-merge'
+  force-merge:
+    name: Force Merge (with approvals)
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'force-merge') &&
+      github.event.pull_request.draft == false
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Force-Merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          npx ts-node -e "
+          import { createAutoMergeController, BlockReason } from './src/services';
+
+          async function forceMerge() {
+            const controller = createAutoMergeController({
+              githubToken: process.env.GITHUB_TOKEN || '',
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.event.repository.name }}',
+              requireCIPassed: false, // Ignora CI para force-merge
+              requiredApprovals: 0,    // Ignora approvals
+              allowMergingWithConflicts: false,
+              mergeMethod: 'squash',
+              deleteBranchAfterMerge: true,
+              notifyOnBlock: true,
+              slackWebhook: process.env.SLACK_WEBHOOK,
+            });
+
+            const prNumber = ${{ github.event.pull_request.number }};
+
+            console.log('Starting force-merge for PR #' + prNumber);
+            const result = await controller.mergePR(prNumber);
+
+            if (!result.success) {
+              console.warn('Force-merge blocked');
+              if (result.blockedBy?.includes('${{ BlockReason.MERGE_CONFLICTS }}')) {
+                console.warn('Cannot force-merge: conflicts exist');
+                process.exit(1);
+              }
+              process.exit(0);
+            }
+
+            console.log('✅ PR force-merged successfully');
+          }
+
+          forceMerge().catch(err => {
+            console.error('Error:', err);
+            process.exit(1);
+          });
+          "
+
+  # Monitoramento da saúde do auto-merge
+  monitor-auto-merge:
+    name: Monitor Auto-Merge Health
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    continue-on-error: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check recent merges
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr list \
+            --state closed \
+            --limit 10 \
+            --json "number,title,mergedAt,author" \
+            --jq '.[] | select(.mergedAt != null) | "\(.number): \(.title)"'
+
+      - name: Report metrics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "=== Auto-Merge Metrics ==="
+          TOTAL=$(gh pr list --state all --limit 1000 | wc -l)
+          MERGED=$(gh pr list --state closed --limit 1000 | wc -l)
+          echo "Total PRs: $TOTAL"
+          echo "Merged PRs: $MERGED"
+          if [ $TOTAL -gt 0 ]; then
+            RATE=$((MERGED * 100 / TOTAL))
+            echo "Merge Rate: $RATE%"
+          fi

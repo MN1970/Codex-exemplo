@@ -1,0 +1,129 @@
+name: Rollback Monitor
+
+# Dispara quando qualquer workflow CI é concluído em main
+on:
+  workflow_run:
+    workflows: ["CI"] # nome do seu workflow CI
+    branches: [main]
+    types: [completed]
+
+permissions:
+  contents: write      # para fazer push do revert commit
+  checks: read
+  statuses: read
+  pull-requests: read
+
+jobs:
+  monitor-ci-failure:
+    runs-on: ubuntu-latest
+    name: Monitor CI for Failures
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for CI failures in main
+        if: github.event.workflow_run.conclusion == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_ALERTS }}
+          COWORK_WEBHOOK: ${{ secrets.COWORK_WEBHOOK_ROLLBACK }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          npx ts-node --transpile-only ./scripts/detect-and-propose-rollback.ts \
+            --workflow-run-id ${{ github.event.workflow_run.id }} \
+            --repository ${{ github.repository }} \
+            --branch main
+
+      - name: Notify results
+        if: always()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_ALERTS }}
+          payload: |
+            {
+              "text": "Rollback Monitor: CI failure check completed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Rollback Monitor* completed for ${{ github.repository }}\n*Branch:* main\n*Status:* ${{ job.status }}"
+                  }
+                }
+              ]
+            }
+
+  # Job separado para processar aprovações (via webhook)
+  # Este job é acionado por um repositório dispatch event do webhook
+  execute-approved-rollback:
+    runs-on: ubuntu-latest
+    name: Execute Approved Rollback
+    if: github.event_name == 'repository_dispatch' && github.event.action == 'execute-rollback'
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Execute rollback
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROPOSAL_ID: ${{ github.event.client_payload.proposalId }}
+          COMMIT_SHA: ${{ github.event.client_payload.commitSha }}
+        run: |
+          npx ts-node --transpile-only ./scripts/execute-rollback.ts \
+            --proposal-id "${{ env.PROPOSAL_ID }}" \
+            --commit-sha "${{ env.COMMIT_SHA }}"
+
+      - name: Wait for CI to complete
+        if: success()
+        run: |
+          echo "Rollback commit pushed. Waiting for CI to validate..."
+          npx ts-node --transpile-only ./scripts/wait-for-rollback-ci.ts \
+            --repository ${{ github.repository }} \
+            --branch main \
+            --timeout 600000
+
+      - name: Notify result
+        if: always()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_ALERTS }}
+          payload: |
+            {
+              "text": "Rollback execution: ${{ job.status }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Rollback Execution* - Proposal: `${{ github.event.client_payload.proposalId }}`\n*Status:* `${{ job.status }}`\n*Commit:* `${{ github.event.client_payload.commitSha }}`"
+                  }
+                }
+              ]
+            }

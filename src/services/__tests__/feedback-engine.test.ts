@@ -10,6 +10,8 @@ import {
   FeedbackStatus,
   type CIOutput,
   type CIError,
+  type BuildStatus,
+  type PRAnalysis,
 } from "../feedback-engine";
 
 // Mock do Anthropic
@@ -471,6 +473,435 @@ describe("FeedbackEngine", () => {
       expect(capturedBody).toContain("TEST_FAILURE");
       expect(capturedBody).toContain("high");
       expect(capturedBody).toContain("confidence");
+    });
+  });
+
+  describe("Phase 3 — analyzeCIResults", () => {
+    it("should analyze successful CI results", async () => {
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 42,
+        status: "success",
+        timestamp: new Date(),
+        duration: 5000,
+        testResults: {
+          total: 100,
+          passed: 100,
+          failed: 0,
+          skipped: 0,
+          duration: 5000,
+        },
+        coverage: {
+          lines: 85,
+          statements: 85,
+          functions: 80,
+          branches: 75,
+          threshold: 80,
+        },
+      };
+
+      const feedback = await engine.analyzeCIResults(buildStatus);
+
+      expect(feedback).toBeDefined();
+      expect(feedback.prNumber).toBe(42);
+      expect(feedback.severity).toBe("info");
+      expect(feedback.issues).toHaveLength(0);
+    });
+
+    it("should detect test failures and generate recommendations", async () => {
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 42,
+        status: "failure",
+        timestamp: new Date(),
+        duration: 5000,
+        testResults: {
+          total: 100,
+          passed: 90,
+          failed: 10,
+          skipped: 0,
+          duration: 5000,
+          failedTests: ["test/foo.test.ts", "test/bar.test.ts"],
+        },
+        coverage: {
+          lines: 80,
+          statements: 80,
+          functions: 80,
+          branches: 75,
+          threshold: 80,
+        },
+      };
+
+      const mockClient = (engine as any).client;
+      mockClient.messages.create = jest.fn().mockResolvedValue({
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              recommendations: [
+                {
+                  type: "test",
+                  title: "Fix failing tests",
+                  description: "Fix test failures",
+                  impact: "high",
+                  effort: "medium",
+                  priority: 9,
+                },
+              ],
+            }),
+          },
+        ],
+      });
+
+      const feedback = await engine.analyzeCIResults(buildStatus);
+
+      expect(feedback).toBeDefined();
+      expect(feedback.prNumber).toBe(42);
+      expect(feedback.severity).toBe("error");
+      expect(feedback.issues.length).toBeGreaterThan(0);
+      expect(feedback.issues[0].category).toBe("Test Failures");
+      expect(feedback.recommendations.length).toBeGreaterThan(0);
+    });
+
+    it("should detect coverage below threshold", async () => {
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 42,
+        status: "failure",
+        timestamp: new Date(),
+        duration: 5000,
+        coverage: {
+          lines: 70,
+          statements: 72,
+          functions: 68,
+          branches: 65,
+          threshold: 80,
+        },
+      };
+
+      const feedback = await engine.analyzeCIResults(buildStatus);
+
+      expect(feedback.issues.some((i) => i.category === "Coverage Below Threshold")).toBe(true);
+    });
+
+    it("should cache feedback for future access", async () => {
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 99,
+        status: "success",
+        timestamp: new Date(),
+        duration: 5000,
+      };
+
+      await engine.analyzeCIResults(buildStatus);
+
+      const cached = engine.getFeedback(99);
+      expect(cached).toBeDefined();
+      expect(cached?.prNumber).toBe(99);
+    });
+  });
+
+  describe("Phase 3 — generateRecommendations", () => {
+    it("should generate recommendations from PR analysis", async () => {
+      const prAnalysis: PRAnalysis = {
+        prNumber: 42,
+        title: "Add feature X",
+        description: "Implements feature X",
+        author: "john",
+        filesChanged: 5,
+        additions: 100,
+        deletions: 20,
+        commits: 3,
+        labels: ["feature", "enhancement"],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const mockClient = (engine as any).client;
+      mockClient.messages.create = jest.fn().mockResolvedValue({
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              recommendations: [
+                {
+                  type: "test",
+                  title: "Add tests",
+                  description: "Add unit tests",
+                  impact: "high",
+                  effort: "medium",
+                  priority: 8,
+                  estimatedTimeMinutes: 30,
+                },
+                {
+                  type: "code",
+                  title: "Refactor duplicated code",
+                  description: "Extract common logic",
+                  impact: "medium",
+                  effort: "low",
+                  priority: 6,
+                },
+              ],
+            }),
+          },
+        ],
+      });
+
+      const recommendations = await engine.generateRecommendations(prAnalysis);
+
+      expect(recommendations.length).toBeGreaterThan(0);
+      expect(recommendations[0]).toHaveProperty("type");
+      expect(recommendations[0]).toHaveProperty("title");
+      expect(recommendations[0]).toHaveProperty("impact");
+      expect(recommendations[0]).toHaveProperty("effort");
+      expect(recommendations[0]).toHaveProperty("priority");
+    });
+
+    it("should handle empty recommendations gracefully", async () => {
+      const prAnalysis: PRAnalysis = {
+        prNumber: 42,
+        title: "Small fix",
+        description: "Typo fix",
+        author: "jane",
+        filesChanged: 1,
+        additions: 1,
+        deletions: 1,
+        commits: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const mockClient = (engine as any).client;
+      mockClient.messages.create = jest.fn().mockResolvedValue({
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              recommendations: [],
+            }),
+          },
+        ],
+      });
+
+      const recommendations = await engine.generateRecommendations(prAnalysis);
+
+      expect(recommendations).toEqual([]);
+    });
+  });
+
+  describe("Phase 3 — trackMetrics", () => {
+    it("should track PR metrics", async () => {
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 42,
+        status: "success",
+        timestamp: new Date(),
+        duration: 5000,
+        testResults: {
+          total: 100,
+          passed: 95,
+          failed: 5,
+          skipped: 0,
+          duration: 5000,
+        },
+        coverage: {
+          lines: 85,
+          statements: 85,
+          functions: 80,
+          branches: 75,
+        },
+        lint: {
+          errors: 2,
+          warnings: 10,
+          fixable: 5,
+        },
+      };
+
+      // First analyze to populate feedback cache
+      await engine.analyzeCIResults(buildStatus);
+
+      // Then track metrics
+      const metrics = await engine.trackMetrics(42);
+
+      expect(metrics).toBeDefined();
+      expect(metrics.prNumber).toBe(42);
+      expect(metrics.qualityScore).toBeGreaterThan(0);
+      expect(metrics.testCoverage).toBe(85);
+      expect(metrics.buildTimeMs).toBe(5000);
+      expect(metrics.testsPassed).toBe(95);
+      expect(metrics.testsFailed).toBe(5);
+      expect(metrics.lintIssues).toBe(2);
+    });
+
+    it("should maintain metrics history", async () => {
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 100,
+        status: "success",
+        timestamp: new Date(),
+        duration: 5000,
+        coverage: {
+          lines: 80,
+          statements: 80,
+          functions: 80,
+          branches: 75,
+        },
+      };
+
+      await engine.analyzeCIResults(buildStatus);
+      await engine.trackMetrics(100);
+      await engine.trackMetrics(100); // Track again
+
+      const history = engine.getMetricsHistory(100);
+      expect(history.length).toBe(2);
+      expect(history[0].prNumber).toBe(100);
+      expect(history[1].prNumber).toBe(100);
+    });
+  });
+
+  describe("Phase 3 — suggestReviewers", () => {
+    it("should suggest reviewers based on diff", async () => {
+      const diff = `
+        diff --git a/src/services/index.ts b/src/services/index.ts
+        --- a/src/services/index.ts
+        +++ b/src/services/index.ts
+        @@ -1,3 +1,5 @@
+        +import { APIHandler } from './handlers';
+        +
+         export class MyService {
+           private handler: APIHandler;
+         }
+      `;
+
+      const mockClient = (engine as any).client;
+      mockClient.messages.create = jest.fn().mockResolvedValue({
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              reviewers: [
+                {
+                  username: "alice",
+                  expertise: ["backend", "services"],
+                  matchScore: 0.95,
+                  filesExpertise: {
+                    "src/services/index.ts": 0.9,
+                  },
+                },
+                {
+                  username: "bob",
+                  expertise: ["api", "testing"],
+                  matchScore: 0.75,
+                  filesExpertise: {
+                    "src/services/index.ts": 0.7,
+                  },
+                },
+              ],
+            }),
+          },
+        ],
+      });
+
+      const reviewers = await engine.suggestReviewers(diff);
+
+      expect(reviewers.length).toBeGreaterThan(0);
+      expect(reviewers[0]).toHaveProperty("username");
+      expect(reviewers[0]).toHaveProperty("expertise");
+      expect(reviewers[0]).toHaveProperty("matchScore");
+      expect(reviewers[0].expertise).toBeInstanceOf(Array);
+    });
+  });
+
+  describe("Phase 3 — getMetricsAggregate", () => {
+    it("should aggregate metrics over time period", async () => {
+      const now = new Date();
+      const startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+
+      // Add some metrics
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 42,
+        status: "success",
+        timestamp: now,
+        duration: 5000,
+        coverage: {
+          lines: 85,
+          statements: 85,
+          functions: 80,
+          branches: 75,
+        },
+      };
+
+      await engine.analyzeCIResults(buildStatus);
+      await engine.trackMetrics(42);
+
+      const aggregate = engine.getMetricsAggregate(startDate, now);
+
+      expect(aggregate).toBeDefined();
+      expect(aggregate.period.startDate).toEqual(startDate);
+      expect(aggregate.period.endDate).toEqual(now);
+      expect(aggregate.totalPRs).toBeGreaterThanOrEqual(0);
+    });
+
+    it("should calculate trends", async () => {
+      const now = new Date();
+      const startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+      const aggregate = engine.getMetricsAggregate(startDate, now);
+
+      expect(aggregate.trends).toHaveProperty("qualityTrend");
+      expect(aggregate.trends).toHaveProperty("coverageTrend");
+      expect(aggregate.trends).toHaveProperty("performanceTrend");
+    });
+  });
+
+  describe("Phase 3 — Cache management", () => {
+    it("should clear all caches", async () => {
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 42,
+        status: "success",
+        timestamp: new Date(),
+        duration: 5000,
+      };
+
+      await engine.analyzeCIResults(buildStatus);
+      await engine.trackMetrics(42);
+
+      expect(engine.getFeedback(42)).toBeDefined();
+      expect(engine.getMetricsHistory(42).length).toBeGreaterThan(0);
+
+      engine.clearAllCaches();
+
+      expect(engine.getFeedback(42)).toBeUndefined();
+      expect(engine.getMetricsHistory(42).length).toBe(0);
+    });
+
+    it("should clear specific caches", async () => {
+      const buildStatus: BuildStatus = {
+        workflowId: "workflow_1",
+        workflowName: "CI",
+        prNumber: 42,
+        status: "success",
+        timestamp: new Date(),
+        duration: 5000,
+      };
+
+      await engine.analyzeCIResults(buildStatus);
+      await engine.trackMetrics(42);
+
+      engine.clearMetricsHistory();
+
+      expect(engine.getFeedback(42)).toBeDefined();
+      expect(engine.getMetricsHistory(42).length).toBe(0);
     });
   });
 });
