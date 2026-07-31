@@ -1,0 +1,63 @@
+{
+  "name": "codex-hub-mcp",
+  "version": "1.0.0",
+  "description": "Codex Hub - Model Context Protocol Server for Manta Associados",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "type-check": "tsc --noEmit",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "node scripts/seed.js",
+    "db:reset": "node scripts/reset.js",
+    "db:backup": "node scripts/backup.js",
+    "docker:build": "docker build -t codex-hub-mcp:latest .",
+    "docker:run": "docker run -p 3000:3000 codex-hub-mcp:latest",
+    "docker:compose": "docker-compose up -d",
+    "docker:compose:down": "docker-compose down",
+    "deploy": "npm run build && npm run test && npm run lint",
+    "deploy:prod": "npm run deploy && node scripts/deploy-prod.js",
+    "deploy:staging": "npm run deploy && node scripts/deploy-staging.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "manta",
+    "agents",
+    "infrastructure",
+    "rag"
+  ],
+  "author": "Manta Associados",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@supabase/supabase-js": "^2.38.0",
+    "better-sqlite3": "^9.2.0",
+    "express": "^4.18.2",
+    "pino": "^8.17.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
