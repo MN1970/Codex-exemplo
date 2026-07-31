@@ -165,40 +165,31 @@ Como `list_organizations()` só retorna 1 org para esta conta, e o erro
 que o projeto existe, mas pertence a uma organização Supabase à qual
 `mneves@mantaassociados.com` **não tem mais** (ou nunca teve) acesso —
 por exemplo, criado por outro membro da equipe (ou por um agente/CI
-com conta própria) em conta pessoal ou em outra org corporativa, antes
-da consolidação em `umlmzpmdgffaiwpxyflb`. A região `us-east-2`
-reforça isso: nenhum projeto da org atual usa `us-east-2` — sugere
-proveniência de um fluxo de criação diferente (ex.: `create_project`
-rodado sem especificar região, caindo no default da conta/CLI de
-quem criou, versus os 4 projetos atuais que foram todos criados
-deliberadamente em `sa-east-1`).
+com conta própria), antes da consolidação em `umlmzpmdgffaiwpxyflb`. A
+região `us-east-2` reforça isso: nenhum projeto da org atual usa essa
+região — sugere proveniência de um fluxo de criação diferente,
+divergente da convenção atual de criar tudo em `sa-east-1`.
 
 **H2 — Legacy/arquivado da própria organização, removido/transferido.**
 Também é possível que `xgluoaa...` tenha sido criado dentro da mesma
-org e depois **transferido** para outra org ou **deletado**. Supabase
-mantém o histórico de billing/transferência no dashboard da
-organização, que não é exposto pelas tools de MCP disponíveis aqui —
-não é possível confirmar ou descartar via API. Esta hipótese exigiria
-confirmação manual no dashboard Supabase (ver AI-2).
+org e depois transferido ou deletado. O histórico de
+billing/transferência do Supabase não é exposto pelas tools de MCP
+disponíveis aqui — não dá para confirmar ou descartar via API. Exige
+confirmação manual no dashboard (ver AI-1).
 
-**H3 — Erro de digitação/registro no SKILL.md.**
-Um ID de projeto Supabase tem 20 caracteres alfanuméricos — improvável
-(mas não impossível) que seja um typo de outro ID real. Comparando
-caractere a caractere com os 4 IDs ativos
+**H3 — Erro de digitação no SKILL.md.**
+Comparando caractere a caractere com os 4 IDs ativos
 (`ogxxgvgtulrbbppshjie`, `vigfmejhdwuhlytloiyj`, `runtluukrhjroxoikbpu`,
 `kwuubcnedqtapvykmyye`), `xgluoaaymbdzbbudnwrh` não tem similaridade
-suficiente com nenhum para ser um typo plausível de um deles. **H3
-descartada.**
+suficiente com nenhum para ser typo de um deles. **H3 descartada.**
 
 **H4 — Dados vivos que precisam ser migrados.**
-Não há como confirmar isso sem acesso ao próprio projeto morto (dados
-não visitáveis via `permission denied`). Mas o argumento indireto da
-seção 0/2.1 (o Maestro já migrou de embedding 384d→1024d dentro do
-próprio projeto ativo, em 2026-07-03, sem atualizar a doc) torna mais
-provável que `xgluoaa...` seja um **antecessor já superado** do RAG
-atual — não uma fonte de dados exclusiva e não replicada. Ainda assim,
-como não há certeza absoluta, a recomendação (seção 6) é confirmar
-antes de simplesmente apagar a referência.
+Não dá para confirmar sem acesso ao projeto morto. Mas o Maestro já
+migrou de embedding 384d→1024d dentro do próprio projeto ativo (em
+2026-07-03, sem atualizar a doc da skill) — torna mais provável que
+`xgluoaa...` seja um antecessor já superado do RAG atual, não uma
+fonte exclusiva não replicada. Ainda assim, sem certeza absoluta, a
+recomendação (seção 6) é confirmar antes de apagar a referência.
 
 ### 3.3. Conclusão
 
