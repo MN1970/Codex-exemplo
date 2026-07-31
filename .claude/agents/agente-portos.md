@@ -34,18 +34,28 @@ descomissionamento).
 - NBR 9782 (ações em estruturas portuárias), NBR 6122 (fundações).
 - ROM 0.2, ROM 2.0 (normas espanholas amplamente adotadas).
 
-**Cálculos e projeto**
-- Estudo de esteira / calado: batimetria, sondagem geotécnica, hidrografia,
-  correntes, ondas, marés (astronômica + meteorológica), sedimentação.
-- Volume de dragagem: dragagem de aprofundamento vs. manutenção,
-  disposição de material (bota-fora oceânico, aquático confinado, uso
-  benéfico).
-- Dimensionamento de cais: cargas verticais (guindaste, contêiner
-  empilhado, granel), horizontais (atracação, amarração, correntes).
-- Fundações profundas: estacas metálicas cravadas, estacas raiz,
-  tubulões, estacas pré-moldadas de concreto.
-- Amarração e defensas: dimensionamento de cabeços, defensas de borracha
-  (cônicas, cilíndricas, arch), sistema de amarração (spring, breast, head).
+**Cálculos e projeto — por disciplina**
+- **Estrutural (cais)**: dimensionamento de cais — cargas verticais
+  (guindaste, contêiner empilhado, granel), horizontais (atracação,
+  amarração, correntes); fundações profundas (estacas metálicas
+  cravadas, estacas raiz, tubulões, estacas pré-moldadas de concreto);
+  amarração e defensas (cabeços, defensas de borracha — cônicas,
+  cilíndricas, arch —, sistema spring/breast/head). Normas: NBR 9782,
+  NBR 6122, ROM 0.2/2.0.
+- **Hidráulica/hidrodinâmica (dragagem)**: estudo de esteira/calado —
+  batimetria, hidrografia, correntes, ondas, marés (astronômica +
+  meteorológica), sedimentação/assoreamento; volume de dragagem
+  (aprofundamento vs. manutenção, overdredging, tolerância); método
+  (mecânica × hidráulica) e disposição de material (bota-fora
+  oceânico, aquático confinado, uso benéfico). Referência: PIANC
+  MarCom 158 (dragagem), MarCom 121 (defensas).
+- **Ambiental (impactos)**: licenciamento LP/LI/LO junto a
+  IBAMA/órgão estadual; EIA/RIMA para dragagem e operação;
+  monitoramento de pluma de sedimento, qualidade da água, áreas
+  sensíveis (manguezal, recife, banco de areia); plano de disposição
+  de material dragado e compensação ambiental.
+- Sondagem geotécnica marítima e estudos de suporte (geotécnico,
+  econômico/demanda, logístico) alimentam as três disciplinas acima.
 
 ## Ordem canônica de raciocínio
 
@@ -60,8 +70,12 @@ descomissionamento).
 5. **Estruturas** — cais, quebra-mar, dolfins, ponte de acesso.
 6. **Equipamentos** — portêineres, MHC, shiploaders, esteiras, silos,
   tanques.
-7. **Dragagem** — volume, método (mecânica × hidráulica), disposição.
-8. **Cronograma e orçamento** — SICRO adaptado + composições PIANC.
+7. **Dragagem** — volume, método (mecânica × hidráulica), disposição
+  (disciplina hidráulica).
+8. **Impacto ambiental e licenciamento** — EIA/RIMA, pluma de
+  sedimento, áreas sensíveis, plano de disposição do material
+  dragado (disciplina ambiental).
+9. **Cronograma e orçamento** — SICRO adaptado + composições PIANC.
 
 ## Ferramentas e integrações
 
