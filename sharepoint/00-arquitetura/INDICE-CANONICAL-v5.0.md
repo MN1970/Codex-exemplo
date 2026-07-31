@@ -65,7 +65,8 @@ Convenção de status usada em todo o documento: ✅ Operacional · ⚡ Parcial
 6. [Histórico de versões](#6-histórico-de-versões)
 7. [Checklist de deploy v5.0](#7-checklist-de-deploy-v50)
 8. [Decisões pendentes](#8-decisões-pendentes)
-9. [Apêndice — mapa de arquivos fonte](#9-apêndice--mapa-de-arquivos-fonte)
+9. [Glossário rápido](#9-glossário-rápido)
+10. [Apêndice — mapa de arquivos fonte](#10-apêndice--mapa-de-arquivos-fonte)
 
 ---
 
@@ -202,28 +203,28 @@ ferramentas, matriz de aplicabilidade Disciplina × Segmento) em
 > documento precisa ser reindexada para S1–S10 (numeração de produção)
 > antes de ser citada externamente como definitiva.
 
-| D | Disciplina | Normas-chave (amostra) |
-|---|---|---|
-| D01 | Hidráulica | NBR 12211-12218, NBR 5626, Lei 14.026/2020 |
-| D02 | Estrutural | NBR 6118, NBR 8800, NBR 6122, NBR 7187 |
-| D03 | Geotecnia | NBR 6484, NBR 8036, NBR 11682, Lei 12.334/2010 |
-| D04 | Pavimentação | DNIT 031/ES, método SICRO, NBR 7207 |
-| D05 | Elétrica | NBR 5410, NBR 14039, NBR 5419, IEC 61850 |
-| D06 | Ambiental | CONAMA 001/1986 e 237/1997, Lei 6.938/1981, Lei 9.985/2000 |
-| D07 | Cálculos Econômicos | Manual de EVTE BNDES, metodologia TIR-BNDES, IN 05/EPE |
-| D08 | Planejamento | PMBOK, NBR ISO 21500, EVM |
-| D09 | Jurídico | Lei 14.133/2021, Lei 8.987/1995, Lei 12.462/2011, Lei 9.307/1996 |
-| D10 | Comercial | diretrizes internas de pricing; sem normativo próprio |
-| D11 | MEP | NBR 16401, NBR 5626, NBR 5410 |
-| D12 | HVAC | NBR 16401, ASHRAE 62.1, NFPA 130 |
-| D13 | Acústica | NBR 10151, NBR 15575, NBR 10152 |
-| D14 | Acessibilidade | NBR 9050, Lei 13.146/2015, NBR 16537 |
-| D15 | BIM | ISO 19650 / NBR ISO 19650, Decreto 10.306/2020 |
-| D16 | Paisagismo | NBR 16636, manuais de recuperação de APP |
-| D17 | TI/Telecom | NBR 14565, ISO/IEC 27001, IEC 62443 |
-| D18 | Comunicação | Plano de Comunicação Social (licenciamento), Lei 8.987/1995 |
-| D19 | RH | NR-18, NR-35, NR-33, NR-10 |
-| D20 | Qualidade | ISO 9001, NBR 5674, PBQP-H, RBC/INMETRO |
+| D | Disciplina | Normas-chave (amostra) | Ferramentas típicas |
+|---|---|---|---|
+| D01 | Hidráulica | NBR 12211-12218, NBR 5626, Lei 14.026/2020 | EPANET, Bentley WaterGEMS/HAMMER |
+| D02 | Estrutural | NBR 6118, NBR 8800, NBR 6122, NBR 7187 | TQS, Eberick, SAP2000, ETABS, CSiBridge |
+| D03 | Geotecnia | NBR 6484, NBR 8036, NBR 11682, Lei 12.334/2010 | Rocscience Slide2/3, GeoStudio, Plaxis |
+| D04 | Pavimentação | DNIT 031/ES, método SICRO, NBR 7207 | planilhas SICRO/SINAPI, Civil 3D, AASHTOWare |
+| D05 | Elétrica | NBR 5410, NBR 14039, NBR 5419, IEC 61850 | ETAP, DIgSILENT PowerFactory, PSS/E |
+| D06 | Ambiental | CONAMA 001/1986 e 237/1997, Lei 6.938/1981, Lei 9.985/2000 | QGIS, ArcGIS, modelagem de dispersão/ruído |
+| D07 | Cálculos Econômicos | Manual de EVTE BNDES, metodologia TIR-BNDES, IN 05/EPE | Excel + @Risk/Crystal Ball, Python (numpy-financial) |
+| D08 | Planejamento | PMBOK, NBR ISO 21500, EVM | Primavera P6, MS Project, Power BI |
+| D09 | Jurídico | Lei 14.133/2021, Lei 8.987/1995, Lei 12.462/2011, Lei 9.307/1996 | gestão contratual, e-discovery para claims |
+| D10 | Comercial | diretrizes internas de pricing; sem normativo próprio | CRM interno, bancos de preços SICRO/SINAPI |
+| D11 | MEP | NBR 16401, NBR 5626, NBR 5410 | Revit MEP, AutoCAD MEP, Navisworks |
+| D12 | HVAC | NBR 16401, ASHRAE 62.1, NFPA 130 | Revit MEP, Ansys Fluent (CFD), Carrier HAP |
+| D13 | Acústica | NBR 10151, NBR 15575, NBR 10152 | CadnaA, Odeon, medidores NPS |
+| D14 | Acessibilidade | NBR 9050, Lei 13.146/2015, NBR 16537 | checklists NBR 9050, clash detection BIM |
+| D15 | BIM | ISO 19650 / NBR ISO 19650, Decreto 10.306/2020 | Revit, Civil 3D, Navisworks, BIM 360/ACC, Solibri |
+| D16 | Paisagismo | NBR 16636, manuais de recuperação de APP | AutoCAD Landscape, QGIS |
+| D17 | TI/Telecom | NBR 14565, ISO/IEC 27001, IEC 62443 | plataformas SCADA, firewalls OT/IT |
+| D18 | Comunicação | Plano de Comunicação Social (licenciamento), Lei 8.987/1995 | relatórios executivos Manta, stakeholder registers |
+| D19 | RH | NR-18, NR-35, NR-33, NR-10 | plataformas de SST, e-learning, controle biométrico |
+| D20 | Qualidade | ISO 9001, NBR 5674, PBQP-H, RBC/INMETRO | software de qualidade, checklists de inspeção |
 
 **Leitura prática**: D08 (Planejamento), D09 (Jurídico), D19 (RH) e D20
 (Qualidade) são as disciplinas com aplicabilidade "alta" no maior número
@@ -443,6 +444,35 @@ falha do agente, mas como comportamento esperado diante de fato novo.
   formalizado com métricas (throughput, tempo de espera por slot). Não
   há, neste repositório, telemetria de uso real do paralelismo — ação
   pendente listada na Seção 7.
+
+### Exemplo de dispatch paralelo dentro do teto
+
+```
+Consulta: "Preciso do pacote completo de due diligence do ativo de
+saneamento X — quantitativo, orçamento, cronograma e situação
+regulatória, antes da reunião de amanhã."
+
+INTAKE (F1): S8-Saneamento, fase 7 (DD), objetivo = pacote consolidado
+
+PLAN: decompõe em 4 composições independentes entre si —
+  1. S8.A2  (quantidades)      → agente-saneamento + cad-quantifier
+  2. S8.A3  (orçamento)        → manta-05, depende da saída de (1)
+  3. S8.A5  (cronograma)       → manta-07, independente
+  4. S8.A9  (regulatório)      → agente-saneamento (distribuído, gap A9)
+
+EXECUTE (dentro do teto de 8):
+  - (1) e (3) e (4) despacham em paralelo — 3 sub-agentes simultâneos
+  - (2) aguarda a saída de (1) antes de iniciar (dependência direta,
+    não paraleliza com sua própria fonte)
+
+DELIVER: consolidação por agente-saneamento (coordenador), F7 → F8 → F6
+antes de entregar o pacote único de DD.
+```
+
+Este exemplo ilustra a regra da Seção 5: A-codes sem dependência direta
+(A2, A5, A9 entre si) paralelizam; A-codes com dependência declarada na
+matriz de `docs/ATIVIDADES-A1-A10.md` (A3 depende de A2) rodam em
+sequência mesmo dentro do teto de 8.
 
 ---
 
@@ -703,7 +733,23 @@ reais `list_organizations`/`list_projects`/`get_project`/`list_tables`/
 
 ---
 
-## 9. Apêndice — mapa de arquivos fonte
+## 9. Glossário rápido
+
+| Termo | Significado |
+|---|---|
+| **Manta 0X** | Identidade de agente horizontal no registro original (ex.: Manta 05 = orçamento). Eixo distinto do Eixo A (atividade). |
+| **S1–S13** | Código de segmento vertical (Eixo S, Seção 1.1). S1–S10 é numeração de produção confirmada; S12/S13 são candidatos confirmados em banco mas não operacionais; S11 é lacuna não atribuída. |
+| **A1–A10** | Código de atividade horizontal (Eixo A, Seção 1.2) — tipo de entrega, não segmento. |
+| **F1–F8** | Código de capacidade funcional transversal (Eixo F, Seção 1.3). |
+| **D01–D20** | Código de disciplina de engenharia/negócio (Eixo D, Seção 1.4). |
+| **Composição S.A.D** | Notação de endereçamento de uma consulta já classificada (ex.: `S8.A3.D07`) — ver Seção 1. |
+| **Gate humano MN** | Aprovação explícita de Mauricio Neves exigida antes de qualquer merge, migração em produção ou envio externo de documento — política já em vigor desde a v4.2 (`docs/DEPLOY-v4.2.md`), mantida sem alteração. |
+| **Gap** | Item identificado como lacuna real (sem agente, sem sistema, sem dado confirmado) — distinto de "pendência de decisão", que tem opções já mapeadas aguardando escolha MN. |
+| **RAG** | Retrieval-Augmented Generation — coleções vetorizadas em Supabase/pgvector, uma por segmento operacional (prefixos `rod:`, `oae:`, `fer:`, `mtr:`, `por:`, `aer:`, `san:`, `ene:`, `bar:`; `og:`/`edi:` propostos para S12/S13). |
+
+---
+
+## 10. Apêndice — mapa de arquivos fonte
 
 ```
 Codex-exemplo/

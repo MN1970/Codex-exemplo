@@ -574,10 +574,17 @@ Codex-exemplo/
   - Mantida a numeração legada de segmentos (S6=Portos…S10=Barragens),
     reconciliando uma divergência encontrada com 3 documentos que
     usavam uma renumeração diferente (sinalizados como pendentes de
-    correção, não corrigidos automaticamente aqui).
+    correção, não corrigidos automaticamente aqui) — decisão
+    corroborada por consulta real a `manta_agent_capabilities` em
+    produção (ver `docs/SEGMENTOS-S12-S13-DECISION.md`).
   - Registrados S12 (Óleo & Gás) e S13 (Edificações) como **propostos**
-    (agentes criados, sem RAG/rota SP/routing — pendente gate MN).
-  - S11 documentado como não atribuído (gap a esclarecer com MN).
+    (agentes criados, sem RAG/rota SP/routing — pendente gate MN),
+    confirmados como capacidades reais (`ativo=true`) em
+    `manta_agent_capabilities`, não erro de cadastro.
+  - S11 (Mineração) identificado na mesma tabela de produção,
+    `ativo=true` desde 2026-07-12, mas ainda sem agente/RAG/rota/
+    routing — documentado como pendente de formalização (gap G015
+    sugerido), não mais como "não atribuído".
   - Coleções RAG atualizadas com números de auditoria real (9
     coleções, 204 chunks, 111 documentos, confirmados via `list_tables`
     em produção) em vez de contagem estimada.
