@@ -5,16 +5,17 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 operacionais no SharePoint.
 
 Versão: **v5.0** (2026-07-31) — consolidação v3.x (modelo conceitual de
-4 eixos S×A×F×D) + v4.2 (expansão operacional S6–S10). Ticket
-`MNT-2026-CONSOLIDACAO-ARCH-V5`.
+4 eixos S×A×F×D) + v4.2 (expansão operacional S6–S10) + trabalho
+paralelo desta mesma data (auditoria Supabase real, decisão de
+embedder, novos agentes S12/S13). Ticket `MNT-2026-CONSOLIDACAO-ARCH-V5`.
 
-> **Nota de proveniência**: esta revisão integra o "Dossiê HTML v2.0"
-> (modelo de 4 eixos) ao estado operacional real do repositório
-> (20 agentes, 9 coleções RAG confirmadas). Itens do dossiê que não
-> puderam ser confirmados contra o estado operacional deste repo estão
-> marcados explicitamente como **pendente de validação** — ver seção
-> "Gaps abertos". Nenhum número não verificado foi apresentado aqui
-> como fato consolidado.
+> **Nota de proveniência**: esta consolidação foi produzida em paralelo
+> a outras sessões trabalhando no mesmo branch no mesmo dia. Este
+> arquivo **reconcilia** divergências reais encontradas entre os
+> documentos produzidos — a mais importante sendo uma numeração de
+> segmento conflitante (ver "Eixo S" abaixo). Onde uma decisão de
+> reconciliação foi necessária, ela está explicitada, com a divergência
+> original preservada em nota, em vez de silenciosamente escolhida.
 
 ---
 
@@ -27,7 +28,7 @@ Versão: **v5.0** (2026-07-31) — consolidação v3.x (modelo conceitual de
 5. [Eixo D — Disciplinas](#eixo-d--disciplinas)
 6. [Eixo temporal — Ciclo de vida](#eixo-temporal--ciclo-de-vida-8-fases)
 7. [Modelo de composição S.A.D](#modelo-de-composição-sad)
-8. [Mapa completo de agentes — 20 agentes](#mapa-completo-de-agentes--20-agentes)
+8. [Mapa completo de agentes — 20 operacionais + 2 propostos](#mapa-completo-de-agentes--20-operacionais--2-propostos)
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
@@ -42,168 +43,173 @@ Versão: **v5.0** (2026-07-31) — consolidação v3.x (modelo conceitual de
 
 ## Modelo de 4 eixos (S×A×F×D)
 
-A v5.0 formaliza o modelo do dossiê v2.0: qualquer consulta ao Maestro
-se posiciona na interseção de **4 eixos ortogonais**, mais um eixo
-temporal auxiliar que se aplica a qualquer composição:
+A v5.0 formaliza o modelo do dossiê/arquitetura v3.0.0: qualquer
+consulta ao Maestro se posiciona na interseção de **4 eixos
+ortogonais**, mais um eixo temporal auxiliar que se aplica a qualquer
+composição:
 
 | Eixo | Pergunta que responde | Cardinalidade | Exemplos |
 |------|------------------------|---------------|----------|
-| **S** — Segmento | Qual o domínio de infraestrutura? | S1–S11 (+ S12/S13 TBD) | Rodovias, Portos, Saneamento |
+| **S** — Segmento | Qual o domínio de infraestrutura? | S1–S10 operacionais (+ S11 identificado/não formalizado, S12/S13 propostos) | Rodovias, Portos, Saneamento |
 | **A** — Atividade | Qual o tipo de entrega/trabalho? | A1–A10 | Orçamento, Cronograma, Claims |
 | **F** — Funcional | Qual capacidade técnica transversal é usada? | F1–F8 | RAG/routing, SharePoint, Guardrails |
 | **D** — Disciplina | Qual disciplina de engenharia/negócio? | D01–D20 | Hidráulica, Estrutural, Jurídico |
 | *(temporal)* Ciclo de vida | Em que fase do projeto? | 8 fases | Projeto básico, Obra, DD |
 
-Esta é uma **mudança de modelo, não de operação**: os 20 agentes atuais
-(Eixo 1 "Horizontais" + Eixo 2 "Verticais" do v4.2) continuam existindo
-e sendo os únicos executores reais. Os eixos A/F/D são uma camada de
-**classificação e composição** por cima do registro de agentes — eles
-não criam agentes novos por si só, mas orientam handoffs e contexto.
-Compatibilidade com o routing v4.2 (por segmento/keyword) é mantida
-integralmente — ver seção de Routing.
+Documentação completa de cada eixo A/F/D vive em documentos dedicados
+(ver seção "Arquivos deste repositório"); este CLAUDE.md traz o
+registro-índice e as tabelas de decisão que afetam routing. Isto é
+uma **mudança de modelo, não de operação**: os 20 agentes atuais
+continuam sendo os únicos executores reais — os eixos A/F/D são uma
+camada de classificação/composição por cima do registro de agentes.
+
+Documento de referência canônico e mais detalhado deste modelo:
+`sharepoint/00-arquitetura/ARQUITETURA-AGENTES-IA.md` **v3.0.0**
+(2026-07-31, substitui v2.0.0).
 
 ---
 
 ## Eixo S — Segmentos
 
-Cobertura por segmento de infraestrutura. **Renumeração v5.0**: o
-dossiê e o registro de produção do Maestro (skill `manta-maestro`,
-v5.0.1) inserem **Edificações como novo S6**, deslocando Portos → S7,
-Aeroportos → S8, Saneamento → S9, Energia → S10 e Barragens → S11.
-Isso reconcilia a numeração deste repositório (que ainda usa S6=Portos
-… S10=Barragens no v4.2) com a numeração já em produção.
+### ⚠️ Divergência de numeração encontrada e reconciliada nesta versão
 
-> ⚠️ **Pendência de sincronização confirmada**: os arquivos
-> `.claude/agents/agente-portos.md`, `agente-aeroportos.md`,
-> `agente-saneamento.md`, `agente-energia.md` e `agente-barragens.md`
-> **ainda trazem os códigos legados** (`Manta 03-S6` … `Manta 03-S10`)
-> em frontmatter e corpo de texto — verificado por leitura direta
-> destes 5 arquivos em 2026-07-31. Isso **não quebra o routing**
-> porque o dispatch do Maestro é feito por *slug* de agente
-> (`agente-portos`, `agente-energia`, …), não pelo número do
-> segmento — mas os arquivos precisam de um patch de sincronização
-> antes que a numeração S7–S11 abaixo seja citada externamente como
-> definitiva. Ação de acompanhamento: abrir ticket para atualizar os
-> 5 frontmatters (fora do escopo desta consolidação de CLAUDE.md).
+Duas convenções de numeração circularam em paralelo nesta rodada de
+consolidação:
 
-| Código v5.0 | Código v4.2 (legado) | Segmento | Agente | Status |
-|---|---|---|---|---|
-| S1 | S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
-| S2 | S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
-| S3 | S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
-| S4 | S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| S5 | S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
-| **S6** | *(novo)* | **Edificações** | agente-edificacoes | 🔲 **Planejado** — não há `.claude/agents/agente-edificacoes.md` neste repo; segmento citado no registro de produção (skill `manta-maestro`), aguardando criação canônica aqui |
-| S7 | S6 | Portos | agente-portos | ✅ Operacional (frontmatter ainda cita S6 — ver pendência acima) |
-| S8 | S7 | Aeroportos | agente-aeroportos | ✅ Operacional (frontmatter ainda cita S7 — ver pendência acima) |
-| S9 | S8 | Saneamento | agente-saneamento | ✅ Operacional — PRIORIDADE AySA (frontmatter ainda cita S8) |
-| S10 | S9 | Energia | agente-energia | ✅ Operacional — ANEEL/State Grid (frontmatter ainda cita S9) |
-| S11 | S10 | Barragens | agente-barragens | ✅ Operacional (frontmatter ainda cita S10) |
-| S12 | — | **TBD** | — | 🟡 **Não resolvido** — candidato citado em investigação: Óleo & Gás. Sem agente, sem SKILL.md, sem entrada em routing. Decisão pendente MN (ver Gaps abertos, G014). |
-| S13 | — | **TBD** | — | 🟡 **Não resolvido** — candidato não identificado com clareza (possível duplicata/erro de cadastro de Edificações). Decisão pendente MN antes de formalizar. |
+- **Convenção A (mantida — adotada nesta versão)**: preserva a
+  numeração legada do v4.2 sem alteração (S6=Portos … S10=Barragens) e
+  **anexa** novos segmentos ao final (S12, S13). É o que está em
+  `sharepoint/00-arquitetura/ARQUITETURA-AGENTES-IA.md` **v3.0.0**
+  (documento de arquitetura dedicado, que registra explicitamente
+  "Edificações... não faz parte do escopo S1-S10 desta versão"), e é o
+  que está de fato implementado nos arquivos de agente mais recentes:
+  `.claude/agents/agente-portos.md` (v1.1.0, ainda `Manta 03-S6`),
+  `.claude/agents/agente-oleo-gas.md` (`Manta 03-S12`),
+  `.claude/agents/agente-edificacoes.md` (`Manta 03-S13`).
+- **Convenção B (descartada — não usar)**: renumera inserindo
+  Edificações como novo S6 e desloca Portos→S7 … Barragens→S11. Esta
+  convenção aparece em `docs/DISCIPLINAS-D01-D20.md`,
+  `docs/ATIVIDADES-A1-A10.md` e numa menção isolada em
+  `.claude/agents/agente-aeroportos.md` (linha "S1–S11"). **Nenhum
+  agente vertical real usa essa numeração em seu próprio frontmatter.**
+
+**Decisão de reconciliação (esta consolidação)**: adota-se a
+**Convenção A**. Isso deixou de ser apenas uma escolha entre documentos
+divergentes — `docs/SEGMENTOS-S12-S13-DECISION.md` (investigação G014,
+Sonnet 12) consultou a **fonte de verdade real** (`execute_sql` contra
+`manta_agent_capabilities` no projeto Supabase de produção,
+`ogxxgvgtulrbbppshjie`) e confirmou que a tabela usa `agent_id` de
+`03-S1` a `03-S13` na numeração **legada** (Portos=S6…Barragens=S10),
+com `03-S11`, `03-S12` e `03-S13` já registrados com `ativo=true` desde
+2026-07-12. A Convenção B (que este CLAUDE.md descartou) não tem
+nenhum lastro em dado de produção — é uma teorização de documentação
+escrita no mesmo dia, sem consulta ao banco. Os 3 documentos que usam a
+Convenção B ficam **sinalizados como desatualizados** — ação de
+correção pendente (ver Gaps abertos).
+
+> ✅ **S11 identificado — não é mais "em aberto"**: a mesma investigação
+> (`docs/SEGMENTOS-S12-S13-DECISION.md`, §2) encontrou `03-S11 =
+> especialista-mineracao` (Mineração — cava/subterrânea/aluvionar;
+> NRM/NR-22, SME/CIM/JORC/NI 43-101; TSF encaminha para S10/barragens),
+> `ativo=true` em produção, no mesmo lote de registro que S12/S13.
+> **Nenhum agente `.md`, RAG, rota SharePoint ou routing keyword existe
+> para S11 ainda** — está na mesma situação em que S12/S13 estavam
+> antes desta rodada: capacidade registrada, formalização pendente.
+> Recomenda-se abrir um gap companheiro (sugestão do próprio documento
+> de origem: **G015**) para tratar S11 com o mesmo processo usado para
+> S12/S13 — não incluído nos entregáveis desta consolidação.
+
+| Código | Segmento | Agente | Status |
+|---|---|---|---|
+| S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
+| S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
+| S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
+| S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
+| S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
+| S6 | Portos | agente-portos | ✅ Operacional (v1.1.0, 2026-07-31) |
+| S7 | Aeroportos | agente-aeroportos | ✅ Operacional |
+| S8 | Saneamento | agente-saneamento | ✅ Operacional — PRIORIDADE AySA |
+| S9 | Energia | agente-energia | ✅ Operacional — ANEEL/State Grid |
+| S10 | Barragens | agente-barragens | ✅ Operacional |
+| S11 | Mineração (cava/subterrânea/aluvionar; TSF encaminha para S10) | *(sem agente `.md` ainda)* | 🔵 **Identificado em produção** (`manta_agent_capabilities`, `ativo=true` desde 2026-07-12), **não formalizado** — sem agente, RAG, rota SP ou routing keyword. Sugerido G015 para tratamento (fora do escopo desta consolidação). |
+| S12 | Óleo & Gás (downstream + midstream; **não cobre** E&P/reservatório) | agente-oleo-gas | 🟠 **Proposto** — `.claude/agents/agente-oleo-gas.md` criado 2026-07-31 a partir de `manta_agent_capabilities` confirmado; sem RAG, sem rota SharePoint, sem keyword de routing; migração candidata em `supabase/migrations/2026_07_31_v4_3_agents_s12_s13.sql`; **pendente gate humano MN** antes de virar operacional |
+| S13 | Edificações (residencial, comercial, galpão, hospitalar, institucional, data center — distinto de Manta 04/Imobiliário, que é horizontal de negócio) | agente-edificacoes | 🟠 **Proposto** — `.claude/agents/agente-edificacoes.md` criado 2026-07-31 a partir de `manta_agent_capabilities` confirmado; sem RAG, sem rota SharePoint, sem keyword de routing; migração candidata em `supabase/migrations/2026_07_31_v4_3_agents_s12_s13.sql`; **pendente gate humano MN** antes de virar operacional |
+
+Decisão completa (evidência, escopo, plano de formalização) em
+`docs/SEGMENTOS-S12-S13-DECISION.md`.
 
 ---
 
 ## Eixo A — Atividades
 
-Novo eixo formalizado nesta consolidação, descrevendo o **tipo de
-entrega** independente do segmento. Cada atividade mapeia, quando
-existente, para o agente horizontal (Eixo "Horizontais" da seção de
-agentes) que a executa hoje.
+Documentado por completo em `docs/ATIVIDADES-A1-A10.md` (v1.0,
+2026-07-31) — descrição, entradas/saídas, critérios de aceitação,
+metodologia e handoffs por atividade. Resumo:
 
-| Código | Atividade | Agente horizontal correspondente | Status do mapeamento |
-|--------|-----------|-----------------------------------|-----------------------|
-| A1 | Proposta | Manta 13 (bd) + Manta 14 (apresentações) | ✅ Mapeado (2 agentes) |
-| A2 | Quantidades | — | 🟡 Sem agente dedicado hoje; hoje coberto por skills (`cad-quantifier`, `evtea-quantifier`) invocadas dentro dos verticais |
+| Código | Atividade | Agente(s) responsável(is) | Status do mapeamento |
+|--------|-----------|-----------------------------|-----------------------|
+| A1 | Proposta | Manta 13 (bd) + Manta 14 (apresentações) | ✅ Mapeado |
+| A2 | Quantidades | Vertical do segmento (Manta 03-Sx) + skills de takeoff (`cad-quantifier`, `evtea-quantifier`) | ✅ Mapeado (sem agente horizontal dedicado — por natureza pertence ao vertical) |
 | A3 | Orçamento | Manta 05 (orçamento) | ✅ Mapeado |
 | A4 | Modelagem financeira | Manta 06 (modelagem) | ✅ Mapeado |
 | A5 | Cronograma | Manta 07 (cronograma) | ✅ Mapeado |
 | A6 | Contratual | Manta 02 (contratual) | ✅ Mapeado |
 | A7 | Claims | Manta 01 (claims) | ✅ Mapeado |
 | A8 | Advisory | Manta 15 (advisory) | ✅ Mapeado |
-| A9 | Regulatório | — | 🟡 **Rubrica pendente** (assim descrito na investigação-fonte) — hoje disperso entre agentes verticais (ex.: ANEEL em Manta 03-S10, ANAC em Manta 03-S8); sem agente horizontal próprio |
-| A10 | Risco | — | 🟡 Sem agente dedicado hoje; hoje coberto parcialmente por Manta 15 (advisory) e Manta 16 (arquiteto-ia) conforme o caso |
-
-**Leitura prática**: A2, A9 e A10 são os três pontos em aberto do eixo
-Atividades — não há agente horizontal 1:1 hoje. Antes de rotear uma
-consulta classificada nessas atividades, o Maestro deve tratá-la como
-handoff para o vertical de segmento (S) mais próximo, e não assumir um
-agente horizontal inexistente.
+| A9 | Regulatório | *(sem agente horizontal dedicado)* | 🔴 **Rubrica pendente (TODO)** — hoje distribuído pelos verticais (ANEEL em S9, ANAC em S7 etc.) + suporte pontual de Manta 02/Manta 15. Decisão MN pendente: criar Manta-code dedicado ou manter distribuído. |
+| A10 | Risco | Manta 15 (advisory) coordena consolidação; conteúdo vem de A1-A9 e S1-S13 | ⚠️ Processo transversal sem Manta-code próprio — **não interpretar como confirmação de um "Manta 17"** até registro formal aqui |
 
 ---
 
 ## Eixo F — Funcionais
 
-Capacidades técnicas transversais, usadas por qualquer agente
-independentemente do segmento ou atividade. Mapeadas, quando possível,
-para skills/sistemas já existentes no ecossistema Manta.
+Documentado por completo em `docs/FUNCIONAIS-F1-F8.md` (v1.0.0,
+2026-07-31) — descrição, componentes, integrações, API/interface e
+status por funcional. Resumo:
 
 | Código | Funcional | Skill/sistema correspondente hoje |
 |--------|-----------|-------------------------------------|
 | F1 | IA (routing, model tiering) | Maestro (Manta 00) + lógica de routing desta seção |
-| F2 | SharePoint (indexação, sync) | MCP `SharePoint_Manta` (leitura); escrita/upload ainda manual — ver Gaps abertos |
-| F3 | Portal (web, SSO, permissões) | `portal-gestao-manta`, `portal-megaprojeto-builder`, `portal-metro-l4` (skills) |
-| F4 | Extração (PDF/DWG parser) | `autodesk-toolkit`, `cqp-cad-bridge`, `evtea-extractor`, `pdf` (skills) |
-| F5 | Notificação (email, Slack, webhook) | `slack-gif-creator` (parcial); notificação por e-mail/webhook **sem skill dedicada hoje** — gap |
-| F6 | Trace (audit log, approval gates) | Gate humano MN nos deploy checklists (processo, não sistema); sem trilha de auditoria automatizada confirmada |
-| F7 | Guardrails (validação, aluci-guard, consist-guard) | `aluci-guard`, `consist-guard`, `context-guardian` (skills) |
-| F8 | Padronização (templates, estilos, nomenclatura) | `padrao-manta`, `cl-design`, `brand-guidelines` (skills) |
-
-**Leitura prática**: F5 e F6 não têm skill/sistema dedicado confirmado
-neste repositório — tratar como gap de implementação, não como
-funcionalidade já disponível.
+| F2 | SharePoint (indexação, sync) | MCP `SharePoint_Manta` — leitura completa; escrita/upload disponível via tools do MCP, mas sync automático `.claude/agents/` ↔ SP ainda manual |
+| F3 | Portal (web, SSO, permissões) | `portal-gestao-manta`, `portal-megaprojeto-builder`, `portal-metro-l4` |
+| F4 | Extração (PDF/DWG parser) | `autodesk-toolkit`, `cqp-cad-bridge`, `evtea-extractor`, `pdf` |
+| F5 | Notificação (email, Slack, webhook) | Routines (`send_later`, `create_trigger`), subscribe PR activity, `slack-gif-creator` (parcial) |
+| F6 | Trace (audit log, approval gates) | `consist-guard` (rastreabilidade), histórico SharePoint, session logs, gate humano MN nos checklists |
+| F7 | Guardrails (validação, aluci-guard, consist-guard) | `aluci-guard`, `consist-guard`, `context-guardian` |
+| F8 | Padronização (templates, estilos, nomenclatura) | `padrao-manta`, `cl-design`, `brand-guidelines`, `docx`, `pptx`, `xlsx` |
 
 ---
 
 ## Eixo D — Disciplinas
 
-Disciplinas de engenharia e negócio, usadas como refinamento dentro de
-qualquer segmento (S) ou atividade (A). Este eixo é o mais granular e
-tipicamente aparece como o terceiro/quarto componente de uma
-composição (ex.: `S9.A3.D07`).
+Documentado por completo em `docs/DISCIPLINAS-D01-D20.md` (v1.0,
+2026-07-31) — inclui matriz de aplicabilidade por segmento, normas-
+chave e ferramentas por disciplina.
 
-**D01–D10 — Disciplinas clássicas**
+> ⚠️ **Nota de inconsistência conhecida**: `docs/DISCIPLINAS-D01-D20.md`
+> usa a numeração de segmento da **Convenção B** (S6=Edificações …
+> S11=Barragens — ver aviso no topo da seção "Eixo S" acima), que este
+> CLAUDE.md **não adota**. A matriz de aplicabilidade por disciplina
+> continua tecnicamente válida (as disciplinas em si não mudam), mas os
+> códigos `Sx` nela **devem ser lidos mentalmente na Convenção A**
+> (S6=Portos … S10=Barragens) até que o arquivo seja corrigido. Ação
+> pendente — ver Gaps abertos.
 
-| Código | Disciplina |
-|--------|------------|
-| D01 | Hidráulica |
-| D02 | Estrutural |
-| D03 | Geotecnia |
-| D04 | Pavimentação |
-| D05 | Eletromecânica |
-| D06 | Ambiental |
-| D07 | Financeiro |
-| D08 | Planejamento |
-| D09 | Jurídico |
-| D10 | Comercial |
+**D01–D10 — Disciplinas clássicas**: Hidráulica, Estrutural,
+Geotecnia, Pavimentação, Elétrica, Ambiental, Econômica/Financeiro,
+Planejamento, Jurídico, Comercial.
 
-**D11–D20 — Disciplinas secundárias**
-
-| Código | Disciplina |
-|--------|------------|
-| D11 | MEP (mecânica/elétrica/hidráulica predial) |
-| D12 | HVAC |
-| D13 | Acústica |
-| D14 | Acessibilidade |
-| D15 | BIM |
-| D16 | Paisagismo |
-| D17 | TI |
-| D18 | Comunicação |
-| D19 | RH |
-| D20 | Qualidade |
-
-> Este eixo é a formalização mais nova do modelo v5.0 e ainda **não
-> possui rotina de validação automatizada** (nenhum teste de routing
-> em `tests/routing/prompts.md` cobre disciplinas hoje — apenas
-> segmentos). Tratar D01–D20 como taxonomia de apoio à composição, não
-> como eixo com routing determinístico testado.
+**D11–D20 — Disciplinas secundárias**: MEP, HVAC, Acústica,
+Acessibilidade, BIM, Paisagismo, TI, Comunicação, RH, Qualidade.
 
 ---
 
 ## Eixo temporal — Ciclo de vida (8 fases)
 
-Mantido do v4.2 sem alteração — aplica-se a qualquer composição dos 4
-eixos acima, via Q2 do intake:
+Mantido sem alteração — aplica-se a qualquer composição dos 4 eixos
+acima, via Q2 do intake. Não é tratado como eixo ortogonal de
+composição (qualquer combinação S.A.D pode, em princípio, ocorrer em
+qualquer fase):
 
 1. Estudo prévio / EVTE
 2. Projeto básico
@@ -218,40 +224,43 @@ eixos acima, via Q2 do intake:
 
 ## Modelo de composição S.A.D
 
-Uma consulta resolve, na prática, como interseção de S (segmento),
-A (atividade) e D (disciplina) — o eixo F entra como capacidade
-utilizada internamente pelo agente despachado, não como parte do
-endereçamento primário:
+Exemplos de composição real (reproduzidos de
+`ARQUITETURA-AGENTES-IA.md` v3.0.0, §2.6, já na Convenção A de
+numeração):
 
 ```
-S9.A3.D07  = Saneamento + Orçamento + Financeiro
+S8.A3.D07  = Saneamento + Orçamento + Econômica
             → Manta 05 (agente-orcamento) com contexto de saneamento
               (RAG san:*, handoff de agente-saneamento)
 
-S10.A7.D09 = Energia + Claims + Jurídico
-            → Manta 01 (agente-claims) com contexto de energia
+S6.A2.D01  = Portos + Quantidades + Hidráulica
+            → cubagem de dragagem do canal de acesso e bacia de evolução
+
+S9.A6.D05  = Energia + Contratual + Elétrica
+            → Manta 02 (contratual) com contexto de energia
               (RAG ene:*, handoff de agente-energia)
 
-S11.A5.D08 = Barragens + Cronograma + Planejamento
-            → Manta 07 (agente-cronograma) com contexto de barragens
-              (RAG bar:*, handoff de agente-barragens)
+S10.A10.D02 = Barragens + Risco + Estrutural
+            → matriz de risco de ruptura (PAE/PSB) com verificação
+              estrutural CFRD/CCR
 ```
 
-Cada composição pode ser delegada a 1+ agentes em paralelo (teto de 8
-sub-agentes simultâneos, conforme prática já usada pelo Maestro).
-Quando A cai em A2/A9/A10 (sem agente horizontal mapeado — ver Eixo A),
-o dispatch primário deve ser o vertical de S, não um horizontal
-inexistente.
+Regra prática: **S** decide o roteamento primário (agente vertical que
+assume a sessão); **A** decide o handoff horizontal disparado; **D**
+decide quais normas/RAG/skills de disciplina são carregadas; **F** pode
+ser acionado a qualquer momento por qualquer agente, em qualquer
+combinação S.A.D, sem alterar o dono da sessão. Cada composição pode
+ser delegada a 1+ agentes em paralelo (teto de 8 sub-agentes
+simultâneos).
 
 ---
 
-## Mapa completo de agentes — 20 agentes
+## Mapa completo de agentes — 20 operacionais + 2 propostos
 
-Contagem confirmada por leitura direta do repositório e da
-`ARQUITETURA-AGENTES-IA.md` (SharePoint mirror): **11 horizontais + 9
-verticais operacionais** = 20 agentes (S5 Túneis é parcial/coberto,
-não conta como agente adicional; S6 Edificações é planejado, ainda não
-implementado, também não soma ao total operacional de 20).
+Contagem operacional confirmada: **11 horizontais + 9 verticais
+operacionais** = 20 agentes (S5 Túneis é parcial, não conta como
+agente adicional). S12 (Óleo & Gás) e S13 (Edificações) são
+**propostos**, não somam ao total operacional até gate MN.
 
 ### Horizontais (transversais a todos os segmentos) — 11 agentes
 
@@ -269,46 +278,46 @@ implementado, também não soma ao total operacional de 20).
 | Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
 | Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
 
-### Verticais por segmento (C3) — 9 agentes operacionais + 1 parcial + 1 planejado
+### Verticais por segmento (C3) — 9 operacionais + 1 parcial + 2 propostos
 
-| Código v5.0 | Segmento | Agente | Status |
+| Código | Segmento | Agente | Status |
 |--------|----------|--------|--------|
 | S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
 | S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
 | S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
-| S6 | Edificações | agente-edificacoes | 🔲 Planejado (sem arquivo canônico neste repo) |
-| S7 | Portos | agente-portos | ✅ Operacional (criado 2026-07-05) |
-| S8 | Aeroportos | agente-aeroportos | ✅ Operacional (criado 2026-07-05) |
-| S9 | Saneamento | agente-saneamento | ✅ Operacional (criado 2026-07-05) — PRIORIDADE AySA |
-| S10 | Energia | agente-energia | ✅ Operacional (criado 2026-07-05) — ANEEL/State Grid |
-| S11 | Barragens | agente-barragens | ✅ Operacional (criado 2026-07-05) |
+| S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial |
+| S6 | Portos | agente-portos | ✅ Operacional |
+| S7 | Aeroportos | agente-aeroportos | ✅ Operacional |
+| S8 | Saneamento | agente-saneamento | ✅ Operacional — PRIORIDADE AySA |
+| S9 | Energia | agente-energia | ✅ Operacional — ANEEL/State Grid |
+| S10 | Barragens | agente-barragens | ✅ Operacional |
+| S12 | Óleo & Gás | agente-oleo-gas | 🟠 Proposto — pendente gate MN |
+| S13 | Edificações | agente-edificacoes | 🟠 Proposto — pendente gate MN |
 
 ---
 
 ## ROUTING — Maestro (Manta 00)
 
-Regra de roteamento para Q1 do intake. **Inalterada em relação ao
-v4.2** — o dispatch é por *slug* de agente (não por número de
-segmento), portanto a renumeração S6→S7…S10→S11 do Eixo S não exige
-mudança nestas regras:
+Regra de roteamento para Q1 do intake. O dispatch é por **slug de
+agente** (não por número de segmento) — por isso a numeração S6-S10 é
+apenas rótulo informativo, sem efeito sobre esta lógica:
 
 ```
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
-   → agente-saneamento (S9)
+   → agente-saneamento (S8)
 
 IF menção a transmissão|LT|subestação|ANEEL|RAP|leilão transmissão|ONS|EPE
-   → agente-energia (S10)
+   → agente-energia (S9)
 
 IF menção a porto|terminal|ANTAQ|dragagem|molhe|berço|calado|contêiner|granel
-   → agente-portos (S7)
+   → agente-portos (S6)
 
 IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
-   → agente-aeroportos (S8)
+   → agente-aeroportos (S7)
 
 IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
-   → agente-barragens (S11)
+   → agente-barragens (S10)
 
 # Regras existentes S1-S4 mantidas sem alteração
 IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
@@ -324,11 +333,16 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
    → agente-infraestrutura S4
 ```
 
+**S12/S13 ainda NÃO têm keyword de routing** (confirmado em
+`agente-oleo-gas.md` e `agente-edificacoes.md`, seção "Ferramentas e
+integrações" de cada um) — o Maestro não consegue despachar para esses
+dois agentes hoje, mesmo que o usuário use as palavras-chave descritas
+em seus frontmatters. Isso é esperado enquanto o status for "proposto".
+
 **Casos ambíguos** (documentados em `tests/routing/prompts.md`, mantidos
 sem alteração):
 - UHE (barragem + LT + SE) → dispatch primário `agente-barragens` +
-  handoff `agente-energia` (política ainda não formalizada — ver
-  `tests/routing/prompts.md`, seção "Casos ambíguos").
+  handoff `agente-energia`.
 - ETE + subestação → dispatch primário `agente-saneamento` + handoff
   `agente-energia`.
 - Porto + pista de carga → dispatch primário `agente-portos` + handoff
@@ -340,10 +354,13 @@ sem alteração):
 
 ## RAG — Coleções em Supabase
 
-**Correção desta consolidação**: o CLAUDE.md v4.2 listava apenas as 5
-coleções novas. A `ARQUITETURA-AGENTES-IA.md` (SharePoint, v2.0.0) e o
-runbook de integração Cowork confirmam **9 coleções operacionais**
-(4 pré-existentes + 5 do v4.2). Tabela completa abaixo:
+**9 coleções confirmadas por auditoria real** (não apenas por arquivo
+de migração candidata) — ver `docs/SUPABASE-PROJECT-AUDIT.md`, que
+executou `list_tables` no projeto `ogxxgvgtulrbbppshjie`
+(`manta-maestro`, `sa-east-1`, `ACTIVE_HEALTHY`) e confirmou
+`rag_collections` com 9 linhas, `sp_agent_routing` com 9 linhas,
+`maestro_routing_keywords` com 50 linhas, `manta_rag_chunks` com 204
+linhas e `manta_rag_documents` com 111 linhas.
 
 | Coleção | Prefixo storage | Fontes iniciais | Status |
 |---------|-----------------|-----------------|--------|
@@ -356,22 +373,36 @@ runbook de integração Cowork confirmam **9 coleções operacionais**
 | saneamento | san: | SNIS, IWA, NBR 12211-12218, Lei 14.026, ERAS/AySA | ✅ v4.2 |
 | energia | ene: | ANEEL editais, R1-R5 EPE, ONS, IEEE, IEC, NBR 5422 | ✅ v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, SNISB, Lei 12.334/14.066, NBR 13028/8681 | ✅ v4.2 |
-| edificações | edi: | *(a definir)* | 🔲 Planejado — sem coleção criada, aguarda decisão sobre agente S6 |
+| óleo-gás | og: *(sugerido)* | ANP, API 650/653, ASME B31.3/4/8, NFPA 30, HAZOP | 🔲 Não criada — depende do gate MN de S12 |
+| edificações | edi: *(sugerido)* | NBR 15575, LEED, BIM | 🔲 Não criada — depende do gate MN de S13 |
 
 Sub-prefixos de contexto (mantidos do v4.2):
 - `san:br:` / `san:ar:` — saneamento por país (Brasil × Argentina AySA).
 - `ene:t:` / `ene:d:` / `ene:g:` — energia por transmissão/distribuição/geração.
-- `bar:c:` / `bar:t:` / `bar:e:` / `bar:r:` — barragens por tipologia
-  (concreto × terra × enrocamento × rejeitos).
+- `bar:c:` / `bar:t:` / `bar:e:` / `bar:r:` — barragens por tipologia.
 
-Migração canônica das 5 coleções v4.2:
-`supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql` — é uma
-**migração candidata**, ainda não confirmada como aplicada em produção
-(ver Gaps abertos, item de contagem de chunks).
+> ⚠️ **Divergência de embedder não resolvida** — ver
+> `docs/EMBEDDER-DECISION.md` (Sonnet 11) vs. achado em
+> `docs/SUPABASE-PROJECT-AUDIT.md` §2.1 (Sonnet 13): o primeiro afirma
+> que produção roda `bge-small-en-v1.5` (384-d) com 0% dos 204 chunks
+> migrados para `bge-m3`; o segundo, lendo o comentário real da coluna
+> em `manta_rag_chunks` via `list_tables`, encontrou o texto "Chunks
+> com embeddings 1024d (bge-m3, canonical Maestro 2026-07-03)". Os dois
+> documentos **não foram reconciliados entre si** nesta consolidação —
+> ambos vêm de sessões diferentes no mesmo dia. Antes de agir sobre
+> qualquer um dos dois, confirmar a dimensão real da coluna de vetor
+> (`\d manta_rag_chunks` ou equivalente), não apenas o texto do
+> comentário nem a descrição da skill. Ver Gaps abertos.
+
+Migração candidata das 5 coleções v4.2:
+`supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql`.
 
 ---
 
 ## SHAREPOINT — Routing rules (sp_agent_routing)
+
+Confirmado por auditoria real: tabela `sp_agent_routing` tem 9 linhas
+em produção (ver seção RAG acima).
 
 | Agente | Pasta SP sugerida | Pattern |
 |--------|-------------------|---------|
@@ -380,17 +411,12 @@ Migração canônica das 5 coleções v4.2:
 | agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
 | agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
 | agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
-| agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado |
-
-Runbook de deploy manual (Supabase + SharePoint) em
-`docs/DEPLOY-v4.2.md` — ainda referenciado, sem runbook v5.0 dedicado
-até que S6/S12/S13 sejam resolvidos.
+| agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, pendente gate S12 |
+| agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, pendente gate S13 |
 
 ---
 
 ## MODEL TIERING
-
-Mantido do v4.2 / `ARQUITETURA-AGENTES-IA.md` sem alteração:
 
 | Tier | Modelo | Uso típico |
 |---|---|---|
@@ -399,81 +425,99 @@ Mantido do v4.2 / `ARQUITETURA-AGENTES-IA.md` sem alteração:
 | Complexo | Claude Opus 4.7/4.8 | Claims complexos, arquitetura, second opinion crítico |
 
 O Maestro escala dinamicamente de tier dentro de uma sessão (Haiku →
-Sonnet ao entrar no vertical → Opus se detectar complexidade — claim +
-jurídico + técnico + financeiro no mesmo pleito).
+Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ---
 
 ## GAPS ABERTOS / PENDÊNCIAS
 
-Itens levantados na investigação de consolidação que **não foram
-resolvidos nesta revisão** — listados aqui como pendências rastreáveis,
-não como fatos assumidos no corpo do documento acima:
-
-- **Embedder**: há registro de decisão por `bge-m3` (1024-d) em
-  paralelo a `bge-small-en-v1.5` (384-d) supostamente em produção.
-  **Não verificado neste repositório** — nenhum dos dois é citado em
-  nenhum arquivo de migração ou config aqui presente. Ação: auditar
-  qual embedder está de fato em uso antes de documentar como decidido.
-- **Contagem de chunks RAG**: há uma cifra de "204 chunks reais"
-  circulando em material de investigação, contra um valor menor
-  documentado anteriormente. **Nenhum dos dois números é verificável a
-  partir dos arquivos deste repositório** (a migração SQL registra
-  *coleções*, não *chunks*, e é candidata/não confirmada como aplicada).
-  Ação: consultar `list_tables`/`execute_sql` no projeto Supabase real
-  antes de citar qualquer contagem em documento canônico.
-- **Projeto Supabase de referência**: há menção a um project ref que
-  retornaria "permission denied" e a outros 3 projetos citados como
-  inativos. **Não verificado nesta revisão** (nenhuma chamada MCP
-  Supabase foi feita para confirmar) — tratar como hipótese a auditar,
-  não como estado confirmado.
-- **S12/S13**: sem definição. Candidato a S12 (Óleo & Gás) mencionado
-  em material de investigação, sem SKILL.md, sem agente, sem entrada de
-  routing. S13 sem candidato claro. Ver seção Eixo S.
-- **S6 Edificações**: citado no registro de produção (skill
-  `manta-maestro`) mas sem arquivo canônico `.claude/agents/` neste
-  repositório. Tratar como planejado, não operacional.
-- **Sincronização de numeração S nos frontmatters dos 5 agentes v4.2**:
-  ver aviso na seção Eixo S.
-- **F5 (Notificação) e F6 (Trace)**: sem skill/sistema dedicado
-  confirmado — ver Eixo F.
-- **A2 (Quantidades), A9 (Regulatório), A10 (Risco)**: sem agente
-  horizontal dedicado — ver Eixo A.
+- **Numeração de segmento divergente (novo, encontrado nesta
+  consolidação)**: `docs/DISCIPLINAS-D01-D20.md`,
+  `docs/ATIVIDADES-A1-A10.md` e uma linha em
+  `.claude/agents/agente-aeroportos.md` usam a Convenção B (S6=
+  Edificações…S11=Barragens), incompatível com a Convenção A adotada
+  neste CLAUDE.md e com os frontmatters reais dos agentes. Ação:
+  corrigir esses 3 arquivos para a Convenção A, ou formalizar a
+  Convenção B em todo o repositório — não ambas ao mesmo tempo.
+- **S11 (Mineração) identificado mas não formalizado**: confirmado em
+  produção (`manta_agent_capabilities`, `03-S11`, `ativo=true`), sem
+  agente `.md`, RAG, rota SP ou routing keyword — mesma situação em que
+  S12/S13 estavam antes desta rodada. Ação: abrir gap G015 e seguir o
+  mesmo processo de `docs/SEGMENTOS-S12-S13-DECISION.md` para S11.
+- **Embedder (G010)**: `docs/EMBEDDER-DECISION.md` recomenda migrar
+  para `bge-m3`, partindo da premissa de que produção roda
+  `bge-small-en-v1.5` com 0% migrado. `docs/SUPABASE-PROJECT-AUDIT.md`
+  encontrou evidência (comentário de coluna via `list_tables`) sugerindo
+  que o schema já é `bge-m3`/1024-d desde 2026-07-03. **Os dois
+  documentos se contradizem e nenhum foi reconciliado com o outro**.
+  Ação: verificar a dimensão real da coluna de embeddings antes de
+  qualquer decisão ou migração.
+- **Supabase — projeto `xgluoaaymbdzbbudnwrh` (G012)**: auditoria real
+  (`docs/SUPABASE-PROJECT-AUDIT.md`) concluiu, com evidência de API,
+  que é provavelmente referência morta (projeto não pertence à
+  organização Supabase ativa da conta corporativa). **Confirmação
+  humana (dashboard) ainda pendente** antes de remover a referência —
+  ver action items AI-1 a AI-10 nesse documento.
+- **RLS desabilitado em 3 tabelas públicas** (`rag_collections`,
+  `sp_agent_routing`, `maestro_routing_keywords`) — achado de segurança
+  correlato da auditoria G012, com SQL de remediação já redigido mas
+  **não aplicado** (requer policies de leitura corretas antes de
+  habilitar RLS, para não quebrar o acesso do próprio Maestro em
+  runtime). Ver AI-6 em `docs/SUPABASE-PROJECT-AUDIT.md`.
+- **3 projetos Supabase `INACTIVE`** (`manta-tocantins`,
+  `manta-rodovias`, `manta-portal-piloto`) — decisão de consolidar,
+  arquivar ou manter pendente MN (ver AI-7/AI-8 no mesmo documento).
+- **A9 (Regulatório) e A10 (Risco)**: sem Manta-code horizontal
+  dedicado — ver Eixo A.
+- **S12/S13 sem RAG, sem rota SharePoint, sem keyword de routing** —
+  agentes existem como arquivo, mas não são despacháveis pelo Maestro
+  hoje.
 
 ---
 
 ## QUESTIONÁRIO DE DECISÃO PARA MN
 
-1. **Embedder**: manter `bge-small` (econômico, já supostamente em
-   produção) ou migrar para `bge-m3` (maior dimensionalidade/qualidade)?
-   Requer auditoria prévia do estado real antes da decisão.
-2. **S12/S13**: formalizar como novos segmentos (e com qual escopo) ou
-   remover a referência? Depende de confirmar a origem do cadastro.
-3. **S6 Edificações**: priorizar criação do agente/SKILL.md nesta
-   sprint ou manter como planejado sem prazo?
-4. **Supabase de referência (project ref citado como inacessível)**:
-   referência morta a remover da documentação ou migração pendente a
-   executar?
-5. **Timeline de merge**: em qual sprint este v5.0 vai para `main`?
-   (Consolidação registrada em 2026-07-31.)
+1. **Numeração de segmento**: ratificar a Convenção A (mantida nesta
+   versão) e corrigir os 3 arquivos com Convenção B, ou inverter a
+   decisão e renumerar os agentes operacionais? Reverter os 5 agentes
+   operacionais tem custo maior (frontmatters + RAG + SP já publicados
+   sob S6-S10).
+2. **S11 (Mineração)**: aprovar formalização (mesmo checklist de
+   S12/S13 — agente `.md`, RAG, rota SP, routing keywords) e abrir o
+   gap G015 correspondente, ou manter apenas como capacidade registrada
+   sem agente despachável?
+3. **S12 (Óleo & Gás) e S13 (Edificações)**: aprovar para operacional
+   (criar RAG + rota SP + routing keywords) ou manter como proposta sem
+   prazo?
+4. **Embedder**: antes de decidir bge-small vs. bge-m3, confirmar a
+   dimensão real da coluna de vetor em produção — a decisão atual
+   (`docs/EMBEDDER-DECISION.md`) parte de uma premissa não verificada
+   contra o achado da auditoria Supabase.
+5. **Projeto Supabase `xgluoaa...`**: autorizar confirmação manual via
+   dashboard (AI-1) antes de remover a referência do SKILL.md?
+6. **Timeline de merge**: em qual sprint este v5.0 vai para `main`?
 
 ---
 
 ## DEPLOY CHECKLIST v5.0
 
+Checklist completo e detalhado em `docs/DEPLOY-CHECKLIST-v5.0.md`
+(herda o checklist v4.2, ainda com 8/10 itens pendentes fora do git, e
+adiciona a sequência de consolidação/validação da v5.0). Resumo:
+
 - [x] Consolidar modelo de 4 eixos (S×A×F×D) no CLAUDE.md master
-- [x] Corrigir tabela de coleções RAG (9 confirmadas, não 5)
-- [x] Registrar S6 (Edificações) e S12/S13 (TBD) no Eixo S
-- [x] Mapear Eixo A (Atividades) aos agentes horizontais existentes
-- [x] Mapear Eixo F (Funcionais) às skills/sistemas existentes
-- [x] Documentar Eixo D (Disciplinas) D01-D20
-- [ ] Sincronizar frontmatters dos 5 agentes v4.2 com numeração S7-S11
-- [ ] Criar `agente-edificacoes.md` (S6) — decisão de prioridade pendente MN
-- [ ] Resolver S12/S13 (questionário de decisão, item 2)
-- [ ] Auditar embedder real em produção (bge-small vs bge-m3)
-- [ ] Auditar contagem real de chunks RAG via Supabase MCP
-- [ ] Auditar acessibilidade do projeto Supabase referenciado como indisponível
-- [ ] Criar coleção RAG `edificacoes` (`edi:`) quando S6 for priorizado
+- [x] Reconciliar divergência de numeração de segmento (Convenção A)
+- [x] Corrigir tabela de coleções RAG com dados de auditoria real (9 confirmadas)
+- [x] Registrar S12 (Óleo & Gás) e S13 (Edificações) como propostos
+- [x] Identificar S11 (Mineração) a partir de `manta_agent_capabilities`
+- [x] Linkar Eixo A/F/D aos documentos dedicados já produzidos
+- [ ] Corrigir numeração de segmento em `docs/DISCIPLINAS-D01-D20.md`, `docs/ATIVIDADES-A1-A10.md` e `agente-aeroportos.md`
+- [ ] Abrir gap G015 e formalizar S11 (Mineração) — mesmo checklist de S12/S13
+- [ ] Reconciliar `docs/EMBEDDER-DECISION.md` com achado de
+      `docs/SUPABASE-PROJECT-AUDIT.md` antes de decidir embedder
+- [ ] Confirmar manualmente o destino do projeto `xgluoaa...` (AI-1)
+- [ ] Aplicar RLS nas 3 tabelas expostas (AI-6)
+- [ ] Criar RAG + rota SP + routing keywords para S12/S13 (se aprovado)
 - [ ] Rodar aluci-guard sobre este documento antes de merge
 - [ ] Rodar consist-guard sobre este documento antes de merge
 - [ ] Gate humano: aprovação MN antes de merge
@@ -488,44 +532,62 @@ Codex-exemplo/
 ├── README.md
 ├── .claude/
 │   └── agents/
-│       ├── agente-portos.md               # S7 (frontmatter ainda cita S6 — pendente)
-│       ├── agente-aeroportos.md           # S8 (frontmatter ainda cita S7 — pendente)
-│       ├── agente-saneamento.md           # S9 — prioridade AySA (frontmatter ainda cita S8)
-│       ├── agente-energia.md              # S10 — ANEEL/State Grid (frontmatter ainda cita S9)
-│       └── agente-barragens.md            # S11 (frontmatter ainda cita S10 — pendente)
+│       ├── agente-portos.md               # S6 (v1.1.0, revisado 2026-07-31)
+│       ├── agente-aeroportos.md           # S7
+│       ├── agente-saneamento.md           # S8 — prioridade AySA
+│       ├── agente-energia.md              # S9 — ANEEL/State Grid
+│       ├── agente-barragens.md            # S10
+│       ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
+│       └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
 ├── docs/
+│   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
+│   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
+│   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (⚠️ numeração de S divergente — ver Gaps)
+│   ├── EMBEDDER-DECISION.md               # G010 — recomendação, pendente aprovação MN (⚠️ contradiz achado do audit — ver Gaps)
+│   ├── SUPABASE-PROJECT-AUDIT.md          # G012 — auditoria real via MCP Supabase
+│   ├── SEGMENTOS-S12-S13-DECISION.md      # G014 — investigação real via MCP Supabase; confirma S11/S12/S13
+│   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
 │   └── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
 ├── sharepoint/
 │   ├── README.md
 │   └── 00-arquitetura/
-│       └── ARQUITETURA-AGENTES-IA.md      # v2.0.0 — pendente bump para v3.0.0 (4 eixos)
+│       └── ARQUITETURA-AGENTES-IA.md      # v3.0.0 — documento de arquitetura de referência (4 eixos)
 ├── supabase/
 │   └── migrations/
-│       └── 2026_07_05_v4_2_agents_s6_s10.sql  # migração candidata, não confirmada como aplicada
+│       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
+│       └── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
 └── tests/
     └── routing/
         └── prompts.md                     # smoke tests de routing por segmento
 ```
-
-Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, S1..S5) vivem no
-repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
-serve como referência canônica versionada dos agentes verticais novos
-(S7–S11) e do mapa de routing/eixos.
 
 ---
 
 ## Histórico de versões
 
 - **v5.0** (2026-07-31) — consolidação do modelo de 4 eixos (S×A×F×D)
-  do dossiê v3.x com o estado operacional v4.2. Adiciona Eixo A
-  (Atividades A1-A10), Eixo F (Funcionais F1-F8), Eixo D (Disciplinas
-  D01-D20). Renumera Eixo S para S1-S11 (Edificações inserido como S6,
-  Barragens torna-se S11) mantendo compatibilidade de routing por
-  slug de agente. Registra S12/S13 como TBD. Corrige tabela de
-  coleções RAG (9 confirmadas, não 5). Documenta gaps abertos e
-  questionário de decisão para MN em vez de resolvê-los
-  unilateralmente. Ticket `MNT-2026-CONSOLIDACAO-ARCH-V5`.
+  com o estado operacional v4.2 e com o trabalho paralelo produzido no
+  mesmo branch nesta data (auditoria real Supabase, decisão de
+  embedder, novos agentes S12/S13). Principais decisões desta
+  consolidação:
+  - Mantida a numeração legada de segmentos (S6=Portos…S10=Barragens),
+    reconciliando uma divergência encontrada com 3 documentos que
+    usavam uma renumeração diferente (sinalizados como pendentes de
+    correção, não corrigidos automaticamente aqui).
+  - Registrados S12 (Óleo & Gás) e S13 (Edificações) como **propostos**
+    (agentes criados, sem RAG/rota SP/routing — pendente gate MN).
+  - S11 documentado como não atribuído (gap a esclarecer com MN).
+  - Coleções RAG atualizadas com números de auditoria real (9
+    coleções, 204 chunks, 111 documentos, confirmados via `list_tables`
+    em produção) em vez de contagem estimada.
+  - Divergência entre `EMBEDDER-DECISION.md` e o achado da auditoria
+    Supabase sobre a dimensão real do embedder documentada como não
+    resolvida, em vez de escolhida unilateralmente.
+  - Eixos A, F e D linkados aos documentos dedicados já produzidos
+    (`docs/ATIVIDADES-A1-A10.md`, `docs/FUNCIONAIS-F1-F8.md`,
+    `docs/DISCIPLINAS-D01-D20.md`) em vez de duplicar o conteúdo aqui.
+  Ticket `MNT-2026-CONSOLIDACAO-ARCH-V5`.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
