@@ -526,7 +526,7 @@ export class CIOrchestratorService {
     }
 
     // Padrão alternativo: resultado JSON nos logs
-    const jsonMatch = logs.match(/"numPassedTests":\s*(\d+).*?"numFailedTests":\s*(\d+)/s);
+    const jsonMatch = logs.match(/"numPassedTests":\s*(\d+)[\s\S]*?"numFailedTests":\s*(\d+)/);
     if (jsonMatch) {
       return {
         name: "Jest/Test Suite",
@@ -546,8 +546,8 @@ export class CIOrchestratorService {
   private parseCoverage(logs: string): CoverageResult | null {
     // Padrões de cobertura
     const coveragePatterns = [
-      /Lines\s*:\s*([\d.]+)%.*?Statements\s*:\s*([\d.]+)%.*?Functions\s*:\s*([\d.]+)%.*?Branches\s*:\s*([\d.]+)%/is,
-      /coverage.*?lines:\s*([\d.]+)%.*?statements:\s*([\d.]+)%.*?functions:\s*([\d.]+)%.*?branches:\s*([\d.]+)%/is,
+      /Lines\s*:\s*([\d.]+)%[\s\S]*?Statements\s*:\s*([\d.]+)%[\s\S]*?Functions\s*:\s*([\d.]+)%[\s\S]*?Branches\s*:\s*([\d.]+)%/i,
+      /coverage[\s\S]*?lines:\s*([\d.]+)%[\s\S]*?statements:\s*([\d.]+)%[\s\S]*?functions:\s*([\d.]+)%[\s\S]*?branches:\s*([\d.]+)%/i,
     ];
 
     for (const pattern of coveragePatterns) {
