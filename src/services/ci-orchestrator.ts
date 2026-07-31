@@ -394,7 +394,7 @@ export class CIOrchestratorService {
       name: data.name,
       headBranch: data.head_branch,
       status: this.normalizeStatus(data.status),
-      conclusion: data.conclusion as WorkflowConclusion | null,
+      conclusion: (data.conclusion as WorkflowConclusion) || undefined,
       createdAt: new Date(data.created_at),
       updatedAt: new Date(data.updated_at),
     };
