@@ -327,12 +327,3 @@ export async function runAllPRAutomationExamples(): Promise<void> {
   }
 }
 
-// Exporta para uso
-export {
-  example1_BasicPRAnalysis,
-  example2_PRAnalysisWithCI,
-  example3_BatchPRAnalysis,
-  example4_ContinuousPRMonitoring,
-  example5_DetailedSuggestions,
-  example6_SupabaseIntegration,
-};
