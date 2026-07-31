@@ -13,6 +13,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "moduleResolution": "node",
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
