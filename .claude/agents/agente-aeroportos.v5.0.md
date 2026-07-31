@@ -91,7 +91,7 @@ descomissionamento.
 
 ## Composição S.A.D (Segmento × Agente horizontal × Disciplina)
 
-Notação Manta Maestro (A1–A10 horizontais + S1–S11 verticais): o
+Notação Manta Maestro (A1–A10 horizontais + S1–S10 operacionais): o
 segmento S7 (Aeroportos) compõe com os agentes horizontais de apoio
 para gerar entregáveis específicos do domínio aeroportuário. Exemplos:
 

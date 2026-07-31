@@ -10,7 +10,7 @@ Versão: **v1.0** (2026-07-31) · Status: rascunho para revisão MN —
 ## 0. Propósito e escopo
 
 As **10 atividades horizontais (A1–A10)** atravessam todos os
-segmentos verticais (S1–S11). Uma atividade horizontal é um **tipo de
+segmentos verticais (S1–S10). Uma atividade horizontal é um **tipo de
 entregável/processo**, não um segmento de engenharia — o mesmo A-code
 se aplica igualmente a uma proposta de rodovia ou de barragem. Cada
 atividade é operada por um agente Manta específico, mas o contrato de
@@ -30,7 +30,7 @@ invoca.
 | A7 | Claims | Manta 01 (claims) | ✅ Definida |
 | A8 | Advisory | Manta 15 (advisory) | ✅ Definida |
 | A9 | Regulatório | **sem agente dedicado no registry v4.2** | 🔴 **TODO — RUBRICA PENDENTE** |
-| A10 | Risco | Manta 15 (advisory) coordena; inputs de A1–A9 e S1–S11 | ⚠️ Sem Manta-code próprio |
+| A10 | Risco | Manta 15 (advisory) coordena; inputs de A1–A9 e S1–S10 | ⚠️ Sem Manta-code próprio |
 
 > **Gap conhecido (A9 e A10):** o `CLAUDE.md` v4.2 (Eixo 1) não lista
 > agente "regulatório" nem "risco" no mapa de 20 agentes. Ambas as
@@ -59,7 +59,7 @@ documento no padrão visual Manta. Suporte de Manta 15 (posicionamento)
 e do vertical do segmento (conteúdo técnico-normativo). Skills:
 `proposta-comercial`, `proposta-tecnica-rod`, `ler-edital`, `mk-manta`.
 
-**Entradas.** Edital/TDR ou briefing; segmento indicado (S1–S11);
+**Entradas.** Edital/TDR ou briefing; segmento indicado (S1–S10);
 restrições comerciais (teto de preço, prazo de resposta, habilitação);
 histórico de relacionamento.
 
@@ -398,7 +398,7 @@ executivo com opções, trade-offs, recomendação).
 - [ ] `aluci-guard` quando cita normas/leis/referências técnicas.
 - [ ] Gate humano MN antes de entrega a cliente ou uso em investimento.
 
-**Handoffs.** ← A1, A3, A4, A6, A7 e qualquer segmento S1–S11 · → A10
+**Handoffs.** ← A1, A3, A4, A6, A7 e qualquer segmento S1–S10 · → A10
 (recomendação deve vir com leitura de risco associada) · → decisão
 executiva (fora do escopo dos A-codes).
 
@@ -428,9 +428,9 @@ regulatório", "compliance setorial", "LP/LI/LO".
 
 **Quem produz (TODO — confirmar com MN).** Hoje, sem agente
 horizontal dedicado, o enquadramento regulatório é produzido **de
-forma distribuída** dentro de cada vertical (Manta 03-S8/saneamento
-cita Lei 14.026/ANA; S9/energia cita ANEEL/ONS/EPE; S6/portos cita
-ANTAQ; S7/aeroportos cita ANAC/ICAO; S10/barragens cita PNSB/ANM),
+forma distribuída** dentro de cada vertical (Manta 03-S7/saneamento
+cita Lei 14.026/ANA; S8/energia cita ANEEL/ONS/EPE; S13/portos cita
+ANTAQ; S6/aeroportos cita ANAC/ICAO; S9/barragens cita PNSB/ANM),
 com suporte pontual de Manta 02 (condição suspensiva contratual) e
 Manta 15 (quando vira decisão estratégica).
 
@@ -441,7 +441,7 @@ seção como guia de referência cruzada. Enquanto não decidido, tratar
 A9 como **gap conhecido do registry**, não como atividade descoberta —
 o conhecimento existe, só não está consolidado sob um A-code único.
 
-**Entradas (rascunho).** Segmento/vertical (S1–S11); localização
+**Entradas (rascunho).** Segmento/vertical (S1–S10); localização
 (jurisdição — especialmente relevante para operações fora do Brasil,
 ex. AySA/Argentina); fase do ciclo de vida (licenciamento concentra-se
 nas fases 1–4).
@@ -458,7 +458,7 @@ status; parecer de enquadramento; cronograma de obtenção de licenças
 - [ ] **[TODO]** Definir critério de completude mínima — depende de
   decisão MN sobre escopo da atividade.
 
-**Handoffs (rascunho).** ← todos os verticais S1–S11 · → A6 (licença
+**Handoffs (rascunho).** ← todos os verticais S1–S10 · → A6 (licença
 como condição suspensiva) · → A5 (prazo de licença no caminho
 crítico) · → A10 (risco regulatório como categoria própria).
 
@@ -469,7 +469,7 @@ crítico) · → A10 (risco regulatório como categoria própria).
 **Descrição.** Consolidação de riscos do projeto/contrato em matriz
 5×5 (probabilidade × impacto), com planos de mitigação/contingência.
 É atividade de **síntese transversal** — recebe insumos de todos os
-demais A-codes e verticais S1–S11, sem produzir conteúdo
+demais A-codes e verticais S1–S10, sem produzir conteúdo
 técnico-primário próprio.
 
 > Nota de gap: como A9, **A10 não tem Manta-code próprio** no
