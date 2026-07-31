@@ -303,7 +303,7 @@ ${claudeAnalysis.risks.map((r) => `- ${r}`).join("\n")}` : ""}
     const response = await create_task({
       title: taskTitle,
       description: taskDescription,
-      priority: routing.confidence === "high" ? "high" : "medium",
+      priority: (routing.confidence === "high" ? "high" : "medium") as "high" | "medium" | "low",
       agent_source: routing.agentName,
       segment: routing.segment,
       tags: [
@@ -419,7 +419,7 @@ Timestamp: ${new Date().toISOString()}
     `;
 
     await post_comment({
-      task_id: coworkTask.taskId,
+      taskId: coworkTask.taskId,
       content: feedbackComment,
     });
   }
