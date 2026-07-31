@@ -84,19 +84,76 @@ descomissionamento).
 - Consulta SharePoint em `03_Projetos/Portos/*` (planos, editais,
   memoriais, DWG de cais e retroárea).
 - Coleção RAG `portos` (prefixo storage `por:`) — ANTAQ, PIANC, editais
-  BNDES/ANTAQ.
+  BNDES/ANTAQ. Sub-prefixos confirmados (conforme
+  `sharepoint/01-agentes-fundamentais/agente-portos/SKILL.md` v1.0.0,
+  seção "Knowledge Engine"): `por:cases:CASE-POR-XXX` (casos
+  individuais), `por:cases:index` (índice de casos), `por:config:*`
+  (configuração), `por:active:*` (dados ativos em uso).
+  **Não confirmado**: sub-prefixos por país/geografia do tipo
+  `por:br:`, `por:ca:`, `por:sa:` não existem no schema documentado
+  hoje — não usar até serem definidos formalmente na criação da
+  coleção em Supabase (`CLAUDE.md` DEPLOY CHECKLIST v4.2, item em
+  aberto "Criar 5 coleções RAG em Supabase (`rag_chunks`)").
+
+## Composição S.A.D (Segmento + Agente Dedicado)
+
+O segmento vertical S6 (Portos) não opera isolado: para quantitativos,
+orçamento e cronograma ele se compõe com os agentes horizontais
+correspondentes, aplicados ao domínio portuário. Exemplos de uso:
+
+- **S6.A2 — Quantidades Porto** (composição S6 + levantamento de
+  quantidades, hoje coberto pelo Manta 05/orçamento): volume de
+  dragagem (m³, separado por aprofundamento × manutenção), área de
+  cais/píer (m²), extensão de estacas cravadas (m), pavimento de
+  retroárea (m²/m³), unidades de equipamento portuário (portêiner,
+  MHC, silo).
+- **S6.A3 — Orçamento Porto** (composição S6 + Manta 05/orçamento):
+  composições de custo específicas do setor — dragagem
+  mecânica/hidráulica (R$/m³ conforme unit rates PIANC), concreto
+  submerso, estacas metálicas cravadas em água, defensas de borracha,
+  sistema de amarração — sobre base SICRO adaptada.
+- **S6.A5 — Cronograma Terminal** (composição S6 + Manta 07/
+  cronograma): fases do terminal — mobilização marítima, dragagem
+  (janela de maré/estofo), fundações em água, superestrutura do cais,
+  montagem de equipamentos, comissionamento, início de operação
+  assistida.
+
+**Nota de validação**: a numeração "A1–A10" para agentes horizontais
+aparece referenciada na descrição da skill `manta-maestro` (v5.0.1),
+mas ainda não está tabulada em `CLAUDE.md` (v4.2, que usa a
+nomenclatura "Manta 0X"). Até a reconciliação formal entre as duas
+convenções, os códigos S6.A2/S6.A3/S6.A5 acima devem ser lidos como
+*aliases* de composição para `manta-05` (quantidades + orçamento) e
+`manta-07` (cronograma) — não como agentes novos, independentes ou
+já registrados no mapa de agentes do CLAUDE.md master.
 
 ## Handoff com outros agentes
 
 - **manta-05 (orcamento)** — quando o usuário pede quantitativos ou preço
-  para itens de dragagem, concreto submerso, estacas cravadas.
+  para itens de dragagem, concreto submerso, estacas cravadas (ver
+  S6.A2/S6.A3 acima).
 - **manta-07 (cronograma)** — cronograma físico-financeiro do
-  arrendamento.
+  arrendamento (ver S6.A5 acima).
+- **agente-infraestrutura S1 (rodovias)** — acessos rodoviários ao
+  terminal.
 - **agente-infraestrutura S2 (OAE)** — para pontes de acesso ao terminal.
 - **agente-saneamento (S8)** — quando o terminal exige ETE/coleta de
   óleos e graxas.
+- **agente-energia (S9)** — subestação e linha de transmissão de
+  alimentação do terminal.
+- **contratual (Manta 02)** — cláusulas de arrendamento ANTAQ, parecer
+  jurídico sobre TUP/concessão.
+- **bd (Manta 13)** — surgimento de edital de novo arrendamento
+  portuário.
 - **claims (Manta 01)** — pleitos por atraso de dragagem, mudança de
   cronograma.
+
+Validado por comparação com a tabela de handoff em
+`sharepoint/01-agentes-fundamentais/agente-portos/SKILL.md` §8 — as
+entradas de S1 (rodovias), S9 (energia), Manta 02 (contratual) e
+Manta 13 (bd) estavam presentes no SKILL.md mas ausentes deste
+arquivo; incluídas nesta revisão para manter os dois documentos
+consistentes.
 
 ## O que este agente NÃO faz
 
