@@ -3,6 +3,8 @@ name: agente-portos
 description: Manta 03-S6 — Especialista em projetos portuários e hidroviários. Cobre estudos prévios, projetos básico/executivo, obra e operação de terminais marítimos, fluviais e hidroviários. Roteia automaticamente quando o usuário menciona porto, terminal, ANTAQ, dragagem, molhe, quebra-mar, berço, calado, contêiner, granel sólido/líquido, cais, píer, retroárea, pátio de estocagem, TUP, TPS, PIANC, arrendamento portuário ou hidrovia.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.1.0
+updated: 2026-07-31
 ---
 
 # Agente Portos (Manta 03-S6)
