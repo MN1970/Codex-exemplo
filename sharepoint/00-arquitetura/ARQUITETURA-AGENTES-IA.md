@@ -2,12 +2,28 @@
 
 **Sistema Manta Maestro — Arquitetura de Agentes IA**
 
-- **Versão**: 3.0.0
+- **Versão**: 3.0.0 (trilha repo Codex-exemplo)
 - **Data**: 2026-07-19
 - **Autor**: Manta Associados
 - **Substitui**: v2.0.0 (2026-07-05 expansão S6–S10), v1.0.0 (2026-06-24)
 - **Ticket**: MNT-2026-UPGRADE-LEARNING-LOOP-v4.9
 - **Sprint aplicado**: v4.9 — Fechar loop de aprendizado (2026-07-19)
+
+> ⚠️ **Nota sobre trilhas paralelas de arquitetura (2026-07-29).** O
+> SharePoint operacional (`04_IA/Manta-Maestro/00-arquitetura/`) mantém
+> uma **trilha própria** com versões
+> `ARQUITETURA-AGENTES-IA-v5.0.0.md` (2026-07-22) e
+> `ARQUITETURA-AGENTES-IA-v5.1.0.md` (2026-07-28), focadas na
+> **KB dispositivos rodoviários** (12 módulos, 221 registros, 5 tabelas
+> em Supabase project `xgluoaaymbdzbbudnwrh`). Essa trilha NÃO passou
+> pelo repo `MN1970/Codex-exemplo`. A trilha do repo (este documento,
+> v3.0.0) foca em **Learning Loop Fechado + Agentic Intelligence Layer**
+> em Supabase project `ogxxgvgtulrbbppshjie`. As duas trilhas rodam
+> lado a lado em Supabase projects distintos e cobrem escopos
+> diferentes. **Reconciliação em curso**: v5.2.0 no SP consolida ambas
+> em uma tabela única de features + esclarecimento dos 2 projects
+> Supabase e sua propriedade. Ver `ARQUITETURA-AGENTES-IA-v5.2.0.md`
+> no SP quando publicada.
 
 ## Sumário
 
