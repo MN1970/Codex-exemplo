@@ -443,13 +443,15 @@ Retorne APENAS um JSON válido (sem markdown, sem explicações adicionais) com 
       }
 
       return parsed.suggestions
-        .map((s: any, idx: number) => ({
+        .map((s: Record<string, unknown>, idx: number) => ({
           errorType: errors[idx]?.type || ErrorType.BUILD_FAILURE,
           originalError: errors[idx],
-          suggestion: s.suggestion || "",
-          codeExample: this.config.includeCodeExamples ? s.codeExample : undefined,
+          suggestion: String(s.suggestion || ""),
+          codeExample: this.config.includeCodeExamples ? String(s.codeExample || "") : undefined,
           confidence: typeof s.confidence === "number" ? s.confidence : 0.5,
-          priority: ["low", "medium", "high"].includes(s.priority) ? s.priority : "medium",
+          priority: ["low", "medium", "high"].includes(String(s.priority))
+            ? (String(s.priority) as "low" | "medium" | "high")
+            : ("medium" as const),
         }))
         .filter((s) => s.suggestion && s.suggestion.length > 0);
     } catch (error) {

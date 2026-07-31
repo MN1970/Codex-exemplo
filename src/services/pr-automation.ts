@@ -342,7 +342,7 @@ export class PRAutomationEngine {
    * Gera sugestões de melhoria baseadas em padrões de código
    */
   async generateSuggestions(
-    files: Array<{ filename: string; patch?: string }>,
+    files: Array<{ filename: string; patch?: string; additions: number; deletions: number }>,
     patterns: DetectedPattern[]
   ): Promise<Suggestion[]> {
     const suggestions: Suggestion[] = [];

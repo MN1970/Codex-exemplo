@@ -139,36 +139,12 @@ describe("CIOrchestratorService", () => {
   describe("Monitor Workflow Run", () => {
     it("should complete successfully when workflow passes", async () => {
       const mockLogs = `
-        Tests: 42 passed, 0 failed, 2 skipped
-        Lines: 85.5% | Statements: 85.0% | Functions: 90.2% | Branches: 80.1%
+Tests: 42 passed, 0 failed, 2 skipped
+Lines: 85.5% | Statements: 85.0% | Functions: 90.2% | Branches: 80.1%
       `;
 
-      // Simula polling: queued → in_progress → completed
+      // Simula polling: completado imediatamente para testes
       (global.fetch as jest.Mock)
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({
-            id: 12345,
-            name: "CI",
-            head_branch: "main",
-            status: "queued",
-            conclusion: null,
-            created_at: "2025-07-31T10:00:00Z",
-            updated_at: "2025-07-31T10:00:00Z",
-          }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({
-            id: 12345,
-            name: "CI",
-            head_branch: "main",
-            status: "in_progress",
-            conclusion: null,
-            created_at: "2025-07-31T10:00:00Z",
-            updated_at: "2025-07-31T10:00:30Z",
-          }),
-        })
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({
@@ -311,17 +287,19 @@ describe("CIOrchestratorService", () => {
 
     it("should handle alternative test format", async () => {
       const logs = `
-        {
-          "numPassedTests": 38,
-          "numFailedTests": 2,
-          "numTotalTests": 40
-        }
+Test Results:
+{
+  "numPassedTests": 38,
+  "numFailedTests": 2,
+  "numTotalTests": 40
+}
       `;
 
       (global.fetch as jest.Mock)
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({
+            id: 54321,
             status: "completed",
             conclusion: "success",
             created_at: "2025-07-31T10:00:00Z",
@@ -341,7 +319,7 @@ describe("CIOrchestratorService", () => {
           text: async () => logs,
         });
 
-      const result = await orchestrator.monitorWorkflowRun(12345);
+      const result = await orchestrator.monitorWorkflowRun(54321);
 
       expect(result.buildOutput.testResults?.passed).toBe(38);
       expect(result.buildOutput.testResults?.failed).toBe(2);
