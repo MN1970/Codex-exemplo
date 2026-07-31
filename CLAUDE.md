@@ -4,18 +4,25 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.0** (2026-07-31) — consolidação v3.x (modelo conceitual de
-4 eixos S×A×F×D) + v4.2 (expansão operacional S6–S10) + trabalho
-paralelo desta mesma data (auditoria Supabase real, decisão de
-embedder, novos agentes S12/S13). Ticket `MNT-2026-CONSOLIDACAO-ARCH-V5`.
+Versão: **v5.0.1** (2026-07-31) — **unificação operacional**. Consolida:
+- **v5.0.0 operacional** (aprovado 2026-07-22): 20 agentes em produção,
+  infraestrutura Maestro-OS v6.0 completa (APScheduler, ML, observability)
+- **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
+  gaps G010/G012/G014 resolvidos, 15 Sonnets investigação paralela.
 
-> **Nota de proveniência**: esta consolidação foi produzida em paralelo
-> a outras sessões trabalhando no mesmo branch no mesmo dia. Este
-> arquivo **reconcilia** divergências reais encontradas entre os
-> documentos produzidos — a mais importante sendo uma numeração de
-> segmento conflitante (ver "Eixo S" abaixo). Onde uma decisão de
-> reconciliação foi necessária, ela está explicitada, com a divergência
-> original preservada em nota, em vez de silenciosamente escolhida.
+Ticket `MNT-2026-CONSOLIDACAO-ARCH-V5` + operacional 2026-07-22.
+
+> **Nota de proveniência**: este arquivo **reconcilia** dois work streams
+> paralelos na mesma data:
+> 1. **v5.0.0 (main, 22/07)** — implementação operacional aprovada com
+>    todos os agentes em produção
+> 2. **v5.0 (branch, 31/07)** — formalização de arquitetura com gaps
+>    investigados e decisões explicitadas
+> 
+> Diferenças encontradas durante merge (numeração segmentos, status de
+> produção) estão documentadas neste arquivo. Decisões divergentes foram
+> preservadas em notas explícitas (ver "Eixo S", "Gaps abertos") em vez
+> de silenciosamente alteradas.
 
 ---
 
@@ -566,6 +573,13 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.0.1** (2026-07-31) — **UNIFICADA**: merge de v5.0.0 operacional
+  (aprovado 2026-07-22, 20 agentes, Maestro-OS v6.0) + v5.0 consolidação
+  (2026-07-31, gaps formalizados, 4 eixos A/F/D, 15 Sonnets investigação).
+  Este documento reconcilia ambos os work streams: infraestrutura em
+  produção + documentação de decisões e gaps. Status: **Operacional com
+  transparência de decisões** — ready para produção com rastreabilidade
+  completa de divergências encontradas em paralelo no mesmo dia.
 - **v5.0** (2026-07-31) — consolidação do modelo de 4 eixos (S×A×F×D)
   com o estado operacional v4.2 e com o trabalho paralelo produzido no
   mesmo branch nesta data (auditoria real Supabase, decisão de
