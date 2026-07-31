@@ -201,22 +201,24 @@ export class FeedbackEngine {
       apiKey: config.anthropicApiKey || process.env.ANTHROPIC_API_KEY,
     });
 
+    const apiKey = config.anthropicApiKey || process.env.ANTHROPIC_API_KEY || "";
     this.config = {
-      anthropicApiKey: config.anthropicApiKey || process.env.ANTHROPIC_API_KEY || "",
+      anthropicApiKey: apiKey,
       githubToken: config.githubToken,
       owner: config.owner,
       repo: config.repo,
       model: config.model || "claude-3-5-haiku-20241022",
       maxTokens: config.maxTokens || 1000,
+      retryPolicy: {
+        ...DEFAULT_RETRY_POLICY,
+        ...(config.retryPolicy || {}),
+      },
       includeCodeExamples: config.includeCodeExamples ?? true,
       autoReplyEnabled: config.autoReplyEnabled ?? true,
       notifyOnNewIssues: config.notifyOnNewIssues ?? true,
     };
 
-    this.retryPolicy = {
-      ...DEFAULT_RETRY_POLICY,
-      ...(config.retryPolicy || {}),
-    };
+    this.retryPolicy = this.config.retryPolicy;
   }
 
   /**
