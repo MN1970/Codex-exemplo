@@ -81,11 +81,11 @@ webhookHandler.on(WebhookEventType.TASK_UPDATED, async payload => {
 });
 
 // Listen for webhook events
-webhookHandler.on('processed', payload => {
+(webhookHandler as any).on('processed', (payload: any) => {
   logger.debug({ deliveryId: payload.deliveryId }, 'Webhook processed successfully');
 });
 
-webhookHandler.on('failed', (payload, error) => {
+(webhookHandler as any).on('failed', (payload: any, error: any) => {
   logger.error(
     { deliveryId: payload.deliveryId, error },
     'Webhook processing failed after retries'

@@ -247,7 +247,7 @@ describe('CoworkWebhookHandler', () => {
         .digest('hex');
 
       const failedPromise = new Promise<void>(resolve => {
-        handler.on('failed', () => {
+        (handler as any).on('failed', () => {
           resolve();
         });
       });
