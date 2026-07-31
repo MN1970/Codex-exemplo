@@ -1,0 +1,352 @@
+name: Build & Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'README.md'
+      - 'ARCHITECTURE.md'
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'ARCHITECTURE.md'
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Create docs directory structure
+        run: |
+          mkdir -p docs_build/{assets/css,assets/js}
+          mkdir -p docs_build/pages
+
+      - name: Generate HTML from Markdown
+        run: |
+          # Convert README.md
+          pandoc README.md \
+            --from markdown \
+            --to html5 \
+            --standalone \
+            --css="assets/css/style.css" \
+            --metadata title="Codex Exemplo - Home" \
+            --output docs_build/index.html
+
+          # Convert ARCHITECTURE.md if exists
+          if [ -f "ARCHITECTURE.md" ]; then
+            pandoc ARCHITECTURE.md \
+              --from markdown \
+              --to html5 \
+              --standalone \
+              --css="../assets/css/style.css" \
+              --metadata title="Architecture Documentation" \
+              --output docs_build/pages/architecture.html
+          fi
+
+          # Convert all markdown files in docs/ folder if exists
+          if [ -d "docs" ]; then
+            find docs -name "*.md" -type f | while read file; do
+              output_file="docs_build/pages/$(basename "$file" .md).html"
+              pandoc "$file" \
+                --from markdown \
+                --to html5 \
+                --standalone \
+                --css="../assets/css/style.css" \
+                --output "$output_file"
+            done
+          fi
+
+      - name: Create default CSS stylesheet
+        run: |
+          cat > docs_build/assets/css/style.css << 'EOF'
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            body {
+              color: #e0e0e0;
+              background: #1a1a1a;
+            }
+          }
+
+          header, nav {
+            background: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+            border-bottom: 3px solid #3498db;
+          }
+
+          nav {
+            padding: 1rem;
+            font-size: 0.95rem;
+          }
+
+          nav a {
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 1.5rem;
+          }
+
+          nav a:hover {
+            text-decoration: underline;
+          }
+
+          main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 2rem;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            main {
+              background: #2a2a2a;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            }
+          }
+
+          h1, h2, h3, h4, h5, h6 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            h1, h2, h3, h4, h5, h6 {
+              color: #64b5f6;
+            }
+          }
+
+          h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+          }
+
+          code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            code {
+              background: #1e1e1e;
+              color: #89d185;
+            }
+          }
+
+          pre {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 4px solid #3498db;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            pre {
+              background: #1e1e1e;
+              color: #e0e0e0;
+            }
+          }
+
+          pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+          }
+
+          table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+          }
+
+          th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            th, td {
+              border-color: #444;
+            }
+          }
+
+          th {
+            background: #3498db;
+            color: white;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            th {
+              background: #1e90ff;
+            }
+          }
+
+          tr:nth-child(even) {
+            background: #f9f9f9;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            tr:nth-child(even) {
+              background: #333;
+            }
+          }
+
+          a {
+            color: #3498db;
+            text-decoration: none;
+          }
+
+          a:hover {
+            text-decoration: underline;
+          }
+
+          blockquote {
+            border-left: 4px solid #3498db;
+            margin: 1rem 0;
+            padding-left: 1rem;
+            color: #666;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            blockquote {
+              color: #aaa;
+            }
+          }
+
+          footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9rem;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            footer {
+              border-top-color: #444;
+              color: #aaa;
+            }
+          }
+          EOF
+
+      - name: Create navigation template
+        run: |
+          cat > docs_build/_nav.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="assets/css/style.css">
+          </head>
+          <body>
+            <header>
+              <h1>Codex Exemplo</h1>
+              <p>Manta Maestro - Agent Registry & Documentation</p>
+            </header>
+            <nav>
+              <a href="index.html">Home</a>
+              <a href="pages/architecture.html">Architecture</a>
+              <a href="https://github.com/mantaassociados/Codex-exemplo">GitHub</a>
+            </nav>
+          </body>
+          </html>
+          EOF
+
+      - name: Inject navigation into HTML files
+        run: |
+          for html_file in docs_build/*.html docs_build/pages/*.html 2>/dev/null; do
+            if [ -f "$html_file" ]; then
+              # Insert nav after opening body tag
+              sed -i '/<body>/a \    <header><h1>Codex Exemplo</h1><p>Manta Maestro - Agent Registry</p></header>\n    <nav><a href="index.html">Home</a> <a href="pages/architecture.html">Architecture</a> <a href="https://github.com">GitHub</a></nav>' "$html_file"
+            fi
+          done
+
+      - name: Create sitemap
+        run: |
+          cat > docs_build/sitemap.txt << 'EOF'
+          https://mantaassociados.github.io/Codex-exemplo/
+          https://mantaassociados.github.io/Codex-exemplo/pages/architecture.html
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: 'docs_build'
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+  notify:
+    name: Notification
+    needs: [ build, deploy ]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deployment status
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            echo "✅ Docs deployed successfully!"
+          else
+            echo "⚠️ Docs build completed (deploy skipped on PR or non-main branch)"
+          fi
