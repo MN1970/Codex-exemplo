@@ -176,6 +176,13 @@ export interface FeedbackEngineConfig {
 }
 
 /**
+ * Interface interna para armazenar config resolvida
+ */
+interface ResolvedFeedbackEngineConfig extends Omit<FeedbackEngineConfig, "retryPolicy"> {
+  retryPolicy: RetryPolicy;
+}
+
+/**
  * Default retry policy
  */
 const DEFAULT_RETRY_POLICY: RetryPolicy = {
@@ -191,7 +198,7 @@ const DEFAULT_RETRY_POLICY: RetryPolicy = {
  */
 export class FeedbackEngine {
   private client: Anthropic;
-  private config: Required<FeedbackEngineConfig>;
+  private config: ResolvedFeedbackEngineConfig;
   private retryPolicy: RetryPolicy;
   private apiBaseUrl = "https://api.github.com";
   private feedbackHistory: Map<string, FeedbackTracking> = new Map();
