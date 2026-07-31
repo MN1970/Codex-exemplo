@@ -1,6 +1,7 @@
 # Deploy artifacts (auto-generated)
 deploy_log.json
 deploy_report.json
+go-live_*.log
 
 # Python cache
 __pycache__/
