@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KB Orchestration System — Manta Maestro</title>
+<style>
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-weight: 400;
+  font-style: normal;
+  src: url('data:font/woff2;base64,d09GMgABAAAAARaYAA0AAAAA8AAAAN2KAAEAAAAAAAA') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-weight: 400;
+  font-style: normal;
+  src: url('data:font/woff2;base64,d09GMgABAAAAARaYAA0AAAAA8AAAAN2KAAEAAAAAAAA') format('woff2');
+  font-display: swap;
+}
+
+:root {
+  --bg-0: #0F172A;
+  --bg-1: #1E293B;
+  --bg-2: #334155;
+  --text-primary: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --accent: #0EA5E9;
+  --accent-dark: #0284C7;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --critical: #EF4444;
+  --border: #475569;
+
+  --font-body: -apple-system, 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+
+  --size-16: 1rem;
+  --size-18: 1.125rem;
+  --size-20: 1.25rem;
+  --size-28: 1.75rem;
+  --size-36: 2.25rem;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-0: #FFFFFF;
+    --bg-1: #F8FAFC;
+    --bg-2: #F1F5F9;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --accent: #0284C7;
+    --accent-dark: #0C63E4;
+    --border: #E2E8F0;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg-0: #0F172A;
+  --bg-1: #1E293B;
+  --bg-2: #334155;
+  --text-primary: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --accent: #0EA5E9;
+}
+
+:root[data-theme="light"] {
+  --bg-0: #FFFFFF;
+  --bg-1: #F8FAFC;
+  --bg-2: #F1F5F9;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --accent: #0284C7;
+  --border: #E2E8F0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-0);
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: var(--size-16);
+}
+
+.container {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+h1 {
+  font-size: var(--size-36);
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: var(--size-28);
+  font-weight: 600;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+  color: var(--accent);
+  text-wrap: balance;
+}
+
+h3 {
+  font-size: var(--size-20);
+  font-weight: 600;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+
+p {
+  margin-bottom: var(--space-md);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 70ch;
+}
+
+.intro {
+  border-left: 3px solid var(--accent);
+  padding-left: var(--space-md);
+  margin: var(--space-xl) 0;
+  font-size: var(--size-18);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-lg) 0;
+  background-color: var(--bg-1);
+  border: 1px solid var(--border);
+}
+
+thead {
+  background-color: var(--bg-2);
+}
+
+th, td {
+  padding: var(--space-sm);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+
+th {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+tr:hover {
+  background-color: rgba(14, 165, 233, 0.05);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.card {
+  background-color: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: var(--space-md);
+}
+
+.card-title {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: var(--space-sm);
+}
+
+code {
+  font-family: var(--font-mono);
+  background-color: var(--bg-1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  color: var(--accent);
+}
+
+pre {
+  background-color: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: var(--space-md);
+  overflow-x: auto;
+  margin: var(--space-lg) 0;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+  color: var(--text-primary);
+}
+
+.keyword { color: #EC4899; }
+.string { color: #10B981; }
+.comment { color: #64748B; }
+.function { color: #0EA5E9; }
+.class { color: #F59E0B; }
+
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-xl) 0;
+  background-color: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: var(--space-lg);
+  overflow-x: auto;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 600;
+  margin-right: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.badge-success {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+.badge-warning {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+}
+
+.badge-critical {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--critical);
+}
+
+.flow-item {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background-color: var(--bg-1);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+
+.flow-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent);
+  color: var(--bg-0);
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+.flow-content h3 {
+  margin-top: 0;
+}
+
+.api-endpoint {
+  background-color: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: var(--space-md);
+  margin: var(--space-lg) 0;
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+.method {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+  margin-right: var(--space-xs);
+  font-size: 0.85em;
+}
+
+.method-post {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+.method-get {
+  background-color: rgba(14, 165, 233, 0.15);
+  color: var(--accent);
+}
+
+.comparison-tool {
+  display: grid;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.tool-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.tool-name {
+  font-size: var(--size-20);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.pros, .cons {
+  padding-left: var(--space-md);
+}
+
+.pros li {
+  color: var(--success);
+}
+
+.cons li {
+  color: var(--warning);
+}
+
+li {
+  margin-bottom: var(--space-xs);
+  margin-left: var(--space-lg);
+}
+
+.section-nav {
+  position: sticky;
+  top: 0;
+  background-color: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(4px);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-xl);
+  z-index: 100;
+}
+
+.section-nav a {
+  display: inline-block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-right: var(--space-lg);
+  padding: var(--space-xs) 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.section-nav a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--space-md);
+  }
+
+  h1 {
+    font-size: var(--size-28);
+  }
+
+  h2 {
+    font-size: var(--size-20);
+  }
+
+  .section-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+  }
+
+  .section-nav a {
+    margin-right: 0;
+    white-space: nowrap;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  transition: opacity 0.2s;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+.highlight {
+  background-color: rgba(245, 158, 11, 0.1);
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+</style>
+</head>
+<body>
+
+<div class="section-nav">
+  <a href="#visao">Visão</a>
+  <a href="#ferramentas">Ferramentas</a>
+  <a href="#dag">DAG</a>
+  <a href="#workflow">Workflow</a>
+  <a href="#erro">Erros</a>
+  <a href="#api">API</a>
+  <a href="#logging">Logging</a>
+  <a href="#security">Security</a>
+  <a href="#exemplo">Exemplo</a>
+</div>
+
+<div class="container">
+
+<h1>Sistema de Orchestração — KB Evolution</h1>
+
+<div class="intro">
+Automação de evolução contínua da Knowledge Base (RAG) de Manta Maestro. O sistema ingere projetos finalizados, extrai insights via agentes especializados, valida por consenso, atualiza o KB e oferece controle humano em pontos críticos.
+</div>
+
+<section id="visao">
+<h2>Visão Geral</h2>
+
+<p>A Knowledge Base que alimenta os agentes verticais (Manta 03-S1..S10) precisa evoluir com novos projetos concluídos. O desafio:</p>
+
+<ul>
+<li>Coletar dados de múltiplas fontes (SharePoint, Supabase, sistemas legados)</li>
+<li>Extrair features/insights em paralelo (one worker per segment)</li>
+<li>Validar com consenso de 2-de-3 agentes especializados</li>
+<li>Atualizar RAG sem quebrar modelos em produção</li>
+<li>Rollback automático se contradição detectada</li>
+<li>Audit trail completo (timestamp + confiança + decisão)</li>
+</ul>
+
+<p>Este orquestrador roda em cadência (diária/semanal) ou manual, com aprovação humana para mudanças normativas críticas.</p>
+</section>
+
+<section id="ferramentas">
+<h2>Análise: Airflow vs n8n vs Temporal</h2>
+
+<div class="comparison-tool">
+  <div class="tool-header">
+    <span class="tool-name">Apache Airflow</span>
+    <span class="badge badge-success">Recomendado</span>
+  </div>
+  <ul class="pros">
+    <li><strong>Infraestrutura:</strong> Rodá em Kubernetes (já em uso em Manta)</li>
+    <li><strong>DAG-as-Code:</strong> Python puro, versionável no Git</li>
+    <li><strong>Logging:</strong> Built-in para cada task, com Web UI</li>
+    <li><strong>Escalabilidade:</strong> Workers paralelos, suporta 1000s de tasks</li>
+    <li><strong>Segurança:</strong> RBAC, secrets em vault, audit log nativo</li>
+    <li><strong>Integrações:</strong> Operadores para Lambda, Spark, K8s, SQL</li>
+  </ul>
+  <ul class="cons">
+    <li>Curva de aprendizado em DAGs complexos</li>
+    <li>Overhead de recursos (memory para scheduler)</li>
+  </ul>
+</div>
+
+<div class="comparison-tool">
+  <div class="tool-header">
+    <span class="tool-name">n8n</span>
+    <span class="badge badge-warning">Visual, não-código</span>
+  </div>
+  <ul class="pros">
+    <li><strong>UI visual:</strong> Drag-and-drop, sem código Python</li>
+    <li><strong>Rápido prototipagem:</strong> Deploy em minutos</li>
+    <li><strong>200+ integrações:</strong> Salesforce, Slack, etc.</li>
+  </ul>
+  <ul class="cons">
+    <li>Menos controle sobre lógica complexa</li>
+    <li>Dependência de UI para manutenção (não versionável como code)</li>
+    <li>Escalabilidade limitada em paralelismo pesado</li>
+    <li>Audit trail não é tão granular quanto Airflow</li>
+  </ul>
+</div>
+
+<div class="comparison-tool">
+  <div class="tool-header">
+    <span class="tool-name">Temporal</span>
+    <span class="badge badge-warning">Durable execution</span>
+  </div>
+  <ul class="pros">
+    <li><strong>Durable execution:</strong> Retry/timeout automático com estado persistido</li>
+    <li><strong>Workflow-as-code:</strong> TypeScript/Go, altamente flexível</li>
+    <li><strong>Escalabilidade:</strong> Suporta workflows de meses</li>
+  </ul>
+  <ul class="cons">
+    <li>Curva de aprendizado: modelo mental diferente (activity/workflow)</li>
+    <li>Menos adotado em Brasil; comunidade menor</li>
+    <li>Melhor para workflows de longa duração, não tanto para jobs diários</li>
+  </ul>
+</div>
+
+<h3>Recomendação para Manta Maestro</h3>
+<p><strong>Apache Airflow.</strong> Razões:</p>
+<ul>
+<li>DAG-as-Code (Python) alinha com prática de agentes em Python</li>
+<li>Web UI robusta para observabilidade (logs, SLA, retries)</li>
+<li>RBAC + secrets vault = segurança para gate humano de aprovações</li>
+<li>Já em infra K8s de Manta; reutiliza secrets/monitoring existente</li>
+<li>Task logging granular permite audit trail para compliance</li>
+</ul>
+</section>
+
+<section id="dag">
+<h2>Arquitetura: DAG do Orquestrador</h2>
+
+<div class="mermaid">
+graph TD
+    A[Daily Trigger<br/>09:00 UTC] --> B[1. Ingest<br/>Projetos finalizados]
+    B --> C{Há novos<br/>projetos?}
+    C -->|Não| D[✓ No-op]
+    C -->|Sim| E[2. Extract Features<br/>Paralelo por segmento]
+
+    E --> E1[S1: Rodovias]
+    E --> E2[S2: OAE]
+    E --> E3[S4: Metrô]
+    E --> E4[S8: Saneamento]
+    E --> E5[S9: Energia]
+
+    E1 --> F[3. Validate<br/>Consensus 2/3]
+    E2 --> F
+    E3 --> F
+    E4 --> F
+    E5 --> F
+
+    F --> G{Contradicção<br/>detectada?}
+    G -->|Sim| H[Escalar para MN<br/>Slack alert]
+    G -->|Não| I{Gate crítico<br/>lei/norma?}
+
+    I -->|Sim| J[Pausar.<br/>Aguardar aprovação MN]
+    I -->|Não| K[4. Update KB<br/>Supabase + versionamento]
+    J --> K
+
+    K --> L[5. Test Models<br/>Regression test]
+    L --> M{Modelos OK?}
+    M -->|Não| N[Rollback automático<br/>Versão anterior]
+    M -->|Sim| O[6. Publish KB]
+
+    N --> P[Slack alert<br/>modelo drift]
+    O --> Q[7. Log Audit<br/>timestamp+confiança]
+    Q --> R[✓ Fim]
+    P --> R
+    H --> R
+</div>
+
+<h3>Fases da DAG</h3>
+
+<div class="flow-item">
+  <div class="flow-number">1</div>
+  <div class="flow-content">
+    <h3>Ingest</h3>
+    <p>Coleta projetos com status "Finalizado" de SharePoint + Supabase. Filtra por data (últimas 7 dias) e segmento. Detecta duplicatas (por projeto_id).</p>
+  </div>
+</div>
+
+<div class="flow-item">
+  <div class="flow-number">2</div>
+  <div class="flow-content">
+    <h3>Extract (Paralelo)</h3>
+    <p>Para cada projeto, dispara worker por segmento. Cada worker invoca agente especializado (ex: agente-saneamento para S8) com prompt de extração de features normativas, riscos, benchmarks. Output: structured JSON com confiança.</p>
+  </div>
+</div>
+
+<div class="flow-item">
+  <div class="flow-number">3</div>
+  <div class="flow-content">
+    <h3>Validate (Consensus)</h3>
+    <p>Coleta respostas dos 3 agentes para o mesmo projeto. Se 2+ concordam (confiança >= 0.75), passa. Se contraditório, escala. Output: validated_insights + confidence_score.</p>
+  </div>
+</div>
+
+<div class="flow-item">
+  <div class="flow-number">4</div>
+  <div class="flow-content">
+    <h3>Gate Humano (Crítico)</h3>
+    <p>Se mudança toca em lei, norma ABNT, ou ANEEL/ANTAQ → pausa. MN recebe Slack com diff. Aprova via <code>/kb-approve &lt;change_id&gt;</code> ou rejeita. Timeout: 24h (escala)</p>
+  </div>
+</div>
+
+<div class="flow-item">
+  <div class="flow-number">5</div>
+  <div class="flow-content">
+    <h3>Update KB</h3>
+    <p>Insere insights validados em <code>rag_chunks</code> (Supabase). Versionamento automático: nova coluna <code>kb_version</code> incrementada. Rollback point criado.</p>
+  </div>
+</div>
+
+<div class="flow-item">
+  <div class="flow-number">6</div>
+  <div class="flow-content">
+    <h3>Test Models</h3>
+    <p>Roda 10 prompts de regressão (ex: "Como estruturar uma ETA em saneamento?" vs benchmark respostas). Se divergência > 5%, rollback automático.</p>
+  </div>
+</div>
+
+<div class="flow-item">
+  <div class="flow-number">7</div>
+  <div class="flow-content">
+    <h3>Audit Log</h3>
+    <p>Registra: projeto_id, mudanças, confiança, agentes que validaram, timestamp, autor (system vs MN), status. Imutável para compliance.</p>
+  </div>
+</div>
+
+</section>
+
+<section id="workflow">
+<h2>Workflow Detalhado (Pseudo-Python Airflow)</h2>
+
+<pre><code><span class="comment"># dags/kb_evolution_dag.py</span>
+
+<span class="keyword">from</span> airflow <span class="keyword">import</span> DAG
+<span class="keyword">from</span> airflow.operators.python <span class="keyword">import</span> PythonOperator
+<span class="keyword">from</span> airflow.operators.bash <span class="keyword">import</span> BashOperator
+<span class="keyword">from</span> airflow.utils.task_group <span class="keyword">import</span> TaskGroup
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta
+<span class="keyword">import</span> json
+
+default_args = {
+    <span class="string">'owner'</span>: <span class="string">'manta-maestro'</span>,
+    <span class="string">'retries'</span>: 2,
+    <span class="string">'retry_delay'</span>: timedelta(minutes=5),
+}
+
+<span class="keyword">with</span> DAG(
+    <span class="string">'kb_evolution'</span>,
+    default_args=default_args,
+    schedule_interval=<span class="string">'0 9 * * *'</span>,  <span class="comment"># 09:00 UTC</span>
+    catchup=False,
+) <span class="keyword">as</span> dag:
+
+    <span class="comment"># Task 1: Ingest</span>
+    <span class="keyword">def</span> <span class="function">ingest_projects</span>(**context):
+        <span class="comment">"""Coleta projetos finalizados das últimas 7 dias."""</span>
+        <span class="keyword">import</span> supabase
+
+        client = supabase.Client(SUPABASE_URL, SUPABASE_KEY)
+        projects = client.table(<span class="string">'projects'</span>).select(
+            <span class="string">'*'</span>
+        ).eq(
+            <span class="string">'status'</span>, <span class="string">'Finalizado'</span>
+        ).gte(
+            <span class="string">'completed_at'</span>,
+            (datetime.now() - timedelta(days=7)).isoformat()
+        ).execute()
+
+        <span class="comment"># Filtra duplicatas</span>
+        new_projects = [p <span class="keyword">for</span> p <span class="keyword">in</span> projects.data
+                        <span class="keyword">if</span> <span class="keyword">not</span> p.get(<span class="string">'kb_ingested'</span>)]
+
+        context[<span class="string">'task_instance'</span>].xcom_push(
+            key=<span class="string">'projects'</span>,
+            value=new_projects
+        )
+
+        <span class="keyword">return</span> len(new_projects)
+
+    t_ingest = PythonOperator(
+        task_id=<span class="string">'ingest_projects'</span>,
+        python_callable=ingest_projects,
+    )
+
+    <span class="comment"># Task 2: Extract (Paralelo)</span>
+    <span class="keyword">with</span> TaskGroup(<span class="string">'extract_features'</span>) <span class="keyword">as</span> extract_tg:
+
+        <span class="keyword">def</span> <span class="function">extract_segment</span>(segment_code: str, **context):
+            <span class="comment">"""Invoca agente especializado para segmento."""</span>
+            projects = context[<span class="string">'task_instance'</span>].xcom_pull(
+                task_ids=<span class="string">'ingest_projects'</span>,
+                key=<span class="string">'projects'</span>
+            )
+
+            results = []
+            <span class="keyword">for</span> proj <span class="keyword">in</span> projects:
+                <span class="keyword">if</span> proj[<span class="string">'segment'</span>] != segment_code:
+                    <span class="keyword">continue</span>
+
+                <span class="comment"># Invoca agent (ex: agente-saneamento)</span>
+                agent = load_agent(f<span class="string">'agente-{segment_code}'</span>)
+                insights = agent.extract_features(proj)
+
+                results.append({
+                    <span class="string">'project_id'</span>: proj[<span class="string">'id'</span>],
+                    <span class="string">'segment'</span>: segment_code,
+                    <span class="string">'insights'</span>: insights,
+                    <span class="string">'confidence'</span>: insights.get(<span class="string">'confidence'</span>, 0.5),
+                    <span class="string">'timestamp'</span>: datetime.now().isoformat(),
+                })
+
+            <span class="keyword">return</span> results
+
+        <span class="comment"># Cria worker por segmento</span>
+        segments = [<span class="string">'S1'</span>, <span class="string">'S2'</span>, <span class="string">'S4'</span>, <span class="string">'S8'</span>, <span class="string">'S9'</span>]
+        <span class="keyword">for</span> seg <span class="keyword">in</span> segments:
+            PythonOperator(
+                task_id=f<span class="string">'extract_{seg}'</span>,
+                python_callable=extract_segment,
+                op_kwargs={<span class="string">'segment_code'</span>: seg},
+            )
+
+    <span class="comment"># Task 3: Validate (Consensus)</span>
+    <span class="keyword">def</span> <span class="function">validate_consensus</span>(**context):
+        <span class="comment">"""Verifica se 2/3 agentes concordam."""</span>
+        <span class="comment"># Busca resultados de extract_*</span>
+        task_ids = [f<span class="string">'extract_features.extract_{seg}'</span>
+                    <span class="keyword">for</span> seg <span class="keyword">in</span> [<span class="string">'S1'</span>, <span class="string">'S2'</span>, <span class="string">'S4'</span>, <span class="string">'S8'</span>, <span class="string">'S9'</span>]]
+
+        all_results = []
+        <span class="keyword">for</span> tid <span class="keyword">in</span> task_ids:
+            res = context[<span class="string">'task_instance'</span>].xcom_pull(task_ids=tid)
+            all_results.extend(res)
+
+        <span class="keyword">import</span> difflib
+        validated = []
+        contradictions = []
+
+        <span class="keyword">for</span> project_id, group <span class="keyword">in</span> group_by(all_results, <span class="string">'project_id'</span>):
+            insights_list = [r[<span class="string">'insights'</span>] <span class="keyword">for</span> r <span class="keyword">in</span> group]
+
+            <span class="comment"># Consenso: 2+ iguais (ou 75%+ similar)</span>
+            match_count = sum(1 <span class="keyword">for</span> i <span class="keyword">in</span> range(len(insights_list)-1)
+                            <span class="keyword">if</span> similarity(insights_list[i],
+                                          insights_list[i+1]) > 0.75)
+
+            <span class="keyword">if</span> match_count >= 1:  <span class="comment"># 2+ agentes concordam</span>
+                validated.append({
+                    <span class="string">'project_id'</span>: project_id,
+                    <span class="string">'insights'</span>: insights_list[0],
+                    <span class="string">'confidence'</span>: avg([r[<span class="string">'confidence'</span>] <span class="keyword">for</span> r <span class="keyword">in</span> group]),
+                    <span class="string">'validators'</span>: [r[<span class="string">'segment'</span>] <span class="keyword">for</span> r <span class="keyword">in</span> group],
+                })
+            <span class="keyword">else</span>:
+                contradictions.append({
+                    <span class="string">'project_id'</span>: project_id,
+                    <span class="string">'insights'</span>: insights_list,
+                    <span class="string">'reason'</span>: <span class="string">'No consensus'</span>,
+                })
+
+        <span class="keyword">if</span> contradictions:
+            notify_slack(f<span class="string">'Contradictions detected: {contradictions}'</span>,
+                        channel=<span class="string">'#manta-alerts'</span>,
+                        escalate_to=<span class="string">'mneves'</span>)
+            <span class="keyword">raise</span> Exception(<span class="string">'Consensus failed'</span>)
+
+        context[<span class="string">'task_instance'</span>].xcom_push(
+            key=<span class="string">'validated'</span>,
+            value=validated
+        )
+
+        <span class="keyword">return</span> len(validated)
+
+    t_validate = PythonOperator(
+        task_id=<span class="string">'validate_consensus'</span>,
+        python_callable=validate_consensus,
+    )
+
+    <span class="comment"># Task 4: Gate crítico (pausa se lei/norma)</span>
+    <span class="keyword">def</span> <span class="function">check_critical_gate</span>(**context):
+        validated = context[<span class="string">'task_instance'</span>].xcom_pull(
+            task_ids=<span class="string">'validate_consensus'</span>,
+            key=<span class="string">'validated'</span>
+        )
+
+        critical_keywords = [
+            <span class="string">'lei'</span>, <span class="string">'norma'</span>, <span class="string">'aneel'</span>, <span class="string">'antaq'</span>,
+            <span class="string">'licitação'</span>, <span class="string">'regulamento'</span>
+        ]
+
+        critical_changes = []
+        <span class="keyword">for</span> item <span class="keyword">in</span> validated:
+            text = json.dumps(item[<span class="string">'insights'</span>]).lower()
+            <span class="keyword">if</span> any(kw <span class="keyword">in</span> text <span class="keyword">for</span> kw <span class="keyword">in</span> critical_keywords):
+                critical_changes.append(item)
+
+        <span class="keyword">if</span> critical_changes:
+            <span class="comment"># Pausa via Airflow sensor</span>
+            change_id = hash_dict(critical_changes)
+            notify_slack(
+                f<span class="string">'Gate crítico: aprovar via /kb-approve {change_id}'</span>,
+                channel=<span class="string">'#manta-ops'</span>,
+                escalate_to=<span class="string">'mneves'</span>
+            )
+            <span class="comment"># Aguarda sensor...</span>
+
+        <span class="keyword">return</span> critical_changes
+
+    t_gate = PythonOperator(
+        task_id=<span class="string">'check_critical_gate'</span>,
+        python_callable=check_critical_gate,
+    )
+
+    <span class="comment"># Task 5: Update KB</span>
+    <span class="keyword">def</span> <span class="function">update_kb</span>(**context):
+        validated = context[<span class="string">'task_instance'</span>].xcom_pull(
+            task_ids=<span class="string">'validate_consensus'</span>,
+            key=<span class="string">'validated'</span>
+        )
+
+        <span class="keyword">import</span> supabase
+        client = supabase.Client(SUPABASE_URL, SUPABASE_KEY)
+
+        <span class="comment"># Incrementa versão KB</span>
+        current_version = client.table(<span class="string">'kb_meta'</span>).select(
+            <span class="string">'version'</span>
+        ).order(<span class="string">'created_at'</span>, desc=True).limit(1).execute().data[0]
+
+        new_version = current_version[<span class="string">'version'</span>] + 1
+
+        <span class="comment"># Insere insights em rag_chunks</span>
+        <span class="keyword">for</span> item <span class="keyword">in</span> validated:
+            client.table(<span class="string">'rag_chunks'</span>).insert({
+                <span class="string">'project_id'</span>: item[<span class="string">'project_id'</span>],
+                <span class="string">'content'</span>: json.dumps(item[<span class="string">'insights'</span>]),
+                <span class="string">'confidence'</span>: item[<span class="string">'confidence'</span>],
+                <span class="string">'kb_version'</span>: new_version,
+                <span class="string">'validators'</span>: json.dumps(item[<span class="string">'validators'</span>]),
+                <span class="string">'created_at'</span>: datetime.now().isoformat(),
+            }).execute()
+
+        <span class="keyword">return</span> {<span class="string">'version'</span>: new_version, <span class="string">'count'</span>: len(validated)}
+
+    t_update = PythonOperator(
+        task_id=<span class="string">'update_kb'</span>,
+        python_callable=update_kb,
+    )
+
+    <span class="comment"># Task 6: Test Models (Regressão)</span>
+    t_test = BashOperator(
+        task_id=<span class="string">'test_models'</span>,
+        bash_command=<span class="string">'python /opt/manta/regression_tests.py --kb-version {{ ti.xcom_pull("update_kb")["version"] }}'</span>,
+    )
+
+    <span class="comment"># Task 7: Rollback se falha</span>
+    <span class="keyword">def</span> <span class="function">handle_test_failure</span>(context):
+        version = context[<span class="string">'task_instance'</span>].xcom_pull(
+            task_ids=<span class="string">'update_kb'</span>
+        )[<span class="string">'version'</span>]
+
+        <span class="keyword">import</span> supabase
+        client = supabase.Client(SUPABASE_URL, SUPABASE_KEY)
+
+        <span class="comment"># Reverte para versão anterior</span>
+        client.table(<span class="string">'rag_chunks'</span>).update({
+            <span class="string">'active'</span>: False
+        }).eq(<span class="string">'kb_version'</span>, version).execute()
+
+        notify_slack(
+            f<span class="string">'Rollback: KB v{version} falhou testes. Revertido.'</span>,
+            channel=<span class="string">'#manta-alerts'</span>,
+            severity=<span class="string">'critical'</span>
+        )
+
+    <span class="comment"># Task 8: Audit Log</span>
+    <span class="keyword">def</span> <span class="function">audit_log</span>(**context):
+        <span class="keyword">import</span> supabase
+        client = supabase.Client(SUPABASE_URL, SUPABASE_KEY)
+
+        validated = context[<span class="string">'task_instance'</span>].xcom_pull(
+            task_ids=<span class="string">'validate_consensus'</span>,
+            key=<span class="string">'validated'</span>
+        )
+
+        <span class="keyword">for</span> item <span class="keyword">in</span> validated:
+            client.table(<span class="string">'kb_audit'</span>).insert({
+                <span class="string">'project_id'</span>: item[<span class="string">'project_id'</span>],
+                <span class="string">'action'</span>: <span class="string">'INSERT'</span>,
+                <span class="string">'confidence'</span>: item[<span class="string">'confidence'</span>],
+                <span class="string">'validators'</span>: json.dumps(item[<span class="string">'validators'</span>]),
+                <span class="string">'author'</span>: <span class="string">'system'</span>,
+                <span class="string">'timestamp'</span>: datetime.now().isoformat(),
+                <span class="string">'status'</span>: <span class="string">'completed'</span>,
+            }).execute()
+
+    t_audit = PythonOperator(
+        task_id=<span class="string">'audit_log'</span>,
+        python_callable=audit_log,
+    )
+
+    <span class="comment"># DAG Topology</span>
+    t_ingest >> extract_tg >> t_validate >> t_gate >> t_update >> t_test >> t_audit</code></pre>
+
+</section>
+
+<section id="erro">
+<h2>Error Handling & Alerts</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Cenário</th>
+      <th>Ação</th>
+      <th>Alerta</th>
+      <th>Escalação</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Falha em ingestão (API down)</td>
+      <td>Retry 2x, depois fail</td>
+      <td>Slack: #manta-alerts</td>
+      <td>DevOps (30 min)</td>
+    </tr>
+    <tr>
+      <td>Contradição entre agentes</td>
+      <td>Pausa DAG</td>
+      <td>Slack: #manta-ops mencionando @mneves</td>
+      <td>MN (imediato)</td>
+    </tr>
+    <tr>
+      <td>Gate crítico (lei/norma)</td>
+      <td>Pausa. Aguarda `/kb-approve`</td>
+      <td>Slack com diff de mudanças</td>
+      <td>MN (até 24h timeout)</td>
+    </tr>
+    <tr>
+      <td>Falha em testes de modelo</td>
+      <td>Rollback automático para versão anterior</td>
+      <td>Slack: #manta-alerts, tag @mneves</td>
+      <td>Alertar que drift detectado</td>
+    </tr>
+    <tr>
+      <td>Timeout em validação (>30 min)</td>
+      <td>Kill task, rollback</td>
+      <td>Slack</td>
+      <td>DevOps + MN</td>
+    </tr>
+  </tbody>
+</table>
+
+</section>
+
+<section id="api">
+<h2>API de Controle</h2>
+
+<p>Endpoints REST (rodam como Airflow Variables + HTTP listener):</p>
+
+<div class="api-endpoint">
+  <span class="method method-post">POST</span> <code>/kb-evolve</code>
+  <p>Força execução imediata da DAG (sem aguardar horário).</p>
+  <p><strong>Body:</strong></p>
+  <pre><code>{
+  "source": "manual",
+  "triggered_by": "mneves@mantaassociados.com"
+}</code></pre>
+  <p><strong>Response:</strong></p>
+  <pre><code>{
+  "dag_run_id": "kb_evolution__2026-07-30T10:15:00",
+  "status": "queued",
+  "message": "DAG queued for immediate execution"
+}</code></pre>
+</div>
+
+<div class="api-endpoint">
+  <span class="method method-get">GET</span> <code>/kb-status</code>
+  <p>Mostra versão atual, próxima atualização, e task status.</p>
+  <p><strong>Response:</strong></p>
+  <pre><code>{
+  "current_version": 42,
+  "last_update": "2026-07-30T09:00:00Z",
+  "next_scheduled": "2026-07-31T09:00:00Z",
+  "task_status": {
+    "ingest_projects": "success",
+    "extract_features": "running",
+    "validate_consensus": "pending"
+  },
+  "confidence_avg": 0.82
+}</code></pre>
+</div>
+
+<div class="api-endpoint">
+  <span class="method method-post">POST</span> <code>/kb-approve</code>
+  <p>Aprova mudanças críticas após gate humano.</p>
+  <p><strong>Body:</strong></p>
+  <pre><code>{
+  "change_id": "abc123def456",
+  "approved_by": "mneves@mantaassociados.com",
+  "notes": "Validado contra lei 14.026"
+}</code></pre>
+  <p><strong>Response:</strong> <code>200 OK</code> — DAG resume</p>
+</div>
+
+<div class="api-endpoint">
+  <span class="method method-post">POST</span> <code>/kb-rollback</code>
+  <p>Reverte para versão anterior.</p>
+  <p><strong>Body:</strong></p>
+  <pre><code>{
+  "to_version": 41,
+  "reason": "Model drift detected in saneamento agent"
+}</code></pre>
+  <p><strong>Response:</strong></p>
+  <pre><code>{
+  "status": "rolled_back",
+  "from_version": 42,
+  "to_version": 41,
+  "audit_id": "rollback_2026_07_30"
+}</code></pre>
+</div>
+
+</section>
+
+<section id="logging">
+<h2>Logging & Observability</h2>
+
+<h3>Estrutura de Logs</h3>
+
+<p>Cada agente e task escreve em formato estruturado (JSON):</p>
+
+<pre><code>{
+  "timestamp": "2026-07-30T09:15:42.123Z",
+  "task_id": "extract_S8",
+  "project_id": "proj_saneamento_aysa_001",
+  "segment": "S8",
+  "event": "extraction_complete",
+  "insights": {
+    "normative_refs": ["NBR 12211", "Lei 14.026"],
+    "risks": ["ETA design", "backup power"],
+    "confidence": 0.88
+  },
+  "duration_ms": 8420,
+  "user": "system",
+  "audit_id": "audit_0842710"
+}
+</code></pre>
+
+<h3>Dashboard de Evolução</h3>
+
+<p>Supabase + Grafana mostra:</p>
+<ul>
+  <li><strong>KB Churn Rate:</strong> chunks novos/dia (target: 2-5)</li>
+  <li><strong>Confidence Trend:</strong> média de confiança de insights (target: >0.80)</li>
+  <li><strong>Consensus Rate:</strong> % de mudanças que passaram 2/3 (target: 95%+)</li>
+  <li><strong>Rollback Count:</strong> quantas reversões por semana (target: <1)</li>
+  <li><strong>Gate Approvals:</strong> tempo médio de aprovação crítica (SLA: 4h)</li>
+</ul>
+
+<h3>Trace Completo</h3>
+
+<p>Auditoria imutável em <code>kb_audit</code>:</p>
+
+<pre><code>project_id → insights → validation → gate_decision → kb_update → test_result → publish → audit_id
+</code></pre>
+
+<p>Cada etapa tem timestamp + responsável (system ou MN) + assinatura digital.</p>
+
+</section>
+
+<section id="security">
+<h2>Security & Approval Gates</h2>
+
+<h3>Threshold para Auto-Update</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tipo de Mudança</th>
+      <th>Confiança Mínima</th>
+      <th>Gate Humano?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Feature normativa (ex: "nova norma ANEEL")</td>
+      <td>0.90+</td>
+      <td><span class="badge badge-critical">Sim, sempre</span></td>
+    </tr>
+    <tr>
+      <td>Risk/benchmark atualizado</td>
+      <td>0.85+</td>
+      <td>Não (auto)</td>
+    </tr>
+    <tr>
+      <td>Typo/correção menor</td>
+      <td>0.75+</td>
+      <td>Não (auto)</td>
+    </tr>
+    <tr>
+      <td>Contradição detectada</td>
+      <td>N/A</td>
+      <td><span class="badge badge-critical">Sim, escalação</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Assinatura Digital</h3>
+
+<p>Toda mudança crítica é assinada com chave privada (armazenada em AWS Secrets Manager):</p>
+
+<pre><code><span class="keyword">def</span> <span class="function">sign_change</span>(change_dict, secret_key):
+    <span class="keyword">import</span> hmac, hashlib
+    payload = json.dumps(change_dict, sort_keys=True)
+    signature = hmac.new(
+        secret_key.encode(),
+        payload.encode(),
+        hashlib.sha256
+    ).hexdigest()
+    <span class="keyword">return</span> {
+        <span class="string">'change'</span>: change_dict,
+        <span class="string">'signature'</span>: signature,
+        <span class="string">'timestamp'</span>: datetime.now().isoformat(),
+    }
+</code></pre>
+
+<h3>RBAC para Approvals</h3>
+
+<ul>
+  <li><strong>Viewer:</strong> Pode ler logs/status via `/kb-status`</li>
+  <li><strong>Approver:</strong> Pode executar `/kb-approve` (only MN)</li>
+  <li><strong>Admin:</strong> Pode fazer `/kb-rollback` (only DevOps lead)</li>
+</ul>
+
+</section>
+
+<section id="exemplo">
+<h2>Exemplo: Fluxo Completo de uma Mudança</h2>
+
+<h3>Cenário: Novo insight em Saneamento (S8)</h3>
+
+<p><strong>Dia 1, 09:00 UTC:</strong> DAG dispara, coleta projeto "ETA AySA SP" finalizado na semana anterior.</p>
+
+<p><strong>09:15:</strong> 3 agentes (S2, S4, S8) extraem features em paralelo.</p>
+
+<pre><code><span class="comment"># agente-saneamento responde:</span>
+{
+  <span class="string">"normative_refs"</span>: [<span class="string">"NBR 12211:2017"</span>, <span class="string">"Lei 14.026/2020"</span>],
+  <span class="string">"key_risks"</span>: [
+    <span class="string">"Dimensionamento de tanque de contato (NBR 12211 cl.5.3)"</span>,
+    <span class="string">"Backup power para bombas (AySA exige 48h)"</span>
+  ],
+  <span class="string">"confidence"</span>: 0.91,
+  <span class="string">"recommendation"</span>: <span class="string">"Incluir em KB normativo para futuros projetos AySA"</span>
+}
+</code></pre>
+
+<p><strong>09:20:</strong> Validação: 2 de 3 agentes concordam (S8 + S2 sobre NBR). Confiança média = 0.88.</p>
+
+<p><strong>09:25:</strong> Gate crítico ativado: mudança menciona "Lei 14.026" (crítica). DAG pausa.</p>
+
+<p><strong>09:26:</strong> Slack notificação para MN:</p>
+
+<pre><code>"KB Change Gate: Aprovação necessária
+Project: ETA AySA SP
+Change: Adicionar refs [NBR 12211, Lei 14.026]
+Confidence: 0.88
+Validators: S8, S2
+Approvar: /kb-approve xyz789 ou Rejeitar"
+</code></pre>
+
+<p><strong>Dia 1, 10:30:</strong> MN aprova via `/kb-approve xyz789`.</p>
+
+<p><strong>10:31:</strong> DAG resume: update KB, nova versão v42.</p>
+
+<p><strong>10:35:</strong> Testes de regressão: 10 prompts de saneamento passam (ex: "Como estruturar uma ETA em São Paulo?").</p>
+
+<p><strong>10:40:</strong> Publish: v42 ativa. Audit log registra:</p>
+
+<pre><code>{
+  <span class="string">"audit_id"</span>: <span class="string">"audit_0840001"</span>,
+  <span class="string">"project_id"</span>: <span class="string">"proj_eta_aysa_sp"</span>,
+  <span class="string">"action"</span>: <span class="string">"INSERT"</span>,
+  <span class="string">"kb_version"</span>: 42,
+  <span class="string">"confidence"</span>: 0.88,
+  <span class="string">"validators"</span>: [<span class="string">"S8"</span>, <span class="string">"S2"</span>],
+  <span class="string">"approved_by"</span>: <span class="string">"mneves@mantaassociados.com"</span>,
+  <span class="string">"timestamp"</span>: <span class="string">"2026-07-30T10:40:00Z"</span>,
+  <span class="string">"signature"</span>: <span class="string">"sha256_hmac_..."</span>,
+  <span class="string">"status"</span>: <span class="string">"completed"</span>
+}
+</code></pre>
+
+<p><strong>Resultado:</strong> Próximas consultas ao agente-saneamento mencionarão Lei 14.026 automaticamente em certos contextos de AySA.</p>
+
+</section>
+
+<h2>Próximos Passos</h2>
+
+<ul>
+  <li>Deploy Airflow em K8s (usar helm chart da Manta)</li>
+  <li>Configurar Slack bot para `/kb-approve` e `/kb-rollback`</li>
+  <li>Criar 5 regression test suites (uma por segmento S1-S9)</li>
+  <li>Integrar Supabase `rag_chunks` + `kb_audit` no schema</li>
+  <li>Dashboard Grafana: KB churn rate, confidence trend, rollback count</li>
+  <li>Gate aprovação: MN + DevOps lead assina com chave privada (AWS Secrets Manager)</li>
+  <li>Testar failover: simular falha de agente, contradicção, timeout</li>
+</ul>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+mermaid.contentLoaded();
+
+const themeToggle = () => {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+};
+
+const saved = localStorage.getItem('theme');
+if (saved) {
+  document.documentElement.setAttribute('data-theme', saved);
+}
+</script>
+
+</body>
+</html>
