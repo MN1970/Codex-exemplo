@@ -446,11 +446,11 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   neste CLAUDE.md e com os frontmatters reais dos agentes. Ação:
   corrigir esses 3 arquivos para a Convenção A, ou formalizar a
   Convenção B em todo o repositório — não ambas ao mesmo tempo.
-- **S11 (Mineração) identificado mas não formalizado**: confirmado em
+- **S11 (Mineração) identificado mas não formalizado (G015)**: confirmado em
   produção (`manta_agent_capabilities`, `03-S11`, `ativo=true`), sem
   agente `.md`, RAG, rota SP ou routing keyword — mesma situação em que
-  S12/S13 estavam antes desta rodada. Ação: abrir gap G015 e seguir o
-  mesmo processo de `docs/SEGMENTOS-S12-S13-DECISION.md` para S11.
+  S12/S13 estavam antes desta rodada. **Documentação em `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md`** com roadmap de
+  formalização. Ação: aprovação MN + checklist idêntico a S12/S13.
 - **Embedder (G010)**: `docs/EMBEDDER-DECISION.md` recomenda migrar
   para `bge-m3`, partindo da premissa de que produção roda
   `bge-small-en-v1.5` com 0% migrado. `docs/SUPABASE-PROJECT-AUDIT.md`
@@ -518,8 +518,8 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 - [x] Registrar S12 (Óleo & Gás) e S13 (Edificações) como propostos
 - [x] Identificar S11 (Mineração) a partir de `manta_agent_capabilities`
 - [x] Linkar Eixo A/F/D aos documentos dedicados já produzidos
-- [ ] Corrigir numeração de segmento em `docs/DISCIPLINAS-D01-D20.md`, `docs/ATIVIDADES-A1-A10.md` e `agente-aeroportos.md`
-- [ ] Abrir gap G015 e formalizar S11 (Mineração) — mesmo checklist de S12/S13
+- [x] Corrigir numeração de segmento em `docs/DISCIPLINAS-D01-D20.md`, `docs/ATIVIDADES-A1-A10.md` e `agente-aeroportos.v5.0.md` (Convenção B → A)
+- [x] Abrir gap G015 — documentação de formalização S11 (Mineração) em `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md`
 - [ ] Reconciliar `docs/EMBEDDER-DECISION.md` com achado de
       `docs/SUPABASE-PROJECT-AUDIT.md` antes de decidir embedder
 - [ ] Confirmar manualmente o destino do projeto `xgluoaa...` (AI-1)
@@ -553,6 +553,7 @@ Codex-exemplo/
 │   ├── EMBEDDER-DECISION.md               # G010 — recomendação, pendente aprovação MN (⚠️ contradiz achado do audit — ver Gaps)
 │   ├── SUPABASE-PROJECT-AUDIT.md          # G012 — auditoria real via MCP Supabase
 │   ├── SEGMENTOS-S12-S13-DECISION.md      # G014 — investigação real via MCP Supabase; confirma S11/S12/S13
+│   ├── SEGMENTO-S11-MINERACAO-GAP-G015.md # G015 — S11 (Mineração) identificado; roadmap formalização (novo, 2026-07-31)
 │   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
 │   └── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
