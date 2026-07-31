@@ -71,3 +71,19 @@ export {
   type IntentParserConfig,
   type ValidationResult,
 } from "./intent-parser";
+
+// CI/CD Orchestrator
+export {
+  CIOrchestratorService,
+  createCIOrchestratorService,
+  WorkflowRunStatus,
+  WorkflowConclusion,
+  type CIOrchestratorConfig,
+  type OrchestrationResult,
+  type WorkflowRun,
+  type BuildOutput,
+  type TestResult,
+  type CoverageResult,
+  type LintError,
+  type CIMetrics,
+} from "./ci-orchestrator";
