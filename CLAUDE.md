@@ -61,6 +61,11 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 Regra de roteamento atualizada para Q1 do intake:
 
 ```
+# Skills horizontais (acionam independente de segmento)
+IF menção a youtube|youtu.be|transcrição vídeo|legenda|"o que fala no vídeo"
+   → skill: youtube-transcript (extrai legendas de vídeos YouTube)
+
+# Segmentos verticais (S6–S10)
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
    → agente-saneamento (S8)
 
@@ -135,15 +140,22 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                         # este arquivo (master registry)
+├── CLAUDE.md                              # este arquivo (master registry)
+├── youtube_transcript_extractor.py        # 🆕 Utilidade de extração local
+├── requirements-youtube.txt               # 🆕 Dependências
+├── YOUTUBE_TRANSCRIPT_README.md           # 🆕 Documentação completa
+├── QUICK_START.md                         # 🆕 Guia de início rápido
 └── .claude/
     └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+        ├── agente-portos.md               # 🆕 S6
+        ├── agente-aeroportos.md           # 🆕 S7
+        ├── agente-saneamento.md           # 🆕 S8 — prioridade AySA
+        ├── agente-energia.md              # 🆕 S9 — ANEEL/State Grid
+        └── agente-barragens.md            # 🆕 S10
 ```
+
+Skills horizontal C1 afiliadas ao Maestro:
+- **youtube-transcript**: Extrai transcrições de vídeos YouTube (legendas com/sem timestamps)
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
 no repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
@@ -154,6 +166,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-01) — Integração skill youtube-transcript ao Maestro.
+  Skill horizontal C1 para extração de legendas/transcrições de vídeos YouTube.
+  Afilia-se ao routing: `youtube.com|youtu.be|transcrição` → skill.
+  Ticket MNT-2026-YOUTUBE-TRANSCRIPT-SKILL.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
