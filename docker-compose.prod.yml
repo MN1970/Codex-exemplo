@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  maestro-sync-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: maestro:1.0.0
+    container_name: maestro-sync-prod
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      MCP_PORT: 3001
+      LOG_LEVEL: info
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      COWORK_API_URL: ${COWORK_API_URL}
+      COWORK_API_TOKEN: ${COWORK_API_TOKEN}
+      MCP_API_TOKEN: ${MCP_API_TOKEN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - maestro-network
+    volumes:
+      - maestro-logs:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Opcional: Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: maestro-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - maestro-sync-server
+    networks:
+      - maestro-network
+    restart: unless-stopped
+
+volumes:
+  maestro-logs:
+
+networks:
+  maestro-network:
+    driver: bridge

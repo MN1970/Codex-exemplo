@@ -1,0 +1,62 @@
+# Production Dockerfile — Maestro Sync Server
+# Multi-stage build for minimal image size
+
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Install dependencies
+RUN npm ci --only=production && \
+    npm install typescript @types/node --save-dev
+
+# Copy source code
+COPY src ./src
+COPY tests ./tests
+
+# Build TypeScript
+RUN npm run build
+
+# Runtime stage
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init curl
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+# Copy from builder
+COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --chown=nodejs:nodejs package*.json ./
+
+# Copy documentation
+COPY --chown=nodejs:nodejs SYNC_SETUP.md CLAUDE_AI_SETUP.md USE_MAESTRO_NOW.md ./
+
+# Switch to non-root user
+USER nodejs
+
+# Environment variables
+ENV NODE_ENV=production \
+    MCP_PORT=3001 \
+    LOG_LEVEL=info
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:3001/health || exit 1
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["/usr/sbin/dumb-init", "--"]
+
+# Start MCP Server
+CMD ["node", "dist/mcp-server.js"]
+
+# Expose port
+EXPOSE 3001
