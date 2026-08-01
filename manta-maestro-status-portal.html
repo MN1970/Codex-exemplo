@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manta Maestro v5.0.1 — Dashboard de Estado</title>
+  <style>
+    :root {
+      --manta-accent: #E07B3D;
+      --manta-accent-dark: #C45A2B;
+      --manta-title: #8B4A2D;
+      --manta-heading: #5D3A1A;
+      --manta-text: #374151;
+      --manta-muted: #6B7280;
+      --manta-border: #E5E7EB;
+      --manta-bg-alt: #F9FAFB;
+      --manta-bg: #FFFFFF;
+      --pia-700: #1a3a52;
+      --pia-600: #235272;
+      --pia-400: #4a8bb0;
+      --pia-success: #1F8A5F;
+      --pia-warning: #C97A1D;
+      --pia-error: #B23B3B;
+      --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, "SFMono-Regular", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-ui);
+      color: var(--manta-text);
+      background: var(--manta-bg);
+      line-height: 1.6;
+    }
+
+    .topbar { height: 4px; background: var(--manta-accent); }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--manta-border);
+      background: var(--manta-bg);
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--manta-accent), var(--manta-accent-dark));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 24px;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--manta-heading);
+    }
+
+    .header-title p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--manta-muted);
+    }
+
+    .header-status {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+    }
+
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .status-label {
+      color: var(--manta-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-value {
+      color: var(--manta-heading);
+      font-weight: 600;
+    }
+
+    .nav-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--manta-border);
+      background: var(--manta-bg);
+      padding: 0 32px;
+      gap: 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav-tabs button {
+      background: none;
+      border: none;
+      padding: 16px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--manta-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .nav-tabs button:hover {
+      color: var(--manta-text);
+      border-bottom-color: var(--manta-border);
+    }
+
+    .nav-tabs button.active {
+      color: var(--manta-heading);
+      border-bottom-color: var(--manta-accent);
+    }
+
+    main {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .tab { display: none; }
+    .tab.active { display: block; animation: fadeIn 0.3s; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--manta-title);
+      margin: 0 0 24px;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--manta-text);
+      margin: 28px 0 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--manta-border);
+    }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px; }
+
+    .card {
+      background: var(--manta-bg);
+      border: 1px solid var(--manta-border);
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--manta-accent);
+      box-shadow: 0 2px 12px rgba(224, 123, 61, 0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .icon-s { background: rgba(26, 58, 82, 0.1); color: var(--pia-700); }
+    .icon-a { background: rgba(224, 123, 61, 0.1); color: var(--manta-accent); }
+    .icon-f { background: rgba(31, 138, 95, 0.1); color: var(--pia-success); }
+    .icon-d { background: rgba(201, 122, 29, 0.1); color: var(--pia-warning); }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--manta-heading);
+      margin: 0;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: var(--manta-muted);
+      margin-top: 4px;
+    }
+
+    .card-content {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--manta-text);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-right: 6px;
+      margin-bottom: 8px;
+    }
+
+    .badge-operational { background: rgba(31, 138, 95, 0.15); color: var(--pia-success); }
+    .badge-proposed { background: rgba(201, 122, 29, 0.15); color: var(--pia-warning); }
+    .badge-identified { background: rgba(74, 139, 176, 0.15); color: var(--pia-400); }
+    .badge-pending { background: rgba(178, 59, 59, 0.15); color: var(--pia-error); }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--manta-bg-alt);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--manta-accent);
+      transition: width 0.3s;
+      border-radius: 4px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-box {
+      background: var(--manta-bg-alt);
+      border: 1px solid var(--manta-border);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--manta-accent);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--manta-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .timeline {
+      border-left: 2px solid var(--manta-accent);
+      padding-left: 24px;
+      position: relative;
+    }
+
+    .timeline-item {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      background: var(--manta-accent);
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px var(--manta-accent);
+    }
+
+    .timeline-date {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--manta-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .timeline-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--manta-heading);
+      margin-top: 4px;
+    }
+
+    .timeline-desc {
+      font-size: 13px;
+      color: var(--manta-text);
+      margin-top: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    thead tr { border-bottom: 2px solid var(--manta-border); }
+    th {
+      text-align: left;
+      padding: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--manta-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tbody tr { border-bottom: 1px solid var(--manta-border); }
+    tbody tr:hover { background: var(--manta-bg-alt); }
+    td {
+      padding: 12px;
+      vertical-align: middle;
+    }
+
+    .status-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--pia-success);
+      animation: pulse-animation 2s infinite;
+    }
+
+    @keyframes pulse-animation {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .info-box {
+      background: var(--manta-bg-alt);
+      border-left: 3px solid var(--manta-accent);
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+    }
+
+    .info-box strong { color: var(--manta-heading); }
+  </style>
+</head>
+<body>
+  <div class="topbar"></div>
+
+  <header>
+    <div class="header-left">
+      <div class="logo">🐙</div>
+      <div class="header-title">
+        <h1>Manta Maestro v5.0.1</h1>
+        <p>Multi-Agent Architecture — Estado Atual</p>
+      </div>
+    </div>
+    <div class="header-status">
+      <div class="status-item">
+        <span class="status-label">Status</span>
+        <span class="status-value">🚀 Operacional</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Fase Atual</span>
+        <span class="status-value">Fase 1 (Exec)</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Data</span>
+        <span class="status-value">2026-08-01</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="nav-btn active" onclick="switchTab('overview')">📊 Visão Geral</button>
+    <button class="nav-btn" onclick="switchTab('architecture')">🏗️ Arquitetura</button>
+    <button class="nav-btn" onclick="switchTab('phase1')">⚡ Fase 1 (Execução)</button>
+    <button class="nav-btn" onclick="switchTab('roadmap')">🗺️ Evolução</button>
+  </div>
+
+  <main>
+    <!-- ========== OVERVIEW ========== -->
+    <div id="overview" class="tab active">
+      <h2>Visão Geral do Manta Maestro</h2>
+
+      <div class="info-box">
+        <strong>✅ Status v5.0.1:</strong> Unificação operacional da v5.0.0 (22 jul) + consolidação v5.0 (31 jul). 20 agentes em produção + 2 propostos (S12/S13). Infraestrutura Maestro-OS v6.0 completa com APScheduler, ML, observabilidade.
+      </div>
+
+      <h3>Métricas Principais</h3>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-number">23</div>
+          <div class="stat-label">Agentes Totais</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">20</div>
+          <div class="stat-label">Operacionais</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">13</div>
+          <div class="stat-label">Segmentos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">9</div>
+          <div class="stat-label">Coleções RAG</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">204</div>
+          <div class="stat-label">Chunks RAG</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Eixos Ortogonais</div>
+        </div>
+      </div>
+
+      <h3>Agentes por Tipo</h3>
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">11</div>
+            <div>
+              <h4 class="card-title">Agentes Horizontais</h4>
+              <p class="card-meta">Transversais a todos segmentos</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <span class="badge badge-operational">Manta 00 (Router)</span><br>
+            <span class="badge badge-operational">Manta 01-02</span>
+            <span class="badge badge-operational">Manta 04-07</span><br>
+            <span class="badge badge-operational">Manta 13-16</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-s">9</div>
+            <div>
+              <h4 class="card-title">Agentes Verticais Operacionais</h4>
+              <p class="card-meta">Especializados por segmento</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <span class="badge badge-operational">S1-S4 Infraestrutura</span><br>
+            <span class="badge badge-operational">S6-S10 Especialistas</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-a">2</div>
+            <div>
+              <h4 class="card-title">Agentes Propostos</h4>
+              <p class="card-meta">Pendentes gate MN</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <span class="badge badge-proposed">S12 Óleo & Gás</span><br>
+            <span class="badge badge-proposed">S13 Edificações</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-d">1</div>
+            <div>
+              <h4 class="card-title">Segmento Identificado</h4>
+              <p class="card-meta">Em produção, não formalizado</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <span class="badge badge-identified">S11 Mineração</span><br>
+            <small>Conforme manta_agent_capabilities, ativo=true desde 2026-07-12</small>
+          </div>
+        </div>
+      </div>
+
+      <h3>Coleções RAG (9 confirmadas por auditoria)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Coleção</th>
+            <th>Prefixo</th>
+            <th>Status</th>
+            <th>Chunks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Rodovias</td><td><code>rod:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~20</td></tr>
+          <tr><td>OAE (Pontes/Viadutos)</td><td><code>oae:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~18</td></tr>
+          <tr><td>Ferrovia</td><td><code>fer:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~15</td></tr>
+          <tr><td>Metrô</td><td><code>mtr:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~12</td></tr>
+          <tr><td>Portos</td><td><code>por:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~18</td></tr>
+          <tr><td>Aeroportos</td><td><code>aer:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~14</td></tr>
+          <tr><td>Saneamento</td><td><code>san:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~24</td></tr>
+          <tr><td>Energia</td><td><code>ene:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~30</td></tr>
+          <tr><td>Barragens</td><td><code>bar:</code></td><td><span class="status-live"><span class="pulse"></span> Operacional</span></td><td>~25</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Documentação Principal</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Arquivo</th>
+            <th>Versão</th>
+            <th>Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>CLAUDE.md</td><td>v5.0.1</td><td>Master registry dos 23 agentes + 4 eixos</td></tr>
+          <tr><td>ARQUITETURA-AGENTES-IA.md</td><td>v3.0.0</td><td>Formalização completa dos 4 eixos (S×A×F×D)</td></tr>
+          <tr><td>ATIVIDADES-A1-A10.md</td><td>v1.0</td><td>Axis Activities completo (10 tipos de entrega)</td></tr>
+          <tr><td>FUNCIONAIS-F1-F8.md</td><td>v1.0.0</td><td>Axis Functionals (infraestrutura transversal)</td></tr>
+          <tr><td>DISCIPLINAS-D01-D20.md</td><td>v1.0</td><td>Axis Disciplines (normas + ferramentas)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== ARCHITECTURE ========== -->
+    <div id="architecture" class="tab">
+      <h2>Arquitetura — 4 Eixos Ortogonais</h2>
+
+      <div class="info-box">
+        <strong>Modelo de Composição S.A.D:</strong> Qualquer consulta ao Maestro se posiciona na interseção de 4 eixos ortogonais. Exemplo: S8.A3.D07 = Saneamento + Orçamento + Econômica → Manta 05 com contexto de saneamento.
+      </div>
+
+      <h3>Eixo S — Segmentos (13 identificados)</h3>
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-s">S1–S4</div>
+            <div>
+              <h4 class="card-title">Infraestrutura</h4>
+              <p class="card-meta">Um agente com 4 especializações</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <strong>S1:</strong> Rodovias<br>
+            <strong>S2:</strong> OAE (Pontes, Viadutos)<br>
+            <strong>S3:</strong> Ferrovia<br>
+            <strong>S4:</strong> Metrô/VLT
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-s">S5–S10</div>
+            <div>
+              <h4 class="card-title">Especialistas Verticais</h4>
+              <p class="card-meta">Agentes dedicados por segmento</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <strong>S5:</strong> Túneis (coberto S2+S4)<br>
+            <strong>S6:</strong> Portos<br>
+            <strong>S7:</strong> Aeroportos<br>
+            <strong>S8:</strong> Saneamento (PRIORIDADE AySA)<br>
+            <strong>S9:</strong> Energia (ANEEL/State Grid)<br>
+            <strong>S10:</strong> Barragens
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-s">S11–S13</div>
+            <div>
+              <h4 class="card-title">Novos Segmentos</h4>
+              <p class="card-meta">Identificados e propostos</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <span class="badge badge-identified">S11: Mineração (identificado)</span><br>
+            <span class="badge badge-proposed">S12: Óleo & Gás (proposto)</span><br>
+            <span class="badge badge-proposed">S13: Edificações (proposto)</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>Eixo A — Atividades (10 tipos)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Atividade</th>
+            <th>Agente Responsável</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>A1</td><td>Proposta</td><td>Manta 13 (bd) + Manta 14 (apresentações)</td></tr>
+          <tr><td>A2</td><td>Quantidades</td><td>Vertical + skills de takeoff</td></tr>
+          <tr><td>A3</td><td>Orçamento</td><td>Manta 05</td></tr>
+          <tr><td>A4</td><td>Modelagem Financeira</td><td>Manta 06</td></tr>
+          <tr><td>A5</td><td>Cronograma</td><td>Manta 07</td></tr>
+          <tr><td>A6</td><td>Contratual</td><td>Manta 02</td></tr>
+          <tr><td>A7</td><td>Claims</td><td>Manta 01</td></tr>
+          <tr><td>A8</td><td>Advisory</td><td>Manta 15</td></tr>
+          <tr><td>A9</td><td>Regulatório</td><td>(Distribuído entre verticais)</td></tr>
+          <tr><td>A10</td><td>Risco</td><td>Manta 15 (coordenação)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Eixo F — Funcionais (8 capacidades transversais)</h3>
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">F1</div>
+            <div>
+              <h4 class="card-title">IA & Routing</h4>
+              <p class="card-meta">Maestro Router (Manta 00)</p>
+            </div>
+          </div>
+          <div class="card-content">Model tiering (Haiku→Sonnet→Opus), intelligent routing por keywords</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">F2</div>
+            <div>
+              <h4 class="card-title">SharePoint</h4>
+              <p class="card-meta">MCP SharePoint_Manta</p>
+            </div>
+          </div>
+          <div class="card-content">Indexação, sync automático, read/write de agentes e documentos</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">F3</div>
+            <div>
+              <h4 class="card-title">Portal Web</h4>
+              <p class="card-meta">SSO, permissões, dashboards</p>
+            </div>
+          </div>
+          <div class="card-content">Portal gestão, megaprojeto-builder, site específicos por segmento</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">F4</div>
+            <div>
+              <h4 class="card-title">Extração</h4>
+              <p class="card-meta">PDF/DWG parsers</p>
+            </div>
+          </div>
+          <div class="card-content">Autodesk toolkit, CAD bridge, EVTEA extractor, PDF parsers</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">F5</div>
+            <div>
+              <h4 class="card-title">Notificação</h4>
+              <p class="card-meta">Multi-canal</p>
+            </div>
+          </div>
+          <div class="card-content">Email, Slack, webhook, Teams — com Routines e PR activity tracking</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">F6</div>
+            <div>
+              <h4 class="card-title">Trace & Audit</h4>
+              <p class="card-meta">Rastreabilidade</p>
+            </div>
+          </div>
+          <div class="card-content">consist-guard, session logs, approval gates, histórico SharePoint</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">F7</div>
+            <div>
+              <h4 class="card-title">Guardrails</h4>
+              <p class="card-meta">Validação & segurança</p>
+            </div>
+          </div>
+          <div class="card-content">aluci-guard, consist-guard, context-guardian — prevenção de alucinação</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-f">F8</div>
+            <div>
+              <h4 class="card-title">Padronização</h4>
+              <p class="card-meta">Templates & styling</p>
+            </div>
+          </div>
+          <div class="card-content">padrao-manta, brand guidelines, templates docx/pptx/xlsx</div>
+        </div>
+      </div>
+
+      <h3>Eixo D — Disciplinas (20 técnicas + negócio)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Disciplina</th>
+            <th>Normas/Padrões Chave</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>D01</td><td>Hidráulica</td><td>NBR 10844, ABNT</td></tr>
+          <tr><td>D02</td><td>Estrutural</td><td>NBR 6118, 6120</td></tr>
+          <tr><td>D03</td><td>Geotecnia</td><td>NBR 7175, 8682</td></tr>
+          <tr><td>D04</td><td>Pavimentação</td><td>DNIT, SICRO</td></tr>
+          <tr><td>D05</td><td>Elétrica</td><td>NBR 5422, IEC</td></tr>
+          <tr><td>D06</td><td>Ambiental</td><td>Lei 6938, CONAMA</td></tr>
+          <tr><td>D07</td><td>Econômica/Financeiro</td><td>SICRO, INPC</td></tr>
+          <tr><td>D08</td><td>Planejamento</td><td>PMI, MS Project</td></tr>
+          <tr><td>D09</td><td>Jurídico</td><td>Lei 8.666, 13.303</td></tr>
+          <tr><td>D10</td><td>Comercial</td><td>INCOTERMS</td></tr>
+          <tr><td>D11–D20</td><td>Secundárias (MEP, HVAC, Acústica, BIM, etc.)</td><td>Conforme segmento</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== PHASE 1 ========== -->
+    <div id="phase1" class="tab">
+      <h2>Fase 1 — Execução Paralela</h2>
+
+      <div class="info-box">
+        <strong>🚀 Status:</strong> Iniciada em 2026-08-01 06:00. 7 tarefas paralelas com checkpoint em 2026-08-07 12:00. Modelo: paralelo com bloqueios sequenciais (1.6 e 1.7 aguardam conclusão de precedentes).
+      </div>
+
+      <h3>Tarefas Paralelas (7 simultâneas)</h3>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2026-08-01 (4h)</div>
+          <div class="timeline-title">✅ 1.1 — D1: Embedder Fase 0</div>
+          <div class="timeline-desc">
+            <strong>Owner:</strong> Cloud<br>
+            <strong>Tarefa:</strong> Verificar dimensão atual do vetor em manta_rag_chunks (produção). Decidir: migrar 384d→1024d ou já otimizado?<br>
+            <strong>Dependência:</strong> Nenhuma (paralelo)
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 30%;"></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2026-08-01 a 08-07 (8 dias)</div>
+          <div class="timeline-title">🔄 1.2 — D3: RLS Hardening</div>
+          <div class="timeline-desc">
+            <strong>Owner:</strong> Security + Database<br>
+            <strong>Tabelas:</strong> rag_collections, sp_agent_routing, maestro_routing_keywords<br>
+            <strong>Processo:</strong> Design RLS (dia 1-2) → Testing em staging (dia 3-5) → Deploy produção (dia 6-7) → Verificação (dia 8)<br>
+            <strong>Dependência:</strong> Nenhuma (paralelo)
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 15%;"></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2026-08-01 a 08-04 (3-4 dias)</div>
+          <div class="timeline-title">🔄 1.3 — D5: DataDog APM</div>
+          <div class="timeline-desc">
+            <strong>Owner:</strong> Observability + DevOps<br>
+            <strong>Tarefas:</strong> Setup DataDog, gerar API keys, configurar instrumentação, criar dashboards<br>
+            <strong>Dependência:</strong> Nenhuma (paralelo)
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2026-08-01 a 08-02 (2 dias)</div>
+          <div class="timeline-title">⏳ 1.4 — D6: G012 Cleanup</div>
+          <div class="timeline-desc">
+            <strong>Owner:</strong> MN + Cloud<br>
+            <strong>Tarefa:</strong> MN confirmar se projeto Supabase xgluoaaymbdzbbudnwrh está vivo ou morto. Se morto, remover referência do SKILL.md<br>
+            <strong>Dependência:</strong> Confirmação humana (MN)
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 5%;"></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2026-08-01 a 08-05 (3 dias)</div>
+          <div class="timeline-title">🔄 1.5 — S12/S13 Operacionalização</div>
+          <div class="timeline-desc">
+            <strong>Owner:</strong> Agentes + DevOps<br>
+            <strong>Tarefas:</strong> Criar RAG collections (og: e edi:) → Registrar routing keywords em maestro_routing_keywords → Criar rotas SP em sp_agent_routing<br>
+            <strong>Dependência:</strong> Nenhuma (paralelo)<br>
+            <strong>Bloqueia:</strong> 1.6 e 1.7
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 25%;"></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2026-08-06 (1 dia)</div>
+          <div class="timeline-title">🔴 1.6 — Smoke Tests</div>
+          <div class="timeline-desc">
+            <strong>Owner:</strong> QA<br>
+            <strong>Tarefas:</strong> 8 testes automatizados + 4 validações manuais (routing, RAG, SharePoint, Maestro)<br>
+            <strong>Bloqueado por:</strong> 1.5 (aguarda S12/S13 operacional)
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2026-08-06 (1 dia)</div>
+          <div class="timeline-title">🔴 1.7 — Slack Announcement</div>
+          <div class="timeline-desc">
+            <strong>Owner:</strong> Comms<br>
+            <strong>Tarefa:</strong> Anunciar go-live S12/S13, status das 6 decisões, próximas fases<br>
+            <strong>Bloqueado por:</strong> 1.6 (aguarda smoke tests bem-sucedidos)
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Cronograma Paralelo</h3>
+      <div class="info-box">
+        <code>2026-08-01 06:00</code><br>
+        <code>├─ 1.1 (Embedder) ──────────► 10:00 ✅</code><br>
+        <code>├─ 1.2 (RLS) ─────────────────────────────────► 08-07 ✅</code><br>
+        <code>├─ 1.3 (DataDog) ──────────────► 08-04 ✅</code><br>
+        <code>├─ 1.4 (G012) ──────────────► 08-02 ⏳</code><br>
+        <code>├─ 1.5 (S12/S13) ────────────────────► 08-05 ✅</code><br>
+        <code>├─ 1.6 (Smoke tests) ───────────────────────► 08-06 ⏳</code><br>
+        <code>└─ 1.7 (Slack) ─────────────────────────────► 08-06 ⏳</code>
+      </div>
+
+      <h3>CHECKPOINT 1: 2026-08-07 12:00</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Decisão</th>
+            <th>Avaliação</th>
+            <th>Critério GO/NO-GO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>D1: Embedder</strong></td>
+            <td>✅ Verificação concluída</td>
+            <td>GO: resultado documentado (384d ou 1024d)</td>
+          </tr>
+          <tr>
+            <td><strong>D3: RLS</strong></td>
+            <td>⏳ Em testing</td>
+            <td>GO: 0 quebras, admin irrestrito, anon rejeitado</td>
+          </tr>
+          <tr>
+            <td><strong>D5: DataDog</strong></td>
+            <td>⏳ Em setup</td>
+            <td>GO: métricas coletando, dashboard ativo</td>
+          </tr>
+          <tr>
+            <td><strong>D6: G012</strong></td>
+            <td>⏳ Aguardando MN</td>
+            <td>GO: confirmação MN recebida</td>
+          </tr>
+          <tr>
+            <td><strong>S12/S13 Ops</strong></td>
+            <td>🔄 Em progresso</td>
+            <td>GO: RAG + routing + SP criados, smoke tests passam</td>
+          </tr>
+          <tr>
+            <td><strong>Fase 2 Readiness</strong></td>
+            <td>⏳ Pendente</td>
+            <td>GO: todos 5 itens acima ✅</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Decisão Final</h3>
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-a" style="background: rgba(31, 138, 95, 0.1); color: var(--pia-success);">✅</div>
+            <div>
+              <h4 class="card-title">GO → Fase 2</h4>
+              <p class="card-meta">Se todos 6 itens ✅</p>
+            </div>
+          </div>
+          <div class="card-content">Fase 2 inicia 2026-08-08 com Manta-09, S11 formalization, e escalação para produção</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-d" style="background: rgba(178, 59, 59, 0.15); color: var(--pia-error);">⏳</div>
+            <div>
+              <h4 class="card-title">NO-GO → Hold</h4>
+              <p class="card-meta">Se qualquer item ❌</p>
+            </div>
+          </div>
+          <div class="card-content">Estender Fase 1 até resolução. Remediação paralela. Re-checkpoint 2026-08-09</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== ROADMAP ========== -->
+    <div id="roadmap" class="tab">
+      <h2>Evolução do Manta Maestro</h2>
+
+      <div class="info-box">
+        <strong>📍 3 Fases, 6 semanas (2026-08-01 a 2026-09-02):</strong> Fase 1 (Execução das 6 decisões críticas) → Fase 2 (Consolidação + novos agentes + escalação) → Fase 3 (Scale + embedder + multi-tenancy).
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">Fase 1: 2026-08-01 a 08-07</div>
+          <div class="timeline-title">🚀 Execução Paralela (7 tarefas)</div>
+          <div class="timeline-desc">
+            <strong>Checkpoint:</strong> 2026-08-07 12:00<br>
+            <strong>Deliverables:</strong><br>
+            • D1 Embedder Fase 0 resultado documentado<br>
+            • D3 RLS 3 tabelas hardened + testing completo<br>
+            • D5 DataDog APM setup + instrumentação<br>
+            • D6 G012 cleanup (confirmar projeto morto)<br>
+            • S12/S13 operacional (RAG + routing + SP)<br>
+            • Smoke tests 8+4 validações passando<br>
+            • Slack announcement enviado<br>
+            <strong>Entrada Fase 2:</strong> GO/NO-GO decision
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Fase 2: 2026-08-08 a 08-21</div>
+          <div class="timeline-title">🔧 Consolidação + Novos Agentes</div>
+          <div class="timeline-desc">
+            <strong>Semana 2 (08-08 a 08-14):</strong><br>
+            • D4: Criar Manta-09 (agente-regulatorio horizontal)<br>
+            • D2: Formalizar S11 (Mineração) — agente.md + RAG + routing<br>
+            • Publicar 3 novos segmentos (S11/S12/S13) em produção<br>
+            <strong>Semana 3 (08-15 a 08-21):</strong><br>
+            • Monitoramento contínuo de produção (14+ dias estável)<br>
+            • Feedback loops dos agentes em produção<br>
+            • Preparação Fase 3 (design de embedder, multi-tenancy)<br>
+            <strong>Checkpoint:</strong> 2026-08-21 12:00 — Estabilidade produção validada
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Fase 3: 2026-08-22 a 09-02</div>
+          <div class="timeline-title">📈 Scale + Otimização + Novos Recursos</div>
+          <div class="timeline-desc">
+            <strong>Semana 4-5 (08-22 a 08-28):</strong><br>
+            • D1 Fases 1-5: Migrar embedder 384d → 1024d (se recomendado em Fase 0)<br>
+            • A10: Criar Manta-10 (agente-risco horizontal)<br>
+            • Consolidar 3 projetos Supabase inativos (manta-tocantins, manta-rodovias, manta-portal-piloto)<br>
+            <strong>Semana 6 (08-29 a 09-02):</strong><br>
+            • Multi-tenancy design → arquitetura de suporte a múltiplas orgs<br>
+            • Learning loops MVP → feedback automático em produção<br>
+            • v5.1 release notes<br>
+            <strong>Checkpoint:</strong> 2026-09-02 12:00 — Fase 3 completa, v5.1 aprovado
+          </div>
+        </div>
+      </div>
+
+      <h3>Métricas de Sucesso por Fase</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Fase</th>
+            <th>KPI</th>
+            <th>Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Fase 1</strong></td>
+            <td>Tarefas completadas</td>
+            <td>7/7 (100%)</td>
+          </tr>
+          <tr>
+            <td><strong>Fase 1</strong></td>
+            <td>Go/No-Go decision</td>
+            <td>GO para Fase 2</td>
+          </tr>
+          <tr>
+            <td><strong>Fase 2</strong></td>
+            <td>Novos agentes operacionais</td>
+            <td>2 (Manta-09, S11)</td>
+          </tr>
+          <tr>
+            <td><strong>Fase 2</strong></td>
+            <td>Estabilidade produção</td>
+            <td>14+ dias sem incident</td>
+          </tr>
+          <tr>
+            <td><strong>Fase 3</strong></td>
+            <td>Total agentes operacionais</td>
+            <td>25+ (20 + 2 S12/S13 + 3 novos)</td>
+          </tr>
+          <tr>
+            <td><strong>Fase 3</strong></td>
+            <td>Embedder migração</td>
+            <td>384d → 1024d (se não otimizado)</td>
+          </tr>
+          <tr>
+            <td><strong>Geral</strong></td>
+            <td>Arquitetura v5.1</td>
+            <td>Aprovada e formalizada</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Decisões Pendentes por Fase</h3>
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-a">Q1</div>
+            <div>
+              <h4 class="card-title">Fase 1 — D1 (Embedder)</h4>
+              <p class="card-meta">MN + Cloud (2026-08-01)</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <strong>Pergunta:</strong> Dimensão atual do vetor? Migrar para 1024d ou já otimizado?<br>
+            <strong>Owner:</strong> Cloud (verificação) + MN (decisão)
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-a">Q2</div>
+            <div>
+              <h4 class="card-title">Fase 1 — D2 (S11)</h4>
+              <p class="card-meta">MN (2026-08-01)</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <strong>Pergunta:</strong> Formalizar S11 (Mineração) na Fase 2 com checklist idêntico a S12/S13?<br>
+            <strong>Owner:</strong> MN
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-a">Q3</div>
+            <div>
+              <h4 class="card-title">Fase 1 — D3 (RLS)</h4>
+              <p class="card-meta">Security (2026-08-01 a 07)</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <strong>Pergunta:</strong> RLS policies design + full testing cycle (8 dias) concluído?<br>
+            <strong>Owner:</strong> Security + Database
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-a">Q4</div>
+            <div>
+              <h4 class="card-title">Fase 1 — D4 (Manta-09)</h4>
+              <p class="card-meta">MN (Fase 2, 2026-08-15)</p>
+            </div>
+          </div>
+          <div class="card-content">
+            <strong>Pergunta:</strong> Criar Manta-09 (agente-regulatorio horizontal) ou deixar distribuído?<br>
+            <strong>Owner:</strong> MN (decisão arquitetura)
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function switchTab(tabName) {
+      // Hide all tabs
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+
+      // Remove active from buttons
+      const buttons = document.querySelectorAll('.nav-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      // Show selected tab
+      document.getElementById(tabName).classList.add('active');
+
+      // Mark button as active
+      event.target.classList.add('active');
+    }
+
+    // Initialize
+    document.querySelectorAll('.nav-btn')[0].classList.add('active');
+  </script>
+</body>
+</html>
