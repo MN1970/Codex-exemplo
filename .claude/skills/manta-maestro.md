@@ -13,8 +13,8 @@ Manta Maestro é um **multi-agent architecture** especializado em infraestrutura
 
 - **23 agentes especializados** (11 horizontais + 12 verticais)
 - **4 eixos ortogonais** (Segmentos, Atividades, Funcionais, Disciplinas)
-- **9 coleções RAG** com 204 chunks de conhecimento específico
-- **Roteamento inteligente** baseado em keywords e contexto
+- **9 coleções RAG** com 204 chunks (embeddings 1024d bge-m3, desde 2026-07-03)
+- **Roteamento inteligente** baseado em keywords e contexto (Maestro Haiku→Sonnet→Opus)
 
 ---
 

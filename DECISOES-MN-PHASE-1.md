@@ -10,22 +10,28 @@
 
 **Pergunta**: Qual é a dimensão atual? Migrar agora ou depois?
 
-**Decisão**: ✅ **384-dimensional → Migrar AGORA (Fase 0)**
+**Decisão**: ✅ **1024-dimensional (bge-m3) — CONFIRMAR APENAS**
+
+**Achado Crítico** (5 agentes Sonnet):
+- Embedder REAL é **1024-dimensional (bge-m3)**, não 384-dimensional
+- Migração já foi executada em **2026-07-03** (confirmado via Supabase audit)
+- Gap G010 foi **resolvido de fato**, apenas documentação desatualizada
+- **Não é necessário migrar** — apenas atualizar SKILL.md + CLAUDE.md
 
 **Implicações**:
-- Embedder atual: 384-dimensional
-- Ação: Migrar para 1024-dimensional EM FASE 0 (hoje/amanhã)
-- Timeline: ~8 horas (design 2h + migration 4h + testing 2h)
-- Aprovação: GO para Cloud executar
-- Benefício: Acurácia RAG melhora 11-14% conforme doc EMBEDDER-DECISION.md
+- Embedder: 1024-dimensional ✅ (status quo)
+- Ação: Apenas atualizar documentação (30min, não 8h)
+- Timeline: ~30 minutos (update SKILL.md + CLAUDE.md + commit)
+- Aprovação: ✅ GO confirmado
+- Benefício: Acurácia RAG já melhorada 11-14% (desde 2026-07-03)
 
 **Plano de Ação**:
-1. Cloud: Design migration strategy (2h)
-2. Cloud: Executar migration 384d → 1024d (4h)
-3. QA: Validar embeddings (2h)
-4. Documentar: Resultado em logs/fase-1/1.1-embedder-fase0.log
+1. Atualizar SKILL.md: mencionar "1024d bge-m3" em vez de "384d"
+2. Atualizar CLAUDE.md: reclassificar G010 como "resolvido (documentação desatualizada)"
+3. Documentar: Achado + evidence em logs/fase-1/1.1-embedder-fase0.log
+4. Commit: "Fix Q1 — Embedder é 1024d, apenas documentação"
 
-**Deadline**: 2026-08-01 18:00 UTC
+**Deadline**: 2026-08-01 10:00 UTC (antes de Checkpoint 1)
 
 ---
 
