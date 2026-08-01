@@ -4,7 +4,22 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.9** (2026-07-13) — Fechar loop de aprendizado. 5 pipes
+Versão: **v6.1** (2026-08-01) — Renumeração breaking. Consolida a
+taxonomia S1..S14 do Maestro operacional SP como código canônico único
+para este repo, aposentando o prefixo legado `Manta 03-S{n}`. Escopo T3
+executado: (a) 9 SKILL.md em `.claude/agents/*.md` renumerados
+(edificacoes S13→S6, portos S6→S7, aeroportos S7→S8, saneamento S8→S9,
+energia S9→S10, barragens S10→S11, tuneis S5→S12, mineracao S11→S13,
+oleo-gas S12→S14); (b) frontmatter YAML mantido, `sp_operational_segment`
+agora coincide com `codigo`; (c) migração candidata
+`supabase/migrations/2026_08_01_v6_1_taxonomy_reconciliation.sql`
+(NÃO aplicada — gate MN duro); (d) referência histórica preservada no
+`manta-maestro.md` (§3.1 legenda); (e) T2 concluída antes: pastas SP
+`S12-tuneis / S13-mineracao / S14-oleogas` criadas em
+`04_IA/Manta-Maestro/01-segmentos/`. T4 (publicação SP de
+ARQUITETURA-v6.1 + CLAUDE-v6.1 consolidado) segue.
+
+Versão v4.9 (2026-07-19) — Fechar loop de aprendizado. 5 pipes
 paralelas: (1) cron diário `consolidate_old_episodes()`; (2) endpoint
 `POST /api/quantitativo/field-measurement` para ingestão pós-obra;
 (3) unblock do learned router (migration v4.6 ainda não aplicada em
@@ -67,53 +82,53 @@ Aeroportos, Saneamento, Energia, Barragens).
 
 ### Eixo 2 — Verticais por segmento (C3)
 
-| Código | Segmento | Agente | Status |
+| Código v6.1 | Segmento | Agente | Status |
 |--------|----------|--------|--------|
-| Manta 03-S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
-| Manta 03-S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
-| Manta 03-S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
-| Manta 03-S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| Manta 03-S5 | Túneis | agente-tuneis | 🆕 Criado 2026-07-12 (v4.4) |
-| Manta 03-S6 | Portos | agente-portos | ✅ Criado 2026-07-05 |
-| Manta 03-S7 | Aeroportos | agente-aeroportos | ✅ Criado 2026-07-05 |
-| Manta 03-S8 | Saneamento | agente-saneamento | ✅ Criado 2026-07-05 — PRIORIDADE AySA |
-| Manta 03-S9 | Energia | agente-energia | ✅ Criado 2026-07-05 — ANEEL/State Grid |
-| Manta 03-S10 | Barragens | agente-barragens | ✅ Criado 2026-07-05 |
-| Manta 03-S11 | Mineração | agente-mineracao | 🆕 Criado 2026-07-12 (v4.4) — adjacente S10 |
-| Manta 03-S12 | Óleo & Gás | agente-oleo-gas | 🆕 Criado 2026-07-12 (v4.4) — downstream + midstream |
-| Manta 03-S13 | Edificações | agente-edificacoes | 🆕 Criado 2026-07-12 (v4.4) — vertical + galpão |
+| S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
+| S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
+| S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
+| S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
+| S5 | Imobiliário | (SP-native, `manta-04`) | ✅ Operacional (SP) |
+| S6 | Edificações | agente-edificacoes | ✅ v6.1 — antes `Manta 03-S13` |
+| S7 | Portos | agente-portos | ✅ v6.1 — antes `Manta 03-S6` |
+| S8 | Aeroportos | agente-aeroportos | ✅ v6.1 — antes `Manta 03-S7` |
+| S9 | Saneamento | agente-saneamento | ✅ v6.1 — antes `Manta 03-S8` — PRIORIDADE AySA |
+| S10 | Energia | agente-energia | ✅ v6.1 — antes `Manta 03-S9` — ANEEL/State Grid |
+| S11 | Barragens | agente-barragens | ✅ v6.1 — antes `Manta 03-S10` |
+| S12 | Túneis | agente-tuneis | 🆕 v6.1 T2 (SP criado 2026-08-01) — antes `Manta 03-S5` |
+| S13 | Mineração | agente-mineracao | 🆕 v6.1 T2 (SP criado 2026-08-01) — antes `Manta 03-S11` |
+| S14 | Óleo & Gás | agente-oleo-gas | 🆕 v6.1 T2 (SP criado 2026-08-01) — antes `Manta 03-S12` |
 
-### RECONCILIAÇÃO COM MAESTRO OPERACIONAL (SP v3.0+)
+### RECONCILIAÇÃO COM MAESTRO OPERACIONAL (SP v3.0+) — resolvida em v6.1
 
-**Contexto do conflito:** o repositório Codex-exemplo (este) modela os
-segmentos de C3 como sub-códigos `Manta 03-S{n}` (S1–S13); o Maestro
-operacional SP v3.0 (rodando em produção) usa códigos top-level `S{n}`
-que colidem em S5 e S6 (SP: S5 Imobiliário, S6 Edificações — sem os
-outros verticais deste repo). A tabela abaixo é a **reconciliação
-canônica** aplicada aos SKILL.md via campo `sp_operational_segment` no
-frontmatter YAML:
+**Estado atual (v6.1, 2026-08-01):** o repo Codex-exemplo agora usa
+diretamente a taxonomia S1..S14 do Maestro operacional SP. O prefixo
+legado `Manta 03-S{n}` foi aposentado. `sp_operational_segment` agora
+coincide sempre com `codigo` e existe apenas para retro-compatibilidade
+de PRs/docs anteriores a v6.1.
 
-| Codex-exemplo (este repo) | Segmento    | Maestro SP operacional |
-|---------------------------|-------------|------------------------|
-| Manta 03-S1               | Rodovias    | S1                     |
-| Manta 03-S2               | OAE         | S2                     |
-| Manta 03-S3               | Ferrovia    | S3                     |
-| Manta 03-S4               | Metrô       | S4                     |
-| Manta 03-S5               | Túneis      | **S12**                |
-| Manta 03-S6               | Portos      | **S7**                 |
-| Manta 03-S7               | Aeroportos  | **S8**                 |
-| Manta 03-S8               | Saneamento  | **S9**                 |
-| Manta 03-S9               | Energia     | **S10**                |
-| Manta 03-S10              | Barragens   | **S11**                |
-| Manta 03-S11              | Mineração   | **S13**                |
-| Manta 03-S12              | Óleo & Gás  | **S14**                |
-| Manta 03-S13              | Edificações | S6 (reusa)             |
+**Legenda histórica (pre-v6.1)** — usar para interpretar branches, PRs
+e documentos com mais de uma revisão de idade:
 
-Cada arquivo `sharepoint/01-agentes-fundamentais/agente-*/SKILL.md`
-declara agora `sp_operational_segment: S<N>` conforme a coluna direita.
-O código `Manta 03-S{n}` continua sendo a identidade canônica deste
-repo; o `sp_operational_segment` é o pino de ligação com o kernel
-Manta 12 do SP.
+| Codex legado (pre-v6.1) | Segmento    | v6.1 (canônico) |
+|-------------------------|-------------|-----------------|
+| Manta 03-S1             | Rodovias    | S1              |
+| Manta 03-S2             | OAE         | S2              |
+| Manta 03-S3             | Ferrovia    | S3              |
+| Manta 03-S4             | Metrô       | S4              |
+| Manta 03-S5             | Túneis      | **S12**         |
+| Manta 03-S6             | Portos      | **S7**          |
+| Manta 03-S7             | Aeroportos  | **S8**          |
+| Manta 03-S8             | Saneamento  | **S9**          |
+| Manta 03-S9             | Energia     | **S10**         |
+| Manta 03-S10            | Barragens   | **S11**         |
+| Manta 03-S11            | Mineração   | **S13**         |
+| Manta 03-S12            | Óleo & Gás  | **S14**         |
+| Manta 03-S13            | Edificações | **S6**          |
+
+Nada mais precisa ser renomeado neste repo — se você encontra `Manta 03-Sn`
+em algum arquivo novo/PR aberto, use esta tabela para converter e re-abra
+com códigos v6.1.
 
 ### Eixo 3 — Ciclo de vida (8 fases)
 
@@ -364,6 +379,32 @@ mergear.
 
 ---
 
+## DEPLOY CHECKLIST v6.1 — Renumeração unificada S1..S14
+
+Sprint T1→T4 (2026-08-01). T1+T2+T3 concluídos no repo; T4 e apply de
+migração seguem sob gate MN duro.
+
+- [x] **T1** — portar 4 SP-only skills para repo (`sharepoint/02-atividades/A9-regulatorio`,
+      `A10-risco`, `A11-fiscalizacao` + `sharepoint/03-funcionais/F10-pesquisa-evolutiva`).
+      Commit `ad98925`.
+- [x] **T2** — criar 3 verticais no SP (`04_IA/Manta-Maestro/01-segmentos/S12-tuneis`,
+      `S13-mineracao`, `S14-oleogas`) via upload MCP. Documentado em
+      `docs/V6.1-T2-SP-UPLOADS.md`.
+- [x] **T3** — renumerar 9 agent files (`agente-{tuneis,portos,aeroportos,saneamento,
+      energia,barragens,mineracao,oleo-gas,edificacoes}.md`) para códigos S1..S14
+      unificados. `manta-maestro.md` mantém tabela de legenda histórica.
+- [x] **T3 migração candidata** — `supabase/migrations/2026_08_01_v6_1_taxonomy_reconciliation.sql`
+      (aditiva + UPDATE codigo; **NÃO aplicada em prod — gate MN duro**).
+- [ ] **T3 apply Supabase** — aguardando gate MN (rollback bloco DOWN incluso).
+- [ ] **T3 fix router SKILL** — `manta-router v1.1.0` referência pasta
+      fantasma `01-agentes-fundamentais/` no SP; próximo passo é publicar
+      `manta-maestro v6.1.0` com fanout via `list_folders` (`01-segmentos/`,
+      `02-atividades/`, `03-funcionais/`).
+- [ ] **T4 publicar SP consolidado** — upload de `ARQUITETURA-AGENTES-IA-v6.1.0.md`,
+      `CLAUDE.md-v6.1.0-CONSOLIDATED.md`, `SKILL-MANTA-MAESTRO-v6.1.0.md`;
+      arquivar v5.1/v5.2 em `99-backup/`.
+- [ ] **Gate humano MN** antes de apply migration + T4 uploads.
+
 ## DEPLOY CHECKLIST v4.9 - Fechar loop de aprendizado
 
 Sprint concluido 2026-07-19. 5 pipes paralelas + hardening pos-apply.
@@ -388,15 +429,16 @@ Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
 └── .claude/
     └── agents/
-        ├── agente-portos.md          # S6 (v4.2)
-        ├── agente-aeroportos.md      # S7 (v4.2)
-        ├── agente-saneamento.md      # S8 — prioridade AySA (v4.2)
-        ├── agente-energia.md         # S9 — ANEEL/State Grid (v4.2)
-        ├── agente-barragens.md       # S10 (v4.2)
-        ├── agente-tuneis.md          # 🆕 S5 (v4.4)
-        ├── agente-mineracao.md       # 🆕 S11 (v4.4) — adjacente S10
-        ├── agente-oleo-gas.md        # 🆕 S12 (v4.4) — downstream/midstream
-        └── agente-edificacoes.md     # 🆕 S13 (v4.4) — vertical + galpão
+        ├── manta-maestro.md          # Manta 00 — router
+        ├── agente-edificacoes.md     # S6 (v6.1 — antes S13)
+        ├── agente-portos.md          # S7 (v6.1 — antes S6)
+        ├── agente-aeroportos.md      # S8 (v6.1 — antes S7)
+        ├── agente-saneamento.md      # S9 (v6.1 — antes S8) — prioridade AySA
+        ├── agente-energia.md         # S10 (v6.1 — antes S9) — ANEEL/State Grid
+        ├── agente-barragens.md       # S11 (v6.1 — antes S10)
+        ├── agente-tuneis.md          # S12 (v6.1 — antes S5)
+        ├── agente-mineracao.md       # S13 (v6.1 — antes S11)
+        └── agente-oleo-gas.md        # S14 (v6.1 — antes S12) — downstream/midstream
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
@@ -408,6 +450,22 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v6.1** (2026-08-01) — Renumeração unificada S1..S14. Fim do dual-numbering
+  Codex×SP. **T1** portou 4 skills SP-only para o repo (A9/A10/A11/F10) —
+  commit `ad98925`. **T2** criou pastas `S12-tuneis`, `S13-mineracao`,
+  `S14-oleogas` em `04_IA/Manta-Maestro/01-segmentos/` via upload MCP —
+  doc `docs/V6.1-T2-SP-UPLOADS.md`. **T3** renumerou 9 agent files
+  (edificacoes 13→6, portos 6→7, aeroportos 7→8, saneamento 8→9,
+  energia 9→10, barragens 10→11, tuneis 5→12, mineracao 11→13,
+  oleo-gas 12→14); `manta-maestro.md` conservou a tabela de legenda
+  para PRs pré-v6.1. **Migração candidata**
+  `supabase/migrations/2026_08_01_v6_1_taxonomy_reconciliation.sql`
+  aplica UPDATE em `rag_collections`, `sp_agent_routing`,
+  `maestro_routing_keywords` + INSERT dos 3 A + 1 F novos em
+  `manta_agent_capabilities`; **NÃO aplicada em prod** — bloco DOWN de
+  rollback incluso. **T4** (publicação SP consolidada) e apply Supabase
+  seguem sob gate MN duro. Docs: `docs/V6.1-PHASE-0-BASELINE.md`,
+  `docs/V6.1-TAXONOMY-PROPOSAL.md`, `docs/V6.1-T2-SP-UPLOADS.md`.
 - **v4.9** (2026-07-19) — Fechar loop de aprendizado. Sprint concluído:
   5 pipes paralelas aplicadas em produção 2026-07-19 + hardening pós-apply.
   **Pipe 1** cron consolidação episódica

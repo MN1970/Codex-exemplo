@@ -201,11 +201,13 @@ Skill v2.zip + Cowork.json) via `manta-hub/scripts/publish_agents.py`
 | **S13** | Mineracao | Cava aberta/subterranea, ANM, SME, JORC, NI 43-101, LOM, moagem SAG, flotacao, heap leach | **v4.6** |
 | **S14** | Oleo & Gas | Refinaria, gasoduto, oleoduto, tancagem API 650, HAZOP, SIL, LOPA, HDD, LNG, city gate | **v4.6** |
 
-**Mapeamento com Codex-exemplo:** o repo espelho `MN1970/Codex-exemplo`
-usa prefixo `Manta 03-S{n}` para os verticais tecnicos com uma numeracao
-propria. Tabela de correspondencia:
+**Mapeamento com Codex-exemplo (legado ate v4.9):** o repo espelho
+`MN1970/Codex-exemplo` usava prefixo `Manta 03-S{n}` para os verticais
+tecnicos com numeracao propria. A partir da **v6.1 (2026-08-01)** o repo
+adota a mesma taxonomia S1..S14 do Maestro operacional; a tabela abaixo
+serve como legenda historica para PRs/docs anteriores a v6.1:
 
-| Codex (`03-Sn`) | Segmento | Maestro operacional (Sn) |
+| Codex legado (`03-Sn` ate v4.9) | Segmento | Maestro operacional (Sn v6.1) |
 |---|---|---|
 | 03-S1 | Rodovias    | S1 |
 | 03-S2 | OAE         | S2 |

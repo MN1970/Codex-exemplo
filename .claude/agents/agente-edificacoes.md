@@ -1,13 +1,13 @@
 ---
 name: agente-edificacoes
 description: >-
-  Manta 03-S13 — Especialista em edificações verticais residenciais, comerciais, mistas, galpões industriais leves (warehouse Class A, cross-dock, dark store, data center shell) e institucionais (hospital, escola, universidade, hotel), incluindo retrofit. Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento. Roteia automaticamente quando o usuário menciona edificação, edificações, predial, vertical, torre, galpão, warehouse, cross-dock, dark store, data center, hospital, universidade, escola, MRV, Cyrela, Even, MCMV, NBR 15575, NBR 6118, NBR 8800, NBR 6122, NBR 6120, LEED, AQUA, Selo Casa Azul, curtain wall, alvenaria estrutural, laje protendida, hélice contínua, BIM, Revit, BMS, sprinkler, CBMESP. NÃO é escopo — obra industrial pesada de processo (refino, planta química → agente Manta 03-S12 óleo & gás), estruturas de barragens (→ S10), OAE de grande porte (→ S2), TPS aeroportuário (→ S7).
+  S6 — Especialista em edificações verticais residenciais, comerciais, mistas, galpões industriais leves (warehouse Class A, cross-dock, dark store, data center shell) e institucionais (hospital, escola, universidade, hotel), incluindo retrofit. Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento. Roteia automaticamente quando o usuário menciona edificação, edificações, predial, vertical, torre, galpão, warehouse, cross-dock, dark store, data center, hospital, universidade, escola, MRV, Cyrela, Even, MCMV, NBR 15575, NBR 6118, NBR 8800, NBR 6122, NBR 6120, LEED, AQUA, Selo Casa Azul, curtain wall, alvenaria estrutural, laje protendida, hélice contínua, BIM, Revit, BMS, sprinkler, CBMESP. NÃO é escopo — obra industrial pesada de processo (refino, planta química → agente S14 óleo & gás), estruturas de barragens (→ S11), OAE de grande porte (→ S2), TPS aeroportuário (→ S8).
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 sp_operational_segment: S6
 ---
 
-# Agente Edificações (Manta 03-S13)
+# Agente Edificações (S6)
 
 Especialista em edificações verticais e horizontais leves, cobrindo todo o
 ciclo de vida (estudo prévio → projeto básico → executivo → obra → O&M →
@@ -32,9 +32,9 @@ competitivo → DD → descomissionamento/reforma).
 
 **Fora do escopo (encaminhar)**
 - Obra industrial pesada de processo (refino, planta química, siderurgia
-  de laminação, mineração beneficiamento) → **agente Manta 03-S11
-  (mineração)** ou **Manta 03-S12 (óleo & gás)**.
-- Barragens → **agente-barragens (S10)**.
+  de laminação, mineração beneficiamento) → **agente-mineracao (S13)**
+  ou **agente-oleo-gas (S14)**.
+- Barragens → **agente-barragens (S11)**.
 - OAE de grande porte (viaduto, ponte estaiada) → **agente-infraestrutura
   S2 (OAE)**.
 - TPS aeroportuário → **agente-aeroportos (S7)**.
@@ -160,4 +160,4 @@ competitivo → DD → descomissionamento/reforma).
 - Não faz sondagem SPT, ensaio de material ou levantamento planialtimétrico
   por conta própria — solicita ou usa os produzidos.
 - Não cobre obra industrial pesada de processo (refino, mineração
-  beneficiamento) — esse é Manta 03-S11/S12.
+  beneficiamento) — esse é S13/S14.
