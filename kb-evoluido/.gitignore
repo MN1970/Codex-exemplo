@@ -1,0 +1,23 @@
+# Deploy artifacts (auto-generated)
+deploy_log.json
+deploy_report.json
+go-live_*.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.Python
+
+# Environment
+.env
+.env.local
+*.sh
+# Production go-live script (EXCEPTION)
+!GO_LIVE_2026_08_01.sh
+
+# Monitoring
+prometheus_data/
+grafana_data/
+alertmanager_data/
