@@ -16,6 +16,7 @@ import {
   create_task,
   list_tasks,
   post_comment,
+  TaskPriority,
 } from "../adapters/cowork-adapter";
 
 interface SyncRecord {
@@ -157,12 +158,14 @@ ${prompt}
 **SyncID:** ${syncId}
         `,
         priority:
-          (routingData.confidence === "high"
-            ? "high"
-            : "medium") as "high" | "medium" | "low",
-        agent_source: routingData.agentName,
-        segment: routingData.segment || "Geral",
-        tags: [routingData.agentName, "sync-manager", syncId],
+          routingData.confidence === "high"
+            ? TaskPriority.HIGH
+            : TaskPriority.MEDIUM,
+        labels: [routingData.agentName, "sync-manager", syncId],
+        customFields: {
+          agent_source: routingData.agentName,
+          segment: routingData.segment || "Geral",
+        },
       });
 
       if (taskResponse.success && taskResponse.data) {
@@ -203,6 +206,8 @@ ${prompt}
 
 Este task foi criado automaticamente através da integração:
 Claude AI → Maestro Router → Cowork Sync Manager`,
+          authorId: "sync-manager-system",
+          authorName: "SyncManager",
         });
 
         console.log(`💬 Comentário postado com contexto de sincronização`);

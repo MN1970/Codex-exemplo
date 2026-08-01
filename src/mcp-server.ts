@@ -10,6 +10,8 @@ import {
   create_task,
   list_tasks,
   post_comment,
+  TaskPriority,
+  TaskStatus,
 } from "./adapters/cowork-adapter";
 
 const app = express();
@@ -165,13 +167,22 @@ app.post("/mcp/create-task", async (req, res) => {
     const { title, description, agent_source, segment, priority, tags } =
       req.body;
 
+    const priorityEnum =
+      priority === "high"
+        ? TaskPriority.HIGH
+        : priority === "low"
+          ? TaskPriority.LOW
+          : TaskPriority.MEDIUM;
+
     const response = await create_task({
       title,
       description,
-      agent_source,
-      segment,
-      priority: (priority || "medium") as "high" | "medium" | "low",
-      tags: tags || [],
+      priority: priorityEnum,
+      labels: tags || [],
+      customFields: {
+        agent_source,
+        segment,
+      },
     });
 
     res.json(response);
@@ -190,10 +201,19 @@ app.get("/mcp/tasks", async (req, res) => {
   try {
     const { limit, agent_source, status } = req.query;
 
+    const statusEnum = status
+      ? (status === "open"
+          ? TaskStatus.OPEN
+          : status === "in_progress"
+            ? TaskStatus.IN_PROGRESS
+            : status === "done"
+              ? TaskStatus.DONE
+              : undefined)
+      : undefined;
+
     const response = await list_tasks({
       limit: parseInt(limit as string) || 20,
-      agent_source: agent_source as string,
-      status: status as string,
+      status: statusEnum,
     });
 
     res.json(response);
@@ -210,11 +230,13 @@ app.get("/mcp/tasks", async (req, res) => {
  */
 app.post("/mcp/post-comment", async (req, res) => {
   try {
-    const { taskId, content } = req.body;
+    const { taskId, content, authorId, authorName } = req.body;
 
     const response = await post_comment({
       taskId,
       content,
+      authorId: authorId || "mcp-api",
+      authorName: authorName || "MCP API",
     });
 
     res.json(response);

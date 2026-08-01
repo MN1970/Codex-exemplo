@@ -24,6 +24,7 @@ import {
   create_task,
   post_comment,
   list_tasks,
+  TaskPriority,
 } from "../adapters/cowork-adapter";
 
 interface EnhancedOrchestrationRequest {
@@ -303,15 +304,17 @@ ${claudeAnalysis.risks.map((r) => `- ${r}`).join("\n")}` : ""}
     const response = await create_task({
       title: taskTitle,
       description: taskDescription,
-      priority: (routing.confidence === "high" ? "high" : "medium") as "high" | "medium" | "low",
-      agent_source: routing.agentName,
-      segment: routing.segment,
-      tags: [
+      priority: routing.confidence === "high" ? TaskPriority.HIGH : TaskPriority.MEDIUM,
+      labels: [
         routing.agentName,
-        routing.segment,
+        routing.segment || "Geral",
         "maestro-enhanced",
         "claude-ai",
       ],
+      customFields: {
+        agent_source: routing.agentName,
+        segment: routing.segment,
+      },
     });
 
     if (!response.success || !response.data) {
@@ -421,6 +424,8 @@ Timestamp: ${new Date().toISOString()}
     await post_comment({
       taskId: coworkTask.taskId,
       content: feedbackComment,
+      authorId: "maestro-system",
+      authorName: "Maestro Enhanced",
     });
   }
 
