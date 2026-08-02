@@ -4,13 +4,18 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.0.1** (2026-07-31) — **unificação operacional**. Consolida:
+Versão: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
+assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
+integração com S6–S10, RAG + compliance mapping.
+
+Consolida v5.0.1 operacional (2026-07-31):
 - **v5.0.0 operacional** (aprovado 2026-07-22): 20 agentes em produção,
   infraestrutura Maestro-OS v6.0 completa (APScheduler, ML, observability)
 - **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
   gaps G010/G012/G014 resolvidos, 15 Sonnets investigação paralela.
 
-Ticket `MNT-2026-CONSOLIDACAO-ARCH-V5` + operacional 2026-07-22.
+Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGENT` (novo).
 
 > **Nota de proveniência**: este arquivo **reconcilia** dois work streams
 > paralelos na mesma data:
@@ -262,12 +267,13 @@ simultâneos).
 
 ---
 
-## Mapa completo de agentes — 20 operacionais + 2 propostos
+## Mapa completo de agentes — 21 operacionais + 2 propostos
 
-Contagem operacional confirmada: **11 horizontais + 9 verticais
-operacionais** = 20 agentes (S5 Túneis é parcial, não conta como
-agente adicional). S12 (Óleo & Gás) e S13 (Edificações) são
-**propostos**, não somam ao total operacional até gate MN.
+Contagem operacional confirmada: **12 horizontais + 9 verticais
+operacionais** = 21 agentes (S5 Túneis é parcial, não conta como
+agente adicional). Manta 20 (ESG) é agora **operacional v1.0** (P3-04 Design Agent).
+S12 (Óleo & Gás) e S13 (Edificações) são **propostos**, não somam ao 
+total operacional até gate MN.
 
 ### Horizontais (transversais a todos os segmentos) — 11 agentes
 
@@ -284,6 +290,7 @@ agente adicional). S12 (Óleo & Gás) e S13 (Edificações) são
 | Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
 | Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
 | Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
+| Manta 20 | esg | manta-20-esg, agente-esg | Sonnet | 🆕 v1.0 (P3-04 Design Agent) |
 
 ### Verticais por segmento (C3) — 9 operacionais + 1 parcial + 2 propostos
 
@@ -325,6 +332,12 @@ IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
 
 IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
    → agente-barragens (S10)
+
+IF menção a biodiversidade|ambiental|ESG|carbono|offset|Mata Atlântica
+   |Cerrado|Amazônia|mangue|APP|RL|IBAMA|social license|stakeholder
+   |impacto comunitário|consulta prévia|FUNAI|carbon accounting|Net Zero
+   |Escopo 1|Escopo 2|Escopo 3|GHG|compliance ESG|TCFD|SASB|GRI
+   → manta-20-esg (co-agente com vertical do segmento em escopo)
 
 # Regras existentes S1-S4 mantidas sem alteração
 IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
@@ -544,6 +557,7 @@ Codex-exemplo/
 │       ├── agente-saneamento.md           # S8 — prioridade AySA
 │       ├── agente-energia.md              # S9 — ANEEL/State Grid
 │       ├── agente-barragens.md            # S10
+│       ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
 │       ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
 │       └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
 ├── docs/
@@ -574,6 +588,12 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
+  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
+  (ambiental, social, governança, integração), integração co-agente com 
+  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap. 
+  Tier: Sonnet. Status: v1.0 operacional. Agentes totais: 21 (12 h + 9 v).
+  Ticket `MNT-2026-P3-04-ESG-AGENT`.
 - **v5.0.1** (2026-07-31) — **UNIFICADA**: merge de v5.0.0 operacional
   (aprovado 2026-07-22, 20 agentes, Maestro-OS v6.0) + v5.0 consolidação
   (2026-07-31, gaps formalizados, 4 eixos A/F/D, 15 Sonnets investigação).
