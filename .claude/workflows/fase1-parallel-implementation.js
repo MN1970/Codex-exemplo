@@ -11,28 +11,39 @@ export const meta = {
 
 // Schema definitions
 const RAG_COLLECTION_SCHEMA = {
-  collection_slug: { type: 'string', enum: ['saneamento', 'energia', 'portos', 'aeroportos', 'barragens'] },
-  chunks_loaded: 'number',
-  sources_processed: 'array',
-  validation: 'object',
-  status: { type: 'string', enum: ['success', 'warning', 'error'] }
+  type: 'object',
+  properties: {
+    collection_slug: { type: 'string' },
+    chunks_loaded: { type: 'number' },
+    sources_processed: { type: 'array' },
+    validation: { type: 'object' },
+    status: { type: 'string' }
+  }
 }
 
 const SHAREPOINT_SETUP_SCHEMA = {
-  agent_name: 'string',
-  folders_created: 'number',
-  skill_md_uploaded: 'boolean',
-  documents_uploaded: 'number',
-  validation: 'object',
-  status: { type: 'string', enum: ['success', 'warning', 'error'] }
+  type: 'object',
+  properties: {
+    agent_name: { type: 'string' },
+    folders_created: { type: 'number' },
+    skill_md_uploaded: { type: 'boolean' },
+    documents_uploaded: { type: 'number' },
+    validation: { type: 'object' },
+    status: { type: 'string' }
+  }
 }
 
 const VALIDATION_SCHEMA = {
-  rag_collections: 'object',
-  sharepoint_folders: 'object',
-  mcp_config: 'object',
-  routing_tests: 'object',
-  overall_status: 'string'
+  type: 'object',
+  properties: {
+    rag_collections: { type: 'object' },
+    sharepoint_folders: { type: 'object' },
+    mcp_config: { type: 'object' },
+    routing_tests: { type: 'object' },
+    overall_status: { type: 'string' },
+    gate_phase2: { type: 'boolean' },
+    ambiguities: { type: 'array' }
+  }
 }
 
 // ============================================================================
