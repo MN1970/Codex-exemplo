@@ -1,10 +1,11 @@
 # 🚀 PHASE 1 — EXECUTION STATUS (2026-08-01 onwards)
 
-**Status**: ✅ **DECISIONS CONFIRMED** — Phase 1 launched with all 4 critical decisions approved.
+**Status**: ✅ **DECISIONS CONFIRMED** — Phase 1 launched. **UPDATE (08-02)**: Task 1.5 reassigned to Cloud team (parallel execution) after DevOps no-show 08-01 T+1h.
 
 **Iniciado**: 2026-08-01 (post Q1-Q4 confirmation)  
+**Hoje**: 2026-08-02 (T+1 day)  
 **CHECKPOINT 1**: 2026-08-07 12:00 UTC → GO/NO-GO para Fase 2  
-**Timeline**: 7 dias (6 tarefas paralelas + critical path 1.5→1.6→1.7)
+**Timeline**: 5 dias até deadline 2026-08-05 18:00 (6 tarefas paralelas + critical path 1.5→1.6→1.7)
 
 ---
 
@@ -16,6 +17,22 @@
 | **Q2** | S11 Mineração — formalizar? | SIM ✅ | Mesmo checklist S12/S13. Abre G015. | Fase 2 (08-15) |
 | **Q3** | RLS — status? | SIM, acelerar 5d ✅ | Design 1d + Staging 2d + Prod 2d (compressed) | 2026-08-05 18:00 |
 | **Q4** | Projeto Supabase xgluoaa? | VIVO ✅ | Migração para projeto principal fase 2 | 2026-08-21 |
+
+---
+
+## 🔄 UPDATE — TASK 1.5 REASSIGNMENT (2026-08-02)
+
+**Situação**: DevOps não respondeu ao briefing após 1+ hora (08-01 T+1h). Critical path em risco.
+
+**Decisão**: Reatribuir Task 1.5 para **Cloud team** em execução paralela com Task 1.4 (G012 investigation).
+
+**Rationale**:
+- Cloud team já tem acesso ao projeto Supabase principal (`ogxxgvgtulrbbppshjie`)
+- Já executando Task 1.4 (investigação G012) — mesmas ferramentas, mesma expertise
+- Execução paralela mantém critical path no track (2026-08-05 18:00 deadline)
+- Documentação completa: `TASK-1.5-CLOUD-PARALLEL-BRIEFING.md`
+
+**Timeline mantido**: 3 dias (08-01 a 08-05), sem extensão.
 
 ---
 
@@ -34,7 +51,7 @@
 
 | Task | O quê | Deadline | Bloqueado por | Status |
 |------|-------|----------|---------------|--------|
-| **1.5 S12/S13** | RAG + routing + SharePoint | 2026-08-05 18:00 | — | 🔴 PRONTO (aguardando DevOps) |
+| **1.5 S12/S13** | RAG + routing + SharePoint | 2026-08-05 18:00 | — | 🟡 PARALLEL (Cloud team) |
 | **1.6 Smoke Tests** | 12 testes (8 auto + 4 manual) | 2026-08-06 18:00 | 1.5 ✅ | ⏳ BLOQUEADO (espera 1.5) |
 | **1.7 Slack Announce** | Post v5.0.1 Phase 1 | 2026-08-06 18:00 | 1.6 ✅ | ⏳ BLOQUEADO (espera 1.6) |
 
@@ -114,7 +131,7 @@
 - **1.2 D3 RLS**: Security (@security-team)
 - **1.3 D5 DataDog**: Observability (@obs-team)
 - **1.4 D6 G012**: Cloud (@cloud-infra)
-- **1.5 S12/S13** (CRÍTICO): DevOps (@devops) — **Este é o caminho crítico. Se atrasar, todo checkpoint atrasa.**
+- **1.5 S12/S13** (CRÍTICO): **Cloud team (@cloud-infra)** — Reatribuído 08-02 (DevOps no-show 08-01 T+1h). Execução paralela com Task 1.4 (G012 investigation). **Este é o caminho crítico. Se atrasar, todo checkpoint atrasa.**
 - **Escalação**: MN se qualquer task atingir risco "vermelho"
 
 ---
