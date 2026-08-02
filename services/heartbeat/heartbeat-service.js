@@ -15,7 +15,7 @@
  *
  *   2. HealthRegistry    — the source of truth for agent health. Holds
  *      an in-memory "health view" (always authoritative and fast),
- *      write-through-persists it to Postgres (`agent_health` table),
+ *      write-through-persists it to Postgres (`agent_heartbeats` table),
  *      and falls back to a local disk cache whenever Postgres is
  *      unreachable ("graceful degradation"). Exposes `isRoutable()`
  *      so the Maestro router can make a synchronous yes/no decision
@@ -146,18 +146,18 @@ class DiskCache {
 // Uses `pg` if it's installed. Lazily required so this file still runs
 // (in cache-only / degraded mode) even if `pg` was never `npm install`ed.
 
-const AGENT_HEALTH_TABLE_DDL = `
-CREATE TABLE IF NOT EXISTS agent_health (
+const AGENT_HEARTBEATS_TABLE_DDL = `
+CREATE TABLE IF NOT EXISTS agent_heartbeats (
   agent_id           TEXT PRIMARY KEY,
   status             TEXT NOT NULL CHECK (status IN ('healthy','degraded','unhealthy')),
   queue_depth        INTEGER NOT NULL DEFAULT 0,
-  error_rate_5m      NUMERIC NOT NULL DEFAULT 0,
+  error_rate_5m      NUMERIC NOT NULL DEFAULT 0 CHECK (error_rate_5m >= 0 AND error_rate_5m <= 1),
   last_heartbeat_at  TIMESTAMPTZ NOT NULL,
   unhealthy_since    TIMESTAMPTZ,
   routable           BOOLEAN NOT NULL DEFAULT TRUE,
   updated_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS idx_agent_health_status ON agent_health (status);
+CREATE INDEX IF NOT EXISTS idx_agent_heartbeats_status ON agent_heartbeats (status);
 `;
 
 class PostgresStore {
@@ -185,9 +185,9 @@ class PostgresStore {
     }
     try {
       this.pool = new PgPool({ connectionString: this.databaseUrl, max: 5, connectionTimeoutMillis: 5000 });
-      await this.pool.query(AGENT_HEALTH_TABLE_DDL);
+      await this.pool.query(AGENT_HEARTBEATS_TABLE_DDL);
       this.available = true;
-      this.logger.info('Postgres store ready (agent_health table ensured)');
+      this.logger.info('Postgres store ready (agent_heartbeats table ensured)');
     } catch (err) {
       this.logger.error('Postgres init failed — falling back to cache-only mode', { error: err.message });
       this.available = false;
@@ -197,7 +197,7 @@ class PostgresStore {
   async upsert(record) {
     if (!this.available) throw new Error('postgres store unavailable');
     const sql = `
-      INSERT INTO agent_health
+      INSERT INTO agent_heartbeats
         (agent_id, status, queue_depth, error_rate_5m, last_heartbeat_at, unhealthy_since, routable, updated_at)
       VALUES ($1,$2,$3,$4,$5,$6,$7, NOW())
       ON CONFLICT (agent_id) DO UPDATE SET
@@ -222,7 +222,7 @@ class PostgresStore {
 
   async listAll() {
     if (!this.available) throw new Error('postgres store unavailable');
-    const { rows } = await this.pool.query('SELECT * FROM agent_health ORDER BY agent_id');
+    const { rows } = await this.pool.query('SELECT * FROM agent_heartbeats ORDER BY agent_id');
     return rows;
   }
 
