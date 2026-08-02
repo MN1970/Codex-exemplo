@@ -29,13 +29,35 @@ início de cada ciclo e preencha os campos entre `[ ]`.
 
 ### Pré-requisito de dados (bloqueante)
 
-- [ ] `routing_events`, `routing_feedback` e `agent_health` existem e
-      estão populadas para todo o período analisado (ver schema em
-      `docs/MANTA-MAESTRO-ECOSYSTEM-v5-UPGRADE.md` §4.1).
-- [ ] Se **qualquer item acima estiver em branco**: esta review vira
-      uma reunião de "gate de instrumentação" — não há dados para
-      Seções 1-4 abaixo. Registrar isso na Seção 6 (Decisões) e
-      escalar prazo de deploy do schema de observabilidade.
+Status conhecido em 2026-08-02 (atualizar a cada ciclo):
+
+- [ ] Migração `supabase/migrations/2026_08_02_routing_observability.sql`
+      aplicada em produção (cria `routing_events`, `routing_feedback`,
+      `agent_posteriors` — hoje só existem localmente via
+      `feedback_loop.py` + SQLite; o adaptador Supabase é um stub não
+      implementado). **Sem isso não há dado nenhum para as Seções 1-4.**
+- [ ] Maestro instrumentado para logar `latency_ms` e `tokens_used` em
+      cada `routing_events` (nenhum dos dois é gravado hoje — ver
+      cabeçalho da migração acima). Sem isso, a métrica de cost/request
+      (Seção 5) só roda em modo "estimativa estática", não custo real.
+- [ ] Conflito de schema `agent_health` resolvido: há duas definições
+      incompatíveis (`2026_08_02_agent_health_heartbeat.sql` — estado
+      atual, 1 linha/agente, é a que o serviço real
+      `services/heartbeat/heartbeat-service.js` escreve — vs.
+      `2026_08_02_agent_auto_registration.sql` — série temporal). Como
+      ambas usam `CREATE TABLE IF NOT EXISTS agent_health`, só a
+      primeira a rodar existe de fato; a outra migração fica um no-op
+      silencioso. Enquanto não resolvido, uptime é só snapshot atual,
+      não trend do trimestre.
+- [ ] `routing_events`/`routing_feedback` populados para **todo** o
+      período analisado (não só a partir de quando a migração acima
+      foi aplicada).
+
+Se **qualquer item acima estiver em aberto**: esta review vira uma
+reunião de "gate de instrumentação" — rodar só o que as queries de
+`quarterly_review_kpis.sql` conseguem entregar hoje (marcado inline no
+próprio arquivo SQL como disponível/indisponível), registrar o restante
+como pendência na Seção 6 (Decisões), e escalar prazo do que falta.
 
 ---
 

@@ -779,7 +779,7 @@ module.exports = {
 // Only auto-run when executed directly (`node heartbeat-service.js`),
 // never when required as a module.
 if (require.main === module) {
-  const isDemo = process.argv.includes('--demo') || !CONFIG.DATABASE_URL;
+  const isDemo = process.argv.includes('--demo');
   (isDemo ? runDemo() : startService()).catch((err) => {
     // eslint-disable-next-line no-console
     console.error('fatal error starting heartbeat-service:', err);

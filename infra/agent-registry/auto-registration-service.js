@@ -27,6 +27,7 @@ const crypto = require('crypto');
 const { getSupabaseClient } = require('./lib/supabase-client');
 const { parseAgentMarkdown } = require('./lib/parse-agent-md');
 const { loadSampleQueries } = require('./lib/sample-queries');
+const { logPromotionEvent } = require('./lib/events');
 const { startAbTest } = require('./ab-test-service');
 
 const SELF_TEST_LATENCY_THRESHOLD_MS = Number(
@@ -104,23 +105,6 @@ async function upsertAgent(record, { commitSha } = {}) {
   });
 
   return { agent: data, isNew };
-}
-
-async function logPromotionEvent(agentId, event, { reason, metrics, before, after } = {}) {
-  const supabase = getSupabaseClient();
-  const { error } = await supabase.from('agent_promotion_events').insert({
-    agent_id: agentId,
-    event,
-    reason: reason || null,
-    metrics: metrics || null,
-    traffic_percentage_before: before ?? null,
-    traffic_percentage_after: after ?? null,
-  });
-  if (error) {
-    // Non-fatal: telemetry shouldn't block registration.
-    // eslint-disable-next-line no-console
-    console.error(`[agent-registry] failed to log event "${event}" for ${agentId}:`, error.message);
-  }
 }
 
 /**

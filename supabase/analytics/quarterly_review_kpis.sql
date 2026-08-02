@@ -2,97 +2,114 @@
 -- Ticket: MNT-2026-ECOSYSTEM-UPGRADE-V5 (Fase 4.2 — Quarterly reviews)
 -- Companion de: docs/QUARTERLY-REVIEW-TEMPLATE.md
 --
--- IMPORTANTE — PRÉ-REQUISITO DE SCHEMA
+-- SCHEMA-BASE DESTAS QUERIES (o que existe de fato hoje, 2026-08-02)
 -- ---------------------------------------------------------------------
--- Estas queries assumem o schema de registry/observabilidade proposto
--- em docs/MANTA-MAESTRO-ECOSYSTEM-v5-UPGRADE.md §4.1 (tabelas `agents`,
--- `agent_health`, `routing_events`, `routing_feedback`). Em 2026-08-02
--- (v4.2 em produção) esse schema AINDA NÃO EXISTE — o Maestro v4.2 é
--- estático (CLAUDE.md + keywords) e não persiste routing logs.
+-- `agents`                     — supabase/migrations/2026_08_02_agent_auto_registration.sql
+-- `routing_events`             — supabase/migrations/2026_08_02_routing_observability.sql
+-- `routing_feedback`           — idem (espelha feedback_loop.py)
+-- `agent_health` (estado atual, 1 linha/agente, SEM histórico) —
+--                                 supabase/migrations/2026_08_02_agent_health_heartbeat.sql
+--                                 (é a versão que services/heartbeat/heartbeat-service.js
+--                                 realmente grava — ver ATENÇÃO abaixo)
 --
--- Portanto, antes da PRIMEIRA quarterly review com dados reais:
---   1. Aplicar o schema de `routing_events` / `routing_feedback` /
---      `agent_health` (ver migração candidata a criar em
---      supabase/migrations/, espelhando §4.1 do doc de ecossistema).
---   2. Instrumentar o Maestro para logar cada decisão de roteamento
---      (Fase 1.4 do roadmap v5.0 — tracing/logging).
---   3. Rodar por >= 1 trimestre completo antes da 1ª review, para ter
---      volume estatisticamente útil.
+-- Estas 3 primeiras já existem em código funcional (feedback_loop.py +
+-- migração companheira). O que NÃO existe ainda e por isso NÃO está
+-- nestas queries: `outcome`/fallback (Fase 2.3), composição multi-agente
+-- `is_composed` (Fase 2.2), `matched_keyword` explícito por regra do
+-- CLAUDE.md. Onde o KPI pedido depende disso, a query abaixo entrega o
+-- melhor proxy possível hoje e comenta o que falta instrumentar.
 --
--- Até lá, a seção "Pré-requisitos" do QUARTERLY-REVIEW-TEMPLATE.md
--- deve ser marcada como bloqueada e a review vira um gate de "dados
--- disponíveis? sim/não" em vez de análise de KPIs.
+-- ATENÇÃO — CONFLITO agent_health: há uma 2ª definição incompatível de
+-- `agent_health` (série temporal) em
+-- supabase/migrations/2026_08_02_agent_auto_registration.sql. Como
+-- ambas usam `CREATE TABLE IF NOT EXISTS`, só a que rodar primeiro
+-- realmente existe; a query 5.x (agent health) deste arquivo assume a
+-- versão "estado atual" (heartbeat), que é a que o serviço em produção
+-- de fato escreve. Resolver esse conflito é pré-requisito da Seção 5
+-- do QUARTERLY-REVIEW-TEMPLATE.md — ver nota lá.
 --
--- Todas as queries abaixo aceitam dois parâmetros de janela via psql
--- variables (:'period_start' / :'period_end'), formato 'YYYY-MM-DD'.
--- Exemplo de chamada:
+-- Todas as queries de janela temporal aceitam dois parâmetros via
+-- psql variables (:'period_start' / :'period_end'), formato
+-- 'YYYY-MM-DD'. Exemplo:
 --   psql "$SUPABASE_DB_URL" \
 --     -v period_start="'2026-05-01'" -v period_end="'2026-08-01'" \
 --     -f supabase/analytics/quarterly_review_kpis.sql
---
--- Se preferir rodar manualmente uma query por vez (recomendado na
--- reunião), copie o bloco desejado e substitua :'period_start' /
--- :'period_end' por literais.
+-- Ou copie um bloco por vez e substitua os literais manualmente
+-- (recomendado ao rodar ao vivo na reunião).
 
 -- =====================================================================
 -- 1. ROUTING ANALYSIS — qual regra/agente é mais usado
 -- =====================================================================
 
--- 1.1 Agente mais requisitado no trimestre (volume + share do total)
+-- 1.1 Agente mais requisitado no trimestre (volume + share + confiança)
 SELECT
-  chosen_agent_id                                   AS agent_id,
-  a.name                                             AS agent_name,
-  COUNT(*)                                           AS routes,
-  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1) AS pct_of_total,
-  ROUND(AVG(chosen_confidence)::numeric, 3)          AS avg_confidence,
-  ROUND(AVG(latency_ms)::numeric, 0)                 AS avg_latency_ms
+  re.chosen_agent_id                                   AS agent_id,
+  a.name                                                AS agent_name,
+  a.model,
+  COUNT(*)                                              AS routes,
+  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1)    AS pct_of_total,
+  ROUND(AVG(re.chosen_confidence)::numeric, 3)          AS avg_confidence,
+  ROUND(AVG(re.latency_ms)::numeric, 0)                 AS avg_latency_ms  -- NULL até instrumentar (ver migração)
 FROM routing_events re
 LEFT JOIN agents a ON a.id = re.chosen_agent_id
 WHERE re.created_at >= :'period_start'::timestamptz
   AND re.created_at <  :'period_end'::timestamptz
-GROUP BY chosen_agent_id, a.name
+GROUP BY re.chosen_agent_id, a.name, a.model
 ORDER BY routes DESC;
 
--- 1.2 Regra de routing mais acionada (por keyword, se instrumentado)
--- Assumes `routing_events.matched_keyword TEXT` (extensão sugerida ao
--- schema §4.1 para rastrear qual regra do CLAUDE.md disparou o match;
--- se ausente, comentar este bloco e usar 1.1 como proxy por agente).
+-- 1.2 Distribuição por eixo (horizontal x vertical), inferida pela
+-- convenção de nomenclatura do slug (não existe coluna `axis` em
+-- `agents` hoje). Convenção observada no repo: agentes verticais por
+-- segmento usam prefixo "agente-*" (ex.: agente-saneamento);
+-- horizontais usam prefixo "manta-*" (ex.: manta-05). Ajustar o CASE
+-- abaixo se a convenção mudar, ou promover isso a coluna real
+-- (`agents.axis`) em migração futura para parar de depender de regex.
 SELECT
-  matched_keyword,
-  chosen_agent_id,
-  COUNT(*) AS times_matched
-FROM routing_events
-WHERE created_at >= :'period_start'::timestamptz
-  AND created_at <  :'period_end'::timestamptz
-  AND matched_keyword IS NOT NULL
-GROUP BY matched_keyword, chosen_agent_id
-ORDER BY times_matched DESC
-LIMIT 30;
-
--- 1.3 Distribuição por eixo (horizontal x vertical x lifecycle-phase)
--- Assumes `agents.axis TEXT CHECK (axis IN ('horizontal','vertical'))`.
-SELECT
-  a.axis,
-  COUNT(*)                                            AS routes,
-  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1)  AS pct_of_total
+  CASE
+    WHEN re.chosen_agent_id LIKE 'agente-%' THEN 'vertical (segmento)'
+    WHEN re.chosen_agent_id LIKE 'manta-%'  THEN 'horizontal'
+    ELSE 'desconhecido/outro'
+  END                                                    AS axis,
+  COUNT(*)                                                AS routes,
+  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1)      AS pct_of_total
 FROM routing_events re
-JOIN agents a ON a.id = re.chosen_agent_id
 WHERE re.created_at >= :'period_start'::timestamptz
   AND re.created_at <  :'period_end'::timestamptz
-GROUP BY a.axis
+GROUP BY 1
 ORDER BY routes DESC;
+
+-- 1.3 "Regra mais usada" — proxy via keywords do agente vs. texto da
+-- query. Requer `query_preview` (só os 200 primeiros caracteres — ver
+-- routing_events) e a lista `agents.keywords`. É uma aproximação: só
+-- enxerga keywords presentes no preview truncado, e não sabe qual
+-- keyword *especificamente* disparou o match no Maestro (o Maestro não
+-- loga isso hoje). Para precisão real, adicionar
+-- `routing_events.matched_keyword TEXT` e popular no momento do
+-- roteamento (mudança de 1 linha no Maestro, migração de 1 coluna).
+SELECT
+  kw                                        AS keyword,
+  re.chosen_agent_id,
+  COUNT(*)                                  AS query_previews_matching
+FROM routing_events re
+JOIN agents a ON a.id = re.chosen_agent_id
+CROSS JOIN LATERAL unnest(a.keywords) AS kw
+WHERE re.created_at >= :'period_start'::timestamptz
+  AND re.created_at <  :'period_end'::timestamptz
+  AND re.query_preview ILIKE '%' || kw || '%'
+GROUP BY kw, re.chosen_agent_id
+ORDER BY query_previews_matching DESC
+LIMIT 30;
 
 -- =====================================================================
 -- 2. GAP DETECTION — queries mal roteadas (regra: >100 bad feedback)
 -- =====================================================================
 
--- 2.1 Agentes com feedback negativo acima do threshold (100) no trimestre
--- feedback negativo = 'wrong' | 'slow' | 'incomplete' (ver §4.1)
+-- 2.1 Agentes acima do threshold de feedback negativo no trimestre
+-- (feedback negativo = 'wrong' | 'slow' | 'incomplete', igual ao
+-- reward_map de feedback_loop.py). Este é o KPI central de gap
+-- detection pedido no processo.
 WITH bad_feedback AS (
-  SELECT
-    rf.agent_id,
-    rf.feedback,
-    COUNT(*) AS n
+  SELECT rf.agent_id, rf.feedback, COUNT(*) AS n
   FROM routing_feedback rf
   WHERE rf.created_at >= :'period_start'::timestamptz
     AND rf.created_at <  :'period_end'::timestamptz
@@ -101,197 +118,189 @@ WITH bad_feedback AS (
 )
 SELECT
   agent_id,
-  SUM(n) AS total_bad_feedback,
+  SUM(n)                        AS total_bad_feedback,
   jsonb_object_agg(feedback, n) AS breakdown
 FROM bad_feedback
 GROUP BY agent_id
-HAVING SUM(n) > 100          -- <-- threshold do processo (ver template)
+HAVING SUM(n) > 100             -- <-- threshold do processo (ver template §3.1)
 ORDER BY total_bad_feedback DESC;
 
--- 2.2 Fallbacks acionados (Maestro trocou de agente no meio da rota)
-SELECT
-  chosen_agent_id      AS original_agent,
-  outcome_agent_id     AS fallback_agent,
-  COUNT(*)             AS fallback_count
-FROM routing_events
-WHERE created_at >= :'period_start'::timestamptz
-  AND created_at <  :'period_end'::timestamptz
-  AND outcome = 'fallback'
-GROUP BY chosen_agent_id, outcome_agent_id
-ORDER BY fallback_count DESC;
-
--- 2.3 Queries com baixa confiança de roteamento (candidatas a gap de
--- keyword/segmento) — não necessariamente com feedback negativo ainda,
--- mas sinal antecedente de má cobertura.
+-- 2.2 Rotas de baixa confiança (Thompson Sampling amostrou theta_hat
+-- baixo) — sinal antecedente de má cobertura, mesmo antes do feedback
+-- humano chegar.
 SELECT
   chosen_agent_id,
-  COUNT(*)                                    AS low_confidence_routes,
-  ROUND(AVG(chosen_confidence)::numeric, 3)   AS avg_confidence
+  COUNT(*)                                  AS low_confidence_routes,
+  ROUND(AVG(chosen_confidence)::numeric, 3) AS avg_confidence
 FROM routing_events
 WHERE created_at >= :'period_start'::timestamptz
   AND created_at <  :'period_end'::timestamptz
-  AND chosen_confidence < 0.60                -- limiar sugerido; ajustar
+  AND chosen_confidence < 0.60               -- limiar sugerido; ajustar por experiência
 GROUP BY chosen_agent_id
 ORDER BY low_confidence_routes DESC;
+
+-- 2.3 Beta posterior atual por agente (crença acumulada de qualidade,
+-- não só do trimestre — mostra o estado "vitalício" do bandit; útil
+-- para contextualizar 2.1/2.2 com histórico de mais longo prazo).
+-- Requer `agent_posteriors` populada (só acontece se SupabaseFeedbackStore
+-- estiver de fato implementado e em uso — hoje é um stub, ver
+-- feedback_loop.py). Se a tabela estiver vazia, pular esta query.
+SELECT
+  agent_id,
+  alpha,
+  beta,
+  ROUND((alpha / (alpha + beta))::numeric, 3)                          AS posterior_mean,
+  ROUND(((alpha * beta) / (POWER(alpha + beta, 2) * (alpha + beta + 1)))::numeric, 5)
+                                                                         AS posterior_variance,
+  n_updates,
+  updated_at
+FROM agent_posteriors
+ORDER BY posterior_mean ASC;
+
+-- 2.4 Fallback / composição multi-agente — NÃO DISPONÍVEL HOJE.
+-- Fase 2.2 (composição) e Fase 2.3 (fallback com Markov chain) do
+-- roadmap v5.0 ainda não estão implementadas no Maestro, então
+-- `routing_events` não tem `outcome`, `is_composed`, `composed_agents`.
+-- Quando essas fases forem implementadas, replicar aqui as queries
+-- 2.2/3.1/3.2 descritas em versões anteriores deste arquivo (ver
+-- histórico do git) — a estrutura de query já está desenhada, só
+-- falta o schema/dado de origem existir.
 
 -- =====================================================================
 -- 3. TRENDING — segmentos emergentes (queries recorrentes fora do mapa)
 -- =====================================================================
 
--- 3.1 Crescimento mês a mês de composições multi-agente (proxy de novo
--- caso de uso / segmento cruzado que hoje exige handoff manual)
-SELECT
-  DATE_TRUNC('month', created_at)::date AS month,
-  COUNT(*) FILTER (WHERE is_composed)   AS composed_routes,
-  COUNT(*)                              AS total_routes,
-  ROUND(100.0 * COUNT(*) FILTER (WHERE is_composed) / NULLIF(COUNT(*), 0), 1)
-                                          AS pct_composed
-FROM routing_events
-WHERE created_at >= :'period_start'::timestamptz
-  AND created_at <  :'period_end'::timestamptz
-GROUP BY 1
-ORDER BY 1;
-
--- 3.2 Combinações de agentes mais compostas (candidatos a virar 1 agente
--- só, ou a virar handoff formalizado no CLAUDE.md)
-SELECT
-  composed_agents,
-  composition_strategy,
-  COUNT(*) AS occurrences
-FROM routing_events
-WHERE created_at >= :'period_start'::timestamptz
-  AND created_at <  :'period_end'::timestamptz
-  AND is_composed
-GROUP BY composed_agents, composition_strategy
-ORDER BY occurrences DESC
-LIMIT 20;
-
--- 3.3 "Sem agente claro" — outcome = 'error' ou confidence muito baixa,
--- agrupado por termos extraídos da query (heurística simples via
--- ts_vector; refinar com embeddings quando disponível)
+-- 3.1 Termos frequentes em rotas de baixa confiança (candidatos a
+-- segmento não coberto). Usa `query_preview` (200 chars truncados —
+-- suficiente para tema geral, não para leitura integral da query).
 SELECT
   word,
   COUNT(*) AS occurrences
 FROM routing_events,
      LATERAL unnest(
-       string_to_array(lower(regexp_replace(query, '[^a-zà-ú0-9 ]', '', 'g')), ' ')
+       string_to_array(
+         lower(regexp_replace(coalesce(query_preview, ''), '[^a-zà-ú0-9 ]', '', 'g')),
+         ' '
+       )
      ) AS word
 WHERE created_at >= :'period_start'::timestamptz
   AND created_at <  :'period_end'::timestamptz
-  AND (outcome = 'error' OR chosen_confidence < 0.50)
-  AND length(word) > 4          -- corta stopwords curtas
+  AND chosen_confidence < 0.50
+  AND length(word) > 4              -- corta stopwords curtas
 GROUP BY word
 ORDER BY occurrences DESC
 LIMIT 40;
+
+-- 3.2 Crescimento mês a mês do volume de rotas de baixa confiança —
+-- se um tema emergente está crescendo (e não é ruído pontual), este
+-- número deve subir mês a mês dentro do próprio trimestre.
+SELECT
+  DATE_TRUNC('month', created_at)::date AS month,
+  COUNT(*) FILTER (WHERE chosen_confidence < 0.60) AS low_confidence_routes,
+  COUNT(*)                                          AS total_routes,
+  ROUND(100.0 * COUNT(*) FILTER (WHERE chosen_confidence < 0.60)
+        / NULLIF(COUNT(*), 0), 1)                    AS pct_low_confidence
+FROM routing_events
+WHERE created_at >= :'period_start'::timestamptz
+  AND created_at <  :'period_end'::timestamptz
+GROUP BY 1
+ORDER BY 1;
+
+-- 3.3 Composição multi-agente — NÃO DISPONÍVEL HOJE (ver nota em 2.4).
 
 -- =====================================================================
 -- 4. KEY METRICS — accuracy trend, throughput growth, cost/request
 -- =====================================================================
 
--- 4.1 Routing accuracy trend (mensal) — success rate + feedback positivo
+-- 4.1 Routing accuracy trend (mensal) — % de feedback 'correct' entre
+-- todo o feedback recebido, e reward médio (0..1, ponderando parcial
+-- credit de 'slow'/'incomplete' — ver DEFAULT_REWARD_MAP em
+-- feedback_loop.py).
 SELECT
-  DATE_TRUNC('month', re.created_at)::date AS month,
-  COUNT(*)                                                          AS total_routes,
-  ROUND(100.0 * COUNT(*) FILTER (WHERE re.outcome = 'success')
-        / NULLIF(COUNT(*), 0), 1)                                    AS success_rate_pct,
+  DATE_TRUNC('month', rf.created_at)::date AS month,
+  COUNT(*)                                                    AS feedback_events,
   ROUND(100.0 * COUNT(*) FILTER (WHERE rf.feedback = 'correct')
-        / NULLIF(COUNT(rf.id), 0), 1)                                 AS positive_feedback_pct
-FROM routing_events re
-LEFT JOIN routing_feedback rf ON rf.routing_id = re.routing_id
-WHERE re.created_at >= :'period_start'::timestamptz
-  AND re.created_at <  :'period_end'::timestamptz
+        / NULLIF(COUNT(*), 0), 1)                              AS pct_correct,
+  ROUND(AVG(rf.reward)::numeric, 3)                           AS avg_reward
+FROM routing_feedback rf
+WHERE rf.created_at >= :'period_start'::timestamptz
+  AND rf.created_at <  :'period_end'::timestamptz
 GROUP BY 1
 ORDER BY 1;
 
--- 4.2 Throughput growth (mensal, trimestre atual vs trimestre anterior)
+-- 4.2 Throughput growth (mensal, trimestre atual + mês anterior para MoM)
 WITH monthly AS (
-  SELECT
-    DATE_TRUNC('month', created_at)::date AS month,
-    COUNT(*)                              AS routes
+  SELECT DATE_TRUNC('month', created_at)::date AS month, COUNT(*) AS routes
   FROM routing_events
-  WHERE created_at >= (:'period_start'::timestamptz - INTERVAL '3 months')
+  WHERE created_at >= (:'period_start'::timestamptz - INTERVAL '1 month')
     AND created_at <  :'period_end'::timestamptz
   GROUP BY 1
 )
 SELECT
   month,
   routes,
-  LAG(routes) OVER (ORDER BY month)                                   AS routes_prev_month,
+  LAG(routes) OVER (ORDER BY month)                                AS routes_prev_month,
   ROUND(100.0 * (routes - LAG(routes) OVER (ORDER BY month))
-        / NULLIF(LAG(routes) OVER (ORDER BY month), 0), 1)            AS mom_growth_pct
+        / NULLIF(LAG(routes) OVER (ORDER BY month), 0), 1)          AS mom_growth_pct
 FROM monthly
 ORDER BY month;
 
--- 4.3 Cost per request (por agente, tokens_used médio x custo estimado)
--- Assumes `routing_events.tokens_used` e `agents.cost_per_call`
--- (estimativa de custo unitário por token/1k, ajustar constante de preço
--- conforme tabela de pricing vigente do modelo usado por cada agente).
+-- 4.3 Cost per request — PARCIALMENTE DISPONÍVEL. `routing_events.tokens_used`
+-- é NULL até o Maestro passar a logar consumo real de tokens (ver
+-- comentário na migração 2026_08_02_routing_observability.sql). Até lá,
+-- este é o melhor proxy possível: `agents.cost_per_call`, uma
+-- ESTIMATIVA ESTÁTICA de tokens por chamada (não medida), multiplicada
+-- por um preço/1k tokens placeholder — NÃO reportar como custo real à
+-- liderança sem atualizar os dois: (a) tokens_used real, (b) pricing
+-- vigente do modelo.
 SELECT
   re.chosen_agent_id                                       AS agent_id,
   a.model,
+  a.cost_per_call                                          AS estimated_tokens_per_call_static,
   COUNT(*)                                                 AS routes,
-  ROUND(AVG(re.tokens_used)::numeric, 0)                   AS avg_tokens_per_request,
-  ROUND(SUM(re.tokens_used)::numeric, 0)                   AS total_tokens,
-  -- custo estimado: ajustar price_per_1k_tokens por modelo antes de usar
-  ROUND(SUM(re.tokens_used) / 1000.0 *
-        (CASE a.model
-           WHEN 'haiku'  THEN 0.0008  -- placeholder — atualizar com pricing real
-           WHEN 'sonnet' THEN 0.003
-           WHEN 'opus'   THEN 0.015
-           ELSE 0.003
-         END)::numeric, 2)                                 AS estimated_cost_usd,
-  ROUND((SUM(re.tokens_used) / 1000.0 *
-        (CASE a.model
-           WHEN 'haiku'  THEN 0.0008
-           WHEN 'sonnet' THEN 0.003
-           WHEN 'opus'   THEN 0.015
-           ELSE 0.003
-         END)) / NULLIF(COUNT(*), 0), 4)                    AS estimated_cost_per_request_usd
+  ROUND(AVG(re.tokens_used)::numeric, 0)                   AS avg_tokens_used_real,  -- NULL se não instrumentado
+  COUNT(re.tokens_used)                                    AS routes_with_real_token_data,
+  ROUND(
+    (a.cost_per_call * COUNT(*) / 1000.0) *
+    (CASE a.model
+       WHEN 'haiku'  THEN 0.0008   -- placeholder — atualizar com pricing real vigente
+       WHEN 'sonnet' THEN 0.003
+       WHEN 'opus'   THEN 0.015
+       ELSE 0.003
+     END)
+  ::numeric, 2)                                             AS estimated_cost_usd_static_proxy
 FROM routing_events re
 JOIN agents a ON a.id = re.chosen_agent_id
 WHERE re.created_at >= :'period_start'::timestamptz
   AND re.created_at <  :'period_end'::timestamptz
-GROUP BY re.chosen_agent_id, a.model
-ORDER BY total_tokens DESC;
+GROUP BY re.chosen_agent_id, a.model, a.cost_per_call
+ORDER BY routes DESC;
 
--- 4.4 SLA snapshot do trimestre (comparar contra alvos do roadmap v5.0,
--- doc MANTA-MAESTRO-ECOSYSTEM-v5-UPGRADE.md §4.1 tabela de métricas)
-SELECT
-  COUNT(*)                                                              AS total_routes,
-  ROUND(100.0 * COUNT(*) FILTER (WHERE outcome = 'success')
-        / NULLIF(COUNT(*), 0), 1)                                        AS success_rate_pct,
-  ROUND(100.0 * COUNT(*) FILTER (WHERE outcome = 'fallback')
-        / NULLIF(COUNT(*), 0), 1)                                        AS fallback_pct,
-  PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY latency_ms)                AS p50_latency_ms,
-  PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY latency_ms)               AS p99_latency_ms,
-  ROUND(100.0 * COUNT(*) FILTER (WHERE is_composed)
-        / NULLIF(COUNT(*), 0), 1)                                        AS composition_pct
-FROM routing_events
-WHERE created_at >= :'period_start'::timestamptz
-  AND created_at <  :'period_end'::timestamptz;
-
--- 4.5 Agent health snapshot (uptime aproximado via amostras de heartbeat)
+-- 4.4 Agent health — snapshot ATUAL (não é trend histórico; a tabela
+-- `agent_health` em uso real (heartbeat) guarda 1 linha por agente,
+-- sobrescrita a cada heartbeat — ver ATENÇÃO no topo do arquivo). Para
+-- um trend real de uptime ao longo do trimestre seria necessário um
+-- `agent_health_history` (append-only) que não existe hoje.
 SELECT
   agent_id,
-  COUNT(*)                                                          AS heartbeats,
-  ROUND(100.0 * COUNT(*) FILTER (WHERE status = 'healthy')
-        / NULLIF(COUNT(*), 0), 1)                                    AS uptime_pct_approx,
-  ROUND(AVG(error_rate_24h)::numeric, 4)                            AS avg_error_rate_24h,
-  ROUND(AVG(avg_latency_ms)::numeric, 0)                            AS avg_latency_ms
+  status,
+  routable,
+  queue_depth,
+  error_rate_5m,
+  last_heartbeat_at,
+  unhealthy_since,
+  updated_at
 FROM agent_health
-WHERE recorded_at >= :'period_start'::timestamptz
-  AND recorded_at <  :'period_end'::timestamptz
-GROUP BY agent_id
-ORDER BY uptime_pct_approx ASC;
+ORDER BY
+  CASE status WHEN 'unhealthy' THEN 0 WHEN 'degraded' THEN 1 ELSE 2 END,
+  agent_id;
 
 -- =====================================================================
 -- 5. RECOMMENDATION HELPERS — sinais para decisão humana na reunião
 -- =====================================================================
 
--- 5.1 Candidatos a "novo agente vertical": clusters de baixa confiança
--- e alto volume (>= 100 ocorrências) que não colam bem em nenhum
--- agente existente — combinar com 3.3 (palavras mais frequentes) e
--- revisão manual/qualitativa dos textos de query originais.
+-- 5.1 Candidatos a "novo agente vertical": volume alto + confiança
+-- baixa persistente (combinar com 3.1 para ver os termos concretos).
 SELECT
   chosen_agent_id,
   COUNT(*)                                  AS routes,
@@ -304,38 +313,38 @@ GROUP BY chosen_agent_id
 HAVING COUNT(*) >= 100
 ORDER BY routes DESC;
 
--- 5.2 Candidatos a "upgrade de tier" (haiku/sonnet → sonnet/opus):
--- agentes com volume alto + confiança/success baixos, sugerindo que
--- o modelo atual está subdimensionado para a complexidade real.
+-- 5.2 Candidatos a "upgrade de tier": volume alto + accuracy real
+-- (feedback 'correct') baixa no tier atual.
 SELECT
-  a.id            AS agent_id,
-  a.model         AS current_model,
-  COUNT(*)                                            AS routes,
-  ROUND(100.0 * COUNT(*) FILTER (WHERE re.outcome = 'success')
-        / NULLIF(COUNT(*), 0), 1)                      AS success_rate_pct,
-  ROUND(AVG(re.chosen_confidence)::numeric, 3)         AS avg_confidence
+  a.id                                                 AS agent_id,
+  a.model                                              AS current_model,
+  COUNT(DISTINCT re.routing_id)                        AS routes,
+  ROUND(100.0 * COUNT(*) FILTER (WHERE rf.feedback = 'correct')
+        / NULLIF(COUNT(rf.id), 0), 1)                   AS pct_correct
 FROM routing_events re
 JOIN agents a ON a.id = re.chosen_agent_id
+LEFT JOIN routing_feedback rf ON rf.routing_id = re.routing_id
 WHERE re.created_at >= :'period_start'::timestamptz
   AND re.created_at <  :'period_end'::timestamptz
 GROUP BY a.id, a.model
-HAVING COUNT(*) >= 50
-   AND (100.0 * COUNT(*) FILTER (WHERE re.outcome = 'success') / NULLIF(COUNT(*), 0)) < 90
+HAVING COUNT(DISTINCT re.routing_id) >= 50
+   AND (100.0 * COUNT(*) FILTER (WHERE rf.feedback = 'correct') / NULLIF(COUNT(rf.id), 0)) < 90
 ORDER BY routes DESC;
 
--- 5.3 Candidatos a "refinar keywords": agente com volume ok e confiança
--- ok, mas feedback negativo concentrado (indica que chegou no agente
--- certo, mas a keyword trouxe caso fora do escopo real do agente).
+-- 5.3 Candidatos a "refinar keywords": Maestro roteou CONFIANTE
+-- (theta_hat alto) mas o feedback veio negativo mesmo assim — sinal de
+-- que a keyword/regra trouxe um caso fora do escopo real do agente,
+-- não um problema de confiança/ranking.
 SELECT
   rf.agent_id,
-  COUNT(*)                                    AS bad_feedback,
+  COUNT(*)                                     AS bad_feedback,
   ROUND(AVG(re.chosen_confidence)::numeric, 3) AS avg_confidence_when_bad
 FROM routing_feedback rf
 JOIN routing_events re ON re.routing_id = rf.routing_id
 WHERE rf.created_at >= :'period_start'::timestamptz
   AND rf.created_at <  :'period_end'::timestamptz
   AND rf.feedback IN ('wrong', 'incomplete')
-  AND re.chosen_confidence >= 0.75   -- roteou "confiante", mas errou
+  AND re.chosen_confidence >= 0.75             -- roteou "confiante", mas errou
 GROUP BY rf.agent_id
 HAVING COUNT(*) > 20
 ORDER BY bad_feedback DESC;
