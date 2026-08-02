@@ -83,24 +83,34 @@ como pendência na Seção 6 (Decisões), e escalar prazo do que falta.
 
 | Rank | Agente | Rotas no período | % do total | Confiança média | Latência média |
 |---|---|---|---|---|---|
-| 1 | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
-| 2 | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
-| 3 | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+| 1 | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]`¹ |
+| 2 | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]`¹ |
+| 3 | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]`¹ |
 
-### 2.2 Regra/keyword mais acionada
+¹ Latência média fica em branco/NULL até o Maestro logar `latency_ms`
+(ver pré-requisitos, item 2). Não bloqueia o resto da seção.
 
-| Rank | Keyword/regra | Agente-alvo | Vezes acionada |
+### 2.2 Distribuição por eixo (horizontal x vertical)
+
+- Horizontais (`manta-*`): `[ ]`% das rotas
+- Verticais (`agente-*`): `[ ]`% das rotas
+- Leitura: `[comentário — ex.: concentração excessiva em 1 eixo indica
+  sub ou super-cobertura de segmentos]`
+
+### 2.3 Regra/keyword mais acionada (proxy — ver limitação)
+
+| Rank | Keyword | Agente-alvo | Query previews com match |
 |---|---|---|---|
 | 1 | `[ ]` | `[ ]` | `[ ]` |
 | 2 | `[ ]` | `[ ]` | `[ ]` |
 | 3 | `[ ]` | `[ ]` | `[ ]` |
 
-### 2.3 Distribuição por eixo (horizontal x vertical)
-
-- Horizontais: `[ ]`% das rotas
-- Verticais: `[ ]`% das rotas
-- Leitura: `[comentário — ex.: concentração excessiva em 1 eixo indica
-  sub ou super-cobertura de segmentos]`
+> Esta é uma aproximação (keyword do agente presente no `query_preview`
+> truncado a 200 chars), não a regra exata que o Maestro efetivamente
+> disparou — ele não loga isso hoje. Se este dado virar crítico para
+> decisões recorrentes, priorizar a adição de
+> `routing_events.matched_keyword` (mudança pequena) na próxima janela
+> de desenvolvimento do Maestro.
 
 ---
 
@@ -108,8 +118,7 @@ como pendência na Seção 6 (Decisões), e escalar prazo do que falta.
 
 *Fonte: `quarterly_review_kpis.sql` §2 (queries 2.1–2.3)*
 *Critério de gap: **>100 feedback negativo** (`wrong`/`slow`/`incomplete`)
-no trimestre para um mesmo agente, OU volume relevante de fallback/baixa
-confiança.*
+no trimestre para um mesmo agente, OU volume relevante de baixa confiança.*
 
 ### 3.1 Agentes acima do threshold de feedback negativo
 
@@ -120,37 +129,37 @@ confiança.*
 Se **nenhum agente** cruzou o threshold: registrar explicitamente
 "nenhum gap crítico este trimestre" — não deixar em branco.
 
-### 3.2 Fallbacks acionados (troca de agente em runtime)
-
-| Agente original | Agente de fallback | Ocorrências | Causa provável |
-|---|---|---|---|
-| `[ ]` | `[ ]` | `[ ]` | `[ ]` |
-
-### 3.3 Rotas de baixa confiança (< 0.60) sem feedback ainda
+### 3.2 Rotas de baixa confiança (< 0.60), com ou sem feedback ainda
 
 | Agente | Rotas de baixa confiança | Confiança média | Observação |
 |---|---|---|---|
 | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
 
+### 3.3 Beta posterior por agente (crença acumulada, não só do trimestre)
+
+| Agente | alpha | beta | Média posterior | Nº de updates | Leitura |
+|---|---|---|---|---|---|
+| `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+
+> Só preencher se `agent_posteriors` estiver populada (requer
+> `SupabaseFeedbackStore` implementado — hoje é stub, ver
+> `feedback_loop.py`). Se vazia, remover esta subseção da pauta.
+
+### 3.4 Fallback entre agentes — NÃO DISPONÍVEL
+
+Fase 2.3 do roadmap v5.0 (fallback com Markov chain) ainda não está
+implementada no Maestro — não há dado de "agente X falhou, tentou
+agente Y" para analisar. Registrar como pendência de instrumentação se
+o gap detection qualitativo (relatos de PM/usuários) sugerir que
+fallback manual está acontecendo com frequência.
+
 ---
 
 ## 4. Trending — segmentos emergentes
 
-*Fonte: `quarterly_review_kpis.sql` §3 (queries 3.1–3.3)*
+*Fonte: `quarterly_review_kpis.sql` §3 (queries 3.1–3.2)*
 
-### 4.1 Composição multi-agente (proxy de caso de uso cruzado)
-
-| Mês | Rotas compostas | Total rotas | % composição | Tendência |
-|---|---|---|---|---|
-| `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[↑/↓/estável]` |
-
-### 4.2 Combinações de agentes mais frequentes
-
-| Combinação | Estratégia (serial/paralelo) | Ocorrências | Deveria virar handoff formal no CLAUDE.md? |
-|---|---|---|---|
-| `[ ]` | `[ ]` | `[ ]` | `[Sim/Não]` |
-
-### 4.3 Termos frequentes em rotas sem agente claro (candidatos a novo segmento)
+### 4.1 Termos frequentes em rotas de baixa confiança (candidatos a novo segmento)
 
 | Termo/tema | Ocorrências | Segmento existente cobre? | Candidato a novo agente? |
 |---|---|---|---|
@@ -160,34 +169,54 @@ Se **nenhum agente** cruzou o threshold: registrar explicitamente
 e não é coberto por nenhum dos 20 agentes atuais (S1-S10 + horizontais)?
 Se sim → levar para Seção 5 como candidato formal a novo agente.
 
+### 4.2 Evolução mensal do volume de baixa confiança (dentro do trimestre)
+
+| Mês | Rotas de baixa confiança | Total rotas | % baixa confiança | Tendência |
+|---|---|---|---|---|
+| `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[↑/↓/estável]` |
+
+Um tema emergente real deve **crescer** mês a mês aqui, não ser um pico
+isolado — isso ajuda a separar "segmento novo de verdade" de ruído.
+
+### 4.3 Composição multi-agente — NÃO DISPONÍVEL
+
+Fase 2.2 do roadmap v5.0 (composição multi-agente) ainda não está
+implementada — não há `is_composed`/`composed_agents` para analisar.
+Até lá, capturar sinais qualitativos na reunião (relatos de handoff
+manual frequente entre 2 agentes específicos) e registrá-los na Seção
+6.1 como evidência informal, complementar ao volume quantitativo de 4.1.
+
 ---
 
 ## 5. Key Metrics — vs. metas do roadmap v5.0
 
-*Fonte: `quarterly_review_kpis.sql` §4 (queries 4.1–4.5). Metas de
+*Fonte: `quarterly_review_kpis.sql` §4 (queries 4.1–4.4). Metas de
 referência: `docs/MANTA-MAESTRO-ECOSYSTEM-v5-UPGRADE.md` §8.*
 
-| Métrica | Trimestre anterior | Este trimestre | Meta | Status |
-|---|---|---|---|---|
-| Routing accuracy (success rate) | `[ ]`% | `[ ]`% | >95% | `[✅/⚠️/❌]` |
-| Feedback positivo | `[ ]`% | `[ ]`% | >80% | `[✅/⚠️/❌]` |
-| Throughput (rotas/mês, média do trimestre) | `[ ]` | `[ ]` | crescimento vs. trimestre anterior | `[✅/⚠️/❌]` |
-| Crescimento de throughput (MoM médio) | — | `[ ]`% | — | `[comentário]` |
-| Cost/request médio (USD, ponderado por agente) | `[ ]` | `[ ]` | tendência de queda ou estável | `[✅/⚠️/❌]` |
-| P50 / P99 latência | `[ ]` / `[ ]` ms | `[ ]` / `[ ]` ms | <1s / <2-3s | `[✅/⚠️/❌]` |
-| Fallback triggered % | `[ ]`% | `[ ]`% | <5% | `[✅/⚠️/❌]` |
-| % composição multi-agente | `[ ]`% | `[ ]`% | 5-10% (v5.0) | `[✅/⚠️/❌]` |
-| Uptime médio dos agentes | `[ ]`% | `[ ]`% | >99% | `[✅/⚠️/❌]` |
+| Métrica | Trimestre anterior | Este trimestre | Meta | Status | Disponível hoje? |
+|---|---|---|---|---|---|
+| Routing accuracy (% feedback 'correct') | `[ ]`% | `[ ]`% | >95% | `[✅/⚠️/❌]` | Sim |
+| Reward médio (0-1, parcial credit slow/incomplete) | `[ ]` | `[ ]` | tendência de alta | `[✅/⚠️/❌]` | Sim |
+| Throughput (rotas/mês, média do trimestre) | `[ ]` | `[ ]` | crescimento vs. trimestre anterior | `[✅/⚠️/❌]` | Sim |
+| Crescimento de throughput (MoM médio) | — | `[ ]`% | — | `[comentário]` | Sim |
+| Cost/request (proxy estático, `cost_per_call` × pricing) | `[ ]` | `[ ]` | tendência de queda ou estável | `[⚠️ ver nota]` | Parcial — proxy, não custo real |
+| Cost/request (real, `tokens_used` medido) | `[ ]` | `[ ]` | — | — | **Não** — requer instrumentação |
+| P50 / P99 latência | — | — | <1s / <2-3s | — | **Não** — requer instrumentação (`latency_ms`) |
+| Fallback triggered % | — | — | <5% | — | **Não** — Fase 2.3 não implementada |
+| % composição multi-agente | — | — | 5-10% (v5.0) | — | **Não** — Fase 2.2 não implementada |
+| Uptime dos agentes | `[ ]`% (snapshot) | `[ ]`% (snapshot) | >99% | `[✅/⚠️/❌]` | Snapshot atual apenas, sem trend (ver pré-requisito 3) |
 
-### 5.1 Cost/request por agente (top 5 por volume)
+### 5.1 Cost/request por agente — proxy estático (top 5 por volume)
 
-| Agente | Modelo | Rotas | Tokens médios/rota | Custo estimado/rota (USD) |
-|---|---|---|---|---|
-| `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
+| Agente | Modelo | Rotas | `cost_per_call` (tokens, estimativa estática) | Rotas com `tokens_used` real | Custo estimado (USD, proxy) |
+|---|---|---|---|---|---|
+| `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` | `[ ]` |
 
-> Nota: preços por 1k tokens na query são placeholders — atualizar
-> conforme tabela de pricing vigente do modelo antes de reportar valor
-> absoluto de custo à liderança.
+> **Não reportar como custo real à liderança.** `cost_per_call` é uma
+> estimativa estática cadastrada em `agents`, não uma medição — e os
+> preços por 1k tokens na query são placeholders. Antes de qualquer
+> decisão orçamentária, priorizar a instrumentação de `tokens_used`
+> real (ver pré-requisitos) e atualizar o pricing vigente do modelo.
 
 ---
 
@@ -247,23 +276,23 @@ julgamento qualitativo dos participantes.*
 Todas em `supabase/analytics/quarterly_review_kpis.sql`, parametrizadas
 por `:'period_start'` / `:'period_end'`:
 
-| Seção do template | Query(ies) | O que responde |
-|---|---|---|
-| 2.1 | §1, query 1.1 | Agente mais requisitado, share, confiança, latência |
-| 2.2 | §1, query 1.2 | Keyword/regra mais acionada (requer `matched_keyword`) |
-| 2.3 | §1, query 1.3 | Distribuição horizontal x vertical |
-| 3.1 | §2, query 2.1 | Agentes acima do threshold de feedback negativo (>100) |
-| 3.2 | §2, query 2.2 | Fallbacks acionados |
-| 3.3 | §2, query 2.3 | Rotas de baixa confiança |
-| 4.1 | §3, query 3.1 | % composição multi-agente por mês |
-| 4.2 | §3, query 3.2 | Combinações de agentes mais frequentes |
-| 4.3 | §3, query 3.3 | Termos frequentes em rotas sem agente claro |
-| 5 (tabela geral) | §4, queries 4.1–4.4 | Accuracy trend, throughput, latência, SLA |
-| 5.1 | §4, query 4.3 | Cost/request por agente |
-| — | §4, query 4.5 | Uptime aproximado por agente (agent_health) |
-| 6.1 | §5, query 5.1 | Candidatos a novo agente (alto volume + baixa confiança) |
-| 6.2 | §5, query 5.3 | Candidatos a refinar keywords (confiante mas errado) |
-| 6.3 | §5, query 5.2 | Candidatos a upgrade de tier (volume alto + success baixo) |
+| Seção do template | Query(ies) | O que responde | Disponível hoje? |
+|---|---|---|---|
+| 2.1 | §1, query 1.1 | Agente mais requisitado, share, confiança | Sim (latência ainda não) |
+| 2.2 | §1, query 1.2 | Distribuição horizontal x vertical (heurística de slug) | Sim |
+| 2.3 | §1, query 1.3 | Keyword mais frequente (proxy, requer `matched_keyword` para precisão) | Parcial |
+| 3.1 | §2, query 2.1 | Agentes acima do threshold de feedback negativo (>100) | Sim |
+| 3.2 | §2, query 2.2 | Rotas de baixa confiança | Sim |
+| 3.3 | §2, query 2.3 | Beta posterior por agente (`agent_posteriors`) | Só se `SupabaseFeedbackStore` estiver implementado |
+| 3.4 | §2, nota "2.4" | Fallback entre agentes | Não (Fase 2.3 pendente) |
+| 4.1 | §3, query 3.1 | Termos frequentes em rotas de baixa confiança | Sim |
+| 4.2 | §3, query 3.2 | Evolução mensal de rotas de baixa confiança | Sim |
+| 4.3 | §3, nota "3.3" | Composição multi-agente | Não (Fase 2.2 pendente) |
+| 5 (tabela geral) | §4, queries 4.1–4.2, 4.4 | Accuracy trend, throughput, agent health snapshot | Sim (exceto latência/fallback/composição) |
+| 5.1 | §4, query 4.3 | Cost/request por agente (proxy estático) | Parcial — proxy, não custo real |
+| 6.1 | §5, query 5.1 | Candidatos a novo agente (alto volume + baixa confiança) | Sim |
+| 6.2 | §5, query 5.3 | Candidatos a refinar keywords (confiante mas errado) | Sim |
+| 6.3 | §5, query 5.2 | Candidatos a upgrade de tier (volume alto + accuracy baixa) | Sim |
 
 ## Apêndice B — Critérios de decisão (referência rápida)
 

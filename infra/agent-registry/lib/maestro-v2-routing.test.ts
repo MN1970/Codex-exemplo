@@ -49,15 +49,19 @@ import {
 // Helpers
 // ---------------------------------------------------------------------
 
+/** Looks up a seed agent by id, failing loudly if the fixture ever drifts from AGENT_REGISTRY_SEED. */
+function seedAgent(id: string) {
+  const agent = AGENT_REGISTRY_SEED.find((a) => a.id === id);
+  if (!agent) throw new Error(`Fixture error: no seed agent with id "${id}"`);
+  return agent;
+}
+
 /** Builds a synthetic candidate pool without touching the real registry/embeddings. */
 function fakeCandidates(): SearchCandidate[] {
-  const [saneamento, energia, portos] = AGENT_REGISTRY_SEED.filter((a) =>
-    ['manta-03-s8', 'manta-03-s9', 'manta-03-s6'].includes(a.id)
-  );
   return [
-    { agent: saneamento, bm25Raw: 8.2, semanticRaw: 0.81 },
-    { agent: energia, bm25Raw: 1.1, semanticRaw: 0.35 },
-    { agent: portos, bm25Raw: 0.2, semanticRaw: 0.1 },
+    { agent: seedAgent('manta-03-s8'), bm25Raw: 8.2, semanticRaw: 0.81 }, // saneamento
+    { agent: seedAgent('manta-03-s9'), bm25Raw: 1.1, semanticRaw: 0.35 }, // energia
+    { agent: seedAgent('manta-03-s6'), bm25Raw: 0.2, semanticRaw: 0.1 }, // portos
   ];
 }
 
