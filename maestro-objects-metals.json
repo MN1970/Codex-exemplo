@@ -1,0 +1,927 @@
+{
+  "maestro_registry": {
+    "version": "5.0",
+    "generated": "2026-08-02T00:00:00Z",
+    "company": "Manta Associados",
+    "system": "Manta Maestro",
+    "objects_total": 20,
+    "metals_tiers": 3,
+    "_comment": "Registro canônico de objetos (agentes) e metais (configuração operacional)",
+
+    "metals": {
+      "description": "Definições de tiers de modelo",
+      "tiers": [
+        {
+          "tier_id": "tier_1",
+          "tier_name": "Triagem",
+          "model_name": "Claude Haiku 4.5",
+          "model_id": "claude-haiku-4-5-20251001",
+          "use_cases": ["routing", "intake", "metadata_extraction"],
+          "cost_per_1k_tokens_usd": 0.001,
+          "max_latency_seconds": 5,
+          "percent_of_calls": 20,
+          "context_window_tokens": 200000,
+          "capabilities": {
+            "structured_output": true,
+            "tools": true,
+            "vision": false
+          }
+        },
+        {
+          "tier_id": "tier_2",
+          "tier_name": "Execução",
+          "model_name": "Claude Sonnet 4.6",
+          "model_id": "claude-sonnet-4-6",
+          "use_cases": [
+            "technical_analysis",
+            "writing",
+            "budgeting",
+            "scheduling"
+          ],
+          "cost_per_1k_tokens_usd": 0.015,
+          "max_latency_seconds": 30,
+          "percent_of_calls": 70,
+          "context_window_tokens": 200000,
+          "capabilities": {
+            "structured_output": true,
+            "tools": true,
+            "vision": true
+          }
+        },
+        {
+          "tier_id": "tier_3",
+          "tier_name": "Complexo",
+          "model_name": "Claude Opus 4.7/4.8",
+          "model_id": "claude-opus-4-8",
+          "use_cases": [
+            "complex_claims",
+            "architecture",
+            "second_opinion",
+            "arbitration"
+          ],
+          "cost_per_1k_tokens_usd": 0.05,
+          "max_latency_seconds": 120,
+          "percent_of_calls": 10,
+          "context_window_tokens": 200000,
+          "capabilities": {
+            "structured_output": true,
+            "tools": true,
+            "vision": true
+          }
+        }
+      ]
+    },
+
+    "objects": {
+      "description": "Registro canônico dos 20 agentes",
+      "horizontals": [
+        {
+          "object_code": "Manta 00",
+          "object_name": "maestro",
+          "aliases": ["router", "manta-router"],
+          "role": "central_router",
+          "domain": "transversal",
+          "tier_default": "Haiku",
+          "tier_escalation": {
+            "routing_simple": "Haiku",
+            "routing_complex": "Sonnet"
+          },
+          "rag_collection": null,
+          "handoffs_from": ["all"],
+          "handoffs_to": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7",
+            "03-S8",
+            "03-S9",
+            "03-S10",
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 06",
+            "Manta 07"
+          ],
+          "skills": [],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 01",
+          "object_name": "claims",
+          "aliases": ["02-C", "manta-claims"],
+          "role": "legal_technical_opinion",
+          "domain": "Direito/Engenharia",
+          "tier_default": "Opus",
+          "tier_escalation": {
+            "simple_claim": "Sonnet",
+            "complex_claim": "Opus"
+          },
+          "rag_collection": null,
+          "handoffs_from": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7",
+            "03-S8",
+            "03-S9",
+            "03-S10"
+          ],
+          "handoffs_to": [],
+          "skills": ["aluci-guard", "consist-guard"],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 02",
+          "object_name": "contratual",
+          "aliases": ["manta-02"],
+          "role": "contract_analysis",
+          "domain": "Contratual/Risco",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "standard_contract": "Sonnet",
+            "complex_negotiation": "Opus"
+          },
+          "rag_collection": null,
+          "handoffs_from": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7",
+            "03-S8",
+            "03-S9",
+            "03-S10"
+          ],
+          "handoffs_to": ["Manta 01"],
+          "skills": ["consist-guard"],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 04",
+          "object_name": "imobiliario",
+          "aliases": ["manta-04"],
+          "role": "land_property_analysis",
+          "domain": "Imobiliário/Desapropriação",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_property": "Sonnet",
+            "complex_expropriation": "Opus"
+          },
+          "rag_collection": null,
+          "handoffs_from": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7"
+          ],
+          "handoffs_to": ["Manta 01"],
+          "skills": [],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 05",
+          "object_name": "orcamento",
+          "aliases": ["manta-05"],
+          "role": "budgeting_cost_estimation",
+          "domain": "Orçamento/Custos",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_budget": "Sonnet",
+            "large_project_budget": "Opus"
+          },
+          "rag_collection": null,
+          "handoffs_from": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7",
+            "03-S8",
+            "03-S9",
+            "03-S10"
+          ],
+          "handoffs_to": ["Manta 06"],
+          "skills": [
+            "sicro-composicoes",
+            "sicro-similaridade",
+            "cad-quantifier"
+          ],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 06",
+          "object_name": "modelagem",
+          "aliases": ["manta-06"],
+          "role": "financial_modeling",
+          "domain": "Modelagem Financeira",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_model": "Sonnet",
+            "complex_sensitivity": "Opus"
+          },
+          "rag_collection": null,
+          "handoffs_from": ["Manta 05", "Manta 07"],
+          "handoffs_to": ["Manta 15"],
+          "skills": [],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 07",
+          "object_name": "cronograma",
+          "aliases": ["manta-07"],
+          "role": "scheduling_cpm",
+          "domain": "Cronograma/Planejamento",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_schedule": "Sonnet",
+            "complex_cpm": "Opus"
+          },
+          "rag_collection": null,
+          "handoffs_from": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7",
+            "03-S8",
+            "03-S9",
+            "03-S10"
+          ],
+          "handoffs_to": ["Manta 06"],
+          "skills": [],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 13",
+          "object_name": "bd",
+          "aliases": ["manta-13", "business-dev"],
+          "role": "business_development",
+          "domain": "Licitação/BD",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "tender_analysis": "Sonnet",
+            "strategic_bid": "Opus"
+          },
+          "rag_collection": null,
+          "handoffs_from": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7",
+            "03-S8",
+            "03-S9",
+            "03-S10"
+          ],
+          "handoffs_to": ["Manta 15"],
+          "skills": [],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 14",
+          "object_name": "apresentacoes",
+          "aliases": ["manta-14-pptx"],
+          "role": "presentations_pptx",
+          "domain": "Apresentações",
+          "tier_default": "Sonnet",
+          "tier_escalation": {},
+          "rag_collection": null,
+          "handoffs_from": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7",
+            "03-S8",
+            "03-S9",
+            "03-S10"
+          ],
+          "handoffs_to": [],
+          "skills": [],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 15",
+          "object_name": "advisory",
+          "aliases": ["manta-15"],
+          "role": "strategic_advisory",
+          "domain": "Consultoria Estratégica",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "standard_advisory": "Sonnet",
+            "strategic_decision": "Opus"
+          },
+          "rag_collection": null,
+          "handoffs_from": [
+            "Manta 05",
+            "Manta 06",
+            "Manta 13"
+          ],
+          "handoffs_to": [],
+          "skills": [],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "Manta 16",
+          "object_name": "arquiteto-ia",
+          "aliases": ["manta-16-arq"],
+          "role": "second_opinion_arbitration",
+          "domain": "Arquitetura IA",
+          "tier_default": "Opus",
+          "tier_escalation": {},
+          "rag_collection": null,
+          "handoffs_from": [
+            "03-S1",
+            "03-S2",
+            "03-S3",
+            "03-S4",
+            "03-S6",
+            "03-S7",
+            "03-S8",
+            "03-S9",
+            "03-S10",
+            "Manta 01",
+            "Manta 02"
+          ],
+          "handoffs_to": [],
+          "skills": [],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        }
+      ],
+      "verticals": [
+        {
+          "object_code": "03-S1",
+          "object_name": "agente-infraestrutura",
+          "segment": "Rodovias",
+          "aliases": ["S1", "rodovias"],
+          "domain": "Rodovias/Pavimentação",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_highway": "Sonnet",
+            "complex_expressway": "Opus"
+          },
+          "rag_collection": {
+            "slug": "rod",
+            "storage_prefix": "rod:",
+            "sub_prefixes": [],
+            "document_count": 150,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "rodovia",
+            "pavimento",
+            "CBUQ",
+            "BGS",
+            "terraplenagem",
+            "SICRO",
+            "DNIT"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "sicro-composicoes",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "03-S2",
+          "object_name": "agente-infraestrutura",
+          "segment": "OAE",
+          "aliases": ["S2", "oae", "pontes", "viadutos"],
+          "domain": "Obras de Arte Especiais",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_bridge": "Sonnet",
+            "complex_cable_stayed": "Opus"
+          },
+          "rag_collection": {
+            "slug": "oae",
+            "storage_prefix": "oae:",
+            "sub_prefixes": [],
+            "document_count": 120,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "ponte",
+            "viaduto",
+            "OAE",
+            "NBR 7187",
+            "túnel rodoviário"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "03-S3",
+          "object_name": "agente-infraestrutura",
+          "segment": "Ferrovia",
+          "aliases": ["S3", "ferrovia", "trilho"],
+          "domain": "Ferrovias",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_rail": "Sonnet",
+            "complex_high_speed": "Opus"
+          },
+          "rag_collection": {
+            "slug": "fer",
+            "storage_prefix": "fer:",
+            "sub_prefixes": [],
+            "document_count": 100,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "ferrovia",
+            "trilho",
+            "AMV",
+            "dormente",
+            "via permanente"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "03-S4",
+          "object_name": "agente-infraestrutura",
+          "segment": "Metrô",
+          "aliases": ["S4", "metro", "estação", "metrô"],
+          "domain": "Metrô/Transporte Urbano",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_metro_station": "Sonnet",
+            "complex_metro_line": "Opus"
+          },
+          "rag_collection": {
+            "slug": "mtr",
+            "storage_prefix": "mtr:",
+            "sub_prefixes": [],
+            "document_count": 130,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "metrô",
+            "estação",
+            "NATM",
+            "PSD",
+            "linha 4",
+            "linha 5",
+            "VLT"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-01-01",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "03-S6",
+          "object_name": "agente-portos",
+          "segment": "Portos",
+          "aliases": ["S6", "portos", "porto"],
+          "domain": "Portos e Hidrovias",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_port_terminal": "Sonnet",
+            "complex_multiport_expansion": "Opus"
+          },
+          "rag_collection": {
+            "slug": "por",
+            "storage_prefix": "por:",
+            "sub_prefixes": [],
+            "document_count": 110,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "porto",
+            "terminal",
+            "ANTAQ",
+            "dragagem",
+            "molhe",
+            "berço",
+            "calado",
+            "contêiner",
+            "granel"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-07-05",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "03-S7",
+          "object_name": "agente-aeroportos",
+          "segment": "Aeroportos",
+          "aliases": ["S7", "aeroportos", "aeroporto"],
+          "domain": "Aeroportos",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_airport": "Sonnet",
+            "complex_hub_expansion": "Opus"
+          },
+          "rag_collection": {
+            "slug": "aer",
+            "storage_prefix": "aer:",
+            "sub_prefixes": [],
+            "document_count": 100,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "aeroporto",
+            "pista pouso",
+            "ANAC",
+            "ICAO",
+            "TPS",
+            "TECA",
+            "balizamento"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-07-05",
+          "last_routing_test": "2026-08-01"
+        },
+        {
+          "object_code": "03-S8",
+          "object_name": "agente-saneamento",
+          "segment": "Saneamento",
+          "aliases": ["S8", "saneamento"],
+          "domain": "Saneamento Básico",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_water_system": "Sonnet",
+            "complex_wastewater_network": "Opus"
+          },
+          "rag_collection": {
+            "slug": "san",
+            "storage_prefix": "san:",
+            "sub_prefixes": [
+              "san:br:",
+              "san:ar:"
+            ],
+            "document_count": 140,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "saneamento",
+            "ETA",
+            "ETE",
+            "adutora",
+            "esgoto",
+            "AySA",
+            "drenagem urbana",
+            "SNIS"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-07-05",
+          "last_routing_test": "2026-08-01",
+          "priority_note": "AySA Argentina"
+        },
+        {
+          "object_code": "03-S9",
+          "object_name": "agente-energia",
+          "segment": "Energia",
+          "aliases": ["S9", "energia"],
+          "domain": "Setor Elétrico",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_transmission": "Sonnet",
+            "complex_grid_expansion": "Opus"
+          },
+          "rag_collection": {
+            "slug": "ene",
+            "storage_prefix": "ene:",
+            "sub_prefixes": [
+              "ene:t:",
+              "ene:d:",
+              "ene:g:"
+            ],
+            "document_count": 150,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "transmissão",
+            "LT",
+            "subestação",
+            "ANEEL",
+            "RAP",
+            "leilão transmissão",
+            "ONS",
+            "EPE"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-07-05",
+          "last_routing_test": "2026-08-01",
+          "priority_note": "ANEEL/State Grid"
+        },
+        {
+          "object_code": "03-S10",
+          "object_name": "agente-barragens",
+          "segment": "Barragens",
+          "aliases": ["S10", "barragens"],
+          "domain": "Barragens",
+          "tier_default": "Sonnet",
+          "tier_escalation": {
+            "simple_dam": "Sonnet",
+            "complex_tailings_dam": "Opus"
+          },
+          "rag_collection": {
+            "slug": "bar",
+            "storage_prefix": "bar:",
+            "sub_prefixes": [
+              "bar:c:",
+              "bar:t:",
+              "bar:e:",
+              "bar:r:"
+            ],
+            "document_count": 120,
+            "update_frequency": "quarterly"
+          },
+          "routing_keywords": [
+            "barragem",
+            "vertedouro",
+            "CFRD",
+            "CCR",
+            "rejeitos",
+            "PNSB",
+            "ICOLD",
+            "CBDB",
+            "TSF"
+          ],
+          "handoffs_from": ["Maestro"],
+          "handoffs_to": [
+            "Manta 01",
+            "Manta 02",
+            "Manta 04",
+            "Manta 05",
+            "Manta 07",
+            "Manta 13"
+          ],
+          "skills": [
+            "aluci-guard",
+            "consist-guard",
+            "cad-quantifier",
+            "padrao-manta"
+          ],
+          "status": "operational",
+          "created_date": "2026-07-05",
+          "last_routing_test": "2026-08-01"
+        }
+      ]
+    },
+
+    "lifecycle_phases": [
+      {
+        "phase_id": 1,
+        "phase_name": "Estudo Prévio / EVTE",
+        "description": "Feasibility and preliminary design"
+      },
+      {
+        "phase_id": 2,
+        "phase_name": "Projeto Básico",
+        "description": "Basic design"
+      },
+      {
+        "phase_id": 3,
+        "phase_name": "Projeto Executivo",
+        "description": "Executive design"
+      },
+      {
+        "phase_id": 4,
+        "phase_name": "Obra em Execução",
+        "description": "Construction in progress"
+      },
+      {
+        "phase_id": 5,
+        "phase_name": "Operação & Manutenção",
+        "description": "Operations and maintenance"
+      },
+      {
+        "phase_id": 6,
+        "phase_name": "Processo Competitivo / Licitação",
+        "description": "Competitive bidding"
+      },
+      {
+        "phase_id": 7,
+        "phase_name": "Due Diligence / M&A",
+        "description": "Acquisition and merger analysis"
+      },
+      {
+        "phase_id": 8,
+        "phase_name": "Encerramento / Descomissionamento",
+        "description": "Decommissioning and closure"
+      }
+    ],
+
+    "estimated_costs_monthly": {
+      "currency": "USD",
+      "baseline_queries_per_segment": 100,
+      "baseline_tokens_per_query": 8000,
+      "by_segment": {
+        "03-S1_rodovias": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        },
+        "03-S2_oae": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        },
+        "03-S3_ferrovia": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        },
+        "03-S4_metro": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        },
+        "03-S6_portos": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        },
+        "03-S7_aeroportos": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        },
+        "03-S8_saneamento": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        },
+        "03-S9_energia": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        },
+        "03-S10_barragens": {
+          "haiku_cost": 1.60,
+          "sonnet_cost": 24.00,
+          "opus_cost": 4.00,
+          "blended_cost": 20.40
+        }
+      },
+      "total_monthly_blended": 183.60,
+      "total_annual_blended": 2203.20
+    }
+  }
+}
