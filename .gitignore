@@ -41,3 +41,10 @@ Thumbs.db
 .env
 .env.local
 *.log
+
+# Logs de execução Fase 1-3
+logs/
+*.log
+
+# Temporários de script
+*.tmp

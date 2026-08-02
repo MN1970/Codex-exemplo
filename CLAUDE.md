@@ -451,14 +451,13 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   agente `.md`, RAG, rota SP ou routing keyword — mesma situação em que
   S12/S13 estavam antes desta rodada. **Documentação em `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md`** com roadmap de
   formalização. Ação: aprovação MN + checklist idêntico a S12/S13.
-- **Embedder (G010)**: `docs/EMBEDDER-DECISION.md` recomenda migrar
-  para `bge-m3`, partindo da premissa de que produção roda
-  `bge-small-en-v1.5` com 0% migrado. `docs/SUPABASE-PROJECT-AUDIT.md`
-  encontrou evidência (comentário de coluna via `list_tables`) sugerindo
-  que o schema já é `bge-m3`/1024-d desde 2026-07-03. **Os dois
-  documentos se contradizem e nenhum foi reconciliado com o outro**.
-  Ação: verificar a dimensão real da coluna de embeddings antes de
-  qualquer decisão ou migração.
+- **Embedder (G010) — ✅ RESOLVIDO**: Confirmado por auditoria real
+  (Supabase `list_tables` + MCP) que embedder é **1024-dimensional
+  bge-m3 desde 2026-07-03** — não migração necessária, apenas
+  documentação desatualizada. Decisão MN (Q1, 2026-08-01): **CONFIRMAR
+  APENAS**. Ação: atualizar SKILL.md (✅ feito) + CLAUDE.md (✅ este
+  arquivo) + commit. Timeline: 30 minutos (não 8 horas). Ver
+  `DECISOES-MN-PHASE-1.md` §Q1 para evidence e rationale completo.
 - **Supabase — projeto `xgluoaaymbdzbbudnwrh` (G012)**: auditoria real
   (`docs/SUPABASE-PROJECT-AUDIT.md`) concluiu, com evidência de API,
   que é provavelmente referência morta (projeto não pertence à
