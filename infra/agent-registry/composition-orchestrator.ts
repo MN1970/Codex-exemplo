@@ -1787,12 +1787,432 @@ export class MockAgentInvoker implements AgentInvoker {
 }
 
 // =====================================================================
-// 11. DEMO — the 3 canonical examples (UHE, ETE+Subestação, Porto+pista)
+// 11. PHASE 2 — Cross-segment composition: resource pool, cost tracking,
+//     shared context, observability events
+// =====================================================================
+
+/** A cached RAG chunk (e.g. edital, normativa, Lei 14.026) shared
+ *  across multiple agents in a composition to avoid redundant queries. */
+export interface SharedRagChunk {
+  id: string;
+  /** Which agent's query produced this chunk. */
+  sourceAgentId: string;
+  /** Collection prefix (e.g. "san:", "ene:", "por:") for traceability. */
+  collectionPrefix: string;
+  content: string;
+  /** Tokens estimated for this chunk. */
+  estimatedTokens: number;
+  /** When it was added to the pool. */
+  createdAt: Date;
+  /** Which agents have referenced this chunk. */
+  consumedBy: Set<string>;
+}
+
+/** Shared resource pool across a multi-agent composition — avoids
+ *  redundant RAG queries when multiple agents need the same edital,
+ *  normativa, or other foundational document. */
+export class ResourcePool {
+  private chunks = new Map<string, SharedRagChunk>();
+
+  /** Adds a chunk to the pool. Returns false if already cached (noop). */
+  addChunk(chunk: SharedRagChunk): boolean {
+    if (this.chunks.has(chunk.id)) return false;
+    this.chunks.set(chunk.id, { ...chunk, consumedBy: new Set() });
+    return true;
+  }
+
+  /** Retrieves a chunk and marks it as consumed by `agentId`. */
+  getChunk(chunkId: string, agentId: string): SharedRagChunk | undefined {
+    const chunk = this.chunks.get(chunkId);
+    if (chunk) chunk.consumedBy.add(agentId);
+    return chunk;
+  }
+
+  /** Searches pool by keyword/prefix (e.g. "Lei 14.026", "ANEEL"). */
+  findByKeyword(keyword: string): SharedRagChunk[] {
+    return [...this.chunks.values()].filter((c) =>
+      c.content.toLowerCase().includes(keyword.toLowerCase()) ||
+      c.id.toLowerCase().includes(keyword.toLowerCase()),
+    );
+  }
+
+  /** Estimated total tokens across all cached chunks. */
+  totalTokens(): number {
+    return [...this.chunks.values()].reduce((sum, c) => sum + c.estimatedTokens, 0);
+  }
+
+  all(): SharedRagChunk[] {
+    return [...this.chunks.values()];
+  }
+
+  clear(): void {
+    this.chunks.clear();
+  }
+}
+
+/** Token estimation heuristics — calibrated to real Claude API usage
+ *  within Manta agents (typical queries 2-5k input tokens, responses
+ *  1-8k output tokens depending on model tier). */
+export class CostTracker {
+  private agentCosts = new Map<string, { estimatedInputTokens: number; estimatedOutputTokens: number }>();
+  private globalBudgetTokens = 250_000; // conservative per-composition limit
+  private ragReuseBenefit = 0;
+
+  constructor(globalBudgetTokens = 250_000) {
+    this.globalBudgetTokens = globalBudgetTokens;
+  }
+
+  /** Log estimated tokens for a completed agent invocation. */
+  recordAgent(agentId: string, estimatedInput: number, estimatedOutput: number): void {
+    const current = this.agentCosts.get(agentId) ?? { estimatedInputTokens: 0, estimatedOutputTokens: 0 };
+    current.estimatedInputTokens += estimatedInput;
+    current.estimatedOutputTokens += estimatedOutput;
+    this.agentCosts.set(agentId, current);
+  }
+
+  /** Log RAG reuse benefit (tokens saved by avoiding redundant query). */
+  recordRagReuse(tokensSaved: number): void {
+    this.ragReuseBenefit += tokensSaved;
+  }
+
+  /** Sum across all agents. */
+  totalInputTokens(): number {
+    return [...this.agentCosts.values()].reduce((sum, c) => sum + c.estimatedInputTokens, 0);
+  }
+
+  totalOutputTokens(): number {
+    return [...this.agentCosts.values()].reduce((sum, c) => sum + c.estimatedOutputTokens, 0);
+  }
+
+  totalTokens(): number {
+    return this.totalInputTokens() + this.totalOutputTokens();
+  }
+
+  isWithinBudget(): boolean {
+    return this.totalTokens() <= this.globalBudgetTokens;
+  }
+
+  budgetRemaining(): number {
+    return Math.max(0, this.globalBudgetTokens - this.totalTokens());
+  }
+
+  ragReusedTokens(): number {
+    return this.ragReuseBenefit;
+  }
+
+  perAgent(): Map<string, { estimatedInputTokens: number; estimatedOutputTokens: number }> {
+    return new Map(this.agentCosts);
+  }
+}
+
+/** Observability event — emitted to supabase.routing_events for metrics,
+ *  debugging, and SLA tracking. */
+export interface CompositionEvent {
+  event_id: string;
+  /** Parent composition query_id, links to all agent invocations. */
+  composition_id: string;
+  query_id: string;
+  agent_id: string;
+  /** Lifecycle stage: 'detect', 'schedule', 'invoke_start', 'invoke_complete', 'invoke_error', 'merge', 'complete' */
+  stage: 'detect' | 'schedule' | 'invoke_start' | 'invoke_complete' | 'invoke_error' | 'merge' | 'complete';
+  /** Which pattern matched, if any (e.g. "uhe", "ete-subestacao", null for ad-hoc). */
+  pattern_matched: string | null;
+  /** e.g. "success", "error", "timeout", "skipped", "partial", "aborted" */
+  status: string;
+  /** Wall-clock duration of this stage (ms). */
+  duration_ms: number;
+  /** Estimated input + output tokens for this invocation. */
+  token_count: number;
+  /** Confidence (0..1) at detection time. */
+  confidence: number;
+  /** Did this agent escalate its model tier during fallback? */
+  fallback_triggered: boolean;
+  /** Fallback details: "escalated sonnet->opus after 1 timeout", etc. */
+  fallback_reason: string | null;
+  /** How many RAG chunks were reused/cached. */
+  rag_reuse_count: number;
+  /** Arbitrary structured context (project_id, phase, user, etc.). */
+  metadata: Record<string, unknown>;
+  /** ISO 8601 timestamp. */
+  created_at: string;
+}
+
+/** Sends composition events to supabase.routing_events for observability.
+ *  In a real deployment this would be a Supabase insert; for testing,
+ *  it's a mock that logs to console. */
+export interface EventEmitter {
+  emit(event: CompositionEvent): Promise<void>;
+}
+
+/** Console-based event emitter for local development/testing. */
+export class ConsoleEventEmitter implements EventEmitter {
+  async emit(event: CompositionEvent): Promise<void> {
+    console.log(`[EVENT] ${event.composition_id} | ${event.agent_id} | ${event.stage} | ${event.status}`);
+  }
+}
+
+/** Production emitter — inserts into supabase.routing_events. */
+export class SupabaseEventEmitter implements EventEmitter {
+  constructor(private supabaseClient: unknown) {} // actual Supabase client
+
+  async emit(event: CompositionEvent): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const client = this.supabaseClient as any;
+    await client.from('routing_events').insert([event]);
+  }
+}
+
+/** Core Phase 2 cross-segment orchestrator — encapsulates detection,
+ *  scheduling, resource pooling, cost tracking, and observability. */
+export class CrossSegmentComposer {
+  private resourcePool = new ResourcePool();
+  private costTracker: CostTracker;
+  private eventEmitter: EventEmitter;
+  private compositionId: string;
+
+  constructor(options: {
+    globalBudgetTokens?: number;
+    eventEmitter?: EventEmitter;
+    compositionId?: string;
+  } = {}) {
+    this.costTracker = new CostTracker(options.globalBudgetTokens ?? 250_000);
+    this.eventEmitter = options.eventEmitter ?? new ConsoleEventEmitter();
+    this.compositionId = options.compositionId ?? `comp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+  }
+
+  getCompositionId(): string {
+    return this.compositionId;
+  }
+
+  getResourcePool(): ResourcePool {
+    return this.resourcePool;
+  }
+
+  getCostTracker(): CostTracker {
+    return this.costTracker;
+  }
+
+  getEventEmitter(): EventEmitter {
+    return this.eventEmitter;
+  }
+
+  /**
+   * Full Phase 2 pipeline: detect → schedule → validate budget →
+   * orchestrate with resource sharing + observability.
+   */
+  async composeAndOrchestrate(
+    query: string,
+    invoker: AgentInvoker,
+    options: {
+      metadata?: Record<string, unknown>;
+      detectOptions?: DetectCompositionOptions;
+      scheduleOptions?: AnalyzeSchedulingOptions;
+      orchestrateOptions?: OrchestrateOptions;
+    } = {},
+  ): Promise<OrchestrationResult & { compositionId: string; costSummary: string }> {
+    const startTime = Date.now();
+    const eventBase = {
+      composition_id: this.compositionId,
+      query_id: `q_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      rag_reuse_count: 0,
+      metadata: options.metadata ?? {},
+      created_at: new Date().toISOString(),
+    };
+
+    try {
+      // Stage 1: Detect composition
+      const detectStart = Date.now();
+      const detection = detectComposition(query, options.detectOptions);
+      const detectDuration = Date.now() - detectStart;
+
+      await this.eventEmitter.emit({
+        ...eventBase,
+        event_id: `evt_${Date.now()}_detect`,
+        agent_id: 'maestro',
+        stage: 'detect',
+        pattern_matched: detection.patternId ?? null,
+        status: detection.isComposite ? 'detected' : 'single-agent',
+        duration_ms: detectDuration,
+        token_count: 0,
+        confidence: detection.confidence,
+        fallback_triggered: false,
+        fallback_reason: null,
+      });
+
+      if (!detection.isComposite) {
+        return {
+          status: 'success',
+          plan: undefined as unknown as SchedulingPlan,
+          agentResults: {},
+          stagesExecuted: 0,
+          mergedOutput: `Single-agent routing (non-composite): ${detection.rationale}`,
+          errors: [],
+          totalMs: Date.now() - startTime,
+          compositionId: this.compositionId,
+          costSummary: `Total: 0 tokens (single-agent, no composition).`,
+        };
+      }
+
+      // Stage 2: Analyze scheduling
+      const scheduleStart = Date.now();
+      const plan = analyzeScheduling(detection, options.scheduleOptions);
+      const scheduleDuration = Date.now() - scheduleStart;
+
+      await this.eventEmitter.emit({
+        ...eventBase,
+        event_id: `evt_${Date.now()}_schedule`,
+        agent_id: 'maestro',
+        stage: 'schedule',
+        pattern_matched: detection.patternId ?? null,
+        status: `scheduled_${plan.strategy}`,
+        duration_ms: scheduleDuration,
+        token_count: 0,
+        confidence: detection.confidence,
+        fallback_triggered: false,
+        fallback_reason: null,
+      });
+
+      // Stage 3: Budget check
+      const estimatedTotalTokens = this.estimateCompositionTokens(plan);
+      if (estimatedTotalTokens > this.costTracker['globalBudgetTokens']) {
+        const msg = `Composição excede orçamento (${estimatedTotalTokens} > ${this.costTracker['globalBudgetTokens']} tokens).`;
+        await this.eventEmitter.emit({
+          ...eventBase,
+          event_id: `evt_${Date.now()}_budget`,
+          agent_id: 'maestro',
+          stage: 'complete',
+          pattern_matched: detection.patternId ?? null,
+          status: 'budget_exceeded',
+          duration_ms: 0,
+          token_count: estimatedTotalTokens,
+          confidence: detection.confidence,
+          fallback_triggered: false,
+          fallback_reason: `Budget overflow: ${estimatedTotalTokens} tokens.`,
+        });
+        return {
+          status: 'failed',
+          plan,
+          agentResults: {},
+          stagesExecuted: 0,
+          mergedOutput: msg,
+          errors: [msg],
+          totalMs: Date.now() - startTime,
+          compositionId: this.compositionId,
+          costSummary: `REJECTED: ${estimatedTotalTokens} tokens > budget ${this.costTracker['globalBudgetTokens']}.`,
+        };
+      }
+
+      // Stage 4: Orchestrate with observability
+      const orchestrateStart = Date.now();
+      const result = await orchestrateComposition(plan, invoker, { query, metadata: options.metadata }, {
+        ...options.orchestrateOptions,
+        merge: (results, schedulePlan) => this.mergeWithResourceContext(results, schedulePlan),
+      });
+
+      // Emit final completion event
+      await this.eventEmitter.emit({
+        ...eventBase,
+        event_id: `evt_${Date.now()}_complete`,
+        agent_id: 'maestro',
+        stage: 'complete',
+        pattern_matched: detection.patternId ?? null,
+        status: result.status,
+        duration_ms: Date.now() - orchestrateStart,
+        token_count: this.costTracker.totalTokens(),
+        confidence: detection.confidence,
+        fallback_triggered: false,
+        fallback_reason: null,
+      });
+
+      const costSummary = this.formatCostSummary();
+
+      return {
+        ...result,
+        compositionId: this.compositionId,
+        costSummary,
+      };
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      await this.eventEmitter.emit({
+        ...eventBase,
+        event_id: `evt_${Date.now()}_error`,
+        agent_id: 'maestro',
+        stage: 'complete',
+        pattern_matched: null,
+        status: 'error',
+        duration_ms: Date.now() - startTime,
+        token_count: this.costTracker.totalTokens(),
+        confidence: 0,
+        fallback_triggered: false,
+        fallback_reason: errorMsg,
+      });
+      throw err;
+    }
+  }
+
+  /**
+   * Cost-optimized tier selection: chooses the minimum tier that meets
+   * a confidence threshold, escalating only if necessary.
+   *
+   * Example: if confidence >= 0.85, use haiku; >= 0.5, use sonnet;
+   * otherwise opus for maximum accuracy.
+   */
+  selectOptimalTier(confidence: number, agentDef: AgentDefinition): ModelTier {
+    // If the agent is already marked as needing a specific tier, respect it
+    if (agentDef.model === 'opus') return 'opus';
+
+    // Otherwise, choose based on confidence
+    if (confidence >= 0.85) return 'haiku';
+    if (confidence >= 0.5) return 'sonnet';
+    return agentDef.model ?? 'sonnet'; // fallback to agent default
+  }
+
+  /** Estimates total tokens for a scheduling plan (sum across all agents). */
+  private estimateCompositionTokens(plan: SchedulingPlan): number {
+    // Rough heuristic: 2k input + 3k output per agent
+    return plan.graph.nodes.length * 5_000;
+  }
+
+  /** Merges agent results with shared resource context (for logging). */
+  private mergeWithResourceContext(
+    results: Record<string, AgentInvocationResult>,
+    plan: SchedulingPlan,
+  ): string {
+    const base = defaultMerge(results, plan);
+    const poolSummary = this.resourcePool.all().length
+      ? `\n\n## Shared Resources\n${this.resourcePool.all().map((c) => `- ${c.id}: ${c.consumedBy.size} agents, ${c.estimatedTokens} tokens`).join('\n')}`
+      : '';
+    return base + poolSummary;
+  }
+
+  private formatCostSummary(): string {
+    const inputTokens = this.costTracker.totalInputTokens();
+    const outputTokens = this.costTracker.totalOutputTokens();
+    const totalTokens = this.costTracker.totalTokens();
+    const ragSaved = this.costTracker.ragReusedTokens();
+    const budgetRemaining = this.costTracker.budgetRemaining();
+    const breakdown = [...this.costTracker.perAgent().entries()]
+      .map(([id, costs]) => `  ${id}: ${costs.estimatedInputTokens + costs.estimatedOutputTokens} tokens`)
+      .join('\n');
+
+    return (
+      `Cost Summary:\n` +
+      `  Total: ${totalTokens} tokens (input: ${inputTokens}, output: ${outputTokens})\n` +
+      `  RAG reused: ${ragSaved} tokens saved\n` +
+      `  Budget remaining: ${budgetRemaining} tokens\n` +
+      `  Per-agent breakdown:\n${breakdown}`
+    );
+  }
+}
+
+// =====================================================================
+// 12. DEMO — the 3 canonical examples (UHE, ETE+Subestação, Porto+pista)
 // =====================================================================
 // Not auto-executed. Run manually, e.g. with `tsx` or `ts-node`:
 //
-//   import { runCompositionDemo } from './composition-orchestrator';
-//   runCompositionDemo();
+//   import { runCompositionDemo, runPhase2Demo } from './composition-orchestrator';
+//   runCompositionDemo();        // Phase 1: basic composition
+//   runPhase2Demo();             // Phase 2: with cost tracking, resource pooling, observability
 //
 // or add a small CLI wrapper. Uses MockAgentInvoker so it runs with no
 // API key and no network access.
@@ -1826,5 +2246,91 @@ export async function runCompositionDemo(): Promise<void> {
     const result = await orchestrateComposition(plan, invoker, { query });
     console.log(`--> Status final: ${result.status} (${result.totalMs}ms, ${result.stagesExecuted} estágio(s))`);
     console.log(result.mergedOutput);
+  }
+}
+
+/**
+ * Phase 2 demo — runs composition with cost tracking, resource pooling,
+ * and observability events.
+ */
+export async function runPhase2Demo(): Promise<void> {
+  const invoker = new MockAgentInvoker({ latencyMs: 100 });
+  const eventEmitter = new ConsoleEventEmitter();
+
+  console.log('\n\n' + '='.repeat(78));
+  console.log('PHASE 2 — Multi-agent composition with resource pooling & cost tracking');
+  console.log('='.repeat(78) + '\n');
+
+  for (const query of DEMO_QUERIES) {
+    console.log('\n' + '-'.repeat(78));
+    console.log(`TEST: ${query}`);
+    console.log('-'.repeat(78));
+
+    const composer = new CrossSegmentComposer({
+      globalBudgetTokens: 150_000,
+      eventEmitter,
+      compositionId: `demo_${Math.random().toString(36).slice(2, 9)}`,
+    });
+
+    try {
+      const result = await composer.composeAndOrchestrate(query, invoker, {
+        metadata: { demo: true, scenario: 'canonical' },
+      });
+
+      console.log(`\nFinal Status: ${result.status} (${result.totalMs}ms)`);
+      console.log(`Composition ID: ${result.compositionId}`);
+      console.log(result.costSummary);
+      console.log('\nMerged Output Preview:');
+      console.log(result.mergedOutput.slice(0, 400));
+    } catch (err) {
+      console.error(`ERROR in composition: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+}
+
+/**
+ * Advanced Phase 2 test: resource pool with shared edital, cost optimization.
+ */
+export async function runPhase2AdvancedDemo(): Promise<void> {
+  const invoker = new MockAgentInvoker({ latencyMs: 50 });
+  const eventEmitter = new ConsoleEventEmitter();
+
+  console.log('\n\n' + '='.repeat(78));
+  console.log('PHASE 2 ADVANCED — RAG caching + cost optimization');
+  console.log('='.repeat(78) + '\n');
+
+  const composer = new CrossSegmentComposer({
+    globalBudgetTokens: 200_000,
+    eventEmitter,
+  });
+
+  // Simulate shared edital chunk
+  const sharedEdital: SharedRagChunk = {
+    id: 'edital_2026_01_bndes',
+    sourceAgentId: 'agente-saneamento',
+    collectionPrefix: 'san:',
+    content: 'Edital BNDES 2026 Saneamento: Critérios de aceitação de projetos em ETA/ETE...',
+    estimatedTokens: 2_500,
+    createdAt: new Date(),
+    consumedBy: new Set(),
+  };
+
+  composer.getResourcePool().addChunk(sharedEdital);
+  composer.getCostTracker().recordRagReuse(2_500); // Document the reuse benefit
+
+  const query = 'Projeto de ETE nova com subestação de energia no mesmo site, usar edital 2026 BNDES.';
+
+  console.log(`Query: ${query}`);
+  console.log(`Resource Pool: ${composer.getResourcePool().all().length} chunk(s) pre-loaded (${composer.getResourcePool().totalTokens()} tokens)`);
+
+  try {
+    const result = await composer.composeAndOrchestrate(query, invoker, {
+      metadata: { mode: 'advanced', rag_preload: true },
+    });
+
+    console.log(`\nFinal Status: ${result.status}`);
+    console.log(result.costSummary);
+  } catch (err) {
+    console.error(`ERROR: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
