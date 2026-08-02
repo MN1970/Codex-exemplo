@@ -36,6 +36,15 @@
 const http = require('http');
 const { configureTelemetry } = require('./otel-setup');
 
+// Hardening: se o otel-collector estiver fora do ar (ex.: docker-compose
+// não subiu ainda, ou reiniciando), o exporter OTLP gRPC pode rejeitar a
+// promise de export sem que o BatchSpanProcessor capture o erro em todas
+// as versões — sem este handler, isso derrubaria o processo do agente.
+// Loga e segue: perder alguns spans/métricas é aceitável, cair o agente não.
+process.on('unhandledRejection', (reason) => {
+  console.error('[otel] falha ao exportar telemetria (collector indisponível?):', reason && reason.message ? reason.message : reason);
+});
+
 const AGENT_ID = process.env.MANTA_AGENT_ID || 'manta-03-s8';
 const SEGMENT = process.env.MANTA_SEGMENT || 'saneamento';
 const PORT = Number(process.env.PORT || 8090);
