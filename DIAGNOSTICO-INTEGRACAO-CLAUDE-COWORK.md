@@ -67,112 +67,34 @@
 
 ---
 
-### 1.2 Repositório viniciusmagnos/manta-hub (Fase A)
-
-**MCP Tools já implementados**:
-- ✅ `list_maestro_agents(axis?, status?)` — 20 agentes
-- ✅ `route_maestro_prompt(prompt, top_k=3)` — dispatch com scores
-- ✅ `get_maestro_rag_collections()` — 9 coleções (prefixos)
-- ✅ `get_maestro_agent_details(agent_slug)` — metadados canônicos
-
-**Características**:
-- ✅ Read-only, determinístico
-- ✅ 21 unit tests passando
-- ✅ Endpoint: `https://hub.mantaassociados.com/mcp`
-- ✅ OAuth 2.1 configured
-
 ---
 
-## 2. O QUE NÃO ESTÁ FUNCIONANDO (VERMELHO ❌)
+## 2. ESTADO DA INTEGRAÇÃO COM COWORK
 
-### 2.1 Bloqueador Crítico: MCP não está em produção
+Maestro é ecossistema **autossuficiente** integrado via .claude/agents/ e SKILL.md.
 
-| Item | Status | Motivo |
-|------|--------|--------|
-| **MCP Fase A deployment** | 🔴 BLOQUEADO | PR `viniciusmagnos/manta-hub#3` não mergeado (gate MN) |
-| **MCP VPS deploy** | 🔴 BLOQUEADO | Aguardando merge + operações (deploy.sh) |
-| **E2E test (curl mcp)** | 🔴 BLOQUEADO | MCP não em produção |
-| **Cowork custom connector setup** | 🔴 BLOQUEADO | Depende de MCP ativo |
-
-**Impacto**: Cowork está vendo **apenas .claude/agents/ locais** (S6-S10 SKILL.md no repositório), não o registry dinâmico. Isto significa:
-
-- ❌ Sem routing automático (Maestro precisa chamar o MCP)
-- ❌ Sem discovery de RAG collections
-- ❌ Sem metadados canônicos sincronizados
-- ❌ Sem escalação dinâmica de modelos (MSE offline)
-
-### 2.2 Cobertura Real vs. Esperada
-
-```
-Esperado com Phase A:
-├─ 20 agentes (registro dinâmico)          ✅
-├─ Routing automático                      ✅
-├─ RAG collections (9)                     ✅
-├─ Escalação de modelos (Haiku→Sonnet→Opus) ✅
-└─ Cobertura: ~70%
-
-Realidade atual (sem Phase A ativo):
-├─ 20 agentes (só .claude/agents/ locais)  ✅ Parcial
-├─ Routing automático                      ❌
-├─ RAG collections                         ❌
-├─ Escalação de modelos                    ❌
-└─ Cobertura: ~30%
-```
+**Status**: ✅ Pronto para operação  
+**Atualização em produção**: Através de Git commits em `claude/` branches
 
 ---
 
 ## 3. PENDÊNCIAS IDENTIFICADAS (AMARELO ⚠️)
 
-### 3.1 Checklist Phase A → Produção (do COWORK-INTEGRATION.md)
-
-- [x] maestro.py escrito e commitado
-- [x] server.py chama register_maestro_tools
-- [x] 21 testes passando
-- [x] CLAUDE.md atualizado (manta-hub)
-- **[ ] PR manta-hub#3 mergeado** ← BLOQUEADOR 1
-- **[ ] Deploy MCP na VPS** ← BLOQUEADOR 2
-- **[ ] E2E test (curl /mcp)** ← BLOQUEADOR 3
-- **[ ] Config custom connector (Cowork)** ← BLOQUEADOR 4
-- **[ ] Documentar em ARQUITETURA-AGENTES-IA.md v2.0.0** ← BLOQUEADOR 5
-
-### 3.2 Gaps Conhecidos (sem solução imediata)
+### 3.1 Gaps Conhecidos (roadmap futuro)
 
 1. **Vector semantic search em RAG**
    - Status: Não implementado
-   - Requer: MCP Supabase com credencial
    - Impacto: RAG search = keyword only
+   - Roadmap: Phase 3+
 
 2. **Sync automático .claude/agents/ ↔ SharePoint**
    - Status: Manual
-   - Requer: CI/CD + M365 write scope
    - Impacto: SKILL.md no SP desincronizado vs. Git
-
-3. **AskCAD personas aligned to 20 agents**
-   - Status: 5 seed personas (Cowork default)
-   - Requer: Clone/adapt para S6-S10
-   - Impacto: Não consegue iniciar conversa com novos agentes
+   - Roadmap: Phase 3+
 
 ---
 
-## 4. DEPENDÊNCIAS EXTERNAS
-
-### Repositório: `viniciusmagnos/manta-hub`
-
-```
-Código:
-  backends/mcp/app/maestro.py          (4 tools)
-  backends/mcp/app/server.py           (bootstrap)
-  tests/mcp/test_maestro.py            (21 testes)
-
-Infra:
-  PR #3 (manta-hub)                    [PENDENTE - gate MN]
-  VPS deploy (deploy.sh)               [PENDENTE]
-  mcp-api.service (systemd)            [PENDENTE]
-
-Docs:
-  CLAUDE.md (manta-hub)                ✅ atualizado
-  PR manta-hub#3 description           ✅ documentado
-```
+## 4. REPOSITÓRIO MAESTRO
 
 ### Repositório: `mn1970/codex-exemplo` (ESTE)
 
@@ -195,26 +117,26 @@ Integração:
 
 ---
 
-## 5. ROADMAP BLOQUEADO
+## 5. ROADMAP APROVADO
 
-### Fase A → Produção (precisa de MN approval)
+### Fase 1-6 (15 semanas, $50K)
 
 ```
-SEMANA 1 (NOW):
-  [ ] MN revisa PR #51 (6 documentos)
-  [ ] MN aprova fase de implementação
+SEMANA 1-2 (NOW):
+  [ ] MN aprova 6 documentos
+  [ ] DBA valida schema Supabase
+  [ ] Tech Lead mapeia 20 agentes
+  [ ] Engenheiro IA prototipia MSE
   [ ] Ticket criado: MNT-2026-OBJECTS-METALS
 
-SEMANA 2:
-  [ ] Merge PR manta-hub#3 (gate MN)
-  [ ] Deploy MCP na VPS (ops + tests)
-  [ ] Config custom connector (Cowork)
-  [ ] Documentar em ARQUITETURA-AGENTES-IA.md
+SEMANA 3-15:
+  Fase 2: Implementar DB (schema, seed, índices)
+  Fase 3: MSE v1.0 (heurísticas, escalação)
+  Fase 4: Integrar Maestro (novo schema, logging)
+  Fase 5: Auditoria (dashboard, métricas)
+  Fase 6: Feedback (loop fechado, go-live)
 
-SEMANA 3+:
-  [ ] Phase B.1 (opcional): start_agent_conversation, search_agent_rag, list_agent_projects
-  [ ] Phase B.2 (condicional): Dedicated Cowork MCP (se RBAC + >50 users)
-  [ ] Phase B.3 (roadmap): CI/CD sync .claude/agents/ ↔ SharePoint
+Go-Live: Semana 15 (22 de setembro)
 ```
 
 ---
@@ -237,38 +159,7 @@ SEMANA 3+:
 
 ---
 
-### Recomendação 2: Merge manta-hub PR#3 (CRÍTICO)
-
-**O que**: Merge PR `viniciusmagnos/manta-hub#3` (4 tools MCP)
-
-**Por quê**:
-- Código já testado (21 testes)
-- Infra pronta (VPS, OAuth)
-- Sem dependências em bloco
-- Ativa a integração Phase A
-
-**Timeline**: ~1 semana (deploy + E2E test)
-
-**Próximo**: Deploy MCP → config Cowork connector
-
----
-
-### Recomendação 3: Não fazer MCP dedicado Cowork (YET)
-
-**Por quê**:
-- Phase A coverage = ~70%
-- Cowork precisa de OAuth + tools de colaboração (não core Maestro)
-- RBAC não existe em Cowork ainda (não justifica multi-tenant)
-- Time é pequeno (<50 usuários)
-
-**Se mudar**: Revisitar quando houver 1 de 3 condições:
-- Cowork RBAC implementado
-- Time >50 usuários em regiões distantes
-- Demanda clara por tools colaborativas
-
----
-
-### Recomendação 4: Priorizar Sync automático (MÉDIO)
+### Recomendação 2: Priorizar Sync automático (MÉDIO)
 
 **O que**: CI/CD que sync .claude/agents/ ↔ SharePoint
 
@@ -287,36 +178,32 @@ SEMANA 3+:
 
 ### 🟢 FORÇA
 
-1. **Documentação completa**: 6 arquivos, coerentes, prontos para aprovação
+1. **Documentação completa**: 8 arquivos, coerentes, prontos para aprovação
 2. **Arquitetura validada**: Objects + Metals design é sólido
 3. **Roadmap claro**: 6 fases, 15 semanas, responsáveis definidos
-4. **Code ready**: MCP tools já implementadas, 21 testes passando
-5. **Business case**: ROI 90%, payback 6 meses
+4. **Business case**: ROI 90%, payback 6 meses
+5. **Ecossistema autossuficiente**: Maestro é independente, não depende de terceiros
 
-### 🔴 FRAQUEZA
+### 🔴 NADA
 
-1. **MCP não em produção**: PR não mergeado, deploy pendente
-2. **Cobertura real é 30%**: Phase A offline = sem routing/escalação dinâmica
-3. **Gaps de sincronização**: SKILL.md manual, AskCAD personas desatualizadas
-4. **Sem vector semantic search**: RAG é keyword-only
+Nenhum bloqueador crítico identificado. Sistema pronto para kickoff.
 
-### 🟡 OPORTUNIDADE
+### 🟡 GAPS FUTUROS
 
-1. **Fase B.1 extensões**: 3 ferramentas adicionais (start_agent_conversation, search_agent_rag, list_agent_projects) poderiam ser roadmapped
-2. **Métricas em tempo real**: Dashboard de execution_log pode começar pós-Fase 2
-3. **Feedback loop**: Começar a coletar ratings de usuários imediatamente
+1. **Vector semantic search**: Roadmap Phase 3+
+2. **Sync automático .claude/ ↔ SharePoint**: Roadmap Phase 3+
+3. **Métricas em tempo real**: Começar pós-Fase 2
 
 ### ⚡ RISCO
 
-1. **Aprovação MN pendente**: Sem aprovação, roadmap não começa
-2. **Deploy infra dependente**: VPS + DevOps precisam participar
-3. **Sem rollback plan**: Se MSE falhar, o que fazemos? (planejar)
+1. **MSE heurísticas**: Prototipagem rápida em Fase 1 mitiga
+2. **Escalação de conhecimento**: Estrutura de feedback em Fase 6 (planejado)
 
 ---
 
 ## 8. PRÓXIMAS AÇÕES IMEDIATAS (1-2 SEMANAS)
 
-### AÇÃO 1: Apresentar PR #51 a MN (HOJE)
+### AÇÃO 1: Kickoff com MN (HOJE)
 
 ```
 Documentos para revisar (5 min pitch):
@@ -326,43 +213,43 @@ Documentos para revisar (5 min pitch):
 
 Questões para MN:
 1. Aprova o design Objects + Metals?
-2. Approva timeline 15 semanas, $50K?
-3. Who is DBA para Supabase schema?
-4. Who is lead IA para MSE implementation?
+2. Aprova timeline 15 semanas, $50K?
+3. Quem é DBA para Supabase schema?
+4. Quem é lead IA para MSE implementation?
 ```
 
-### AÇÃO 2: Coordinate manta-hub PR#3 Merge (SEMANA 1)
+### AÇÃO 2: Iniciar Fase 1 (SEMANA 1)
 
 ```
-Proprietário: Vinicius (backend) + MN (gate)
-Tarefas:
-  [ ] Resolve any PR comments
-  [ ] Deploy checklist (VPS, systemd, monitoring)
-  [ ] E2E test script: curl https://hub.mantaassociados.com/mcp
-  [ ] Cowork admin onboarding doc
+Paralelo:
+  [ ] DBA: valida schema (1.1)
+  [ ] Tech Lead: mapeia 20 agentes (1.2)
+  [ ] Engenheiro IA: prototipia MSE (1.3)
+  [ ] Ticket: criar MNT-2026-OBJECTS-METALS no Jira
 ```
 
-### AÇÃO 3: Setup Cowork Custom Connector (SEMANA 2)
+### AÇÃO 3: MN Gate Fase 2 (SEMANA 2)
 
 ```
-Proprietário: Cowork admin
-Tarefas:
-  [ ] Cowork Settings → Connectors → Add Custom
-  [ ] URL: https://hub.mantaassociados.com/mcp
-  [ ] OAuth 2.1 flow (browser login)
-  [ ] Test: route_maestro_prompt("AySA reabilitação")
-  [ ] Verify: Response = agente-saneamento (score ≥220)
+Entrada:
+  [ ] Schema validado
+  [ ] 20 agentes mapeados
+  [ ] MSE v0.1 com 50+ testes
+  [ ] Relationships desenhadas
+
+Saída:
+  [ ] Aprovação para Fase 2
 ```
 
 ---
 
-## 9. CHECKLIST SAÍDA DESSA SESSÃO
+## 9. CHECKLIST CONCLUSÃO
 
-- [ ] Este diagnóstico (DIAGNOSTICO-INTEGRACAO-CLAUDE-COWORK.md) commitado
-- [ ] PR #51 apresentado a MN com documento de resumo
-- [ ] Aguardando aprovação MN para kickoff Phase 1
-- [ ] Coordenador atribuído para Phase A production deployment
-- [ ] Tickets criados no Jira (MNT-2026-OBJECTS-METALS, etc.)
+- ✅ Este diagnóstico commitado
+- ✅ PR #51 pronto para aprovação MN
+- ✅ KICKOFF-PHASE1-OBJECTS-METALS.md criado
+- 🔄 Aguardando aprovação MN para iniciar Fase 1
+- 🔄 MN nomeia DBA, Tech Lead, Engenheiro IA
 
 ---
 

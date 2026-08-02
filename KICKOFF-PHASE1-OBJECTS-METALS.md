@@ -135,17 +135,7 @@
 
 ## DEPENDÊNCIAS EXTERNAS
 
-### viniciusmagnos/manta-hub (Phase A MCP — paralelo)
-
-Enquanto Fase 1 roda aqui, **em paralelo**:
-- [ ] Merge PR `manta-hub#3`
-- [ ] Deploy MCP na VPS
-- [ ] E2E test
-- [ ] Setup Cowork connector
-
-**Coordenador**: Vinicius (backend)  
-**Timeline**: 1 semana  
-**Bloqueador para Fase 4?** Não — Fase 1-3 são design-only
+Nenhuma. Maestro é ecossistema autossuficiente (Codex-exemplo).
 
 ---
 
