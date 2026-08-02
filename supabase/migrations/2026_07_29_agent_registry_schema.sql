@@ -561,37 +561,49 @@ ALTER TABLE agent_registry_meta     ENABLE ROW LEVEL SECURITY;
 -- Leitura para usuários autenticados (ex. dashboard interno da Manta).
 -- routing_events fica de fora de propósito (pode conter texto de query
 -- sensível) — só service_role (bypassa RLS) lê essa tabela.
+--
+-- Os papéis `authenticated`/`anon`/`service_role` só existem em um
+-- projeto Supabase de verdade (não em um Postgres genérico de dev/CI).
+-- O bloco abaixo checa pg_roles antes de criar cada policy para que
+-- esta migração rode sem erro em qualquer ambiente; em Supabase real
+-- as policies são criadas normalmente.
 DO $$ BEGIN
-  CREATE POLICY p_agents_select_authenticated ON agents
-    FOR SELECT TO authenticated USING (true);
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN
+    BEGIN
+      CREATE POLICY p_agents_select_authenticated ON agents
+        FOR SELECT TO authenticated USING (true);
+    EXCEPTION WHEN duplicate_object THEN NULL; END;
 
-DO $$ BEGIN
-  CREATE POLICY p_expertise_select_authenticated ON agent_expertise
-    FOR SELECT TO authenticated USING (true);
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+    BEGIN
+      CREATE POLICY p_expertise_select_authenticated ON agent_expertise
+        FOR SELECT TO authenticated USING (true);
+    EXCEPTION WHEN duplicate_object THEN NULL; END;
 
-DO $$ BEGIN
-  CREATE POLICY p_capabilities_select_authenticated ON agent_capabilities
-    FOR SELECT TO authenticated USING (true);
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+    BEGIN
+      CREATE POLICY p_capabilities_select_authenticated ON agent_capabilities
+        FOR SELECT TO authenticated USING (true);
+    EXCEPTION WHEN duplicate_object THEN NULL; END;
 
-DO $$ BEGIN
-  CREATE POLICY p_health_select_authenticated ON agent_health
-    FOR SELECT TO authenticated USING (true);
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+    BEGIN
+      CREATE POLICY p_health_select_authenticated ON agent_health
+        FOR SELECT TO authenticated USING (true);
+    EXCEPTION WHEN duplicate_object THEN NULL; END;
 
-DO $$ BEGIN
-  CREATE POLICY p_heartbeats_select_authenticated ON agent_heartbeats
-    FOR SELECT TO authenticated USING (true);
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+    BEGIN
+      CREATE POLICY p_heartbeats_select_authenticated ON agent_heartbeats
+        FOR SELECT TO authenticated USING (true);
+    EXCEPTION WHEN duplicate_object THEN NULL; END;
 
--- Staff autenticado pode registrar feedback de routing (não pode ler
--- o histórico de terceiros nem editar/apagar — só INSERT).
-DO $$ BEGIN
-  CREATE POLICY p_feedback_insert_authenticated ON routing_feedback
-    FOR INSERT TO authenticated WITH CHECK (true);
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+    -- Staff autenticado pode registrar feedback de routing (não pode ler
+    -- o histórico de terceiros nem editar/apagar — só INSERT).
+    BEGIN
+      CREATE POLICY p_feedback_insert_authenticated ON routing_feedback
+        FOR INSERT TO authenticated WITH CHECK (true);
+    EXCEPTION WHEN duplicate_object THEN NULL; END;
+  ELSE
+    RAISE NOTICE 'Papel "authenticated" não existe neste banco (não é um projeto Supabase) — policies de leitura não criadas. agents/agent_expertise/agent_capabilities/agent_health/agent_heartbeats/routing_feedback ficam com RLS habilitado e SEM policy, ou seja, só o dono da tabela / roles com BYPASSRLS conseguem acessar até que as policies sejam criadas manualmente.';
+  END IF;
+END $$;
 
 COMMIT;
 
