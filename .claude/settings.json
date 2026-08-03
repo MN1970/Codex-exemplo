@@ -18,6 +18,7 @@
   "env": {
     "MANTA_VERSION": "6.1.0",
     "MANTA_SHAREPOINT_LIBRARY": "04_IA",
-    "MANTA_SHAREPOINT_ROOT": "Manta-Maestro"
+    "MANTA_SHAREPOINT_ROOT": "Manta-Maestro",
+    "MANTA_ALIASES": "MM,maestro,manta-maestro"
   }
 }
