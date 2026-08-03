@@ -1,0 +1,204 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": ["@supabase/mcp-server"],
+      "env": {
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_API_KEY": "${SUPABASE_API_KEY}"
+      },
+      "tools": [
+        "list_tables",
+        "execute_sql",
+        "get_logs",
+        "apply_migration"
+      ]
+    },
+    "sharepoint": {
+      "command": "npx",
+      "args": ["@mcp/sharepoint"],
+      "env": {
+        "AZURE_TENANT_ID": "${AZURE_TENANT_ID}",
+        "AZURE_CLIENT_ID": "${AZURE_CLIENT_ID}",
+        "AZURE_CLIENT_SECRET": "${AZURE_CLIENT_SECRET}"
+      },
+      "tools": [
+        "list_files",
+        "read_document",
+        "upload_file",
+        "create_folder",
+        "search_files"
+      ]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["@mcp/github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "tools": [
+        "search_code",
+        "create_pull_request",
+        "push_files",
+        "get_file_contents"
+      ]
+    },
+    "websearch": {
+      "command": "npx",
+      "args": ["@mcp/web-search"],
+      "tools": [
+        "search",
+        "fetch"
+      ]
+    }
+  },
+  "agents": {
+    "s6-portos": {
+      "name": "agente-portos",
+      "description": "Especialista em projetos portuários e hidroviários",
+      "codePath": ".claude/agents/agente-portos.md",
+      "tier": "sonnet",
+      "tools": [
+        "supabase",
+        "sharepoint",
+        "github"
+      ],
+      "ragCollections": ["portos"],
+      "aliases": ["portos", "agente-portos", "S6", "manta-portos"]
+    },
+    "s7-aeroportos": {
+      "name": "agente-aeroportos",
+      "description": "Especialista em infraestrutura aeroportuária",
+      "codePath": ".claude/agents/agente-aeroportos.md",
+      "tier": "sonnet",
+      "tools": [
+        "supabase",
+        "sharepoint",
+        "github"
+      ],
+      "ragCollections": ["aeroportos"],
+      "aliases": ["aeroportos", "agente-aeroportos", "S7", "manta-aeroportos"]
+    },
+    "s8-saneamento": {
+      "name": "agente-saneamento",
+      "description": "Especialista em saneamento básico (água, esgoto, drenagem)",
+      "codePath": ".claude/agents/agente-saneamento.md",
+      "tier": "sonnet",
+      "tools": [
+        "supabase",
+        "sharepoint",
+        "github"
+      ],
+      "ragCollections": ["saneamento"],
+      "aliases": ["saneamento", "agente-saneamento", "S8", "manta-saneamento"],
+      "priority": "high",
+      "context": "PRIORIDADE AySA (projeto Argentina)"
+    },
+    "s9-energia": {
+      "name": "agente-energia",
+      "description": "Especialista em setor elétrico (transmissão, distribuição, geração)",
+      "codePath": ".claude/agents/agente-energia.md",
+      "tier": "sonnet",
+      "tools": [
+        "supabase",
+        "sharepoint",
+        "github"
+      ],
+      "ragCollections": ["energia"],
+      "aliases": ["energia", "agente-energia", "S9", "manta-energia"],
+      "context": "PRIORIDADE ANEEL/State Grid"
+    },
+    "s10-barragens": {
+      "name": "agente-barragens",
+      "description": "Especialista em barragens (concreto, terra, rejeitos)",
+      "codePath": ".claude/agents/agente-barragens.md",
+      "tier": "sonnet",
+      "tools": [
+        "supabase",
+        "sharepoint",
+        "github"
+      ],
+      "ragCollections": ["barragens"],
+      "aliases": ["barragens", "agente-barragens", "S10", "manta-barragens"]
+    }
+  },
+  "routing": {
+    "maestro": {
+      "model": "haiku",
+      "defaultModel": "sonnet",
+      "rules": [
+        {
+          "patterns": ["saneamento", "ETA", "ETE", "adutora", "esgoto", "AySA", "drenagem urbana", "SNIS"],
+          "agent": "s8-saneamento"
+        },
+        {
+          "patterns": ["transmissão", "LT", "subestação", "ANEEL", "RAP", "leilão transmissão", "ONS", "EPE"],
+          "agent": "s9-energia"
+        },
+        {
+          "patterns": ["porto", "terminal", "ANTAQ", "dragagem", "molhe", "berço", "calado", "contêiner"],
+          "agent": "s6-portos"
+        },
+        {
+          "patterns": ["aeroporto", "pista", "ANAC", "ICAO", "TPS", "TECA", "balizamento"],
+          "agent": "s7-aeroportos"
+        },
+        {
+          "patterns": ["barragem", "vertedouro", "CFRD", "CCR", "rejeitos", "PNSB", "ICOLD", "CBDB"],
+          "agent": "s10-barragens"
+        }
+      ]
+    }
+  },
+  "rag": {
+    "collections": [
+      {
+        "name": "saneamento",
+        "prefix": "san:",
+        "sourcesStatus": "pending",
+        "targetTable": "rag_chunks",
+        "description": "Saneamento básico, água, esgoto, drenagem urbana"
+      },
+      {
+        "name": "energia",
+        "prefix": "ene:",
+        "sourcesStatus": "pending",
+        "targetTable": "rag_chunks",
+        "description": "Setor elétrico, transmissão, distribuição, geração"
+      },
+      {
+        "name": "portos",
+        "prefix": "por:",
+        "sourcesStatus": "pending",
+        "targetTable": "rag_chunks",
+        "description": "Portos e terminais marítimos/fluviais"
+      },
+      {
+        "name": "aeroportos",
+        "prefix": "aer:",
+        "sourcesStatus": "pending",
+        "targetTable": "rag_chunks",
+        "description": "Infraestrutura aeroportuária"
+      },
+      {
+        "name": "barragens",
+        "prefix": "bar:",
+        "sourcesStatus": "pending",
+        "targetTable": "rag_chunks",
+        "description": "Barragens, concreto, terra, rejeitos"
+      }
+    ],
+    "blocker": "CRÍTICO: Schema rag_chunks sem coluna embedding. Decisão necessária entre usar rag_chunks ou manta_rag_chunks."
+  },
+  "metadata": {
+    "version": "4.2.0",
+    "created": "2026-08-03T00:00:00Z",
+    "status": "draft-awaiting-infrastructure-fixes",
+    "blockers": [
+      "Schema Supabase (rag_chunks vs manta_rag_chunks)",
+      "Embeddings service (API ou Edge Function)",
+      "Network access (gov.br 403)",
+      "MN approval (gate de produção)"
+    ]
+  }
+}

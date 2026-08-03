@@ -1,0 +1,132 @@
+{
+  "version": "1.0",
+  "model": "claude-sonnet-5",
+  "fastMode": false,
+  "agents": {
+    "discovery": {
+      "enabled": true,
+      "autoRegister": true,
+      "registryPath": ".claude/agents/"
+    },
+    "maestro": {
+      "enabled": true,
+      "routingMode": "dynamic",
+      "tiering": {
+        "triage": "haiku",
+        "execution": "sonnet",
+        "complex": "opus"
+      }
+    }
+  },
+  "rag": {
+    "enabled": true,
+    "provider": "supabase",
+    "collections": [
+      "saneamento",
+      "energia",
+      "portos",
+      "aeroportos",
+      "barragens"
+    ],
+    "embeddingModel": "pending",
+    "vectorDimensions": 384,
+    "blockers": [
+      {
+        "id": "schema-mismatch",
+        "severity": "CRITICAL",
+        "description": "rag_chunks table lacks embedding column. Need to decide: use manta_rag_chunks or migrate rag_chunks DDL",
+        "owner": "DevOps",
+        "dueDate": "2026-08-05"
+      },
+      {
+        "id": "embeddings-service",
+        "severity": "CRITICAL",
+        "description": "No embeddings generation tool available. Decision: Claude Embeddings API or Edge Function?",
+        "owner": "Manta 16",
+        "dueDate": "2026-08-05"
+      },
+      {
+        "id": "network-access",
+        "severity": "MEDIUM",
+        "description": "HTTP 403 on gov.br. Workaround: manual PDF upload via SharePoint",
+        "owner": "Manta 06",
+        "dueDate": "2026-08-04"
+      },
+      {
+        "id": "mn-approval",
+        "severity": "REQUIRED",
+        "description": "MN approval needed for production data load (CLAUDE.md gate)",
+        "owner": "MN",
+        "dueDate": "2026-08-05"
+      }
+    ]
+  },
+  "artifacts": {
+    "caching": {
+      "enabled": true,
+      "ttl": 3600
+    },
+    "versionControl": {
+      "enabled": true,
+      "autoCommit": false
+    }
+  },
+  "prompting": {
+    "cachingEnabled": true,
+    "cacheTTL": 3600,
+    "systemPromptVersion": "4.2.0"
+  },
+  "validation": {
+    "preCommitHook": ".claude/hooks/validate-claude-md.sh",
+    "aluciguard": {
+      "enabled": true,
+      "checkNorms": true,
+      "checkURLs": true,
+      "checkSICRO": true
+    }
+  },
+  "sharepoint": {
+    "enabled": true,
+    "siteUrl": "${SHAREPOINT_SITE_URL}",
+    "libs": [
+      {
+        "name": "Documentos",
+        "path": "/sites/manta-maestro/shared documents"
+      }
+    ],
+    "agentFolders": {
+      "reference": "04_IA/Manta-Maestro/01-agentes-fundamentais/",
+      "projects": "03_Projetos/"
+    }
+  },
+  "notifications": {
+    "slackChannel": "#manta-maestro-automation",
+    "emailTo": "mneves@mantaassociados.com",
+    "onBlocker": true,
+    "onCompletion": true
+  },
+  "infrastructure": {
+    "status": "setup-in-progress",
+    "supabaseProject": "manta-maestro",
+    "supabaseId": "ogxxgvgtulrbbppshjie",
+    "supabaseRegion": "sa-east-1",
+    "tables": {
+      "primary": "rag_chunks",
+      "alternative": "manta_rag_chunks",
+      "decision_pending": true
+    },
+    "embeddings": {
+      "status": "not-configured",
+      "model": "pending",
+      "vectorDimensions": 384,
+      "provider": "pending"
+    }
+  },
+  "timeline": {
+    "phase": "1-infrastructure-setup",
+    "week": 1,
+    "status": "diagnostic-complete-blockers-identified",
+    "expectedGate": "2026-08-14",
+    "notes": "Semana 1 (RAG) bloqueada aguardando infraestrutura. Semana 2 (SharePoint) em execução paralela."
+  }
+}
