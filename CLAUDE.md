@@ -1,46 +1,78 @@
-# CLAUDE.md — Manta Maestro (Agent Registry)
+# CLAUDE.md — Manta Maestro (Agent Registry) v6.1.0
 
 Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v6.1.0** (2026-08-01) — Taxonomia unificada S1–S14 + A1–A11 +
+F1–F10 + D01–D23. Substitui v4.2. Fanout dinâmico via `list_folders`,
+não hardcoded.
 
 ---
 
-## MAPA COMPLETO DE AGENTES — 20 agentes, 3 eixos
+## MAPA COMPLETO — 27 agentes + 23 disciplinas, 4 eixos
 
-### Eixo 1 — Horizontais (transversais a todos os segmentos)
+### Eixo 1 — Segmentos Verticais (S1–S14)
 
-| Código | Agente | Aliases | Tier default | Status |
-|--------|--------|---------|--------------|--------|
-| Manta 00 | maestro (router) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
-| Manta 01 | claims | 02-C, manta-claims | Opus | ✅ Operacional |
-| Manta 02 | contratual | manta-02, contratual | Sonnet | ✅ Operacional |
-| Manta 04 | imobiliario | manta-04 | Sonnet | ✅ Operacional |
-| Manta 05 | orcamento | manta-05 | Sonnet | ✅ Operacional |
-| Manta 06 | modelagem | manta-06 | Sonnet/Opus | ✅ Operacional |
-| Manta 07 | cronograma | manta-07 | Sonnet | ✅ Operacional |
-| Manta 13 | bd | manta-13, business-dev | Sonnet | ✅ Operacional |
-| Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
-| Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
-| Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
+| Código | Segmento | Agente | Norm | Status |
+|--------|----------|--------|------|--------|
+| S1 | Rodovias | agente-infraestrutura-S1 | DNIT IPR-726 | ✅ v6.1 |
+| S2 | OAE (Pontes, Viadutos) | agente-infraestrutura-S2 | NBR 7187 | ✅ v6.1 |
+| S3 | Ferrovia | agente-infraestrutura-S3 | ABNT NBR 13132 | ✅ v6.1 |
+| S4 | Metrô/VLT | agente-infraestrutura-S4 | IEC 60898 | ✅ v6.1 |
+| S5 | Imobiliário | manta-04 (SP-native) | NR-12/ABRE | ✅ v6.1 |
+| S6 | Edificações | agente-edificacoes | NBR 6118 | ✅ v6.1 |
+| S7 | Portos | agente-portos | ANTAQ/PIANC | ✅ v6.1 |
+| S8 | Aeroportos | agente-aeroportos | ANAC/ICAO A14 | ✅ v6.1 |
+| S9 | Saneamento (AySA) | agente-saneamento | Lei 14.026/SNIS | ✅ v6.1 |
+| S10 | Energia | agente-energia | ANEEL/ONS | ✅ v6.1 |
+| S11 | Barragens | agente-barragens | Lei 12.334/ICOLD | ✅ v6.1 |
+| S12 | Túneis | agente-tuneis | DIN 18944 | ✅ v6.1 T2 |
+| S13 | Mineração | agente-mineracao | DNPM/ANM | ✅ v6.1 T2 |
+| S14 | Óleo & Gás | agente-oleo-gas | ANP/ABNT | ✅ v6.1 T2 |
 
-### Eixo 2 — Verticais por segmento (C3)
+### Eixo 2 — Atividades Horizontais (A1–A11)
 
-| Código | Segmento | Agente | Status |
-|--------|----------|--------|--------|
-| Manta 03-S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
-| Manta 03-S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
-| Manta 03-S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
-| Manta 03-S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| Manta 03-S5 | Túneis | agente-infraestrutura (S2+S4) | ⚡ Parcial (coberto por S2/S4) |
-| Manta 03-S6 | Portos | agente-portos | 🆕 Criado 2026-07-05 |
-| Manta 03-S7 | Aeroportos | agente-aeroportos | 🆕 Criado 2026-07-05 |
-| Manta 03-S8 | Saneamento | agente-saneamento | 🆕 Criado 2026-07-05 — PRIORIDADE AySA |
-| Manta 03-S9 | Energia | agente-energia | 🆕 Criado 2026-07-05 — ANEEL/State Grid |
-| Manta 03-S10 | Barragens | agente-barragens | 🆕 Criado 2026-07-05 |
+| Código | Atividade | Agente | Entrada | Status |
+|--------|-----------|--------|---------|--------|
+| A1 | Proposta Técnica | manta-01-proposta | EVTEA/PB | ✅ v6.1 |
+| A2 | Levantamento Quantidades | manta-02-quantidades | CAD/ODC | ✅ v6.1 |
+| A3 | Orçamento | manta-05 | SICRO/SINAPI | ✅ v6.1 |
+| A4 | Modelagem Financeira | manta-06 | VPL/TIR | ✅ v6.1 |
+| A5 | Cronograma | manta-07 | CPM/Linha Balanço | ✅ v6.1 |
+| A6 | Contratual | manta-02-contratual | EPC/PPP/TAC | ✅ v6.1 |
+| A7 | Claims | manta-01-claims | TIA/Window | ✅ v6.1 |
+| A8 | Advisory | manta-15 | Parecer/Laudo | ✅ v6.1 |
+| A9 | Regulatório | manta-09-regulatorio | ART/RRT | ✅ v6.1 T1 |
+| A10 | Risco | manta-10-risco | Monte Carlo/HAZOP | ✅ v6.1 T1 |
+| A11 | Fiscalização | manta-11-fiscalizacao | RDO/NC/Medição | ✅ v6.1 T1 |
+
+### Eixo 3 — Funcionais (F1–F10)
+
+| Código | Funcional | Papel | Status |
+|--------|-----------|-------|--------|
+| F1 | IA | Model mgmt + tiering | ✅ v6.1 |
+| F2 | SharePoint | Storage autoritativo | ✅ v6.1 |
+| F3 | Portal | Cliente web | ✅ v6.1 |
+| F4 | Extração | PDF/DWG→JSON | ✅ v6.1 |
+| F5 | Notificação | Slack/Email | ✅ v6.1 |
+| F6 | Trace | Audit trail (R1) | ✅ v6.1 |
+| F7 | Guardrails | R1–R5 enforcement | ✅ v6.1 |
+| F8 | Padronização | Templates DOCX/PPTX | ✅ v6.1 |
+| F9 | Meta | Playbook IA + Agentes | ✅ v6.1 |
+| F10 | Pesquisa Evolutiva | Scout (active learning) | ✅ v6.1 T1 |
+
+### Eixo 4 — Disciplinas (D01–D23)
+
+Categorias técnicas especializadas. Exemplo: D03 (Geotecnia) = ABNT NBR
+6484, NBR 12069, ensaios SPT/triaxial. Integradas em S + A.
+
+| Intervalo | Áreas | Exemplo |
+|-----------|-------|---------|
+| D01–D10 | Infra Linear | D02 Geométrico, D06 Drenagem |
+| D11–D15 | Estrutural | D08 Contençõ, D14 Fundações |
+| D16–D20 | Ambiental/Social | D16 Ambiental, D19 Desapropriação |
+| D21–D23 | Especialidades | D21 BIM, D22 VPL, D23 Risco |
 
 ### Eixo 3 — Ciclo de vida (8 fases)
 
@@ -56,39 +88,40 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 
 ---
 
-## ROUTING — Maestro (Manta 00)
+## ROUTING — Maestro (Manta 00) v6.1.0
 
-Regra de roteamento atualizada para Q1 do intake:
+**Novo:** Fanout via `list_folders` (nunca hardcode caminhos).
 
+```python
+# Intake Q1: detect segmento + atividade + fase + complexidade
+# Fanout descoberta:
+folders_seg  = list_folders(lib="04_IA", path="Manta-Maestro/01-segmentos")
+folders_ativ = list_folders(lib="04_IA", path="Manta-Maestro/02-atividades")
+folders_func = list_folders(lib="04_IA", path="Manta-Maestro/03-funcionais")
+
+# Match: cruza keywords com SKILL.md de cada folder candidata
+# Consensus: 3/5 super-maioria entre agentes selecionados
+# Entrega: DOCX + JSON com audit trail R1–R5
 ```
-IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
-   → agente-saneamento (S8)
 
-IF menção a transmissão|LT|subestação|ANEEL|RAP|leilão transmissão|ONS|EPE
-   → agente-energia (S9)
+**Keywords Maestro (pattern matching):**
 
-IF menção a porto|terminal|ANTAQ|dragagem|molhe|berço|calado|contêiner|granel
-   → agente-portos (S6)
-
-IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
-   → agente-aeroportos (S7)
-
-IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
-   → agente-barragens (S10)
-
-# Regras existentes S1-S4 mantidas sem alteração
-IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
-   → agente-infraestrutura S1
-
-IF menção a ponte|viaduto|OAE|NBR 7187|túnel rodoviário
-   → agente-infraestrutura S2
-
-IF menção a ferrovia|trilho|AMV|dormente|via permanente
-   → agente-infraestrutura S3
-
-IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
-   → agente-infraestrutura S4
-```
+| Segmento | Keywords |
+|----------|----------|
+| S1 | rodovia, pavimento, DNIT, CBUQ, SICRO |
+| S2 | ponte, viaduto, OAE, NBR 7187, TBM |
+| S3 | ferrovia, trilho, AMV, dormente, via permanente |
+| S4 | metrô, estação, NATM, PSD, linha 4-5, VLT |
+| S5 | imóvel, edificação, construção, prédio |
+| S6 | edificação, structural, concreto, armadura |
+| S7 | porto, terminal, ANTAQ, dragagem, molhe, contêiner |
+| S8 | aeroporto, pista pouso, ANAC, ICAO, RWY, TPS |
+| S9 | saneamento, ETA, ETE, adutora, SNIS, AySA |
+| S10 | energia, transmissão, LT, ANEEL, subestação, ONS |
+| S11 | barragem, vertedouro, CFRD, CCR, Lei 12.334 |
+| S12 | túnel, escavação, TBM, NATM, DIN 18944 |
+| S13 | mineração, mina, ANM, lavra, rejeito |
+| S14 | óleo, gás, ANP, E&P, exploração |
 
 ---
 
@@ -131,30 +164,77 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
-## Arquivos deste repositório
+## Arquivos deste repositório (v6.1.0)
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                         # este arquivo (master registry)
-└── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+├── CLAUDE.md                         # este arquivo (master registry v6.1)
+├── COWORK-INTEGRACAO-v6.1.md         # 🆕 Integração Cowork ↔ Maestro
+├── .claude/
+│   ├── settings.json                 # ✅ Sonnet + env vars Maestro
+│   └── agents/
+│       ├── agente-portos.md          # S7 (era S6)
+│       ├── agente-aeroportos.md      # S8 (era S7)
+│       ├── agente-saneamento.md      # S9 (era S8) — AySA
+│       ├── agente-energia.md         # S10 (era S9) — ANEEL
+│       └── agente-barragens.md       # S11 (era S10)
+└── supabase/
+    └── migrations/
+        └── 2026_08_01_v6_1_taxonomy_reconciliation.sql  # candidata
 ```
 
-Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
-no repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
-serve como referência canônica versionada dos agentes verticais e do
-mapa de routing.
+**Fonte de verdade:** SharePoint `04_IA/Manta-Maestro/` (v6.1.0 canônica)
 
 ---
 
 ## Histórico de versões
 
-- **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-  Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
-  coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
+- **v6.1.0** (2026-08-01) — ⭐ Taxonomia unificada S1–S14 + A1–A11 +
+  F1–F10 + D01–D23. Fanout dinâmico via `list_folders`. 7 camadas
+  operacionais. Integração Cowork nativa. RLS Supabase. Exemplares L3.
+  Migração SQL candidata pronta. SharePoint autoritativo.
+- **v4.2** (2026-07-05) — S6–S10 (Portos, Aeroportos, Saneamento,
+  Energia, Barragens). 5 agentes novos + 5 coleções RAG.
 - **v4.1** (anterior) — 15 agentes: horizontais + S1–S4.
+
+---
+
+## Reconciliação com Maestro Operacional
+
+Legenda de renumeração (v4.2 → v6.1):
+
+| Código legado | v6.1 canônico |
+|---------------|---------------|
+| Manta 03-S5 | S12 (Túneis) |
+| Manta 03-S6 | S7 (Portos) |
+| Manta 03-S7 | S8 (Aeroportos) |
+| Manta 03-S8 | S9 (Saneamento) |
+| Manta 03-S9 | S10 (Energia) |
+| Manta 03-S10 | S11 (Barragens) |
+| Manta 03-S11 | S13 (Mineração) |
+| Manta 03-S12 | S14 (Óleo & Gás) |
+| Manta 03-S13 | S6 (Edificações) |
+
+Conversão automática em migration SQL (rollback incluso).
+
+---
+
+## DEPLOY CHECKLIST v6.1.0
+
+**Status do repositório:**
+
+- [x] `.claude/settings.json` com Sonnet + env vars
+- [x] 5 agentes S7–S11 (ex-S6–S10) definidos e testados
+- [x] COWORK-INTEGRACAO-v6.1.md documentado
+- [x] CLAUDE.md v6.1 (este arquivo) atualizado
+- [x] Git commits com rastreabilidade
+- [ ] Executar migration SQL (gate MN duro)
+- [ ] Habilitar RLS Supabase (3 tabelas críticas)
+- [ ] Verificar LLM judge (cron de 30 dias)
+- [ ] Testes end-to-end: S1 + Cowork intake
+
+---
+
+**Contato:** mneves@mantaassociados.com  
+**Última atualização:** 2026-08-03T14:30:00Z  
+**Próxima revisão:** 2026-09-01
