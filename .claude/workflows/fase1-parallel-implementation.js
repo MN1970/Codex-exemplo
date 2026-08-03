@@ -1,23 +1,23 @@
 export const meta = {
   name: 'fase1-parallel-implementation',
-  description: 'Implementa Fase 1 com 10 agentes em paralelo: 5 para Supabase RAG + 5 para SharePoint',
+  description: 'Implementa Fase 1 com 10 agentes em paralelo: infraestrutura MCP + SharePoint + planejamento RAG',
   phases: [
-    { title: 'Preparação', detail: 'Setup de credenciais e validação' },
-    { title: 'RAG Loading (5 agentes)', detail: 'Carregar 5 coleções em paralelo' },
-    { title: 'SharePoint Setup (5 agentes)', detail: 'Criar pastas + SKILL.md em paralelo' },
-    { title: 'Validação', detail: 'Verificar integridade de tudo' }
+    { title: 'Diagnóstico', detail: 'Validar pré-requisitos e infraestrutura real' },
+    { title: 'SharePoint Setup (5 agentes)', detail: 'Criar pastas + SKILL.md + MCP config em paralelo' },
+    { title: 'Config MCP', detail: 'Gerar .mcp.json, settings.json, hooks' },
+    { title: 'Planejamento RAG', detail: 'Documentar requisitos reais para Semana 1 (RAG post-infraestrutura)' }
   ]
 }
 
-// Schema definitions
-const RAG_COLLECTION_SCHEMA = {
+// Schema definitions (proper JSON Schema format with type: 'object')
+const PREP_SCHEMA = {
   type: 'object',
   properties: {
-    collection_slug: { type: 'string' },
-    chunks_loaded: { type: 'number' },
-    sources_processed: { type: 'array' },
-    validation: { type: 'object' },
-    status: { type: 'string' }
+    infrastructure_status: { type: 'string' },
+    blockers: { type: 'array', items: { type: 'string' } },
+    supabase_schema: { type: 'string' },
+    embeddings_available: { type: 'boolean' },
+    network_access: { type: 'boolean' }
   }
 }
 
@@ -26,518 +26,319 @@ const SHAREPOINT_SETUP_SCHEMA = {
   properties: {
     agent_name: { type: 'string' },
     folders_created: { type: 'number' },
-    skill_md_uploaded: { type: 'boolean' },
+    skill_md_content: { type: 'string' },
     documents_uploaded: { type: 'number' },
-    validation: { type: 'object' },
+    skill_file_path: { type: 'string' },
     status: { type: 'string' }
   }
 }
 
-const VALIDATION_SCHEMA = {
+const MCP_CONFIG_SCHEMA = {
   type: 'object',
   properties: {
-    rag_collections: { type: 'object' },
-    sharepoint_folders: { type: 'object' },
-    mcp_config: { type: 'object' },
-    routing_tests: { type: 'object' },
-    overall_status: { type: 'string' },
-    gate_phase2: { type: 'boolean' },
-    ambiguities: { type: 'array' }
+    mcp_json_generated: { type: 'boolean' },
+    settings_json_generated: { type: 'boolean' },
+    hooks_generated: { type: 'boolean' },
+    config_files: { type: 'array', items: { type: 'string' } },
+    status: { type: 'string' }
+  }
+}
+
+const RAG_PLAN_SCHEMA = {
+  type: 'object',
+  properties: {
+    phase: { type: 'string' },
+    blockers_identified: { type: 'array', items: { type: 'string' } },
+    required_steps: { type: 'array', items: { type: 'string' } },
+    mn_approval_needed: { type: 'boolean' },
+    infrastructure_fixes: { type: 'array', items: { type: 'string' } },
+    status: { type: 'string' }
   }
 }
 
 // ============================================================================
-// FASE 1 PARALLEL EXECUTION
+// FASE 1 EXECUTION (ADJUSTED FOR REAL INFRASTRUCTURE)
 // ============================================================================
 
-phase('Preparação')
+phase('Diagnóstico')
 
-log('🚀 Iniciando Fase 1 com 10 agentes em paralelo')
-log('Objetivo: Operacionalizar 5 agentes novos (S6-S10) em 3 semanas')
+log('🔍 Fase 1: Diagnóstico de infraestrutura real')
+log('Contexto: Semana 1 (RAG) identificou blockers reais que precisam resolução primeiro')
 log('')
 
-// Validação de pré-requisitos
-const prep = await agent(
-  `Valide que tudo está pronto para Fase 1:
+const diag = await agent(
+  `Você é arquiteto técnico. Diagnostique a infraestrutura REAL de Supabase para RAG Manta:
 
-   CHECKLIST:
-   - [ ] Supabase credenciais obtidas (API_KEY, URL)
-   - [ ] SharePoint Graph API credenciais obtidas (Tenant, Client, Secret)
-   - [ ] GitHub credentials prontos (PAT token)
-   - [ ] Staging environments criados
-   - [ ] Arquivo .mcp.json template preparado
-   - [ ] Arquivo .claude/settings.json template preparado
+   CHECKLIST DE DIAGNÓSTICO:
+   1. Conecte ao projeto Supabase 'manta-maestro' (id: ogxxgvgtulrbbppshjie)
+   2. Inspecione tabela 'public.rag_chunks': quais colunas existem? (id, collection, prefix, title, content, source, segment, created_at, embedding?)
+   3. Inspecione tabela 'public.manta_rag_chunks': existe? qual schema? (tem embedding/embedding_m3?)
+   4. Verifique extensão 'vector' (pgvector): está instalada? qual versão?
+   5. Teste acesso HTTP a gov.br (planalto.gov.br, camara.leg.br): consegue fetch sem 403?
+   6. Listar funções Edge: há alguma função de embeddings disponível?
 
-   Se tudo está OK, retorne { status: 'ready', blockers: [] }
-   Se há blockers, retorne { status: 'blocked', blockers: ['descrição'] }`,
+   RETORNE (valores reais):
+   - infrastructure_status: 'ready' | 'needs_fixes' | 'blocked'
+   - blockers: lista de problemas encontrados
+   - supabase_schema: descrição do schema real encontrado
+   - embeddings_available: true/false
+   - network_access: true/false`,
   {
-    label: 'prep-validation',
-    model: 'haiku',
-    schema: {
-      status: { type: 'string', enum: ['ready', 'blocked'] },
-      blockers: 'array'
-    }
+    label: 'infrastructure-diagnosis',
+    model: 'sonnet',
+    schema: PREP_SCHEMA
   }
 )
 
-if (prep.status === 'blocked') {
-  log('❌ BLOQUEADO: Resolver antes de continuar')
-  prep.blockers.forEach(b => log(`   • ${b}`))
-  return { status: 'blocked', blockers: prep.blockers }
+log(`📊 Diagnóstico: ${diag.infrastructure_status}`)
+diag.blockers.forEach(b => log(`   ❌ ${b}`))
+log('')
+log(`Schema real Supabase: ${diag.supabase_schema}`)
+log(`Embeddings disponíveis: ${diag.embeddings_available}`)
+log(`Acesso HTTP a gov.br: ${diag.network_access}`)
+log('')
+
+if (diag.infrastructure_status === 'blocked') {
+  log('⚠️  Infraestrutura bloqueada. Pivotando para tarefas executáveis agora:')
+  log('   1. ✅ SharePoint: criar pastas + SKILL.md (não precisa Supabase)')
+  log('   2. ✅ MCP config: gerar .mcp.json + settings.json (executável offline)')
+  log('   3. ⏳ RAG: documentar plano de ação (aguarda MN approval + infraestrutura)')
+  log('')
 }
 
-log('✅ Pré-requisitos validados, iniciando paralelização')
-log('')
-
 // ============================================================================
-// SEMANA 1: RAG COLLECTIONS (5 agentes em paralelo)
-// ============================================================================
-
-phase('RAG Loading (5 agentes)')
-
-log('📚 Semana 1: Carregando 5 coleções RAG em paralelo')
-log('   • Cada agente carrega uma coleção completa')
-log('   • Total esperado: ~2500-5000 chunks por coleção')
-log('')
-
-const rag_collections = [
-  { slug: 'saneamento', label: 'S8 (Saneamento)', sources: ['SNIS', 'NBR 12211-12218', 'Lei 14.026', 'editais BNDES'] },
-  { slug: 'energia', label: 'S9 (Energia)', sources: ['ANEEL editais', 'R1-R5 EPE', 'ONS', 'IEEE'] },
-  { slug: 'portos', label: 'S6 (Portos)', sources: ['ANTAQ', 'PIANC', 'editais BNDES/ANTAQ'] },
-  { slug: 'aeroportos', label: 'S7 (Aeroportos)', sources: ['ANAC/RBAC', 'ICAO Annex 14', 'FAA ACs'] },
-  { slug: 'barragens', label: 'S10 (Barragens)', sources: ['ICOLD', 'CBDB', 'SIGBM', 'Lei 12.334'] }
-]
-
-const rag_results = await parallel(
-  rag_collections.map(collection => () =>
-    agent(
-      `Você é o agente de carregamento de RAG para ${collection.label}.
-
-      TAREFA: Carregar coleção RAG '${collection.slug}' com ~500-1000 chunks
-
-      FONTES PRIMÁRIAS:
-      ${collection.sources.map(s => `• ${s}`).join('\n')}
-
-      PASSO 1: Fetch sources
-      ├─ Buscar documentos das fontes oficiais
-      ├─ SNIS: https://www.snis.gov.br/ (se saneamento)
-      ├─ ANEEL: https://www.aneel.gov.br/resolucoes (se energia)
-      ├─ ANTAQ: https://www.gov.br/antaq/ (se portos)
-      ├─ ANAC: https://www.anac.gov.br/ (se aeroportos)
-      └─ ICOLD: https://www.icold-cigb.org/ (se barragens)
-
-      PASSO 2: Chunk documents
-      ├─ Dividir em chunks de ~200-300 tokens
-      ├─ Overlap: 50 tokens entre chunks
-      └─ Metadados: source URL, tipo documento
-
-      PASSO 3: Generate embeddings
-      ├─ Usar Claude embeddings (ou similar vetorial)
-      └─ Armazenar em Supabase rag_chunks
-
-      PASSO 4: Validação
-      ├─ Contar chunks: total ≥ 500
-      ├─ Verificar qualidade: relevância >0.7
-      └─ Testar query sample: buscar 5 chunks top-relevantes
-
-      RETORNE:
-      {
-        collection_slug: '${collection.slug}',
-        chunks_loaded: <número>,
-        sources_processed: [<lista>],
-        validation: {
-          total_chunks: <número>,
-          avg_similarity: <0-1>,
-          sample_queries_passed: <boolean>,
-          notes: '<observações>'
-        },
-        status: 'success | warning | error'
-      }
-
-      Se houver erro: tente retry 1x, depois retorne status 'error' com detalhes.`,
-      {
-        label: `rag-${collection.slug}`,
-        model: 'sonnet',
-        effort: 'high',
-        schema: RAG_COLLECTION_SCHEMA
-      }
-    )
-  )
-)
-
-log('📊 Resultados RAG Loading:')
-rag_results.forEach((result, i) => {
-  if (result && result.status === 'success') {
-    log(`   ✅ ${rag_collections[i].label}: ${result.chunks_loaded} chunks carregados`)
-  } else if (result && result.status === 'warning') {
-    log(`   ⚠️  ${rag_collections[i].label}: ${result.chunks_loaded} chunks (com avisos)`)
-  } else {
-    log(`   ❌ ${rag_collections[i].label}: FALHOU`)
-  }
-})
-log('')
-
-// ============================================================================
-// SEMANA 2: SHAREPOINT SETUP (5 agentes em paralelo)
+// SHAREPOINT SETUP (5 agentes em paralelo) — EXECUTÁVEL AGORA
 // ============================================================================
 
 phase('SharePoint Setup (5 agentes)')
 
-log('📁 Semana 2: Criando estrutura SharePoint em paralelo')
-log('   • Cada agente cria 2 pastas (agente + projetos)')
-log('   • Carrega SKILL.md, README.md, refs e prompts')
+log('📁 Semana 2 (adiantada): Criar pastas SharePoint + SKILL.md em paralelo')
+log('   • 5 agentes S6-S10 rodam simultaneamente')
+log('   • Não depende de Supabase/embeddings/gov.br access')
 log('')
 
-const agents_setup = [
+const sp_agents = [
   {
-    agent_slug: 'agente-portos',
-    label: 'S6 (Portos)',
-    sp_agent_path: '04_IA/Manta-Maestro/01-agentes-fundamentais/agente-portos',
-    sp_project_path: '03_Projetos/Portos',
-    skill_content: `# Agente Portos (S6)
-Especialista em projetos portuários e hidroviários.
-Cobre: estudos prévios, projetos básico/executivo, obra e operação.
-Stakeholders: ANTAQ, TUP, operador portuário.
-Normas: PIANC, ANTAQ, NBR 12211.`
+    name: 'agente-portos',
+    code: 'S6',
+    folder: '03_Projetos/Portos',
+    description: 'Especialista em portos e terminais marítimos/fluviais'
   },
   {
-    agent_slug: 'agente-aeroportos',
-    label: 'S7 (Aeroportos)',
-    sp_agent_path: '04_IA/Manta-Maestro/01-agentes-fundamentais/agente-aeroportos',
-    sp_project_path: '03_Projetos/Aeroportos',
-    skill_content: `# Agente Aeroportos (S7)
-Especialista em infraestrutura aeroportuária (lado ar + terra).
-Cobre: pistas RWY, taxiways, TPS, TECA, balizamento.
-Stakeholders: ANAC, operador aeroporto.
-Normas: RBAC 154, ICAO Annex 14, FAA AC.`
+    name: 'agente-aeroportos',
+    code: 'S7',
+    folder: '03_Projetos/Aeroportos',
+    description: 'Especialista em infraestrutura aeroportuária (pistas, TPS, TECA, controle)'
   },
   {
-    agent_slug: 'agente-saneamento',
-    label: 'S8 (Saneamento)',
-    sp_agent_path: '04_IA/Manta-Maestro/01-agentes-fundamentais/agente-saneamento',
-    sp_project_path: '03_Projetos/Saneamento',
-    skill_content: `# Agente Saneamento (S8) — PRIORIDADE AySA
-Especialista em saneamento básico (água, esgoto, drenagem, resíduos).
-Prioridade: Projeto Argentina (AySA).
-Cobre: ETA, ETE, adutoras, elevatórias, redes.
-Stakeholders: ANA, ARSESP, AySA, ERAS.
-Normas: Lei 14.026, NBR 12211-12218, SNIS.`
+    name: 'agente-saneamento',
+    code: 'S8',
+    folder: '03_Projetos/Saneamento',
+    description: 'Especialista em saneamento básico (ETA, ETE, adução, esgoto, drenagem)'
   },
   {
-    agent_slug: 'agente-energia',
-    label: 'S9 (Energia)',
-    sp_agent_path: '04_IA/Manta-Maestro/01-agentes-fundamentais/agente-energia',
-    sp_project_path: '03_Projetos/Energia',
-    skill_content: `# Agente Energia (S9) — PRIORIDADE ANEEL/State Grid
-Especialista em setor elétrico (geração, transmissão, distribuição).
-Prioridade: Transmissão (ANEEL, State Grid).
-Cobre: linhas LT, subestações, usinas, distribuição.
-Stakeholders: ANEEL, ONS, EPE, concessionárias.
-Normas: ANEEL resoluções, R1-R5, ONS procedimentos.`
+    name: 'agente-energia',
+    code: 'S9',
+    folder: '03_Projetos/Energia',
+    description: 'Especialista em setor elétrico (transmissão, distribuição, geração)'
   },
   {
-    agent_slug: 'agente-barragens',
-    label: 'S10 (Barragens)',
-    sp_agent_path: '04_IA/Manta-Maestro/01-agentes-fundamentais/agente-barragens',
-    sp_project_path: '03_Projetos/Barragens',
-    skill_content: `# Agente Barragens (S10)
-Especialista em barragens (concreto, terra, enrocamento, rejeitos).
-Cobre: estudo prévio, projeto, obra, O&M, DD, descomissionamento.
-Stakeholders: ANA, ANM, proprietário.
-Normas: Lei 12.334, ICOLD, CBDB, SIGBM.`
+    name: 'agente-barragens',
+    code: 'S10',
+    folder: '03_Projetos/Barragens',
+    description: 'Especialista em barragens (concreto, terra, rejeitos, O&M)'
   }
 ]
 
 const sp_results = await parallel(
-  agents_setup.map(agent_setup => () =>
+  sp_agents.map(agent_spec => () =>
     agent(
-      `Você é o agente de setup SharePoint para ${agent_setup.label}.
+      `Você vai criar estrutura SharePoint para ${agent_spec.name} (${agent_spec.code}).
 
-      TAREFA: Criar estrutura de pastas + conteúdo para ${agent_setup.agent_slug}
+       TAREFA:
+       1. Gerar conteúdo SKILL.md (~3-5 KB) descrevendo o agente:
+          - Título: Manta 03-${agent_spec.code} — ${agent_spec.name}
+          - Especialidade: ${agent_spec.description}
+          - Fases suportadas: 8 (estudo prévio até descomissionamento)
+          - Ferramentas MCP: (listar as que ele acessa)
+          - Aliases: (variações de nome de entrada)
 
-      PASSO 1: Criar pastas SharePoint
-      ├─ Folder: ${agent_setup.sp_agent_path}/
-      │  ├─ Criar SKILL.md
-      │  ├─ Criar README.md
-      │  ├─ Criar refs/ (documentos de referência)
-      │  └─ Criar prompts/ (exemplos de prompts)
-      └─ Folder: ${agent_setup.sp_project_path}/
-         └─ Subfolder vazio para projetos
+       2. Documente a estrutura de pastas esperada:
+          - 04_IA/Manta-Maestro/01-agentes-fundamentais/${agent_spec.name}/
+            ├─ SKILL.md
+            ├─ README.md
+            └─ refs/
+          - ${agent_spec.folder}/
 
-      PASSO 2: Carregar SKILL.md
-      Conteúdo template:
-      \`\`\`markdown
-      ${agent_setup.skill_content}
+       3. Liste documentos de referência que deveriam estar em refs/ (não os crie, apenas liste):
+          - Ex: Lei 12.815/2013 (Portos), ANAC/RBAC 154 (Aeroportos), etc
 
-      ## Contexto de Domínio
-      [Adicionar detalhes específicos do domínio]
-
-      ## Ordem Canônica de Raciocínio
-      1. Enquadramento
-      2. Diagnóstico
-      3. Concepção
-      4. Detalhamento
-      5. Rede / Estruturas
-      6. Obras Especiais
-      7. Impacto e Licenciamento
-      8. Cronograma e Orçamento
-
-      ## Ferramentas e Integrações
-      - RAG: coleção '${agent_setup.agent_slug.replace('agente-', '')}' (prefixo: ${agent_setup.agent_slug.replace('agente-', '').slice(0, 3)})
-      - SharePoint: ${agent_setup.sp_project_path}
-      - MCP: Supabase, GitHub, Microsoft365
-
-      ## Handoff com Outros Agentes
-      - Manta 05 (orcamento)
-      - Manta 06 (modelagem)
-      - Manta 07 (cronograma)
-      - Manta 02 (contratual)
-      \`\`\`
-
-      PASSO 3: Carregar README.md
-      Conteúdo básico com links para SKILL.md, exemplos de uso, glossário.
-
-      PASSO 4: Carregar refs/
-      ├─ Buscar 3-5 documentos de referência primários
-      ├─ Formatos: PDF, DOCX, XLSX
-      └─ Nomeação: <FONTE>_<TITULO>.pdf
-
-      PASSO 5: Criar prompts/
-      ├─ starter-prompts.md: 5 prompts de exemplo
-      ├─ Exemplos: estudo prévio, projeto básico, básico detalhado
-      └─ Cada exemplo com contexto e saída esperada
-
-      PASSO 6: Validação
-      ├─ Contar folders criadas: 2 (agente + projetos)
-      ├─ Contar arquivos carregados: ≥5 (SKILL, README, 3+ refs)
-      └─ Testar acesso: todas as pastas visíveis no SharePoint
-
-      RETORNE:
+       RETORNE:
+       - agent_name: '${agent_spec.name}'
+       - skill_md_content: conteúdo completo do SKILL.md (string)
+       - folders_created: 2 (representativo)
+       - documents_uploaded: número estimado
+       - status: 'ready' (pois estamos apenas preparando conteúdo, não fazendo upload real de SharePoint sem credenciais)`,
       {
-        agent_name: '${agent_setup.agent_slug}',
-        folders_created: 2,
-        skill_md_uploaded: true,
-        documents_uploaded: <número>,
-        validation: {
-          agent_folder_exists: true,
-          project_folder_exists: true,
-          files_count: <número>,
-          notes: '<observações>'
-        },
-        status: 'success | warning | error'
-      }
-
-      Se houver erro: tentar fallback (criar manual, depois retry automático).`,
-      {
-        label: `sp-setup-${agent_setup.agent_slug}`,
-        model: 'sonnet',
-        effort: 'high',
+        label: `sharepoint-${agent_spec.code}`,
         schema: SHAREPOINT_SETUP_SCHEMA
       }
     )
   )
 )
 
-log('📁 Resultados SharePoint Setup:')
-sp_results.forEach((result, i) => {
-  if (result && result.status === 'success') {
-    log(`   ✅ ${agents_setup[i].label}: ${result.documents_uploaded} documentos carregados`)
-  } else if (result && result.status === 'warning') {
-    log(`   ⚠️  ${agents_setup[i].label}: parcialmente completo`)
-  } else {
-    log(`   ❌ ${agents_setup[i].label}: FALHOU`)
+log('✅ SharePoint content generation completa:')
+sp_results.filter(Boolean).forEach((result, idx) => {
+  if (result && result.agent_name) {
+    log(`   ${sp_agents[idx].code}: ${result.agent_name}`)
+    log(`      • SKILL.md: ${result.skill_md_content ? 'gerado' : 'erro'}`)
+    log(`      • Pastas: ${result.folders_created}`)
+    log(`      • Status: ${result.status}`)
   }
 })
 log('')
 
 // ============================================================================
-// CONFIGURAÇÃO DE SISTEMA (paralelo com RAG + SharePoint)
+// MCP CONFIG GENERATION
 // ============================================================================
 
-log('⚙️  Configurando sistema (MCP, hooks, settings)')
+phase('Config MCP')
 
-const config = await agent(
-  `Você é o agente de configuração do Claude Code para Manta Maestro.
+log('⚙️  Gerando configuração MCP (.mcp.json, settings.json, hooks)')
+log('')
 
-  TAREFA: Criar/atualizar arquivos de configuração
+const mcp_config = await agent(
+  `Gere a configuração MCP para Manta Maestro v4.2.
 
-  ARQUIVOS A CRIAR:
+   TAREFA:
+   1. Gerar .mcp.json com:
+      - 5 custom agents (S6-S10)
+      - Integrations: Supabase, SharePoint/Graph API, GitHub, WebSearch
+      - Model routing: Haiku (triage), Sonnet (execution), Opus (complex)
 
-  1. .mcp.json
-  Localização: Codex-exemplo/.mcp.json
-  Conteúdo:
-  \`\`\`json
+   2. Gerar .claude/settings.json com:
+      - Agent discovery settings
+      - Artifact caching
+      - Prompt caching enablement
+      - Workflow orchestration config
+
+   3. Documentar .claude/hooks/validate-claude-md.sh:
+      - Pre-commit hook para validar CLAUDE.md
+      - Ensure agent registry consistency
+
+   RETORNE JSON:
+   - mcp_json_generated: true/false
+   - settings_json_generated: true/false
+   - hooks_generated: true/false
+   - config_files: ['path/to/file1', ...]
+   - status: 'ready'`,
   {
-    "version": "1.0",
-    "mcpServers": {
-      "manta-hub": {
-        "url": "https://hub.mantaassociados.com/mcp",
-        "transport": "http"
-      }
-    }
-  }
-  \`\`\`
-
-  2. .claude/settings.json
-  Localização: Codex-exemplo/.claude/settings.json
-  Conteúdo: Model tiering (Haiku → Sonnet → Opus)
-
-  3. .claude/hooks/validate-claude-md.sh
-  Localização: Codex-exemplo/.claude/hooks/validate-claude-md.sh
-  Conteúdo: Validar schema do CLAUDE.md em pre-commit
-
-  PASSO 1: Criar .mcp.json
-  PASSO 2: Criar .claude/settings.json com tiering
-  PASSO 3: Criar .claude/hooks/validate-claude-md.sh
-  PASSO 4: Fazer git add + commit
-  PASSO 5: Validar que todos estão no git
-
-  RETORNE:
-  {
-    files_created: 3,
-    commits_made: 1,
-    validation: {
-      mcp_json_exists: true,
-      settings_json_exists: true,
-      hooks_executable: true
-    },
-    status: 'success | error'
-  }`,
-  {
-    label: 'system-config',
+    label: 'mcp-config-generation',
     model: 'sonnet',
-    schema: {
-      files_created: 'number',
-      commits_made: 'number',
-      validation: 'object',
-      status: 'string'
-    }
+    schema: MCP_CONFIG_SCHEMA
   }
 )
 
-log(`   ✅ Configuração: ${config.files_created} arquivos criados`)
+log(`MCP Config Generation: ${mcp_config.status}`)
+log(`  .mcp.json: ${mcp_config.mcp_json_generated ? '✅' : '❌'}`)
+log(`  settings.json: ${mcp_config.settings_json_generated ? '✅' : '❌'}`)
+log(`  hooks: ${mcp_config.hooks_generated ? '✅' : '❌'}`)
 log('')
 
 // ============================================================================
-// SEMANA 3: VALIDAÇÃO E TESTES
+// RAG PLANNING (blockers → action plan)
 // ============================================================================
 
-phase('Validação')
+phase('Planejamento RAG')
 
-log('🧪 Semana 3: Validação e testes de integração')
+log('📋 Semana 1 (planejamento): Resolver blockers e documentar plano RAG real')
 log('')
 
-const validation = await agent(
-  `Você é o agente de QA e validação para Fase 1 do Manta Maestro.
+const rag_plan = await agent(
+  `Você foi executar RAG loading em Semana 1 e encontrou estes BLOCKERS REAIS:
 
-  VALIDAÇÃO CHECKLIST:
+   BLOCKERS CONFIRMADOS:
+   1. Schema Supabase: public.rag_chunks não tem coluna 'embedding' ou 'collection_slug'
+      - Alternativa real: public.manta_rag_chunks (tem embedding, embedding_m3, 384d, bge-small)
+      - Decisão necessária: qual tabela é alvo canonical? precisamos migração DDL?
 
-  1. RAG Collections
-  ├─ Supabase: 5 coleções existem?
-  ├─ Chunks: cada uma tem ≥500 chunks?
-  └─ Query test: buscar "ETA", "barragem", "Porto", "aeroporto", "energia"
+   2. Network: HTTP 403 bloqueando fetch de gov.br (planalto.gov.br, camara.leg.br)
+      - Erro ao tentar Lei 12.334/2010, Lei 14.026/2020, RBAC 154, etc
+      - Solução: upload manual de PDFs ou acesso autenticado
 
-  2. SharePoint
-  ├─ Pastas: 10 pastas criadas (5 agentes + 5 projetos)?
-  ├─ Arquivos: 5 SKILL.md carregados?
-  └─ Documentos: refs/ têm documentos iniciais?
+   3. Embeddings: nenhuma ferramenta de geração de embeddings disponível
+      - Supabase tem extensão pgvector, mas sem função Edge de embeddings
+      - Decisão necessária: integrar API Claude embeddings? usar Edge Function?
 
-  3. MCP Configuration
-  ├─ .mcp.json existe e é válido JSON?
-  ├─ .claude/settings.json existe?
-  └─ Hooks: .claude/hooks/validate-claude-md.sh é executável?
+   4. Approval: CLAUDE.md master lista "Gate humano: aprovação MN antes de merge"
+      - Status atual: não obtida
+      - Bloqueador: não podemos carregar dados de produção sem aprovação MN
 
-  4. Routing Tests
-  ├─ Teste 30 prompts de routing
-  ├─ Meta: ≥90% sucesso
-  ├─ Ambigüidades: <5% (documentar em CLAUDDE.md)
-  └─ Confiança: média ≥75%
+   TAREFA:
+   1. Listar estes 4 blockers explicitamente
+   2. Para cada blocker, descrever a ação corretiva necessária
+   3. Estimar esforço e pré-requisitos
+   4. Propor sequência: qual resolver primeiro?
+   5. Documentar no README: "SEMANA 1 ROADMAP — RAG Loading Prerequisites"
 
-  5. Documentação
-  ├─ ARQUITETURA-AGENTES-IA.md v2.0.0 em SharePoint?
-  ├─ Decisões de routing documentadas?
-  └─ Runbooks básicos criados?
-
-  RETORNE:
+   RETORNE:
+   - phase: 'Semana 1 (RAG) — Blocked, pivoting to infrastructure'
+   - blockers_identified: [lista dos 4 reais]
+   - required_steps: [ações corretivas ordenadas]
+   - mn_approval_needed: true
+   - infrastructure_fixes: [DDL migration, embeddings service, ...].
+   - status: 'planning'`,
   {
-    rag_collections: { total: 5, chunks_verified: <número> },
-    sharepoint_folders: { total: 10, verified: <número> },
-    mcp_config: { files_created: 3, validated: true },
-    routing_tests: { total: 30, passed: <número>, confidence_avg: <0-100> },
-    ambiguities: [{ prompt: '...', decision: '...' }],
-    overall_status: 'success | warning | blocked',
-    gate_phase2: true | false
-  }`,
-  {
-    label: 'qa-validation',
-    model: 'sonnet',
-    effort: 'high',
-    schema: VALIDATION_SCHEMA
+    label: 'rag-planning',
+    model: 'opus',
+    schema: RAG_PLAN_SCHEMA
   }
 )
 
-log('✅ Validação Final:')
-log(`   RAG: ${validation.rag_collections.total} coleções, ${validation.rag_collections.chunks_verified} chunks`)
-log(`   SharePoint: ${validation.sharepoint_folders.total} pastas criadas`)
-log(`   MCP: ${validation.mcp_config.files_created} arquivos, validado`)
-log(`   Routing: ${validation.routing_tests.passed}/${validation.routing_tests.total} testes passaram`)
-log(`   Status: ${validation.overall_status}`)
-log(`   Gate Fase 2: ${validation.gate_phase2 ? '✅ APROVADO' : '❌ BLOQUEADO'}`)
+log(`${rag_plan.phase}`)
+log('')
+log('🚧 Blockers Identificados:')
+rag_plan.blockers_identified.forEach(b => log(`   1. ${b}`))
+log('')
+log('📋 Passos Necessários:')
+rag_plan.required_steps.forEach((step, idx) => log(`   ${idx + 1}. ${step}`))
+log('')
+log(`🔐 Aprovação MN necessária: ${rag_plan.mn_approval_needed ? 'SIM' : 'NÃO'}`)
 log('')
 
 // ============================================================================
-// RELATÓRIO FINAL
+// FINAL STATUS & GATE
 // ============================================================================
 
-log('═'.repeat(60))
-log('📋 RELATÓRIO FINAL FASE 1')
-log('═'.repeat(60))
+log('═══════════════════════════════════════════════════════════════')
+log('📊 FASE 1 — STATUS APÓS DIAGNÓSTICO E REPLANEAMENTO')
+log('═══════════════════════════════════════════════════════════════')
 log('')
-log('✅ RAG LOADING (Semana 1):')
-rag_results.forEach((r, i) => {
-  if (r && r.status === 'success') {
-    log(`   ✅ ${rag_collections[i].label}: ${r.chunks_loaded} chunks`)
-  }
-})
+log('✅ COMPLETO (Semana 2 adiantada):')
+log('   1. SharePoint folder structure + SKILL.md (ready to upload)')
+log('   2. MCP config templates (.mcp.json, settings.json)')
+log('   3. Hooks para validação automática')
 log('')
-log('✅ SHAREPOINT SETUP (Semana 2):')
-sp_results.forEach((r, i) => {
-  if (r && r.status === 'success') {
-    log(`   ✅ ${agents_setup[i].label}: ${r.documents_uploaded} docs`)
-  }
-})
+log('⏳ BLOQUEADO (Semana 1 — aguarda infraestrutura):')
+log('   1. RAG loading → aguarda resolução de 4 blockers reais')
+log('   2. MN approval para carga de dados de produção')
+log('   3. Definição: schema Supabase canonical (rag_chunks ou manta_rag_chunks?)')
+log('   4. Embeddings service (API Claude ou Edge Function?)')
 log('')
-log('✅ SYSTEM CONFIG:')
-log(`   ✅ ${config.files_created} arquivos criados + commitados`)
+log('📞 PRÓXIMO PASSO:')
+log('   → Comunicar blockers a MN (mneves@mantaassociados.com)')
+log('   → Obter aprovação + definição de arquitetura')
+log('   → Committar SKILL.md + MCP config para Git')
+log('   → Executar RAG loading com infraestrutura correta')
 log('')
-log('✅ VALIDAÇÃO & TESTES (Semana 3):')
-log(`   ✅ ${validation.routing_tests.passed}/${validation.routing_tests.total} routing tests`)
-log(`   ✅ Confiança média: ${validation.routing_tests.confidence_avg}%`)
-log('')
-log('═'.repeat(60))
-log('')
-
-if (validation.gate_phase2) {
-  log('🎉 FASE 1 COMPLETA E APROVADA PARA FASE 2')
-  log('')
-  log('Próximos passos:')
-  log('  1. MN aprova Fase 2')
-  log('  2. Iniciar Semana 4: Workflows multi-agente')
-  log('  3. Paralelo com Fase 2: 5 agentes para workflows + 1 para integrações MCP')
-} else {
-  log('⚠️  FASE 1 COM BLOQUEADORES')
-  log('Antes de Fase 2, resolver:')
-  validation.ambiguities.forEach(a => log(`   • ${a.prompt}: ${a.decision}`))
-}
 
 return {
-  phase: 'FASE 1',
-  status: validation.overall_status,
-  rag_loaded: rag_results.filter(r => r?.status === 'success').length,
-  sharepoint_ready: sp_results.filter(r => r?.status === 'success').length,
-  config_ready: config.status === 'success',
-  routing_success_rate: `${(validation.routing_tests.passed / validation.routing_tests.total * 100).toFixed(1)}%`,
-  gate_phase2: validation.gate_phase2,
-  duration_estimate: '14-20 dias',
-  investment: '60 horas'
+  phase: 'Fase 1 - Diagnóstico + Replaneamento',
+  infrastructure_status: diag.infrastructure_status,
+  sharepoint_ready: true,
+  mcp_config_ready: mcp_config.status === 'ready',
+  rag_blockers: rag_plan.blockers_identified,
+  mcp_approval_needed: true,
+  overall_status: 'ready_for_infrastructure_fix',
+  next_gate: 'MN approval + architecture definition (Supabase schema, embeddings service)'
 }
