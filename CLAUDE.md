@@ -9,23 +9,23 @@ Saneamento, Energia, Barragens).
 
 ---
 
-## MAPA COMPLETO DE AGENTES — 20 agentes, 3 eixos
+## MAPA COMPLETO DE AGENTES — 22 agentes, 3 eixos
 
 ### Eixo 1 — Horizontais (transversais a todos os segmentos)
 
-| Código | Agente | Aliases | Tier default | Status |
-|--------|--------|---------|--------------|--------|
-| Manta 00 | maestro (router) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
-| Manta 01 | claims | 02-C, manta-claims | Opus | ✅ Operacional |
-| Manta 02 | contratual | manta-02, contratual | Sonnet | ✅ Operacional |
-| Manta 04 | imobiliario | manta-04 | Sonnet | ✅ Operacional |
-| Manta 05 | orcamento | manta-05 | Sonnet | ✅ Operacional |
-| Manta 06 | modelagem | manta-06 | Sonnet/Opus | ✅ Operacional |
-| Manta 07 | cronograma | manta-07 | Sonnet | ✅ Operacional |
-| Manta 13 | bd | manta-13, business-dev | Sonnet | ✅ Operacional |
-| Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
-| Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
-| Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
+| Código | Agente | Arquivo | Aliases | Tier default | Status |
+|--------|--------|---------|---------|--------------|--------|
+| Manta 00 | maestro (router) | — | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
+| Manta 01 | claims | agente-claims.md | 02-C, manta-claims | Opus | ✅ Operacional |
+| Manta 02 | contratual | agente-contratual.md | manta-02, contratual | Sonnet | ✅ Operacional |
+| Manta 04 | imobiliario | agente-imobiliario.md | manta-04 | Sonnet | ✅ Operacional |
+| Manta 05 | orcamento | agente-orcamento.md | manta-05 | Sonnet | ✅ Operacional |
+| Manta 06 | modelagem | agente-modelagem.md | manta-06 | Sonnet/Opus | ✅ Operacional |
+| Manta 07 | cronograma | agente-cronograma.md | manta-07 | Sonnet | ✅ Operacional |
+| Manta 13 | bd | agente-bd.md | manta-13, business-dev | Sonnet | ✅ Operacional |
+| Manta 14 | apresentacoes | agente-apresentacoes.md | manta-14-pptx | Sonnet | ✅ Operacional |
+| Manta 15 | advisory | agente-advisory.md | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
+| Manta 16 | arquiteto-ia | agente-arquiteto-ia.md | manta-15-arq | Opus | ✅ Operacional |
 
 ### Eixo 2 — Verticais por segmento (C3)
 
