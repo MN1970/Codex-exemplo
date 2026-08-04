@@ -9,6 +9,9 @@
 # checklist "DEPLOY CHECKLIST v4.2" no CLAUDE.md) — o teste então só
 # valida que a coleção existe/é consultável, não que tem conteúdo.
 collections:
+  - name: rodovias
+    storage_prefix: "rod:"
+    min_chunks: 0
   - name: saneamento
     storage_prefix: "san:"
     min_chunks: 0
