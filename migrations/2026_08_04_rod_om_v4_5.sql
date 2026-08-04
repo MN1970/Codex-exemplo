@@ -29,14 +29,13 @@ VALUES (
 ON CONFLICT (doc_id) DO NOTHING;
 
 -- 2. Insert chunks from 10 specializations
-INSERT INTO manta_rag_chunks (doc_id, posicao, texto, tokens, metadados_chunk, created_at)
+INSERT INTO manta_rag_chunks (doc_id, posicao, texto, tokens, metadados_chunk)
 SELECT
   'rod-om-especializacoes-20260804',
   row_number() OVER (ORDER BY posicao),
   texto,
   tokens,
-  metadados_chunk,
-  NOW()
+  metadados_chunk
 FROM (
   SELECT 1 as posicao,
     'Inspeção estrutural (auscultação) — avaliação condição pavimento, drenagem, taludes. Técnicas: visual (lesões superficiais fotografadas), GPS RTK (geoposicionamento precisão ±2cm), GPR (mapeamento camadas profundas), FWD (deflexão estrutural). Formulários DNIT: checklist lesões (trincas, afundamento, panelas, lama), severidade escala 1-5. Frequência: anual (rodovia operação normal), bianual (rodovia critica tráfego pesado), pós-evento (chuva 100-ano, acidente). Custo inspeção: R$ 2.000-3.000/100km (visual + GPS); +R$ 5.000-8.000 se GPR/FWD incluído. Documentação: relatório fotográfico, planta lesões geoposicionadas, conclusões condição estrutural. Norma DNIT 719/2006, NBR 6118 (estrutura).' as texto,

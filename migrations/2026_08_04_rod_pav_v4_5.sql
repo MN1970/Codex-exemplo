@@ -29,14 +29,13 @@ VALUES (
 ON CONFLICT (doc_id) DO NOTHING;
 
 -- 2. Insert chunks from 20 specializations
-INSERT INTO manta_rag_chunks (doc_id, posicao, texto, tokens, metadados_chunk, created_at)
+INSERT INTO manta_rag_chunks (doc_id, posicao, texto, tokens, metadados_chunk)
 SELECT
   'rod-pav-especializacoes-20260804',
   row_number() OVER (ORDER BY posicao),
   texto,
   tokens,
-  metadados_chunk,
-  NOW()
+  metadados_chunk
 FROM (
   SELECT 1 as posicao,
     'Ligantes asfálticos — CAP convencional (50/70, 60/80), CAP-modificado com SBS (elasticidade, recuperação), CAP polímero elastomérico (flexibilidade baixa T), CAP borracha (amortecimento, sustentabilidade). Normas: NBR 15086, DNER-ME 001. Viscosidade cinemática especificada. Aplicações: CBUQ convencional (CAP 50/70), drenante (CAP-modificado SBS), porosa (CAP elastomérico).' as texto,

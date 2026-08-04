@@ -29,14 +29,13 @@ VALUES (
 ON CONFLICT (doc_id) DO NOTHING;
 
 -- 2. Insert chunks from 15 specializations
-INSERT INTO manta_rag_chunks (doc_id, posicao, texto, tokens, metadados_chunk, created_at)
+INSERT INTO manta_rag_chunks (doc_id, posicao, texto, tokens, metadados_chunk)
 SELECT
   'rod-terra-especializacoes-20260804',
   row_number() OVER (ORDER BY posicao),
   texto,
   tokens,
-  metadados_chunk,
-  NOW()
+  metadados_chunk
 FROM (
   SELECT 1 as posicao,
     'Classificação solos SUCS (Sistema Unificado) e AASHTO — fundamentais para projeto aterros/cortes. SUCS: areia grossa (SP, SM, SC, SW), silte/argila (CL, CH, ML, MH, OL, OH). Propriedades geotécnicas: LL (limite liquidez), LP (limite plasticidade), IP (índice plasticidade >15% potencialmente expansivos). Ensaios DNER-ME/NBR: limite Atterberg (NBR 6459, 7180), análise granulométrica (NBR 7181), classificação sistemática. Região Brasil: solos lateríticos (SE/NE) mais comuns, granito/gnaisse originou. Impacto projeto: IP alto requer drenagem especial, LL>50% solo problemático, expansividade risco em clima seco-úmido.' as texto,

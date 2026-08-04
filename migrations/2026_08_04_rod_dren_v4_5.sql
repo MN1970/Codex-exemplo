@@ -29,14 +29,13 @@ VALUES (
 ON CONFLICT (doc_id) DO NOTHING;
 
 -- 2. Insert chunks from 15 specializations
-INSERT INTO manta_rag_chunks (doc_id, posicao, texto, tokens, metadados_chunk, created_at)
+INSERT INTO manta_rag_chunks (doc_id, posicao, texto, tokens, metadados_chunk)
 SELECT
   'rod-dren-especializacoes-20260804',
   row_number() OVER (ORDER BY posicao),
   texto,
   tokens,
-  metadados_chunk,
-  NOW()
+  metadados_chunk
 FROM (
   SELECT 1 as posicao,
     'Fundamentos hidrológicos — ciclo água (evaporação, precipitação, escoamento), bacias hidrográficas, coeficiente escoamento C. C varia: asfalto 0.80-0.95, grama 0.20-0.30, floresta 0.10-0.20. Tempo concentração tc (tempo chuva atingir ponto jusante): fórmulas Kirpich, SCS, correlação regional. Precipitação de projeto: tempo retorno 10-25 anos típico (rodovias), altura máxima consultada isoieta (mapas DNIT/ANA). Exemplo: bacia 15 ha, C=0.6, tc=20 min, i=100 mm/h → Q=2.73 m³/s (método racional). Impacto: projeto drenagem depende precipitação, erros subestimam riscos (alagamento, erosão). Monitoramento: pluviômetro estação base, série histórica 10+ anos.' as texto,
