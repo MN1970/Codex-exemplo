@@ -7,18 +7,18 @@
 BEGIN TRANSACTION;
 
 -- Create collection if not exists
-INSERT INTO rag_collections (name, prefix, description, created_at)
+INSERT INTO rag_collections (slug, name, storage_prefix, created_at)
 VALUES (
-  'rodovias_pavimentacao',
-  'rod:pav:',
+  'rodovias-pavimentacao',
   'Pavimentação — 20 especialidades (materiais, projeto AASHTO/M-E, execução, monitoramento, reabilitação, casos reais)',
+  'rod:pav:',
   NOW()
 )
-ON CONFLICT (prefix) DO NOTHING;
+ON CONFLICT (slug) DO NOTHING;
 
 -- Get collection ID
 WITH collection AS (
-  SELECT id FROM rag_collections WHERE prefix = 'rod:pav:' LIMIT 1
+  SELECT id FROM rag_collections WHERE storage_prefix = 'rod:pav:' LIMIT 1
 )
 
 -- Insert chunks from 08-pavimentacao-especializacoes.md

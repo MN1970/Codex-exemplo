@@ -6,17 +6,17 @@
 
 BEGIN TRANSACTION;
 
-INSERT INTO rag_collections (name, prefix, description, created_at)
+INSERT INTO rag_collections (slug, name, storage_prefix, created_at)
 VALUES (
-  'rodovias_om',
-  'rod:om:',
+  'rodovias-om',
   'O&M (Operação & Manutenção) — 10 especialidades (monitoramento, inspeção, avaliação, manutenção, reabilitação)',
+  'rod:om:',
   NOW()
 )
-ON CONFLICT (prefix) DO NOTHING;
+ON CONFLICT (slug) DO NOTHING;
 
 WITH collection AS (
-  SELECT id FROM rag_collections WHERE prefix = 'rod:om:' LIMIT 1
+  SELECT id FROM rag_collections WHERE storage_prefix = 'rod:om:' LIMIT 1
 )
 
 INSERT INTO rag_chunks (collection_id, prefix, source_doc, section, subsection, content, tokens, created_at)
