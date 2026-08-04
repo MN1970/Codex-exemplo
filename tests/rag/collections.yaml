@@ -12,6 +12,15 @@ collections:
   - name: rodovias
     storage_prefix: "rod:"
     min_chunks: 0
+  - name: oae
+    storage_prefix: "oae:"
+    min_chunks: 0
+  - name: ferrovia
+    storage_prefix: "fer:"
+    min_chunks: 0
+  - name: metro
+    storage_prefix: "mtr:"
+    min_chunks: 0
   - name: saneamento
     storage_prefix: "san:"
     min_chunks: 0
