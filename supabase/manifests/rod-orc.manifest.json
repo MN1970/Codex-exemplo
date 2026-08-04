@@ -1,0 +1,60 @@
+{
+  "manifest_version": "1.0",
+  "type": "manifest",
+  "manifest_kind": "rag_collection",
+  "collection_key": "rod:+orc:",
+  "generated_at": "2026-08-04",
+  "generated_by": "Codex-exemplo (Manta Maestro Agent Registry)",
+  "ticket": null,
+  "status": "candidate",
+  "notes": [
+    "Este manifest formaliza, no formato JSON usado a partir da v4.2, duas colecoes RAG PRE-EXISTENTES (rod: e orc:) que nao tinham manifest proprio — apenas a tabela 'RAG - Colecoes em Supabase' do CLAUDE.md documenta as 5 colecoes NOVAS (san:, ene:, por:, aer:, bar:).",
+    "Este arquivo e uma proposta candidata. Nao assume que as colecoes 'rodovias' e 'orcamento' ja existem em rag_collections no Supabase — a confirmacao de existencia/criacao real depende de get_advisors/list_tables/execute_sql via MCP Supabase e de gate humano (MN), seguindo o mesmo padrao de 'supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql'.",
+    "Schema assumido para rag_collections: (slug TEXT PRIMARY KEY, name TEXT, storage_prefix TEXT, initial_sources JSONB, created_at TIMESTAMPTZ DEFAULT NOW()) — mesmo assumido pela migracao v4.2. Ajustar se o schema real divergir."
+  ],
+  "collections": [
+    {
+      "slug": "rodovias",
+      "name": "Rodovias",
+      "storage_prefix": "rod:",
+      "linked_agents": [
+        "Manta 03-S1 (agente-infraestrutura, Rodovias)",
+        "Manta 03-S2 (agente-infraestrutura, OAE — parcialmente sobreposto)",
+        "Manta 03-S3 (agente-infraestrutura, Ferrovia — parcialmente sobreposto)",
+        "Manta 03-S4 (agente-infraestrutura, Metro — parcialmente sobreposto)"
+      ],
+      "initial_sources": [
+        "DNIT IPR-706 (Manual de Projeto Geometrico de Rodovias)",
+        "DNIT IPR-724 (Manual de Pavimentacao)",
+        "DNIT IPR-727 (Manual de Drenagem de Rodovias)",
+        "DNIT IPR-736 (Manual de Estudos de Trafego)",
+        "SICRO (tabela referencial de custos DNIT)",
+        "NBR 8403 / NBR 10068 / NBR 10582 / NBR 13133 (representacao grafica e topografia)"
+      ],
+      "routing_keywords_ref": "CLAUDE.md > ROUTING > agente-infraestrutura S1 (rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT)",
+      "status": "existing_undocumented_pre_v4.2"
+    },
+    {
+      "slug": "orcamento",
+      "name": "Orcamento",
+      "storage_prefix": "orc:",
+      "linked_agents": [
+        "Manta 05 (orcamento, manta-05)"
+      ],
+      "initial_sources": [
+        "SICRO (tabela referencial de custos DNIT)",
+        "SINAPI (Caixa/IBGE)",
+        "TCPO (Tabelas de Composicao de Precos para Orcamentos)",
+        "Lei 14.133/2021 (Nova Lei de Licitacoes e Contratos Administrativos)",
+        "Banco de composicoes historicas Manta (SharePoint)"
+      ],
+      "routing_keywords_ref": "sem regra dedicada no bloco ROUTING do CLAUDE.md v4.2 — orcamento e tipicamente acionado como etapa auxiliar de outros agentes verticais (S1-S10), nao por keyword direta de Q1",
+      "status": "existing_undocumented_pre_v4.2"
+    }
+  ],
+  "follow_up_suggested": [
+    "Adicionar linhas 'rodovias' e 'orcamento' na tabela 'RAG - Colecoes em Supabase' do CLAUDE.md, para paridade com as 5 colecoes S6-S10.",
+    "Confirmar via MCP Supabase (list_tables / execute_sql) se as colecoes 'rodovias' e 'orcamento' ja existem em rag_collections antes de qualquer INSERT.",
+    "Se nao existirem, gerar migracao .sql analoga a '2026_07_05_v4_2_agents_s6_s10.sql' para as colecoes rod:/orc:, com gate humano (MN) antes de aplicar."
+  ]
+}
