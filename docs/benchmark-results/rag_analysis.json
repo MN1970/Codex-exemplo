@@ -15,35 +15,83 @@
       "tratamento água",
       "via permanente"
     ],
-    "hipotese_raiz": "4 problemas entrelaçados: (1) prefixos com overlap semântico não filtrado; (2) embedding_model genérico não captura nuances de domínio; (3) corpus sem suficiente contexto diferenciador; (4) falta de negative embeddings"
+    "analise_detalhada": {
+      "terraplenagem": {
+        "dominios_afetados": ["S1 (Rodovias)", "S2 (OAE)", "S10 (Barragens)"],
+        "problema": "Termo genérico de engenharia civil; Barragens possui corpus sobre 'terraplenagem de aterro' enquanto Rodovias usa 'terraplenagem de subleito'",
+        "raiz": "Embedding confunde contexto de aplicação"
+      },
+      "estrutura+fundacao": {
+        "dominios_afetados": ["S2 (OAE)", "S10 (Barragens)"],
+        "problema": "Ambos falam de estruturas e fundações; S10 sobre fundações de barragens, S2 sobre fundações de pontes",
+        "raiz": "Falta de diferenciador contextual (ex: 'fundação profunda em barragem CFRD' vs 'fundação de encontro em OAE')"
+      },
+      "drenagem": {
+        "dominios_afetados": ["S6 (Portos)", "S10 (Barragens)"],
+        "problema": "S6 menciona drenagem de terrenos portuários; S10 menciona drenagem de barragens (valas de pé)",
+        "raiz": "Embedding não discrimina 'drenagem superficial' vs 'drenagem profunda estrutural'"
+      },
+      "via_permanente": {
+        "dominios_afetados": ["S3 (Ferrovia)", "S4 (Metrô)"],
+        "problema": "Ambos usam 'via permanente'; Metrô confunde com Ferrovia",
+        "raiz": "Prefixo ferroviário 'fer:' pode estar capturando queries sobre metrô"
+      }
+    },
+    "hipotese_raiz": "4 problemas entrelaçados: (1) prefixos com overlap semântico não filtrado; (2) embedding_model genérico não captura nuances de domínio; (3) corpus sem suficiente 'contexto diferenciador'; (4) falta de 'negative embeddings' (anti-matches explícitos)"
   },
   "estrategias": [
     {
       "ordem": 1,
       "nome": "Normalização de prefixos + reweighting + stop-terms específicos",
-      "descricao": "Ajustar pesos dos prefixos (diminuir S10 de 1.0 para 0.85), adicionar termos de exclusão cross-domain",
+      "descricao": "Ajustar pesos dos prefixos (diminuir S10 de 1.0 para 0.85), adicionar termos de exclusão cross-domain ('NOT barragem' para S1-S6), rebalancear embedding_model weights.",
       "esforco": "BAIXO (1-2h)",
-      "impacto_esperado": "Recall@1 +5-8% → 74-77%, contaminação -30-40%",
-      "timeline": "HOJE"
+      "impacto_esperado": "Recall@1 +5-8%, contaminação -30-40% (desce para ~12-14%)",
+      "condicoes_sucesso": "Implementável em Supabase via SQL + ajuste no cliente Python/JS de embedding",
+      "pseudocodigo": "-- Strategy 1: Reweight na função de busca Supabase\nCREATE OR REPLACE FUNCTION search_rag_v2(\n  query_text text,\n  segment_domain text,\n  k integer DEFAULT 3\n) RETURNS TABLE (...) AS $$\nBEGIN\n  RETURN QUERY\n  WITH embeddings_scored AS (\n    SELECT \n      id, chunk_text, domain, prefix,\n      similarity_score * domain_weight AS adjusted_score\n    FROM rag_chunks\n    CROSS JOIN (\n      SELECT embedding_text_to_vector(query_text) AS query_vec\n    ) AS q\n    WHERE domain != segment_domain  -- penalize cross-domain\n      OR (domain = segment_domain AND adjusted_score > 0.72)  -- threshold mais alto\n      OR prefix NOT IN (select forbidden_prefix_for(segment_domain))  -- exclude known contaminators\n  )\n  SELECT TOP k * FROM embeddings_scored ORDER BY adjusted_score DESC;\nEND;\n$$ LANGUAGE plpgsql;\n\n-- Ajuste de pesos por domínio\nUPDATE rag_chunks \nSET embedding_weight = CASE \n  WHEN prefix = 'bar:' THEN 0.85  -- reduz S10 de 1.0\n  WHEN prefix IN ('ene:', 'san:') THEN 0.90  -- reduz S9, S8 levemente\n  ELSE 1.0\nEND\nWHERE domain IN ('S8', 'S9', 'S10');\n\n-- Adicionar lista de anti-termos\nINSERT INTO domain_anti_terms (domain, anti_term, reason) VALUES\n('S1', 'barragem', 'Rodovia não trabalha com barragens'),\n('S2', 'rejeito TSF', 'OAE não lida com rejeitos de mineração'),\n('S6', 'vertedouro CFRD', 'Porto não trabalha com estruturas de barragem'),\n('S4', 'via permanente ferroviária', 'Metrô usa 'trilho' não 'via permanente');\n",
+      "implementacao": "1. Executar UPDATE de weights\n2. Adicionar tabela `domain_anti_terms` com 10-15 pares exclusivos\n3. Modificar função de busca para considerar anti_terms\n4. Testar com queries de contaminação histórica"
     },
     {
       "ordem": 2,
       "nome": "Expansão de corpus com contexto diferenciador",
-      "descricao": "Enriquecer chunks com context_tag e synthetic examples de disambiguação",
+      "descricao": "Enriquecer cada chunk com 'context_tag' explícito (ex: 'terraplenagem em rodovia' vs 'terraplenagem em barragem CFRD'). Adicionar 50-100 synthetic examples por domínio com disambiguação.",
       "esforco": "MÉDIO (4-6h)",
-      "impacto_esperado": "Recall@1 +8-12%, contaminação -50-70%",
-      "timeline": "ESTA SEMANA"
+      "impacto_esperado": "Recall@1 +8-12%, contaminação -50-70% (desce para ~6-10%), Recall@3 +3-5%",
+      "condicoes_sucesso": "Requer curação manual ou LLM-assisted para gerar synthetic chunks; precisa validação de domain experts",
+      "pseudocodigo": "-- Strategy 2: Enriquecer chunks com context tags\nALTER TABLE rag_chunks ADD COLUMN context_tag TEXT;\nALTER TABLE rag_chunks ADD COLUMN disambiguator TEXT;\n\n-- Exemplo de enrichment para terraplenagem\nUPDATE rag_chunks \nSET \n  context_tag = 'terraplenagem_rodovia',\n  disambiguator = 'subleito CBUQ BGS camadas pavement'\nWHERE domain = 'S1' AND chunk_text LIKE '%terraplenagem%';\n\nUPDATE rag_chunks \nSET \n  context_tag = 'terraplenagem_barragem',\n  disambiguator = 'aterro compactação CFRD dique núcleo'\nWHERE domain = 'S10' AND chunk_text LIKE '%terraplenagem%';\n\n-- Inserir synthetic examples de disambiguação (50 por domínio)\nINSERT INTO rag_chunks (domain, prefix, chunk_text, context_tag, disambiguator, source_type) \nVALUES\n  ('S1', 'rod:', 'Terraplenagem em rodovia segue NBR 12922. Subleito deve atingir 95% Proctor. Não confundir com aterro de barragem.', 'terraplenagem_rodovia_clarificacao', 'rodovia subleito CBUQ', 'synthetic_disambiguator'),\n  ('S10', 'bar:', 'Terraplenagem de barragem CFRD requer compactação seca. Núcleo impermeável com fração fina. Diferente de subleito rodovia.', 'terraplenagem_barragem_clarificacao', 'barragem CFRD núcleo impermeável', 'synthetic_disambiguator');\n\n-- Ajustar função de busca para considerar disambiguator\nCREATE OR REPLACE FUNCTION search_rag_v3(\n  query_text text,\n  segment_domain text\n) AS $$\nBEGIN\n  -- Boost chunks com context_tag matching\n  -- Penalize chunks com disambiguator pointing to OTHER domains\nEND;\n$$ LANGUAGE plpgsql;\n",
+      "implementacao": "1. Criar 8-10 'disambiguator templates' para termos ambíguos (terraplenagem, estrutura, drenagem, etc.)\n2. Usar LLM (Claude) para gerar 50 synthetic chunks por domínio\n3. Validar com domain experts (2-3h review)\n4. Inserir na tabela + reindexar embedding\n5. Re-rodar benchmark"
     },
     {
       "ordem": 3,
-      "nome": "Troca de embedding_model + semantic layer",
-      "descricao": "Upgrade para text-embedding-3-large ou multilingual-E5-large",
-      "esforco": "ALTO (8-12h)",
-      "impacto_esperado": "Recall@1 +12-18%, contaminação -70-90%",
-      "timeline": "FALLBACK"
+      "nome": "Troca/ajuste de embedding_model + camada de disambiguação semântica",
+      "descricao": "Considerar upgrade para embedding model mais sofisticado (ex: text-embedding-3-large da OpenAI ou Multilingual-E5-large) que captura nuances de domínio melhor. Implementar camada de 'semantic disambiguation' pós-embedding (ex: verificar se chunk_domain é compatível com query_context).",
+      "esforco": "ALTO (8-12h + testes integração)",
+      "impacto_esperado": "Recall@1 +12-18%, contaminação -70-90% (desce para ~2-5%), Recall@3 +5-8%",
+      "condicoes_sucesso": "Supabase permite troca de embedding_model? Custo de reindexar 10k chunks? Latência aceitável para busca?",
+      "pseudocodigo": "-- Strategy 3: Upgrade embedding model + semantic layer\n-- Opção A: Trocar de ada-002 para text-embedding-3-large (se Supabase permite)\nALTER TABLE rag_chunks \n  DROP COLUMN embedding_ada,\n  ADD COLUMN embedding_e5 vector(1024);  -- E5-large tem dim 1024\n\n-- Reindexar com novo modelo\nUPDATE rag_chunks \nSET embedding_e5 = (\n  SELECT embedding FROM openai.embeddings(\n    model := 'text-embedding-3-large',\n    input := chunk_text\n  )\n);\n\n-- Opção B: Adicionar semantic disambiguation layer\nCREATE TABLE semantic_disambiguation (\n  id SERIAL PRIMARY KEY,\n  term TEXT,\n  domain_primary TEXT,\n  domain_secondary TEXT[],  -- domínios que também mencionam este termo\n  distinguishing_feature TEXT,  -- ex: 'rodovia usa CBUQ, barragem usa CFRD'\n  created_at TIMESTAMP\n);\n\nINSERT INTO semantic_disambiguation VALUES\n  (NULL, 'terraplenagem', 'S1', ARRAY['S10'], 'rodovia: subleito + camadas de pavimento | barragem: núcleo impermeável + aterro compactado', NOW()),\n  (NULL, 'fundação', 'S2', ARRAY['S10'], 'OAE: encontro/apoio viga | barragem: base estrutural cipó-rígida CFRD', NOW()),\n  (NULL, 'drenagem', 'S6', ARRAY['S10'], 'porto: drenagem superficial terreno | barragem: sistema de drenagem profunda valas pé', NOW());\n\n-- Função de busca com semantic layer\nCREATE OR REPLACE FUNCTION search_rag_semantic(\n  query_text text,\n  segment_domain text,\n  k integer DEFAULT 3\n) RETURNS TABLE (...) AS $$\nBEGIN\n  -- Step 1: Busca por embedding (novo modelo)\n  WITH initial_search AS (\n    SELECT id, chunk_text, domain, embedding_e5 <-> query_embedding AS distance\n    FROM rag_chunks\n    ORDER BY distance\n    LIMIT k * 5  -- pega 5x mais para filtrar depois\n  ),\n  -- Step 2: Verificar se há ambiguidade\n  with_disambiguation AS (\n    SELECT \n      is.id, is.chunk_text, is.domain, is.distance,\n      CASE \n        WHEN sd.term IS NOT NULL AND is.domain != segment_domain THEN distance * 1.5  -- penalize cross-domain ambíguos\n        ELSE distance\n      END AS adjusted_distance\n    FROM initial_search is\n    LEFT JOIN semantic_disambiguation sd ON (\n      is.chunk_text ILIKE '%' || sd.term || '%' \n      AND is.domain = ANY(sd.domain_secondary)\n    )\n  )\n  SELECT TOP k * FROM with_disambiguation \n  WHERE domain = segment_domain OR adjusted_distance < 0.15  -- threshold baixo para cross-domain\n  ORDER BY adjusted_distance;\nEND;\n$$ LANGUAGE plpgsql;\n",
+      "implementacao": "1. Avaliar custo/latência de trocar embedding_model\n2. Se viável: executar reindexação (pode levar 30min-2h para 10k chunks)\n3. Criar tabela `semantic_disambiguation` com 20-30 entradas\n4. Implementar função `search_rag_semantic` com lógica de penalty\n5. Teste A/B com estratégia 2 antes de fazer upgrade completo"
     }
   ],
-  "metricas_target": {
+  "ranking_recomendado": [
+    {
+      "estrategia": 1,
+      "razao": "Rápida, baixo risco, impacto imediato de 30-40% redução em contaminação. Pode ser revertida em minutos.",
+      "timeline": "hoje",
+      "comando_deploy": "Execute os 3 UPDATEs + adicione tabela anti_terms"
+    },
+    {
+      "estrategia": 2,
+      "razao": "Complementa Strategy 1 com +20-30% melhoria adicional. Requer curação mas é mais robusta.",
+      "timeline": "esta semana (4-6h)",
+      "dependencia": "Validação de domain experts (Rodovias, OAE, Barragens, etc.)"
+    },
+    {
+      "estrategia": 3,
+      "razao": "Solve-all mas alto custo. Executar APENAS se Strategy 1+2 não atingem threshold 70% Recall@1 + <5% contaminação.",
+      "timeline": "próximas 2 semanas",
+      "condicao": "Aprovação de cost-benefit analysis (upgrade embedding_model + reindexação)"
+    }
+  ],
+  "metricas_target_apos_estrategias": {
     "apos_strategy_1": {
       "recall_at_1": "74-77%",
       "recall_at_3": "87-88%",
@@ -59,5 +107,6 @@
       "recall_at_3": "90-92%",
       "contaminacao": "2-5%"
     }
-  }
+  },
+  "proxima_acao": "Qual estratégia deseja implementar primeiro? Recomendo começar por Strategy 1 (hoje) + Strategy 2 (esta semana). Strategy 3 fica como fallback caso as duas primeiras não atinjam recall@1 >= 70%."
 }
