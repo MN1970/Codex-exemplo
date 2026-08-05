@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Manta Associados · Dispositivos Viários — Referência Técnica</title>
+<style>
+:root {
+  --manta-accent: #E07B3D;
+  --manta-accent-dark: #C45A2B;
+  --manta-title: #8B4A2D;
+  --manta-heading: #5D3A1A;
+  --manta-text: #374151;
+  --manta-muted: #6B7280;
+  --manta-border: #E5E7EB;
+  --manta-bg-alt: #F9FAFB;
+  --manta-bg: #FFFFFF;
+  --cad-line: #1F2937;
+  --cad-dim: #9CA3AF;
+  --cad-fill: #6B7280;
+  --cad-yellow: #FFC629;
+  --cad-white: #FFFFFF;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',system-ui,Arial,sans-serif;color:var(--manta-text);background:var(--manta-bg)}
+.topbar{display:flex;align-items:center;gap:16px;padding:10px 24px;border-top:4px solid var(--manta-accent);border-bottom:1px solid var(--manta-border)}
+.topbar img{height:38px}
+.topbar .title-block h1{font-family:'Montserrat',Arial,sans-serif;font-size:19px;color:var(--manta-heading);margin:0;font-weight:700}
+.topbar .title-block .sub{font-size:12.5px;color:var(--manta-muted);margin-top:2px}
+.topbar .ver{margin-left:auto;font-size:12px;color:var(--manta-muted);text-align:right;white-space:nowrap}
+.layout{display:flex;position:relative}
+.sidenav{width:250px;flex-shrink:0;border-right:1px solid var(--manta-border);position:sticky;top:0;align-self:flex-start;height:100vh;overflow-y:auto;padding-top:8px}
+.sidenav button{display:block;width:100%;text-align:left;background:none;border:none;border-left:3px solid transparent;padding:11px 18px;font-size:13.3px;color:var(--manta-muted);cursor:pointer;line-height:1.35}
+.sidenav button.active{border-left-color:var(--manta-accent);color:var(--manta-heading);font-weight:600;background:var(--manta-bg-alt)}
+.sidenav .grp{padding:14px 18px 4px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#B0B7C0;font-weight:700}
+.content{flex:1;min-width:0;padding:28px 40px 80px;position:relative}
+.tab{display:none}.tab.active{display:block}
+h2.sec{font-family:'Montserrat',Arial,sans-serif;font-size:22px;color:var(--manta-title);margin:0 0 4px;font-weight:600}
+h2.sec .num{color:var(--manta-accent)}
+.lead{color:var(--manta-muted);font-size:13.5px;margin:0 0 24px;max-width:900px}
+h3.sub{font-family:'Montserrat',Arial,sans-serif;font-size:15.5px;color:var(--manta-heading);margin:30px 0 4px;font-weight:600}
+.scope-block{border-left:3px solid var(--manta-accent);background:var(--manta-bg-alt);padding:14px 18px;margin:0 0 26px;font-size:13.5px;max-width:900px}
+table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:13px}
+thead th{text-align:left;padding:9px 10px;font-size:11px;font-weight:700;color:var(--manta-muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--manta-border)}
+tbody td{padding:9px 10px;border-bottom:1px solid #F3F4F6;vertical-align:top}
+tbody tr:nth-child(even){background:var(--manta-bg-alt)}
+.device{border:1px solid var(--manta-border);border-radius:4px;margin:18px 0 34px;overflow:hidden}
+.device-head{background:var(--manta-bg-alt);padding:10px 16px;border-bottom:1px solid var(--manta-border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.device-head .dname{font-family:'Montserrat',Arial,sans-serif;font-weight:600;font-size:14.5px;color:var(--manta-heading)}
+.device-head .dtag{font-size:11px;color:#fff;background:var(--manta-accent);padding:2px 9px;border-radius:2px;letter-spacing:.03em}
+.device-body{display:flex;gap:0;flex-wrap:wrap}
+.device-cad{flex:0 0 auto;padding:14px;background:#fff;border-right:1px solid var(--manta-border);display:flex;align-items:center;justify-content:center}
+.device-info{flex:1;min-width:280px;padding:14px 18px;font-size:13px}
+.device-info .field{margin-bottom:9px}
+.device-info .field b{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--manta-muted);margin-bottom:2px;font-weight:700}
+.device-info .norm{display:inline-block;background:#FBEFE5;color:var(--manta-accent-dark);font-size:11.5px;padding:2px 8px;border-radius:2px;margin-right:4px;font-weight:600}
+.kpi-row{display:flex;gap:0;margin:22px 0 30px;flex-wrap:wrap}
+.kpi{text-align:center;padding:12px 28px}
+.kpi .n{font-family:'Montserrat',Arial,sans-serif;font-size:30px;font-weight:700;color:var(--manta-accent)}
+.kpi .l{font-size:12px;color:var(--manta-muted);margin-top:2px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--manta-muted);margin:6px 0 20px;padding:10px 14px;background:var(--manta-bg-alt);border-left:3px solid var(--cad-dim)}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{display:inline-block;width:16px;height:2px;background:var(--cad-line)}
+.legend i.dim{background:var(--cad-dim);height:1px}
+.legend i.fill{width:12px;height:12px;background:var(--cad-fill);border:1px solid var(--cad-line)}
+.footer-note{margin-top:50px;padding-top:16px;border-top:1px solid var(--manta-border);font-size:11.5px;color:var(--manta-muted);display:flex;justify-content:space-between}
+.watermark{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:64px;font-weight:800;color:var(--manta-heading);opacity:.045;pointer-events:none;white-space:nowrap;z-index:0;font-family:'Montserrat',Arial,sans-serif}
+.ficha{border:1px solid var(--manta-border);max-width:520px;font-family:monospace;font-size:12.5px;line-height:1.7;padding:16px 20px;background:var(--manta-bg-alt)}
+.ficha .rule{border-top:1px solid var(--manta-border);margin:8px 0}
+@media(max-width:900px){.layout{flex-direction:column}.sidenav{width:100%;height:auto;position:static;display:flex;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--manta-border)}.content{padding:20px}}
+@media print{.tab{display:block!important}.sidenav{display:none}.content{padding:10px}}
+</style>
+</head>
+<body>
+<div class="watermark">MANTA ASSOCIADOS</div>
+<div class="topbar">
+  <img src="data:image/png;base64,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" alt="Manta Associados">
+  <div class="title-block">
+    <h1>Dispositivos Viários · Interconexões e Segurança</h1>
+    <div class="sub">Referência Técnica — Uso Interno Manta Associados · Classificação DNIT/CONTRAN, aplicação em nível e desnível</div>
+  </div>
+  <div class="ver">v1.0 · 29/07/2026<br>Interno</div>
+</div>
+<div class="layout">
+  <div class="sidenav" id="sidenav">
+    <div class="grp">Guia</div>
+    <button class="tabbtn active" data-tab="t1">1. Escopo &amp; Critérios</button>
+    <div class="grp">Em Nível</div>
+    <button class="tabbtn" data-tab="t2">2. Interseções em Nível</button>
+    <div class="grp">Em Desnível (com ramos)</div>
+    <button class="tabbtn" data-tab="t3">3. Trombeta &amp; Diamante</button>
+    <button class="tabbtn" data-tab="t4">4. Trevo Completo &amp; Parcial</button>
+    <button class="tabbtn" data-tab="t5">5. Direcional &amp; Semidirecional</button>
+    <div class="grp">Segurança Viária</div>
+    <button class="tabbtn" data-tab="t6">6. Defensas &amp; Barreiras</button>
+    <button class="tabbtn" data-tab="t7">7. Atenuadores &amp; Auxiliares</button>
+    <div class="grp">Referência</div>
+    <button class="tabbtn" data-tab="t8">8. Quadro Comparativo</button>
+    <button class="tabbtn" data-tab="t9">9. Fontes &amp; Ficha Técnica</button>
+  </div>
+  <div class="content" id="content">
+    <div class="tab active" id="t1">
+      <h2 class="sec"><span class="num">1.</span> Escopo &amp; Critérios de Enquadramento</h2>
+      <p class="lead">Guia técnico ilustrado com desenhos esquemáticos em planta (estilo CAD) dos principais dispositivos rodoviários — interconexões em nível e em desnível, e dispositivos de segurança viária — com a norma aplicável e o critério de uso de cada um.</p>
+      <div class="scope-block">
+        <b>Objeto:</b> Referência técnica interna Manta Associados para apoio a projetos de duplicação, concessão e EVTEA rodoviário.<br>
+        <b>Fontes normativas base:</b> DNIT/IPR-718 (Manual de Projeto de Interseções, 2ª ed. 2005); Manual Brasileiro de Sinalização de Trânsito — CONTRAN (Vol. I a VII); Manual de Projeto e Práticas Operacionais para Segurança nas Rodovias — DNIT; Manual de Fiscalização de Rodovias Federais Concedidas — ANTT.<br>
+        <b>Uso:</b> Interno / apoio a decisão de enquadramento geométrico e checagem de conformidade normativa.
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="n">2</div><div class="l">Grandes Grupos<br>(Nível / Desnível)</div></div>
+        <div class="kpi"><div class="n">9</div><div class="l">Tipos de Interconexão<br>Classificados</div></div>
+        <div class="kpi"><div class="n">4</div><div class="l">Dispositivos de<br>Segurança Viária</div></div>
+        <div class="kpi"><div class="n">5</div><div class="l">Normas-Base<br>Consultadas</div></div>
+      </div>
+      <h3 class="sub">1.1 Dois grandes grupos de cruzamento</h3>
+      <table>
+        <thead><tr><th style="width:22%">Grupo</th><th>Definição</th><th style="width:20%">Norma-base</th></tr></thead>
+        <tbody>
+          <tr><td><b>Interseção em Nível</b></td><td>Vias se cruzam no mesmo plano/greide; conflitos resolvidos por sinalização, canalização ou rótula.</td><td class="norm">DNIT IPR-718 Cap.8</td></tr>
+          <tr><td><b>Interconexão em Desnível — sem ramos</b></td><td>Cruzamento em níveis diferentes, sem troca de fluxo entre as vias (apenas transposição de greides).</td><td class="norm">DNIT IPR-718 Cap.7</td></tr>
+          <tr><td><b>Interconexão em Desnível — com ramos</b></td><td>Cruzamento em desnível com ramos que permitem a troca de fluxo veicular entre as vias (trevo, diamante, direcional etc.).</td><td class="norm">DNIT IPR-718 Cap.7</td></tr>
+        </tbody>
+      </table>
+      <h3 class="sub">1.2 Critérios de enquadramento (resumo)</h3>
+      <table>
+        <thead><tr><th>Critério</th><th>Influência no tipo de dispositivo</th></tr></thead>
+        <tbody>
+          <tr><td>VMD / VHP (volume de tráfego, ano de projeto = 10º ano)</td><td>Define a necessidade de nível diferente e o número de faixas dos ramos</td></tr>
+          <tr><td>Classe da via / velocidade de projeto</td><td>Define raios mínimos de ramos e comprimentos de aceleração/desaceleração</td></tr>
+          <tr><td>Disponibilidade de área / topografia</td><td>Favorece trevo parcial (PARCLO) ou direcional em áreas restritas; trevo completo exige mais área</td></tr>
+          <tr><td>Necessidade de parada na via secundária</td><td>Trevo completo e trevo parcial evitam sinalização semafórica na via secundária</td></tr>
+          <tr><td>Movimentos de conversão à esquerda de alto volume</td><td>Favorece ramos direcionais/semidirecionais</td></tr>
+        </tbody>
+      </table>
+      <div class="legend">
+        <span><i style="background:#FFC629"></i> Eixo — sentidos opostos (amarela, CONTRAN)</span>
+        <span><i style="background:#FFFFFF;border:1px solid #9CA3AF"></i> Bordo/faixa — mesmo sentido (branca, CONTRAN)</span>
+        <span><i class="dim"></i> Linha de cota</span>
+        <span><i class="fill"></i> Pavimento (asfalto)</span>
+      </div>
+      <p class="lead" style="margin-top:-10px;font-size:12px">Convenção de cores conforme Manual Brasileiro de Sinalização de Trânsito — CONTRAN (Vol. IV) e Norma DNIT 100/2018-ES: <b>amarelo</b> regulamenta fluxos de sentidos opostos (eixo); <b>branco</b> regulamenta fluxos de mesmo sentido, delimita faixas e bordos de pista.</p>
+    </div>
+    <div class="tab" id="t2">
+      <h2 class="sec"><span class="num">2.</span> Interseções em Nível</h2>
+      <p class="lead">Cruzamento no mesmo plano. Aplicação típica em rodovias de pista simples, acessos e vias urbanas/rurais de menor volume.</p>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">2.1 · Interseção em T (ou Y)</span><span class="dtag">EM NÍVEL</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="260" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9CA3AF"/></marker></defs>
+  <rect x="0" y="100" width="360" height="60" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <rect x="150" y="0" width="60" height="100" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <!-- bordo branco (mesmo sentido) -->
+  <line x1="0" y1="104" x2="150" y2="104" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="210" y1="104" x2="360" y2="104" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="156" x2="150" y2="156" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="210" y1="156" x2="360" y2="156" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="154" y1="0" x2="154" y2="100" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="206" y1="0" x2="206" y2="100" stroke="#FFFFFF" stroke-width="1.6"/>
+  <!-- eixo amarelo (sentidos opostos) -->
+  <line x1="0" y1="130" x2="150" y2="130" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <line x1="210" y1="130" x2="360" y2="130" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <line x1="180" y1="0" x2="180" y2="100" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <line x1="20" y1="82" x2="20" y2="100" stroke="#9CA3AF" stroke-width="1"/>
+  <line x1="20" y1="88" x2="150" y2="88" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar1)" marker-start="url(#ar1)"/>
+  <text x="60" y="84" font-family="monospace" font-size="9" fill="#6B7280">via secundária (T)</text>
+  <text x="14" y="200" font-family="monospace" font-size="9" fill="#374151">via principal</text>
+  <line x1="0" y1="172" x2="360" y2="172" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar1)" marker-start="url(#ar1)"/>
+  <text x="150" y="186" font-family="monospace" font-size="9" fill="#6B7280">L = 2x3,60 + acost.</text>
+  <line x1="150" y1="8" x2="210" y2="8" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar1)" marker-start="url(#ar1)"/>
+  <text x="152" y="20" font-family="monospace" font-size="9" fill="#6B7280">6,00 m</text>
+  <path d="M150,100 Q168,118 180,130" fill="none" stroke="#1F2937" stroke-width="1.2" stroke-dasharray="2 3"/>
+  <path d="M210,100 Q192,118 180,130" fill="none" stroke="#1F2937" stroke-width="1.2" stroke-dasharray="2 3"/>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> Cap. 6 — Classificação das Interseções</div>
+            <div class="field"><b>Onde se aplica</b> Entroncamento de via secundária/acesso em rodovia de pista simples; baixo a médio VMD; sem justificativa técnica/econômica para desnível.</div>
+            <div class="field"><b>Nível ou desnível</b> Em nível — travessia direta, sem transposição de greide.</div>
+            <div class="field"><b>Observação de projeto</b> Requer faixa de acomodação/desaceleração na via principal quando VHP de conversão for relevante (DNIT IPR-718, Cap. 8).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">2.2 · Rótula / Rotatória (Giratório em nível)</span><span class="dtag">EM NÍVEL</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="260" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9CA3AF"/></marker></defs>
+  <rect x="0" y="110" width="360" height="40" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <rect x="160" y="0" width="40" height="260" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <!-- bordo branco das vias de acesso -->
+  <line x1="0" y1="114" x2="140" y2="114" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="146" x2="140" y2="146" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="220" y1="114" x2="360" y2="114" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="220" y1="146" x2="360" y2="146" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="164" y1="0" x2="164" y2="84" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="196" y1="0" x2="196" y2="84" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="164" y1="176" x2="164" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="196" y1="176" x2="196" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <!-- eixo amarelo das vias de acesso -->
+  <line x1="0" y1="130" x2="140" y2="130" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <line x1="220" y1="130" x2="360" y2="130" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <line x1="180" y1="0" x2="180" y2="84" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <line x1="180" y1="176" x2="180" y2="260" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <!-- anel de circulação (um sentido) -->
+  <circle cx="180" cy="130" r="46" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <circle cx="180" cy="130" r="22" fill="#A9D8A6" stroke="#1F2937" stroke-width="1"/>
+  <circle cx="180" cy="130" r="43" fill="none" stroke="#FFFFFF" stroke-width="1.6"/>
+  <circle cx="180" cy="130" r="25" fill="none" stroke="#FFFFFF" stroke-width="1.6"/>
+  <text x="158" y="134" font-family="monospace" font-size="8" fill="#274a17">ilha central</text>
+  <line x1="220" y1="90" x2="260" y2="90" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar2)"/>
+  <text x="222" y="84" font-family="monospace" font-size="9" fill="#6B7280">R ext. = 46 m</text>
+  <line x1="180" y1="130" x2="200" y2="130" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar2)"/>
+  <text x="182" y="146" font-family="monospace" font-size="8.5" fill="#374151">R int.=22m</text>
+  <path d="M300,120 a30,30 0 0,1 0,20" fill="none" stroke="#1F2937" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="270" y="240" font-family="monospace" font-size="9" fill="#6B7280">4 acessos — via secundária dá passagem</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> Cap. 8 — item Giratório / Rótula</div>
+            <div class="field"><b>Onde se aplica</b> Entroncamentos com múltiplos acessos e volumes equilibrados entre vias; reduz severidade de acidentes (conflitos convergentes, não frontais).</div>
+            <div class="field"><b>Nível ou desnível</b> Em nível (rótula em desnível existe, porém pouco usual no Brasil rural — tratada como Giratório no Cap.7 do IPR-718 quando integra interconexão).</div>
+            <div class="field"><b>Observação</b> Estudo de caso citado nas referências aponta rótula como um dos tipos com maior índice de acidentes quando mal dimensionada — atenção a raios e sinalização de aproximação.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab" id="t3">
+      <h2 class="sec"><span class="num">3.</span> Interconexões em Desnível — Trombeta &amp; Diamante</h2>
+      <p class="lead">Cruzamento em níveis diferentes com ramos de ligação. Uso em rodovias de pista dupla / classe 0 e IA, entroncamentos e acessos a vias arteriais.</p>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">3.1 · Trombeta</span><span class="dtag">DESNÍVEL · 3 RAMOS</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="260" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar3" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9CA3AF"/></marker></defs>
+  <rect x="0" y="200" width="360" height="30" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="204" x2="360" y2="204" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="226" x2="360" y2="226" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="215" x2="360" y2="215" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <text x="10" y="245" font-family="monospace" font-size="9" fill="#6B7280">rodovia principal (fluxo livre — passa sob o ramal)</text>
+  <rect x="230" y="0" width="26" height="200" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="234" y1="0" x2="234" y2="200" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="252" y1="0" x2="252" y2="200" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="243" y1="0" x2="243" y2="200" stroke="#FFC629" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="262" y="20" font-family="monospace" font-size="9" fill="#6B7280">ramal secundário (2 sentidos)</text>
+  <path d="M256,150 C 320,150 320,60 250,55" fill="none" stroke="#4B5563" stroke-width="5"/>
+  <path d="M230,150 C 190,150 190,110 210,90 C 225,75 240,68 250,63" fill="none" stroke="#4B5563" stroke-width="5"/>
+  <path d="M256,190 C 300,192 300,215 270,215" fill="none" stroke="#4B5563" stroke-width="5"/>
+  <path d="M230,190 C 200,192 200,215 230,215" fill="none" stroke="#4B5563" stroke-width="5"/>
+  <text x="260" y="120" font-family="monospace" font-size="8" fill="#8B4A2D">laço ~270°</text>
+  <line x1="330" y1="150" x2="330" y2="200" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar3)" marker-start="url(#ar3)"/>
+  <text x="333" y="180" font-family="monospace" font-size="8" fill="#6B7280">R min. laço</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> Cap. 7 — Interconexão em 'T'/'Y', variante Trombeta</div>
+            <div class="field"><b>Onde se aplica</b> Encontro de uma rodovia principal com um único ramal/acesso (3 ramos); quando um dos ramos precisa girar próximo de 270°.</div>
+            <div class="field"><b>Nível ou desnível</b> Desnível com ramos — transposição de greide + laço de conversão.</div>
+            <div class="field"><b>Observação</b> Raio do laço é o elemento crítico de dimensionamento — deve respeitar velocidade de operação mínima do ramo (DNIT IPR-718, critérios de seleção Cap.7).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">3.2 · Diamante</span><span class="dtag">DESNÍVEL · 4 RAMOS</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="260" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar4" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9CA3AF"/></marker></defs>
+  <rect x="0" y="100" width="360" height="40" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="104" x2="360" y2="104" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="136" x2="360" y2="136" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="120" x2="360" y2="120" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <text x="10" y="95" font-family="monospace" font-size="9" fill="#6B7280">rodovia principal (via de fluxo livre)</text>
+  <rect x="160" y="0" width="40" height="260" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="164" y1="0" x2="164" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="196" y1="0" x2="196" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="180" y1="0" x2="180" y2="60" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <line x1="180" y1="180" x2="180" y2="260" stroke="#FFC629" stroke-width="2.2" stroke-dasharray="7 6"/>
+  <text x="205" y="252" font-family="monospace" font-size="9" fill="#6B7280">via secundária (interseções em nível nas pontas)</text>
+  <path d="M90,100 Q125,80 160,60" fill="none" stroke="#4B5563" stroke-width="4.5"/>
+  <path d="M200,60 Q235,80 270,100" fill="none" stroke="#4B5563" stroke-width="4.5"/>
+  <path d="M90,140 Q125,160 160,180" fill="none" stroke="#4B5563" stroke-width="4.5"/>
+  <path d="M200,180 Q235,160 270,140" fill="none" stroke="#4B5563" stroke-width="4.5"/>
+  <circle cx="160" cy="60" r="3" fill="#E07B3D"/><circle cx="200" cy="60" r="3" fill="#E07B3D"/>
+  <circle cx="160" cy="180" r="3" fill="#E07B3D"/><circle cx="200" cy="180" r="3" fill="#E07B3D"/>
+  <text x="95" y="55" font-family="monospace" font-size="8" fill="#8B4A2D">saída à direita antes do cruzamento</text>
+  <text x="95" y="200" font-family="monospace" font-size="8" fill="#8B4A2D">entrada à direita após o cruzamento</text>
+  <line x1="30" y1="82" x2="30" y2="100" stroke="#9CA3AF" stroke-width="1"/>
+  <line x1="30" y1="90" x2="160" y2="90" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar4)"/>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> Cap. 7 — Diamante</div>
+            <div class="field"><b>Onde se aplica</b> Tipo mais comum e econômico; a via principal mantém fluxo livre e as conexões com a via secundária ficam em nível, controladas por sinalização.</div>
+            <div class="field"><b>Nível ou desnível</b> Desnível com ramos — a via principal apresenta, para cada sentido, saída à direita antes do cruzamento e entrada à direita após.</div>
+            <div class="field"><b>Observação</b> Exige menor área que trevo completo; requer controle de tráfego (semáforo ou rótula) nos pontos de conexão da via secundária.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab" id="t4">
+      <h2 class="sec"><span class="num">4.</span> Trevo Completo &amp; Trevo Parcial (PARCLO)</h2>
+      <p class="lead">Uso em rodovias de maior volume, sem necessidade de sinalização semafórica na via secundária. O trevo parcial (PARCLO) é a variante usada quando há restrição de área.</p>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">4.1 · Trevo Completo (Cloverleaf)</span><span class="dtag">DESNÍVEL · 8 RAMOS</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="280" viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="120" width="360" height="40" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="124" x2="360" y2="124" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="156" x2="360" y2="156" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="140" x2="360" y2="140" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <rect x="160" y="0" width="40" height="280" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="164" y1="0" x2="164" y2="280" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="196" y1="0" x2="196" y2="280" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="180" y1="0" x2="180" y2="280" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <!-- 4 loops -->
+  <circle cx="141" cy="101" r="27" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <circle cx="219" cy="101" r="27" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <circle cx="141" cy="179" r="27" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <circle cx="219" cy="179" r="27" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <!-- external connectors (direct right turns) -->
+  <path d="M270,120 Q300,120 300,140 Q300,160 270,160" fill="none" stroke="#4B5563" stroke-width="3.5"/>
+  <path d="M90,120 Q60,120 60,140 Q60,160 90,160" fill="none" stroke="#4B5563" stroke-width="3.5"/>
+  <text x="6" y="112" font-family="monospace" font-size="8" fill="#8B4A2D">conexão externa = giro à direita</text>
+  <text x="128" y="101" font-family="monospace" font-size="7.5" fill="#8B4A2D" transform="rotate(0)">loop</text>
+  <text x="206" y="101" font-family="monospace" font-size="7.5" fill="#8B4A2D">loop</text>
+  <text x="128" y="182" font-family="monospace" font-size="7.5" fill="#8B4A2D">loop</text>
+  <text x="206" y="182" font-family="monospace" font-size="7.5" fill="#8B4A2D">loop</text>
+  <text x="255" y="255" font-family="monospace" font-size="8.5" fill="#6B7280">4 quadrantes com laço — sem sinalização na via secundária</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> Cap. 7 — Trevo Completo</div>
+            <div class="field"><b>Onde se aplica</b> Nos quatro quadrantes, conversões à esquerda por laços (loops) e à direita por conexões externas — elimina cruzamentos em nível.</div>
+            <div class="field"><b>Nível ou desnível</b> Desnível com ramos — 8 ramos (4 loops + 4 conexões diretas).</div>
+            <div class="field"><b>Observação</b> Exige a maior área entre os tipos de interconexão; entrecruzamento (weaving) entre loop e conexão direta é ponto crítico de projeto e segurança.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">4.2 · Trevo Parcial — Dois Quadrantes (PARCLO A2 / B2)</span><span class="dtag">DESNÍVEL · 4 RAMOS</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="260" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="110" width="360" height="40" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="114" x2="360" y2="114" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="146" x2="360" y2="146" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="130" x2="360" y2="130" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <rect x="160" y="0" width="40" height="260" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="164" y1="0" x2="164" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="196" y1="0" x2="196" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="180" y1="0" x2="180" y2="260" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <!-- only 2 loops (quadrant top-left and bottom-right = A2 config) -->
+  <circle cx="141" cy="90" r="27" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <path d="M270,110 Q300,110 300,130 Q300,150 270,150" fill="none" stroke="#4B5563" stroke-width="3.5"/>
+  <circle cx="219" cy="170" r="27" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <path d="M90,110 Q60,110 60,130 Q60,150 90,150" fill="none" stroke="#4B5563" stroke-width="3.5"/>
+  <text x="110" y="55" font-family="monospace" font-size="8" fill="#8B4A2D">loop (acesso) — quadrante NO</text>
+  <text x="210" y="215" font-family="monospace" font-size="8" fill="#8B4A2D">loop (saída) — quadrante SE</text>
+  <text x="245" y="245" font-family="monospace" font-size="8.5" fill="#6B7280">demais quadrantes: ramos diretos com interseção controlada na via secundária</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> Cap. 7 — Trevo Parcial (dois quadrantes) · nomenclatura internacional AASHTO: PARCLO A2/B2</div>
+            <div class="field"><b>Onde se aplica</b> Restrição de área ou terreno; comum em rodovias rurais — permite ramos mais longos e velocidades maiores que a versão de 4 quadrantes.</div>
+            <div class="field"><b>Nível ou desnível</b> Desnível com ramos — formado pela eliminação de 2 dos 4 ramos em laço do trevo completo.</div>
+            <div class="field"><b>Observação</b> Ramos de entrada e saída exigem interseção controlada na via arterial secundária (diferente do trevo completo). Config. "A": loop = acesso; "B": loop = saída.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">4.3 · Trevo Parcial — Quatro Quadrantes (PARCLO A4 / B4)</span><span class="dtag">DESNÍVEL · 6 RAMOS</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="260" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="110" width="360" height="40" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="114" x2="360" y2="114" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="146" x2="360" y2="146" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="130" x2="360" y2="130" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <rect x="160" y="0" width="40" height="260" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="164" y1="0" x2="164" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="196" y1="0" x2="196" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="180" y1="0" x2="180" y2="260" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <circle cx="141" cy="90" r="27" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <circle cx="219" cy="90" r="27" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <path d="M270,110 Q300,110 300,130 Q300,150 270,150" fill="none" stroke="#4B5563" stroke-width="3.5"/>
+  <path d="M90,110 Q60,110 60,130 Q60,150 90,150" fill="none" stroke="#4B5563" stroke-width="3.5"/>
+  <text x="245" y="245" font-family="monospace" font-size="8.5" fill="#6B7280">loops no mesmo lado (norte) — conexões diretas ao sul</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> Cap. 7 — Trevo Parcial (quatro quadrantes)</div>
+            <div class="field"><b>Onde se aplica</b> Quando é preciso manter fluxo livre em mais movimentos que a versão de 2 quadrantes, mas ainda sem área para o trevo completo.</div>
+            <div class="field"><b>Nível ou desnível</b> Desnível com ramos — 6 ramos totais (2 loops + 4 conexões diretas).</div>
+            <div class="field"><b>Observação</b> Loops tipicamente do mesmo lado da via principal; reduz entrecruzamento em relação ao trevo completo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab" id="t5">
+      <h2 class="sec"><span class="num">5.</span> Direcional &amp; Semidirecional</h2>
+      <p class="lead">Uso em interconexões entre duas rodovias de fluxo livre (autoestrada × autoestrada), onde os volumes de conversão à esquerda são altos e não podem depender de laços.</p>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">5.1 · Direcional / Semidirecional</span><span class="dtag">DESNÍVEL · MÚLTIPLOS NÍVEIS</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="260" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="120" width="360" height="30" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="123" x2="360" y2="123" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="147" x2="360" y2="147" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="135" x2="360" y2="135" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <rect x="165" y="0" width="30" height="260" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="168" y1="0" x2="168" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="192" y1="0" x2="192" y2="260" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="180" y1="0" x2="180" y2="260" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="8 6"/>
+  <path d="M195,120 C 230,120 260,90 260,60" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <path d="M165,150 C 130,150 100,180 100,210" fill="none" stroke="#4B5563" stroke-width="4"/>
+  <path d="M195,150 Q225,150 225,150 Q260,150 260,180" fill="none" stroke="#4B5563" stroke-width="3.2"/>
+  <path d="M165,120 Q135,120 135,120 Q100,120 100,90" fill="none" stroke="#4B5563" stroke-width="3.2"/>
+  <text x="205" y="55" font-family="monospace" font-size="8" fill="#8B4A2D">ramo direcional (conversão à esq., sem laço)</text>
+  <text x="30" y="230" font-family="monospace" font-size="8" fill="#8B4A2D">ramo direcional oposto</text>
+  <text x="20" y="20" font-family="monospace" font-size="9" fill="#6B7280">autoestrada × autoestrada — 3 níveis de greide</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> Cap. 7 — Direcional / Semidirecional</div>
+            <div class="field"><b>Onde se aplica</b> Encontro de duas rodovias de alto padrão (fluxo livre nas duas); movimentos de conversão à esquerda com volume elevado.</div>
+            <div class="field"><b>Nível ou desnível</b> Desnível com ramos — quando todos os movimentos são por ramos direcionais, chama-se "totalmente direcional"; com ramos semidirecionais para conversão à esquerda, "semidirecional".</div>
+            <div class="field"><b>Observação</b> Maior custo de obra (múltiplos viadutos/OAEs); usado apenas quando o volume não justifica trevo/PARCLO por gerar entrecruzamento excessivo.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub">5.2 Critério comparativo de seleção do tipo de interconexão</h3>
+      <table>
+        <thead><tr><th>Tipo</th><th>Nº de ramos</th><th>Área exigida</th><th>Sinalização na via secundária</th></tr></thead>
+        <tbody>
+          <tr><td>Diamante</td><td>4</td><td>Pequena</td><td>Sim (semáforo/rótula)</td></tr>
+          <tr><td>Trevo Parcial (2 quad.)</td><td>4</td><td>Média</td><td>Parcial</td></tr>
+          <tr><td>Trevo Parcial (4 quad.)</td><td>6</td><td>Média-Grande</td><td>Parcial</td></tr>
+          <tr><td>Trevo Completo</td><td>8</td><td>Grande</td><td>Não</td></tr>
+          <tr><td>Direcional/Semidirecional</td><td>Variável</td><td>Grande (+ OAEs)</td><td>Não</td></tr>
+          <tr><td>Trombeta</td><td>3</td><td>Média</td><td>Não</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab" id="t6">
+      <h2 class="sec"><span class="num">6.</span> Defensas &amp; Barreiras de Segurança</h2>
+      <p class="lead">Dispositivos de contenção que impedem a saída de veículos desgovernados da pista ou seu choque com objetos fixos/outras pistas.</p>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">6.1 · Defensa Metálica (Guard-Rail)</span><span class="dtag">CONTENÇÃO — SEMIFLEXÍVEL</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="200" viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar6" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9CA3AF"/></marker></defs>
+  <rect x="0" y="160" width="360" height="40" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="164" x2="360" y2="164" stroke="#FFFFFF" stroke-width="1.8"/>
+  <text x="10" y="178" font-family="monospace" font-size="8.5" fill="#F3F4F6">bordo de acostamento (faixa branca)</text>
+  <g>
+    <rect x="20" y="90" width="10" height="70" fill="#9CA3AF"/>
+    <rect x="90" y="90" width="10" height="70" fill="#9CA3AF"/>
+    <rect x="160" y="90" width="10" height="70" fill="#9CA3AF"/>
+    <rect x="230" y="90" width="10" height="70" fill="#9CA3AF"/>
+    <rect x="300" y="90" width="10" height="70" fill="#9CA3AF"/>
+    <path d="M15,110 Q180,95 355,110" fill="none" stroke="#D1D5DB" stroke-width="6"/>
+    <path d="M15,110 Q180,95 355,110" fill="none" stroke="#1F2937" stroke-width="1" stroke-dasharray="20 4"/>
+  </g>
+  <line x1="20" y1="80" x2="90" y2="80" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar6)" marker-start="url(#ar6)"/>
+  <text x="35" y="74" font-family="monospace" font-size="8" fill="#6B7280">e = 2,00 a 4,00 m</text>
+  <line x1="345" y1="90" x2="345" y2="160" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar6)" marker-start="url(#ar6)"/>
+  <text x="348" y="128" font-family="monospace" font-size="8" fill="#6B7280">h ≈ 0,70m</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT</span> Manual de Projeto e Práticas Operacionais para Segurança nas Rodovias · fiscalização: <span class="norm">Manual ANTT</span></div>
+            <div class="field"><b>Onde se aplica</b> Ao longo de toda a rodovia, em pontos com "área livre" insuficiente — próximo a taludes de corte/aterro, OAEs, obstáculos fixos, canteiro central.</div>
+            <div class="field"><b>Nível ou desnível</b> Ambos — obrigatória especialmente em acessos, aproximações de OAE e transposições em desnível.</div>
+            <div class="field"><b>Observação</b> Manual ANTT cobra recuperação/substituição quando a defensa metálica apresenta dano; dimensionamento de área livre varia com velocidade de projeto, VMD e geometria (curvatura, corte/aterro).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">6.2 · Barreira Rígida (tipo New Jersey / Single Slope)</span><span class="dtag">CONTENÇÃO — RÍGIDA</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="200" viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar7" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9CA3AF"/></marker></defs>
+  <rect x="0" y="170" width="360" height="30" fill="#6B7280" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="174" x2="360" y2="174" stroke="#FFFFFF" stroke-width="1.8"/>
+  <!-- cross-section profile New Jersey -->
+  <path d="M140,170 L140,140 L150,90 L165,60 L195,60 L210,90 L220,140 L220,170 Z" fill="#E5E7EB" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="120" y1="60" x2="120" y2="170" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar7)" marker-start="url(#ar7)"/>
+  <text x="65" y="118" font-family="monospace" font-size="8.5" fill="#6B7280">h = 0,81 a 1,07m</text>
+  <line x1="140" y1="185" x2="220" y2="185" stroke="#9CA3AF" stroke-width="1" marker-end="url(#ar7)" marker-start="url(#ar7)"/>
+  <text x="145" y="198" font-family="monospace" font-size="8" fill="#F3F4F6">base ≈ 0,60m</text>
+  <text x="240" y="80" font-family="monospace" font-size="8" fill="#8B4A2D">estrutura rígida de concreto, indeformável</text>
+  <text x="240" y="95" font-family="monospace" font-size="8" fill="#8B4A2D">— reorienta o veículo, longitudinal à pista</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT IPR-718</span> — definição de Barreira (glossário) · <span class="norm">Manual ANTT</span> — item 4.2 fiscalização</div>
+            <div class="field"><b>Onde se aplica</b> Canteiro central estreito, pistas adjacentes, viadutos, aproximações de OAE — onde o afastamento não permite defensa semiflexível.</div>
+            <div class="field"><b>Nível ou desnível</b> Ambos — muito usada em desníveis (viadutos, alças) por sua rigidez e menor necessidade de área livre atrás.</div>
+            <div class="field"><b>Observação</b> Estrutura rígida, geralmente de concreto, disposta longitudinalmente à pista, com o objetivo de impedir que veículos desgovernados saiam da plataforma ou invadam pistas adjacentes, reorientando a trajetória do veículo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab" id="t7">
+      <h2 class="sec"><span class="num">7.</span> Atenuadores de Impacto &amp; Dispositivos Auxiliares</h2>
+      <p class="lead">Dispositivos complementares que absorvem energia de impacto ou orientam/delimitam o tráfego, sem função de contenção estrutural contínua.</p>
+
+      <div class="device">
+        <div class="device-head"><span class="dname">7.1 · Atenuador de Impacto</span><span class="dtag">ABSORÇÃO DE ENERGIA</span></div>
+        <div class="device-body">
+          <div class="device-cad">
+<svg width="360" height="220" viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar8" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9CA3AF"/></marker></defs>
+  <path d="M0,60 L180,60 L230,120 L230,220 L0,220 Z" fill="#6B7280"/>
+  <path d="M0,60 L180,60 L230,120 L230,220" fill="none" stroke="#1F2937" stroke-width="1.5"/>
+  <path d="M0,160 L120,160 L230,120" fill="none" stroke="#1F2937" stroke-width="1.5"/>
+  <line x1="0" y1="64" x2="176" y2="64" stroke="#FFFFFF" stroke-width="1.6"/>
+  <line x1="0" y1="216" x2="226" y2="216" stroke="#FFFFFF" stroke-width="1.6"/>
+  <text x="6" y="50" font-family="monospace" font-size="8.5" fill="#6B7280">saída / bifurcação de ramo</text>
+  <!-- área do nariz (gore) hachurada em branco - MAN -->
+  <g stroke="#FFFFFF" stroke-width="2.2">
+    <line x1="130" y1="120" x2="118" y2="160"/>
+    <line x1="140" y1="118" x2="126" y2="164"/>
+    <line x1="150" y1="116" x2="134" y2="168"/>
+    <line x1="160" y1="114" x2="142" y2="172"/>
+    <line x1="170" y1="112" x2="150" y2="176"/>
+    <line x1="180" y1="110" x2="158" y2="180"/>
+    <line x1="190" y1="112" x2="166" y2="184"/>
+    <line x1="200" y1="115" x2="176" y2="188"/>
+  </g>
+  <!-- atenuador: módulos chevron preto/amarelo, padrão real -->
+  <g>
+    <rect x="132" y="96" width="18" height="18" fill="#1F2937" stroke="#1F2937" stroke-width="1"/>
+    <rect x="150" y="99" width="16" height="15" fill="#FFC629" stroke="#1F2937" stroke-width="1"/>
+    <rect x="166" y="102" width="14" height="12" fill="#1F2937" stroke="#1F2937" stroke-width="1"/>
+    <rect x="180" y="105" width="10" height="9" fill="#FFC629" stroke="#1F2937" stroke-width="1"/>
+  </g>
+  <text x="120" y="88" font-family="monospace" font-size="8" fill="#8B4A2D">atenuador (módulos chevron pto/amarelo)</text>
+  <text x="90" y="205" font-family="monospace" font-size="8.5" fill="#F3F4F6">área do nariz (gore) — MAN, hachura branca</text>
+  <line x1="130" y1="130" x2="188" y2="130" stroke="#374151" stroke-width="1" marker-end="url(#ar8)" marker-start="url(#ar8)"/>
+  <text x="132" y="143" font-family="monospace" font-size="8" fill="#F3F4F6">compr. conforme velocidade de projeto</text>
+</svg>
+          </div>
+          <div class="device-info">
+            <div class="field"><b>Norma aplicável</b><span class="norm">DNIT</span> Manual de Projeto e Práticas Operacionais para Segurança nas Rodovias · citado nos PERs ANTT junto a defensas e barreiras</div>
+            <div class="field"><b>Onde se aplica</b> Extremidade de obstáculos fixos na área do nariz (gore) de saídas/bifurcações, início de barreiras rígidas, pilares de viaduto próximos à pista.</div>
+            <div class="field"><b>Nível ou desnível</b> Predominante em desnível — nariz de ramos de saída e aproximação de pilares de OAE.</div>
+            <div class="field"><b>Observação</b> Dimensionado para absorver energia cinética do impacto conforme a velocidade de projeto do trecho; requer manutenção e substituição pós-impacto.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub">7.2 Dispositivos auxiliares de sinalização (CONTRAN Vol. VI)</h3>
+      <table>
+        <thead><tr><th style="width:24%">Dispositivo</th><th>Função</th><th style="width:16%">Norma</th></tr></thead>
+        <tbody>
+          <tr><td>Tachas e tachões refletivos</td><td>Delimitam pista, faixas de rolamento e áreas de proibição de mudança de faixa; complementam sinalização horizontal.</td><td class="norm">CONTRAN Vol. VI</td></tr>
+          <tr><td>Balizadores refletivos</td><td>Orientam o traçado em curvas e aproximações noturnas/chuva.</td><td class="norm">CONTRAN Vol. VI</td></tr>
+          <tr><td>Cones e dispositivos balizadores móveis</td><td>Sinalização provisória quando o pavimento úmido impede demarcação horizontal definitiva.</td><td class="norm">PER ANTT / CONTRAN Vol. VII</td></tr>
+          <tr><td>Dispositivo anti-ofuscante</td><td>Instalado no canteiro central para reduzir ofuscamento pelos faróis do sentido oposto.</td><td class="norm">Manual ANTT — item 4.4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab" id="t8">
+      <h2 class="sec"><span class="num">8.</span> Quadro Comparativo Geral</h2>
+      <p class="lead">Consolidação de todos os dispositivos tratados neste guia, com norma, aplicação e enquadramento nível/desnível.</p>
+      <table>
+        <thead><tr><th style="width:20%">Dispositivo</th><th style="width:10%">Nível/Desnível</th><th style="width:16%">Norma</th><th>Onde se aplica</th></tr></thead>
+        <tbody>
+          <tr><td>Interseção em T/Y</td><td>Em nível</td><td class="norm">DNIT IPR-718</td><td>Entroncamento de acesso/via secundária, baixo-médio VMD</td></tr>
+          <tr><td>Rótula/Rotatória</td><td>Em nível</td><td class="norm">DNIT IPR-718</td><td>Volumes equilibrados entre acessos, redução de conflitos frontais</td></tr>
+          <tr><td>Trombeta</td><td>Desnível (3 ramos)</td><td class="norm">DNIT IPR-718</td><td>Rodovia principal x ramal único de acesso</td></tr>
+          <tr><td>Diamante</td><td>Desnível (4 ramos)</td><td class="norm">DNIT IPR-718</td><td>Tipo mais comum/econômico; via secundária com controle em nível</td></tr>
+          <tr><td>Trevo Completo</td><td>Desnível (8 ramos)</td><td class="norm">DNIT IPR-718</td><td>Alto volume, elimina qualquer sinalização na via secundária</td></tr>
+          <tr><td>Trevo Parcial (2/4 quad. — PARCLO)</td><td>Desnível (4-6 ramos)</td><td class="norm">DNIT IPR-718</td><td>Restrição de área/terreno rural; termo internacional PARCLO A/B</td></tr>
+          <tr><td>Direcional/Semidirecional</td><td>Desnível (múltiplos níveis)</td><td class="norm">DNIT IPR-718</td><td>Autoestrada x autoestrada, alto volume de conversão à esquerda</td></tr>
+          <tr><td>Defensa metálica</td><td>Ambos</td><td class="norm">DNIT / ANTT</td><td>Área livre insuficiente, taludes, OAEs, canteiro central</td></tr>
+          <tr><td>Barreira rígida (New Jersey)</td><td>Ambos (+ desnível)</td><td class="norm">DNIT / ANTT</td><td>Canteiro estreito, viadutos, pistas adjacentes</td></tr>
+          <tr><td>Atenuador de impacto</td><td>Predomina desnível</td><td class="norm">DNIT / ANTT</td><td>Nariz de saída/bifurcação, pilares de OAE</td></tr>
+          <tr><td>Tachas/tachões/balizadores</td><td>Ambos</td><td class="norm">CONTRAN Vol. VI</td><td>Delimitação de pista e faixas, orientação noturna</td></tr>
+          <tr><td>Dispositivo anti-ofuscante</td><td>Ambos</td><td class="norm">Manual ANTT</td><td>Canteiro central, redução de ofuscamento</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab" id="t9">
+      <h2 class="sec"><span class="num">9.</span> Fontes &amp; Ficha Técnica</h2>
+      <h3 class="sub">9.1 Fontes normativas consultadas</h3>
+      <table>
+        <thead><tr><th style="width:30%">Documento</th><th>Órgão / Publicação</th></tr></thead>
+        <tbody>
+          <tr><td>Manual de Projeto de Interseções — IPR-718, 2ª ed. (2005)</td><td>DNIT / Instituto de Pesquisas Rodoviárias</td></tr>
+          <tr><td>Manual Brasileiro de Sinalização de Trânsito — Vol. I a VII (2014)</td><td>CONTRAN</td></tr>
+          <tr><td>Manual de Projeto e Práticas Operacionais para Segurança nas Rodovias</td><td>DNIT</td></tr>
+          <tr><td>Manual de Fiscalização de Rodovias Federais Concedidas</td><td>ANTT</td></tr>
+          <tr><td>Anexo 2 — Programa de Exploração da Rodovia (PER), modelo</td><td>Ministério dos Transportes / ANTT</td></tr>
+          <tr><td>Manual de Projeto Geométrico de Travessias Urbanas — IPR-740</td><td>DNIT</td></tr>
+        </tbody>
+      </table>
+      <p class="lead" style="margin-top:14px">Nota de rastreabilidade: a nomenclatura "PARCLO A2/A4/B2/B4" usada neste documento é a classificação internacional (AASHTO/ITE) para o trevo parcial; o DNIT (IPR-718) trata o mesmo dispositivo apenas como "Trevo Parcial (Dois/Quatro Quadrantes)", sem o detalhamento A/B. Ambas as referências foram mantidas para uso comparativo.</p>
+
+      <h3 class="sub">9.2 Ficha Técnica do Documento</h3>
+      <div class="ficha">
+        ═══════════════════════════════════════<br>
+        &nbsp;&nbsp;&nbsp;FICHA TÉCNICA DO DOCUMENTO<br>
+        ═══════════════════════════════════════<br>
+        Cliente:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interno<br>
+        Projeto:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Referência Técnica — Manta Maestro<br>
+        Documento:&nbsp;&nbsp;&nbsp;&nbsp;Dispositivos Viários (Interconexões e Segurança)<br>
+        Objeto:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guia ilustrado + normas + aplicação nível/desnível<br>
+        Versão:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1.0<br>
+        <div class="rule"></div>
+        Data Criação:&nbsp;&nbsp;29/07/2026<br>
+        Gerado por:&nbsp;&nbsp;&nbsp;&nbsp;Claude AI — Manta Associados<br>
+        Ferramenta:&nbsp;&nbsp;&nbsp;&nbsp;Claude AI<br>
+        <div class="rule"></div>
+        Classificação:&nbsp;&nbsp;Interno<br>
+        ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MNT-REF-20260729-001<br>
+        ═══════════════════════════════════════<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MANTA ASSOCIADOS<br>
+        ═══════════════════════════════════════
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer-note" style="padding:0 40px">
+  <span>Manta Associados · Referência Técnica Interna</span>
+  <span>Desenvolvido por Manta Associados · v1.0</span>
+</div>
+<script>
+document.querySelectorAll('.tabbtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tabbtn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo(0,0);
+  });
+});
+</script>
+<script id="METADATA" type="application/json">
+{
+  "cliente": "Interno",
+  "projeto": "Referência Técnica — Manta Maestro",
+  "documento": "Dispositivos Viários: Interconexões (Nível/Desnível) e Segurança",
+  "objeto": "Guia técnico ilustrado de dispositivos rodoviários e normas aplicáveis",
+  "versao": "v1.0",
+  "data_criacao": "2026-07-29",
+  "gerador": "Claude AI — Manta Associados",
+  "classificacao": "Interno",
+  "id": "MNT-REF-20260729-001"
+}
+</script>
+</body>
+</html>
