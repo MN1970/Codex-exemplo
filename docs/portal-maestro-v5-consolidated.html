@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercado de Construção Pesada — EUA | Manta v5</title>
+<style>
+:root {
+  --color-accent: #E8500A;
+  --color-accent-dark: #C45A2B;
+  --color-accent-light: #F17A3A;
+  --color-primary-dark: #8B4A2D;
+  --color-primary: #5D3A1A;
+  --color-primary-light: #9D6B4A;
+  --color-text: #2D3E50;
+  --color-text-muted: #6B7280;
+  --color-border: #D1D5DB;
+  --color-bg-alt: #EDE0D4;
+  --color-bg: #E8DCCA;
+  --color-bg-light: #F5F3F0;
+  --color-white: #FFFFFF;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-critical: #EF4444;
+  --type-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --type-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --type-mono: 'Monaco', 'Menlo', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1F2937;
+    --color-bg-light: #2D3E50;
+    --color-bg-alt: #374151;
+    --color-white: #F3F4F6;
+    --color-text: #F3F4F6;
+    --color-text-muted: #9CA3AF;
+    --color-border: #4B5563;
+    --color-accent: #F17A3A;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #1F2937;
+  --color-bg-light: #2D3E50;
+  --color-bg-alt: #374151;
+  --color-white: #F3F4F6;
+  --color-text: #F3F4F6;
+  --color-text-muted: #9CA3AF;
+  --color-border: #4B5563;
+}
+
+:root[data-theme="light"] {
+  --color-bg: #F5F3F0;
+  --color-bg-light: #FFFFFF;
+  --color-bg-alt: #EDE0D4;
+  --color-white: #FFFFFF;
+  --color-text: #1F2937;
+  --color-text-muted: #6B7280;
+  --color-border: #E5E7EB;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--type-body);
+  font-size: 14px;
+  line-height: 1.6;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* === HEADER & NAV === */
+.topbar {
+  height: 6px;
+  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+}
+
+header {
+  padding: 32px 40px 20px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.logo {
+  font-family: var(--type-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.logo span {
+  color: var(--color-accent);
+}
+
+h1 {
+  font-family: var(--type-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-top: 14px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+}
+
+/* === LAYOUT === */
+.container {
+  display: flex;
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: calc(100vh - 140px);
+}
+
+aside {
+  width: 260px;
+  flex-shrink: 0;
+  padding: 24px 0 40px 28px;
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.nav-group {
+  margin-bottom: 24px;
+}
+
+.nav-group-label {
+  font-family: var(--type-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  padding: 12px 14px 8px;
+  margin-bottom: 4px;
+}
+
+aside button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  padding: 8px 14px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+  margin: 1px 0;
+}
+
+aside button:hover {
+  color: var(--color-primary-dark);
+  background: var(--color-bg-alt);
+}
+
+aside button.active {
+  color: var(--color-accent-dark);
+  border-left-color: var(--color-accent);
+  font-weight: 600;
+  background: var(--color-bg-alt);
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 40px 50px;
+}
+
+/* === TYPOGRAPHY === */
+h2 {
+  font-family: var(--type-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 14px;
+  margin-top: 0;
+  line-height: 1.3;
+}
+
+h3 {
+  font-family: var(--type-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 18px 0 10px;
+}
+
+p {
+  margin-bottom: 12px;
+  max-width: 840px;
+  color: var(--color-text);
+}
+
+.note {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 6px 0 14px;
+  padding: 0;
+}
+
+/* === KPIs === */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 14px 0 28px;
+}
+
+.kpi {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.kpi:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 8px rgba(232, 80, 10, 0.08);
+}
+
+.kpi .num {
+  font-family: var(--type-display);
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--color-accent);
+  line-height: 1.1;
+}
+
+.kpi .lbl {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* === TABLES === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 16px;
+  background: var(--color-white);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-border);
+  background: var(--color-bg-light);
+}
+
+td {
+  padding: 10px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-bg-alt);
+}
+
+tbody tr:hover {
+  background: var(--color-bg-light);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.pos {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.neg {
+  color: var(--color-critical);
+  font-weight: 600;
+}
+
+/* === INSIGHT CARDS === */
+.insight-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 4px;
+  padding: 16px;
+  margin: 14px 0;
+  max-width: 840px;
+}
+
+.insight-card h3 {
+  margin-top: 0;
+  font-size: 14px;
+  color: var(--color-primary-dark);
+}
+
+.insight-card p {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+.insight-card.critical {
+  border-left-color: var(--color-critical);
+  background: linear-gradient(to right, rgba(239, 68, 68, 0.04), transparent);
+}
+
+.insight-card.warning {
+  border-left-color: var(--color-warning);
+  background: linear-gradient(to right, rgba(245, 158, 11, 0.04), transparent);
+}
+
+.insight-card.success {
+  border-left-color: var(--color-success);
+  background: linear-gradient(to right, rgba(16, 185, 129, 0.04), transparent);
+}
+
+/* === BARS === */
+.metric-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  max-width: 780px;
+}
+
+.metric-label {
+  width: 200px;
+  font-size: 13px;
+  flex-shrink: 0;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.metric-bar {
+  flex: 1;
+  height: 20px;
+  background: var(--color-bg-alt);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+.metric-value {
+  width: 100px;
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+/* === GRID LAYOUT === */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 28px;
+  align-items: start;
+  max-width: 1100px;
+  margin: 20px 0;
+}
+
+@media (max-width: 1000px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === FOOTER === */
+footer {
+  margin-top: 50px;
+  padding: 24px 40px;
+  border-top: 1px solid var(--color-border);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: var(--color-white);
+}
+
+.watermark {
+  font-family: var(--type-display);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-primary-dark);
+  opacity: 0.15;
+  margin-bottom: 8px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+
+  aside {
+    width: 100%;
+    max-height: none;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0 12px;
+    padding: 12px 16px;
+  }
+
+  .nav-group-label {
+    grid-column: 1 / -1;
+  }
+
+  main {
+    padding: 24px 16px 40px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .kpis {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .grid-2 {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .metric-label {
+    width: 120px;
+    font-size: 12px;
+  }
+
+  .metric-value {
+    width: 80px;
+  }
+
+  main {
+    padding: 16px 12px 32px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .kpi {
+    padding: 12px;
+  }
+
+  .kpi .num {
+    font-size: 22px;
+  }
+}
+
+/* === PANE SYSTEM === */
+.pane {
+  display: none;
+}
+
+.pane.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === DIVIDERS === */
+.section-divider {
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* === THEME TOGGLE === */
+.theme-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all 0.2s;
+  z-index: 100;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+</style>
+</head>
+<body>
+
+<div class="topbar"></div>
+
+<header>
+  <div class="logo">MANTA <span>ASSOCIADOS</span></div>
+  <h1>Mercado de Construção Pesada — Estados Unidos</h1>
+  <div class="subtitle">Visão estratégica · Atores do mercado · Engenharia &amp; Custos · Oportunidades IA — v5 (28/07/2026)</div>
+</header>
+
+<div class="container">
+<aside>
+  <div class="nav-group">
+    <div class="nav-group-label">0. Resumo</div>
+    <button data-pane="pane-0-1" class="nav-btn active">0.1 — Resumo Executivo</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">1. Mercado</div>
+    <button data-pane="pane-1-1" class="nav-btn">1.1 — Panorama 10Y</button>
+    <button data-pane="pane-1-2" class="nav-btn">1.2 — Por Estado</button>
+    <button data-pane="pane-1-3" class="nav-btn">1.3 — Por Segmento</button>
+    <button data-pane="pane-1-4" class="nav-btn">1.4 — Custos &amp; Inflação</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">2. Atores</div>
+    <button data-pane="pane-2-1" class="nav-btn">2.1 — Estados &amp; DOTs</button>
+    <button data-pane="pane-2-2" class="nav-btn">2.2 — P3 &amp; Investidores</button>
+    <button data-pane="pane-2-3" class="nav-btn">2.3 — Construtoras Top 10</button>
+    <button data-pane="pane-2-4" class="nav-btn">2.4 — Consultores</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">3. Engenharia</div>
+    <button data-pane="pane-3-1" class="nav-btn">3.1 — Pavimentos</button>
+    <button data-pane="pane-3-2" class="nav-btn">3.2 — OAE &amp; Preços</button>
+    <button data-pane="pane-3-3" class="nav-btn">3.3 — Insumos</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">4. IA</div>
+    <button data-pane="pane-4-1" class="nav-btn">4.1 — Aplicações &amp; Radar</button>
+  </div>
+</aside>
+
+<main>
+
+<!-- PANE 0.1: Resumo Executivo -->
+<div class="pane active" id="pane-0-1">
+  <h2>Resumo Executivo</h2>
+  <p class="note">Síntese dos 8 insights que estruturam a leitura de mercado para 2026.</p>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$2.164 bi</div>
+      <div class="lbl">Construção total EUA 2025 (−1,4% vs. 2024)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$150,6 bi</div>
+      <div class="lbl">Rodoviário — taxa 2026 (+4,0% a/a)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$671,4 bi</div>
+      <div class="lbl">Receita ENR Top 400 2025 (+11,8%)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">set/2026</div>
+      <div class="lbl">Prazo IIJA — janela crítica de reposicionamento</div>
+    </div>
+  </div>
+
+  <div class="insight-card critical">
+    <h3>1️⃣ Recuo 2025 é platô + inflação, não queda de demanda</h3>
+    <p>2025 foi o 1º recuo real em 6 anos ($2.164 bi, −1,4%), mas não reflete perda de demanda — é o platô do IIJA combinado com inflação de obra consumindo volume físico. Base de entrada: reequilíbrio de estrutura de custos.</p>
+  </div>
+
+  <div class="insight-card warning">
+    <h3>2️⃣ Inflação de obra estrutural é tema central</h3>
+    <p>Ponte NHS +88% (2020→2024, $228→$429/ft²); HCI TxDOT +67% em 4 anos. Achado factual direto — base para tese de reequilíbrio econômico e forense de custo em claims.</p>
+  </div>
+
+  <div class="insight-card warning">
+    <h3>3️⃣ IIJA expira 30/set/2026; H.R. 8870 em tramitação</h3>
+    <p>Janela de 12 meses de reposicionamento estratégico para todo o setor. Lei de superfície vence em out/2026. Pressão por P3, pedágio e receitas estaduais próprias na próxima lei.</p>
+  </div>
+
+  <div class="insight-card success">
+    <h3>4️⃣ Carolina do Norte: 4 frentes simultâneas</h3>
+    <p>NCDOT #7 federal; P3 I-77 Sul cancelado (mai/2026, $600 mi realocados); Charlotte (P3/DOT); Triad (Toyota $5,9 bi); Triangle (biotech $10,8 bi/ano); Oeste (Helene $5,8 bi recuperação). Nenhuma outra região do país concentra tantos ângulos de entrada.</p>
+  </div>
+
+  <div class="insight-card success">
+    <h3>5️⃣ Nicho "Bridge Brasil-EUA" segue sem ocupante</h3>
+    <p>Zero firmas brasileiras/latinas no Top 10 de claims &amp; disputes dos EUA (HKA lidera com 92 peritos). O espaço Manta USA é virgen — entrada via claims, cronograma forense, orçamento forense.</p>
+  </div>
+
+  <div class="insight-card">
+    <h3>6️⃣ Mercado de disputas é opaco — TAM precisa vir de contagem de projetos</h3>
+    <p>Não existe "market size" público de claims de construção nos EUA. Projeção de receita vem da contagem de projetos-alvo (estados + programas + valores), não de agregado de mercado.</p>
+  </div>
+
+  <div class="insight-card">
+    <h3>7️⃣ Aço nos EUA é ~10% mais caro; CBUQ brasileiro é ~15% mais caro</h3>
+    <p>Achados contraintuitivos (tarifa Seção 232 + logística). Bom material de conversa técnica com cliente/parceiro em precificação comparada.</p>
+  </div>
+
+  <div class="insight-card">
+    <h3>8️⃣ Data centers puxam construção total; rodoviário estável em platô alto</h3>
+    <p>2025 foi bifurcação: IA/DC +31,3% no segmento telecom (maior crescimento ENR); construção total cai 1,5% a/a; rodoviário cresce 4% sustentado por funding público.</p>
+  </div>
+
+</div>
+
+<!-- PANE 1.1: Panorama 10 anos -->
+<div class="pane" id="pane-1-1">
+  <h2>Panorama 10 Anos — 2025 Aberto</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$2.164 bi</div>
+      <div class="lbl">Construção total — 2025 (Census C30; −1,4%)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$2,17 tri</div>
+      <div class="lbl">Taxa corrente (SAAR) abr/2026</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$516,8 bi</div>
+      <div class="lbl">Construção pública 2025</div>
+    </div>
+    <div class="kpi">
+      <div class="num">+4,0% a/a</div>
+      <div class="lbl">Rodovias &amp; vias urbanas</div>
+    </div>
+  </div>
+
+  <h3>Composição do investimento rodoviário (~$150 bi/ano)</h3>
+  <div class="metric-row">
+    <div class="metric-label">Estadual + local</div>
+    <div class="metric-bar"><div class="metric-fill" style="width: 62%;"></div></div>
+    <div class="metric-value">~$93 bi (62%)</div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric-label">Federal (FY26)</div>
+    <div class="metric-bar"><div class="metric-fill" style="width: 38%; background: var(--color-accent-dark);"></div></div>
+    <div class="metric-value">$56,8 bi (38%)</div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric-label">Bridge/NEVI/grants</div>
+    <div class="metric-bar"><div class="metric-fill" style="width: 6%; background: var(--color-primary-light);"></div></div>
+    <div class="metric-value">~$9 bi (6%)</div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric-label">P3 / privado</div>
+    <div class="metric-bar"><div class="metric-fill" style="width: 5%; background: var(--color-text-muted);"></div></div>
+    <div class="metric-value">$5–10 bi (5%)</div>
+  </div>
+
+  <div class="section-divider">
+    <h3>Leituras Estratégicas 2026</h3>
+
+    <div class="insight-card success">
+      <h3>Fim do ciclo IIJA</h3>
+      <p>FY 2026 é o último ano; nova lei de superfície vence em out/2026 — janela de reposicionamento para todo o setor. Expectativa: pressão por P3 e receitas próprias.</p>
+    </div>
+
+    <div class="insight-card warning">
+      <h3>Mercado em dois ritmos</h3>
+      <p>Data centers/energia aceleram (~$7 tri de capex IA projetado); construção total cai 1,5% a/a; rodoviário cresce 4% sustentado por funding público.</p>
+    </div>
+
+    <div class="insight-card warning">
+      <h3>Inflação de obra estrutural</h3>
+      <p>Ponte NHS: $228/ft² (2020) → $429/ft² (2024), +88%. HCI TxDOT +67% em 4 anos. Pressão permanente em preços unitários.</p>
+    </div>
+
+    <div class="insight-card success">
+      <h3>Sun Belt lidera demanda</h3>
+      <p>TX, FL, GA, NC, TN combinam crescimento, orçamento federal e P3 — geografia prioritária para entrada nos EUA.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- PANE 1.2: Por Estado -->
+<div class="pane" id="pane-1-2">
+  <h2>Repasse Federal por Estado — FY 2026</h2>
+  <p class="note">Distribuição dos $56,81 bi entre as 51 jurisdições (último ano IIJA).</p>
+
+  <h3>Top 10 Estados — Repasse Federal FHWA FY26</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Estado</th>
+        <th class="num">Repasse ($ mi)</th>
+        <th class="num">% do Total</th>
+        <th>Nota Estratégica</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Texas</strong></td><td class="num">$5.848</td><td class="num">10,3%</td><td>Maior programa; TxDOT UTP $146 bi</td></tr>
+      <tr><td>2</td><td><strong>Califórnia</strong></td><td class="num">$4.206</td><td class="num">7,4%</td><td>SB 1 + manutenção; custos altos</td></tr>
+      <tr><td>3</td><td><strong>Nova York</strong></td><td class="num">$2.870</td><td class="num">5,0%</td><td>Custos unitários mais altos do país</td></tr>
+      <tr><td>4</td><td><strong>Flórida</strong></td><td class="num">$2.720</td><td class="num">4,8%</td><td>Líder P3; I-4, I-275</td></tr>
+      <tr><td>5</td><td><strong>Pensilvânia</strong></td><td class="num">$2.454</td><td class="num">4,3%</td><td>P3 de pontes pioneiro</td></tr>
+      <tr><td>6</td><td><strong>Geórgia</strong></td><td class="num">$2.100</td><td class="num">3,7%</td><td>SR 400 $11 bi — maior P3 greenfield</td></tr>
+      <tr><td>7</td><td><strong>Carolina do Norte</strong></td><td class="num">$1.501</td><td class="num">2,6%</td><td>OPORTUNIDADE: I-77 Sul realocado, 4 frentes</td></tr>
+      <tr><td>8</td><td><strong>Ohio</strong></td><td class="num">$1.925</td><td class="num">3,4%</td><td>Brent Spence Bridge $3,6 bi (com KY)</td></tr>
+      <tr><td>9</td><td><strong>Illinois</strong></td><td class="num">$1.680</td><td class="num">3,0%</td><td>Chicago core; ponte &amp; túneis</td></tr>
+      <tr><td>10</td><td><strong>Michigan</strong></td><td class="num">$1.560</td><td class="num">2,7%</td><td>Infraestrutura manufatura</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PANE 1.3: Por Segmento -->
+<div class="pane" id="pane-1-3">
+  <h2>Mercado por Segmento — 2022 vs. 2025</h2>
+  <p class="note">Quebra ENR/Census. Residencial é maior bloco isolado (+905 bi em 2025).</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Segmento</th>
+        <th class="num">2022 (US$ bi)</th>
+        <th class="num">2025 (US$ bi)</th>
+        <th class="num">Δ</th>
+        <th>Leitura</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Manufatura</strong></td>
+        <td class="num">125,0</td>
+        <td class="num">215,0</td>
+        <td class="pos">+72%</td>
+        <td>Pico CHIPS passou; −12% desde 2024</td>
+      </tr>
+      <tr>
+        <td><strong>Energia</strong></td>
+        <td class="num">121,6</td>
+        <td class="num">172,2</td>
+        <td class="pos">+42%</td>
+        <td>Demanda IA/data centers; gargalo turbinas</td>
+      </tr>
+      <tr>
+        <td><strong>Rodovias</strong></td>
+        <td class="num">115,7</td>
+        <td class="num">146,7</td>
+        <td class="pos">+27%</td>
+        <td>Taxa 2026 $150,6 bi; funding público estável</td>
+      </tr>
+      <tr>
+        <td><strong>Educacional</strong></td>
+        <td class="num">104,0</td>
+        <td class="num">141,0</td>
+        <td class="pos">+36%</td>
+        <td>Bonds municipais</td>
+      </tr>
+      <tr>
+        <td><strong>Data Centers</strong></td>
+        <td class="num">95,4</td>
+        <td class="num">121,5</td>
+        <td class="pos">+27%</td>
+        <td>Telecom +31,3% a/a — maior crescimento</td>
+      </tr>
+      <tr>
+        <td><strong>Saúde</strong></td>
+        <td class="num">58,1</td>
+        <td class="num">76,8</td>
+        <td class="pos">+32%</td>
+        <td>Estável</td>
+      </tr>
+      <tr>
+        <td><strong>Transporte (aero/portos)</strong></td>
+        <td class="num">60,9</td>
+        <td class="num">71,5</td>
+        <td class="pos">+17%</td>
+        <td>Ciclo terminal aeroportuário</td>
+      </tr>
+      <tr>
+        <td><strong>Saneamento</strong></td>
+        <td class="num">33,2</td>
+        <td class="num">53,6</td>
+        <td class="pos">+61%</td>
+        <td>IIJA água — maior alta relativa</td>
+      </tr>
+      <tr>
+        <td><strong>Comunicação</strong></td>
+        <td class="num">24,4</td>
+        <td class="num">28,4</td>
+        <td class="pos">+16%</td>
+        <td>Fibra / BEAD</td>
+      </tr>
+      <tr style="background: var(--color-bg-alt);">
+        <td><strong>Residencial</strong></td>
+        <td class="num">—</td>
+        <td class="num">905,2</td>
+        <td class="neg">−2,6%</td>
+        <td>Maior bloco; queda por juros altos → recupera 2026</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PANE 1.4: Custos & Inflação -->
+<div class="pane" id="pane-1-4">
+  <h2>Custos e Inflação de Obra</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$429/ft²</div>
+      <div class="lbl">Ponte NHS — custo médio substituição (FHWA 2024)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">+88%</div>
+      <div class="lbl">Inflação 2020→2024 ($228→$429/ft²)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">+67%</div>
+      <div class="lbl">Highway Cost Index TxDOT (4 anos)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$115–125/t</div>
+      <div class="lbl">HMA usina — média nacional 2026</div>
+    </div>
+  </div>
+
+  <div class="insight-card critical">
+    <h3>Inflação de ponte é a maior do segmento</h3>
+    <p>De $228/ft² (2020) para $429/ft² (2024) = +88% em 4 anos. Reflete aço, mão-de-obra, energia e encargos. Matéria-prima para reequilíbrio em claims.</p>
+  </div>
+
+  <h3>Encadeamento de aumentos</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Insumo / Índice</th>
+        <th class="num">2020</th>
+        <th class="num">2024</th>
+        <th class="num">Δ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ponte NHS ($/ft²)</td>
+        <td class="num">$228</td>
+        <td class="num">$429</td>
+        <td class="pos">+88%</td>
+      </tr>
+      <tr>
+        <td>HCI TxDOT (índice)</td>
+        <td class="num">100</td>
+        <td class="num">167</td>
+        <td class="pos">+67%</td>
+      </tr>
+      <tr>
+        <td>Aço estrutural ($/t)</td>
+        <td class="num">~$380</td>
+        <td class="num">~$620</td>
+        <td class="pos">+63%</td>
+      </tr>
+      <tr>
+        <td>Concreto usinado ($/yd³)</td>
+        <td class="num">~$140</td>
+        <td class="num">~$185</td>
+        <td class="pos">+32%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PANE 2.1: DOTs & Estados -->
+<div class="pane" id="pane-2-1">
+  <h2>Investidores Públicos — Estados &amp; DOTs</h2>
+  <p class="note">Maiores contratantes do mercado rodoviário (~$150 bi/ano).</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>DOT</th>
+        <th>Programa</th>
+        <th>Contrato de Entrada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>TxDOT</strong></td>
+        <td>$40,4 bi / 2 anos; UTP 10a: $146 bi</td>
+        <td>Prequalif. consulting (GEC, PMC)</td>
+      </tr>
+      <tr>
+        <td><strong>Caltrans</strong></td>
+        <td>$16,1 bi / FY 25-26</td>
+        <td>SB 1 + manutenção</td>
+      </tr>
+      <tr>
+        <td><strong>FDOT</strong></td>
+        <td>Fed. $2,72 bi (#3 repasse)</td>
+        <td>Assessoria P3 (I-4, I-275)</td>
+      </tr>
+      <tr>
+        <td><strong>NYSDOT</strong></td>
+        <td>Fed. $2,41 bi (#4)</td>
+        <td>Custos unitários altos — especialidade</td>
+      </tr>
+      <tr>
+        <td><strong>NCDOT</strong></td>
+        <td>Fed. $1,50 bi (#7)</td>
+        <td>OPORTUNIDADE: I-77 Sul + Complete 540</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PANE 2.2: P3 & Investidores -->
+<div class="pane" id="pane-2-2">
+  <h2>Investidores Privados — P3 Rodoviário</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$11 bi</div>
+      <div class="lbl">SR 400 (GA) — maior P3 greenfield (2025)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">~$50 bi</div>
+      <div class="lbl">Pipeline Build America Bureau (mai/2026)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$27,6 bi</div>
+      <div class="lbl">PABs alocados (teto $30 bi)</div>
+    </div>
+  </div>
+
+  <h3>Top 5 Operadores P3</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Grupo</th>
+        <th>Portfólio nos EUA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Ferrovial / Cintra</strong></td>
+        <td>Managed lanes TX (NTE/LBJ/I-66); I-77 NC operacional; I-77 Sul P3 cancelado mai/2026</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Transurban</strong></td>
+        <td>Express lanes VA (495/95/395)</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>ACS / Iridium</strong></td>
+        <td>Equity + construção (FlatironDragados); SR 400</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>John Laing</strong></td>
+        <td>Greenfield (I-77 NC, I-4 FL)</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>Macquarie (MIP)</strong></td>
+        <td>Brownfield + plataformas de infraestrutura</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PANE 2.3: Construtoras -->
+<div class="pane" id="pane-2-3">
+  <h2>Construtoras — Top 10 ENR 2026</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$671,4 bi</div>
+      <div class="lbl">Receita Top 400 2025 (+11,8%)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$760,1 bi</div>
+      <div class="lbl">Novos contratos Top 400 (+22,4%)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">+31,3%</div>
+      <div class="lbl">Telecom / data centers (maior crescimento)</div>
+    </div>
+  </div>
+
+  <h3>Top 5 Construtoras — Receita 2025</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Empresa</th>
+        <th class="num">Receita 2025 (US$ bi)</th>
+        <th>Posição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Turner Construction</strong></td>
+        <td class="num">$28,3</td>
+        <td>6º ano consecutivo; 80% CM-at-Risk; $2,1 bi intl</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Bechtel</strong></td>
+        <td class="num">$19,5</td>
+        <td>2ª posição; forte energia/nuclear/LNG</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>STO Building Group</strong></td>
+        <td class="num">$15,6</td>
+        <td>Subiu #6→#3; 77% general building</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Kiewit</strong></td>
+        <td class="num">$18,2</td>
+        <td>#1 Transportation; novos contratos $41,4 bi</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>Mortenson</strong></td>
+        <td class="num">$10,85</td>
+        <td>Subiu 12 posições (+62%); 45% telecom + 33% energia</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Heavy Civil / Rodovias — Top 5</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Empresa</th>
+        <th>Especialidade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Kiewit</strong></td>
+        <td>#1 Transportation (ENR 2026); $18,2 bi</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Granite</strong></td>
+        <td>#1 Highways (5º ano); #3 Domestic Heavy</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>FlatironDragados</strong></td>
+        <td>Fusão 2024 (ACS/Hochtief); $7,0 bi</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Skanska USA Civil</strong></td>
+        <td>Pontes e trânsito</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>Walsh Group</strong></td>
+        <td>Pontes e rodovias Meio-Oeste/Sul</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PANE 2.4: Consultores -->
+<div class="pane" id="pane-2-4">
+  <h2>Consultores &amp; Projetistas — ENR Top 500</h2>
+  <p class="note">Jacobs #1 em 2026; Telecom em projeto: +31,3% a/a, +87% em 2 anos.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Empresa</th>
+        <th>Posicionamento</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Jacobs</strong></td>
+        <td>#1 Top 500; pipeline DC +500%</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>AECOM</strong></td>
+        <td>#2; líder histórico transporte</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>WSP USA</strong></td>
+        <td>Top 3 transporte; resiliência</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>HNTB</strong></td>
+        <td>Puro transporte — GECs de grandes DOTs</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>HDR</strong></td>
+        <td>Rodovias, pontes, água</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><strong>Stantec</strong></td>
+        <td>Top 10; M&amp;A ativa</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><strong>Parsons</strong></td>
+        <td>Transporte + infra crítica</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td><strong>STV</strong></td>
+        <td>Pipeline IIJA até 2027</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight-card success">
+    <h3>Pontos de entrada para consultoria especializada</h3>
+    <p>
+      (1) Subconsultoria a Tier 1/2 em <strong>claims, cronograma forense e quantum</strong><br>
+      (2) Assessoria a construtores estrangeiros entrando em <strong>P3</strong><br>
+      (3) Prequalificação em DOTs regionais para <strong>gestão contratual e scheduling</strong>
+    </p>
+  </div>
+</div>
+
+<!-- PANE 3.1: Pavimentos -->
+<div class="pane" id="pane-3-1">
+  <h2>Pavimentos por Classe</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$115–125/t</div>
+      <div class="lbl">HMA usina — média nacional 2026</div>
+    </div>
+    <div class="kpi">
+      <div class="num">~$3/m²</div>
+      <div class="lbl">CBUQ 5 cm (in situ)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">+15%</div>
+      <div class="lbl">Custo CBUQ Brasil vs. EUA (portão da usina)</div>
+    </div>
+  </div>
+
+  <p class="note">Estrutura típica de pavimento asfáltico (rodoviário Norte-Americano): base granular → BGS → CBUQ. Espessura CBUQ: 5–8 cm (refurb); 10–15 cm (novo).</p>
+</div>
+
+<!-- PANE 3.2: OAE & Preços -->
+<div class="pane" id="pane-3-2">
+  <h2>Obras de Arte (OAE) &amp; Preços Unitários</h2>
+
+  <h3>Ponte sobre via (em média)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th class="num">Custo unitário</th>
+        <th>Referência</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ponte NHS padrão (substituição)</td>
+        <td class="num">$429/ft² (2024)</td>
+        <td>FHWA NBI; inflação +88% vs. 2020</td>
+      </tr>
+      <tr>
+        <td>Viaduto urbano (concreto)</td>
+        <td class="num">$350–550/ft²</td>
+        <td>Custo em situ; encargos urbanos altos</td>
+      </tr>
+      <tr>
+        <td>Ponte sobre água (fluvial)</td>
+        <td class="num">$600–900/ft²</td>
+        <td>Fundações profundas; batimetria; ambiente</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PANE 3.3: Insumos -->
+<div class="pane" id="pane-3-3">
+  <h2>Insumos &amp; Comparação Brasil–EUA</h2>
+
+  <div class="grid-2">
+    <div>
+      <h3>Preços Nominais 2026 (USD/unidade)</h3>
+      <table>
+        <thead><tr><th>Insumo</th><th class="num">EUA</th></tr></thead>
+        <tbody>
+          <tr><td>Aço estrutural</td><td class="num">~$620/t</td></tr>
+          <tr><td>Concreto usinado</td><td class="num">~$185/yd³</td></tr>
+          <tr><td>HMA</td><td class="num">$115–125/t</td></tr>
+          <tr><td>Combustível diesel</td><td class="num">~$2.20/gal</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h3>Achados Brasil–EUA</h3>
+      <div class="insight-card">
+        <p><strong>Aço:</strong> EUA ~10% mais caro (tarifa Seção 232)</p>
+        <p><strong>CBUQ:</strong> Brasil ~15% mais caro (portão usina)</p>
+        <p><strong>Mão-de-obra:</strong> EUA 3–4× Brasil (salário mínimo federal $7,25/h + benefícios)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANE 4.1: IA & Oportunidades -->
+<div class="pane" id="pane-4-1">
+  <h2>IA &amp; Sinais de Mercado — Radar de Oportunidades</h2>
+
+  <div class="insight-card success">
+    <h3>1. Claims &amp; Reequilíbrio Econômico</h3>
+    <p><strong>Tese:</strong> Inflação de obra +88% em ponte, +67% em TxDOT HCI. Construtoras em EUA têm acesso a dados de custos reais mas faltam ferramentas de forense estruturada.<br>
+    <strong>Aplicação IA:</strong> Monta tese de reequilíbrio via análise de Measured Mile, AACE RP 25R-03, quantificação de improdutividade cumulativa. Modelo: agente-claims (Manta 02-C) × dados de custo real.<br>
+    <strong>Receita potencial:</strong> Honrários de especialista (R$1.000–3.000/h × 20–40h por claim).</p>
+  </div>
+
+  <div class="insight-card success">
+    <h3>2. Cronograma Forense &amp; Scheduling</h3>
+    <p><strong>Tese:</strong> P3s e grandes programas (IIJA) têm cronogramas complexos em Primavera P6. Disputas de sequência, atraso crítico, cálculo de dano são opacos.<br>
+    <strong>Aplicação IA:</strong> Agente-cronograma (Manta 07) + xer-p6-analytics lê XER, simula cenários, calcula impacto. Relatório em 2 dias vs. semanas de consultoria manual.<br>
+    <strong>Receita potencial:</strong> Análise forense $15–30k; simulação Monte Carlo adicional $5–10k.</p>
+  </div>
+
+  <div class="insight-card success">
+    <h3>3. Orçamento Forense &amp; Quantum</h3>
+    <p><strong>Tese:</strong> Claims de construção nos EUA usam AACE para estimativa de custo, mas DBB em 50 estados tem variação forte. Construtoras estrangeiras (Brasil) trazem SICRO e precisam comparar com EUA.<br>
+    <strong>Aplicação IA:</strong> agente-orcamento (Manta 05) + sicro-composicoes faz match código SICRO ↔ equivalente EUA, monta composição de custo forense.<br>
+    <strong>Receita potencial:</strong> Análise quantum $10–25k por claim.</p>
+  </div>
+
+  <div class="insight-card">
+    <h3>4. Dados Centros &amp; Energia — Transposição de Conhecimento</h3>
+    <p><strong>Tese:</strong> Boom de data centers ($7 tri capex IA projetado); pouquíssimas firmas latino-americanas em projeto/construção. Manta tem know-how em subestação, linha de transmissão, obra civil pesada.<br>
+    <strong>Aplicação IA:</strong> Cross-training via agente-energia (Manta 03-S9) + autodesk-toolkit (lê DXF de projeto elétrico, sobrepõe civil).<br>
+    <strong>Receita potencial:</strong> Consultoria design-build $50–150k/projeto; subcontratação recorrente.</p>
+  </div>
+
+  <div class="insight-card">
+    <h3>5. Carolina do Norte — Porta de Entrada Concreta</h3>
+    <p><strong>Tese:</strong> NCDOT #7; I-77 Sul P3 cancelado (mai/2026), $600 mi realocados. Estado tem 4 frentes: Charlotte (P3), Toyota $5,9 bi, biotech $10,8 bi, recuperação Helene $5,8 bi.<br>
+    <strong>Aplicação IA:</strong> Portal-gestao-manta (Manta 15) configura dashboard de projetos-alvo por área, radar de licitações, contatos de stakeholder.<br>
+    <strong>Receita potencial:</strong> Entrada via subconsultoria claims/cronograma em 2–3 projetos = $200–500k ano 1.</p>
+  </div>
+
+</div>
+
+</main>
+</div>
+
+<footer>
+  <div class="watermark">MANTA</div>
+  <p>Mercado de Construção Pesada — Estados Unidos &nbsp;|&nbsp; v5 Consolidada (28/07/2026)</p>
+  <p style="font-size: 11px; margin-top: 8px;">Fontes: Census Bureau C30, FHWA FY26, ENR Top 400, FHWA NBI, BEA GDP, Build America Bureau, Reason Foundation, Construction Dive. Atualizado: 28/07/2026.</p>
+</footer>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌓</button>
+
+<script>
+function navigateTo(paneId) {
+  const panes = document.querySelectorAll('.pane');
+  const buttons = document.querySelectorAll('.nav-btn');
+
+  panes.forEach(p => p.classList.remove('active'));
+  buttons.forEach(b => b.classList.remove('active'));
+
+  const pane = document.getElementById(paneId);
+  const button = document.querySelector(`[data-pane="${paneId}"]`);
+
+  if (pane) pane.classList.add('active');
+  if (button) button.classList.add('active');
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const paneId = btn.getAttribute('data-pane');
+    navigateTo(paneId);
+  });
+});
+
+function toggleTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme') || 'light';
+  const next = current === 'light' ? 'dark' : 'light';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+
+// Restore saved theme
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+});
+</script>
+
+</body>
+</html>

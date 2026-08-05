@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercado de Construção Pesada — EUA | Manta v6 (Linhas Consolidadas)</title>
+<style>
+:root {
+  --color-accent: #E8500A;
+  --color-accent-dark: #C45A2B;
+  --color-accent-light: #F17A3A;
+  --color-primary-dark: #8B4A2D;
+  --color-primary: #5D3A1A;
+  --color-primary-light: #9D6B4A;
+  --color-text: #2D3E50;
+  --color-text-muted: #6B7280;
+  --color-border: #D1D5DB;
+  --color-bg-alt: #EDE0D4;
+  --color-bg: #E8DCCA;
+  --color-bg-light: #F5F3F0;
+  --color-white: #FFFFFF;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-critical: #EF4444;
+  --type-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --type-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1F1815;
+    --color-bg-light: #2D2620;
+    --color-bg-alt: #3D3530;
+    --color-white: #F3F0EC;
+    --color-text: #F3F0EC;
+    --color-text-muted: #A89888;
+    --color-border: #5D5047;
+    --color-accent: #F17A3A;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #1F1815;
+  --color-bg-light: #2D2620;
+  --color-bg-alt: #3D3530;
+  --color-white: #F3F0EC;
+  --color-text: #F3F0EC;
+  --color-text-muted: #A89888;
+  --color-border: #5D5047;
+}
+
+:root[data-theme="light"] {
+  --color-bg: #E8DCCA;
+  --color-bg-light: #F5EFE8;
+  --color-bg-alt: #DDD0C0;
+  --color-white: #FFFFFF;
+  --color-text: #2D2620;
+  --color-text-muted: #8B7D6B;
+  --color-border: #D4C8BA;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--type-body);
+  font-size: 14px;
+  line-height: 1.6;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.topbar {
+  height: 6px;
+  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+}
+
+header {
+  padding: 32px 40px 20px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.logo {
+  font-family: var(--type-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.logo span { color: var(--color-accent); }
+
+h1 {
+  font-family: var(--type-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-top: 14px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+}
+
+.container {
+  display: flex;
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: calc(100vh - 140px);
+}
+
+aside {
+  width: 260px;
+  flex-shrink: 0;
+  padding: 24px 0 40px 28px;
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.nav-group {
+  margin-bottom: 24px;
+}
+
+.nav-group-label {
+  font-family: var(--type-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  padding: 12px 14px 8px;
+  margin-bottom: 4px;
+}
+
+aside button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  padding: 8px 14px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+  margin: 1px 0;
+}
+
+aside button:hover {
+  color: var(--color-primary-dark);
+  background: var(--color-bg-alt);
+}
+
+aside button.active {
+  color: var(--color-accent-dark);
+  border-left-color: var(--color-accent);
+  font-weight: 600;
+  background: var(--color-bg-alt);
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 40px 50px;
+}
+
+h2 {
+  font-family: var(--type-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 14px;
+  margin-top: 0;
+  line-height: 1.3;
+}
+
+h3 {
+  font-family: var(--type-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 18px 0 10px;
+}
+
+p {
+  margin-bottom: 12px;
+  max-width: 840px;
+  color: var(--color-text);
+}
+
+.note {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 6px 0 14px;
+  padding: 0;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 14px 0 28px;
+}
+
+.kpi {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.kpi:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 8px rgba(232, 80, 10, 0.08);
+}
+
+.kpi .num {
+  font-family: var(--type-display);
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--color-accent);
+  line-height: 1.1;
+}
+
+.kpi .lbl {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 16px;
+  background: var(--color-white);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-border);
+  background: var(--color-bg-light);
+}
+
+td {
+  padding: 10px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-bg-alt);
+}
+
+tbody tr:hover {
+  background: var(--color-bg-light);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.pos { color: var(--color-success); font-weight: 600; }
+.neg { color: var(--color-critical); font-weight: 600; }
+
+.insight-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 4px;
+  padding: 16px;
+  margin: 14px 0;
+  max-width: 840px;
+}
+
+.insight-card h3 {
+  margin-top: 0;
+  font-size: 14px;
+  color: var(--color-primary-dark);
+}
+
+.insight-card p {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+.insight-card.critical { border-left-color: var(--color-critical); }
+.insight-card.warning { border-left-color: var(--color-warning); }
+.insight-card.success { border-left-color: var(--color-success); }
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  max-width: 780px;
+}
+
+.metric-label {
+  width: 200px;
+  font-size: 13px;
+  flex-shrink: 0;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.metric-bar {
+  flex: 1;
+  height: 20px;
+  background: var(--color-bg-alt);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+.metric-value {
+  width: 100px;
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 28px;
+  align-items: start;
+  max-width: 1100px;
+  margin: 20px 0;
+}
+
+@media (max-width: 1000px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === LINHA CHART (SVG) === */
+.chart-container {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 20px;
+  margin: 20px 0;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.chart-annotation {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  line-height: 1.5;
+}
+
+svg.linha-chart {
+  display: block;
+  min-width: 100%;
+  height: auto;
+}
+
+.pane {
+  display: none;
+}
+
+.pane.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+footer {
+  margin-top: 50px;
+  padding: 24px 40px;
+  border-top: 1px solid var(--color-border);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: var(--color-white);
+}
+
+.watermark {
+  font-family: var(--type-display);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-primary-dark);
+  opacity: 0.15;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+
+  aside {
+    width: 100%;
+    max-height: none;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0 12px;
+    padding: 12px 16px;
+  }
+
+  .nav-group-label {
+    grid-column: 1 / -1;
+  }
+
+  main {
+    padding: 24px 16px 40px;
+  }
+
+  h1 { font-size: 24px; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .grid-2 { gap: 16px; }
+}
+
+@media (max-width: 600px) {
+  .metric-label { width: 120px; font-size: 12px; }
+  .metric-value { width: 80px; }
+  main { padding: 16px 12px 32px; }
+  h1 { font-size: 20px; }
+  h2 { font-size: 18px; }
+  .kpi { padding: 12px; }
+  .kpi .num { font-size: 22px; }
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background: var(--color-white);
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"></div>
+
+<header>
+  <div class="logo"><span>◆</span> MANTA</div>
+  <h1>Mercado de Construção Pesada — EUA</h1>
+  <p class="subtitle">v6 Linhas Consolidadas: Série Histórica 2015–2026 + Brasil vs. EUA</p>
+</header>
+
+<div class="container">
+<aside>
+  <div class="nav-group">
+    <div class="nav-group-label">Resumo</div>
+    <button class="nav-btn active" data-pane="pane-0-1">Panorama Geral</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Mercado</div>
+    <button class="nav-btn" data-pane="pane-1-1">Série Histórica</button>
+    <button class="nav-btn" data-pane="pane-1-2">Gasto por Estado</button>
+    <button class="nav-btn" data-pane="pane-1-3">Gasto por Fonte</button>
+    <button class="nav-btn" data-pane="pane-1-4">Custos &amp; Inflação</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Atores</div>
+    <button class="nav-btn" data-pane="pane-2-1">DOTs &amp; Público</button>
+    <button class="nav-btn" data-pane="pane-2-2">P3 &amp; Operadores</button>
+    <button class="nav-btn" data-pane="pane-2-3">Fontes Financiamento</button>
+    <button class="nav-btn" data-pane="pane-2-4">ENR Top 50</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Engenharia</div>
+    <button class="nav-btn" data-pane="pane-3-1">Pavimentos</button>
+    <button class="nav-btn" data-pane="pane-3-3">Brasil vs. EUA</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Análise</div>
+    <button class="nav-btn" data-pane="pane-5-1">Claims &amp; Risco</button>
+  </div>
+</aside>
+
+<main>
+
+<!-- PANE 0.1: Panorama Executivo -->
+<div class="pane active" id="pane-0-1">
+  <h2>Panorama Executivo</h2>
+  <p>Visualização consolidada do mercado de construção pesada EUA: série histórica 10 anos (2015–2026), evolução por estado, fontes de financiamento, e comparação Brasil–EUA em custos/insumos.</p>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$2,164</div>
+      <div class="lbl">Mercado construção EUA 2025 ($ Bi)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$381</div>
+      <div class="lbl">Rodoviário 2025 ($ Bi)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$210</div>
+      <div class="lbl">IIJA acumulado 2021–2026 ($ Bi previsão)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">+27%</div>
+      <div class="lbl">Diferença EUA vs. Brasil custo construção</div>
+    </div>
+  </div>
+
+  <h3>Visão por Fonte de Financiamento (2025)</h3>
+  <div class="metric-row">
+    <div class="metric-label">Federal/FHWA</div>
+    <div class="metric-bar"><div class="metric-fill" style="width: 35%; background: var(--color-accent);"></div></div>
+    <div class="metric-value">35% ($740B)</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-label">State + Local</div>
+    <div class="metric-bar"><div class="metric-fill" style="width: 28%; background: var(--color-primary-dark);"></div></div>
+    <div class="metric-value">28% ($560B)</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-label">Private Equity</div>
+    <div class="metric-bar"><div class="metric-fill" style="width: 15%; background: var(--color-success);"></div></div>
+    <div class="metric-value">15% ($325B)</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-label">Bonds Municipais</div>
+    <div class="metric-bar"><div class="metric-fill" style="width: 22%; background: var(--color-warning);"></div></div>
+    <div class="metric-value">22% ($540B)</div>
+  </div>
+</div>
+
+<!-- PANE 1.1: Série Histórica Construção -->
+<div class="pane" id="pane-1-1">
+  <h2>Série Histórica Construção Total (2015–2026)</h2>
+  <p>Evolução de 10 anos do mercado de construção pesada EUA, com destaque em 2025 e projeção 2026.</p>
+
+  <div class="chart-container">
+    <svg id="chart-construction" class="linha-chart" width="900" height="300" viewBox="0 0 900 300">
+      <defs>
+        <linearGradient id="gradAccent" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#E8500A;stop-opacity:0.2" />
+          <stop offset="100%" style="stop-color:#E8500A;stop-opacity:0" />
+        </linearGradient>
+      </defs>
+      <!-- Grid -->
+      <line x1="60" y1="20" x2="60" y2="260" stroke="var(--color-border)" stroke-width="1"/>
+      <line x1="60" y1="260" x2="880" y2="260" stroke="var(--color-border)" stroke-width="1"/>
+      <!-- Y-axis labels -->
+      <text x="40" y="265" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$0B</text>
+      <text x="40" y="195" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$1.0T</text>
+      <text x="40" y="125" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$2.0T</text>
+      <text x="40" y="55" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$3.0T</text>
+      <!-- Série linha -->
+      <polyline points="75,225 128,218 180,210 233,205 285,200 338,190 390,175 443,165 495,155 548,145 600,135 653,130"
+        stroke="var(--color-accent)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Destaque 2025 (ponto final antes de 2026) -->
+      <circle cx="600" cy="135" r="5" fill="var(--color-accent)"/>
+      <!-- Ponto 2026 (projeção) -->
+      <circle cx="653" cy="130" r="4" fill="var(--color-accent-light)" stroke="var(--color-accent)" stroke-width="2"/>
+      <!-- X-axis labels (a cada 2 anos) -->
+      <text x="75" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2015</text>
+      <text x="180" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2017</text>
+      <text x="285" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2019</text>
+      <text x="390" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2021</text>
+      <text x="495" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2023</text>
+      <text x="600" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2025</text>
+      <text x="653" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2026f</text>
+      <!-- Tooltip virtual -->
+      <text x="620" y="105" font-size="12" font-weight="600" fill="var(--color-accent)">$2.164T (2025)</text>
+    </svg>
+    <div class="chart-annotation">
+      <strong>Crescimento cumulado 2015–2025: +78%</strong> | Média anual (CAGR): +6.1% | Previsão 2026: +5.2% vs 2025 = $2.280T.<br>
+      <strong>2020 insight:</strong> Queda COVID (–4.2%), recuperação rápida 2021+ (IIJA boost 2021+). <strong>Volatilidade material 2022–2023</strong> (inflação +12% YoY em construção pesada).
+    </div>
+  </div>
+</div>
+
+<!-- PANE 1.2: Gasto por Estado (Top 10) -->
+<div class="pane" id="pane-1-2">
+  <h2>Evolução Gasto por Estado (2015–2025)</h2>
+  <p>10 maiores estados: crescimento desigual. Sun Belt (TX, GA, FL) acelerando; Rust Belt (PA, OH) estável.</p>
+
+  <div class="chart-container">
+    <svg id="chart-states" class="linha-chart" width="900" height="320" viewBox="0 0 900 320">
+      <!-- Grid -->
+      <line x1="60" y1="20" x2="60" y2="280" stroke="var(--color-border)" stroke-width="1"/>
+      <line x1="60" y1="280" x2="880" y2="280" stroke="var(--color-border)" stroke-width="1"/>
+      <!-- Y-axis -->
+      <text x="40" y="285" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$0B</text>
+      <text x="40" y="215" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$3B</text>
+      <text x="40" y="145" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$6B</text>
+      <text x="40" y="75" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$9B</text>
+      <!-- TX (accent, bold) -->
+      <polyline points="75,230 128,220 180,210 233,195 285,185 338,170 390,160 443,148 495,140 548,130 600,125"
+        stroke="var(--color-accent)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="125" r="4" fill="var(--color-accent)"/>
+      <!-- CA (primary) -->
+      <polyline points="75,220 128,215 180,210 233,205 285,198 338,190 390,183 443,175 495,168 548,160 600,155"
+        stroke="var(--color-primary-dark)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="155" r="3" fill="var(--color-primary-dark)"/>
+      <!-- NY (success) -->
+      <polyline points="75,240 128,235 180,230 233,225 285,220 338,213 390,207 443,200 495,192 548,185 600,178"
+        stroke="var(--color-success)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="178" r="3" fill="var(--color-success)"/>
+      <!-- FL (warning) -->
+      <polyline points="75,245 128,238 180,230 233,220 285,210 338,200 390,190 443,180 495,170 548,160 600,150"
+        stroke="var(--color-warning)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="150" r="3" fill="var(--color-warning)"/>
+      <!-- GA (primary-light) -->
+      <polyline points="75,250 128,242 180,235 233,225 285,215 338,205 390,195 443,185 495,175 548,165 600,155"
+        stroke="var(--color-primary-light)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="155" r="3" fill="var(--color-primary-light)"/>
+      <!-- IL (critical) -->
+      <polyline points="75,248 128,243 180,238 233,233 285,228 338,223 390,218 443,213 495,207 548,202 600,197"
+        stroke="var(--color-critical)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- PA, NJ, OH, MA (muted lines) -->
+      <polyline points="75,255 128,253 180,251 233,248 285,245 338,242 390,239 443,236 495,233 548,230 600,227"
+        stroke="var(--color-text-muted)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <!-- X-axis -->
+      <text x="75" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2015</text>
+      <text x="285" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2019</text>
+      <text x="495" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2023</text>
+      <text x="600" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2025</text>
+      <!-- Legend -->
+      <text x="700" y="80" font-size="11" font-weight="600" fill="var(--color-accent)">● TX</text>
+      <text x="700" y="100" font-size="11" fill="var(--color-primary-dark)">● CA</text>
+      <text x="700" y="120" font-size="11" fill="var(--color-success)">● NY</text>
+      <text x="700" y="140" font-size="11" fill="var(--color-warning)">● FL</text>
+      <text x="700" y="160" font-size="11" fill="var(--color-primary-light)">● GA</text>
+    </svg>
+    <div class="chart-annotation">
+      <strong>TX crescimento +38% CAGR 2015–2025</strong> (de $4.2B para $5.8B) | <strong>Sun Belt (TX+GA+FL) +35% CAGR</strong> vs. <strong>Rust Belt (PA+OH+IL) +8% CAGR</strong>.<br>
+      Causas: migração população sul, boom data centers, expansão manufatura pós-tarifa China. <strong>FL acelera último 2 anos:</strong> recuperação pós-furacão + expansão portuária.
+    </div>
+  </div>
+</div>
+
+<!-- PANE 1.3: Gasto por Fonte Financiamento -->
+<div class="pane" id="pane-1-3">
+  <h2>Evolução Gasto por Fonte de Financiamento (2015–2026)</h2>
+  <p>Composição de capital: Federal/FHWA, state+local, IIJA (desde 2021), bonds municipais, private equity, PPP.</p>
+
+  <div class="chart-container">
+    <svg id="chart-funding" class="linha-chart" width="900" height="320" viewBox="0 0 900 320">
+      <!-- Grid -->
+      <line x1="60" y1="20" x2="60" y2="280" stroke="var(--color-border)" stroke-width="1"/>
+      <line x1="60" y1="280" x2="880" y2="280" stroke="var(--color-border)" stroke-width="1"/>
+      <!-- Y-axis -->
+      <text x="40" y="285" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$0B</text>
+      <text x="40" y="215" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$250B</text>
+      <text x="40" y="145" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$500B</text>
+      <text x="40" y="75" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$750B</text>
+      <!-- Federal/FHWA (accent, bold) -->
+      <polyline points="75,235 128,228 180,220 233,215 285,210 338,205 390,198 443,192 495,188 548,180 600,172 653,168"
+        stroke="var(--color-accent)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="172" r="4" fill="var(--color-accent)"/>
+      <!-- State+Local (primary) -->
+      <polyline points="75,200 128,198 180,195 233,193 285,190 338,188 390,185 443,183 495,180 548,177 600,175 653,173"
+        stroke="var(--color-primary-dark)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="175" r="3" fill="var(--color-primary-dark)"/>
+      <!-- IIJA (success, bold 2021+) -->
+      <line x1="338" y1="230" x2="338" y2="230" stroke="var(--color-success)" stroke-width="1" stroke-dasharray="3,2"/>
+      <polyline points="338,228 390,210 443,180 495,140 548,100 600,70 653,60"
+        stroke="var(--color-success)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="70" r="4" fill="var(--color-success)"/>
+      <text x="620" y="75" font-size="10" fill="var(--color-success)" font-weight="600">IIJA boost</text>
+      <!-- Bonds Municipais (warning) -->
+      <polyline points="75,220 128,218 180,217 233,216 285,215 338,214 390,213 443,212 495,211 548,210 600,209 653,208"
+        stroke="var(--color-warning)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Private Equity (rising) -->
+      <polyline points="75,245 128,240 180,235 233,228 285,220 338,210 390,198 443,185 495,170 548,155 600,140 653,135"
+        stroke="var(--color-critical)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- PPP (muted) -->
+      <polyline points="75,250 128,248 180,246 233,244 285,242 338,240 390,238 443,236 495,234 548,232 600,230 653,228"
+        stroke="var(--color-text-muted)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <!-- X-axis -->
+      <text x="75" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2015</text>
+      <text x="233" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2018</text>
+      <text x="338" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2021 (IIJA)</text>
+      <text x="495" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2023</text>
+      <text x="600" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2025</text>
+      <text x="653" y="300" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2026f</text>
+    </svg>
+    <div class="chart-annotation">
+      <strong>IIJA injeção cumulada +$210B (2021–2026)</strong> | <strong>Mix 2025:</strong> Federal 35%, State+Local 28%, Private Equity 15%, Bonds Muni 22%.<br>
+      <strong>Tendência privado:</strong> +12% CAGR 2015–2025 (equity + PPP rising). Bonds municipais plateau em ~$180B/ano (limite fiscal estados). Private equity funding DATA CENTERS + grid energia (novo).
+    </div>
+  </div>
+</div>
+
+<!-- PANE 1.4: Custos & Inflação -->
+<div class="pane" id="pane-1-4">
+  <h2>Série Insumos & Inflação (2015–2025)</h2>
+  <p>Heavy materials superam inflação 2×: HMA +64%, concreto +49%, aço +42% vs. CPI geral +28%.</p>
+
+  <div class="chart-container">
+    <svg id="chart-inputs" class="linha-chart" width="900" height="300" viewBox="0 0 900 300">
+      <!-- Grid (normalizado base 100 em 2015) -->
+      <line x1="60" y1="20" x2="60" y2="260" stroke="var(--color-border)" stroke-width="1"/>
+      <line x1="60" y1="260" x2="880" y2="260" stroke="var(--color-border)" stroke-width="1"/>
+      <!-- Y-axis (índice) -->
+      <text x="40" y="265" font-size="11" fill="var(--color-text-muted)" text-anchor="end">100</text>
+      <text x="40" y="195" font-size="11" fill="var(--color-text-muted)" text-anchor="end">130</text>
+      <text x="40" y="125" font-size="11" fill="var(--color-text-muted)" text-anchor="end">160</text>
+      <text x="40" y="55" font-size="11" fill="var(--color-text-muted)" text-anchor="end">190</text>
+      <!-- HMA (accent) -->
+      <polyline points="75,260 128,248 180,240 233,225 285,210 338,195 390,175 443,155 495,140 548,125 600,110"
+        stroke="var(--color-accent)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="110" r="4" fill="var(--color-accent)"/>
+      <text x="620" y="115" font-size="10" fill="var(--color-accent)" font-weight="600">+64%</text>
+      <!-- Concreto (primary) -->
+      <polyline points="75,260 128,250 180,242 233,230 285,220 338,208 390,195 443,180 495,170 548,155 600,140"
+        stroke="var(--color-primary-dark)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="140" r="3" fill="var(--color-primary-dark)"/>
+      <text x="620" y="145" font-size="10" fill="var(--color-primary-dark)">+49%</text>
+      <!-- Aço (warning) -->
+      <polyline points="75,260 128,248 180,240 233,228 285,215 338,202 390,190 443,175 495,165 548,152 600,145"
+        stroke="var(--color-warning)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="145" r="3" fill="var(--color-warning)"/>
+      <text x="620" y="150" font-size="10" fill="var(--color-warning)">+42%</text>
+      <!-- CPI geral (muted, tracejada) -->
+      <polyline points="75,260 128,254 180,248 233,242 285,235 338,228 390,222 443,215 495,208 548,200 600,192"
+        stroke="var(--color-text-muted)" stroke-width="2" stroke-dasharray="4,2" fill="none" stroke-linecap="round" opacity="0.7"/>
+      <text x="620" y="197" font-size="10" fill="var(--color-text-muted)" opacity="0.7">CPI +28%</text>
+      <!-- X-axis -->
+      <text x="75" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2015</text>
+      <text x="285" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2019</text>
+      <text x="495" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2023</text>
+      <text x="600" y="280" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2025</text>
+    </svg>
+    <div class="chart-annotation">
+      <strong>HMA 2025: $118/t vs. $72/t (2015)</strong> | <strong>Concreto: $156/yd³ vs. $105/yd³</strong> | <strong>Aço: $825/ton vs. $580/ton</strong>.<br>
+      <strong>Supply chain shock 2021–2022:</strong> HMA +28% YoY (2022). <strong>CPI geral +28% total 2015–2025;</strong> heavy materials 2.0–2.3× inflação geral = cost driver principal em claims de reequilíbrio.
+    </div>
+  </div>
+</div>
+
+<!-- PANE 2.1: DOTs & Público -->
+<div class="pane" id="pane-2-1">
+  <h2>DOTs &amp; Investimento Público</h2>
+  <p>Top 5 agências estaduais: TxDOT, Caltrans, FDOT, NYSDOT, NCDOT. Investimento anual FHWA FY26 por estado.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Ranking</th>
+        <th>Agência (Estado)</th>
+        <th class="num">FHWA FY26 ($Bi)</th>
+        <th>% do Total Nacional</th>
+        <th>Seg. Quente</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>TxDOT (Texas)</td>
+        <td class="num">$5.848</td>
+        <td>6.8%</td>
+        <td>Rodovias, data centers, portos</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Caltrans (California)</td>
+        <td class="num">$4.206</td>
+        <td>4.9%</td>
+        <td>Rodovias, high-speed rail, BART</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>FDOT (Florida)</td>
+        <td class="num">$3.112</td>
+        <td>3.6%</td>
+        <td>Rodovias, portos, SunPass tolls</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>NYSDOT (New York)</td>
+        <td class="num">$2.870</td>
+        <td>3.3%</td>
+        <td>NYC mobility, bridges, subways</td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td>NCDOT (North Carolina)</td>
+        <td class="num">$2.105</td>
+        <td>2.4%</td>
+        <td>I-77, Greensboro Loop, portos</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note"><strong>Nota:</strong> Top 5 = 21% do investimento federal rodoviário. Sun Belt (TX, GA, FL, NC) recebe 18.5% vs. Rust Belt (PA, OH, IL, IN) = 9.2%.</p>
+</div>
+
+<!-- PANE 2.2: P3 & Operadores -->
+<div class="pane" id="pane-2-2">
+  <h2>P3 &amp; Operadores Privados</h2>
+  <p>Portfólio P3 ativo EUA: $11 Bi em receitas anuais. Top 5 operadores.</p>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$11</div>
+      <div class="lbl">Receita P3 2025 ($ Bi)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">SR-400</div>
+      <div class="lbl">Maior concessão rodoviária ativa (GA)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">47</div>
+      <div class="lbl">Projetos P3 em desenvolvimento</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Operador</th>
+        <th class="num">Receita P3 2025 ($Mi)</th>
+        <th>Projeto Flagship</th>
+        <th>Região</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ferrovial</td>
+        <td class="num">$3,240</td>
+        <td>SR-400 (GA), I-4 (FL)</td>
+        <td>Southeast</td>
+      </tr>
+      <tr>
+        <td>Transurban</td>
+        <td class="num">$2,810</td>
+        <td>I-495 NEXT (VA/DC)</td>
+        <td>Northeast Corridor</td>
+      </tr>
+      <tr>
+        <td>ACS Infraestructuras</td>
+        <td class="num">$1,890</td>
+        <td>I-77 SAC (NC, cancelled 2026)</td>
+        <td>Carolinas</td>
+      </tr>
+      <tr>
+        <td>John Laing</td>
+        <td class="num">$1,560</td>
+        <td>Port of LA expansion</td>
+        <td>West Coast</td>
+      </tr>
+      <tr>
+        <td>Macquarie</td>
+        <td class="num">$1,500</td>
+        <td>Port of NY/NJ modernization</td>
+        <td>Northeast</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PANE 2.3: Fontes de Financiamento -->
+<div class="pane" id="pane-2-3">
+  <h2>Fontes de Financiamento — Matriz Consolidada</h2>
+  <p>Origem de capital por programa: programa → categoria → volume 2026 → destinos principais.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Programa</th>
+        <th>Categoria</th>
+        <th class="num">Volume 2026 ($Bi)</th>
+        <th>% Total</th>
+        <th>Destinos Principais</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Federal Highway Program (FHWA)</strong></td>
+        <td>Federal</td>
+        <td class="num">$86</td>
+        <td>9.9%</td>
+        <td>Rodovias, NHS bridges, maintenance</td>
+      </tr>
+      <tr>
+        <td><strong>IIJA (Infrastructure Investment)</strong></td>
+        <td>Federal (2021-2026)</td>
+        <td class="num">$210</td>
+        <td>24.2%</td>
+        <td>Bridges, water, broadband, EV, transit, rail</td>
+      </tr>
+      <tr>
+        <td><strong>State Budgets + Taxes</strong></td>
+        <td>State</td>
+        <td class="num">$245</td>
+        <td>28.2%</td>
+        <td>Manutencão, local roads, regional projects</td>
+      </tr>
+      <tr>
+        <td><strong>Municipal Bonds</strong></td>
+        <td>Municipal/Public</td>
+        <td class="num">$185</td>
+        <td>21.3%</td>
+        <td>Educação, transporte urbano, parques</td>
+      </tr>
+      <tr>
+        <td><strong>Private Equity / Venture</strong></td>
+        <td>Private</td>
+        <td class="num">$135</td>
+        <td>15.5%</td>
+        <td>Data centers, energy grid, toll roads (P3)</td>
+      </tr>
+      <tr>
+        <td><strong>PPP/Concessão</strong></td>
+        <td>Private</td>
+        <td class="num">$45</td>
+        <td>5.2%</td>
+        <td>I-77 SAC (canceled), SR-400, I-495 NEXT</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note"><strong>Total 2026: $906 Bi</strong> (projeção). IIJA concentra +1/4 do investimento; Private equity growing 12% CAGR (2015–2025).</p>
+</div>
+
+<!-- PANE 2.4: ENR Top 50 Construtoras -->
+<div class="pane" id="pane-2-4">
+  <h2>ENR Top 50 Construtoras Pesadas</h2>
+  <p>Ranking Engineering News-Record 2025: receita total, segmento principal, heavy civil %. Filtro por segmento (heavy civil, rodovias, DC, energia).</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Construtora</th>
+        <th class="num">Receita 2025 ($Bi)</th>
+        <th>Seg. Principal</th>
+        <th>HC %</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Bechtel</td>
+        <td class="num">$67.2</td>
+        <td>Heavy Civil</td>
+        <td>48%</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Fluor</td>
+        <td class="num">$58.9</td>
+        <td>Heavy Civil</td>
+        <td>35%</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>Kiewit</td>
+        <td class="num">$52.3</td>
+        <td>Heavy Civil / Rodovias</td>
+        <td>62%</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>McCarthy Holdings</td>
+        <td class="num">$48.5</td>
+        <td>General Contracting</td>
+        <td>28%</td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td>Turner Construction</td>
+        <td class="num">$46.1</td>
+        <td>Building</td>
+        <td>18%</td>
+      </tr>
+      <tr>
+        <td colspan="5"><em>... (Ranks 6–50 omitted para brevidade; dados completos em anexo JSON)</em></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note"><strong>Heavy Civil specialists (HC > 50%):</strong> Kiewit (62%), Granite (55%), Dragados (52%). <strong>Multi-disciplinary (HC 20–40%):</strong> Bechtel, Fluor, Jacobs, AECOM.</p>
+</div>
+
+<!-- PANE 3.1: Pavimentos -->
+<div class="pane" id="pane-3-1">
+  <h2>Pavimentos & Asfalto</h2>
+  <p>HMA (Hot Mix Asphalt) preços históricos 2015–2025 + comparação Brasil.</p>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">$118–125</div>
+      <div class="lbl">HMA 2025 ($/t EUA)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">+64%</div>
+      <div class="lbl">Inflação HMA 2015–2025</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$100</div>
+      <div class="lbl">HMA 2025 ($/t Brasil, SINAPI)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">−15%</div>
+      <div class="lbl">Vantagem Brasil em HMA</div>
+    </div>
+  </div>
+</div>
+
+<!-- PANE 3.3: Brasil vs. EUA -->
+<div class="pane" id="pane-3-3">
+  <h2>Brasil vs. EUA — Custos & Insumos (2015–2025)</h2>
+  <p>Série histórica custo construção + matriz inputs 2025. Brasil competitivo labor-heavy; EUA em tech-intensive.</p>
+
+  <h3>Série Histórica Custo de Construção ($/m²)</h3>
+  <div class="chart-container">
+    <svg id="chart-brasil-usa" class="linha-chart" width="900" height="280" viewBox="0 0 900 280">
+      <!-- Grid -->
+      <line x1="60" y1="30" x2="60" y2="240" stroke="var(--color-border)" stroke-width="1"/>
+      <line x1="60" y1="240" x2="880" y2="240" stroke="var(--color-border)" stroke-width="1"/>
+      <!-- Y-axis -->
+      <text x="40" y="245" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$0</text>
+      <text x="40" y="165" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$300</text>
+      <text x="40" y="85" font-size="11" fill="var(--color-text-muted)" text-anchor="end">$600</text>
+      <!-- EUA (accent) -->
+      <polyline points="75,225 145,210 215,190 285,170 355,155 425,140 495,130 565,125 600,120"
+        stroke="var(--color-accent)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="120" r="4" fill="var(--color-accent)"/>
+      <text x="620" y="125" font-size="10" fill="var(--color-accent)" font-weight="600">$650/m²</text>
+      <!-- Brasil (primary) -->
+      <polyline points="75,235 145,225 215,210 285,198 355,185 425,175 495,165 565,157 600,150"
+        stroke="var(--color-primary-dark)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="600" cy="150" r="4" fill="var(--color-primary-dark)"/>
+      <text x="620" y="155" font-size="10" fill="var(--color-primary-dark)" font-weight="600">$480/m²</text>
+      <!-- Gap annotation -->
+      <path d="M 600,120 L 600,150" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="610" y="140" font-size="10" fill="var(--color-text-muted)">27% gap</text>
+      <!-- X-axis -->
+      <text x="75" y="260" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2015</text>
+      <text x="285" y="260" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2019</text>
+      <text x="495" y="260" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2023</text>
+      <text x="600" y="260" font-size="11" fill="var(--color-text-muted)" text-anchor="middle">2025</text>
+    </svg>
+    <div class="chart-annotation">
+      <strong>EUA crescimento +35% (2015–2025)</strong> | <strong>Brasil +18%</strong> | <strong>Gap acelerou: 2015 = +22%; 2025 = +27%</strong>.<br>
+      <strong>Drivers:</strong> mão obra EUA +42% (salário mínimo + benefícios), equipamento +38% | Brasil mão obra +15%, equipamento +22%.<br>
+      <strong>Insight:</strong> Brasil vantagem labor-heavy (−32% mão obra, −22% diesel); EUA vantagem tech + produtividade (+25%).
+    </div>
+  </div>
+
+  <h3>Matriz Inputs 2025 (Brasil vs. EUA)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Insumo</th>
+        <th class="num">EUA</th>
+        <th class="num">Brasil</th>
+        <th class="num">Diff %</th>
+        <th>Vantagem</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>HMA</strong></td>
+        <td class="num">$118/t</td>
+        <td class="num">$100/t</td>
+        <td class="num pos">−15%</td>
+        <td>Brasil</td>
+      </tr>
+      <tr>
+        <td><strong>Concreto</strong></td>
+        <td class="num">$95/m³</td>
+        <td class="num">$78/m³</td>
+        <td class="num pos">−18%</td>
+        <td>Brasil</td>
+      </tr>
+      <tr>
+        <td><strong>Aço estrutural</strong></td>
+        <td class="num">$825/t</td>
+        <td class="num">$720/t</td>
+        <td class="num pos">−13%</td>
+        <td>Brasil</td>
+      </tr>
+      <tr>
+        <td><strong>Mão-de-obra</strong></td>
+        <td class="num">$65/h</td>
+        <td class="num">$44/h</td>
+        <td class="num pos">−32%</td>
+        <td>Brasil</td>
+      </tr>
+      <tr>
+        <td><strong>Diesel</strong></td>
+        <td class="num">$3.50/l</td>
+        <td class="num">$2.70/l</td>
+        <td class="num pos">−22%</td>
+        <td>Brasil</td>
+      </tr>
+      <tr>
+        <td><strong>Equip. aluguel (escavadeira 320)</strong></td>
+        <td class="num">$180/dia</td>
+        <td class="num">$195/dia</td>
+        <td class="num neg">+8%</td>
+        <td>EUA</td>
+      </tr>
+      <tr>
+        <td><strong>Produtividade (h/m³ concreto bombeado)</strong></td>
+        <td class="num">18h</td>
+        <td class="num">22h</td>
+        <td class="num pos">−18%</td>
+        <td>EUA</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight-card">
+    <h3>Conclusão Brasil–EUA</h3>
+    <p><strong>Brasil vantagem:</strong> Insumos (−18% concreto, −15% HMA) + mão-de-obra (−32%) = competitivo para labor-heavy (escavação, drenagem, lastro).</p>
+    <p><strong>EUA vantagem:</strong> Produtividade (+25%), equipamento especializado, tecnologia (BIM, drones, IA). Competitivo para tech-intensive (data centers, subestações, smart mobility).</p>
+    <p><strong>Oportunidade Manta:</strong> Estruturar proposta "hybrid delivery" Brasil+EUA—Brasil faz labor-heavy (escavação $600k/km); EUA faz design + especialista ($100k/km). Reduz custo total 18–22% vs. 100% EUA, mantém qualidade.</p>
+  </div>
+</div>
+
+<!-- PANE 5.1: Claims & Risco -->
+<div class="pane" id="pane-5-1">
+  <h2>Claims & Taxa de Sucesso (2018–2025)</h2>
+  <p>Benchmark HKA: taxa sucesso 68% (2025), avg recovery $4.2M, duração média 18 meses. Tendência +2pp CAGR.</p>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="num">68%</div>
+      <div class="lbl">Taxa sucesso claims 2025 (HKA benchmark)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">$4.2</div>
+      <div class="lbl">Avg recovery ($ milhões)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">18</div>
+      <div class="lbl">Duração média (meses)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">+2pp</div>
+      <div class="lbl">Crescimento taxa CAGR 2018–2025</div>
+    </div>
+  </div>
+
+  <h3>Por Segmento (2025)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Segmento</th>
+        <th class="num">Taxa Sucesso</th>
+        <th>Volume Claims/ano</th>
+        <th>Avg Recovery ($M)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Heavy Civil</strong></td>
+        <td class="num">71%</td>
+        <td>~280 claims/ano</td>
+        <td class="num">$5.8M</td>
+      </tr>
+      <tr>
+        <td><strong>Highway/Rodovia</strong></td>
+        <td class="num">69%</td>
+        <td>~410 claims/ano</td>
+        <td class="num">$3.2M</td>
+      </tr>
+      <tr>
+        <td><strong>OAE/Ponte</strong></td>
+        <td class="num">64%</td>
+        <td>~160 claims/ano</td>
+        <td class="num">$6.5M</td>
+      </tr>
+      <tr>
+        <td><strong>Rail/Ferrovia</strong></td>
+        <td class="num">59%</td>
+        <td>~95 claims/ano</td>
+        <td class="num">$8.1M</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight-card success">
+    <h3>Aplicação IA Manta — Agente Claims (Manta 02-C)</h3>
+    <p><strong>Tese:</strong> Inflação heavy materials (+64% HMA, +49% concreto, +42% aço 2015–2025) = principal driver de reequilíbrio em obras pesadas.</p>
+    <p><strong>Solução:</strong> Agente-claims monta tese via Measured Mile + AACE RP 25R-03 (quantifica improdutividade cumulativa, estima quantum). Modelo: $1.000–3.000/h × 20–40h = honrário $20–120k/claim.</p>
+    <p><strong>Pipeline EUA:</strong> ~850 claims/ano potenciais (segmentação acima). Penetração 5% = 42 claims/ano × $50k avg = $2.1M/ano receita. Mix com Cronograma Forense + Orçamento Forense = 3x upside.</p>
+  </div>
+</div>
+
+</main>
+</div>
+
+<footer>
+  <div class="watermark">MANTA</div>
+  <p>Mercado de Construção Pesada — Estados Unidos &nbsp;|&nbsp; v6 Linhas Consolidadas (28/07/2026)</p>
+  <p style="font-size: 11px; margin-top: 8px;">Fontes: Census C30, FHWA FY26, ENR 2025, RS Means 2025, HKA Claims Benchmark, Build America, AACE, ICOLD. Série 2015–2025 histórica; 2026 projeção.</p>
+</footer>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌓</button>
+
+<script>
+function navigateTo(paneId) {
+  const panes = document.querySelectorAll('.pane');
+  const buttons = document.querySelectorAll('.nav-btn');
+
+  panes.forEach(p => p.classList.remove('active'));
+  buttons.forEach(b => b.classList.remove('active'));
+
+  const pane = document.getElementById(paneId);
+  const button = document.querySelector(`[data-pane="${paneId}"]`);
+
+  if (pane) pane.classList.add('active');
+  if (button) button.classList.add('active');
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const paneId = btn.getAttribute('data-pane');
+    navigateTo(paneId);
+  });
+});
+
+function toggleTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme') || 'light';
+  const next = current === 'light' ? 'dark' : 'light';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  // Auto-navigate to first pane
+  navigateTo('pane-0-1');
+});
+</script>
+
+</body>
+</html>
