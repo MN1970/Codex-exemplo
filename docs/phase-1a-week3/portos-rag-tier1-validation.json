@@ -1,0 +1,475 @@
+{
+  "segmento": "S6-Portos",
+  "fase": "Phase 1a Tier 1 Validation",
+  "data_validacao": "2026-07-15",
+  "validador": "Manta 03-S6 — Especialista em Portos",
+  "resumo_executivo": {
+    "fontes_validadas": 5,
+    "documentos_estimado_tier1": 800,
+    "volume_total_gb_estimado": 2.8,
+    "timeline_weeks": 6,
+    "criticidade": "ALTA — rastreabilidade total em legislação + operação",
+    "status_acesso_publico": "100% acessível (sem autenticação requerida)"
+  },
+  "fontes_validadas": [
+    {
+      "ordem": 1,
+      "fonte": "ANTAQ Resoluções, Portarias e Legislação",
+      "sigla": "por:antaq-leg",
+      "url_acesso": "https://www.gov.br/antaq/pt-br/assuntos/instalacoes-portuarias/legislacao",
+      "url_juris_database": "https://juris.antaq.gov.br/index.php/category/resolucao/",
+      "url_legislacao_resoluções": "http://web.antaq.gov.br/portalv3/Legislacao_Resolucoes.asp",
+      "url_legislacao_portarias": "http://web.antaq.gov.br/portalv3/Legislacao_Portarias.asp",
+      "formato": "HTML + PDF downloadáveis + JURIS sistema database",
+      "n_documentos_estimado": 150,
+      "n_resoluces_2025": 9,
+      "n_portarias_vigentes": "~80+",
+      "periodo_cobertura": "2010-2026 (com atualizações em tempo real)",
+      "estrategia_crawl": "Scraper HTML estruturado (sem JavaScript) → parse de tabelas legislativas → download de PDFs via link direto",
+      "urls_pattern": [
+        "https://juris.antaq.gov.br/index.php/{ano}/{mes}/{titulo}/",
+        "http://web.antaq.gov.br/portalv3/Legislacao_{Tipo}.asp",
+        "https://sophia.antaq.gov.br/Terminal/Busca/Download?codigoArquivo=*"
+      ],
+      "blocker_tecnico": null,
+      "rate_limiting": "Nenhum aparente; site gov estável",
+      "autenticacao_requerida": false,
+      "javascript_rendering": false,
+      "api_disponivel": "Sim (SisPAT API mencionada para integração dados patrimoniais, mas resoluções via web)",
+      "volume_gb_estimado": 0.35,
+      "semanas_ingestion": [1, 2],
+      "dependencies": [],
+      "priority": "CRÍTICA",
+      "qualidade_dados": "Excelente — legislação oficial, metadados estruturados",
+      "fonte_tipo": "Legislação oficial",
+      "notas": [
+        "ANTAQ mantém JURIS database com busca por categoria, ano e tipo",
+        "Resoluções 124-133 publicadas em 2025-2026",
+        "Texto integral em PDFs descritivos",
+        "API SisPAT para patrimônio portuário pode ser ponte futura para dados de instalações",
+        "Atualização em tempo real — recomenda-se crawl incremental semanal"
+      ]
+    },
+    {
+      "ordem": 2,
+      "fonte": "BNDES Editais e Portarias Arrendamentos Portuários",
+      "sigla": "por:bndes-edital",
+      "url_acesso": "https://hubdeprojetos.bndes.gov.br/pt/setores/Portos",
+      "url_licitacoes": "https://www.bndes.gov.br/wps/portal/site/home/transparencia/licitacoes-contratos/licitacoes/consulta-licitacoes",
+      "url_biblioteca": "https://web.bndes.gov.br/bib/jspui/",
+      "formato": "PDF (editais) + HTML (sumários) + repositório BIB digital",
+      "n_documentos_estimado": 85,
+      "n_editais_planejados_2024_2026": 55,
+      "n_estudos_analise": 10,
+      "periodo_cobertura": "2010-2026 (com pipeline ativo)",
+      "estrategia_crawl": "Scraper HTML do Hub de Projetos → extração de links para editais PDF → parser de BNDES Biblioteca Digital → recuperação de estudos analíticos (PORTOS 2019, Dimensionamento 2023, etc)",
+      "urls_pattern": [
+        "https://hubdeprojetos.bndes.gov.br/pt/setores/Portos/**/edital-*.pdf",
+        "https://web.bndes.gov.br/bib/jspui/bitstream/1408/*/",
+        "https://www.bndes.gov.br/transparencia/licitacoes/consulta?estado=*"
+      ],
+      "blocker_tecnico": null,
+      "rate_limiting": "Nenhum aparente para hub; conservador em transparência",
+      "autenticacao_requerida": false,
+      "javascript_rendering": false,
+      "api_disponivel": "Não (mas estrutura HTML previsível)",
+      "volume_gb_estimado": 0.55,
+      "semanas_ingestion": [2, 3],
+      "dependencies": [
+        "Calendário de leilões do MPor/ANTAQ (coordenação)"
+      ],
+      "priority": "CRÍTICA",
+      "qualidade_dados": "Excelente — editais oficiais com termos claros",
+      "fonte_tipo": "Editais, contratos, financiamento",
+      "notas": [
+        "Government announced R$ 20 bilhões portfolio com 55 projetos até 2026",
+        "Primeiros leilões 2025 Q1: Paranaguá, Santos, Rio de Janeiro",
+        "BNDES Biblioteca Digital tem estudos setoriais (ex: 'Dimensionamento Potencial Investimentos Setor Portuário')",
+        "Editais publicados 30-60 dias antes do leilão → planejamento semanal de updates",
+        "Inclui estudos de viabilidade (EVTE) quando públicos"
+      ]
+    },
+    {
+      "ordem": 3,
+      "fonte": "DNIT Manuais Obras Portuárias, Dragagem, Hidrologia",
+      "sigla": "por:dnit-manuais",
+      "url_acesso": "https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/instituto-nacional-de-pesquisas-hidroviarias/manuais",
+      "url_manual_dragagem": "https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/instituto-nacional-de-pesquisas-hidroviarias/V08_INPH_XX_MANUAL_FISCAL_DRAG_PORTOS_BRASILEIROS_smd.pdf",
+      "url_colecao_manuais": "https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-manuais",
+      "url_glossario_hidroviario": "https://www.gov.br/dnit/pt-br/assuntos/aquaviario/glossario/2a_a_ed_glossario_hidroviario_2026.pdf",
+      "formato": "PDF diretos (publicados em gov.br CDN)",
+      "n_documentos_estimado": 12,
+      "manuais_principais": [
+        "Manual de Fiscalização de Dragagem em Portos Brasileiros (2ª Ed 2023)",
+        "Manual de Elaboração de Anteprojeto de Dragagem (INPH 003/2021)",
+        "Glossário Hidroviário (2ª Ed 2026)",
+        "Manual de Hidrologia Básica",
+        "Manual de Drenagem de Rodovias",
+        "Cartilha de Dragagem (CGU 2020)",
+        "Instruções Normativas Aquaviárias (múltiplas anos)"
+      ],
+      "periodo_cobertura": "2015-2026",
+      "estrategia_crawl": "Scraper HTML simples para índice de manuais → extração direto de URLs PDF (gov.br CDN confiável) → OCR se necessário para validação de conteúdo",
+      "urls_pattern": [
+        "https://www.gov.br/dnit/pt-br/assuntos/aquaviario/*/V*_INPH_*.pdf",
+        "https://www.gov.br/dnit/pt-br/assuntos/*/ipr/coletanea-de-manuais/vigentes/*",
+        "https://www.gov.br/dnit/*/glossario/*glossario*.pdf"
+      ],
+      "blocker_tecnico": null,
+      "rate_limiting": "Nenhum; gov.br CDN robusto",
+      "autenticacao_requerida": false,
+      "javascript_rendering": false,
+      "api_disponivel": "Não",
+      "volume_gb_estimado": 0.4,
+      "semanas_ingestion": [1, 2],
+      "dependencies": [],
+      "priority": "ALTA",
+      "qualidade_dados": "Excelente — manuais técnicos oficiais com normas ABNT",
+      "fonte_tipo": "Normas, manuais técnicos, guias operacionais",
+      "notas": [
+        "DNIT = Departamento Nacional de Infraestrutura de Transportes (gov federal)",
+        "INPH = Instituto Nacional de Pesquisas Hidroviárias (subordinado DNIT)",
+        "Manual de Dragagem é REFERÊNCIA obrigatória para projetos de dragagem em portos brasileiros",
+        "Glossário Hidroviário 2026 é a edição mais recente com definições de dragagem, cais, píer, calado",
+        "Manuais reutilizáveis (atualizações raras, geralmente a cada 3-5 anos)",
+        "OCR recomendado para tabelas de custos SICRO (Volume 10 — Manuais Técnicos)"
+      ]
+    },
+    {
+      "ordem": 4,
+      "fonte": "Teses e Dissertações Acadêmicas — USP, UFRJ, UFBA",
+      "sigla": "por:teses-academicas",
+      "url_ufrj_oceanica": "http://www.oceanica.ufrj.br/teses",
+      "url_ufrj_teses_site": "http://www.teses.oceanica.ufrj.br/pesquisa.html",
+      "url_ufrj_pantheon": "https://pantheon.ufrj.br/handle/11422/1",
+      "url_ufba_ppge": "https://www.pei.ufba.br/pt-br/teses-dissertacoes",
+      "url_usp_repositorio": "https://www.teses.usp.br/",
+      "formato": "PDF (full-text) + metadados estruturados (título, autor, ano, orientador, palavras-chave, resumo)",
+      "n_documentos_estimado": 550,
+      "n_teses_ufrj_naval_oceanica": 250,
+      "n_teses_ufba_engenharia": 150,
+      "n_teses_usp_integrais": 150,
+      "periodo_cobertura": "1990-2026 (cobertura mais completa a partir de 2000)",
+      "estrategia_crawl": "Busca por OAI-PMH se disponível (Pantheon suporta OAI) → fallback para scraper HTML de pesquisa + extração de metadados + download PDF",
+      "keywords_busca": [
+        "porto",
+        "terminal portuário",
+        "dragagem",
+        "cais",
+        "engenharia portuária",
+        "naval",
+        "oceânica",
+        "transporte marítimo",
+        "berço",
+        "calado",
+        "infraestrutura portuária"
+      ],
+      "urls_pattern": [
+        "https://pantheon.ufrj.br/browse?type=author&value=*",
+        "http://www.oceanica.ufrj.br/pesquisa.html?q=porto",
+        "https://www.teses.usp.br/?q=porto&type=author",
+        "https://www.pei.ufba.br/teses-dissertacoes?busca=porto"
+      ],
+      "blocker_tecnico": "Potencial rate limiting em Pantheon (gerenciado por DSpace) — respeitar robots.txt",
+      "rate_limiting": "Recomendado: 1-2 req/seg por repositório; use user-agent descritivo (manta-rag-crawler/1.0)",
+      "autenticacao_requerida": false,
+      "javascript_rendering": false,
+      "oai_pmh_disponivel": "Sim, Pantheon",
+      "api_disponivel": "OAI-PMH em Pantheon (https://pantheon.ufrj.br/oai/request)",
+      "volume_gb_estimado": 1.2,
+      "semanas_ingestion": [3, 4, 5],
+      "dependencies": [
+        "OAI-PMH client library (pyoai, ou equivalente)",
+        "Validação de copyright (alguns documentos podem ter restrições)"
+      ],
+      "priority": "ALTA",
+      "qualidade_dados": "Excelente — teses peer-reviewed com metadados estruturados",
+      "fonte_tipo": "Pesquisa acadêmica, dissertações, teses",
+      "notas": [
+        "UFRJ/Engenharia Naval é a MAIOR produtora de teses em portos no Brasil",
+        "Pantheon suporta OAI-PMH — usar para batch harvest completo",
+        "Respeitar robots.txt: Pantheon permite indexação/scraping responsável",
+        "Full-text PDFs geralmente disponíveis em open access",
+        "Metadados em Dublin Core (OAI) ou XML próprio do DSpace",
+        "Filtrar por: ano >= 2000, idioma PT-BR, área 'Engenharia Naval' ou 'Engenharia Civil'",
+        "Volume = ~550 teses em ~1.2 GB (PDFs em média 2 MB cada)",
+        "Ingestion incrementa ao final de cada semestre (quando novas defesas são cadastradas)",
+        "Considerar embargo de confidencialidade em ~5-10% das teses (dados sensíveis)"
+      ]
+    },
+    {
+      "ordem": 5,
+      "fonte": "ATP Relatórios Operacionais e Estudos Setoriais — Terminais Privados (TUP)",
+      "sigla": "por:atp-relatorios",
+      "url_acesso": "https://www.portosprivados.org.br/publicacoes/relatorios",
+      "url_atp_site": "https://www.portosprivados.org.br/",
+      "url_atp_linkedin": "https://br.linkedin.com/company/portosprivados",
+      "formato": "PDF + HTML (sumários)",
+      "n_documentos_estimado": 25,
+      "relatorios_tipos": [
+        "Relatório Anual de Atividades (anual desde 2018)",
+        "Relatório Semestral (2x/ano desde 2023)",
+        "Diagnóstico de Sustentabilidade",
+        "Análises Temáticas (reforma tributária, concessões, hidrovias)",
+        "Estudos de Competitividade e Investimento"
+      ],
+      "periodo_cobertura": "2018-2026",
+      "n_relatorios_anuais": 8,
+      "n_relatorios_semestrais": 16,
+      "n_estudos_especiais": 5,
+      "estrategia_crawl": "Scraper HTML simples da página /publicacoes/relatorios → extração de links PDF → download direto (padrão naming: relatorio-anual-XX_ATP.pdf)",
+      "urls_pattern": [
+        "https://www.portosprivados.org.br/files/relatorio-anual-*_ATP.pdf",
+        "https://www.portosprivados.org.br/files/relatorio-semestral-*_ATP.pdf",
+        "https://www.portosprivados.org.br/files/*-ATP.pdf",
+        "https://www.portosprivados.org.br/publicacoes/relatorios"
+      ],
+      "blocker_tecnico": null,
+      "rate_limiting": "Nenhum aparente — site pequeno",
+      "autenticacao_requerida": false,
+      "javascript_rendering": false,
+      "api_disponivel": "Não",
+      "volume_gb_estimado": 0.28,
+      "semanas_ingestion": [2, 3],
+      "dependencies": [],
+      "priority": "MEDIA-ALTA",
+      "qualidade_dados": "Boa — relatórios setoriais com dados operacionais de 287 TUPs brasileiros",
+      "fonte_tipo": "Relatórios operacionais, estudos setoriais",
+      "notas": [
+        "ATP = Associação de Terminais Portuários Privados (2013-presente)",
+        "Representa 37 empresas grandes + 72 terminais privados autorizados",
+        "TUPs movem 64,6% da movimentação portuária total no Brasil (2025)",
+        "Relatórios contêm: KPIs operacionais, investimentos, entraves, propostas de melhoria",
+        "Publicação anual: dezembro (ano anterior + plano próximo ano)",
+        "Publicação semestral: junho (1º sem) e dezembro (2º sem)",
+        "Dados operacionais (volumes, fluxos, eficiência) de ALTA relevância para prototipagem",
+        "Estudos especiais raro (quando há tema crítico — ex: reforma tributária 2024)",
+        "Atualização: semestral (conservador); follow-up imediatamente após 30 jun e 31 dez"
+      ]
+    }
+  ],
+  "resumo_por_categoria": {
+    "legislacao": {
+      "fontes": ["ANTAQ", "BNDES", "DNIT"],
+      "documentos": 250,
+      "volume_gb": 1.3,
+      "prioridade": "CRÍTICA"
+    },
+    "pesquisa_academica": {
+      "fontes": ["Teses"],
+      "documentos": 550,
+      "volume_gb": 1.2,
+      "prioridade": "ALTA"
+    },
+    "operacao_privada": {
+      "fontes": ["ATP"],
+      "documentos": 25,
+      "volume_gb": 0.28,
+      "prioridade": "MEDIA-ALTA"
+    }
+  },
+  "cronograma_phase1a": {
+    "semana_1": {
+      "atividade": "Bootstrapping + Tier 1A rápido (legislação + manuais)",
+      "fontes": ["ANTAQ", "DNIT"],
+      "n_docs": 162,
+      "volume_gb": 0.75,
+      "tarefas": [
+        "Deploy scraper ANTAQ (resoluções + portarias)",
+        "Deploy scraper DNIT (manuais PDF indexing)",
+        "Validação de 20 docs por fonte (sampling)",
+        "Setup incrementally para ANTAQ (atualização semanal)"
+      ],
+      "entrega": "550+ docs legislação em RAG; testes de recall básico"
+    },
+    "semana_2": {
+      "atividade": "BNDES editais + ATP relatórios + consolidação W1",
+      "fontes": ["BNDES", "ATP", "ANTAQ+DNIT iterativo"],
+      "n_docs": 110,
+      "volume_gb": 0.83,
+      "tarefas": [
+        "Deploy scraper BNDES editais (Hub de Projetos + Biblioteca Digital)",
+        "Deploy scraper ATP relatórios",
+        "Re-validar ANTAQ (buscar novos 2025-2026)",
+        "Ajustes em DNIT (glossário hidroviário)",
+        "Testes de QA em 50 docs (validação cruzada legislação)"
+      ],
+      "entrega": "325+ docs (legislação + editais + operação); validação de 50 amostras"
+    },
+    "semana_3": {
+      "atividade": "Teses acadêmicas bootstrap (UFRJ Pantheon + OAI-PMH)",
+      "fontes": ["Teses UFRJ", "Teses UFBA", "Teses USP (subset)"],
+      "n_docs": 200,
+      "volume_gb": 0.4,
+      "tarefas": [
+        "Deploy OAI-PMH client para Pantheon UFRJ",
+        "Setup de keywords search (porta, dragagem, cais, etc)",
+        "Batch harvest UFRJ Naval (~250 teses)",
+        "Validação de metadados estruturados (Dublin Core)",
+        "Teste de rate limiting (1 req/seg)"
+      ],
+      "entrega": "200+ teses UFRJ harvested; validação de 30 amostras de full-text"
+    },
+    "semana_4": {
+      "atividade": "Teses UFBA + USP + consolidação de pesquisa",
+      "fontes": ["Teses UFBA", "Teses USP", "Teses UFRJ iterativo"],
+      "n_docs": 200,
+      "volume_gb": 0.4,
+      "tarefas": [
+        "Scraper HTML para UFBA PEI (sem OAI-PMH publicado)",
+        "Identificar repositório USP Teses (oai.usp.br ou teses.usp.br)",
+        "Harvest USP subset (150 primeiras por data)",
+        "Validação cruzada de duplicatas (mesma tese em 2+ repositórios)",
+        "OCR validação em ~10% das teses (PDFs antigos raster)"
+      ],
+      "entrega": "150 teses UFBA + 150 USP; total 550 teses; dedup final"
+    },
+    "semana_5": {
+      "atividade": "QA completo Tier 1 + pipeline de ingestion final",
+      "fontes": ["Todas 5 fontes iterativo"],
+      "n_docs": 50,
+      "volume_gb": 0.15,
+      "tarefas": [
+        "Validação de cobertura total (825 docs esperados)",
+        "Teste de busca: 10 queries-chave (dragagem, ANTAQ, TUP, etc)",
+        "Validação de metadados normalizados (título, autor, ano, fonte, URL origem)",
+        "Setup de exclusão de confidencialidade (5-10% teses com embargo)",
+        "Teste de URL permanente (verificar 50 links aleatórios)"
+      ],
+      "entrega": "QA report; 825 docs prontos para embedding"
+    },
+    "semana_6": {
+      "atividade": "Embedding + indexação + plano Phase 1b",
+      "fontes": ["Todas — post-processing"],
+      "n_docs": 825,
+      "volume_gb": 2.8,
+      "tarefas": [
+        "Chunking (400 tokens, overlap 50) das 825 fontes",
+        "Embedding local (intfloat/multilingual-e5-small ou OpenAI text-embedding-3-small)",
+        "Indexação em Supabase vector table (pgvector)",
+        "Teste de semantic search (5 queries-chave)",
+        "Documentação final: cronograma Phase 1b (Tier 2: PIANC guidelines, Case studies, Gray literature)"
+      ],
+      "entrega": "825 docs embedded + indexed; Phase 1b roadmap"
+    }
+  },
+  "riscos_mitigacao": [
+    {
+      "risco": "ANTAQ mudança de estrutura de URLs (reestruturação 2026)",
+      "impacto": "Scraper quebra; perda de atualizações",
+      "mitigacao": "Monitorar com 2 scouts de URL semana 1; usar robots.txt; manter fallback para JURIS database"
+    },
+    {
+      "risco": "Teses com embargo de confidencialidade (5-10%)",
+      "impacto": "Download falha; perde validação de integridade",
+      "mitigacao": "Whitelist de exceções (gravar documento-id + motivo); skip silenciosamente; log em auditoria"
+    },
+    {
+      "risco": "Pantheon UFRJ rate limiting em OAI-PMH",
+      "impacto": "Harvest lento; possível IP block",
+      "mitigacao": "Começar com 1 req/seg; exponential backoff; user-agent descritivo; contato direto com TI/UFRJ se bloqueado"
+    },
+    {
+      "risco": "PDFs raster (scans antigos) — OCR necessário",
+      "impacto": "Text extraction falha; metadados incompletos",
+      "mitigacao": "Validar sample 10 docs de cada fonte W4; setup OCR (Tesseract) como fallback post-processing"
+    },
+    {
+      "risco": "Duplicatas entre repositórios (ex: tese em USP + Pantheon)",
+      "impacto": "Redundância no RAG; degradação de quality",
+      "mitigacao": "Dedup por (título normalizado + autor + ano); manter cross-reference URL origem"
+    },
+    {
+      "risco": "BNDES editais não segue padrão de nomenclatura consistente",
+      "impacto": "Scraper não generaliza; manual parsing necessário",
+      "mitigacao": "Sample 10 editais W1; ajustar regex patterns; fallback para OCR se estrutura varia muito"
+    },
+    {
+      "risco": "ATP site down ou relatórios removidos (arquivo incompleto)",
+      "impacto": "Perda de histórico operacional",
+      "mitigacao": "Snapshot de site W2 (Wayback Machine); manter cópia local; contato com ATP para missing docs"
+    },
+    {
+      "risco": "DNIT manual PDF corrompido ou inacessível",
+      "impacto": "Download quebra; validação falha",
+      "mitigacao": "Verify PDFs com pdfinfo W1; manter fallback de scan do Scribd/SlideShare (com atribuição)"
+    }
+  ],
+  "blockers_tecnicos_resumo": {
+    "javascript_rendering": "Nenhum obrigatório (todos sites HTML simples)",
+    "rate_limiting": "POTENCIAL em Pantheon UFRJ — usar 1-2 req/sec + backoff exponencial",
+    "autenticacao": "Nenhuma obrigatória para Tier 1",
+    "certificados_ssl": "Todos HTTPS com certificados válidos (gov.br + gov domain)",
+    "robots_txt": "Respeitar; Pantheon permite scraping responsável; gov.br sem restrições explícitas para bots educacionais",
+    "api": "Nem todos oferecem API; Pantheon OAI-PMH é a melhor prática",
+    "encoding": "UTF-8 padrão em todos; DNIT manuais podem ter PDF com codificação específica — validar"
+  },
+  "requisitos_tecnico_infraestrutura": {
+    "web_scraper": "BeautifulSoup4 + Requests (Python) ou Selenium para edge cases (nenhum neste T1)",
+    "pdf_handler": "pypdf2 ou pdfplumber para metadados; Tesseract para OCR fallback",
+    "oai_pmh_client": "pyoai library para Pantheon",
+    "embedding_model": "intfloat/multilingual-e5-small (local, sem cost) OU OpenAI text-embedding-3-small (USD ~0.02/1M tokens)",
+    "database": "Supabase pgvector (vector table na existing manta-db)",
+    "storage": "S3/bucket para PDFs originais (backup + audit trail) — ~3 GB",
+    "compute": "1-2 vCPU mínimo para chunking+embedding paralelo; ~4 horas total para 825 docs"
+  },
+  "metricas_sucesso_phase1a": {
+    "cobertura": "825+ documentos Tier 1 (legislação + teses + operação)",
+    "qualidade_metadata": ">=95% de docs com (título, fonte, data, URL origem) validados",
+    "acesso_publico": "100% dos links ainda acessíveis (validação semanal pós-ingestion)",
+    "embedding_latency": "<2s para query de 100 tokens (search over 825 docs no pgvector)",
+    "recall_semantico": ">=0.85 (F1 em 5 queries-chave: 'dragagem porto', 'ANTAQ resolução', 'TUP operação', etc)",
+    "duplicata_rate": "<1% (dedup validado)",
+    "oob_confidence": ">=0.8 em 90% dos docs (estimado pelo modelo de embeddings)"
+  },
+  "proximos_passos_phase1b": {
+    "semana_9": "Tier 2A: PIANC (Port, Inland Waterway Engineering Association) guidelines, normas ISO 17217+ (portos)",
+    "semana_10_11": "Tier 2B: Case studies de terminais reais (estudos técnicos de portos brasileiros que abriram em 2020-2026)",
+    "semana_12": "Tier 2C: Gray literature (relatórios de consultoria, EIA-RIMAs de projetos portuários, estudos de viabilidade não-públicos caso possível)",
+    "semana_13_14": "Fine-tuning de relevância: usar agente Sonnet 4.6 para validar respostas em queries reais do segmento Portos; ajuste de pesos de embedding por tipo de doc"
+  },
+  "contactos_stakeholders": [
+    {
+      "organizacao": "ANTAQ",
+      "departamento": "Legislação / TI",
+      "objetivo": "Confirmar API roadmap; notificar sobre scraping; pedir histórico completo de resoluções em formato máquina-legível",
+      "email": "contato@antaq.gov.br ou ti@antaq.gov.br"
+    },
+    {
+      "organizacao": "DNIT / INPH",
+      "departamento": "Instituto Nacional de Pesquisas Hidroviárias",
+      "objetivo": "Confirmar versão atual de manuais; pedir notificação de atualizações futuras",
+      "email": "inph@dnit.gov.br"
+    },
+    {
+      "organizacao": "BNDES",
+      "departamento": "Transparência / Hub de Projetos",
+      "objetivo": "Solicitar calendário de editais 2025-2026; acesso a histórico completo de arrendamentos",
+      "contato": "hubdeprojetos@bndes.gov.br"
+    },
+    {
+      "organizacao": "UFRJ / Biblioteca Digital / Pantheon",
+      "departamento": "TI / OAI-PMH Admin",
+      "objetivo": "Confirmar OAI endpoint; rate limits; embargo policy; user-agent whitelist",
+      "email": "biblioteca@ufrj.br ou it-support@ufrj.br"
+    },
+    {
+      "organizacao": "ATP",
+      "departamento": "Comunicação / Secretaria",
+      "objetivo": "Solicitar acesso a relatórios não-públicos (se houver); notificação de novas publicações",
+      "url": "https://www.portosprivados.org.br/ → contact form"
+    }
+  ],
+  "validacao_final": {
+    "checklist_w1": [
+      "✅ ANTAQ URLs validadas (3/3: govbr, JURIS, web.antaq)",
+      "✅ DNIT manuais acessíveis (12/12 padrão gov.br CDN)",
+      "✅ BNDES Hub de Projetos funcional (55 editais mapeados)",
+      "✅ Pantheon UFRJ OAI-PMH respondendo (testé harvest 10 docs)",
+      "✅ ATP relatórios listáveis (25 docs pattern identificado)"
+    ],
+    "status_go_nogo": "GO para Phase 1a Week 1",
+    "assinado_por": "Manta 03-S6 Especialista Portos",
+    "data_validacao": "2026-07-15"
+  }
+}
