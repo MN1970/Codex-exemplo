@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manta Maestro — Planejamento de Orquestração Multi-Agentes</title>
+  <style>
+    :root {
+      /* Cores — light theme */
+      --color-ground: #FAFAF8;
+      --color-text: #1a1a18;
+      --color-text-secondary: #6B7280;
+      --color-border: #E5E7EB;
+      --color-accent: #2563EB;
+      --color-accent-light: #EFF6FF;
+      --color-parallel: #7C3AED;
+      --color-warning: #DC2626;
+      --color-success: #10B981;
+      --color-info: #0EA5E9;
+
+      /* Tipografia */
+      --ff-display: "Nunito Sans", -apple-system, system-ui, sans-serif;
+      --ff-body: "Segoe UI", -apple-system, system-ui, sans-serif;
+      --ff-mono: Consolas, Monaco, "Courier New", monospace;
+
+      /* Escalas */
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.25rem;
+      --text-2xl: 1.5rem;
+      --text-3xl: 2rem;
+      --text-4xl: 2.5rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-ground: #0F0F0E;
+        --color-text: #F5F5F3;
+        --color-text-secondary: #9CA3AF;
+        --color-border: #2D2D2B;
+        --color-accent: #60A5FA;
+        --color-accent-light: #1E3A8A;
+        --color-parallel: #A78BFA;
+        --color-warning: #FCA5A5;
+        --color-success: #6EE7B7;
+        --color-info: #22D3EE;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --color-ground: #0F0F0E;
+      --color-text: #F5F5F3;
+      --color-text-secondary: #9CA3AF;
+      --color-border: #2D2D2B;
+      --color-accent: #60A5FA;
+      --color-accent-light: #1E3A8A;
+      --color-parallel: #A78BFA;
+      --color-warning: #FCA5A5;
+      --color-success: #6EE7B7;
+      --color-info: #22D3EE;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--color-ground);
+      color: var(--color-text);
+      font-family: var(--ff-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .grid-12 {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 2rem;
+    }
+
+    .col-span-12 { grid-column: span 12; }
+    .col-span-6 { grid-column: span 6; }
+    .col-span-4 { grid-column: span 4; }
+    .col-span-3 { grid-column: span 3; }
+
+    @media (max-width: 768px) {
+      .col-span-6 { grid-column: span 12; }
+      .col-span-4 { grid-column: span 12; }
+      .col-span-3 { grid-column: span 12; }
+    }
+
+    /* Tipografia */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--ff-display);
+      font-weight: 700;
+      text-wrap: balance;
+      margin: 0 0 1rem 0;
+    }
+
+    h1 {
+      font-size: var(--text-4xl);
+      line-height: 1.2;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: var(--text-3xl);
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 3px solid var(--color-accent);
+      padding-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: var(--text-2xl);
+      color: var(--color-accent);
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    h4 {
+      font-size: var(--text-xl);
+      color: var(--color-text);
+      margin-top: 1.5rem;
+    }
+
+    p {
+      margin: 0 0 1rem 0;
+      line-height: 1.8;
+      color: var(--color-text);
+    }
+
+    .subtitle {
+      font-size: var(--text-lg);
+      color: var(--color-text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    code {
+      font-family: var(--ff-mono);
+      font-size: 0.9em;
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* Componentes */
+    .hero {
+      padding: 3rem 2rem;
+      background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-ground) 100%);
+      border-radius: 8px;
+      margin-bottom: 3rem;
+      border-left: 6px solid var(--color-accent);
+    }
+
+    .hero h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-diagram {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--color-ground);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--color-accent);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    }
+
+    .card-title {
+      font-size: var(--text-xl);
+      font-family: var(--ff-display);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--color-accent);
+    }
+
+    .card-label {
+      display: inline-block;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.75rem;
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .card.pattern-pipeline .card-label {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--color-accent);
+    }
+
+    .card.pattern-parallel .card-label {
+      background: rgba(124, 58, 237, 0.1);
+      color: var(--color-parallel);
+    }
+
+    .limit-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: var(--text-sm);
+    }
+
+    .limit-table th {
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      font-family: var(--ff-display);
+      font-weight: 700;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--color-accent);
+    }
+
+    .limit-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+
+    .limit-table tr:hover {
+      background: var(--color-accent-light);
+    }
+
+    .limit-value {
+      font-family: var(--ff-mono);
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+
+    .warning-box {
+      background: rgba(220, 38, 38, 0.1);
+      border-left: 4px solid var(--color-warning);
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1.5rem 0;
+    }
+
+    .warning-box strong {
+      color: var(--color-warning);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-box {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--color-success);
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1.5rem 0;
+    }
+
+    .success-box strong {
+      color: var(--color-success);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .diagram {
+      background: var(--color-accent-light);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+
+    .diagram svg {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .checklist li {
+      padding: 0.75rem 0 0.75rem 2.5rem;
+      position: relative;
+      color: var(--color-text);
+    }
+
+    .checklist li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      font-size: var(--text-lg);
+      color: var(--color-success);
+    }
+
+    .summary-box {
+      background: var(--color-accent-light);
+      border: 2px solid var(--color-accent);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .summary-box strong {
+      display: block;
+      font-size: var(--text-lg);
+      color: var(--color-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HERO -->
+    <div class="hero">
+      <h1>Manta Maestro — Orquestração de Múltiplos Agentes</h1>
+      <p class="subtitle">Planejamento arquitetural para execução paralela de 20 agentes IA com priorização de workflows e otimização de throughput</p>
+      <div class="hero-diagram">
+        <svg width="100%" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="max-width: 500px;">
+          <!-- Mestrado central -->
+          <circle cx="300" cy="100" r="30" fill="#2563EB" opacity="0.2" stroke="#2563EB" stroke-width="2"/>
+          <text x="300" y="105" text-anchor="middle" font-size="12" font-weight="bold" fill="#2563EB">Maestro</text>
+
+          <!-- 4 workflows paralelos -->
+          <g>
+            <!-- WF 1 -->
+            <line x1="330" y1="70" x2="430" y2="50" stroke="#7C3AED" stroke-width="2"/>
+            <circle cx="450" cy="40" r="20" fill="#7C3AED" opacity="0.15" stroke="#7C3AED" stroke-width="2"/>
+            <text x="450" y="45" text-anchor="middle" font-size="11" fill="#7C3AED">WF-1</text>
+
+            <!-- WF 2 -->
+            <line x1="330" y1="85" x2="430" y2="85" stroke="#7C3AED" stroke-width="2"/>
+            <circle cx="450" cy="85" r="20" fill="#7C3AED" opacity="0.15" stroke="#7C3AED" stroke-width="2"/>
+            <text x="450" y="90" text-anchor="middle" font-size="11" fill="#7C3AED">WF-2</text>
+
+            <!-- WF 3 -->
+            <line x1="330" y1="100" x2="430" y2="120" stroke="#7C3AED" stroke-width="2"/>
+            <circle cx="450" cy="130" r="20" fill="#7C3AED" opacity="0.15" stroke="#7C3AED" stroke-width="2"/>
+            <text x="450" y="135" text-anchor="middle" font-size="11" fill="#7C3AED">WF-3</text>
+
+            <!-- WF 4 -->
+            <line x1="330" y1="115" x2="430" y2="160" stroke="#7C3AED" stroke-width="2"/>
+            <circle cx="450" cy="170" r="20" fill="#7C3AED" opacity="0.15" stroke="#7C3AED" stroke-width="2"/>
+            <text x="450" y="175" text-anchor="middle" font-size="11" fill="#7C3AED">WF-4</text>
+          </g>
+
+          <!-- Label "fan-out paralelo" -->
+          <text x="380" y="20" font-size="10" fill="#7C3AED" font-weight="bold">Fan-out paralelo</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 1: ARQUITETURA ATUAL -->
+    <h2>Arquitetura Atual — 20 Agentes Operacionais</h2>
+
+    <div class="grid-12">
+      <div class="col-span-6 card">
+        <div class="card-title">Agentes Horizontais (A1–A10)</div>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary);">Cross-setor, reutilizáveis em todos os projetos</p>
+        <ul style="list-style: none; padding: 0; margin: 1rem 0; font-size: var(--text-sm);">
+          <li><strong>A1</strong> — Claims</li>
+          <li><strong>A2</strong> — Quantidades</li>
+          <li><strong>A3</strong> — Contratual</li>
+          <li><strong>A4</strong> — Cronograma</li>
+          <li><strong>A5</strong> — Orçamento</li>
+          <li><strong>A6</strong> — Modelagem</li>
+          <li><strong>A7</strong> — Business Dev</li>
+          <li><strong>A8</strong> — Apresentações</li>
+          <li><strong>A9</strong> — Regulatório</li>
+          <li><strong>A10</strong> — Risco</li>
+        </ul>
+      </div>
+
+      <div class="col-span-6 card">
+        <div class="card-title">Agentes Verticais (S1–S11)</div>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary);">Segmentos de mercado específicos</p>
+        <ul style="list-style: none; padding: 0; margin: 1rem 0; font-size: var(--text-sm);">
+          <li><strong>S1–S5</strong> — Infraestrutura (rodovias, OAE, ferrovia, metro, geral)</li>
+          <li><strong>S6</strong> — Edificações</li>
+          <li><strong>S7</strong> — Portos</li>
+          <li><strong>S8</strong> — Aeroportos</li>
+          <li><strong>S9</strong> — Saneamento</li>
+          <li><strong>S10</strong> — Energia</li>
+          <li><strong>S11</strong> — Barragens</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 2: LIMITES TÉCNICOS -->
+    <h2>Limites Técnicos — O Que Funciona em Paralelo</h2>
+
+    <table class="limit-table">
+      <thead>
+        <tr>
+          <th>Métrica</th>
+          <th>Valor</th>
+          <th>Implicação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Agentes simultâneos por workflow</strong></td>
+          <td class="limit-value">16 (ou min(16, cores−2))</td>
+          <td>Max fan-out paralelo. Cores da máquina podem limitar a 14 em CPU de 16 cores.</td>
+        </tr>
+        <tr>
+          <td><strong>Agentes totais por lifecycle</strong></td>
+          <td class="limit-value">1.000</td>
+          <td>Hard cap de agentes spawnable numa sessão. Proteção contra runaway loops.</td>
+        </tr>
+        <tr>
+          <td><strong>Itens por pipeline() ou parallel()</strong></td>
+          <td class="limit-value">4.096</td>
+          <td>Max items numa única chamada paralela. Além disso, erro explícito.</td>
+        </tr>
+        <tr>
+          <td><strong>Colecções RAG</strong></td>
+          <td class="limit-value">5</td>
+          <td>Propostas, contratos, normas, composições, projetos. Query automática por agente.</td>
+        </tr>
+        <tr>
+          <td><strong>Embedding dimensionalidade</strong></td>
+          <td class="limit-value">384d</td>
+          <td>BAAI/bge-small-en-v1.5. Mais leve que OpenAI text-embedding-3 (1536d).</td>
+        </tr>
+        <tr>
+          <td><strong>KE vetorizados / total</strong></td>
+          <td class="limit-value">66 / 86 (78.6%)</td>
+          <td>Knowledge Extractions prontos para RAG. 20 pendentes de indexação.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warning-box">
+      <strong>⚠️ Bottleneck Crítico</strong>
+      Você tem 20 agentes mas só pode rodar 16 em paralelo por workflow. Estratégia: fan-out em lotes de 16, ou usar pipeline (sem barrier) para serializar logicamente mas paralelizar por itens.
+    </div>
+
+    <!-- SEÇÃO 3: PADRÕES DE ORQUESTRAÇÃO -->
+    <h2>4 Padrões de Orquestração</h2>
+
+    <div class="grid-12">
+      <!-- Padrão 1: Pipeline -->
+      <div class="col-span-6 card pattern-pipeline">
+        <div class="card-label">Recomendado para Análise</div>
+        <div class="card-title">Pipeline (sem barrier)</div>
+        <p><strong>Quando usar:</strong> Múltiplos agentes processando <em>itens diferentes</em> através de múltiplas <em>etapas sequenciais</em>.</p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin: 1rem 0;">
+          <strong>Exemplo:</strong> Varrer 100 projetos → A7 indexar cada um → A5 estimar custos → A4 gerar cronograma. Cada projeto flui independentemente. Item A pode estar na etapa 3 enquanto Item B está na etapa 1.
+        </p>
+        <p style="font-size: var(--text-sm); margin-top: 1rem;"><code>pipeline(items, stage1, stage2, stage3)</code></p>
+        <div class="success-box">
+          <strong>✓ Vantagem</strong>
+          Wall-clock = cadeia mais lenta, não soma de todas as etapas. Máximo throughput.
+        </div>
+      </div>
+
+      <!-- Padrão 2: Parallel -->
+      <div class="col-span-6 card pattern-parallel">
+        <div class="card-label">Para Votação Paralela</div>
+        <div class="card-title">Parallel (com barrier)</div>
+        <p><strong>Quando usar:</strong> <em>Múltiplos agentes independentes</em> respondendo <em>à mesma pergunta</em>, depois <em>síntese centralizada</em>.</p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin: 1rem 0;">
+          <strong>Exemplo:</strong> Um claim complexo. 3 agentes votam se é válido (adversarial verify). Síntese lê todos os votos e decide.
+        </p>
+        <p style="font-size: var(--text-sm); margin-top: 1rem;"><code>parallel([agent1, agent2, agent3]).then(synthesis)</code></p>
+        <div class="success-box">
+          <strong>✓ Vantagem</strong>
+          Verdade por consenso. Evita single-point-of-failure em decisões críticas.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-12">
+      <!-- Padrão 3: Fan-out + Fallback -->
+      <div class="col-span-6 card">
+        <div class="card-label">Roteamento Inteligente</div>
+        <div class="card-title">Fan-out com Fallback</div>
+        <p><strong>Padrão:</strong> Tenta A1-claims. Se falha ou confiança &lt;70%, fallback para A3-contratual.</p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin: 1rem 0;">
+          <strong>Implementação:</strong> Router determinístico (zero tokens) classifica entrada. Se A1 falha, dispatch para A3 automático. Sem retry desnecessário.
+        </p>
+        <code>if agente_falha: fallback[agente_alternativo]</code>
+      </div>
+
+      <!-- Padrão 4: Fan-out por Lote -->
+      <div class="col-span-6 card">
+        <div class="card-label">Para Esgotar 20 Agentes</div>
+        <div class="card-title">Fan-out em Lotes de 16</div>
+        <p><strong>Padrão:</strong> Dividir 20 agentes em 2 lotes (16 + 4), executar em paralelo, depois juntar.</p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin: 1rem 0;">
+          <strong>Caso de uso:</strong> Scan massivo do SharePoint. Lote 1 (A1–A8, S1–S4) varrem projetos core. Lote 2 (A9–A10, S6–S11) varrem segmentos novos. Depois consolidar findings.
+        </p>
+        <code>batch1 = await parallel(agents.slice(0,16))<br/>batch2 = await parallel(agents.slice(16,20))</code>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 4: ESTRATÉGIA DE PRIORIZAÇÃO -->
+    <h2>Estratégia de Priorização de Workflows</h2>
+
+    <div class="diagram">
+      <svg width="100%" height="300" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width: 600px;">
+        <!-- Caixas de decisão -->
+        <g>
+          <!-- Entrada -->
+          <rect x="50" y="20" width="120" height="60" rx="4" fill="#2563EB" opacity="0.15" stroke="#2563EB" stroke-width="2"/>
+          <text x="110" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#2563EB">User Input</text>
+
+          <!-- Router -->
+          <line x1="170" y1="50" x2="220" y2="50" stroke="#2563EB" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <rect x="220" y="20" width="140" height="60" rx="4" fill="#0EA5E9" opacity="0.15" stroke="#0EA5E9" stroke-width="2"/>
+          <text x="290" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#0EA5E9">Router</text>
+          <text x="290" y="70" text-anchor="middle" font-size="10" fill="#0EA5E9">(classificação keywords)</text>
+
+          <!-- Split 3 decisões -->
+          <!-- Path 1: Urgência Alta -->
+          <line x1="360" y1="50" x2="400" y2="30" stroke="#DC2626" stroke-width="2"/>
+          <rect x="400" y="10" width="110" height="50" rx="4" fill="#DC2626" opacity="0.15" stroke="#DC2626" stroke-width="2"/>
+          <text x="455" y="25" text-anchor="middle" font-size="11" font-weight="bold" fill="#DC2626">CRÍTICO</text>
+          <text x="455" y="40" text-anchor="middle" font-size="9" fill="#DC2626">Imediato</text>
+          <text x="455" y="52" text-anchor="middle" font-size="8" fill="#DC2626">(Q=0)</text>
+
+          <!-- Path 2: Prioridade Normal -->
+          <line x1="360" y1="50" x2="400" y2="50" stroke="#10B981" stroke-width="2"/>
+          <rect x="400" y="30" width="110" height="50" rx="4" fill="#10B981" opacity="0.15" stroke="#10B981" stroke-width="2"/>
+          <text x="455" y="45" text-anchor="middle" font-size="11" font-weight="bold" fill="#10B981">NORMAL</text>
+          <text x="455" y="60" text-anchor="middle" font-size="9" fill="#10B981">Fila padrão</text>
+          <text x="455" y="72" text-anchor="middle" font-size="8" fill="#10B981">(Q=16)</text>
+
+          <!-- Path 3: Background -->
+          <line x1="360" y1="50" x2="400" y2="90" stroke="#6B7280" stroke-width="2"/>
+          <rect x="400" y="70" width="110" height="50" rx="4" fill="#6B7280" opacity="0.15" stroke="#6B7280" stroke-width="2"/>
+          <text x="455" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#6B7280">BACKGROUND</text>
+          <text x="455" y="100" text-anchor="middle" font-size="9" fill="#6B7280">Quando houver</text>
+          <text x="455" y="112" text-anchor="middle" font-size="8" fill="#6B7280">(Q=unlimited)</text>
+
+          <!-- Executor -->
+          <line x1="510" y1="35" x2="580" y2="50" stroke="#2563EB" stroke-width="2"/>
+          <line x1="510" y1="55" x2="580" y2="50" stroke="#2563EB" stroke-width="2"/>
+          <line x1="510" y1="95" x2="580" y2="50" stroke="#2563EB" stroke-width="2"/>
+          <rect x="580" y="25" width="100" height="50" rx="4" fill="#7C3AED" opacity="0.15" stroke="#7C3AED" stroke-width="2"/>
+          <text x="630" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#7C3AED">Executor</text>
+
+          <!-- Queue Manager -->
+          <rect x="220" y="120" width="280" height="80" rx="4" fill="none" stroke="#0EA5E9" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="230" y="140" font-size="11" font-weight="bold" fill="#0EA5E9">Queue Manager (dinâmico)</text>
+          <text x="240" y="160" font-size="10" fill="#0EA5E9">• Interrompe background se crítico chegar</text>
+          <text x="240" y="175" font-size="10" fill="#0EA5E9">• Mantém até 16 agentes ativos max</text>
+          <text x="240" y="190" font-size="10" fill="#0EA5E9">• Preaquecimento: cache RAG + warmup lócus</text>
+        </g>
+
+        <!-- Legend seta -->
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0 0, 10 3, 0 6" fill="#2563EB" />
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <h3>Regras de Priorização (QPrio)</h3>
+
+    <table class="limit-table">
+      <thead>
+        <tr>
+          <th>Nível</th>
+          <th>Trigger</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color: var(--color-warning);">Q0 — CRÍTICO</strong></td>
+          <td>User diz "urge", "crítico", "agora"; prazo &lt;2h; claim reequilíbrio</td>
+          <td>Executa imediatamente. Interrompe background. Sem fila.</td>
+        </tr>
+        <tr>
+          <td><strong style="color: var(--color-success);">Q16 — NORMAL</strong></td>
+          <td>Default. Proposta, análise técnica, modelagem de viabilidade</td>
+          <td>Fila padrão. Max 16 agentes paralelos. Fan-out após conclusão anterior.</td>
+        </tr>
+        <tr>
+          <td><strong style="color: var(--color-text-secondary);">Q∞ — BACKGROUND</strong></td>
+          <td>Indexação RAG, scan SharePoint, cache warmup</td>
+          <td>Roda quando há slots livres. Interrompível sem perda. Auto-resume.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SEÇÃO 5: EXEMPLO PRÁTICO -->
+    <h2>Exemplo Prático — Workflow Real de 16 Agentes</h2>
+
+    <div class="summary-box">
+      <strong>Cenário:</strong> Proposta técnico-comercial para concessão rodoviária.
+      Entrada: edital PDF + briefing cliente (2 páginas).
+      Saída: 10-slide deck + relatório executivo + análise de concorrentes.
+    </div>
+
+    <h3>Pipeline de Execução</h3>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+      <!-- Etapa 1 -->
+      <div class="card" style="border-left: 4px solid var(--color-accent);">
+        <h4 style="margin-top: 0; font-size: var(--text-lg);">Etapa 1 — Análise (4 agentes paralelos)</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+          <li><code>A9</code> — Parse regulatório (DNIT, concessões)</li>
+          <li><code>A7</code> — Contexto de mercado (concorrentes OEC, CCR)</li>
+          <li><code>S1</code> — Specs técnicas (geometria, pavimentos)</li>
+          <li><code>A10</code> — Análise de riscos (financeiro, político)</li>
+        </ul>
+        <p style="font-size: var(--text-xs); color: var(--color-text-secondary); margin-top: 1rem;">Wall-clock: ~120s (paralelo)</p>
+      </div>
+
+      <!-- Etapa 2 -->
+      <div class="card" style="border-left: 4px solid var(--color-parallel);">
+        <h4 style="margin-top: 0; font-size: var(--text-lg);">Etapa 2 — Síntese (6 agentes paralelos)</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+          <li><code>A6</code> — Modelagem financeira (DCF, fluxo caixa)</li>
+          <li><code>A4</code> — Cronograma executivo (fases, marcos)</li>
+          <li><code>A5</code> — Orçamento SICRO + auxiliares</li>
+          <li><code>A1</code> — Análise contratual (TAC, diferenciais)</li>
+          <li><code>A2</code> — Levantamento de quantidades CAD</li>
+          <li><code>A3</code> — Review jurídico (clausulado)</li>
+        </ul>
+        <p style="font-size: var(--text-xs); color: var(--color-text-secondary); margin-top: 1rem;">Wall-clock: ~180s (paralelo)</p>
+      </div>
+
+      <!-- Etapa 3 -->
+      <div class="col-span-2 card" style="border-left: 4px solid var(--color-success);">
+        <h4 style="margin-top: 0; font-size: var(--text-lg);">Etapa 3 — Entrega (6 agentes serializados + consolidação)</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+          <li><code>A8</code> — Deck 10 slides (5 subtipos Manta: A–E executivos)</li>
+          <li><code>F-advisory</code> — Parecer técnico</li>
+          <li><code>A7</code> — Proposição comercial (18 seções, capa customizada)</li>
+          <li><code>A6</code> → <code>A8</code> — Financeiro no deck (gráficos DCF)</li>
+          <li><code>A4</code> → <code>A8</code> — Cronograma Gantt (3 fases)</li>
+          <li><code>A14-apresentacoes</code> — Review final (correções de tom, branding)</li>
+        </ul>
+        <p style="font-size: var(--text-xs); color: var(--color-text-secondary); margin-top: 1rem;">Wall-clock: ~120s (serial, mas paralelo dentro de etapa 3)</p>
+      </div>
+    </div>
+
+    <div class="success-box">
+      <strong>✓ Total Wall-Clock: ~420 segundos (7 minutos)</strong><br/>
+      16 agentes utilizados em paralelo: A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, S1, F-advisory, A14, + 2 slots livres.
+      <br/><br/>
+      <strong>Com execução serial (1 agente de cada vez):</strong> ~1.200s (20 minutos) — 3x mais lento.
+    </div>
+
+    <!-- SEÇÃO 6: PRIORIDADES NA PRÁTICA -->
+    <h2>Prioridades na Prática — Quadrante de Impacto</h2>
+
+    <div class="diagram">
+      <svg width="100%" height="280" viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" style="max-width: 700px;">
+        <!-- Eixos -->
+        <line x1="100" y1="220" x2="700" y2="220" stroke="#2563EB" stroke-width="2"/>
+        <line x1="100" y1="30" x2="100" y2="220" stroke="#2563EB" stroke-width="2"/>
+
+        <!-- Labels eixos -->
+        <text x="730" y="220" font-size="12" font-weight="bold" fill="#2563EB">Urgência →</text>
+        <text x="70" y="15" font-size="12" font-weight="bold" fill="#2563EB">Impacto ↑</text>
+
+        <!-- Grid -->
+        <line x1="100" y1="125" x2="700" y2="125" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="2,4"/>
+        <line x1="400" y1="30" x2="400" y2="220" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="2,4"/>
+
+        <!-- Quadrante 1: Alto impacto, baixa urgência (cima-esquerda) -->
+        <rect x="100" y="30" width="300" height="95" fill="#7C3AED" opacity="0.08" stroke="#7C3AED" stroke-width="1" stroke-dasharray="2,4"/>
+        <text x="250" y="70" font-size="11" font-weight="bold" fill="#7C3AED">PLANEJAMENTO</text>
+        <text x="250" y="85" font-size="10" fill="#7C3AED">Alto impacto, baixa urgência</text>
+        <text x="120" y="105" font-size="9" fill="#7C3AED">• Propostas estratégicas</text>
+        <text x="120" y="118" font-size="9" fill="#7C3AED">• Análise de mercado</text>
+
+        <!-- Quadrante 2: Alto impacto, alta urgência (cima-direita) [CRÍTICO] -->
+        <rect x="400" y="30" width="300" height="95" fill="#DC2626" opacity="0.15" stroke="#DC2626" stroke-width="2"/>
+        <text x="550" y="70" font-size="11" font-weight="bold" fill="#DC2626">CRÍTICO (Q0)</text>
+        <text x="550" y="85" font-size="10" fill="#DC2626">Alto impacto, alta urgência</text>
+        <text x="420" y="105" font-size="9" fill="#DC2626">• Reequilíbrio de claim</text>
+        <text x="420" y="118" font-size="9" fill="#DC2626">• Resposta licitação express</text>
+
+        <!-- Quadrante 3: Baixo impacto, baixa urgência (baixo-esquerda) [BACKGROUND] -->
+        <rect x="100" y="125" width="300" height="95" fill="#6B7280" opacity="0.08" stroke="#6B7280" stroke-width="1" stroke-dasharray="2,4"/>
+        <text x="250" y="165" font-size="11" font-weight="bold" fill="#6B7280">BACKGROUND (Q∞)</text>
+        <text x="250" y="180" font-size="10" fill="#6B7280">Baixo impacto, baixa urgência</text>
+        <text x="120" y="200" font-size="9" fill="#6B7280">• Indexação RAG</text>
+        <text x="120" y="213" font-size="9" fill="#6B7280">• Scan SharePoint</text>
+
+        <!-- Quadrante 4: Baixo impacto, alta urgência (baixo-direita) [DELEGA] -->
+        <rect x="400" y="125" width="300" height="95" fill="#10B981" opacity="0.08" stroke="#10B981" stroke-width="1" stroke-dasharray="2,4"/>
+        <text x="550" y="165" font-size="11" font-weight="bold" fill="#10B981">DELEGÁVEL (Q16)</text>
+        <text x="550" y="180" font-size="10" fill="#10B981">Baixo impacto, alta urgência</text>
+        <text x="420" y="200" font-size="9" fill="#10B981">• Formatação doc</text>
+        <text x="420" y="213" font-size="9" fill="#10B981">• Pequenas alterações</text>
+      </svg>
+    </div>
+
+    <!-- SEÇÃO 7: CHECKLIST DE IMPLEMENTAÇÃO -->
+    <h2>Checklist de Implementação</h2>
+
+    <h3>Fase 1 — Setup da Infraestrutura (Semana 1)</h3>
+    <ul class="checklist">
+      <li>Corrigir Supabase Project ID: <code>ogxxgvgtulrbbppshjie</code> (atual: <code>kwuu...</code>)</li>
+      <li>Validar embedding model: BAAI/bge-small-en-v1.5 384d (não text-embedding-3-small)</li>
+      <li>Ativar pipeline RAG indexing na VPS com bge-small-en-v1.5</li>
+      <li>Criar SYSTEM.md para S6–S11 (segmentos novos)</li>
+      <li>Indexar 5 novos projetos SP (Aeroportos, Barragens, Energia, Portos, Saneamento) em ke_embeddings</li>
+    </ul>
+
+    <h3>Fase 2 — Routing e Orquestração (Semana 2)</h3>
+    <ul class="checklist">
+      <li>Implementar Router determinístico (keywords → agente canônico A*/S*/F*)</li>
+      <li>Codificar Adaptive Routing (fallbacks: A1→A3, A5→sicro direto, etc.)</li>
+      <li>Setup QPrio (Q0 crítico, Q16 normal, Q∞ background)</li>
+      <li>Testar fan-out de 16 agentes em paralelo (lote 1: A1–A8, S1–S4)</li>
+      <li>Testar fan-out lote 2 (A9–A10, S6–S11) + consolidação</li>
+    </ul>
+
+    <h3>Fase 3 — Padrões de Orquestração (Semana 2–3)</h3>
+    <ul class="checklist">
+      <li>Implementar <code>pipeline()</code> pattern: múltiplos itens, múltiplas etapas, sem barrier</li>
+      <li>Implementar <code>parallel()</code> pattern: votação adversarial (3 agentes, síntese)</li>
+      <li>Implementar fallback automático (A1 falha → A3)</li>
+      <li>Testar workflow real (proposta rodoviária de 16 agentes) — validar wall-clock ~420s</li>
+    </ul>
+
+    <h3>Fase 4 — Validação e Deploy (Semana 3–4)</h3>
+    <ul class="checklist">
+      <li>Stress test: 1.000 agentes total (ciclo completo de vários workflows sequenciais)</li>
+      <li>Validar limites: abusar <code>parallel(4097 items)</code> — deve falhar gracefully</li>
+      <li>Load test: 5 workflows críticos (Q0) simultâneos — verificar interrupção de background</li>
+      <li>Documentar SLA: proposta expressa &lt;30min, análise técnica &lt;2h, background &lt;6h</li>
+      <li>Deploy em produção com monitoramento (logs de routing, latência por agente, taxa de fallback)</li>
+    </ul>
+
+    <!-- SEÇÃO 8: MANUTENÇÃO E EVOLUÇÃO -->
+    <h2>Manutenção e Evolução</h2>
+
+    <div class="grid-12">
+      <div class="col-span-12 card">
+        <h3 style="margin-top: 0;">Ciclo de Learning (Diário)</h3>
+        <p>A cada workflow executado, registrar em <code>rag_learning_log</code>:</p>
+        <ul style="font-size: var(--text-sm);">
+          <li><strong>Sucesso:</strong> Quais agentes falharam? Qual foi o fallback? Tempo real vs. estimado?</li>
+          <li><strong>Anomalias:</strong> Agente X demorou 10x mais que normal. Investigar.</li>
+          <li><strong>Gaps:</strong> Usário perguntou algo que nenhum agente respondeu? Criar novo agente ou expandir RAG.</li>
+        </ul>
+        <p style="margin-top: 1rem; font-size: var(--text-sm); color: var(--color-text-secondary);">
+          Output: <code>EVOLUTION.md</code> semanal com recomendações de melhoria.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid-12">
+      <div class="col-span-6 card">
+        <h3 style="margin-top: 0;">Métricas para Monitorar</h3>
+        <ul style="list-style: none; padding: 0; font-size: var(--text-sm);">
+          <li>📊 Taxa de sucesso de routing (% agentes certos de primeira)</li>
+          <li>📊 Taxa de fallback (% que usaram agente alternativo)</li>
+          <li>📊 Latência P50 / P95 por agente</li>
+          <li>📊 Throughput (workflows/hora)</li>
+          <li>📊 Utilização média de cores (vs. 16 max)</li>
+        </ul>
+      </div>
+
+      <div class="col-span-6 card">
+        <h3 style="margin-top: 0;">Próximas Expansões</h3>
+        <ul style="list-style: none; padding: 0; font-size: var(--text-sm);">
+          <li>🚀 Agente F-arquiteto-ia para design de novos agentes</li>
+          <li>🚀 MCP rota_manta_rodovias (11 tools de geometria/concessão)</li>
+          <li>🚀 Plugin desktop-commander para acesso persistente ao filesystem</li>
+          <li>🚀 RAG de jurisprudência (ARTESP, DNIT, ANELL) via deep-research</li>
+          <li>🚀 Portal IA (produto cliente) com 8 módulos integrados</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RODAPÉ -->
+    <div class="footer">
+      <p><strong>Documento gerado:</strong> 2026-08-08 | <strong>Versão:</strong> Manta Maestro v5.0.1</p>
+      <p>Fonte: CLAUDE.md + manta-maestro-arquitetura-v5.0.md (2026-07-26)</p>
+      <p>Próxima revisão: 2026-08-22 (após Phase 1 de implementação)</p>
+    </div>
+  </div>
+</body>
+</html>

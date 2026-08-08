@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quando Usar: Claude AI vs Cowork vs Claude Code</title>
+  <style>
+    :root {
+      --color-ground: #FAFAF8;
+      --color-text: #1a1a18;
+      --color-text-secondary: #6B7280;
+      --color-border: #E5E7EB;
+      --color-ai: #8B5CF6;
+      --color-cowork: #0EA5E9;
+      --color-code: #10B981;
+      --color-accent: #2563EB;
+      --color-light-ai: #F3E8FF;
+      --color-light-cowork: #ECFDF5;
+      --color-light-code: #F0FDF4;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-ground: #0F0F0E;
+        --color-text: #F5F5F3;
+        --color-text-secondary: #9CA3AF;
+        --color-border: #2D2D2B;
+        --color-ai: #C4B5FD;
+        --color-cowork: #06B6D4;
+        --color-code: #86EFAC;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --color-ground: #0F0F0E;
+      --color-text: #F5F5F3;
+      --color-text-secondary: #9CA3AF;
+      --color-border: #2D2D2B;
+      --color-ai: #C4B5FD;
+      --color-cowork: #06B6D4;
+      --color-code: #86EFAC;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--color-ground);
+      color: var(--color-text);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    h1, h2, h3 {
+      font-family: "Nunito Sans", system-ui, sans-serif;
+      font-weight: 700;
+      text-wrap: balance;
+      margin: 0 0 1rem 0;
+    }
+
+    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    h2 { font-size: 2rem; margin-top: 2.5rem; margin-bottom: 1.5rem; border-bottom: 3px solid var(--color-accent); padding-bottom: 0.75rem; }
+    h3 { font-size: 1.5rem; margin-top: 1.5rem; }
+
+    .subtitle { font-size: 1.125rem; color: var(--color-text-secondary); margin-bottom: 2rem; }
+
+    .hero {
+      padding: 2rem;
+      background: linear-gradient(135deg, #F3E8FF 0%, var(--color-ground) 100%);
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border-left: 6px solid var(--color-ai);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    .tool-card {
+      border-radius: 8px;
+      padding: 2rem;
+      border: 2px solid;
+      transition: all 0.2s;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .tool-card.ai {
+      border-color: var(--color-ai);
+      background: linear-gradient(135deg, var(--color-light-ai) 0%, var(--color-ground) 100%);
+    }
+
+    .tool-card.cowork {
+      border-color: var(--color-cowork);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, var(--color-ground) 100%);
+    }
+
+    .tool-card.code {
+      border-color: var(--color-code);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, var(--color-ground) 100%);
+    }
+
+    .tool-card h3 {
+      margin-top: 0;
+      color: var(--color-ai);
+    }
+
+    .tool-card.cowork h3 { color: var(--color-cowork); }
+    .tool-card.code h3 { color: var(--color-code); }
+
+    .tool-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .badge.ai { background: rgba(139, 92, 246, 0.1); color: var(--color-ai); }
+    .badge.cowork { background: rgba(6, 182, 212, 0.1); color: var(--color-cowork); }
+    .badge.code { background: rgba(16, 185, 129, 0.1); color: var(--color-code); }
+
+    .use-case {
+      background: var(--color-ground);
+      border-left: 4px solid;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+
+    .use-case.ai { border-color: var(--color-ai); }
+    .use-case.cowork { border-color: var(--color-cowork); }
+    .use-case.code { border-color: var(--color-code); }
+
+    .use-case strong { display: block; margin-bottom: 0.5rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: var(--color-accent);
+      color: white;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    tr:hover {
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .comparison { grid-template-columns: 1fr; }
+    }
+
+    .comparison-cell {
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      background: var(--color-ground);
+    }
+
+    .comparison-cell strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .comparison-cell.highlight {
+      background: rgba(37, 99, 235, 0.05);
+      border-color: var(--color-accent);
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .checklist li {
+      padding: 0.5rem 0 0.5rem 2rem;
+      position: relative;
+      font-size: 0.95rem;
+    }
+
+    .checklist li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: var(--color-code);
+    }
+
+    .decision-tree {
+      background: var(--color-ground);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--color-accent);
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    .footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HERO -->
+    <div class="hero">
+      <h1>Quando Usar: Claude AI vs Cowork vs Claude Code</h1>
+      <p class="subtitle">Guia de decisão para escolher a ferramenta certa para orquestração de múltiplos agentes Manta</p>
+    </div>
+
+    <!-- SEÇÃO 1: VISÃO GERAL -->
+    <h2>Visão Geral das 3 Plataformas</h2>
+
+    <div class="grid-3">
+      <!-- CLAUDE AI -->
+      <div class="tool-card ai">
+        <div class="tool-icon">🧠</div>
+        <h3>Claude AI (web)</h3>
+        <div class="badge ai">Interface Web</div>
+        <p><strong>O quê:</strong> Interface conversacional oficial do Claude em claude.ai</p>
+        <p><strong>Foco:</strong> Interação humana com um agente (1:1)</p>
+        <p><strong>Bom para:</strong> Perguntas pontuais, brainstorm colaborativo, revisão de documentos</p>
+        <p><strong>Max agentes paralelos:</strong> 1 (você conversa com Claude)</p>
+      </div>
+
+      <!-- COWORK -->
+      <div class="tool-card cowork">
+        <div class="tool-icon">🤝</div>
+        <h3>Claude Cowork</h3>
+        <div class="badge cowork">Colaborativo</div>
+        <p><strong>O quê:</strong> Espaço compartilhado para equipes colaborarem com Claude</p>
+        <p><strong>Foco:</strong> Múltiplos usuários, um agente central coordenador</p>
+        <p><strong>Bom para:</strong> Revisão em tempo real, aprovações, decisões em grupo</p>
+        <p><strong>Max agentes paralelos:</strong> 1 coordenador + múltiplos usuários</p>
+      </div>
+
+      <!-- CLAUDE CODE -->
+      <div class="tool-card code">
+        <div class="tool-icon">⚙️</div>
+        <h3>Claude Code</h3>
+        <div class="badge code">Orquestração</div>
+        <p><strong>O quê:</strong> CLI + IDE extensions + servidor remoto para automação</p>
+        <p><strong>Foco:</strong> Workflows automatizados, fan-out paralelo, integração git</p>
+        <p><strong>Bom para:</strong> Múltiplos agentes em paralelo, pipelines, integração CI/CD</p>
+        <p><strong>Max agentes paralelos:</strong> 16 simultâneos (min(16, cores-2))</p>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 2: MATRIZ DE DECISÃO -->
+    <h2>Matriz de Decisão</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Critério</th>
+          <th>Claude AI</th>
+          <th>Cowork</th>
+          <th>Claude Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Usuários simultâneos</strong></td>
+          <td>1 (você)</td>
+          <td>N (equipe)</td>
+          <td>1 (automation)</td>
+        </tr>
+        <tr>
+          <td><strong>Agentes paralelos</strong></td>
+          <td>1</td>
+          <td>1 principal</td>
+          <td>16</td>
+        </tr>
+        <tr>
+          <td><strong>Workflows</strong></td>
+          <td>Conversação</td>
+          <td>Conversação em grupo</td>
+          <td>Determinísticos (Code)</td>
+        </tr>
+        <tr>
+          <td><strong>Integração git</strong></td>
+          <td>❌ Nenhuma</td>
+          <td>⚠️ Limitada</td>
+          <td>✅ Full (push/PR/CI)</td>
+        </tr>
+        <tr>
+          <td><strong>RAG / Knowledge</strong></td>
+          <td>✅ Browsing</td>
+          <td>✅ Docs compartilhados</td>
+          <td>✅ Supabase pgvector</td>
+        </tr>
+        <tr>
+          <td><strong>Tempo de resposta</strong></td>
+          <td>Instant (chat)</td>
+          <td>Instant (chat)</td>
+          <td>Latência = N × (tempo por agente)</td>
+        </tr>
+        <tr>
+          <td><strong>Custo</strong></td>
+          <td>Claude Pro ou API</td>
+          <td>Claude Pro ou Cowork license</td>
+          <td>API usage + infra (remote env)</td>
+        </tr>
+        <tr>
+          <td><strong>Escalabilidade</strong></td>
+          <td>Baixa (conversação)</td>
+          <td>Média (grupo)</td>
+          <td>Alta (auto-scaling)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SEÇÃO 3: CENÁRIOS DE USO -->
+    <h2>Cenários de Uso por Ferramenta</h2>
+
+    <h3>🧠 Claude AI — Quando Usar</h3>
+
+    <div class="use-case ai">
+      <strong>Cenário 1: Análise rápida de edital</strong>
+      Um sócio recebe um edital rodoviário e quer um parecer técnico em 5 minutos. Ele abre claude.ai, cola o PDF, conversa diretamente com Claude. Resposta rápida, personalizada pela conversa.
+    </div>
+
+    <div class="use-case ai">
+      <strong>Cenário 2: Brainstorm de proposta</strong>
+      Equipe discute abordagem técnica para concessão portuária. Usam Claude AI como "colega" — fazem perguntas, refinam ideias, Claude propõe estruturas. Interação humana é central.
+    </div>
+
+    <div class="use-case ai">
+      <strong>Cenário 3: Revisão de documento</strong>
+      Draft de parecer técnico pronto. Usuário cola em claude.ai, pede para revisar gramática, lógica, conformidade com padrões Manta. Claude faz sugestões inline.
+    </div>
+
+    <div class="use-case ai">
+      <strong>Cenário 4: Pesquisa web rápida</strong>
+      "Qual é a taxa SELIC hoje?" Claude busca (web browsing), responde com contexto. Sem necessidade de automação.
+    </div>
+
+    <ul class="checklist" style="margin-top: 1rem;">
+      <li>Use quando: **interação humana é o ponto central**</li>
+      <li>Use quando: precisa de feedback/aprovação antes da próxima etapa</li>
+      <li>Use quando: decisão é exploratória (não determinística)</li>
+      <li>⚠️ NÃO use para orquestração de múltiplos agentes</li>
+      <li>⚠️ NÃO use para workflows repetitivos/automáticos</li>
+    </ul>
+
+    <hr style="border: none; border-top: 1px solid var(--color-border); margin: 2rem 0;">
+
+    <h3>🤝 Cowork — Quando Usar</h3>
+
+    <div class="use-case cowork">
+      <strong>Cenário 1: Revisão em tempo real por múltiplos stakeholders</strong>
+      Proposta comercial pronta. 4 pessoas (sócio, gerente, técnico, comercial) abrem Cowork compartilhado, discutem alterações simultaneamente em tempo real. Claude coordena sugestões.
+    </div>
+
+    <div class="use-case cowork">
+      <strong>Cenário 2: Aprovação com trail de decisão</strong>
+      Análise de claim está pronta. Sócio abre Cowork, revisa, deixa comentários. Subordinado vê comentários, faz ajustes, novo review. Histórico completo fica no Cowork.
+    </div>
+
+    <div class="use-case cowork">
+      <strong>Cenário 3: Workshop colaborativo**</strong>
+      Reunião estratégica de 10 pessoas sobre posicionamento em licitação. Usam Cowork para brainstorm facilitado: alguém propõe estratégia, Claude ajuda estruturar, equipe vota/discute.
+    </div>
+
+    <div class="use-case cowork">
+      <strong>Cenário 4: Onboarding de novo projeto</strong>
+      Novo cliente. Time de 6 pessoas entra no Cowork dedicado do projeto, vê contexto (edital, briefing), Claude pergunta clarificações, time responde em paralelo.
+    </div>
+
+    <ul class="checklist" style="margin-top: 1rem;">
+      <li>Use quando: **múltiplos usuários precisam colaborar**</li>
+      <li>Use quando: aprovações/reviews são síncronos</li>
+      <li>Use quando: trail de decisão é importante</li>
+      <li>Use quando: comunicação é não-determinística (discussão)</li>
+      <li>⚠️ NÃO use como substituto de Claude Code para automação</li>
+      <li>⚠️ NÃO escalável além de ~10 pessoas simultâneas</li>
+    </ul>
+
+    <hr style="border: none; border-top: 1px solid var(--color-border); margin: 2rem 0;">
+
+    <h3>⚙️ Claude Code — Quando Usar</h3>
+
+    <div class="use-case code">
+      <strong>Cenário 1: Fan-out de 16 agentes em paralelo</strong>
+      Proposta expressa de concessão rodoviária. Claude Code executa: A7 (mercado) + S1 (técnico) + A5 (orçamento) + A4 (cronograma) + A8 (deck) + 11 agentes mais em paralelo. Wall-clock 7 minutos.
+    </div>
+
+    <div class="use-case code">
+      <strong>Cenário 2: Pipeline de indexação RAG**</strong>
+      Novo projeto entrou no SharePoint. Claude Code dispara: A2 (extrai quantidades) → A5 (calcula custos) → indexa em Supabase pgvector. Tudo automático, sem humano.
+    </div>
+
+    <div class="use-case code">
+      <strong>Cenário 3: Rotina noturna de análise**</strong>
+      Toda noite, Claude Code: scan de licitações novas (web) → classifica por segmento (S1-S11) → estima viabilidade (A6) → armazena em RAG → notifica equipe. Sem intervenção humana.
+    </div>
+
+    <div class="use-case code">
+      <strong>Cenário 4: Integração git + CI/CD**</strong>
+      Desenvolvedor faz push. Claude Code: roda testes automaticamente, revisa código, abre PR com sugestões de melhoria, atualiza docs. Tudo integrado ao GitHub.
+    </div>
+
+    <div class="use-case code">
+      <strong>Cenário 5: Monitoria de claims em tempo real**</strong>
+      Workflow de 2h: A1 (reequilíbrio) → A3 (contratual) → A1-reavaliação (votação adversarial 3x) → se aprovado, gera documentação (A8). Determinístico, sem decisão humana.
+    </div>
+
+    <ul class="checklist" style="margin-top: 1rem;">
+      <li>Use quando: **automação é o objetivo**</li>
+      <li>Use quando: múltiplos agentes em paralelo são necessários</li>
+      <li>Use quando: workflow é determinístico (if-then, não exploratório)</li>
+      <li>Use quando: escala é importante (1000s de operações)</li>
+      <li>Use quando: integração git/CI/CD é necessária</li>
+      <li>✅ **USE PARA MANTA MAESTRO — orquestração de 20 agentes**</li>
+    </ul>
+
+    <!-- SEÇÃO 4: ÁRVORE DE DECISÃO -->
+    <h2>Árvore de Decisão Rápida</h2>
+
+    <div class="decision-tree">
+      <p style="margin-top: 0;"><strong>Comece aqui:</strong></p>
+
+      <p>❓ <strong>O usuário está em frente a uma tela interagindo agora?</strong></p>
+      <ul>
+        <li>✅ SIM, conversando sozinho → <strong>Claude AI</strong></li>
+        <li>✅ SIM, em reunião com 2–10 pessoas → <strong>Cowork</strong></li>
+        <li>❌ NÃO, é automação agendada/background → continuar</li>
+      </ul>
+
+      <p>❓ <strong>Precisa executar 1 agente ou múltiplos agentes?</strong></p>
+      <ul>
+        <li>1 agente → <strong>Claude AI ou Cowork</strong> (conforme acima)</li>
+        <li>2–16 agentes em paralelo → <strong>Claude Code</strong></li>
+        <li>&gt;16 agentes → **Claude Code em lotes** (16+16+...)</li>
+      </ul>
+
+      <p>❓ <strong>O workflow é determinístico ou exploratório?</strong></p>
+      <ul>
+        <li>Determinístico (A→B→C sempre) → <strong>Claude Code</strong></li>
+        <li>Exploratório (precisa de feedback/iteração) → <strong>Claude AI ou Cowork</strong></li>
+      </ul>
+
+      <p>❓ <strong>Vai integrar com git/CI/CD ou agendar no cron?</strong></p>
+      <ul>
+        <li>SIM → <strong>Claude Code (obrigatório)</strong></li>
+        <li>NÃO → Claude AI ou Cowork</li>
+      </ul>
+
+      <p style="margin-bottom: 0;"><strong>Resultado:</strong> Você agora sabe qual usar! 🎯</p>
+    </div>
+
+    <!-- SEÇÃO 5: EXEMPLO REAL MANTA -->
+    <h2>Exemplo Real: Proposta Rodoviária Expressa</h2>
+
+    <p><strong>Contexto:</strong> Sócio recebe edital rodoviário. Prazo: amanhã às 10h. Hoje 18h. 16 horas para entregar proposta.</p>
+
+    <div class="comparison">
+      <div class="comparison-cell">
+        <strong>❌ Errado: Claude AI</strong>
+        <p>Sócio abre claude.ai, copia edital, começa conversa. A5 (orçamento) leva 2h numa conversa interativa. S1 (técnico) leva 3h. A8 (deck) leva 4h. Total: 9h + breaks = 12h. Cansaço mental. Risco de erro.</p>
+      </div>
+
+      <div class="comparison-cell">
+        <strong>⚠️ Parcialmente certo: Cowork</strong>
+        <p>Equipe de 4 abre Cowork. Discutem abordagem, distribuem tarefas. Claude "facilita". Mas cada pessoa ainda executa sequencialmente (A7 → A5 → S1 → A8). 10h+ de clock. Melhor que solo, mas ainda serial.</p>
+      </div>
+
+      <div class="comparison-cell highlight">
+        <strong>✅ Certo: Claude Code</strong>
+        <p>Sócio dispara workflow Claude Code. Maestro lança 16 agentes em paralelo: A7 + S1 + A9 + A5 + A2 + A4 + A6 + A1 + A3 + A10 + F-advisory + A8 + ... Wall-clock: 7 min análise + 5 min síntese. Total: ~30 min. Sócio revisa, faz pequenos ajustes, submit 22h.</p>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 6: IMPLEMENTAÇÃO MANTA -->
+    <h2>Implementação Recomendada para Manta</h2>
+
+    <h3>3 Modos de Operação</h3>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+      <div style="background: rgba(139, 92, 246, 0.1); border-radius: 6px; padding: 1rem;">
+        <p style="margin-top: 0;"><strong style="color: var(--color-ai);">Modo 1: Interativo</strong></p>
+        <p style="font-size: 0.9rem; margin-bottom: 0;">Sócio usa <strong>Claude AI</strong> para perguntas pontuais, brainstorm. Resposta em minutos.</p>
+      </div>
+
+      <div style="background: rgba(6, 182, 212, 0.1); border-radius: 6px; padding: 1rem;">
+        <p style="margin-top: 0;"><strong style="color: var(--color-cowork);">Modo 2: Colaborativo</strong></p>
+        <p style="font-size: 0.9rem; margin-bottom: 0;">Equipe usa <strong>Cowork</strong> para revisar/aprovar drafts. Discussão síncrona, trail auditável.</p>
+      </div>
+
+      <div style="background: rgba(16, 185, 129, 0.1); border-radius: 6px; padding: 1rem;">
+        <p style="margin-top: 0;"><strong style="color: var(--color-code);">Modo 3: Automático</strong></p>
+        <p style="font-size: 0.9rem; margin-bottom: 0;"><strong>Claude Code</strong> executa workflows paralelos. Resposta em horas. Sem humano envolvido.</p>
+      </div>
+    </div>
+
+    <h3>Stack Recomendado para Manta Maestro</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Atividade</th>
+          <th>Plataforma</th>
+          <th>Agentes</th>
+          <th>Tempo Típico</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Análise rápida</strong> (edital, parecer)</td>
+          <td><code>Claude AI</code></td>
+          <td>1 (você)</td>
+          <td>5–15 min</td>
+        </tr>
+        <tr>
+          <td><strong>Revisão em grupo</strong> (draft pronto)</td>
+          <td><code>Cowork</code></td>
+          <td>Múltiplos usuários + 1 Claude</td>
+          <td>30–60 min</td>
+        </tr>
+        <tr>
+          <td><strong>Proposta completa</strong> (express)</td>
+          <td><code>Claude Code</code> (Workflow)</td>
+          <td>16 agentes em paralelo</td>
+          <td>30 min (wall-clock)</td>
+        </tr>
+        <tr>
+          <td><strong>Análise detalhada</strong> (viabilidade)</td>
+          <td><code>Claude Code</code> (Pipeline)</td>
+          <td>12 agentes (múltiplas etapas)</td>
+          <td>2–3 h</td>
+        </tr>
+        <tr>
+          <td><strong>Rotina noturna</strong> (indexação RAG)</td>
+          <td><code>Claude Code</code> (Cron)</td>
+          <td>Agentes de fundo</td>
+          <td>1–2 h (agendado)</td>
+        </tr>
+        <tr>
+          <td><strong>Monitoração 24/7</strong> (claims)</td>
+          <td><code>Claude Code</code> (Loop)</td>
+          <td>Agentes dedicados</td>
+          <td>Contínuo</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SEÇÃO 7: SETUP TÉCNICO -->
+    <h2>Setup Técnico por Plataforma</h2>
+
+    <h3>Claude AI</h3>
+    <ul class="checklist">
+      <li>Abra claude.ai (web ou mobile app)</li>
+      <li>Login com email manta (mneves@mantaassociados.com)</li>
+      <li>Comece conversa — Claude já tem web browsing ativo</li>
+      <li>Sem setup necessário</li>
+    </ul>
+
+    <h3>Cowork</h3>
+    <ul class="checklist">
+      <li>Peça ao admin para criar espaço Cowork para projeto</li>
+      <li>Convide stakeholders (sócio, gerentes, técnicos)</li>
+      <li>Comece discussão — Claude facilita automaticamente</li>
+      <li>Histórico completo fica no Cowork (auditável)</li>
+    </ul>
+
+    <h3>Claude Code</h3>
+    <ul class="checklist">
+      <li>Instale CLI: <code>npm install -g @anthropic-ai/claude-code</code></li>
+      <li>Ou use IDE extension (VS Code, JetBrains)</li>
+      <li>Configure <code>~/.claude/settings.json</code> com CLAUDE.md do projeto</li>
+      <li>Defina remote environment (VPS + orquestração Maestro)</li>
+      <li>Crie workflows em scripts JavaScript (Workflow tool)</li>
+      <li>Execute: <code>claude code path/to/workflow.js</code></li>
+    </ul>
+
+    <!-- RODAPÉ -->
+    <div class="footer">
+      <p><strong>Documento gerado:</strong> 2026-08-08 | <strong>Para:</strong> Manta Associados</p>
+      <p><strong>Referências:</strong> Claude AI docs, Cowork setup guide, Claude Code remote execution docs</p>
+      <p>Próxima atualização: conforme novas features do Claude 5.x forem lançadas</p>
+    </div>
+  </div>
+</body>
+</html>
