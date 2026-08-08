@@ -1,0 +1,282 @@
+{
+  "metadata": {
+    "titulo": "Mapping Agentes Verticais Manta — ANTT Knowledge Base v4.3",
+    "data": "2026-08-08",
+    "versao": "4.3",
+    "status": "QA-Validated — Ready for Distribution",
+    "descobertas_multi_agente": "Síntese 5 Sonnet + Fable Coordinator"
+  },
+
+  "agentes_verticais": [
+    {
+      "codigo": "Manta 03-S1",
+      "nome": "agente-infraestrutura (Rodovias)",
+      "segmento": "Rodovias Federais",
+      "marcos_legais": [
+        "Lei 10.233/2001 (competências ANTT)",
+        "Lei 8.987/1995 (concessões)",
+        "RCR1-4 (Regulamento Concessões Rodoviárias)",
+        "CL 214/2025 art. 376 (reforma tributária) ⭐ NOVO"
+      ],
+      "resolucoes_vigentes": [
+        "ANTT 5.950/2021 (RCR1 — Edição/licitação)",
+        "ANTT 6.000/2022 (RCR2 — Execução)",
+        "ANTT 6.032/2023 (RCR3 — Operação/manutenção)",
+        "ANTT 6.053/2024 (RCR4 — Encerramento/relicitação)",
+        "ANTT 6.079/2026 (Free Flow — Pedágio eletrônico)"
+      ],
+      "casos_emblematicos": [
+        "Via Bahia (BR-116/324/BA) — Encerramento consensual, R$ 9 bi renunciado",
+        "BR-101/RJ (Autopista Fluminense) — Reequilíbrio aprovado, R$ 136,9 mi",
+        "BR-116/SP-PR (Régis Bittencourt) — Revisão extraordinária ⚠️ Validação pendente",
+        "BR-381/MG-SP (Fernão Dias) — Relicitação, R$ 15 bi investimentos",
+        "Rodovia do Aço (BR-393/RJ) — Rescisão por caducidade (2025)"
+      ],
+      "acordaos_tcu_relevantes": [
+        "1.996/2024 (BR-101/RJ — APROVADO)",
+        "2.279/2024 (BR-116/SP-PR — APROVADO)",
+        "1.369/2025 (BR-381/MG-SP — APROVADO)",
+        "2.453/2023 (BR-116/392/RS — MONITORAMENTO)"
+      ],
+      "descobertas_v4_3": [
+        "Consensualismo TCU consolidado: mais fácil negociar, mais difícil aprovar (ESG obrigatório)",
+        "CL 214/2025 art. 376 — novo vetor: reequilíbrio por reforma tributária (R$ 15-25 bi/ano 2027-30)",
+        "Limite 2 reequilíbrios/10 anos + buffer 8-12% receita obrigatório",
+        "8 leilões ferroviários R$ 140 bi em pipeline 2026-27 (não é rodoviário, mas contexto macro)"
+      ],
+      "alertas_criticos": [
+        "Régis Bittencourt: Conflito caracterização vs. manta-regis — ⚠️ VALIDAÇÃO PENDENTE",
+        "CL 214/2025 é NEW FRONTIER: propagar imediatamente para todos clientes em risco"
+      ],
+      "recomendacoes_acao": [
+        "Preparar dossiês para pleitos 2027-28 usando CL 214/2025 art. 376 como fundamento adicional",
+        "Usar Via Bahia como precedente de rescisão consensual para saídas antecipadas",
+        "Implementar modelagem 3-cenários (TCU exigirá 2025+)",
+        "Flag ESG compliance desde brief do cliente"
+      ],
+      "contacts": ["Manta 01 (claims)", "Manta 15 (advisory)"]
+    },
+
+    {
+      "codigo": "Manta 03-S3",
+      "nome": "agente-infraestrutura (Ferrovias)",
+      "segmento": "Ferrovias — Concessões + Operação",
+      "marcos_legais": [
+        "Lei 10.233/2001 (competências ANTT)",
+        "Lei 14.273/2021 (Marco Legal das Ferrovias) ⚠️ IMPLEMENTAÇÃO LENTA",
+        "Lei 8.987/1995 (concessões)",
+        "Res. ANTT 5.987/2022 (autorizações Lei 14.273)"
+      ],
+      "resolucoes_vigentes": [
+        "ANTT 5.987/2022 (Autorizações ferroviárias)",
+        "ANTT 6.050/2024 (Atualização processos)",
+        "ANTT 5.902/2020 (Acidentes ferroviários)",
+        "ANTT 6.031/2023 (Operações auxiliares)"
+      ],
+      "casos_emblematicos": [
+        "FCA (Ferrovia Centro-Atlântica) — Renovação antecipada, R$ 24 bi investimentos (2026)",
+        "Malha Paulista — Auditoria + renegociação, R$ 2,96 bi em 122 obrigações",
+        "MRS Logística — Renovação com reequilíbrio, R$ 2,8 bi (move 33% da produção ferroviária)",
+        "Rumo Malha Sul — Relicitação, R$ 14+ bi (4.250 km)",
+        "Rumo Malha Oeste — Edital aprovado, R$ 89 bi potencial"
+      ],
+      "acordaos_tcu_relevantes": [
+        "2.876/2019 + 2.472/2023 (Malha Paulista — APROVADO)",
+        "2.186/2025 (MRS Logística — APROVADO)",
+        "962/2016 (EFVM/Vale — Auditoria, irregularidades)"
+      ],
+      "descobertas_v4_3": [
+        "⚠️ ALERTA CRÍTICO: Lei 14.273/2021 implementação FRACASSADA — ZERO operadores independentes operando",
+        "Casos aprovados: FTL, Temape, Minas-Rio 2026 — nenhum operacional",
+        "Onda regulatória 2026-2027: 8 leilões ferroviários R$ 140 bilhões (ALTAMENTE TRIANGULADO)",
+        "5 renovações/aditivos em pipeline: Malha Sul, Centro-Atlântica, Transnordestina, Malha Oeste, Tereza Cristina",
+        "Consensualismo TCU: MRS/Rumo/FCA como precedentes de solução integrada"
+      ],
+      "alertas_criticos": [
+        "🔴 CRÍTICO: Lei 14.273/21 — OFI ZERO. Revisar TODA projeção baseada em interoperabilidade multioperador",
+        "Minério: tráfego -40% em Transnordestina (ver Análise 3)",
+        "Subsídios: Rio Linha 5 metrô (-15%) — contagio para ferrovias?"
+      ],
+      "recomendacoes_acao": [
+        "Priorizar cobertura dos 8 leilões 2026 (R$ 140 bi — driver principal)",
+        "AVISAR clientes sobre Lei 14.273/21 fracasso: retirar OFI das premissas de receita",
+        "Preparar modeling para 5 renovações com dados de tráfego REAL (não projeções otimistas)",
+        "Usar FCA como benchmark: renovação com devolução de seções inviáveis"
+      ],
+      "contacts": ["Manta 01 (claims)", "Manta 06 (modelagem)", "Manta 15 (advisory)"]
+    },
+
+    {
+      "codigo": "Manta 03-S2",
+      "nome": "agente-infraestrutura (OAE — Pontes/Viadutos)",
+      "segmento": "OAE — Obras de Arte Especiais",
+      "marcos_legais": [
+        "Lei 10.233/2001",
+        "NBR 7187:2022 (Projetos de pontes)",
+        "NBR 9452:2023 (Inspeção estrutural) ⭐ NOVO em v4.3"
+      ],
+      "casos_emblematicos": [
+        "Ecoponte (13km, 2015-2045) — Benchmark de gestão de reversão em concessão"
+      ],
+      "descobertas_v4_3": [
+        "NBR 9452:2023 entrada em vigor — afeta inspeção técnica em laudo de concessão"
+      ],
+      "recomendacoes_acao": [
+        "Atualizar protocolos de inspeção com NBR 9452:2023",
+        "Usar Ecoponte como precedente em discussões de reversão de ativos"
+      ],
+      "status": "Cobertura básica completa"
+    },
+
+    {
+      "codigo": "Manta 03-S4",
+      "nome": "agente-infraestrutura (Metrô)",
+      "segmento": "Metrô — Transporte de Massa",
+      "marcos_legais": [
+        "Lei 10.233/2001 (ANTT competência limitada)",
+        "Legislação estadual SP/RJ"
+      ],
+      "casos_emblematicos": [
+        "Linha 4 SP (Motiva) — Aditivo 11, R$ 676 M (jun 2026)",
+        "Rio Linha 5 — Subsídio -15% (contexto: potencial contagio para ferrovias)"
+      ],
+      "descobertas_v4_3": [
+        "Consensualismo TCU: modelo aplicável a metrô (precedentes Via Bahia, MRS)"
+      ],
+      "recomendacoes_acao": [
+        "Monitorar Rio Linha 5: -15% subsídio pode indicar stress setorial"
+      ],
+      "status": "Cobertura média — pesquisa dedicada recomendada"
+    },
+
+    {
+      "codigo": "Manta 03-S6",
+      "nome": "agente-portos",
+      "segmento": "Portos — Transportes Aquaviários",
+      "marcos_legais": [
+        "Lei 12.815/2013 (Lei dos Portos)",
+        "Lei 10.233/2001 (ANTAQ criação)",
+        "Res. ANTAQ 124/2025, 127/2025, 131/2025"
+      ],
+      "casos_emblematicos": [
+        "Porto de Santos — Movimentação -20%, dragagem emergencial R$ 45 M"
+      ],
+      "descobertas_v4_3": [
+        "ANTAQ agenda 2025: Modernização portuária (Res. 127), sandbox regulatório (Res. 131)",
+        "Consensualismo: aplicável também a concessões portuárias (precedente ViaBahia)"
+      ],
+      "recomendacoes_acao": [
+        "Monitorar seca: Porto Santos -20% pode propagar para rodovia (BR-116 carga pesada)"
+      ],
+      "status": "Cobertura básica — caso concreto único (Santos)"
+    },
+
+    {
+      "codigo": "Manta 03-S7",
+      "nome": "agente-aeroportos",
+      "segmento": "Aeroportos — Aviação Civil",
+      "marcos_legais": [
+        "Lei 11.182/2005 (ANAC criação)",
+        "RBAC (Regulamento Brasileiro de Aviação Civil)",
+        "ICAO Annex 14"
+      ],
+      "casos_emblematicos": [
+        "GRU/Galeão — Revisões extraordinárias (genérico, sem detalhe)"
+      ],
+      "descobertas_v4_3": [
+        "ANAC agenda 2025: Aeroportos Sustentáveis, 5 rodadas concessão em blocos"
+      ],
+      "alertas_criticos": [
+        "🔴 LACUNA CRÍTICA: Nenhum caso concreto de reequilíbrio/risco identificado",
+        "Cobertura genérica de GRU/Galeão insuficiente"
+      ],
+      "recomendacoes_acao": [
+        "🔍 PESQUISA DEDICADA NECESSÁRIA: Identificar casos de stress aeroportuário 2024-2026"
+      ],
+      "status": "⚠️ GAP — Pesquisa urgente"
+    },
+
+    {
+      "codigo": "Manta 03-S8",
+      "nome": "agente-saneamento",
+      "segmento": "Saneamento Básico — Água/Esgoto",
+      "marcos_legais": [
+        "Lei 14.026/2020 (Lei do Saneamento)",
+        "SNIS (Sistema Nacional de Informações Saneamento)"
+      ],
+      "casos_emblematicos": [
+        "CEDAE Rio — Faturamento -18% por seca Guanabara (2026)"
+      ],
+      "descobertas_v4_3": [
+        "Seca estrutural: risco setorial concentrado (potencial onda de pleitos 2027-28)"
+      ],
+      "recomendacoes_acao": [
+        "Monitorar CEDAE: -18% pode ser primeira de múltiplas reivindicações reequilíbrio por seca",
+        "Preparar estrutura reequilíbrio baseado em CL 214/2025 + seca extraordinária"
+      ],
+      "status": "Cobertura básica — 1 caso concreto"
+    },
+
+    {
+      "codigo": "Manta 03-S9",
+      "nome": "agente-energia",
+      "segmento": "Energia Elétrica — Transmissão/Distribuição",
+      "marcos_legais": [
+        "Lei 10.848/2004 (Políticas setor elétrico)",
+        "Lei 9.427/1996 (ANEEL criação)",
+        "RN 1.137/2025 (Resiliência climática), RN 1.095/2024, RN 1.110/2024"
+      ],
+      "descobertas_v4_3": [
+        "Leilão 1/2026 transmissão (RAP) — sem caso concreto de reequilíbrio identificado"
+      ],
+      "alertas_criticos": [
+        "🔴 LACUNA CRÍTICA: NENHUM caso de risco de reequilíbrio em energia identificado",
+        "Status: S9 é PRIORIDADE DECLARADA do CLAUDE.md v4.2 (ANEEL/State Grid) — gap inaceitável"
+      ],
+      "recomendacoes_acao": [
+        "🔍 PESQUISA URGENTE DEDICADA: Identificar concessões transmissão em stress 2024-2026",
+        "Incluir: impacto resiliência climática (RN 1.137/2025) nas concessões"
+      ],
+      "status": "🔴 GAP CRÍTICO — Pesquisa urgente"
+    },
+
+    {
+      "codigo": "Manta 03-S10",
+      "nome": "agente-barragens",
+      "segmento": "Barragens — Recursos Hídricos",
+      "marcos_legais": [
+        "Lei 12.334/2010 (Lei de Segurança de Barragens — PNSB)",
+        "Lei 14.066/2020 (Atualizações PNSB)"
+      ],
+      "casos_emblematicos": [
+        "Histórico: Brumadinho (2019), Mariana (2015) — referências, não eventos 2026"
+      ],
+      "alertas_criticos": [
+        "🔴 LACUNA CRÍTICA: NENHUM evento de barragem ou risco de reequilíbrio em 2026 identificado"
+      ],
+      "recomendacoes_acao": [
+        "🔍 PESQUISA DEDICADA: Monitorar ANM (Agência Nacional Mineração), ANA (Agência Nacional Águas)",
+        "Identificar barragens em concessão com risco ESG/climático"
+      ],
+      "status": "🔴 GAP CRÍTICO — Pesquisa urgente"
+    }
+  ],
+
+  "consolidado_acao": {
+    "liberados_para_uso_imediato": [
+      "S1 (Rodovias): Consensualismo TCU + CL 214/2025 + 8 leilões contexto",
+      "S2 (OAE): Ecoponte + NBR 9452:2023",
+      "S3 (Ferrovias): Lei 14.273 ALERTA + 8 leilões + 5 renovações",
+      "S4 (Metrô): Monitoramento seca/subsídios",
+      "S6 (Portos): ANTAQ modernização + seca monitoramento",
+      "S8 (Saneamento): Seca estrutural + reequilíbrio framework"
+    ],
+    "pesquisa_urgente_necessaria": [
+      "S7 (Aeroportos): Casos stress 2024-2026 ausentes",
+      "S9 (Energia): PRIORIDADE DECLARADA — gap inaceitável",
+      "S10 (Barragens): Eventos 2026 ausentes"
+    ]
+  },
+
+  "status_geral": "v4.3 Validated + Distributed to S1-S6, S8 | GAPS flagged for S7, S9, S10"
+}
