@@ -92,6 +92,89 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## AUTOSCALING — Política de Escalagem Automática (v1.0, 2026-08-08)
+
+**Princípio Fundamental:** "Sempre comece com múltiplos agentes em paralelo. Diminua apenas se volume < 500 tokens."
+
+Maestro (Manta 00) decide **automaticamente**:
+- Número de agentes a disparar (1, 3, 8, ou 16)
+- Modelo primário (Haiku, Sonnet, Opus)
+- Padrão de orquestração (direto, pipeline, parallel, fan-out)
+
+Baseado em: **volume de input** + **complexidade da tarefa**
+
+### Volume Bands
+
+| Band | Tokens | Agentes | Modelo | Wall-Clock | Padrão |
+|------|--------|---------|--------|-----------|--------|
+| **Pequeno** | 0–500 | 1 | Haiku | <30s | Conversa direta |
+| **Médio** | 500–2000 | 3–4 | Sonnet + Haiku | 5–10 min | Pipeline 2 etapas |
+| **Grande** | 2000–5000 | 8 | Sonnet + Haiku | 20–30 min | Pipeline 3 etapas |
+| **Extra-Grande** | 5000+ | 16 | Sonnet + Haiku (paralelo) | 30 min–2h | Lotes 16 + consolidação |
+
+### Matriz de Seleção de Modelo
+
+| Volume | Complexidade | Modelo Primário | Modelo Secundário | Motivo |
+|--------|---|---|---|---|
+| Pequeno | Baixa | **Haiku** | — | Velocidade máxima |
+| Pequeno | Alta | **Sonnet** | — | Complexidade demanda Sonnet |
+| Médio | Baixa | **Haiku** | Haiku | Paralelizar Haikus é eficiente |
+| Médio | Média | **Sonnet** | Haiku | Sonnet crítico, Haiku suporte |
+| Médio | Alta | **Sonnet** | Sonnet | Ambos Sonnet para robustez |
+| Grande | Qualquer | **Sonnet** | Haiku | **PADRÃO MANTA**: Sonnet análise, Haiku paralelo |
+| Extra-Grande | Qualquer | **Sonnet** | Haiku | Maximize throughput |
+| Qualquer | Crítica* | **Opus** | Sonnet | *Rare: claims reequilíbrio, M&A. Opus + votação Sonnet |
+
+### Algoritmo Simplificado
+
+```
+1. Contar tokens(input + context)
+2. Classificar volume (Pequeno/Médio/Grande/Extra-Grande)
+3. Detectar complexidade (keywords: claim, edital, concessão, etc.)
+4. Selecionar modelo primário + secundário da Matriz acima
+5. Escolher padrão: direto (1 agente) | pipeline (8 agentes) | lotes (16 agentes)
+6. Selecionar agentes relevantes (routing + contexto do projeto)
+7. Executar e registrar em rag_learning_log: tokens, wall-clock real, status
+8. Retornar resultado ao usuário
+```
+
+### Exemplos de Decisão
+
+**Cenário 1:** "Qual a SELIC hoje?"
+- Volume: 15 tokens → **Pequeno**
+- Modelo: **Haiku**, conversa direta, <30s
+- Agentes: 1 (nenhum workflow)
+
+**Cenário 2:** "Analise este edital de concessão rodoviária (10 páginas)"
+- Volume: 1200 tokens → **Médio**
+- Modelo: **Sonnet + Sonnet + Haiku** (3 agentes)
+- Agentes: A9 (regulatório) + S1 (técnico) + A7 (mercado)
+- Pattern: Pipeline 2 etapas (análise paralela → síntese) — 5–10 min
+
+**Cenário 3:** "Proposta comercial completa para concessão até amanhã"
+- Volume: 3500 tokens → **Grande**
+- Modelo: **4 Sonnet + 4 Haiku** (8 agentes)
+- Agentes: Etapa 1 (A9, S1, A7, A10) → Etapa 2 (A6, A5, A4, A3) → Etapa 3 (A8, A1)
+- Pattern: Pipeline 3 etapas (análise → síntese → entrega) — 25 min wall-clock
+
+### Regras Invioláveis
+
+1. **Sempre múltiplos agentes por padrão** — serial é exceção, não regra
+2. **Haiku é padrão para paralelo massivo** — não use Sonnet para tasks menores em fan-out
+3. **Sonnet para análise única crítica** — qualidade > velocidade
+4. **Opus apenas para reequilíbrio/M&A** — raro, alto risco, alto impacto
+5. **Pipeline sem barrier é padrão** — evite parallel() com barrier desnecessário
+
+### Monitoramento Semanal
+
+Toda segunda-feira: analisar `rag_learning_log` da semana
+- Quais combinações volume/modelo/agentes tiveram melhor SLA?
+- Quais tiveram pior taxa de sucesso?
+- Qual foi o custo médio por tipo de tarefa?
+- Atualizar esta política se patterns mudam
+
+---
+
 ## RAG — Coleções em Supabase
 
 | Coleção | Prefixo storage | Fontes iniciais | Status |
