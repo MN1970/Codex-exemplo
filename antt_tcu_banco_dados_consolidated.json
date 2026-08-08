@@ -1,0 +1,499 @@
+{
+  "metadata": {
+    "titulo": "ANTT & Regulações de Transportes Terrestres — Banco de Dados Maestro v4.3",
+    "data_criacao": "2026-08-07",
+    "data_enriquecimento": "2026-08-08",
+    "versao": "4.3",
+    "fonte_pesquisa": "6 agentes IA especializados (Sonnet) + Fable Coordinator",
+    "abrangencia": "Marcos legais, resoluções ANTT, casos julgados 2011-2026, acórdãos TCU 2011-2026, descobertas emergentes v4.3",
+    "escopo_geografico": "Brasil",
+    "descobertas_v4_3": [
+      "Consensualismo TCU: novo paradigma 2025-2026 (mediação → soluções consensuais)",
+      "CL 214/2025 art. 376: reforma tributária como vetor reequilíbrio (R$ 15-25 bi/ano)",
+      "Lei 14.273/21: implementação fracassada (ZERO OFI operando)",
+      "Onda regulatória: 8 leilões ferroviários R$ 140 bi (2026-2027)"
+    ],
+    "alertas_qa": [
+      "Problem A (Régis Bittencourt): validação com Manta 15 pendente",
+      "Problem B (Citations): aluci-guard validation pendente",
+      "Problem C (Units): R$ 945 mi (validação modelo)"
+    ],
+    "atualizacao_recomendada": "Agosto 2027"
+  },
+
+  "marcos_legais": {
+    "descricao": "Leis federais que fundamentam a regulação de transportes terrestres",
+    "documentos": [
+      {
+        "lei": "Lei 9.503",
+        "nome": "Código de Trânsito Brasileiro (CTB)",
+        "ano": 1997,
+        "data_publicacao": "1997-09-23",
+        "objetivo": "Estabelecer normas e diretrizes para organização e fiscalização do trânsito",
+        "escopo": ["Requisitos motoristas", "Regulamentação veículos", "Segurança viária", "Infrações e penalidades"],
+        "status": "Vigente",
+        "link": "https://www2.camara.leg.br/legin/fed/lei/1997/lei-9503-23-setembro-1997-372348-norma-pl.html"
+      },
+      {
+        "lei": "Lei 10.233",
+        "nome": "Lei de Organização do Sistema Nacional de Viação",
+        "ano": 2001,
+        "data_publicacao": "2001-06-05",
+        "objetivo": "Reorganizar transportes terrestres e aquáticos; criar ANTT e ANTAQ",
+        "escopo": ["Criação ANTT", "Competências rodoviárias e ferroviárias", "Concessões", "Sistema de viação"],
+        "status": "Vigente",
+        "competencias_antt": ["Concessão rodovias federais", "Autorização transporte", "Fiscalização", "RNTRC"],
+        "link": "https://anttlegis.antt.gov.br/action/ActionDatalegis.php?acao=detalharAto&tipo=LEI&numeroAto=00010233"
+      },
+      {
+        "lei": "Lei 8.987",
+        "nome": "Lei Geral de Concessões",
+        "ano": 1995,
+        "data_publicacao": "1995-02-13",
+        "objetivo": "Regime jurídico de concessões de serviços públicos",
+        "escopo": ["Concessões", "Reequilíbrio econômico-financeiro", "Modicidade tarifária", "Direitos e deveres"],
+        "status": "Vigente",
+        "aplicacao_antt": "Base legal para todas as concessões rodoviárias e ferroviárias",
+        "link": "https://www.planalto.gov.br/ccivil_03/leis/l8987compilada.htm"
+      },
+      {
+        "lei": "Lei 14.273",
+        "nome": "Marco Legal das Ferrovias",
+        "ano": 2021,
+        "data_publicacao": "2021-12-09",
+        "objetivo": "Modernizar modelo de exploração ferroviária; criar regime de autorização",
+        "escopo": ["Autorizações ferroviárias", "Operadores independentes", "Desverticalização", "Acesso multioperador"],
+        "status": "Vigente (regulamentada 2022)",
+        "inovacoes": ["Novo regime OFI", "Exploração de trechos ociosos", "Facilitação investimentos privados"],
+        "link": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14273.htm"
+      },
+      {
+        "lei": "Lei 11.182",
+        "nome": "Criação ANAC — Agência Nacional de Aviação Civil",
+        "ano": 2005,
+        "data_publicacao": "2005-09-27",
+        "objetivo": "Criar ANAC e estabelecer regulação aérea",
+        "escopo": ["Aviação civil", "Concessões aeroportuárias", "Segurança aérea", "Relações ICAO"],
+        "status": "Vigente",
+        "link": "https://www2.camara.leg.br/legin/fed/lei/2005/lei-11182-27-setembro-2005-538638-publicacaooriginal-34875-pl.html"
+      },
+      {
+        "lei": "Lei 9.427",
+        "nome": "Criação ANEEL — Agência Nacional de Energia Elétrica",
+        "ano": 1996,
+        "data_publicacao": "1996-12-26",
+        "objetivo": "Criar ANEEL e regular setor elétrico",
+        "escopo": ["Geração", "Transmissão", "Distribuição", "Metodologia tarifária", "Concessões"],
+        "status": "Vigente",
+        "link": "https://www2.aneel.gov.br/cedoc/lei19427-1996.pdf"
+      }
+    ]
+  },
+
+  "resolucoes_antt": {
+    "descricao": "Resoluções ANTT que regulam concessões rodoviárias e ferroviárias",
+    "rodovias": {
+      "rcr_ciclo": "RCR1, RCR2, RCR3, RCR4 (Regulamento de Concessões Rodoviárias)",
+      "resolucoes": [
+        {
+          "numero": "ANTT 5.950",
+          "ano": 2021,
+          "tema": "RCR1 — Critérios de edição, licitação e celebração de concessões",
+          "aplicacao": "Projetos novos; relicitações",
+          "status": "Vigente (alterada 2026)",
+          "link": "https://anttlegis.antt.gov.br/"
+        },
+        {
+          "numero": "ANTT 6.000",
+          "ano": 2022,
+          "tema": "RCR2 — Execução e acompanhamento de contratos",
+          "aplicacao": "Acompanhamento operacional; penalties; fiscalização",
+          "status": "Vigente (alterada 2026)"
+        },
+        {
+          "numero": "ANTT 6.032",
+          "ano": 2023,
+          "tema": "RCR3 — Manutenção, operação e conservação",
+          "aplicacao": "Padrões de qualidade; níveis de serviço",
+          "status": "Vigente (alterada 2026)"
+        },
+        {
+          "numero": "ANTT 6.053",
+          "ano": 2024,
+          "tema": "RCR4 — Encerramento, relicitação e extensão",
+          "aplicacao": "Terminalidade contratual; renovações",
+          "status": "Vigente (alterada 2026)"
+        },
+        {
+          "numero": "ANTT 6.079",
+          "ano": 2026,
+          "tema": "Sistema de Pedágio em Fluxo Livre (Free Flow)",
+          "aplicacao": "Cobrança eletrônica sem parada; infraestrutura tecnológica",
+          "vigencia": "2026-07-27",
+          "status": "Vigente"
+        },
+        {
+          "numero": "ANTT 5.998",
+          "ano": 2022,
+          "tema": "Transporte de Produtos Perigosos",
+          "aplicacao": "Regulamentação obrigatória para cargas perigosas",
+          "vigencia": "2023-06-01",
+          "status": "Em revisão (Audiência Pública maio 2026)"
+        }
+      ]
+    },
+    "ferrovias": {
+      "resolucoes": [
+        {
+          "numero": "ANTT 5.987",
+          "ano": 2022,
+          "tema": "Processo administrativo para autorizações ferroviárias (Lei 14.273/21)",
+          "aplicacao": "Operadores independentes; novo regime OFI",
+          "status": "Vigente (alterada 2024)"
+        },
+        {
+          "numero": "ANTT 6.050",
+          "ano": 2024,
+          "tema": "Atualização de processos de autorização ferroviária",
+          "aplicacao": "Simplificação administrativa",
+          "status": "Vigente"
+        },
+        {
+          "numero": "ANTT 5.902",
+          "ano": 2020,
+          "tema": "Comunicação de acidentes ferroviários",
+          "aplicacao": "Segurança operacional",
+          "status": "Vigente"
+        },
+        {
+          "numero": "ANTT 6.031",
+          "ano": 2023,
+          "tema": "Operações auxiliares ao transporte",
+          "aplicacao": "Armazenagem; pátios; logística",
+          "status": "Vigente"
+        }
+      ]
+    }
+  },
+
+  "agencias_complementares": {
+    "descricao": "Agências correlatas: ANTAQ, ANAC, ANEEL",
+    "agencias": [
+      {
+        "sigla": "ANTAQ",
+        "nome": "Agência Nacional de Transportes Aquaviários",
+        "lei_criacao": "Lei 10.233/2001",
+        "ano_criacao": 2001,
+        "competencias": ["Navegação fluvial", "Navegação marítima", "Portos organizados", "Concessões", "Afretamento"],
+        "resoluções_2025": ["Res. 124", "Res. 127 (modernização portuária)", "Res. 131 (sandbox regulatório)"],
+        "status": "Operacional",
+        "movimentacao_2024": "1,32 bilhões de toneladas"
+      },
+      {
+        "sigla": "ANAC",
+        "nome": "Agência Nacional de Aviação Civil",
+        "lei_criacao": "Lei 11.182/2005",
+        "ano_criacao": 2005,
+        "competencias": ["Regulação aviação civil", "Infraestrutura aeroportuária", "Concessões", "Segurança aérea", "ICAO"],
+        "programas_2025": ["Programa Aeroportos Sustentáveis", "5 rodadas concessões em blocos"],
+        "status": "Operacional"
+      },
+      {
+        "sigla": "ANEEL",
+        "nome": "Agência Nacional de Energia Elétrica",
+        "lei_criacao": "Lei 9.427/1996",
+        "ano_criacao": 1996,
+        "competencias": ["Geração", "Transmissão", "Distribuição", "Concessões", "Metodologia tarifária"],
+        "resolucoes_recentes": ["RN 1.137/2025 (resiliência climática)", "RN 1.095/2024", "RN 1.110/2024"],
+        "status": "Operacional",
+        "foco_2026": "Transição energética; resiliência climática"
+      }
+    ]
+  },
+
+  "casos_antt_julgados_2011_2026": {
+    "descricao": "Casos emblemáticos julgados pela ANTT — decisões com jurisprudência estabelecida",
+    "rodovias": [
+      {
+        "projeto": "Rodovia do Aço (BR-393/RJ)",
+        "ano": 2025,
+        "decisao": "Rescisão por caducidade",
+        "fundamento": "Lei 8.987/95; Resolução ANTT 5.935/21",
+        "extensao_km": 182.5,
+        "motivo": "Ineficiência comprovada",
+        "impacto": "Marco de aplicação estrita de rescisão por caducidade",
+        "status": "Rescindido junho 2025; sob DNIT"
+      },
+      {
+        "projeto": "Via Bahia (BR-116/324/BA)",
+        "ano": "2024-2025",
+        "decisao": "Encerramento consensual (TCU)",
+        "fundamento": "Lei 8.987/95; Solução Consensual TCU",
+        "extensao_km": 582,
+        "impacto_financeiro": "R$ 9 bilhões em litígios renunciados",
+        "data_encerramento": "2025-03-31",
+        "status": "Encerrado consensualmente",
+        "jurisprudencia": "Shift de litigância para consenso"
+      },
+      {
+        "projeto": "BR-116/101/RJ-SP (CCR)",
+        "ano": 2026,
+        "decisao": "Revisão ordinária + reajuste tarifário",
+        "fundamento": "Lei 8.987/95; RCR",
+        "extensao_km": 636,
+        "irt": 1.33231,
+        "aumento_percentual": 4.5,
+        "investimentos_r_mi": 1770,
+        "status": "Vigente com reajustes regulares"
+      },
+      {
+        "projeto": "BR-381/SP-MG (Fernão Dias)",
+        "ano": "2025-2026",
+        "decisao": "Aprovação edital relicitação",
+        "fundamento": "Lei 8.987/95; RCR",
+        "extensao_km": 561,
+        "investimentos_r_bi": 15,
+        "leilao_b3": "2025-12",
+        "status": "Relicitação aprovada"
+      },
+      {
+        "projeto": "Transbrasiliana (BR-153/SP)",
+        "ano": "2015-2026",
+        "decisao": "Reequilíbrio pendente + ação MPF",
+        "fundamento": "Lei 8.987/95",
+        "multas_r_mi": 1100,
+        "indenizacao_mpf_r_mi": 250,
+        "status": "Em procedimento administrativo/judicial"
+      }
+    ],
+    "ferrovias": [
+      {
+        "projeto": "FCA — Renovação Antecipada",
+        "ano": 2026,
+        "decisao": "Aprovação renovação antecipada (Lei 14.273/21)",
+        "fundamento": "Lei 10.233/01; Lei 14.273/21",
+        "investimentos_r_bi": 24,
+        "outorga_r_mi": 4200,
+        "periodo_anos": 30,
+        "status": "Aprovado ANTT (abr 2026); análise TCU"
+      },
+      {
+        "projeto": "MRS Logística",
+        "ano": 2026,
+        "decisao": "Renovação com reequilíbrio",
+        "fundamento": "Lei 10.233/01; ANTT reequilíbrio",
+        "extensao_km": 1643,
+        "limite_investimento_r_mi": 472.65,
+        "status": "Contrato vigente renovado"
+      },
+      {
+        "projeto": "Rumo Malha Sul",
+        "ano": 2026,
+        "decisao": "Aprovação edital relicitação",
+        "fundamento": "Lei 10.233/01; Lei 14.273/21",
+        "extensao_km": 4250,
+        "investimentos_r_bi": 14,
+        "status": "Relicitação aprovada (abr 2026)"
+      },
+      {
+        "projeto": "Rumo Malha Oeste",
+        "ano": 2026,
+        "decisao": "Aprovação edital e plano outorga",
+        "fundamento": "Lei 10.233/01; Lei 14.273/21",
+        "extensao_km": 1625,
+        "potencial_r_bi": 89,
+        "status": "Leilão 2026"
+      },
+      {
+        "projeto": "Vale EFC/EFVM",
+        "ano": "2025-2026",
+        "decisao": "Renegociação em andamento",
+        "fundamento": "Lei 10.233/01",
+        "status": "Bases reestabelecidas (dez 2024)"
+      },
+      {
+        "projeto": "Lei 14.273/21 — Operadores Independentes",
+        "ano": "2021+",
+        "decisao": "Regulamentação + casos aprovados",
+        "fundamento": "Lei 14.273/21; Resolução ANTT 4.348",
+        "destaque": "Desverticalização de mercado ferroviário",
+        "casos_aprovados": ["FTL", "Temape", "Minas-Rio 2026"],
+        "status": "Em implementação"
+      }
+    ]
+  },
+
+  "acordaos_tcu_2011_2026": {
+    "descricao": "Acórdãos do TCU sobre transportes terrestres e reequilíbrio econômico-financeiro",
+    "rodovias": [
+      {
+        "acordao": "1.996/2024-TCU-Plenário",
+        "projeto": "BR-101/RJ (Autopista Fluminense)",
+        "data": "2024-06",
+        "decisao": "APROVADO",
+        "renuncias_r_mi": 136.9,
+        "investimentos": "Duplicação, multivias, contorno urbano",
+        "status": "Vigente"
+      },
+      {
+        "acordao": "2.279/2024-TCU-Plenário",
+        "projeto": "BR-116/SP/PR (Régis Bittencourt - Arteris)",
+        "data": "2024-09",
+        "decisao": "APROVADO",
+        "economia_risco_r_bi": 1.6,
+        "investimentos_r_bi": 7.23,
+        "periodo_anos": 8,
+        "status": "Vigente"
+      },
+      {
+        "acordao": "1.369/2025-TCU-Plenário",
+        "projeto": "BR-381/MG/SP (Fernão Dias)",
+        "data": "2025-06",
+        "decisao": "APROVADO",
+        "investimentos_r_bi": 9,
+        "numero_acordo_consensual": 16,
+        "status": "Vigente"
+      },
+      {
+        "acordao": "2.453/2023-TCU-Plenário",
+        "projeto": "BR-116/392/RS (Ecosul)",
+        "data": "2023",
+        "decisao": "MONITORAMENTO (Procrofe)",
+        "tema": "Fator D (desconto tarifário)",
+        "recomendacao": "Melhorar metodologia",
+        "status": "Acompanhamento"
+      },
+      {
+        "acordao": "1.211/2021-TCU-Plenário",
+        "projeto": "ViaBahia (BR-116/BR-324/BA) — ENCERRAMENTO",
+        "data": "2021-02",
+        "decisao": "APROVADO",
+        "renuncias_r_bi": 9,
+        "data_encerramento": "2025-03-31",
+        "status": "Encerrado; DNIT retoma manutenção"
+      }
+    ],
+    "ferrovias": [
+      {
+        "acordao": "2.876/2019 + 2.472/2023-TCU-Plenário",
+        "projeto": "Malha Paulista",
+        "data": "2019/2023",
+        "decisao": "APROVADO",
+        "obrigacoes_reformuladas": 122,
+        "total_r_bi": 2.96,
+        "status": "Aprovado"
+      },
+      {
+        "acordao": "2.186/2025-TCU-Plenário",
+        "projeto": "MRS Logística",
+        "data": "2025-09",
+        "decisao": "APROVADO",
+        "investimentos_r_bi": 2.8,
+        "extensao_km": 1643,
+        "percentual_producao": 33,
+        "status": "Aprovado"
+      },
+      {
+        "acordao": "962/2016-TCU-Plenário",
+        "projeto": "EFVM (Estrada de Ferro Vitória a Minas - Vale)",
+        "data": "2016",
+        "decisao": "AUDITORIA",
+        "tema": "Irregularidades em aditamento",
+        "problemas": ["Asset base inadequado", "Tarifa inadequada"],
+        "status": "Concluso"
+      }
+    ]
+  },
+
+  "jurisprudencia_consolidada": {
+    "principios": [
+      {
+        "principio": "Modicidade + Sustentabilidade",
+        "fundamento": "Lei 8.987/95; Resoluções ANTT RCR",
+        "aplicacao": "BR-116/101 (IRT 4,50%)",
+        "evolucao": "Binômio não-negociável; imperativo em todas as decisões"
+      },
+      {
+        "principio": "Rescisão por Ineficiência",
+        "fundamento": "Resolução ANTT 5.935/21",
+        "aplicacao": "Rodovia do Aço (2025)",
+        "evolucao": "Aplicação mais rigorosa; anteriormente rara"
+      },
+      {
+        "principio": "Revisão Quinquenal Obrigatória",
+        "fundamento": "Lei 8.987/95; RCR 3",
+        "aplicacao": "Via Bahia (conflito 2017-2025)",
+        "evolucao": "Não-cumprimento causa conflito; tendência para consenso"
+      },
+      {
+        "principio": "Reequilíbrio Baseado em Evidências",
+        "fundamento": "IN ANTT 33/2024",
+        "aplicacao": "Aplicação emergencial pós-eventos climáticos",
+        "evolucao": "Requer análise comprovada; rigor metodológico"
+      },
+      {
+        "principio": "Soluções Consensuais (TCU)",
+        "fundamento": "TCU acórdãos 2020+",
+        "aplicacao": "Via Bahia, MRS, Rumo, FCA",
+        "evolucao": "Shift de litigância para consenso; 16+ acordos 2023+"
+      },
+      {
+        "principio": "Acesso Multioperador",
+        "fundamento": "Lei 14.273/21",
+        "aplicacao": "Operadores Independentes; OFI",
+        "evolucao": "Novo regime de desverticalização ferroviária"
+      },
+      {
+        "principio": "Limite Financeiro",
+        "fundamento": "Lei 10.233/01",
+        "aplicacao": "MRS Logística (R$ 472,65 mi)",
+        "evolucao": "Cap obrigatório em renovações"
+      }
+    ],
+    "evolucao_tcu": {
+      "2011_2015": "Postura restritiva (rejeição frequente)",
+      "2016_2019": "Período transitório (maior flexibilidade)",
+      "2020_2023": "Postura mediadora (soluções consensuais)",
+      "2024_2026": "Proativa com proteções (consensual + garantias)"
+    },
+    "problemas_recorrentes": [
+      "Superfaturamento em obras ferroviárias",
+      "Inadimplência contratual reiterada",
+      "Atrasos generalizados em obras",
+      "Qualidade de serviço comprometida",
+      "Investimentos obrigatórios não cumpridos",
+      "Falta de indicadores para efetividade"
+    ]
+  },
+
+  "agenda_antt_2026_2027": {
+    "rodovias": [
+      "Consolidação free flow (julho 2026)",
+      "Revisão normas produtos perigosos (AP 2026)",
+      "Expansão concessões federais (leilões 2026)",
+      "Aprimoramento padrões segurança viária"
+    ],
+    "ferrovias": [
+      "Lei 14.273/21 em implementação (desverticalização)",
+      "Grandes licitações Malha Sul/Oeste (2026)",
+      "Renovações com devolução de seções (FCA modelo)",
+      "Operadores independentes em expansão"
+    ]
+  },
+
+  "recomendacoes_tcu": [
+    "Robustecimento regulatório — Mecanismos de fiscalização mais efetivos",
+    "Indicadores de desempenho — Incluir no planejamento estratégico",
+    "Monitoramento anual — Planos detalhados de inspeção técnica",
+    "Aplicação de penalidades — Mais assertiva e consistente",
+    "Estruturação contratual — Editais melhor preparados",
+    "Infraestrutura compartilhada — Ampliar acesso multioperador"
+  ],
+
+  "consolidado_financeiro_2024_2025": {
+    "investimentos_aprovados_r_bi": 20,
+    "renuncias_litigiosidades_r_mi": 136.9,
+    "reequilibrios_consensuais": 16,
+    "acordos_homologados_desde": 2023
+  }
+}
