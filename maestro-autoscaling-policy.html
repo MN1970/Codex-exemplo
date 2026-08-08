@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manta Maestro — Política de Escalagem Automática</title>
+  <style>
+    :root {
+      --color-ground: #FAFAF8;
+      --color-text: #1a1a18;
+      --color-text-secondary: #6B7280;
+      --color-border: #E5E7EB;
+      --color-accent: #2563EB;
+      --color-sonnet: #F59E0B;
+      --color-haiku: #06B6D4;
+      --color-opus: #EC4899;
+      --color-success: #10B981;
+      --color-warning: #DC2626;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-ground: #0F0F0E;
+        --color-text: #F5F5F3;
+        --color-text-secondary: #9CA3AF;
+        --color-border: #2D2D2B;
+        --color-accent: #60A5FA;
+        --color-sonnet: #FBBF24;
+        --color-haiku: #22D3EE;
+        --color-opus: #F472B6;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --color-ground: #0F0F0E;
+      --color-text: #F5F5F3;
+      --color-text-secondary: #9CA3AF;
+      --color-border: #2D2D2B;
+      --color-accent: #60A5FA;
+      --color-sonnet: #FBBF24;
+      --color-haiku: #22D3EE;
+      --color-opus: #F472B6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--color-ground);
+      color: var(--color-text);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    h1, h2, h3 {
+      font-family: "Nunito Sans", system-ui, sans-serif;
+      font-weight: 700;
+      text-wrap: balance;
+    }
+
+    h1 { font-size: 2.5rem; margin: 0 0 0.5rem 0; }
+    h2 { font-size: 2rem; margin: 2.5rem 0 1.5rem 0; border-bottom: 3px solid var(--color-accent); padding-bottom: 0.75rem; }
+    h3 { font-size: 1.5rem; margin: 1.5rem 0 1rem 0; }
+
+    p { margin: 0 0 1rem 0; }
+
+    .subtitle { font-size: 1.125rem; color: var(--color-text-secondary); margin-bottom: 2rem; }
+
+    .hero {
+      background: linear-gradient(135deg, #FEF3C7 0%, var(--color-ground) 100%);
+      border-left: 6px solid var(--color-sonnet);
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .card:hover {
+      border-color: var(--color-accent);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    }
+
+    .volume-band {
+      border-left: 4px solid;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+
+    .volume-band.small {
+      border-color: var(--color-haiku);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .volume-band.medium {
+      border-color: var(--color-sonnet);
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .volume-band.large {
+      border-color: var(--color-warning);
+      background: rgba(220, 38, 38, 0.05);
+    }
+
+    .volume-band.xl {
+      border-color: var(--color-opus);
+      background: rgba(236, 72, 153, 0.05);
+    }
+
+    .volume-band h4 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.125rem;
+    }
+
+    .model-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .model-selector { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .model-card {
+      border: 2px solid;
+      border-radius: 6px;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .model-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .model-card.haiku {
+      border-color: var(--color-haiku);
+      color: var(--color-haiku);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .model-card.sonnet {
+      border-color: var(--color-sonnet);
+      color: var(--color-sonnet);
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .model-card.opus {
+      border-color: var(--color-opus);
+      color: var(--color-opus);
+      background: rgba(236, 72, 153, 0.05);
+    }
+
+    .model-card.fable {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .decision-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .decision-table th {
+      background: var(--color-accent);
+      color: white;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .decision-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .decision-table tr:hover {
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .decision-table code {
+      font-family: Consolas, Monaco, monospace;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--color-accent);
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+
+    .rule {
+      background: var(--color-ground);
+      border-left: 4px solid var(--color-accent);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+
+    .rule-title {
+      font-weight: 700;
+      color: var(--color-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .algorithm {
+      background: var(--color-ground);
+      border: 1px solid var(--color-border);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .algorithm code {
+      background: none;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .success-box {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--color-success);
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+    }
+
+    .success-box strong {
+      color: var(--color-success);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .checklist li {
+      padding: 0.5rem 0 0.5rem 2rem;
+      position: relative;
+    }
+
+    .checklist li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: var(--color-success);
+    }
+
+    code {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9em;
+    }
+
+    .metric {
+      display: inline-block;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--color-accent);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 700;
+      margin: 0.25rem;
+    }
+
+    .footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HERO -->
+    <div class="hero">
+      <h1>Manta Maestro — Política de Escalagem Automática</h1>
+      <p class="subtitle">Decisão automática de múltiplos agentes, modelos (Sonnet/Haiku) e padrões de orquestração baseado no volume da tarefa</p>
+    </div>
+
+    <!-- SEÇÃO 1: PRINCÍPIO -->
+    <h2>Princípio Fundamental</h2>
+    <p><strong>Regra de Ouro:</strong> "Sempre comece com múltiplos agentes em paralelo. Diminua apenas se necessário."</p>
+    <p>
+      Manta Maestro <strong>não</strong> pergunta "use 1 agente?" e depois expande. Ao invés disso, ele <strong>estima o volume da tarefa</strong>,
+      <strong>assume fan-out paralelo por padrão</strong>, e <strong>escolhe Sonnet/Haiku</strong> para velocidade e custo.
+    </p>
+    <p style="color: var(--color-text-secondary); margin: 1.5rem 0;">
+      Resultado: respostas 3–10x mais rápidas que abordagem serial, a um custo controlado.
+    </p>
+
+    <!-- SEÇÃO 2: CLASSIFICAÇÃO POR VOLUME -->
+    <h2>Classificação de Volume de Tarefa</h2>
+
+    <div class="volume-band small">
+      <h4>📊 Banda 1: PEQUEÑO (0–500 tokens input)</h4>
+      <p><strong>Exemplos:</strong> "Qual é a SELIC hoje?", "Parse rápido de edital", "Pergunta técnica simples"</p>
+      <p><strong>Decisão Maestro:</strong></p>
+      <ul class="checklist">
+        <li>1 agente (Claude ai direto, não precisa paralelismo)</li>
+        <li>Modelo: <span class="metric">Haiku</span> (rápido, barato)</li>
+        <li>Padrão: conversa direta</li>
+        <li>Wall-clock: &lt;30s</li>
+      </ul>
+    </div>
+
+    <div class="volume-band medium">
+      <h4>📊 Banda 2: MÉDIO (500–2000 tokens input)</h4>
+      <p><strong>Exemplos:</strong> "Analise este edital de 5 páginas", "Crie um parecer técnico", "Estude este contrato"</p>
+      <p><strong>Decisão Maestro:</strong></p>
+      <ul class="checklist">
+        <li>2–4 agentes em paralelo (análise multidimensional)</li>
+        <li>Modelo: <span class="metric">Sonnet</span> (balanceado, rápido)</li>
+        <li>Padrão: <code>parallel()</code> votação ou <code>pipeline()</code> 2 etapas</li>
+        <li>Wall-clock: 2–5 min</li>
+      </ul>
+    </div>
+
+    <div class="volume-band large">
+      <h4>📊 Banda 3: GRANDE (2000–5000 tokens input)</h4>
+      <p><strong>Exemplos:</strong> "Proposta comercial completa", "Análise de viabilidade EVTEA", "Due diligence contratual"</p>
+      <p><strong>Decisão Maestro:</strong></p>
+      <ul class="checklist">
+        <li>6–12 agentes em paralelo (fan-out múltiplos aspectos)</li>
+        <li>Modelo: <span class="metric">Sonnet</span> primário + <span class="metric">Haiku</span> para tasks menores</li>
+        <li>Padrão: <code>pipeline()</code> 3+ etapas, barrier entre fases críticas</li>
+        <li>Wall-clock: 10–30 min</li>
+      </ul>
+    </div>
+
+    <div class="volume-band xl">
+      <h4>📊 Banda 4: EXTRA-GRANDE (5000+ tokens input)</h4>
+      <p><strong>Exemplos:</strong> "Scan massivo de 100 projetos", "Análise forense cronograma", "Reavaliação de toda proposta"</p>
+      <p><strong>Decisão Maestro:</strong></p>
+      <ul class="checklist">
+        <li>12–16 agentes em paralelo (máximo fan-out)</li>
+        <li>Modelo: <span class="metric">Sonnet</span> análise crítica + <span class="metric">Haiku</span> paralelo massivo</li>
+        <li>Padrão: <code>pipeline()</code> com lotes de 16, consolidação em etapa final</li>
+        <li>Wall-clock: 30 min–2 h</li>
+      </ul>
+    </div>
+
+    <!-- SEÇÃO 3: SELEÇÃO DE MODELO -->
+    <h2>Seleção Automática de Modelo</h2>
+
+    <p><strong>Matriz de Decisão:</strong> Baseado em volume + complexidade, Maestro escolhe:</p>
+
+    <div class="model-selector">
+      <div class="model-card haiku">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+        <div>Haiku</div>
+        <div style="font-size: 0.8rem; font-weight: 400; margin-top: 0.25rem;">Rápido</div>
+      </div>
+      <div class="model-card sonnet">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">⭐</div>
+        <div>Sonnet</div>
+        <div style="font-size: 0.8rem; font-weight: 400; margin-top: 0.25rem;">Balanceado</div>
+      </div>
+      <div class="model-card opus" style="opacity: 0.5;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠</div>
+        <div>Opus</div>
+        <div style="font-size: 0.8rem; font-weight: 400; margin-top: 0.25rem;">Raro</div>
+      </div>
+      <div class="model-card fable" style="opacity: 0.5;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+        <div>Fable 5</div>
+        <div style="font-size: 0.8rem; font-weight: 400; margin-top: 0.25rem;">Novo</div>
+      </div>
+    </div>
+
+    <table class="decision-table">
+      <thead>
+        <tr>
+          <th>Volume</th>
+          <th>Complexidade</th>
+          <th>Modelo Primário</th>
+          <th>Modelo Secundário</th>
+          <th>Motivo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pequeno</td>
+          <td>Baixa</td>
+          <td><code>Haiku</code></td>
+          <td>—</td>
+          <td>Velocidade máxima. Não precisa de raciocínio complexo.</td>
+        </tr>
+        <tr>
+          <td>Pequeno</td>
+          <td>Alta</td>
+          <td><code>Sonnet</code></td>
+          <td>—</td>
+          <td>Complexidade demanda Sonnet mesmo em volume baixo.</td>
+        </tr>
+        <tr>
+          <td>Médio</td>
+          <td>Baixa</td>
+          <td><code>Haiku</code></td>
+          <td><code>Haiku</code></td>
+          <td>Paralelizar Haikus é custo-efetivo.</td>
+        </tr>
+        <tr>
+          <td>Médio</td>
+          <td>Média</td>
+          <td><code>Sonnet</code></td>
+          <td><code>Haiku</code></td>
+          <td>Sonnet para análise crítica, Haiku para suporte.</td>
+        </tr>
+        <tr>
+          <td>Médio</td>
+          <td>Alta</td>
+          <td><code>Sonnet</code></td>
+          <td><code>Sonnet</code></td>
+          <td>Ambos Sonnet para análise robusta.</td>
+        </tr>
+        <tr>
+          <td>Grande</td>
+          <td>Qualquer</td>
+          <td><code>Sonnet</code></td>
+          <td><code>Haiku</code></td>
+          <td><strong>PADRÃO MANTA:</strong> Sonnet críticos, Haiku paralelo em massa.</td>
+        </tr>
+        <tr>
+          <td>Extra-Grande</td>
+          <td>Qualquer</td>
+          <td><code>Sonnet</code></td>
+          <td><code>Haiku</code></td>
+          <td>Maximize throughput: Sonnet análise, Haiku indexação/processamento.</td>
+        </tr>
+        <tr>
+          <td>Qualquer</td>
+          <td>Crítica*</td>
+          <td><code>Opus</code></td>
+          <td><code>Sonnet</code></td>
+          <td>*Raro: claim reequilíbrio, decisão final multi-milhões. Opus + votação Sonnet.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SEÇÃO 4: ALGORITMO DE DECISÃO -->
+    <h2>Algoritmo de Decisão Automática (Pseudocódigo)</h2>
+
+    <div class="algorithm">
+<code>FUNCTION maestro_autoscale(user_input, project_context):
+
+  # PASSO 1: Estimar volume
+  input_tokens = count_tokens(user_input)
+  context_tokens = count_tokens(project_context)
+  total_tokens = input_tokens + context_tokens
+
+  # PASSO 2: Classificar volume
+  IF total_tokens < 500:
+    volume_band = PEQUENO
+    num_agents_target = 1
+  ELSE IF total_tokens < 2000:
+    volume_band = MÉDIO
+    num_agents_target = 3
+  ELSE IF total_tokens < 5000:
+    volume_band = GRANDE
+    num_agents_target = 8
+  ELSE:
+    volume_band = EXTRA_GRANDE
+    num_agents_target = 16
+
+  # PASSO 3: Detectar complexidade
+  keywords_crítica = ["claim", "reequilíbrio", "litígio", "ANEEL", "ARTESP"]
+  keywords_multi = ["proposta", "viabilidade", "edital", "concessão"]
+
+  complexidade = BAIXA
+  IF contains_any(user_input, keywords_crítica):
+    complexidade = CRÍTICA
+  ELSE IF contains_any(user_input, keywords_multi):
+    complexidade = MÉDIA
+
+  # PASSO 4: Selecionar modelo
+  IF complexidade == CRÍTICA:
+    primary_model = OPUS
+    secondary_model = SONNET
+  ELSE IF volume_band == PEQUENO:
+    primary_model = HAIKU
+    secondary_model = NULL
+  ELSE IF volume_band == MÉDIO:
+    primary_model = SONNET
+    secondary_model = HAIKU (se num_agents > 2)
+  ELSE:
+    primary_model = SONNET
+    secondary_model = HAIKU  # sempre Haiku paralelo em grande volume
+
+  # PASSO 5: Escolher padrão de orquestração
+  IF num_agents_target == 1:
+    pattern = DIRECT_CHAT
+  ELSE IF complexidade == CRÍTICA:
+    pattern = PARALLEL_VOTAÇÃO  # múltiplas perspectivas, síntese
+  ELSE IF volume_band == MÉDIO:
+    pattern = PIPELINE_2_ETAPAS
+  ELSE:
+    pattern = PIPELINE_3_ETAPAS  # análise → síntese → entrega
+
+  # PASSO 6: Definir SLA (wall-clock estimado)
+  IF pattern == DIRECT_CHAT:
+    sla_minutes = 0.5
+  ELSE IF pattern == PARALLEL_VOTAÇÃO:
+    sla_minutes = 5 + (num_agents_target / 4)
+  ELSE IF pattern == PIPELINE_2_ETAPAS:
+    sla_minutes = 10
+  ELSE:
+    sla_minutes = 20
+
+  # PASSO 7: Retornar plano de execução
+  RETURN {
+    volume_band: volume_band,
+    num_agents: min(num_agents_target, 16),
+    primary_model: primary_model,
+    secondary_model: secondary_model,
+    pattern: pattern,
+    sla_minutes: sla_minutes,
+    agents_to_dispatch: select_agents(volume_band, complexity),
+  }
+END FUNCTION</code>
+    </div>
+
+    <!-- SEÇÃO 5: SELEÇÃO DE AGENTES -->
+    <h2>Seleção Automática de Agentes</h2>
+
+    <p>Baseado em volume + contexto, Maestro seleciona quais dos 20 agentes disparar:</p>
+
+    <div class="rule">
+      <div class="rule-title">📋 Regra 1: Volume PEQUENO → 1 Agente</div>
+      <p>Roteamento determinístico por keywords. Exemplo: "edital DNIT" → S1-rodovias. Nenhum parallelismo necessário.</p>
+    </div>
+
+    <div class="rule">
+      <div class="rule-title">📋 Regra 2: Volume MÉDIO → 3 Agentes (análise tridimensional)</div>
+      <p>Identifique 3 dimensões da tarefa (técnica, comercial, legal) e dispare 1 agente por dimensão em paralelo.</p>
+      <p style="margin-top: 1rem;"><strong>Exemplo — Edital de concessão rodoviária:</strong></p>
+      <ul class="checklist">
+        <li><code>S1</code> (técnico) — análise geométrica e pavimentos</li>
+        <li><code>A7</code> (mercado) — contexto competitivo e viabilidade</li>
+        <li><code>A9</code> (regulatório) — conformidade DNIT/ARTESP</li>
+      </ul>
+      <p style="margin-top: 1rem; font-size: 0.95rem; color: var(--color-text-secondary);">Wall-clock: 3 análises em paralelo = 1 hora. Serial: 3 horas.</p>
+    </div>
+
+    <div class="rule">
+      <div class="rule-title">📋 Regra 3: Volume GRANDE → 8 Agentes (proposta completa)</div>
+      <p>Dispare todos os agentes horizontais relevantes em 2–3 etapas:</p>
+      <p style="margin-top: 1rem;"><strong>Etapa 1 (paralelo):</strong> Análise (A9 regulatório, S1 técnico, A7 mercado, A10 risco) — 4 agentes</p>
+      <p><strong>Etapa 2 (paralelo):</strong> Síntese (A6 modelagem, A5 orçamento, A4 cronograma, A3 legal) — 4 agentes</p>
+      <p><strong>Etapa 3 (serial):</strong> Entrega (A8 deck, A1 review final) — conforme síntese da etapa 2</p>
+      <p style="margin-top: 1rem; font-size: 0.95rem; color: var(--color-text-secondary);">Wall-clock: ~25 min (paralelo). Serial: ~8 horas.</p>
+    </div>
+
+    <div class="rule">
+      <div class="rule-title">📋 Regra 4: Volume EXTRA-GRANDE → 16 Agentes (máximo fan-out)</div>
+      <p>Dispare <strong>todos</strong> os 20 agentes em lotes de 16 (2 lotes sequenciais) ou use <code>pipeline()</code> com N items em paralelo.</p>
+      <p style="margin-top: 1rem;"><strong>Caso: Scan de 100 projetos no SharePoint</strong></p>
+      <p>Lote 1 (16 agentes × 50 projetos em paralelo) → Lote 2 (20 agentes × 50 restantes) → Consolidação</p>
+      <p style="margin-top: 1rem; font-size: 0.95rem; color: var(--color-text-secondary);">Wall-clock: 2 × 30 min + 10 min consolidação = 70 min. Serial: 1000 horas.</p>
+    </div>
+
+    <!-- SEÇÃO 6: EXEMPLOS PRÁTICOS -->
+    <h2>Exemplos de Decisão Automática</h2>
+
+    <h3>Exemplo 1: "Qual a SELIC hoje?"</h3>
+    <table class="decision-table" style="font-size: 0.9rem;">
+      <tr>
+        <td><strong>Input tokens:</strong></td>
+        <td><code>15</code> (pequeno)</td>
+      </tr>
+      <tr>
+        <td><strong>Volume band:</strong></td>
+        <td><span class="metric">PEQUENO</span></td>
+      </tr>
+      <tr>
+        <td><strong>Complexidade:</strong></td>
+        <td>Baixa (pergunta factual)</td>
+      </tr>
+      <tr>
+        <td><strong>Decisão Maestro:</strong></td>
+        <td><code>Haiku</code>, 1 agente, conversa direta, wall-clock &lt;30s</td>
+      </tr>
+      <tr>
+        <td><strong>Ação:</strong></td>
+        <td>Responder direto em Claude AI. Não dispara workflow paralelo.</td>
+      </tr>
+    </table>
+
+    <h3>Exemplo 2: "Analise este edital de concessão rodoviária de 10 páginas e me dê um parecer"</h3>
+    <table class="decision-table" style="font-size: 0.9rem;">
+      <tr>
+        <td><strong>Input tokens:</strong></td>
+        <td><code>1200</code> (médio)</td>
+      </tr>
+      <tr>
+        <td><strong>Volume band:</strong></td>
+        <td><span class="metric">MÉDIO</span></td>
+      </tr>
+      <tr>
+        <td><strong>Complexidade:</strong></td>
+        <td>Média (análise multidimensional)</td>
+      </tr>
+      <tr>
+        <td><strong>Decisão Maestro:</strong></td>
+        <td>3 agentes paralelos: <code>Sonnet</code> + <code>Sonnet</code> + <code>Haiku</code>, pipeline 2 etapas, wall-clock 5–10 min</td>
+      </tr>
+      <tr>
+        <td><strong>Agentes:</strong></td>
+        <td><code>A9</code> (regulatório) + <code>S1</code> (técnico) + <code>A7</code> (mercado)</td>
+      </tr>
+      <tr>
+        <td><strong>Ação:</strong></td>
+        <td>Dispara <code>pipeline()</code>: análise paralela (A9, S1, A7) → síntese (A8 parecer) → entrega</td>
+      </tr>
+    </table>
+
+    <h3>Exemplo 3: "Preciso de uma proposta comercial completa para essa concessão até amanhã"</h3>
+    <table class="decision-table" style="font-size: 0.9rem;">
+      <tr>
+        <td><strong>Input tokens:</strong></td>
+        <td><code>3500</code> (grande)</td>
+      </tr>
+      <tr>
+        <td><strong>Volume band:</strong></td>
+        <td><span class="metric">GRANDE</span></td>
+      </tr>
+      <tr>
+        <td><strong>Complexidade:</strong></td>
+        <td>Alta (multi-disciplinar)</td>
+      </tr>
+      <tr>
+        <td><strong>Decisão Maestro:</strong></td>
+        <td>8 agentes paralelos: 4 <code>Sonnet</code> + 4 <code>Haiku</code>, pipeline 3 etapas, wall-clock 25 min</td>
+      </tr>
+      <tr>
+        <td><strong>Agentes:</strong></td>
+        <td>Etapa 1: A9, S1, A7, A10 | Etapa 2: A6, A5, A4, A3 | Etapa 3: A8, A1</td>
+      </tr>
+      <tr>
+        <td><strong>Ação:</strong></td>
+        <td>Dispara <code>Workflow</code>: fan-out 8 agentes em 3 etapas, consolidação em final, entrega 25 min</td>
+      </tr>
+    </table>
+
+    <!-- SEÇÃO 7: REGRAS INVIOLÁVEIS -->
+    <h2>Regras Invioláveis da Autoscaling</h2>
+
+    <div class="success-box">
+      <strong>Regra 1: Sempre comece com múltiplos agentes</strong>
+      <p>Padrão é fan-out paralelo. Diminua apenas se volume &lt; 500 tokens. Nunca assuma serial por padrão.</p>
+    </div>
+
+    <div class="success-box">
+      <strong>Regra 2: Haiku é padrão para paralelo massivo</strong>
+      <p>Em volume grande/extra-grande, use Haiku para tasks suporte/paralelo em massa. Sonnet para análise crítica.</p>
+    </div>
+
+    <div class="success-box">
+      <strong>Regra 3: Sonnet é padrão para análise única</strong>
+      <p>Se volume médio e apenas 1 agente necessário, use Sonnet (não Haiku). Qualidade &gt; velocidade em análise crítica.</p>
+    </div>
+
+    <div class="success-box">
+      <strong>Regra 4: Opus apenas para reequilíbrio/M&amp;A</strong>
+      <p>Opus é raro. Use apenas em claims de reequilíbrio, due diligence, decisões que movem múltiplos milhões. Padrão: Opus + votação Sonnet.</p>
+    </div>
+
+    <div class="success-box">
+      <strong>Regra 5: Pipeline sem barrier é padrão</strong>
+      <p>Não use <code>parallel()</code> com barrier desnecessário. <code>pipeline()</code> sem barrier deixa wall-clock baixo.</p>
+    </div>
+
+    <!-- SEÇÃO 8: MONITORAMENTO -->
+    <h2>Monitoramento e Ajuste Contínuo</h2>
+
+    <p>A cada execução, Maestro registra em <code>rag_learning_log</code>:</p>
+
+    <table class="decision-table">
+      <thead>
+        <tr>
+          <th>Métrica</th>
+          <th>O que monitorar</th>
+          <th>Ação se desviar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Wall-clock real</strong></td>
+          <td>Tempo real de execução vs. SLA estimado</td>
+          <td>Se real &gt; SLA × 1.5, revisar seleção de agentes ou modelo</td>
+        </tr>
+        <tr>
+          <td><strong>Taxa de sucesso</strong></td>
+          <td>% de agentes que completam sem erro</td>
+          <td>Se &lt;90%, investigar fallback (qual agente falhou?)</td>
+        </tr>
+        <tr>
+          <td><strong>Custo total</strong></td>
+          <td>Input + output tokens × preço modelo</td>
+          <td>Se &gt; orçamento esperado, diminuir num_agents ou trocar para Haiku</td>
+        </tr>
+        <tr>
+          <td><strong>Qualidade da resposta</strong></td>
+          <td>Score de satisfação do usuário (1–5)</td>
+          <td>Se &lt;3, reviewar seleção de agentes (talvez Sonnet necessário, não Haiku)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rule">
+      <div class="rule-title">🔄 Ciclo de Ajuste (Semanal)</div>
+      <p>Toda segunda-feira (ou conforme carga), Maestro analisa <code>rag_learning_log</code> da semana anterior:</p>
+      <ul class="checklist">
+        <li>Quais combinações volume/modelo/agentes tiveram melhor wall-clock?</li>
+        <li>Quais tiveram pior taxa de sucesso?</li>
+        <li>Qual foi o custo médio por tipo de tarefa?</li>
+        <li>Atualizar <code>maestro_autoscale_policy.md</code> se regras mudam</li>
+      </ul>
+    </div>
+
+    <!-- SEÇÃO 9: IMPLEMENTAÇÃO -->
+    <h2>Implementação no Código</h2>
+
+    <p><strong>Localização:</strong> <code>.claude/agents/maestro.md</code> → seção "Autoscaling Engine"</p>
+
+    <div class="algorithm">
+<code>// Em .claude/agents/maestro.md:
+
+## Autoscaling Engine v1.0
+
+Ao receber input do usuário:
+
+1. Contar tokens (input + context)
+2. Chamar maestro_autoscale(input, context)
+3. Resultado: {volume_band, num_agents, primary_model, pattern, agents_to_dispatch}
+4. Se num_agents == 1: responder direto em Claude AI
+5. Se num_agents > 1: dispara Workflow com agents_to_dispatch em pattern indicado
+6. Registrar em rag_learning_log: tokens, num_agents, modelo, wall-clock real, status
+7. Retornar resultado ao usuário</code>
+    </div>
+
+    <!-- RODAPÉ -->
+    <div class="footer">
+      <p><strong>Documento:</strong> Manta Maestro — Política de Escalagem Automática v1.0</p>
+      <p><strong>Data:</strong> 2026-08-08 | <strong>Próxima revisão:</strong> 2026-08-22 (após Phase 1)</p>
+      <p><strong>Referência:</strong> CLAUDE.md, Maestro v5.0.1, Política de Priorização</p>
+    </div>
+  </div>
+</body>
+</html>
