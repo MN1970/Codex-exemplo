@@ -1,11 +1,23 @@
 {
   "metadata": {
-    "titulo": "ANTT & Regulações de Transportes Terrestres — Banco de Dados Maestro v4.2",
+    "titulo": "ANTT & Regulações de Transportes Terrestres — Banco de Dados Maestro v4.3",
     "data_criacao": "2026-08-07",
-    "versao": "4.2",
-    "fonte_pesquisa": "6 agentes IA especializados",
-    "abrangencia": "Marcos legais, resoluções ANTT, casos julgados 2011-2026, acórdãos TCU 2011-2026",
+    "data_enriquecimento": "2026-08-08",
+    "versao": "4.3",
+    "fonte_pesquisa": "6 agentes IA especializados (Sonnet) + Fable Coordinator",
+    "abrangencia": "Marcos legais, resoluções ANTT, casos julgados 2011-2026, acórdãos TCU 2011-2026, descobertas emergentes v4.3",
     "escopo_geografico": "Brasil",
+    "descobertas_v4_3": [
+      "Consensualismo TCU: novo paradigma 2025-2026 (mediação → soluções consensuais)",
+      "CL 214/2025 art. 376: reforma tributária como vetor reequilíbrio (R$ 15-25 bi/ano)",
+      "Lei 14.273/21: implementação fracassada (ZERO OFI operando)",
+      "Onda regulatória: 8 leilões ferroviários R$ 140 bi (2026-2027)"
+    ],
+    "alertas_qa": [
+      "Problem A (Régis Bittencourt): validação com Manta 15 pendente",
+      "Problem B (Citations): aluci-guard validation pendente",
+      "Problem C (Units): R$ 945 mi (validação modelo)"
+    ],
     "atualizacao_recomendada": "Agosto 2027"
   },
 
