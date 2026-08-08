@@ -261,7 +261,83 @@ Este documento consolida **20+ anos de jurisprudência** em transportes terrestr
 
 ---
 
-## IX. CONSOLIDADO FINANCEIRO (2024-2025)
+## VIII.B DESCOBERTAS EMERGENTES v4.3 — Síntese Multi-Agente (Agosto 2026)
+
+### 1. Consensualismo TCU como Novo Paradigma (2025-2026)
+
+- **Evolução:** TCU migrou de postura litigante (2020-2024) para "co-construtor de soluções estáveis"
+- **Mecanismo:** SecexConsenso (procedimento administrativo dedicado)
+- **Trade-off:** Mais fácil negociar, mais difícil aprovar
+- **Critérios rigorosos:**
+  - Ônus probatório recai sobre concessionária (não sobre TCU)
+  - Limite: máximo 2 reequilíbrios por ciclo de 10 anos
+  - **Pré-requisito ESG obrigatório** (novo em 2025)
+  - Modelagem em 3 cenários requerida
+  - Buffer de 8-12% de receita
+- **Impacto:** Encarece custo de capital (spread +200-250 bps) para concessionárias sem track record
+
+### 2. Reforma Tributária — Novo Vetor de Reequilíbrio (CL 214/2025)
+
+- **Marco legal:** Artigo 376, Complementary Law 214/2025
+- **Inovação:** Procedimento administrativo dedicado para rebalanceamento por mudança tributária
+- **Potencial financeiro:** R$ 15-25 bilhões/ano em ajustes 2027-2030
+- **Aplicabilidade:** Transversal a qualquer concessão (rodovia, ferrovia, porto, etc.)
+- **Estratégia:** Novo fundamento de pleito para claims 2027-2028
+- **Ação:** Propagar imediatamente para todos agentes verticais S1-S10
+
+### 3. Lei 14.273/2021 (Marco Legal das Ferrovias) — Alerta Crítico
+
+- **Status atual:** Regulamentada (Res. ANTT 5.987/2022), mas implementação LENTA
+- **Achado crítico:** **ZERO operadores ferroviários independentes (OFI) operando de fato**
+  - Casos aprovados: FTL, Temape, Minas-Rio 2026 — nenhum operacional
+- **Implicação:** Risco crítico para qualquer EVTE que assuma interoperabilidade multioperador como premissa de receita
+- **Ação:** Agente-ferrovias (S3) deve revisar ALL projeções baseadas em Lei 14.273/21
+
+### 4. Onda Regulatória Concentrada — 2026-2027
+
+- **8 leilões ferroviários:** R$ 140 bilhões (dado triangulado, alta confiabilidade)
+- **5 renovações/aditivos em pipeline:** Malha Sul, Centro-Atlântica, Transnordestina, Malha Oeste, Tereza Cristina
+- **Processo competitivo:** Régis Bittencourt (alienação de controle)
+- **Agentes principal:** S1 (rodovias), S3 (ferrovias)
+
+### 5. Mapping Agentes Verticais → Jurisprudência + Gaps
+
+| Agente | Segmento | Marcos Legais | Precedentes 2026 | Status Cobertura |
+|--------|----------|---------------|------------------|-----------------|
+| **S1** | Rodovias | Lei 8.987/95, RCR1-4, CL 214/2025 | Via Bahia rescisão; BR-101 risco OPEX | ✅ Completo |
+| **S2** | OAE | NBR 7187/9452 | Ecoponte (13km) | ✅ Completo |
+| **S3** | Ferrovias | Lei 14.273/21, SUFER | 8 leilões (R$140bi); 5 renovações; Lei 14.273 fracasso OFI | ⚠️ Crítico: OFI não funciona |
+| **S4** | Metrô | Leg. SP/RJ | Linha 4 SP (+R$676M); Rio Linha 5 (-15%) | ✅ Médio |
+| **S6** | Portos | Lei 12.815/2013, ANTAQ | Porto Santos (-20% movim.); dragagem emergencial | ✅ Médio |
+| **S7** | Aeroportos | Lei 11.182/2005 | GRU/Galeão (genérico) | **🔴 LACUNA CRÍTICA** — pesquisa dedicada necessária |
+| **S8** | Saneamento | Lei 14.026/2020, SNIS | CEDAE Rio (-18% seca) | ✅ Médio |
+| **S9** | Energia | Lei 10.848/2004, ANEEL | Leilão transmissão (sem caso reequilíbrio) | **🔴 LACUNA CRÍTICA** — sem precedente 2026 |
+| **S10** | Barragens | Lei 12.334/2010, PNSB | Histórico (Brumadinho, Mariana) | **🔴 LACUNA CRÍTICA** — sem evento 2026 |
+
+### ⚠️ Alertas de Qualidade de Dado (Validação Necessária Antes de RAG)
+
+**Problema A — Régis Bittencourt (Análise 1):**
+- Caracterização na síntese: "repactuação consensual com extensão 8 anos + R$ 7,2 bi capex"
+- **Conflita com skill `manta-regis`:** é Processo Competitivo ANTT nº 1/2026 — alienação de 100% ações via B3
+- **Natureza:** evento societário (venda de controle), não aditivo de prazo
+- **Ação:** NÃO usar sem validação human com Manta 15/BD
+
+**Problema B — Inconsistências de Citação (Análise 1):**
+- Mistura formatos: "Accord 1.360/2026" (inglês) ↔ "Acórdão 522/2025" (português)
+- Cita nomenclaturas não-padrão: "Decisão ANTT DLA 32-2026" (não corresponde padrão real)
+- **Padrão:** alucinação potencial de LLM em busca não verificada
+- **Ação:** **Rodar skill `aluci-guard`** antes de qualquer uso
+
+**Problema C — Erro de Unidade (Análise 2):**
+- Impacto agregado: `impacto_total_r_bi: 945` (R$ 945 bilhões)
+- Verificação: soma aritmética de valores individuais, que parecem ser **R$ milhões, não bilhões**
+- Implausibilidade: R$ 180 bi de desequilíbrio numa única rodovia vs. R$ 140-180 bi para TODA a rodovia nacional
+- **Fator de erro:** ~1000x (superestimado)
+- **Ação:** **Validar com modelagem ANTES de usar em cliente/laudo**
+
+---
+
+## IX. CONSOLIDADO FINANCEIRO (2024-2026)
 
 - **Investimentos Aprovados:** R$ 20+ bilhões
 - **Renúncias de Ações Litigiosidades:** R$ 136,9 milhões
