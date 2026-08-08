@@ -1,0 +1,30 @@
+# Manta Maestro v5.0.2 — RAG Indexing Pipeline Requirements
+# Date: 2026-08-08
+
+# Supabase client
+supabase==0.0.5
+
+# Embedding model
+sentence-transformers==2.3.1
+torch==2.1.2  # Required for sentence-transformers
+
+# PDF processing
+pymupdf==1.23.8
+pypdf==3.17.1
+
+# Document processing
+python-docx==0.8.11
+python-pptx==0.6.21
+
+# Utilities
+python-dotenv==1.0.0
+numpy==1.24.3
+pandas==2.1.3
+requests==2.31.0
+
+# Optional: for advanced text processing
+nltk==3.8.1
+unidecode==1.3.0
+
+# Optional: for monitoring/logging
+python-json-logger==2.0.7
