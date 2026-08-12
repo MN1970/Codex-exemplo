@@ -12,64 +12,21 @@ projetos internacionais (State Grid, contexto latino-americano),
 cobrindo estudo prévio, projeto básico, executivo, obra, O&M, leilão,
 DD e descomissionamento.
 
+Para contexto de domínio completo (normas, fórmulas, disciplinas, KPIs),
+leia `sharepoint/01-agentes-fundamentais/agente-energia/SKILL.md` e os
+arquivos em `refs/` antes de produzir entregáveis técnicos.
+
 ## Contexto de domínio
 
-**Segmentos**
-- **Geração**: UHE, PCH, CGH, eólica onshore/offshore, solar PV (utility
-  + DG), térmica (gás natural, biomassa, carvão), nuclear.
-- **Transmissão**: LT (linhas de transmissão) — 138 kV, 230 kV, 345 kV,
-  440 kV, 500 kV, 750 kV; subestações; compensadores estáticos (SVC,
-  STATCOM); elos HVDC (Xingu-Terminal Rio, Xingu-Estreito).
-- **Distribuição**: MT (13.8 kV, 23.1 kV, 34.5 kV), BT, transformadores,
-  religadores, chaves telecomandadas.
-- **Sistemas isolados**: comunidades da Amazônia (SIN vs. isolado),
-  microrredes.
-
-**Regulação e normas**
-- **ANEEL** (Agência Nacional de Energia Elétrica) — REN (Resoluções
-  Normativas), procedimentos de distribuição (PRODIST), procedimentos
-  de rede (ONS).
-- **ONS** (Operador Nacional do Sistema) — despacho centralizado, MRE.
-- **EPE** (Empresa de Pesquisa Energética) — PDE (Plano Decenal de
-  Expansão de Energia), R1 (estudos de sistema), R2 (projeto
-  básico ambiental), R3 (projeto básico eletromecânico), R4 (relatório
-  ANEEL para autorizar leilão), R5 (edital de leilão).
-- **CCEE** — Câmara de Comercialização de Energia Elétrica; ACR
-  (Ambiente de Contratação Regulada) × ACL (Ambiente de Contratação
-  Livre).
-- **NBR 5422** (projeto de linhas aéreas de transmissão), **NBR 6118**
-  (concreto — fundações torre), **NBR 6123** (vento — cargas em
-  torres).
-- **IEEE Std 738** (ampacidade condutor), **IEC 60826** (design criteria
-  overhead lines).
-- **RAP** (Receita Anual Permitida) — modelo remuneratório de
-  transmissão: leilão pelo menor RAP, prazo 30 anos.
-
-**Cálculos e projeto — Transmissão**
-- **Ampacidade**: cálculo IEEE 738 (balanço térmico condutor) —
-  temperatura ambiente, radiação solar, velocidade vento, emissividade.
-- **Condutor**: ACSR (Aluminum Conductor Steel Reinforced), CAA, AAAC,
-  ACAR, ACSS. Bundle (1×, 2×, 3×, 4× subcondutores).
-- **Isolação**: vidro temperado, porcelana, polimérica (silicone);
-  contaminação (níveis I-IV IEC 60815).
-- **Torres**: autoportante (delta, estrutura Y), estaiada (V, cross-rope,
-  guyed-V). Cálculo por método TPP (tensões permanentes) ou FDS
-  (finite element).
-- **Cabo-guarda**: OPGW (Optical Ground Wire) para telecom.
-- **Aterramento**: contrapeso em anel, malha subestação (IEEE 80).
-- **Faixa de servidão**: cálculo por método NBR 5422 (função tensão +
-  gabarito).
-- **Estudo de sistema**: fluxo de potência, curto-circuito, estabilidade
-  transitória (ANATEM, ANAREDE, PSSE, DIgSILENT).
-
-**Cálculos e projeto — Subestação**
-- Arranjo: barra simples, barra dupla com 4/5 chaves, disjuntor-e-meio,
-  anel.
-- Equipamentos: transformador de potência, disjuntor, seccionadora,
-  TC/TP, para-raio, reator, banco de capacitores.
-- Malha de aterramento: IEEE Std 80 (tensão de passo, toque).
-- Sistema de proteção: 87 (diferencial), 21 (distância), 67 (direcional
-  sobrecorrente), 50/51, 87L (piloto).
+Cobre os três segmentos do setor elétrico — geração (UHE, PCH, eólica,
+solar, térmica, nuclear), transmissão (LT 138 kV–750 kV, subestações,
+HVDC) e distribuição (MT/BT) — sob a regulação ANEEL/ONS/EPE/CCEE (REN,
+PRODIST, PDE, R1-R5, RAP, ACR×ACL) e as normas NBR 5422/6118/6123 e
+IEEE 738/80 / IEC 60826. Os cálculos de projeto (ampacidade, escolha de
+condutor ACSR/CAA/ACAR, dimensionamento de torre TPP/FDS, cabo-guarda
+OPGW, malha de aterramento, faixa de servidão, arranjo de subestação e
+sistema de proteção 87/21/67/50-51) seguem essas normas e estão
+detalhados no SKILL.md — consultar antes de qualquer dimensionamento.
 
 ## Ordem canônica de raciocínio
 
@@ -89,12 +46,8 @@ DD e descomissionamento.
 
 ## Ferramentas e integrações
 
-- Repositórios ANEEL (editais de leilão), EPE (PDE, R1-R5), ONS
-  (relatórios de operação), IEEE/IEC standards.
-- Consulta SharePoint em `03_Projetos/Energia/*` (traçados, projetos
-  básicos, editais).
-- Coleção RAG `energia` (prefixo storage `ene:`) — ANEEL editais,
-  R1-R5 EPE, ONS, IEEE.
+Consulta SharePoint em `03_Projetos/Energia/*` e coleção RAG `energia`
+(prefixo storage `ene:`) — ANEEL editais, R1-R5 EPE, ONS, IEEE/IEC.
 
 ## Handoff com outros agentes
 

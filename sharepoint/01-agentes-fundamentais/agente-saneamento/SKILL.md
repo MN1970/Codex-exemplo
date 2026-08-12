@@ -79,49 +79,30 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
-- `san-scanner.md` — premissas: demanda per capita, K1/K2, horizonte
-- `san-risk.md` — matriz de risco 5×5 (mananciais, tarifa, ambiental, social)
-- `san-thesis.md` — tese técnica + score 0-100
+Premissas de demanda (per capita, K1/K2, horizonte), matriz de risco 5×5
+(mananciais, tarifa, ambiental, social) e tese técnica com score 0-100.
 
 ### V2 — Inteligência Setorial
-- `san-int-orchestrator.md`
-- `axes/01-normas.md` — NBR 12211-12218 (BR), diretrizes AySA (AR), IWA
-- `axes/02-regulatorio.md` — Lei 14.026, ANA (BR); ERAS + PIRHA (AR)
-- `axes/03-mercado.md` — universalização 2033 (BR), planos AySA (AR)
-- `axes/04-indicadores.md` — SNIS (BR), indicadores AySA (AR)
-- `axes/05-tecnologia.md` — MBR, DAF, UV+O₃, reúso PPU
-- `axes/06-academia.md` — ABES, IWA, publicações Water Research
+Normas (NBR 12211-12218, diretrizes AySA, IWA), regulação (Lei 14.026/ANA
+no BR; ERAS/PIRHA na AR), leitura de mercado (universalização 2033 BR,
+planos AySA na AR), indicadores (SNIS no BR, indicadores AySA na AR),
+tecnologia (MBR, DAF, UV+O₃, reúso PPU) e academia (ABES, IWA, Water
+Research).
 
 ### V3 — Gestão de Obra Urbana
-- `san-cronograma.md` — obra faseada, interferências urbanas
-- `san-medicao-fisica.md` — rede por m linear, ETA/ETE por vazão implantada
-- `san-interferencias.md` — trânsito, energia, gás, telecom
-- `san-ligacoes.md` — cronograma ligação por rua
+Cronograma faseado com interferências urbanas, medição física (rede por
+m linear, ETA/ETE por vazão implantada), interferências (trânsito,
+energia, gás, telecom) e cronograma de ligações por rua.
 
 ### V4 — Document Intelligence
-- `san-doc-orchestrator.md`
-- `san-doc-projeto.md` — memorial hidráulico
-- `san-doc-cad.md` — DWG/DXF (cad-quantifier + gis-integration)
-- `san-doc-pmsb.md` — Plano Municipal de Saneamento Básico
-- `san-doc-analitico.md` — PRC 05/2017, CONAMA 357/430
-- `san-doc-snis.md` — extração de indicadores
-- `san-doc-hidraulica.md` — EPANET, SWMM, Hidrogênius
+Memorial hidráulico, leitura de DWG/DXF, PMSB (Plano Municipal de
+Saneamento Básico), dados analíticos (PRC 05/2017, CONAMA 357/430),
+extração de indicadores SNIS e modelagem hidráulica (EPANET, SWMM,
+Hidrogênius).
 
 ### V5 — 12 Disciplinas de Saneamento
-- `disciplines/D01-mananciais.md` (superficial × subterrâneo, outorga)
-- `disciplines/D02-adutora.md` (Hazen-Williams, golpe de aríete)
-- `disciplines/D03-ETA.md` (ciclo completo × em linha)
-- `disciplines/D04-reservacao.md` (apoiado, elevado, semi-enterrado)
-- `disciplines/D05-distribuicao.md` (setorização, pressão)
-- `disciplines/D06-coleta-esgoto.md` (rede, PV, poços de passagem)
-- `disciplines/D07-EEE.md` (bomba submersível × vertical)
-- `disciplines/D08-ETE.md` (UASB, lodo ativado, MBR, filtro bio.)
-- `disciplines/D09-emissario.md` (submarino, fluvial, dispersão)
-- `disciplines/D10-drenagem-urbana.md` (microdrenagem + macrodrenagem + SbN)
-- `disciplines/D11-residuos.md` (coleta, transbordo, aterro sanitário)
-- `disciplines/D12-reuso.md` (industrial, agrícola, urbano)
-- `matrices/tratamento-esgoto.json` (por eficiência × custo × área)
-- `matrices/norma-aplicavel.json`
+Mananciais, adutora, ETA, reservação, distribuição, coleta de esgoto,
+EEE, ETE, emissário, drenagem urbana, resíduos e reúso.
 
 ## 4. KNOWLEDGE ENGINE (RAG)
 

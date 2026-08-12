@@ -82,47 +82,41 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
-- `aer-scanner.md` — premissas: código aeródromo, aeronave crítica, mix
-- `aer-risk.md` — matriz de risco 5×5 (obstáculo, ruído, ambiental, operacional)
-- `aer-thesis.md` — tese técnica + score 0-100
+Levanta as premissas do caso (código de aeródromo, aeronave crítica, mix de
+movimentos), aplica uma matriz de risco 5×5 (obstáculo, ruído, ambiental,
+operacional) e consolida a tese técnica final com score de 0 a 100.
 
 ### V2 — Inteligência Setorial
-- `aer-int-orchestrator.md`
-- `axes/01-normas.md` — RBAC 154, ICAO Annex 14 Vol I/II, FAA AC 150/5300-13
-- `axes/02-regulatorio.md` — ANAC, DECEA (ICA 100-12), IBAMA
-- `axes/03-mercado.md` — passageiros/ano BR, TPHP, cargo throughput
-- `axes/04-indicadores.md` — SICRO adaptado + custo m² TPS por LOS
-- `axes/05-tecnologia.md` — biometria, HBS, dobradiça de embarque, VDGS
-- `axes/06-academia.md` — ITA, USP-EESC, publicações Transportation Research
+Reúne o pano de fundo regulatório e de mercado do caso: normas aplicáveis
+(RBAC 154, ICAO Annex 14 Vol I/II, FAA AC 150/5300-13), órgãos reguladores
+(ANAC, DECEA/ICA 100-12, IBAMA), indicadores de mercado (passageiros/ano no
+Brasil, TPHP, cargo throughput), referências de custo (SICRO adaptado e
+custo por m² de TPS por nível de serviço/LOS), tendências tecnológicas
+(biometria, HBS, ponte de embarque, VDGS) e produção acadêmica de apoio
+(ITA, USP-EESC, Transportation Research).
 
 ### V3 — Gestão de Obra em Aeroporto Operante
-- `aer-cronograma.md` — janelas noturnas (obras airside com movimento)
-- `aer-fasing.md` — plano de fases + NOTAM
-- `aer-medicao-fisica.md` — pista por m² pavimento novo, TPS por área bruta
-- `aer-interferencias.md` — controle de tráfego aéreo, PGZ, altura obstáculo
+Trata do planejamento de obra em aeroporto operante: janelas noturnas para
+intervenções em área airside com movimento de aeronaves, plano de fases
+articulado com NOTAM, medição física (pista por m² de pavimento novo, TPS
+por área bruta) e controle de interferências com o tráfego aéreo (PGZ,
+altura de obstáculo).
 
 ### V4 — Document Intelligence
-- `aer-doc-orchestrator.md`
-- `aer-doc-projeto.md` — memorial de cálculo, plantas
-- `aer-doc-cad.md` — DWG/DXF (cad-quantifier)
-- `aer-doc-rbac.md` — RBAC 154 + apostilas ANAC
-- `aer-doc-mix-aeronave.md` — aeronave crítica + wheel loading
-- `aer-doc-cronograma.md` — XER/MPP (p6-analytics)
+Processa e classifica a documentação recebida do caso — memorial de cálculo
+e plantas do projeto, arquivos DWG/DXF (via cad-quantifier), RBAC 154 e
+apostilas ANAC, dados de aeronave crítica e wheel loading, e cronogramas em
+XER/MPP (via p6-analytics) — para alimentar as demais vertentes.
 
 ### V5 — 10 Disciplinas Aeroportuárias
-- `disciplines/D01-geometria-airside.md` (pista, RESA, TWY, pátio)
-- `disciplines/D02-pavimento-aeroportuario.md` (FAA FAARFIELD, PCN/ACN)
-- `disciplines/D03-drenagem-pista.md` (sub-superficial + superficial)
-- `disciplines/D04-balizamento.md` (CAT I/II/III, PAPI, ALSF)
-- `disciplines/D05-terminal-passageiros.md` (LOS IATA, fluxo, MEP)
-- `disciplines/D06-terminal-carga.md` (TECA, HVAC)
-- `disciplines/D07-navegacao-aerea.md` (ILS, VOR, DME, ATIS, torre)
-- `disciplines/D08-combate-incendio.md` (SCI categoria 1-10)
-- `disciplines/D09-meteorologia.md` (AWOS, sensores, RVR)
-- `disciplines/D10-ambiental.md` (ruído NBR 10151, GEE, resíduos)
-- `matrices/codigo-aerodromo.json` (1A → 4F)
-- `matrices/aeronave-critica.json` (B737, A320, ATR72, E195, cargueiro)
-- `matrices/norma-aplicavel.json`
+Cobre as dez disciplinas técnicas do projeto aeroportuário: geometria
+airside (pista, RESA, taxiway, pátio), pavimento aeroportuário (FAA
+FAARFIELD, PCN/ACN), drenagem de pista, balizamento (CAT I/II/III, PAPI,
+ALSF), terminal de passageiros (LOS IATA, fluxo, MEP), terminal de carga
+(TECA, HVAC), navegação aérea (ILS, VOR, DME, ATIS, torre), combate a
+incêndio (SCI categoria 1-10), meteorologia (AWOS, sensores, RVR) e questões
+ambientais (ruído NBR 10151, GEE, resíduos), apoiada por referências de
+código de aeródromo, aeronave crítica e norma aplicável a cada situação.
 
 ## 4. KNOWLEDGE ENGINE (RAG)
 

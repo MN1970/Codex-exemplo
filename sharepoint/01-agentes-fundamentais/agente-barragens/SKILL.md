@@ -87,50 +87,42 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
-- `bar-scanner.md` — premissas: altura, volume, DPA, categoria risco
-- `bar-risk.md` — matriz 5×5 (sísmica, liquefação, PAE, PAEBM)
-- `bar-thesis.md` — tese técnica + score 0-100 (segurança + custo)
+Levanta as premissas do empreendimento (altura, volume, DPA, categoria de
+risco) e monta a matriz de risco 5×5 (sísmica, liquefação, PAE/PAEBM),
+consolidando tudo em uma tese técnica com score 0-100 de segurança e custo.
 
 ### V2 — Inteligência Setorial
-- `bar-int-orchestrator.md`
-- `axes/01-normas.md` — NBR 13028 (rejeitos), 8681 (ações), ABNT 6122
-- `axes/02-regulatorio.md` — ANM Res. 95/2022, ANA (SNISB), ANEEL (UHE)
-- `axes/03-mercado.md` — barragens em operação BR + histórico rupturas
-- `axes/04-indicadores.md` — R$/m³ concreto, R$/m³ enrocamento, R$/m² face
-- `axes/05-tecnologia.md` — dry stack, filtragem, instrumentação IoT
-- `axes/06-academia.md` — ICOLD bulletins (194 rejeitos, 164 CFRD, 194 seg.)
+Cobre o panorama normativo e regulatório (NBR 13028/rejeitos, NBR 8681/ações,
+NBR 6122/fundações, ANM Res. 95/2022, ANA/SNISB, ANEEL para UHE), o mercado de
+barragens em operação no Brasil e histórico de rupturas, indicadores de custo
+(R$/m³ concreto, R$/m³ enrocamento, R$/m² de face) e tendências tecnológicas
+(dry stack, filtragem, instrumentação IoT), com base nos bulletins ICOLD de
+referência (rejeitos, CFRD, segurança).
 
 ### V3 — Gestão de Obra + Instrumentação
-- `bar-cronograma.md` — sazonalidade (janela seca), desvio de rio
-- `bar-medicao-fisica.md` — m³ escavação, m³ concreto lançado, m² face
-- `bar-instrumentacao.md` — piezômetro, medidor de vazão, extensômetro, célula
-- `bar-monitoramento.md` — níveis de controle × emergência, frequência
+Trata do cronograma de obra considerando sazonalidade (janela seca) e desvio
+de rio, medição física (m³ de escavação, m³ de concreto lançado, m² de face),
+e o plano de instrumentação e monitoramento (piezômetros, medidores de vazão,
+extensômetros, células de carga) com seus níveis de controle e emergência.
 
 ### V4 — Document Intelligence
-- `bar-doc-orchestrator.md`
-- `bar-doc-projeto.md` — memorial + plantas
-- `bar-doc-cad.md` — DWG/DXF (cad-quantifier)
-- `bar-doc-sondagem.md` — SPT, CPT, sondagem rotativa
-- `bar-doc-ensaio.md` — triaxial CID/CIU, oedométrico, cisalhamento direto
-- `bar-doc-modelagem.md` — PLAXIS, GeoStudio, FLAC (leitura de resultados)
-- `bar-doc-sigbm.md` — extração de relatório SIGBM/SNISB
-- `bar-doc-pae.md` — PAE/PAEBM + mapa inundação
+Extrai e organiza a documentação técnica do empreendimento: memorial e
+plantas de projeto, arquivos DWG/DXF (via cad-quantifier), boletins de
+sondagem (SPT, CPT, rotativa), ensaios de laboratório (triaxial CID/CIU,
+oedométrico, cisalhamento direto), resultados de modelagem numérica (PLAXIS,
+GeoStudio, FLAC), relatórios SIGBM/SNISB e os planos PAE/PAEBM com mapa de
+inundação.
 
 ### V5 — 12 Disciplinas de Barragens
-- `disciplines/D01-hidrologia.md` (PMP, PMF, TR)
-- `disciplines/D02-hidraulica-vertedor.md` (routing + dimensionamento)
-- `disciplines/D03-geotecnia-geral.md` (caracterização, ensaios)
-- `disciplines/D04-estabilidade-estatica.md` (Bishop, Morgenstern, Spencer)
-- `disciplines/D05-estabilidade-sismica.md` (OBE × MDE, Newmark, dinâmica)
-- `disciplines/D06-percolacao.md` (Darcy, redes de fluxo, EF)
-- `disciplines/D07-liquefacao.md` (state parameter, SPT/CPT)
-- `disciplines/D08-orgaos-vertedores.md` (superfície, fundo, bacia dissip.)
-- `disciplines/D09-instrumentacao-monitoramento.md`
-- `disciplines/D10-dam-breach.md` (DAMBRK, HEC-RAS 2D, Flow-3D)
-- `disciplines/D11-PAE-PAEBM.md` (ZAS < 30min, ZSS)
-- `disciplines/D12-descaracterizacao.md` (barragens montante, reintegração)
-- `matrices/tipologia-barragem.json` (sítio × material × altura)
-- `matrices/norma-aplicavel.json`
+Reúne o cálculo técnico das 12 disciplinas do domínio: hidrologia (PMP, PMF,
+TR), hidráulica de vertedouro (routing e dimensionamento), geotecnia geral
+(caracterização e ensaios), estabilidade estática (Bishop, Morgenstern,
+Spencer) e sísmica (OBE × MDE, Newmark), percolação (Darcy, redes de fluxo),
+liquefação (state parameter via SPT/CPT), órgãos vertedores e bacia de
+dissipação, instrumentação e monitoramento, dam breach (DAMBRK, HEC-RAS 2D,
+Flow-3D), PAE/PAEBM (ZAS/ZSS) e descaracterização de barragens a montante.
+Também mantém as matrizes de referência de tipologia (sítio × material ×
+altura) e de norma aplicável.
 
 ## 4. KNOWLEDGE ENGINE (RAG)
 

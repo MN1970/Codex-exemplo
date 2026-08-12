@@ -84,50 +84,41 @@ Antes de qualquer ação:
 
 ## 3. MÓDULOS POR VERTENTE
 
-### V1 — Análise Técnica & Risco
-- `ene-scanner.md` — premissas: MW/MVA, tensão, comprimento LT, RAP referencial
-- `ene-risk.md` — matriz de risco 5×5 (ambiental, servidão, cronograma milestone RAP)
-- `ene-thesis.md` — tese técnica + score 0-100
+**V1 — Análise Técnica & Risco.** Levanta as premissas do empreendimento
+(MW/MVA, tensão, comprimento de LT, RAP referencial), monta a matriz de
+risco 5×5 (ambiental, servidão, cronograma de milestone RAP) e consolida
+a tese técnica com score 0-100.
 
-### V2 — Inteligência Setorial
-- `ene-int-orchestrator.md`
-- `axes/01-normas.md` — NBR 5422 (LT), NBR 6118/6122 (fund.), IEEE 738/80, IEC 60826
-- `axes/02-regulatorio.md` — ANEEL (REN), ONS (Procedimentos de Rede), CCEE (ACR × ACL)
-- `axes/03-mercado.md` — leilões passados (RAP média por tensão × km), PDE EPE
-- `axes/04-indicadores.md` — R$/MVA·km, R$/bay SE, R$/MW instalado por fonte
-- `axes/05-tecnologia.md` — condutor ACSS TT, HVDC VSC, digital SE (IEC 61850)
-- `axes/06-academia.md` — CIGRÉ, CPFL R&D, IEEE PES
+**V2 — Inteligência Setorial.** Cobre normas aplicáveis (NBR 5422, NBR
+6118/6122, IEEE 738/80, IEC 60826), o marco regulatório (REN ANEEL,
+Procedimentos de Rede ONS, ACR × ACL na CCEE), leituras de mercado
+(leilões passados, RAP média por tensão × km, PDE EPE), indicadores de
+referência (R$/MVA·km, R$/bay de SE, R$/MW instalado por fonte),
+tecnologia (condutor ACSS TT, HVDC VSC, SE digital IEC 61850) e
+literatura técnica (CIGRÉ, CPFL R&D, IEEE PES).
 
-### V3 — Gestão de Obra + Comissionamento
-- `ene-cronograma.md` — milestones RAP, prazo comissionamento (energização)
-- `ene-medicao-fisica.md` — km LT lançado, torres cravadas, bay energizado
-- `ene-comissionamento.md` — testes de comissionamento, ART
-- `ene-interferencias.md` — servidão administrativa, licenças ambientais
+**V3 — Gestão de Obra + Comissionamento.** Acompanha cronograma e
+milestones ligados à RAP e à energização, medição física (km de LT
+lançado, torres cravadas, bays energizados), testes de comissionamento
+e ART, e interferências como servidão administrativa e licenciamento
+ambiental.
 
-### V4 — Document Intelligence
-- `ene-doc-orchestrator.md`
-- `ene-doc-projeto.md` — memorial técnico
-- `ene-doc-cad.md` — DWG/DXF (cad-quantifier)
-- `ene-doc-r1-r5.md` — extração de dados EPE
-- `ene-doc-anatem.md` — leitura de bases ANATEM/ANAREDE
-- `ene-doc-lidar.md` — LiDAR de traçado (perfil vertical, obstáculos)
+**V4 — Document Intelligence.** Processa a documentação do projeto:
+memorial técnico, DWG/DXF de traçado e SE (via cad-quantifier), dados
+extraídos de relatórios EPE R1-R5, bases de estudo elétrico
+ANATEM/ANAREDE e levantamentos LiDAR de traçado (perfil vertical,
+obstáculos).
 
-### V5 — 12 Disciplinas Elétricas
-- `disciplines/D01-tracado-LT.md` (gabarito, faixa, servidão)
-- `disciplines/D02-condutor.md` (ACSR × CAA × ACAR × AAAC, ampacidade)
-- `disciplines/D03-torre.md` (autoportante × estaiada, TPP × FDS)
-- `disciplines/D04-fundacao-torre.md` (grelha, sapata, tubulão)
-- `disciplines/D05-cabo-guarda-OPGW.md`
-- `disciplines/D06-arranjo-SE.md` (barra simples/dupla, disj+meio, anel)
-- `disciplines/D07-trafo-disjuntor.md`
-- `disciplines/D08-malha-aterramento.md` (IEEE 80: tensão passo, toque)
-- `disciplines/D09-protecao.md` (87, 21, 67, 50/51, 87L)
-- `disciplines/D10-sistema-scada.md` (IEC 61850)
-- `disciplines/D11-ambiental-servidao.md`
-- `disciplines/D12-geracao.md` (UHE, eólica, PV, térmica — quando aplicável)
-- `matrices/tensao-condutor-bundle.json`
-- `matrices/arranjo-SE.json`
-- `matrices/norma-aplicavel.json`
+**V5 — 12 Disciplinas Elétricas.** Abrange todo o ciclo técnico da LT e
+da SE: traçado (gabarito, faixa, servidão), condutor (ACSR/CAA/ACAR/AAAC
+e ampacidade), torre (autoportante × estaiada, TPP/FDS) e sua fundação
+(grelha, sapata, tubulão), cabo-guarda/OPGW, arranjo de subestação
+(barra simples/dupla, disjuntor e meio, anel), transformador e
+disjuntor, malha de aterramento (IEEE 80 — tensão de passo e de
+toque), proteção (funções 87, 21, 67, 50/51, 87L), sistema SCADA (IEC
+61850), aspectos ambientais/servidão e geração associada (UHE, eólica,
+PV, térmica, quando aplicável), apoiado por matrizes de referência de
+tensão × condutor × bundle, arranjo de SE e norma aplicável.
 
 ## 4. KNOWLEDGE ENGINE (RAG)
 

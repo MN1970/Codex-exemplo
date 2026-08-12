@@ -8,6 +8,13 @@
 - **Substitui**: v1.0.0 (2026-06-24)
 - **Ticket**: MNT-2026-UPGRADE-AGENTS-S6S10
 
+> Este documento é a fonte canônica de arquitetura detalhada (camadas,
+> model tiering, diagramas de fluxo, RAG, SharePoint routing). O
+> `CLAUDE.md` no repo mestre é apenas o índice operacional (mapa de
+> agentes + regras de routing que o Maestro consulta em runtime) e
+> aponta para cá — evite duplicar tabelas completas de volta no
+> `CLAUDE.md`.
+
 ## Sumário
 
 - [1. Visão geral](#1-visão-geral)

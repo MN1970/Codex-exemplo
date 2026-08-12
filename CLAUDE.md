@@ -5,7 +5,12 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 operacionais no SharePoint.
 
 Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Saneamento, Energia, Barragens). Histórico completo em `CHANGELOG.md`.
+
+Arquitetura detalhada (5 camadas, model tiering, diagramas de fluxo):
+`sharepoint/00-arquitetura/ARQUITETURA-AGENTES-IA.md`. Este arquivo
+mantém apenas o registro operacional que o Maestro consulta em runtime
+(mapa de agentes + regras de routing) — mantenha-o enxuto.
 
 ---
 
@@ -92,69 +97,27 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
-## RAG — Coleções em Supabase
+## RAG e SharePoint — coleções por vertical
 
-| Coleção | Prefixo storage | Fontes iniciais | Status |
-|---------|-----------------|-----------------|--------|
-| saneamento | san: | SNIS, IWA, NBR 12211-12218, Lei 14.026, editais BNDES | 🆕 v4.2 |
-| energia | ene: | ANEEL editais, R1-R5 EPE, ONS, IEEE | 🆕 v4.2 |
-| portos | por: | ANTAQ, PIANC, editais BNDES/ANTAQ | 🆕 v4.2 |
-| aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
-| barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
+5 coleções novas (v4.2): `saneamento` (`san:`), `energia` (`ene:`),
+`portos` (`por:`), `aeroportos` (`aer:`), `barragens` (`bar:`) — cada
+uma mapeada para `03_Projetos/<Segmento>/*` no SharePoint.
 
----
-
-## SHAREPOINT — Routing rules (sp_agent_routing)
-
-| Agente | Pasta SP sugerida | Pattern |
-|--------|-------------------|---------|
-| agente-saneamento | 03_Projetos/Saneamento/* | *.pdf, *.dwg, *.xlsx |
-| agente-energia | 03_Projetos/Energia/* | *.pdf, *.dwg, *.xlsx |
-| agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
-| agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
-| agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
+Detalhe completo (fontes, sub-prefixos, patterns de arquivo):
+`ARQUITETURA-AGENTES-IA.md` §7-8. Migração: `supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql`.
 
 ---
 
-## DEPLOY CHECKLIST v4.2
+## Deploy e histórico
 
-- [x] Copiar 5 agent .md para `.claude/agents/`
-- [x] Aplicar patch no CLAUDE.md master (seção Agentes)
-- [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
-- [ ] Inserir 5 routing rules em `sp_agent_routing`
-- [ ] Criar pastas SP para novos segmentos
-- [ ] Registrar skills no catálogo (skill registry)
-- [ ] Testar routing do Maestro com prompts de cada segmento
-- [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
-- [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
-- [ ] Gate humano: aprovação MN antes de merge
-
----
-
-## Arquivos deste repositório
-
-```
-Codex-exemplo/
-├── CLAUDE.md                         # este arquivo (master registry)
-└── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
-```
+- Checklist de deploy (Supabase, SharePoint, testes de routing):
+  `docs/DEPLOY-v4.2.md`.
+- Histórico completo de versões: `CHANGELOG.md`.
+- Definições canônicas dos 5 agentes verticais v4.2:
+  `.claude/agents/agente-{portos,aeroportos,saneamento,energia,barragens}.md`
+  (SKILL.md completo em `sharepoint/01-agentes-fundamentais/agente-<slug>/`).
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
 no repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
 serve como referência canônica versionada dos agentes verticais e do
 mapa de routing.
-
----
-
-## Histórico de versões
-
-- **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-  Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
-  coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
-- **v4.1** (anterior) — 15 agentes: horizontais + S1–S4.

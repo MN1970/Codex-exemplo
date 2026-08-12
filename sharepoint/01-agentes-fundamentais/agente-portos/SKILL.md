@@ -85,48 +85,39 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
-- `por-scanner.md` — premissas: tipo terminal, aeronave/navio de projeto, movimentação
-- `por-risk.md` — matriz de risco 5×5 (assoreamento, sísmica, ondas extremas, ambiental)
-- `por-thesis.md` — tese técnica + score 0-100
+Levantamento de premissas do terminal (tipo, navio de projeto, movimentação),
+matriz de risco 5×5 (assoreamento, sísmica, ondas extremas, ambiental) e
+consolidação da tese técnica com score 0-100.
 
 ### V2 — Inteligência Setorial
-- `por-int-orchestrator.md`
-- `axes/01-normas.md` — NBR 9782 (ações portuárias), NBR 6122, ROM 0.2/2.0
-- `axes/02-regulatorio.md` — ANTAQ (arrendamento, TUP), Marinha (NORMAM), IBAMA
-- `axes/03-mercado.md` — throughput brasileiro, tarifas THC, DPP
-- `axes/04-indicadores.md` — SICRO adaptado + PIANC guidance
-- `axes/05-tecnologia.md` — automação portuária, portêineres, MHC, STS
-- `axes/06-academia.md` — COPPE, IPT, publicações PIANC
+Normas técnicas aplicáveis (NBR 9782, NBR 6122, ROM 0.2/2.0), regulação
+(ANTAQ — arrendamento e TUP, Marinha/NORMAM, IBAMA), indicadores de mercado
+(throughput brasileiro, tarifas THC/DPP, SICRO adaptado + PIANC guidance),
+tecnologia (automação portuária, portêineres, MHC, STS) e referências
+acadêmicas (COPPE, IPT, publicações PIANC).
 
 ### V3 — Gestão de Obra Marítima
-- `por-cronograma.md` — janelas operacionais (chuvosa, seca, safra)
-- `por-medicao-fisica.md` — dragagem por volume beam-swath, cais por vão
-- `por-interferencias.md` — navegação em operação, órgãos ambientais
-- `por-suprimentos.md` — estacas metálicas cravadas, blocos, guindastes
+Cronograma por janelas operacionais (chuvosa, seca, safra), medição física
+(dragagem por volume beam-swath, cais por vão), interferências (navegação em
+operação, órgãos ambientais) e suprimentos (estacas metálicas cravadas,
+blocos, guindastes).
 
 ### V4 — Document Intelligence
-- `por-doc-orchestrator.md`
-- `por-doc-batimetria.md` — carta náutica DHN + levantamento próprio
-- `por-doc-projeto.md` — memorial de cálculo, plantas
-- `por-doc-cad.md` — DWG/DXF (chama cad-quantifier)
-- `por-doc-antaq.md` — editais de arrendamento, resoluções normativas
-- `por-doc-hidrodinamica.md` — estudos de ondas, correntes, sedimentação
-- `por-doc-sondagem-maritima.md` — SPT em plataforma flutuante
+Leitura e orquestração de batimetria (carta náutica DHN + levantamento
+próprio), memorial de cálculo e plantas de projeto, DWG/DXF (via
+cad-quantifier), editais e resoluções normativas da ANTAQ, estudos
+hidrodinâmicos (ondas, correntes, sedimentação) e sondagem SPT em
+plataforma flutuante.
 
 ### V5 — 10 Disciplinas Portuárias
-- `disciplines/D01-batimetria.md`
-- `disciplines/D02-dragagem.md` (aprofundamento × manutenção)
-- `disciplines/D03-hidrodinamica.md` (onda, corrente, maré, assoreamento)
-- `disciplines/D04-estrutura-maritima.md` (cais, píer, dolfin)
-- `disciplines/D05-fundacoes-profundas.md` (estaca metálica, raiz, tubulão)
-- `disciplines/D06-defensas.md` (dimensionamento por energia atracação)
-- `disciplines/D07-amarracao.md` (cabeços, spring/breast/head lines)
-- `disciplines/D08-retroarea.md` (pátio de estocagem, pavimento pesado)
-- `disciplines/D09-equipamento-portuario.md` (portêiner, MHC, esteira, silo)
-- `disciplines/D10-ambiental-costeiro.md` (EIA/RIMA, disposição dragagem)
-- `matrices/decisao-dragagem.json` (mecânica × hidráulica × disposição)
-- `matrices/tipologia-cais.json` (aberto, semi-aberto, gravidade)
-- `matrices/norma-aplicavel.json`
+Cobertura técnica de batimetria, dragagem (aprofundamento × manutenção),
+hidrodinâmica (onda, corrente, maré, assoreamento), estrutura marítima
+(cais, píer, dolfin), fundações profundas em água (estaca metálica, raiz,
+tubulão), defensas (dimensionamento por energia de atracação), amarração
+(cabeços, spring/breast/head lines), retroárea (pátio de estocagem,
+pavimento pesado), equipamento portuário (portêiner, MHC, esteira, silo) e
+ambiental costeiro (EIA/RIMA, disposição de dragagem), apoiada por matrizes
+de decisão de dragagem, tipologia de cais e norma aplicável.
 
 ## 4. KNOWLEDGE ENGINE (RAG)
 
