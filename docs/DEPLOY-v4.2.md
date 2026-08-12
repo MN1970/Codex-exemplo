@@ -157,19 +157,30 @@ não encontrou nada com esse nome exato), atualizar
 ## 5. Testes de routing
 
 **Arquivo pronto:** `tests/routing/prompts.md` (neste PR).
+**Script pronto:** `scripts/test_routing.py` — simula as regras
+IF/ELSE-IF do CLAUDE.md + keywords de `.claude/agents/*.md` contra os
+prompts do arquivo acima (`python3 scripts/test_routing.py`).
 
 - [ ] Rodar cada prompt do arquivo no ambiente do Maestro
   (`https://hub.mantaassociados.com/askcad` ou o entrypoint que o time
-  usa para o router).
-- [ ] Anotar em qual agente cada prompt caiu.
-- [ ] Considerar aprovado se ≥ 90% dos prompts primários caírem no
-  agente esperado.
+  usa para o router) — pendente; a simulação abaixo cobre só a lógica
+  de keywords declarada nos arquivos deste repo, não o router real.
+- [x] Anotar em qual agente cada prompt caiu — ver checkboxes em
+  `tests/routing/prompts.md` (atualizado 2026-08-12 via simulação).
+- [x] Considerar aprovado se ≥ 90% dos prompts primários caírem no
+  agente esperado — **30/32 (93,8%)** na simulação, após corrigir a
+  ordem S1/S2 no CLAUDE.md (rodovia vs. viaduto/OAE).
 - [ ] Registrar decisões sobre os "casos ambíguos" (UHE = barragem OU
   energia, ETE + subestação, etc.) diretamente no `CLAUDE.md` ou num
   ADR separado.
 
 Casos que falharem: iterar nas keywords do
-`maestro_routing_keywords` (ajustar prioridades).
+`maestro_routing_keywords` (ajustar prioridades). Duas colisões
+remanescentes na simulação (keyword `RAP` disputada entre
+agente-saneamento/agente-energia, e `pátio` bare word capturando
+tudo para agente-aeroportos antes de S3/S6) estão documentadas na
+seção ROUTING do `CLAUDE.md` e pendem decisão de negócio do MN antes
+de mexer nas keywords — não foram corrigidas automaticamente.
 
 ---
 
