@@ -4,8 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.3** (2026-08-12) — adição da Matriz de Riscos por Segmento
-(S1–S10).
+Versão: **v4.4** (2026-08-12) — Matriz de Riscos por Segmento (S1–S10)
+ganha categoria de risco de obra indireta e anexo de jurisdição
+comparada Brasil × EUA (Rodovias/OAE, Saneamento, Energia).
 
 ---
 
@@ -108,13 +109,20 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 Documento dedicado: [`MATRIZ-RISCOS-POR-SEGMENTO.md`](./MATRIZ-RISCOS-POR-SEGMENTO.md).
 
-Cruza os 10 segmentos verticais (S1–S10) com 8 categorias de risco
+Cruza os 10 segmentos verticais (S1–S10) com 9 categorias de risco
 (geotécnico, ambiental/solo-água contaminados, hidrológico, custo,
-cronograma, interferências, contratual/regulatório, construção/O&M) e as
-8 fases do ciclo de vida (Eixo 3). Serve como checklist de risco comum
-para os agentes verticais e para o handoff com os horizontais (Manta 01
-claims, 02 contratual, 05 orçamento, 06 modelagem, 07 cronograma, 15
-advisory).
+cronograma, interferências, contratual/regulatório, construção/O&M e
+**impacto indireto / terceiros / cadeia de suprimentos**) e as 8 fases
+do ciclo de vida (Eixo 3). Serve como checklist de risco comum para os
+agentes verticais e para o handoff com os horizontais (Manta 01 claims,
+02 contratual, 05 orçamento, 06 modelagem, 07 cronograma, 15 advisory).
+
+Inclui anexo de **jurisdição comparada Brasil × EUA** para os segmentos
+onde a Manta atua ou pretende atuar nos Estados Unidos: Rodovias/OAE
+(S1/S2), Saneamento (S8) e Energia (S9) — normas/agências aplicáveis
+(FHWA/AASHTO, EPA/NEPA, FERC/NERC etc.) e particularidades de risco
+indireto no mercado americano (eminent domain, utility relocation,
+Buy America/BABA, Davis-Bacon, environmental justice).
 
 Todo agente vertical (03-S1 a 03-S10) deve consultar esse documento ao
 processar orçamento, cronograma ou claims — ver seção "Como este
@@ -173,6 +181,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.4** (2026-08-12) — `MATRIZ-RISCOS-POR-SEGMENTO.md` v2.0: nova
+  categoria de risco de obra indireta (terceiros, cadeia de
+  suprimentos, efeito cascata) aplicada aos 10 segmentos, e anexo de
+  jurisdição comparada Brasil × EUA para S1/S2, S8 e S9.
 - **v4.3** (2026-08-12) — adição de `MATRIZ-RISCOS-POR-SEGMENTO.md`:
   matriz de riscos técnicos, ambientais, de custo, cronograma,
   interferência e contratuais/regulatórios para os 10 segmentos verticais
