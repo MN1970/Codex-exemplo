@@ -1,0 +1,56 @@
+# Prometheus configuration for Maestro APScheduler v5.0
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'maestro-v5'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - '/etc/prometheus/alert_rules.yml'
+
+scrape_configs:
+  # Maestro APScheduler metrics
+  - job_name: 'maestro-scheduler'
+    static_configs:
+      - targets: ['maestro-scheduler:8080']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+      - source_labels: [__scheme__]
+        target_label: scheme
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'maestro_.*'
+        action: keep
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # PostgreSQL exporter (optional)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['localhost:5432']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+
+  # Node exporter for system metrics (optional)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance

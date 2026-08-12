@@ -1,0 +1,20 @@
+{
+  "agente-saneamento": {
+    "agent_id": "agente-saneamento",
+    "status": "healthy",
+    "queue_depth": 2,
+    "error_rate_5m": 0.01,
+    "last_heartbeat_at": "2026-08-02T14:31:50.249Z",
+    "unhealthy_since": null,
+    "routable": true
+  },
+  "agente-energia": {
+    "agent_id": "agente-energia",
+    "status": "unhealthy",
+    "queue_depth": 40,
+    "error_rate_5m": 0.9,
+    "last_heartbeat_at": "2026-08-02T14:31:50.249Z",
+    "unhealthy_since": "2026-08-02T14:08:39.932Z",
+    "routable": false
+  }
+}
