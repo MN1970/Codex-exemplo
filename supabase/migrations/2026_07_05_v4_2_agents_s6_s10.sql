@@ -98,6 +98,7 @@ INSERT INTO maestro_routing_keywords (agent_slug, keyword, priority) VALUES
   ('agente-saneamento', 'AySA',              120),
   ('agente-saneamento', 'drenagem urbana',    95),
   ('agente-saneamento', 'SNIS',              100),
+  ('agente-saneamento', 'PMSB',              100),
   -- Energia (S9)
   ('agente-energia',    'transmissão',       100),
   ('agente-energia',    'LT',                 90),
@@ -107,16 +108,21 @@ INSERT INTO maestro_routing_keywords (agent_slug, keyword, priority) VALUES
   ('agente-energia',    'leilão transmissão', 95),
   ('agente-energia',    'ONS',                90),
   ('agente-energia',    'EPE',                90),
+  ('agente-energia',    'condutor',           85),
+  ('agente-energia',    'ampacidade',        100),
+  ('agente-energia',    'ACSR',              100),
   -- Portos (S6)
   ('agente-portos',     'porto',              80),
   ('agente-portos',     'terminal',           70),
   ('agente-portos',     'ANTAQ',             100),
   ('agente-portos',     'dragagem',          100),
   ('agente-portos',     'molhe',             100),
+  ('agente-portos',     'quebra-mar',        100),
   ('agente-portos',     'berço',              90),
   ('agente-portos',     'calado',             90),
   ('agente-portos',     'contêiner',          80),
   ('agente-portos',     'granel',             80),
+  ('agente-portos',     'PIANC',             100),
   -- Aeroportos (S7)
   ('agente-aeroportos', 'aeroporto',         100),
   ('agente-aeroportos', 'pista pouso',       100),
@@ -125,6 +131,10 @@ INSERT INTO maestro_routing_keywords (agent_slug, keyword, priority) VALUES
   ('agente-aeroportos', 'TPS',                90),
   ('agente-aeroportos', 'TECA',               90),
   ('agente-aeroportos', 'balizamento',       100),
+  ('agente-aeroportos', 'RBAC',              100),
+  ('agente-aeroportos', 'PCN',                90),
+  ('agente-aeroportos', 'pátio de aeronaves', 85),
+  ('agente-aeroportos', 'carga aérea',        85),
   -- Barragens (S10)
   ('agente-barragens',  'barragem',          100),
   ('agente-barragens',  'vertedouro',        100),
@@ -134,7 +144,11 @@ INSERT INTO maestro_routing_keywords (agent_slug, keyword, priority) VALUES
   ('agente-barragens',  'PNSB',              100),
   ('agente-barragens',  'ICOLD',             100),
   ('agente-barragens',  'CBDB',              100),
-  ('agente-barragens',  'TSF',               100)
+  ('agente-barragens',  'TSF',               100),
+  ('agente-barragens',  'dam breach',        100),
+  ('agente-barragens',  'SIGBM',             100),
+  ('agente-barragens',  'ANM',                90),
+  ('agente-barragens',  'rompimento',         90)
 ON CONFLICT (agent_slug, keyword) DO NOTHING;
 
 COMMIT;

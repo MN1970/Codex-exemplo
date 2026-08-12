@@ -156,47 +156,22 @@ vertical, e escala novamente para Opus se detectar complexidade
 
 ## 6. Routing do Maestro (Manta 00)
 
-Regra de dispatch Q1 (segmento):
+Bloco de regras completo (keywords por segmento + regra de desempate
+para múltiplos matches): **`CLAUDE.md` §ROUTING** no repo mestre —
+fonte única, não duplicado aqui para evitar drift entre os dois
+arquivos.
 
-```
-IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
-   → agente-saneamento (S8)
-
-IF menção a transmissão|LT|subestação|ANEEL|RAP|leilão transmissão|ONS|EPE
-   → agente-energia (S9)
-
-IF menção a porto|terminal|ANTAQ|dragagem|molhe|berço|calado|contêiner|granel
-   → agente-portos (S6)
-
-IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
-   → agente-aeroportos (S7)
-
-IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
-   → agente-barragens (S10)
-
-# Regras existentes S1-S4 mantidas sem alteração
-IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
-   → agente-infraestrutura S1
-
-IF menção a ponte|viaduto|OAE|NBR 7187|túnel rodoviário
-   → agente-infraestrutura S2
-
-IF menção a ferrovia|trilho|AMV|dormente|via permanente
-   → agente-infraestrutura S3
-
-IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
-   → agente-infraestrutura S4
-```
-
-**Casos ambíguos** (múltiplas regras aplicáveis):
+**Casos ambíguos** (múltiplas regras aplicáveis) — resolvidos pela
+regra de desempate do `CLAUDE.md` (estrutura principal do pedido vence
+como primário; suporte/interligação vira handoff automático):
 - UHE (barragem + LT + SE) → dispatch primário `agente-barragens`
   + handoff a `agente-energia`.
 - ETE + subestação → dispatch primário `agente-saneamento` + handoff
   a `agente-energia`.
 - Porto + pista de carga → dispatch primário `agente-portos` +
   handoff a `agente-aeroportos`.
-- Ver `tests/routing/prompts.md` no repo `Codex-exemplo` para lista
-  atualizada de casos ambíguos e política.
+- Ver `tests/routing/prompts.md` no repo `Codex-exemplo` para o smoke
+  test completo (30 prompts) e o detalhe de cada caso ambíguo.
 
 ## 7. Knowledge Engine (RAG)
 

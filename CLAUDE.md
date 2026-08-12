@@ -63,22 +63,23 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 
 ## ROUTING — Maestro (Manta 00)
 
-Regra de roteamento atualizada para Q1 do intake:
+Regra de roteamento atualizada para Q1 do intake. **Fonte única** —
+não duplicar este bloco em outro arquivo; referenciar por link.
 
 ```
-IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
+IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS|PMSB
    → agente-saneamento (S8)
 
-IF menção a transmissão|LT|subestação|ANEEL|RAP|leilão transmissão|ONS|EPE
+IF menção a transmissão|LT|subestação|ANEEL|RAP|leilão transmissão|ONS|EPE|condutor|ampacidade|ACSR
    → agente-energia (S9)
 
-IF menção a porto|terminal|ANTAQ|dragagem|molhe|berço|calado|contêiner|granel
+IF menção a porto|terminal|ANTAQ|dragagem|molhe|quebra-mar|berço|calado|contêiner|granel|PIANC
    → agente-portos (S6)
 
-IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento
+IF menção a aeroporto|pista pouso|ANAC|ICAO|TPS|TECA|balizamento|RBAC|PCN|pátio de aeronaves|carga aérea
    → agente-aeroportos (S7)
 
-IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF
+IF menção a barragem|vertedouro|CFRD|CCR|rejeitos|PNSB|ICOLD|CBDB|TSF|dam breach|SIGBM|ANM|rompimento
    → agente-barragens (S10)
 
 # Regras existentes S1-S4 mantidas sem alteração
@@ -94,6 +95,40 @@ IF menção a ferrovia|trilho|AMV|dormente|via permanente
 IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
    → agente-infraestrutura S4
 ```
+
+Keywords adicionadas em 2026-08-12 após smoke test (`tests/routing/prompts.md`)
+revelar ~20% de falha de match literal nos prompts de exemplo. Mesma
+lista replicada em `supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql`
+(`maestro_routing_keywords`) — atualizar os dois juntos até o Maestro
+carregar keywords de uma fonte única.
+
+### Regra de desempate — múltiplos matches
+
+O bloco acima é uma lista plana de `IF`s independentes: mais de uma
+regra pode bater no mesmo prompt (ex.: "barragem CFRD + LT 500kV").
+Quando isso acontecer:
+
+1. O agente cujo match representa a **estrutura principal** do pedido
+   (o ativo sendo projetado/operado/analisado) é o despacho
+   **primário**.
+2. Qualquer outro agente cujo match represente uma interligação ou
+   insumo de suporte (alimentação elétrica, adução de água, travessia)
+   recebe **handoff automático** — nunca fica sem resposta.
+3. Em caso de empate real (nenhum dos dois é claramente "principal"),
+   usar a ordem de prioridade: barragens (S10) > energia (S9) >
+   saneamento (S8) > aeroportos (S7) > portos (S6) > metrô (S4) >
+   ferrovia (S3) > OAE (S2) > rodovias (S1) — infraestrutura crítica
+   de maior risco regulatório primeiro.
+4. Casos de referência já resolvidos por esta regra — ver
+   `tests/routing/prompts.md` §Casos ambíguos:
+   - UHE (barragem + LT) → **agente-barragens** primário + handoff
+     **agente-energia**.
+   - ETE + subestação → **agente-saneamento** primário + handoff
+     **agente-energia**.
+   - Porto + pista de carga aérea → **agente-portos** primário +
+     handoff **agente-aeroportos**.
+   - Adutora + barragem de rejeitos → **agente-saneamento** primário +
+     consulta técnica ao **agente-barragens**.
 
 ---
 

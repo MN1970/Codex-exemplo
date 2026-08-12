@@ -66,15 +66,18 @@ arquivo serve como fonte manual para QA humano.)
 
 ## Casos ambíguos / desafiadores
 
-Estes prompts têm palavras-chave de mais de um segmento; o Maestro
-deve escolher o **mais específico** (não necessariamente o primeiro
-match). Anotar o dispatch efetivo em revisão manual.
+Estes prompts têm palavras-chave de mais de um segmento. Política de
+desempate decidida em 2026-08-12 (ver `CLAUDE.md` §"Regra de
+desempate — múltiplos matches"): o agente cuja estrutura é o **ativo
+principal** do pedido é o dispatch primário; o outro match (energia,
+água, fundação — insumo/interligação de suporte) vira **handoff
+automático**, nunca fica sem resposta.
 
 - [ ] `Preciso projetar uma UHE com barragem CFRD de 100m e LT de 500kV até a SE.`
-    - Esperado: dispatch para **agente-barragens** (ou **agente-energia**?) com handoff explícito para o outro. Definir política MN.
+    - Decidido: **agente-barragens** primário + handoff **agente-energia** (a barragem é o ativo principal; a LT é interligação de suporte).
 - [ ] `A concessionária pediu uma ETE nova + subestação de 138kV no mesmo canteiro.`
-    - Esperado: **agente-saneamento** primário + handoff **agente-energia**.
+    - Decidido: **agente-saneamento** primário + handoff **agente-energia**.
 - [ ] `Porto arrendado no Amazonas com pátio + pista para carga aérea auxiliar.`
-    - Esperado: **agente-portos** primário + handoff **agente-aeroportos**.
+    - Decidido: **agente-portos** primário + handoff **agente-aeroportos**. (Keyword `carga aérea` adicionada à regra S7 em 2026-08-12 — antes desta correção, este prompt não gerava nenhum match para aeroportos.)
 - [ ] `Adutora atravessa uma barragem de rejeitos existente.`
-    - Esperado: **agente-saneamento** com consulta técnica ao **agente-barragens**.
+    - Decidido: **agente-saneamento** primário + consulta técnica ao **agente-barragens** (a adutora é o ativo do pedido; a barragem é uma interferência a considerar, não o objeto principal).
