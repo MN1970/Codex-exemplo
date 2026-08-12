@@ -108,6 +108,19 @@ básico, executivo, obra, O&M, licitação, DD e descomissionamento.
 - **advisory (Manta 15)** — modelos financeiros de concessão de
   saneamento, VPL, TIR, EBITDA.
 
+## Matriz de Riscos
+
+Antes de fechar orçamento, cronograma ou avaliar um claim, consultar a
+seção **S8 — Saneamento** de [`MATRIZ-RISCOS-POR-SEGMENTO.md`](../../MATRIZ-RISCOS-POR-SEGMENTO.md)
+(raiz do repositório): geotécnico, ambiental/solo e água contaminados,
+hidráulico/hidrogeológico, custo, cronograma, interferências,
+contratual/regulatório, construção/O&M e impacto indireto (terceiros,
+cadeia de suprimentos, efeito cascata). Para projetos com componente
+americano, consultar também o **Anexo — Jurisdição Comparada Brasil ×
+EUA** no mesmo arquivo (SDWA/EPA, CWA/NPDES, AWWA, Buy America/BABA,
+Davis-Bacon, environmental justice) — além do contexto AySA/Argentina
+já coberto neste agente.
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto assinado por engenheiro sanitarista habilitado.

@@ -82,6 +82,17 @@ descomissionamento).
 - **claims (Manta 01)** — pleitos por atraso de dragagem, mudança de
   cronograma.
 
+## Matriz de Riscos
+
+Antes de fechar orçamento, cronograma ou avaliar um claim, consultar a
+seção **S6 — Portos** de [`MATRIZ-RISCOS-POR-SEGMENTO.md`](../../MATRIZ-RISCOS-POR-SEGMENTO.md)
+(raiz do repositório): geotécnico, ambiental/sedimento contaminado,
+hidrográfico/hidrodinâmico, custo, cronograma, interferências,
+contratual/regulatório, construção/O&M e impacto indireto (terceiros,
+cadeia de suprimentos, efeito cascata). Cobertura EUA ainda não
+documentada para este segmento — sinalizar ao usuário se o projeto tiver
+componente americano.
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto executivo assinado por engenheiro habilitado.

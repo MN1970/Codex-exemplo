@@ -94,6 +94,17 @@ descomissionamento.
 - **claims (Manta 01)** — pleitos por atraso em concessão, alteração
   de escopo por regulador.
 
+## Matriz de Riscos
+
+Antes de fechar orçamento, cronograma ou avaliar um claim, consultar a
+seção **S7 — Aeroportos** de [`MATRIZ-RISCOS-POR-SEGMENTO.md`](../../MATRIZ-RISCOS-POR-SEGMENTO.md)
+(raiz do repositório): geotécnico, ambiental/solo contaminado,
+operacional em obra com aeroporto ativo, custo, cronograma,
+interferências, contratual/regulatório, construção/O&M e impacto
+indireto (terceiros, cadeia de suprimentos, efeito cascata). Cobertura
+EUA ainda não documentada para este segmento — sinalizar ao usuário se
+o projeto tiver componente americano.
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto certificado por engenheiro habilitado + ANAC.

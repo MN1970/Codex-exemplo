@@ -113,6 +113,18 @@ DD e descomissionamento.
 - **advisory (Manta 15)** — modelo financeiro RAP × investimento;
   VPL/TIR do projeto de transmissão.
 
+## Matriz de Riscos
+
+Antes de fechar orçamento, cronograma ou avaliar um claim, consultar a
+seção **S9 — Energia** de [`MATRIZ-RISCOS-POR-SEGMENTO.md`](../../MATRIZ-RISCOS-POR-SEGMENTO.md)
+(raiz do repositório): geotécnico, ambiental/solo contaminado, custo,
+cronograma, interferências, contratual/regulatório, construção/O&M e
+impacto indireto (terceiros, cadeia de suprimentos, efeito cascata).
+Para projetos com componente americano, consultar também o **Anexo —
+Jurisdição Comparada Brasil × EUA** no mesmo arquivo (FERC/rate base,
+NERC reliability standards, NEPA/CWA §404, eminent domain estadual,
+Buy America/BABA + FEOC, lead time de transformadores).
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto assinado por engenheiro eletricista habilitado

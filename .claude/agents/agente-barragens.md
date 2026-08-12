@@ -126,6 +126,17 @@ DD e descomissionamento / descaracterização.
   imprevistos geológicos.
 - **advisory (Manta 15)** — modelo financeiro UHE, PPP saneamento.
 
+## Matriz de Riscos
+
+Antes de fechar orçamento, cronograma ou avaliar um claim, consultar a
+seção **S10 — Barragens** de [`MATRIZ-RISCOS-POR-SEGMENTO.md`](../../MATRIZ-RISCOS-POR-SEGMENTO.md)
+(raiz do repositório): geotécnico, ambiental/solo e água contaminados,
+hidrológico, custo, cronograma, interferências, contratual/regulatório,
+construção/O&M e impacto indireto (terceiros, cadeia de suprimentos,
+efeito cascata). Cobertura EUA ainda não documentada para este
+segmento — sinalizar ao usuário se o projeto tiver componente
+americano.
+
 ## O que este agente NÃO faz
 
 - Não substitui projeto assinado por engenheiro civil/geotécnico
