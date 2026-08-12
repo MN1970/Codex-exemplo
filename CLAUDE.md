@@ -339,12 +339,12 @@ IF menção a biodiversidade|ambiental|ESG|carbono|offset|Mata Atlântica
    |Escopo 1|Escopo 2|Escopo 3|GHG|compliance ESG|TCFD|SASB|GRI
    → manta-20-esg (co-agente com vertical do segmento em escopo)
 
-# Regras existentes S1-S4 mantidas sem alteração
-IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
-   → agente-infraestrutura S1
-
+# Regras existentes S1-S4 — S2 avaliada antes de S1 (ver Nota de ordenação)
 IF menção a ponte|viaduto|OAE|NBR 7187|túnel rodoviário
    → agente-infraestrutura S2
+
+IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
+   → agente-infraestrutura S1
 
 IF menção a ferrovia|trilho|AMV|dormente|via permanente
    → agente-infraestrutura S3
@@ -353,11 +353,35 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
    → agente-infraestrutura S4
 ```
 
-**S12/S13 ainda NÃO têm keyword de routing** (confirmado em
-`agente-oleo-gas.md` e `agente-edificacoes.md`, seção "Ferramentas e
-integrações" de cada um) — o Maestro não consegue despachar para esses
-dois agentes hoje, mesmo que o usuário use as palavras-chave descritas
-em seus frontmatters. Isso é esperado enquanto o status for "proposto".
+**Nota de ordenação (routing smoke test 2026-08-12):** as regras acima
+são avaliadas em ordem — primeiro match vence. `tests/routing/prompts.md`
++ `scripts/test_routing.py` simulam esse comportamento contra os
+prompts de QA. Com a ordem S2→S1 acima (antes era S1→S2), o placar
+sobe de 29/32 (90,6%) para **30/32 (93,8%)** usando as keywords
+completas de `.claude/agents/*.md` (o `CLAUDE.md` sozinho, com sua
+lista mais curta, fica em 75%). Essa reordenação corrigiu a única
+colisão puramente mecânica encontrada (rodovia/viaduto no mesmo
+prompt caía sempre em S1). Três colisões **exigem decisão de negócio
+antes de corrigir** — não mexi nelas:
+
+- `RAP` aparece como keyword tanto em `agente-energia` (S9, Receita
+  Anual Permitida) quanto em `agente-saneamento` (S8); como S8 é
+  avaliada primeiro, um prompt sobre RAP de LT/transmissão pode cair
+  em saneamento. Confirmar com MN se `RAP` é mesmo termo relevante do
+  lado saneamento antes de remover ou desambiguar.
+- `pátio` (bare word) é keyword só de `agente-aeroportos` (S7), que é
+  avaliada antes de S3/S6; um "pátio ferroviário" ou "pátio de
+  estocagem" portuário sem outra palavra-chave do segmento correto
+  cai em aeroportos. Definir se `pátio` deve virar termos qualificados
+  (`pátio de aeronaves`, `apron`) em vez de bare word.
+- **S12/S13 ainda NÃO têm keyword de routing** (confirmado em
+  `agente-oleo-gas.md` e `agente-edificacoes.md`, seção "Ferramentas e
+  integrações" de cada um) — o Maestro não consegue despachar para
+  esses dois agentes hoje, mesmo que o usuário use as palavras-chave
+  descritas em seus frontmatters. Isso é esperado enquanto o status
+  for "proposto".
+
+Rodar `python3 scripts/test_routing.py` para reproduzir.
 
 **Casos ambíguos** (documentados em `tests/routing/prompts.md`, mantidos
 sem alteração):

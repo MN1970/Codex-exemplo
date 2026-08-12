@@ -1,215 +1,164 @@
 #!/usr/bin/env python3
-"""
-Teste de roteamento Maestro v4.2
-Valida que os prompts de teste disparam o roteamento correto para cada agente.
-"""
+"""Simula o roteamento do Maestro (Manta 00) contra tests/routing/prompts.md.
 
+Compara duas fontes de verdade que hoje divergem no repositorio:
+
+  1. As regras IF da secao ROUTING do CLAUDE.md (o "master rule" que o
+     Maestro deveria seguir).
+  2. As listas de palavras-chave do campo `description` de cada
+     `.claude/agents/*.md` (usadas pelo Claude Code para auto-selecionar
+     o subagente).
+
+Para cada prompt do arquivo de teste, aplica as regras na ordem em que
+aparecem (semantica IF / ELSE IF) e reporta o primeiro agente cujo
+padrao bate. Uso:
+
+    python3 scripts/test_routing.py
+"""
 import re
 import sys
 from pathlib import Path
 
-# Regras de roteamento baseadas em CLAUDE.md
-ROUTING_RULES = {
-    "agente-saneamento": [
-        r"\bsaneamento\b",
-        r"\bETA\b",
-        r"\bETE\b",
-        r"\badutora\b",
-        r"\besgoto\b",
-        r"\bAySA\b",
-        r"drenagem urbana",
-        r"\bSNIS\b",
-        r"\bPMSB\b",
-        r"Lei 14\.026",
-        r"\bEEE\b",
-        r"\bEEAB\b",
-    ],
-    "agente-energia": [
-        r"\btransmissão\b",
-        r"\bLT\b",
-        r"\bsubestação\b",
-        r"\bANEEL\b",
-        r"\bRAP\b",
-        r"leilão transmissão",
-        r"\bONS\b",
-        r"\bEPE\b",
-        r"\bACsr\b",
-        r"\bkV\b",
-    ],
-    "agente-portos": [
-        r"\bporto\b",
-        r"\bterminal\b",
-        r"\bANTAQ\b",
-        r"\bdragagem\b",
-        r"\bmolhe\b",
-        r"\bberço\b",
-        r"\bcalado\b",
-        r"\bcontêiner\b",
-        r"\bgranel\b",
-        r"\bPIANC\b",
-        r"quebra-mar",
-    ],
-    "agente-aeroportos": [
-        r"\baeroporto\b",
-        r"pista pouso",
-        r"pista de pouso",
-        r"\bANAC\b",
-        r"\bICAO\b",
-        r"\bTPS\b",
-        r"\bTECA\b",
-        r"\bbalizamento\b",
-        r"\bRWY\b",
-        r"\bPCN\b",
-        r"\bCAT II\b",
-        r"\brbac\b",
-    ],
-    "agente-barragens": [
-        r"\bbarragem\b",
-        r"\bvertedouro\b",
-        r"\bCFRD\b",
-        r"\bCCR\b",
-        r"\brejeitos\b",
-        r"\bPNSB\b",
-        r"\bICOLD\b",
-        r"\bCBDB\b",
-        r"\bTSF\b",
-        r"\bdam breach\b",
-        r"\bSIGBM\b",
-        r"\bANM\b",
-    ],
-}
+ROOT = Path(__file__).resolve().parent.parent
+CLAUDE_MD = ROOT / "CLAUDE.md"
+AGENTS_DIR = ROOT / ".claude" / "agents"
+PROMPTS_MD = ROOT / "tests" / "routing" / "prompts.md"
 
-def match_prompt_to_agent(prompt):
-    """
-    Match um prompt contra as regras de roteamento.
-    Retorna lista de agentes que fazem match (em ordem de especificidade).
-    """
-    matches = {}
+# .claude/agents/*.md tem cobertura so para S6-S10; S1-S4 (agente-infraestrutura)
+# so existem como regras no CLAUDE.md, entao usamos sempre essa fonte para elas.
+NO_AGENT_MD = {"agente-infraestrutura S1", "agente-infraestrutura S2", "agente-infraestrutura S3", "agente-infraestrutura S4"}
 
-    for agent, patterns in ROUTING_RULES.items():
-        match_count = 0
-        for pattern in patterns:
-            if re.search(pattern, prompt, re.IGNORECASE):
-                match_count += 1
-        if match_count > 0:
-            matches[agent] = match_count
 
-    # Ordenar por número de matches (descendente)
-    if matches:
-        return sorted(matches.items(), key=lambda x: x[1], reverse=True)
-    return []
+def parse_claude_md_rules(text):
+    rules = []
+    for m in re.finditer(
+        r"IF menç[ãa]o a (?P<kw>[^\n]+)\n\s*→\s*(?P<agent>[^\n(]+)(?:\((?P<seg>S\d+)\))?",
+        text,
+    ):
+        kws = [k.strip() for k in m.group("kw").split("|")]
+        agent = m.group("agent").strip()
+        seg = m.group("seg")
+        label = f"{agent} {seg}" if seg else agent
+        rules.append((label, kws))
+    return rules
 
-def parse_test_file(file_path):
-    """Parse prompts.md e extrai os testes."""
-    tests = {}
-    current_section = None
 
-    with open(file_path, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.rstrip()
+def parse_agent_md_rules():
+    rules = []
+    for path in sorted(AGENTS_DIR.glob("*.md")):
+        text = path.read_text()
+        name_m = re.search(r"^name:\s*(\S+)", text, re.MULTILINE)
+        desc_m = re.search(r"^description:\s*(.+)$", text, re.MULTILINE)
+        if not name_m or not desc_m:
+            continue
+        name = name_m.group(1)
+        desc = desc_m.group(1)
+        trig_m = re.search(r"[Rr]oteia (?:automaticamente )?quando o usuário menciona (.+)$", desc)
+        if not trig_m:
+            continue
+        raw = trig_m.group(1).rstrip(".").rstrip()
+        # separa por virgula e trata o ultimo item ligado por " ou "
+        raw = raw.replace(" ou ", ", ")
+        kws = [k.strip() for k in raw.split(",") if k.strip()]
+        rules.append((name, kws))
+    return rules
 
-            # Detectar seções (S6, S7, etc.)
-            match = re.match(r"## (S\d+) — (\w+)", line)
-            if match:
-                current_section = match.group(2).lower()
-                tests[current_section] = []
-                continue
 
-            # Detectar items de teste
-            if current_section and line.strip().startswith("- [ ]"):
-                # Extrair prompt e agente esperado
-                match = re.match(r'- \[ \] `(.+?)` → \*\*(\w+(?:-\w+)*)\*\*', line)
-                if match:
-                    prompt = match.group(1)
-                    expected_agent = match.group(2)
-                    tests[current_section].append({
-                        'prompt': prompt,
-                        'expected': expected_agent,
-                    })
-
-    return tests
-
-def run_tests(test_file):
-    """Executa os testes e relata resultados."""
-    tests = parse_test_file(test_file)
-
-    total = 0
-    passed = 0
-    failed_tests = []
-
-    print("=" * 80)
-    print("TESTE DE ROTEAMENTO MAESTRO v4.2")
-    print("=" * 80)
-
-    for section, test_list in tests.items():
-        print(f"\n[{section.upper()}]")
-        print("-" * 80)
-
-        for test in test_list:
-            total += 1
-            prompt = test['prompt']
-            expected = test['expected']
-
-            matches = match_prompt_to_agent(prompt)
-            routed_to = matches[0][0] if matches else "NENHUM"
-
-            # Normalizar nomes para comparação
-            expected_normalized = expected.replace('_', '-')
-            routed_normalized = routed_to.replace('_', '-')
-
-            test_passed = routed_normalized == expected_normalized
-
-            if test_passed:
-                passed += 1
-                status = "PASS"
-            else:
-                status = "FAIL"
-                failed_tests.append({
-                    'prompt': prompt,
-                    'expected': expected,
-                    'got': routed_to,
-                    'matches': matches,
-                })
-
-            print(f"{status:4s} | {prompt[:60]:60s}")
-            if not test_passed:
-                print(f"       Expected: {expected}, Got: {routed_to}")
-                if matches:
-                    print(f"       Matches: {matches}")
-
-    # Resumo
-    print("\n" + "=" * 80)
-    print(f"RESUMO: {passed}/{total} testes passaram ({100*passed/total if total>0 else 0:.1f}%)")
-    print("=" * 80)
-
-    if failed_tests:
-        print("\nFALHAS DETALHADAS:")
-        print("-" * 80)
-        for failure in failed_tests:
-            print(f"\nPrompt: {failure['prompt']}")
-            print(f"Esperado: {failure['expected']}")
-            print(f"Obtido: {failure['got']}")
-            print(f"Matches encontrados: {failure['matches']}")
-
-    return {
-        'testes_passados': passed,
-        'total_testes': total,
-        'detalhes': [
-            {
-                'prompt': f.get('prompt', '')[:60],
-                'esperado': f.get('expected', ''),
-                'obtido': f.get('got', ''),
-            }
-            for f in failed_tests
-        ]
+def build_ruleset(claude_rules, agent_rules):
+    """Substitui, na ordem do CLAUDE.md, as entradas S6-S10 pelas keywords
+    mais ricas do .claude/agents/*.md correspondente; mantem S1-S4 como estao."""
+    agent_by_slug = {name: kws for name, kws in agent_rules}
+    slug_by_segment = {
+        "S6": "agente-portos",
+        "S7": "agente-aeroportos",
+        "S8": "agente-saneamento",
+        "S9": "agente-energia",
+        "S10": "agente-barragens",
     }
+    merged = []
+    for label, kws in claude_rules:
+        seg_m = re.search(r"\bS(\d+)\b", label)
+        seg = f"S{seg_m.group(1)}" if seg_m else None
+        slug = slug_by_segment.get(seg)
+        if slug and slug in agent_by_slug:
+            merged.append((label, agent_by_slug[slug]))
+        else:
+            merged.append((label, kws))
+    return merged
 
-if __name__ == '__main__':
-    test_file = Path(__file__).parent.parent / 'tests' / 'routing' / 'prompts.md'
 
-    if not test_file.exists():
-        print(f"Arquivo de testes não encontrado: {test_file}")
-        sys.exit(1)
+def parse_prompts_md(text):
+    cases = []
+    section = None
+    for line in text.splitlines():
+        h = re.match(r"^##\s+(.+)$", line)
+        if h:
+            section = h.group(1).strip()
+            continue
+        m = re.match(r"^- \[[ x]\]\s*`(?P<prompt>.+?)`\s*→\s*\*\*(?P<agent>[^*]+)\*\*", line)
+        if m and section and "ambíguos" not in section.lower():
+            cases.append((section, m.group("prompt"), m.group("agent").strip()))
+    return cases
 
-    result = run_tests(test_file)
-    sys.exit(0 if result['testes_passados'] == result['total_testes'] else 1)
+
+def match(rules, prompt, word_boundary=True):
+    low = prompt.lower()
+    for label, kws in rules:
+        for kw in kws:
+            kwl = kw.lower().strip()
+            if not kwl:
+                continue
+            if word_boundary:
+                if re.search(r"(?<!\w)" + re.escape(kwl) + r"(?!\w)", low):
+                    return label
+            elif kwl in low:
+                return label
+    return None
+
+
+def normalize(label):
+    # normaliza "agente-portos (S6)" vs "agente-portos" vs "agente-infraestrutura S1 (Rodovias)"
+    label = re.sub(r"\s*\([^)]*\)\s*", " ", label).strip()
+    return label
+
+
+def run(rules, cases, name, word_boundary=True):
+    print(f"\n=== {name} ===")
+    passed = 0
+    fails = []
+    for section, prompt, expected in cases:
+        got = match(rules, prompt, word_boundary=word_boundary)
+        exp_norm = normalize(expected)
+        got_norm = normalize(got) if got else None
+        ok = got_norm is not None and (got_norm in exp_norm or exp_norm in got_norm)
+        if ok:
+            passed += 1
+        else:
+            fails.append((section, prompt, expected, got))
+    total = len(cases)
+    print(f"{passed}/{total} passou ({100*passed/total:.1f}%)")
+    for section, prompt, expected, got in fails:
+        print(f"  FALHA [{section}] '{prompt}'")
+        print(f"         esperado={expected!r}  obtido={got!r}")
+    return passed, total
+
+
+def main():
+    claude_text = CLAUDE_MD.read_text()
+    claude_rules = parse_claude_md_rules(claude_text)
+    agent_rules = parse_agent_md_rules()
+    merged_rules = build_ruleset(claude_rules, agent_rules)
+    cases = parse_prompts_md(PROMPTS_MD.read_text())
+
+    print(f"Regras extraidas do CLAUDE.md: {len(claude_rules)}")
+    for label, kws in claude_rules:
+        print(f"  - {label}: {kws}")
+    print(f"\nCasos de teste (excl. ambiguos): {len(cases)}")
+
+    run(claude_rules, cases, "CLAUDE.md ROUTING, substring cru (ex.: SQL ILIKE '%kw%')", word_boundary=False)
+    run(claude_rules, cases, "CLAUDE.md ROUTING, match com borda de palavra (regex \\b)", word_boundary=True)
+    run(merged_rules, cases, "CLAUDE.md ROUTING + keywords .claude/agents/*.md, borda de palavra", word_boundary=True)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
