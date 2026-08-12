@@ -4,8 +4,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-08-12) — adição da Matriz de Riscos por Segmento
+(S1–S10).
 
 ---
 
@@ -104,6 +104,24 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## MATRIZ DE RISCOS — por segmento (S1–S10)
+
+Documento dedicado: [`MATRIZ-RISCOS-POR-SEGMENTO.md`](./MATRIZ-RISCOS-POR-SEGMENTO.md).
+
+Cruza os 10 segmentos verticais (S1–S10) com 8 categorias de risco
+(geotécnico, ambiental/solo-água contaminados, hidrológico, custo,
+cronograma, interferências, contratual/regulatório, construção/O&M) e as
+8 fases do ciclo de vida (Eixo 3). Serve como checklist de risco comum
+para os agentes verticais e para o handoff com os horizontais (Manta 01
+claims, 02 contratual, 05 orçamento, 06 modelagem, 07 cronograma, 15
+advisory).
+
+Todo agente vertical (03-S1 a 03-S10) deve consultar esse documento ao
+processar orçamento, cronograma ou claims — ver seção "Como este
+documento se integra ao ecossistema" no arquivo.
+
+---
+
 ## SHAREPOINT — Routing rules (sp_agent_routing)
 
 | Agente | Pasta SP sugerida | Pattern |
@@ -136,6 +154,7 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 ```
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
+├── MATRIZ-RISCOS-POR-SEGMENTO.md     # 🆕 v4.3 — riscos por segmento (S1-S10)
 └── .claude/
     └── agents/
         ├── agente-portos.md          # 🆕 S6
@@ -154,6 +173,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-12) — adição de `MATRIZ-RISCOS-POR-SEGMENTO.md`:
+  matriz de riscos técnicos, ambientais, de custo, cronograma,
+  interferência e contratuais/regulatórios para os 10 segmentos verticais
+  (S1–S10), cruzada com as 8 fases do ciclo de vida.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
