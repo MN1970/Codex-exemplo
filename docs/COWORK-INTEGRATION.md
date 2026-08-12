@@ -76,6 +76,11 @@ Para ambientes Cowork que suportam `.mcp.json` per-repo:
 Commit isso no `manta-hub` ou em `Codex-exemplo`; ao clonar em Cowork, o
 MCP é auto-configurado (o fluxo OAuth ainda roda uma vez por usuário).
 
+**Status**: `.mcp.json` já commitado na raiz deste repo (2026-08-12).
+Só funciona depois que os itens de deploy da Fase A (checklist §
+"Checklist Fase A → produção" abaixo) estiverem concluídos — hoje o
+endpoint `hub.mantaassociados.com/mcp` ainda não está em produção.
+
 ### Verificação
 
 Depois de logar, testar no chat do Cowork:

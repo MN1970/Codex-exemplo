@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "manta-hub": {
+      "url": "https://hub.mantaassociados.com/mcp",
+      "transport": "http"
+    }
+  }
+}
