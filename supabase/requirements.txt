@@ -1,0 +1,18 @@
+# SICRO Similaridade Integration — Python Dependencies
+
+# Embedding Model
+sentence-transformers==2.7.0
+torch>=2.0.0
+
+# Database
+psycopg2-binary==2.9.9
+pgvector==0.2.4
+
+# Utilities
+python-dotenv==1.0.1
+click==8.1.7
+tqdm==4.66.1
+numpy==1.26.0
+
+# Optional: para geração de dados sintéticos
+faker==22.2.0
