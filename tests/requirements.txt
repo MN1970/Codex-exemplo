@@ -1,6 +1,7 @@
 # Dependências para rodar a suíte de testes de agentes (CI e local).
 # Fixar versões major para estabilidade do pipeline; patch/minor livres.
 pytest~=8.3
+pytest-asyncio~=0.24
 pytest-cov~=5.0
 pytest-timeout~=2.3
 pytest-xdist~=3.6
