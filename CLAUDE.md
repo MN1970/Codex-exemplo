@@ -4,7 +4,11 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
+Versão: **v4.3** (2026-08-13) — área de apresentação e retenção de
+conhecimento das pessoas Manta que usam o Maestro (ver
+`docs/CONHECIMENTO-PESSOAS.md`).
+
+Versão anterior: v4.2 (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
 Saneamento, Energia, Barragens).
 
 ---
@@ -131,11 +135,23 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## PESSOAS — Apresentação e retenção de conhecimento
+
+Diretório das pessoas da Manta que usam o Maestro e critério de
+classificação do conhecimento que cada uso agrega ao ecossistema
+(fonte RAG, regra de routing, skill/agente, caso de uso, correção,
+processo). Estrutura em `docs/CONHECIMENTO-PESSOAS.md` — hoje só o
+template, aguardando preenchimento pelo time.
+
+---
+
 ## Arquivos deste repositório
 
 ```
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
+├── docs/
+│   └── CONHECIMENTO-PESSOAS.md       # 🆕 v4.3 — pessoas + retenção de conhecimento
 └── .claude/
     └── agents/
         ├── agente-portos.md          # 🆕 S6
@@ -154,6 +170,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-13) — nova área `docs/CONHECIMENTO-PESSOAS.md`:
+  diretório de pessoas que usam o Maestro + critério de classificação
+  do conhecimento retido (RAG, routing, skill/agente, caso de uso,
+  correção, processo). Só estrutura/template nesta versão.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.

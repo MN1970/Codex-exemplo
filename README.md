@@ -7,12 +7,17 @@ Manta Associados. Versiona:
   por segmento + ciclo de vida).
 - `.claude/agents/*.md` — definições canônicas dos agentes verticais
   novos (S6–S10 adicionados na v4.2).
+- `docs/CONHECIMENTO-PESSOAS.md` — área de apresentação e retenção de
+  conhecimento: diretório das pessoas que usam o Maestro e critério de
+  classificação do conhecimento que cada uso agrega (v4.3).
 
 ## Estrutura
 
 ```
 .
 ├── CLAUDE.md                         # master registry
+├── docs/
+│   └── CONHECIMENTO-PESSOAS.md       # pessoas + retenção de conhecimento
 └── .claude/
     └── agents/
         ├── agente-portos.md          # S6
@@ -24,7 +29,8 @@ Manta Associados. Versiona:
 
 ## Versão atual
 
-**v4.2** — 2026-07-05 — expansão S6–S10.
+**v4.3** — 2026-08-13 — área de apresentação e retenção de conhecimento
+das pessoas Manta (template). Anterior: v4.2 — expansão S6–S10.
 
 ## Como usar
 
