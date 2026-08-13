@@ -22,6 +22,7 @@ entre o que é validado e o que é de fato executado.
 from __future__ import annotations
 
 import re
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -108,9 +109,45 @@ def parse_agent_file(path: Path) -> AgentDef:
 
 
 def load_all_agents() -> list[AgentDef]:
+    """
+    Carrega todos os agentes válidos em `.claude/agents/`.
+
+    Um único arquivo malformado (frontmatter YAML ausente/inválido) não
+    deve derrubar a coleta de testes de TODOS os agentes — historicamente
+    isso já aconteceu (ver `list_malformed_agent_files`): um arquivo em
+    "Design Phase" sem frontmatter travava até os smoke tests de agentes
+    operacionais não relacionados. Arquivos malformados são pulados aqui
+    com um warning (visível no resumo do pytest, sem falhar a suíte);
+    use `list_malformed_agent_files()` num teste dedicado para reportar
+    isso explicitamente sem acoplar ao carregamento em si.
+    """
     if not AGENTS_DIR.exists():
         return []
-    return [parse_agent_file(p) for p in sorted(AGENTS_DIR.glob("*.md"))]
+    agents = []
+    for path in sorted(AGENTS_DIR.glob("*.md")):
+        try:
+            agents.append(parse_agent_file(path))
+        except AgentParseError as exc:
+            warnings.warn(f"Pulando agente malformado em load_all_agents(): {exc}", stacklevel=2)
+    return agents
+
+
+def list_malformed_agent_files() -> list[tuple[Path, str]]:
+    """
+    Retorna `(path, mensagem_de_erro)` para cada arquivo em `.claude/agents/`
+    que falha ao parsear. Usado por testes que querem reportar o problema
+    explicitamente (ex: "N arquivos sem frontmatter") sem que isso quebre
+    a coleta de outros testes que dependem de `load_all_agents()`.
+    """
+    if not AGENTS_DIR.exists():
+        return []
+    problems: list[tuple[Path, str]] = []
+    for path in sorted(AGENTS_DIR.glob("*.md")):
+        try:
+            parse_agent_file(path)
+        except AgentParseError as exc:
+            problems.append((path, str(exc)))
+    return problems
 
 
 def load_agent(slug: str) -> AgentDef:
