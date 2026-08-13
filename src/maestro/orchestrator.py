@@ -12,6 +12,7 @@ from .detector import ComplexityDetector, DetectionResult
 from .queue_executor import QueueExecutor, Task, TaskResult
 from .consensus import ConsensusEngine, Candidate, Vote, ConsensusResult
 from .parser import WorkflowDSL, Phase
+from .episode_recorder import record_fan_out_episodes
 
 
 @dataclass
@@ -191,6 +192,11 @@ class MaestroOrchestrator:
         summary = self.queue_executor.get_results_summary()
         print(f"[FAN-OUT] Resumo: {summary['completed']} completadas, "
               f"{summary['failed']} falhadas")
+
+        # Telemetria/aprendizado: grava 1 episódio por tarefa em agent_episodes
+        # (best-effort — no-op se Supabase não estiver configurado; ver
+        # src/maestro/supabase_client.py e episode_recorder.py)
+        record_fan_out_episodes(tasks, results, task_type="fan_out")
 
         return results
 
