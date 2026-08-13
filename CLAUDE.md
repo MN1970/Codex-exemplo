@@ -4,7 +4,11 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+Versão: **v5.2** (2026-08-13) — área de apresentação e retenção de
+conhecimento das pessoas Manta que usam o Maestro (ver
+`docs/CONHECIMENTO-PESSOAS.md`).
+
+Versão anterior: v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
 Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
 assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
@@ -48,8 +52,9 @@ Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGE
 13. [Gaps abertos / pendências](#gaps-abertos--pendências)
 14. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
 15. [Deploy checklist v5.0](#deploy-checklist-v50)
-16. [Arquivos deste repositório](#arquivos-deste-repositório)
-17. [Histórico de versões](#histórico-de-versões)
+16. [PESSOAS — Apresentação e retenção de conhecimento](#pessoas--apresentação-e-retenção-de-conhecimento)
+17. [Arquivos deste repositório](#arquivos-deste-repositório)
+18. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -544,6 +549,16 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ---
 
+## PESSOAS — Apresentação e retenção de conhecimento
+
+Diretório das pessoas da Manta que usam o Maestro e critério de
+classificação do conhecimento que cada uso agrega ao ecossistema
+(fonte RAG, regra de routing, skill/agente, caso de uso, correção,
+processo). Estrutura em `docs/CONHECIMENTO-PESSOAS.md` — hoje só o
+template, aguardando preenchimento pelo time.
+
+---
+
 ## Arquivos deste repositório
 
 ```
@@ -570,7 +585,8 @@ Codex-exemplo/
 │   ├── SEGMENTO-S11-MINERACAO-GAP-G015.md # G015 — S11 (Mineração) identificado; roadmap formalização (novo, 2026-07-31)
 │   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
-│   └── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
+│   ├── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
+│   └── CONHECIMENTO-PESSOAS.md            # 🆕 v5.2 — pessoas + retenção de conhecimento
 ├── sharepoint/
 │   ├── README.md
 │   └── 00-arquitetura/
@@ -588,6 +604,10 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.2** (2026-08-13) — nova área `docs/CONHECIMENTO-PESSOAS.md`:
+  diretório de pessoas que usam o Maestro + critério de classificação
+  do conhecimento retido (RAG, routing, skill/agente, caso de uso,
+  correção, processo). Só estrutura/template nesta versão.
 - **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
   agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
   (ambiental, social, governança, integração), integração co-agente com 

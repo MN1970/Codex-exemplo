@@ -30,6 +30,7 @@ Uma plataforma escalável de **20 agentes IA** (11 horizontais + 9 verticais S1�
 | **docs/ARQUITETURA-v5.0.md** | Detalhe dos 8 pilares (P1–P8) |
 | **docs/DEPLOYMENT-GUIDE.md** | Step-by-step deploy (8 fases, 48h → go-live) |
 | **docs/ROUTING-REFERENCE.md** | Especificação completa R1 (3-stage pipeline, keywords) |
+| **docs/CONHECIMENTO-PESSOAS.md** | Diretório de pessoas que usam o Maestro + critério de classificação do conhecimento retido (template) |
 | **DEPLOY-CHECKLIST.md** | Quick reference checklist (imprimir e marcar) |
 
 ### Scripts
