@@ -1,0 +1,10 @@
+estaca_inicial,estaca_final,volume_corte_m3,volume_aterro_m3,tipo_material
+0,200,1500,0,solo
+200,400,0,1200,solo
+400,600,1800,0,solo
+600,800,0,900,solo
+800,1000,600,0,rocha
+1000,1200,0,1400,solo
+1200,1400,2000,0,solo
+1400,1600,0,1600,solo
+1600,1800,300,0,solo
