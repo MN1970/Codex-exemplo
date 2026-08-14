@@ -1,0 +1,287 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_at": "2026-07-25T00:00:00Z",
+    "title": "Agent Memory Cache Policy (R10)",
+    "description": "Configuration for agent_memory cache TTL, purge rules, and observability"
+  },
+
+  "cache_policy": {
+    "default_ttl_minutes": 480,
+    "comment": "Default cache time-to-live: 8 hours (480 min)",
+    "exceptions": {
+      "frequently_accessed": {
+        "ttl_minutes": 720,
+        "comment": "Queries com avg_rating >= 4.0 vivem 12h"
+      },
+      "low_quality": {
+        "ttl_minutes": 120,
+        "comment": "Queries com avg_rating < 2.0 vivem apenas 2h"
+      }
+    },
+    "memory_limits": {
+      "per_agent_mb": 100,
+      "comment": "Máximo 100 MB por agente antes de purga forçada"
+    }
+  },
+
+  "purge_policy": {
+    "enabled": true,
+    "schedule_cron": "0 3 * * *",
+    "schedule_description": "Todos os dias às 03:00 UTC",
+    "schedule_note": "Usar APScheduler com create_trigger(cron='0 3 * * *')",
+
+    "rules": [
+      {
+        "id": "rule_ttl_expired",
+        "name": "Purge TTL Expired",
+        "description": "Delete entries com expires_at <= NOW()",
+        "query": "DELETE FROM agent_memory WHERE agent_id = $agent_id AND expires_at <= NOW()",
+        "enabled": true,
+        "priority": 100
+      },
+      {
+        "id": "rule_low_rating",
+        "name": "Purge Low Rating + Age",
+        "description": "Delete entries com user_rating < 2 AND age > 7 days",
+        "query": "DELETE FROM agent_memory WHERE agent_id = $agent_id AND user_rating < 2 AND created_at < NOW() - INTERVAL '7 days'",
+        "enabled": true,
+        "priority": 90,
+        "constraints": {
+          "min_age_days": 7,
+          "max_rating": 2
+        }
+      },
+      {
+        "id": "rule_keep_recent",
+        "name": "Keep Recent Completions",
+        "description": "Mantém últimas 1000 completions por agente",
+        "keep_count": 1000,
+        "enabled": true,
+        "priority": 110,
+        "comment": "Proteção contra deleção de entries recentes"
+      }
+    ],
+
+    "memory_thresholds": {
+      "soft_limit_mb": 80,
+      "hard_limit_mb": 100,
+      "comment": "Se > 100 MB, force purge imediata; se > 80 MB, warn"
+    },
+
+    "chunk_count_thresholds": {
+      "soft_limit": 5000,
+      "hard_limit": 10000,
+      "comment": "Se > 10000 chunks, force purge; se > 5000, warn"
+    },
+
+    "alerts": {
+      "slack_enabled": true,
+      "slack_threshold_gb_freed": 10,
+      "slack_threshold_rows_deleted": 10000,
+      "comment": "Alert se GB_freed > 10 ou rows_deleted > 10000"
+    }
+  },
+
+  "agent_state_policy": {
+    "description": "Política para tabela agent_state (persistente, embeddings)",
+    "retention_days": 30,
+    "comment": "Agent_state não é auto-deletado (retenção indefinida)",
+    "feedback_aggregation": {
+      "enabled": true,
+      "window_days": 7,
+      "min_samples": 5,
+      "comment": "Agregar ratings dos últimos 7 dias se >= 5 amostras"
+    },
+    "embedding_refresh": {
+      "enabled": true,
+      "frequency_days": 1,
+      "comment": "Atualizar embeddings daily via R9 feedback loop"
+    }
+  },
+
+  "rls_policy": {
+    "description": "Row-Level Security para isolamento multi-tenant",
+    "enforcement": "application_role",
+    "isolation_key": "agent_id",
+    "comment": "RLS via CURRENT_SETTING('app.current_agent_id')",
+    "admin_bypass": true,
+    "policies": [
+      {
+        "table": "agent_memory",
+        "policy_name": "agent_memory_isolation",
+        "description": "SELECT/INSERT/UPDATE/DELETE restrito ao agent_id do usuário"
+      },
+      {
+        "table": "agent_state",
+        "policy_name": "agent_state_isolation",
+        "description": "SELECT/INSERT/UPDATE restrito ao agent_id do usuário"
+      }
+    ]
+  },
+
+  "observability": {
+    "metrics_table": "agent_memory_metrics",
+    "metrics_recorded": [
+      "memory_size_mb",
+      "chunk_count",
+      "avg_user_rating",
+      "purge_frequency",
+      "bytes_freed_total"
+    ],
+    "log_table": "agent_memory_purge_log",
+    "log_fields": [
+      "agent_id",
+      "purge_timestamp",
+      "policy_applied",
+      "total_rows_deleted",
+      "total_bytes_freed",
+      "memory_size_before_mb",
+      "memory_size_after_mb",
+      "purge_duration_ms",
+      "executed_by"
+    ],
+    "grafana_dashboard": {
+      "enabled": true,
+      "url": "https://grafana.manta-internal.com/d/agent-memory-cache",
+      "panels": [
+        {
+          "title": "Cache Size by Agent",
+          "metric": "memory_size_mb",
+          "group_by": "agent_id"
+        },
+        {
+          "title": "Chunk Count by Agent",
+          "metric": "chunk_count",
+          "group_by": "agent_id"
+        },
+        {
+          "title": "Purge Operations",
+          "metric": "rows_deleted",
+          "group_by": "policy_applied",
+          "description": "Total rows deleted por policy rule"
+        },
+        {
+          "title": "Memory Trend",
+          "metric": "memory_size_mb",
+          "aggregation": "avg",
+          "time_window": "24h"
+        }
+      ]
+    }
+  },
+
+  "agents": {
+    "s1_rodovias": {
+      "agent_id": "manta-03-s1",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true
+    },
+    "s2_oae": {
+      "agent_id": "manta-03-s2",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true
+    },
+    "s3_ferrovia": {
+      "agent_id": "manta-03-s3",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true
+    },
+    "s4_metro": {
+      "agent_id": "manta-03-s4",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true
+    },
+    "s6_portos": {
+      "agent_id": "manta-03-s6",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true
+    },
+    "s7_aeroportos": {
+      "agent_id": "manta-03-s7",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true
+    },
+    "s8_saneamento": {
+      "agent_id": "manta-03-s8",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true,
+      "comment": "PRIORIDADE AySA"
+    },
+    "s9_energia": {
+      "agent_id": "manta-03-s9",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true,
+      "comment": "ANEEL focus"
+    },
+    "s10_barragens": {
+      "agent_id": "manta-03-s10",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true
+    }
+  },
+
+  "apscheduler_integration": {
+    "description": "APScheduler trigger configuration para purga diária",
+    "trigger_template": {
+      "name": "agent-memory-purge-daily",
+      "cron": "0 3 * * *",
+      "prompt": "Execute purga de agent_memory conforme R10: DELETE entries com expires_at <= NOW() ou user_rating < 2 AND age > 7 days. Registre metrics em agent_memory_metrics. Se bytes_freed > 10GB, envie Slack alert para #agent-ops.",
+      "environment": "production",
+      "timeout_seconds": 1800,
+      "retry_on_failure": true,
+      "max_retries": 3
+    },
+    "feedback_loop_trigger": {
+      "name": "embedding-retraining-weekly",
+      "cron": "0 3 * * 0",
+      "prompt": "Weekly: fetch user_ratings >= 4 das últimas 7 dias, retrain embedding model com fine-tuning. Update checksum em VERSIONS.json. Redeploy embeddings.",
+      "environment": "production"
+    }
+  },
+
+  "deployment_notes": {
+    "phase": "Phase 4 — Observabilidade (T-12h antes go-live)",
+    "pre_requisites": [
+      "Supabase project configured",
+      "pgvector extension enabled",
+      "RLS policies activated",
+      "APScheduler setup (Temporal/Celery)",
+      "Slack webhook configured (opcional)"
+    ],
+    "post_deployment": [
+      "Validate purge_expired_agent_memory() function via SQL",
+      "Test RLS isolation: verify agents can't see each other's data",
+      "Test dry-run: python scripts/agent_memory_purge.py --dry-run",
+      "Monitor Grafana dashboard for 24h",
+      "Alert if > 3 timeouts/hour em um agente"
+    ],
+    "rollback": {
+      "procedure": "Revert CLAUDE.md → v4.2, desativar R10 (manter R1-R5)",
+      "steps": [
+        "Disable APScheduler trigger (agent-memory-purge-daily)",
+        "Restore RAG from backup (v4.9)",
+        "Revert skills → v4.9 via VERSIONS.json checksum",
+        "Log incident em ROLLBACK_LOG.md"
+      ]
+    }
+  }
+}
