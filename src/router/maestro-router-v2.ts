@@ -29,6 +29,13 @@
  * `AgentExecutor` em `MaestroRouterV2.run(...)`. Sem executor customizado, um executor mock
  * determinístico é usado (útil para testes/demonstração — ver `runSelfTest()` no fim do
  * arquivo, que valida o roteador contra os prompts de tests/routing/prompts.md).
+ *
+ * ATENÇÃO — COLISÃO DE NOME: este arquivo é um protótipo isolado e independente,
+ * escrito sem visibilidade do módulo real de produção. Existe hoje em `main`, em
+ * `infra/agent-registry/lib/maestro-v2-routing.ts`, um módulo também chamado
+ * "Maestro v2", já integrado a Supabase/pgvector (BM25 + busca semântica, ranking,
+ * circuit breaker) — não confundir os dois. Este arquivo (`src/router/maestro-router-v2.ts`)
+ * não deve ser portado/integrado à produção sem antes reconciliar com aquele módulo real.
  */
 
 // ============================================================================================

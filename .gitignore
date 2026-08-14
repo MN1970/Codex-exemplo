@@ -1,1 +1,9 @@
 node_modules/
+reports/
+.pytest_cache/
+__pycache__/
+*.pyc
+.coverage
+htmlcov/
+.venv/
+venv/

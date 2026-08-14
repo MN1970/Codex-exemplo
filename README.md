@@ -1,89 +1,142 @@
-# Codex-exemplo — Manta Maestro Agent Registry
+# Manta Maestro v5.0 — Agent Registry & Orchestration
 
-Repositório de referência do sistema **Manta Maestro** de agentes IA da
-Manta Associados. Versiona:
+**Registro mestre e especificação operacional dos agentes IA da Manta Associados.**
 
-- `CLAUDE.md` — registro mestre **operacional** dos agentes (horizontais +
-  verticais por segmento + ciclo de vida). v4.2 — S6–S10.
-- `.claude/agents/*.md` — definições canônicas dos agentes verticais
-  operacionais (S6–S10) **e** propostas ainda não promovidas (ex.:
-  `agente-performance.md`, ver seção "Proposta v4.3" abaixo).
-- `docs/` — runbooks de deploy manual (Supabase + SharePoint) e notas de
-  integração (Cowork).
-- `sharepoint/` — mirror versionado do conteúdo que também vive no SP
-  (`ARQUITETURA-AGENTES-IA.md`, `SKILL.md`/README/prompts por agente).
-- `supabase/` — migrações candidatas (ainda não aplicadas em produção).
-- `src/router/`, `tests/router/`, `tests/routing/` — protótipo isolado do
-  Roteador Maestro v2 (ver seção "Proposta v4.3" abaixo). **Não é** o
-  sistema de produção (`src/maestro/*.py`, em `main`, fora deste repo de
-  registro).
+---
 
-## Estrutura
+## O que é Manta Maestro v5.0?
 
+Uma plataforma escalável de **20 agentes IA** (11 horizontais + 9 verticais S1–S10) sustentada por **8 pilares arquiteturais**:
+
+1. **Routing Determinístico** — Maestro (R1) roteia prompts com 90%+ confiança
+2. **Qualidade Vertical** — 5 novos agentes (S6–S10: Portos, Aeroportos, Saneamento, Energia, Barragens)
+3. **Ciclo de Vida** — 8 fases: estudo prévio → encerramento
+4. **RAG Híbrido** — BM25 + embedding + reranker em <50ms
+5. **Tiering Automático** — Haiku/Sonnet/Opus via complexity score
+6. **Observabilidade** — Run tracking imutável, custos, latência
+7. **Orquestração Async** — APScheduler: reindex diário, feedback, limpeza
+8. **Versionamento de Skills** — Checksums MD5, rollback automático, grace period 30d
+
+---
+
+## Arquivos Principais
+
+### Documentação
+
+| Arquivo | Propósito |
+|---------|-----------|
+| **CLAUDE.md** | Master registry: 20 agentes, 8 pilares, R1–R10, RAG, deploy checklist |
+| **VERSIONS.json** | Checksums de todos 20 skills v5.0 + 9 RAG collections |
+| **docs/ARQUITETURA-v5.0.md** | Detalhe dos 8 pilares (P1–P8) |
+| **docs/DEPLOYMENT-GUIDE.md** | Step-by-step deploy (8 fases, 48h → go-live) |
+| **docs/ROUTING-REFERENCE.md** | Especificação completa R1 (3-stage pipeline, keywords) |
+| **DEPLOY-CHECKLIST.md** | Quick reference checklist (imprimir e marcar) |
+
+### Scripts
+
+| Script | Função |
+|--------|--------|
+| **scripts/healthcheck.py** | Valida checksums, RAG, CLAUDE.md, settings.json |
+| **scripts/rag-reindex.py** | Reindexação RAG diária (APScheduler trigger) |
+| **scripts/tiering-audit.py** | Auditoria R7 (formula complexity score) |
+
+---
+
+## Começar
+
+### 1. Ler (15 min)
+- Cabeçalho + 8 pilares em **CLAUDE.md**
+- **docs/ARQUITETURA-v5.0.md**
+
+### 2. Validar (5 min)
+```bash
+python3 scripts/healthcheck.py
 ```
-.
-├── CLAUDE.md                         # master registry (operacional, v4.2)
-├── README.md
-├── package.json                      # scripts para rodar os testes do protótipo router v2
-├── .claude/
-│   └── agents/
-│       ├── agente-portos.md          # S6 (operacional)
-│       ├── agente-aeroportos.md      # S7 (operacional)
-│       ├── agente-saneamento.md      # S8 — PRIORIDADE AySA (operacional)
-│       ├── agente-energia.md         # S9 — ANEEL/State Grid (operacional)
-│       ├── agente-barragens.md       # S10 (operacional)
-│       └── agente-performance.md     # PROPOSTA v4.3 — pendente aprovação MN
-├── docs/                             # runbooks de deploy + integração Cowork
-├── sharepoint/                       # mirror versionado do conteúdo do SP
-├── supabase/                         # migrações candidatas (não aplicadas)
-├── scripts/
-│   └── demo-router.ts                # driver de linha de comando do protótipo router v2
-├── src/router/
-│   └── maestro-router-v2.ts          # PROPOSTA v4.3 — protótipo isolado, não operacional
-└── tests/
-    ├── router/maestro-router-v2.test.ts
-    └── routing/prompts.md            # smoke tests de routing (fonte para o autoteste)
-```
 
-## Versão atual
+### 3. Deploy (4–6h)
+Siga **DEPLOY-CHECKLIST.md** (8 fases)
 
-**v4.2** — 2026-07-05 — expansão S6–S10 (**operacional**, registrada no
-`CLAUDE.md` master).
+---
 
-### Proposta v4.3 (não operacional, draft PR [#60](https://github.com/MN1970/Codex-exemplo/pull/60))
+## Performance Targets
 
-- `agente-performance.md` (Manta 03-PERF) — minuta de agente transversal
-  de telemetria/desempenho. Não consta no `CLAUDE.md` master; o próprio
-  arquivo se declara pendente de aprovação MN antes de qualquer registro,
-  coleção RAG ou routing rule.
-- `src/router/maestro-router-v2.ts` — protótipo isolado (zero dependências
-  externas) do roteador Maestro: classificador de keywords ponderadas,
-  seletor de agente com política de desambiguação, orquestrador de steps
-  e autoteste contra `tests/routing/prompts.md`. **Validado nesta versão**:
-  16/16 testes (`tests/router/maestro-router-v2.test.ts`) e 14/14 casos do
-  autoteste passam. Este módulo **não** substitui nem se integra ao
-  sistema de produção `src/maestro/*.py` (branch `main`) — três taxonomias
-  de segmento incompatíveis coexistem hoje no repositório operacional (ver
-  comentário no topo do arquivo de teste); reconciliá-las é uma decisão de
-  arquitetura separada, não coberta por este protótipo.
+| Métrica | Target | v4.2 | Improvement |
+|---------|--------|------|------------|
+| Routing latency | <500ms | ~800ms | 37% faster |
+| RAG query | <50ms | ~200ms | 75% faster |
+| Cost/run | $0.05–$0.08 | $0.12 | 40% cheaper |
+| Latency p95 | <5s | ~8s | 37% faster |
 
-Rodar a suíte do protótipo:
+---
+
+**Manta Maestro v5.0 — Ready for deployment**
+
+*Generated: 2026-07-25*
+
+---
+
+## Draft em avaliação neste branch (PR #60)
+
+Esta seção documenta o que **este branch** (`claude/org-modularizacao-melhorias-83i4zx`)
+adiciona sobre o README acima, que é o conteúdo real e atual do `main`. Nada
+abaixo está operacional; tudo está sujeito a revisão e aprovação MN antes de
+qualquer merge ou promoção de status.
+
+### 1. `.claude/agents/agente-performance.md` — Manta 03-PERF (🟠 Proposto)
+
+Minuta de agente transversal de telemetria/desempenho operacional de ativos
+de infraestrutura (RAM, MTBF, MTTR, OEE, health monitoring, digital twin),
+atuando em paralelo aos verticais S1–S10 nas fases de O&M e due diligence do
+ciclo de vida. Status **🟠 Proposto**, seguindo o mesmo padrão de sinalização
+já usado no `CLAUDE.md` do `main` para S12 (Óleo & Gás) e S13 (Edificações):
+não registrado em nenhuma tabela de segmentos oficial, sem coleção RAG, sem
+rota SharePoint, sem keyword de routing — pendente de aprovação MN antes de
+qualquer promoção a operacional.
+
+**Overlap de escopo identificado**: o `main` já contém
+`.claude/agents/agente-analytics-p3-07.md` (**Manta 23 — "Performance
+Monitoring & Analytics"**), atualmente em fase de design ("Design Phase"),
+cobrindo essencialmente a mesma área — KPI real-time, anomaly detection e
+predictive maintenance para os segmentos S1–S10. A decisão de consolidar os
+dois agentes em um só, diferenciar explicitamente seus escopos, ou
+descontinuar um deles **fica pendente de revisão MN** e não é resolvida
+neste branch.
+
+### 2. Protótipo de routing — `src/router/maestro-router-v2.ts`
+
+Protótipo isolado (zero dependências externas) de classificador/orquestrador
+de routing, acompanhado de:
+
+- `tests/router/maestro-router-v2.test.ts` — 16/16 testes `node:test` passando
+- `tests/routing/prompts.md` — 14/14 casos do autoteste validados localmente
+
+**Não deve ser confundido com** `infra/agent-registry/lib/maestro-v2-routing.ts`,
+que já existe no `main` com o mesmo nome conceitual ("Maestro v2") mas é a
+implementação real do roteador, integrada a Supabase/pgvector (busca híbrida
+BM25 + semântica). O protótipo deste branch é um exercício isolado de lógica
+de desambiguação/orquestração — não uma substituição, não integrado a
+Supabase, e não pretende disputar espaço com a implementação do `main`.
+
+### 3. Convenção de execução (exceção Python/pytest)
 
 ```bash
-npm install
-npm run test:router   # suíte node:test — 16 casos
-npm run demo:router    # autoteste + exemplo de caso ambíguo + orquestração mock
+npm install && npm run test:router
+npm run demo:router
 ```
 
-## Como usar
+Isso é uma **exceção deliberada** à convenção Python/pytest usada no restante
+do repositório (`pytest.ini`, `scripts/test_routing.py`, etc.). O protótipo e
+seus testes ficam propositalmente isolados em `src/router/` e `tests/router/`
+(Node/TypeScript, via `tsx --test`) para não interferir com a suíte de testes
+real do repositório.
 
-Este repositório é **read-only** para o Maestro em runtime. Alterações
-seguem gate humano (MN) e são replicadas para:
+### 4. Numeração de segmentos (S6–S10) — gap conhecido, não resolvido aqui
 
-1. `manta-hub` — `.claude/agents/` (mirror dos agentes verticais)
-2. SharePoint — `01-agentes-fundamentais/` (upload dos SKILL.md)
-3. Supabase — coleções RAG e tabela `sp_agent_routing`
-
-Ver checklist completo de deploy no `CLAUDE.md` e o runbook detalhado em
-`docs/DEPLOY-v4.2.md` (itens de Supabase/SharePoint permanecem **bloqueados
-por acesso** — não há credenciais de produção configuradas nesta sessão).
+Os arquivos deste branch usam a convenção S6=Portos, S7=Aeroportos,
+S8=Saneamento, S9=Energia, S10=Barragens. O `CLAUDE.md` do `main` já
+documenta uma **inconsistência de numeração conhecida** entre essa convenção
+("Convenção A") e uma convenção divergente usada em outros documentos
+("Convenção B", S6=Edificações...S11=Barragens) — ver seção "GAPS ABERTOS /
+PENDÊNCIAS" do `CLAUDE.md` no `main`. Este branch não tenta resolver essa
+divergência; apenas sinaliza que ela existe e é pendência documentada
+separadamente.

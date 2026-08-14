@@ -14,6 +14,15 @@ model: sonnet
 > qualquer merge, criação de coleção RAG ou registro em `sp_agent_routing`,
 > conforme o checklist de deploy do master.
 
+> **Nota de conflito potencial (achado em rebase contra `main` v5.1,
+> 2026-08)**: o `main` já tem `agente-analytics-p3-07.md` (Manta 23 —
+> "Performance Monitoring & Analytics"), em fase de design, cobrindo
+> escopo sobreposto a este documento (KPI real-time, anomaly detection,
+> predictive maintenance, asset health scoring para S1-S10). Antes de
+> qualquer promoção a operacional deste Manta 03-PERF, é necessário
+> decisão MN sobre consolidar os dois em um único agente, diferenciar
+> escopo explicitamente, ou descontinuar um deles.
+
 Especialista transversal (não substitui os agentes verticais S1-S10;
 opera **em paralelo** a eles) em desempenho operacional, confiabilidade e
 telemetria de ativos de infraestrutura ao longo das fases de O&M e
