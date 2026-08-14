@@ -4,7 +4,10 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+Versão: **v5.2** (2026-08-14) — padrão de comunicação concisa
+(resumo-primeiro, expansão sob pedido) aplicado a todos os agentes.
+
+Versão anterior: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
 Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
 assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
@@ -31,25 +34,51 @@ Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGE
 
 ---
 
+## Padrão de comunicação — Resumo primeiro, expansão sob pedido
+
+Válido para **todos os agentes** (horizontais e verticais), em
+qualquer canal (chat, relatório, laudo, claim, e-mail).
+
+Regra: por padrão, toda resposta é **curta e direta** — sem tabelas,
+seções ou detalhamento que o usuário não pediu. Tabelas, memórias de
+cálculo, listas de fontes e análises extensas só aparecem quando:
+
+1. o usuário pedir explicitamente ("detalha", "amplia", "mostra a
+   memória de cálculo", "quero o relatório completo"); ou
+2. o tipo de entrega exigir estrutura formal por natureza (ex.: GR de
+   reequilíbrio, laudo técnico, edital analisado, planilha de
+   quantitativos) — nesses casos o corpo principal ainda deve abrir
+   com um resumo de 2-3 linhas antes do detalhamento.
+
+Ao final de uma resposta resumida, oferecer a expansão em uma linha
+curta (ex.: "Quer que eu detalhe X?"), sem forçar.
+
+Esse padrão substitui qualquer tendência anterior dos agentes de
+produzir respostas longas por padrão (tabelas, checklists e seções
+completas em toda interação, mesmo para perguntas simples).
+
+---
+
 ## Sumário
 
-1. [Modelo de 4 eixos (S×A×F×D)](#modelo-de-4-eixos-saf%C3%97d)
-2. [Eixo S — Segmentos](#eixo-s--segmentos)
-3. [Eixo A — Atividades](#eixo-a--atividades)
-4. [Eixo F — Funcionais](#eixo-f--funcionais)
-5. [Eixo D — Disciplinas](#eixo-d--disciplinas)
-6. [Eixo temporal — Ciclo de vida](#eixo-temporal--ciclo-de-vida-8-fases)
-7. [Modelo de composição S.A.D](#modelo-de-composição-sad)
-8. [Mapa completo de agentes — 20 operacionais + 2 propostos](#mapa-completo-de-agentes--20-operacionais--2-propostos)
-9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
-10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
-11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
-12. [Model tiering](#model-tiering)
-13. [Gaps abertos / pendências](#gaps-abertos--pendências)
-14. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
-15. [Deploy checklist v5.0](#deploy-checklist-v50)
-16. [Arquivos deste repositório](#arquivos-deste-repositório)
-17. [Histórico de versões](#histórico-de-versões)
+1. [Padrão de comunicação — Resumo primeiro, expansão sob pedido](#padrão-de-comunicação--resumo-primeiro-expansão-sob-pedido)
+2. [Modelo de 4 eixos (S×A×F×D)](#modelo-de-4-eixos-saf%C3%97d)
+3. [Eixo S — Segmentos](#eixo-s--segmentos)
+4. [Eixo A — Atividades](#eixo-a--atividades)
+5. [Eixo F — Funcionais](#eixo-f--funcionais)
+6. [Eixo D — Disciplinas](#eixo-d--disciplinas)
+7. [Eixo temporal — Ciclo de vida](#eixo-temporal--ciclo-de-vida-8-fases)
+8. [Modelo de composição S.A.D](#modelo-de-composição-sad)
+9. [Mapa completo de agentes — 20 operacionais + 2 propostos](#mapa-completo-de-agentes--20-operacionais--2-propostos)
+10. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
+11. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
+12. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
+13. [Model tiering](#model-tiering)
+14. [Gaps abertos / pendências](#gaps-abertos--pendências)
+15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
+16. [Deploy checklist v5.0](#deploy-checklist-v50)
+17. [Arquivos deste repositório](#arquivos-deste-repositório)
+18. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -588,6 +617,10 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.2** (2026-08-14) — padrão de comunicação concisa (resumo-primeiro,
+  expansão sob pedido) adotado para todos os agentes, em qualquer canal
+  (chat, relatório, laudo, claim, e-mail). Sem mudança de routing, modelo
+  de eixos ou mapa de agentes.
 - **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
   agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
   (ambiental, social, governança, integração), integração co-agente com 
