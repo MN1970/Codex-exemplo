@@ -1,0 +1,13 @@
+{
+  "name": "codex-exemplo",
+  "private": true,
+  "version": "4.3.0-proposta",
+  "description": "Manta Maestro — Agent Registry: CLAUDE.md master + protótipo do Roteador v2 (não operacional).",
+  "scripts": {
+    "test:router": "tsx --test tests/router/*.test.ts",
+    "demo:router": "tsx scripts/demo-router.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}
