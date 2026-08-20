@@ -136,13 +136,18 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 ```
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
-└── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+├── .claude/
+│   └── agents/
+│       ├── agente-portos.md          # 🆕 S6
+│       ├── agente-aeroportos.md      # 🆕 S7
+│       ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
+│       ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
+│       └── agente-barragens.md       # 🆕 S10
+└── docs/
+    ├── PORTAL-BACKEND-PLANO.md       # 🆕 MNT-2026-ARQ-0001 (proposta)
+    └── portal-backend/
+        ├── schema-draft.sql          # anexo A — schema candidato
+        └── api-contract.md           # anexo B — contrato /v1
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
