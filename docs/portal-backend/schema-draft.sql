@@ -73,11 +73,12 @@ CREATE TABLE portal_core.memberships (
   PRIMARY KEY (tenant_id, user_id)
 );
 
--- Catálogo de segmentos (S1..S11) e atividades (A1..A10).
+-- Catálogo de segmentos (S1..S13) e atividades (A1..A10).
 -- Tabela, não constante em código: a reconciliação da taxonomia
 -- (risco R-01 do plano) muda dado, não deploy.
 CREATE TABLE portal_core.taxonomy (
   code        text PRIMARY KEY,          -- 'S1', 'A1', 'F-portal-ia'
+                                         -- numeração legada do CLAUDE.md deste repo
   kind        text NOT NULL,             -- 'segmento' | 'atividade' | 'funcional'
   name        text NOT NULL,
   legacy_code text,                      -- '03-S1', '02-C' ...

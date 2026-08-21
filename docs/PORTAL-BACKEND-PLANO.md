@@ -43,7 +43,7 @@ ver §11.3) e, simultaneamente, a camada operacional interna da Manta.
 O frontend é o scaffold React de **8 módulos**:
 
 | # | Módulo | Necessidade de backend |
-|---|--------|------------------------|
+| --- | -------- | ------------------------ |
 | 1 | Dashboard | Agregações de prazo, custo, claims, alertas |
 | 2 | Contratos | Contratos, aditivos, cláusulas, prazos-gatilho |
 | 3 | Cronograma | Import XER/MSP, baselines, CPM, curva S, atrasos |
@@ -149,7 +149,7 @@ não-idempotente. Detalhe em `docs/portal-backend/api-contract.md`.
 
 ## 3. Visão de componentes
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │ Frontend — Portal React (Netlify)                                │
 │ 8 módulos · Supabase JS (leitura/realtime) · fetch /v1 (escrita) │
@@ -185,7 +185,7 @@ Três processos de aplicação, todos versionados no mesmo repositório
 (`manta-hub`, diretório `backends/portal/`):
 
 | Processo | systemd unit | Responsabilidade |
-|---|---|---|
+| --- | --- | --- |
 | `portal-api` | `portal-api.service` | HTTP síncrono + SSE |
 | `portal-worker` | `portal-worker.service` | Jobs de fila (pgmq) |
 | `portal-scheduler` | `portal-scheduler.timer` | Cron: sync SP, snapshots, alertas |
@@ -201,11 +201,11 @@ domínio:
 ### 4.1. `portal_core` — tenancy e projetos
 
 | Tabela | Papel |
-|---|---|
+| --- | --- |
 | `tenants` | Cliente/organização. Tenant zero = Manta |
 | `profiles` | Espelho de `auth.users` + nome, cargo, avatar |
 | `memberships` | `(tenant_id, user_id, role)` — RBAC |
-| `projects` | Obra/contrato-objeto. FK `segment_code` (S1–S11) |
+| `projects` | Obra/contrato-objeto. FK `segment_code` → `taxonomy` |
 | `project_members` | ACL por projeto (leitura/edição/aprovação) |
 | `contracts` | Contrato principal por projeto |
 | `contract_amendments` | Aditivos (prazo, valor, escopo) |
@@ -215,7 +215,7 @@ domínio:
 ### 4.2. `portal_core` — cronograma e custos
 
 | Tabela | Papel |
-|---|---|
+| --- | --- |
 | `schedules` | Cronograma importado (origem XER/MSP/manual) |
 | `schedule_versions` | Baseline e revisões (`is_baseline`, `data_date`) |
 | `activities` | Atividades com WBS, datas, folgas, `is_critical` |
@@ -229,7 +229,7 @@ domínio:
 ### 4.3. `portal_core` — claims
 
 | Tabela | Papel |
-|---|---|
+| --- | --- |
 | `claims` | Pleito/reequilíbrio (nº, objeto, status, valor) |
 | `claim_windows` | Janelas de análise (GR-xx, trimestre) |
 | `claim_events` | Eventos com data, causa, responsabilidade, evidência |
@@ -239,7 +239,7 @@ domínio:
 ### 4.4. `portal_docs`
 
 | Tabela | Papel |
-|---|---|
+| --- | --- |
 | `documents` | Documento lógico (título, tipo, disciplina, projeto) |
 | `document_versions` | Versões com hash SHA-256, tamanho, storage key |
 | `document_links` | Vínculo documento ↔ claim/atividade/cláusula |
@@ -249,7 +249,7 @@ domínio:
 ### 4.5. `portal_ai`
 
 | Tabela | Papel |
-|---|---|
+| --- | --- |
 | `agent_runs` | Execução de agente: prompt, agente, projeto, status |
 | `agent_messages` | Turnos da conversa (role, conteúdo, tokens) |
 | `agent_tool_calls` | Ferramentas invocadas + resultado resumido |
@@ -266,7 +266,7 @@ tenants (item bloqueante — §15).
 ### 4.6. `portal_ops`
 
 | Tabela | Papel |
-|---|---|
+| --- | --- |
 | `jobs` | Estado do job (tipo, payload, tentativas, erro) |
 | `job_events` | Timeline por job (para UI de progresso) |
 | `audit_log` | Quem fez o quê, quando, em qual recurso (append-only) |
@@ -325,7 +325,7 @@ retorna zero linhas (§13).
 ### 5.4. Papéis (RBAC)
 
 | Papel | Escopo | Pode |
-|---|---|---|
+| --- | --- | --- |
 | `owner` | tenant | Tudo, inclusive faturamento e usuários |
 | `admin` | tenant | Usuários, projetos, integrações |
 | `manager` | projeto | Editar dados do projeto, aprovar artefatos |
@@ -342,7 +342,7 @@ IA sai do Portal como oficial sem `approved_by` preenchido.
 
 Detalhe completo em **`docs/portal-backend/api-contract.md`**. Resumo:
 
-```
+```text
 POST   /v1/auth/session                  troca de código OIDC
 GET    /v1/projects                      lista (cursor, filtros)
 GET    /v1/projects/{id}/ficha           read model consolidado (mód. 8)
@@ -390,7 +390,7 @@ models, `Idempotency-Key` em POST, `problem+json` em erro, `429` com
 
 ### 7.1. Fluxo de uma execução (`POST /v1/ai/runs`)
 
-```
+```text
 1. Valida JWT → tenant_id, project_id, permissão no projeto
 2. Router determinístico (keyword match, zero token) → agente A*/S*/F*
    · confiança < 70% → devolve 200 com `needs_disambiguation` + opções
@@ -416,7 +416,7 @@ o conteúdo é entregue marcado, nunca publicado como artefato oficial.
 ### 7.2. Model tiering
 
 | Uso | Modelo | Racional |
-|---|---|---|
+| --- | --- | --- |
 | Roteamento, classificação, extração simples | `claude-haiku-4-5` | Volume alto, tarefa fechada |
 | Agentes de produção (S1–S11, A2–A8) | `claude-sonnet-5` | Padrão |
 | A1-claims, A10-risco, F-arquiteto-ia | `claude-opus-5` | Raciocínio longo, risco alto |
@@ -428,6 +428,9 @@ constante em código — permite ajuste sem deploy.
 
 - Coleções: `propostas`, `contratos`, `normas`, `composicoes`,
   `projetos` + prefixos por segmento (`rod:`, `oae:`, … `bar:`).
+- Códigos de segmento seguem a numeração **legada** vigente neste
+  repositório (S6=Portos … S10=Barragens, S11=Mineração,
+  S12=Óleo & Gás, S13=Edificações) — ver risco R-01.
 - Query: embedding 384d → HNSW cosine → `threshold > 0.7`, top-5 →
   injeção como `[FONTE N]`.
 - **Filtro de tenant é obrigatório na RPC**, não no código de aplicação
@@ -445,7 +448,7 @@ configurável. Sem isso o produto tem custo variável sem limite.
 
 ## 8. Ingestão documental (SharePoint → Portal → RAG)
 
-```
+```text
 scheduler (a cada 30 min)
   └─ para cada linha de sp_sync_state (pasta × tenant):
        Graph delta query → lista mudanças desde o cursor
@@ -472,7 +475,7 @@ Pontos de atenção:
 ## 9. Jobs assíncronos e importadores
 
 | Tipo de job | Origem | Duração típica | Saída |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `document.ingest` | scheduler/upload | s–min | chunks + embeddings |
 | `schedule.import` | upload XER/MSP | s–min | `activities`, `links`, versão |
 | `schedule.analyze` | usuário | s | CPM, DCMA-14, curva S |
@@ -496,7 +499,7 @@ bibliotecas Python — sem reimplementar parser.
 ### 10.1. Controles
 
 | Controle | Implementação |
-|---|---|
+| --- | --- |
 | Isolamento | RLS em todas as tabelas + filtro de tenant na RPC do RAG |
 | Segredos | Cofre da VPS (systemd `LoadCredential` ou Doppler/1Password); nada em `.env` versionado |
 | Storage | Buckets por tenant, URLs assinadas com TTL ≤ 15 min |
@@ -519,7 +522,7 @@ dados e objetos de Storage em cascata (job `tenant.purge`).
 ### 10.3. Aderência às regras R1–R5
 
 | Regra | Onde é imposta no backend |
-|---|---|
+| --- | --- |
 | **R1** — nunca exibir nomes de empresa em artefato | Filtro de anonimização na etapa 8 do §7.1, aplicado a todo export |
 | **R2** — dado ausente = `null` + motivo | Colunas anuláveis + `*_missing_reason text`; API nunca devolve valor inventado |
 | **R3** — output técnico passa por `aluci-guard` | Etapa obrigatória do pipeline; run sem guardrail não pode ser exportado |
@@ -542,7 +545,7 @@ dados e objetos de Storage em cascata (job `tenant.purge`).
 ### 11.2. SLO propostos
 
 | Indicador | Alvo |
-|---|---|
+| --- | --- |
 | Disponibilidade da API | 99,5%/mês |
 | p95 de leitura CRUD | < 400 ms |
 | Primeiro token no chat | < 2,5 s |
@@ -552,7 +555,7 @@ dados e objetos de Storage em cascata (job `tenant.purge`).
 ### 11.3. Custos
 
 | Item | Valor | Data | Fonte |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Preço do Portal IA ao cliente | R$ 50.000 implantação + R$ 25.000/mês | 2026-07-27 | skill `manta-maestro` v5.0.1 §9 |
 | Supabase (plano atual) | `null` — a confirmar no console | — | conta `manta-maestro-v5` |
 | VPS (api + worker) | `null` — a confirmar na fatura | — | provedor atual do hub |
@@ -567,14 +570,14 @@ deve entrar na margem do produto.
 ## 12. Ambientes, CI/CD e deploy
 
 | Ambiente | Dados | Deploy |
-|---|---|---|
+| --- | --- | --- |
 | `local` | Supabase CLI (docker) + seeds | `make dev` |
 | `staging` | Branch Supabase (`create_branch`) | push em `main` do backend |
 | `prod` | `manta-maestro-v5` | tag `portal-vX.Y.Z` + aprovação MN |
 
 Pipeline (GitHub Actions):
 
-```
+```text
 lint (ruff, black --check) → typecheck (mypy) → testes (pytest)
   → testes de RLS → migração dry-run (supabase db diff)
   → build de imagem → deploy staging → smoke E2E
@@ -590,7 +593,7 @@ documentado no arquivo (padrão já adotado em
 ## 13. Estratégia de testes
 
 | Camada | O que cobre | Meta |
-|---|---|---|
+| --- | --- | --- |
 | Unitário | Regras de negócio, parsers, router determinístico | ≥ 80% nas regras |
 | **RLS** | Tenant A não lê/escreve dado de tenant B — **por tabela** | 100% das tabelas |
 | Contrato | Schema OpenAPI × respostas reais (`schemathesis`) | 100% das rotas |
@@ -610,7 +613,7 @@ Estimativa para **1 dev backend sênior + 0,5 dev** (ajustar conforme
 alocação real).
 
 | Fase | Entrega | Semanas |
-|---|---|---|
+| --- | --- | --- |
 | **F0 — Fundação** | Repo `backends/portal/`, schemas `portal_*`, RLS, Auth (Entra ID), CI, staging, `/healthz` | 2 |
 | **F1 — Docs + RAG** | Ingestão SP, Storage, parsers PDF/XLSX, `/v1/documents`, `/v1/search`, filtro de tenant no RAG | 3 |
 | **F2 — Assistente IA** | `/v1/ai/*`, streaming SSE, tool calls via MCP do hub, `aluci-guard`, `token_usage`, teto de custo | 3 |
@@ -630,8 +633,8 @@ diferencia de um chat genérico.
 ### 15.1. Riscos
 
 | # | Risco | Impacto | Mitigação |
-|---|---|---|---|
-| R-01 | Taxonomia divergente entre canônico v5.0 (`A*/S*`) e produção (`03-S*`, `M*`) | Alto — routing e RAG inconsistentes | Reconciliar **antes** de F2; o Portal lê a taxonomia de uma tabela única, não de constantes |
+| --- | --- | --- | --- |
+| R-01 | Taxonomia de segmentos divergente: o `CLAUDE.md` deste repo usa a numeração legada (S6=Portos … S10=Barragens, S11=Mineração, S12/S13 propostos), enquanto a skill `manta-maestro` v5.0.1 usa outra (S6=Edificações … S11=Barragens); a produção ainda usa `03-S*`/`M*` | Alto — routing, RAG e relatórios inconsistentes | `portal_core.taxonomy` é a **única** fonte no backend (dado, não constante), com `legacy_code` para tradução. Reconciliar antes de F2 |
 | R-02 | RAG sem `tenant_id` hoje | Crítico — vazamento entre clientes | Migração de coluna + backfill é pré-requisito de F1; sem isso, nenhum tenant externo entra |
 | R-03 | Custo de LLM sem teto | Médio-alto | Teto por tenant + medição desde o dia 1 (§7.4) |
 | R-04 | `sharepoint-write-mcp-server` não implantado | Baixo para o backend | Ingestão só precisa de leitura; escrita fica em backlog |

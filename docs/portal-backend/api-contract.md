@@ -14,7 +14,7 @@ Autenticação: `Authorization: Bearer <JWT do Supabase Auth>`
 ### 1.1. Divisão de responsabilidade
 
 | Operação | Caminho |
-|---|---|
+| --- | --- |
 | Leitura simples, filtro, paginação, realtime | **PostgREST/Supabase JS** direto, protegido por RLS |
 | Escrita de negócio, jobs, IA, exportação, integrações | **`/v1` no FastAPI** |
 
@@ -45,7 +45,7 @@ Cursor opaco. `GET /v1/...?limit=50&cursor=eyJ...`
 ```
 
 | Código | Uso |
-|---|---|
+| --- | --- |
 | 400 | Requisição malformada |
 | 401 | Sem token / token inválido |
 | 403 | Sem permissão no tenant ou projeto |
@@ -71,7 +71,7 @@ Cursor opaco. `GET /v1/...?limit=50&cursor=eyJ...`
 ## 2. Projetos e ficha
 
 ```http
-GET  /v1/projects?segment=S9&phase=obra&limit=50
+GET  /v1/projects?segment=S8&phase=obra&limit=50
 GET  /v1/projects/{project_id}
 POST /v1/projects
 PATCH /v1/projects/{project_id}
@@ -85,7 +85,7 @@ cacheável por `ETag`:
 ```json
 {
   "project": { "id": "...", "code": "OBRA-2026-014", "name": "...",
-               "segment_code": "S9", "phase": "obra" },
+               "segment_code": "S8", "phase": "obra" },
   "contract": { "number": "...", "original_amount": 128500000.00,
                 "currency": "BRL", "reference_date": "2026-01-15",
                 "source_ref": "Contrato assinado, cláusula 5.1",
@@ -187,7 +187,7 @@ POST /v1/ai/route
 
 200
 {
-  "primary": { "agent_code": "S9", "name": "saneamento", "score": 200 },
+  "primary": { "agent_code": "S8", "name": "saneamento", "score": 200 },
   "alternatives": [ { "agent_code": "A5", "name": "orcamento", "score": 100 } ],
   "confidence": 0.83
 }
@@ -202,13 +202,13 @@ ao usuário em vez de adivinhar.
 POST /v1/ai/runs
 {
   "project_id": "…",              // opcional
-  "agent_code": "S9",             // opcional; ausente → router decide
+  "agent_code": "S8",             // opcional; ausente → router decide
   "prompt": "…",
   "attachments": ["document_version_id", "…"],
   "options": { "rag": true, "top_k": 5 }
 }
 
-202 { "run_id": "…", "status": "queued", "agent_code": "S9" }
+202 { "run_id": "…", "status": "queued", "agent_code": "S8" }
 ```
 
 ### 7.3. Streaming (SSE)
@@ -218,8 +218,8 @@ GET /v1/ai/runs/{run_id}/stream
 Accept: text/event-stream
 ```
 
-```
-event: status      data: {"status":"running","agent_code":"S9"}
+```text
+event: status      data: {"status":"running","agent_code":"S8"}
 event: rag         data: {"chunks":[{"id":"…","score":0.82,"doc":"…"}]}
 event: token       data: {"text":"A adutora "}
 event: tool_call   data: {"name":"sicro_search","args":{…}}
@@ -235,7 +235,7 @@ exportado como artefato oficial.
 ### 7.4. Catálogo e RAG
 
 ```http
-GET  /v1/ai/agents?kind=segmento          # A1–A10, S1–S11, F*
+GET  /v1/ai/agents?kind=segmento          # A1–A10, S1–S13, F*
 GET  /v1/ai/agents/{code}
 POST /v1/ai/rag/query
      { "query": "…", "collection": "normas", "top_k": 5, "project_id": "…" }
@@ -287,7 +287,7 @@ projeto/tenant, base para a margem do contrato mensal.
 ## 10. Limites operacionais
 
 | Limite | Valor inicial |
-|---|---|
+| --- | --- |
 | Requisições por tenant | 600/min |
 | Runs de IA simultâneos por tenant | 5 |
 | Upload por arquivo | 250 MB |
