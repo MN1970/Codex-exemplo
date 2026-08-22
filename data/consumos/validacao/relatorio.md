@@ -21,7 +21,7 @@ e linha válida passa limpa.
 | Intensidades em recorte agregado CNAE | — | 8 linhas | fora da meta original, foi o que o acesso permitiu |
 | Estrutura de custo por setor | 6 blocos | 3 blocos, 8 linhas, todos fechando 100% | parcial — só no recorte agregado |
 | Comparação internacional | 2 setores | 0 | não atingida |
-| Catálogo de fontes | 100–130 | **179** | superada |
+| Catálogo de fontes | 100–130 | **180** | superada |
 | Crosswalk CNAE ↔ NAICS | — | 17 mapeamentos (S1–S13 + 4 recortes), com grau de aderência | atingido |
 | Método, schema, validador | — | completos e testados | atingido |
 
@@ -326,6 +326,65 @@ Fora do escopo desta base, mas verificado de passagem e vale registrar:
 | 3 projetos INACTIVE | confirmado: `manta-tocantins`, `manta-rodovias`, `manta-portal-piloto` |
 | Embedder (G010) | divergência **é real e agora precisa**: `manta_rag_chunks` = 1024d bge-m3; `servicos` = 1536d OpenAI text-embedding-3-small. Dois embedders coexistindo, decisão MN pendente |
 | Contagens do registro | desatualizadas: `rag_collections` = 10 (não 9), `maestro_routing_keywords` = 61 (não 50), `manta_rag_chunks` = 292 (não 204), `manta_rag_documents` = 119 (não 111) |
+
+## Quarta rodada — SIEC lido, primeiros coeficientes reais
+
+O SIEC/CPTM (`F-173`) foi lido na origem via SharePoint. É a **terceira fonte com
+`fonte_primaria_lida`** do projeto, e a primeira que entrega **coeficiente de
+consumo de verdade**.
+
+Identificação verificada: 5ª edição, dezembro/2024; sistema oficial da CPTM desde
+2010; amparado pela Lei 13.303/16, art. 31; implantação aprovada pela Diretoria
+Plena em 13/06/2019; mantido pela Gerência de Custos Referenciais.
+
+### Composição real extraída
+
+Tabela 1 do manual, serviço `10.01.03.601.02` (NEK.88) — "Conjunto de assentos,
+simples, para plataforma fixado em pilaretes, 3 unidades", unidade `cj`, custo
+total R$ 6.829,98:
+
+| Insumo | Unid | Coeficiente | Tipo |
+| --- | --- | --- | --- |
+| Concreto estrutural virado em obra, fck 30 MPa | m³ | **0,07** | SERV |
+| Chapa de aço galvanizada pintada para pilarete | kg | **34,14** | SERV |
+| Ajudante geral | h | **2,20** | MOH |
+| Montador | h | **2,20** | MOH |
+| Cadeira assento duplo fiberglass | un | 1,00 | MAT |
+| Cadeira fiberglass | un | 2,00 | MAT |
+| Suporte em perfis de aço galvanizado | un | 1,00 | MAT |
+| Chumbador expansível URX 12 | un | 12,00 | MAT |
+| Estrutura de fixação de comunicação visual | un | 1,00 | MAT |
+
+São coeficientes **bottom-up por unidade de serviço** — Fase 2, fora do escopo
+desta rodada. **Não foram inseridos em `intensidades-setor.csv`**, que é
+top-down por receita. Ficam aqui como prova de que a rota de extração funciona.
+
+### Três achados que ancoram o método
+
+**1. A premissa de horas agora tem fonte.** O SIEC declara **jornada de 44 h
+semanais**. Isso dá 2.288 h/ano contratuais e algo perto de 2.000 h/ano de horas
+pagas e presentes descontando férias e feriados. As 1.800 h/ano adotadas nas
+linhas em `hh/R$ mi` são conservadoras e dentro da faixa — mas agora existe
+âncora citável em vez de arbítrio.
+
+**2. Duas fontes BR separam hora produtiva de improdutiva, de formas diferentes.**
+O SICRO usa fatores externos nomeados (FIC chuvas, FIT tráfego) aplicados por
+fora. O SIEC resolve no vocabulário de insumo: **EQCH = equipamento produtivo**
+e **EQCI = equipamento improdutivo** são tipos distintos, com seções próprias de
+custo horário (§3.2.5 e §3.2.6). Para a Fase 2 o SIEC é mais direto.
+
+**3. O SIEC embute perda de material; o SICRO não.** O manual diz que os
+coeficientes já consideram as improdutividades inerentes (paralisação para
+instrução de equipe, deslocamento no canteiro) **e as perdas de material**
+(cortes, transportes, reaproveitamentos). Logo `perda_incluida = true`, como
+SINAPI e BEDEC. Somar coeficiente SIEC com coeficiente SICRO sem declarar isso
+conta perda uma vez em um e duas no outro.
+
+### Fonte nova revelada pela leitura
+
+O próprio SIEC cita **SIURB** — sistema de custos de obras públicas do município
+de São Paulo — como uma de suas três referências de composição, ao lado de SINAPI
+e SICRO. Não estava no catálogo; registrado como `F-180`. Catálogo: 180 fontes.
 
 ## O que falta para fechar o piloto
 

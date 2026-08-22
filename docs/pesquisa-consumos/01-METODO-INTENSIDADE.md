@@ -81,6 +81,15 @@ Linha `INT-C42-MAO_DE_OBRA-002`, `metodo = indireto`, com
 As 1.800 h/ano **não** vêm do IBGE. Trocar essa premissa reescala a linha
 inteira, e é por isso que ela não pode ficar implícita.
 
+**Âncora com fonte para essa premissa.** O SIEC/CPTM (`F-173`, lido na origem)
+declara **jornada de 44 horas semanais**, exceto onde convenção coletiva fixa
+limite inferior. Isso dá 2.288 h/ano contratuais; descontando 30 dias de férias e
+os feriados, chega-se a algo próximo de **2.000 h/ano** de horas pagas e
+presentes. As 1.800 h/ano adotadas são, portanto, conservadoras e dentro da
+faixa — mas quem quiser um número com fonte deve partir da jornada de 44 h e
+declarar o desconto aplicado, ou usar o CAGED/RAIS (`F-008`, `F-009`) para horas
+observadas em vez de contratuais.
+
 **Passo 3 — leitura do resultado.** Comparando os três recortes de 2022:
 
 | Recorte | pessoas-ano/R$ mi |
@@ -195,6 +204,43 @@ contêm mão de obra subcontratada. Logo os 48,3% de despesas de pessoal
 intensidades diretas mostram: serviços especializados (CNAE 43) têm 7,329
 pessoas-ano por R$ mi contra 4,633 da infraestrutura — a mão de obra que a
 construtora não carrega na folha aparece no faturamento de quem subcontrata.
+
+---
+
+## Hora produtiva × improdutiva, e perda embutida
+
+Duas fontes brasileiras tratam isso explicitamente — e de formas diferentes, o
+que importa na hora de comparar.
+
+**SICRO/DNIT** (`F-019`, `F-020`) trata a perda de produtividade por **fatores
+externos nomeados e separados** da composição: **FIC** (chuvas, Volume 04) e
+**FIT** (tráfego, Volume 05). A produtividade da equipe vem da **PEM**.
+
+**SIEC/CPTM** (`F-173`) resolve dentro do próprio vocabulário de insumo. São
+seis tipos, e dois deles são a distinção que interessa:
+
+| Tipo | Significado |
+| --- | --- |
+| `MOH` / `MOM` | mão de obra horista / mensalista |
+| **`EQCH`** | **equipamento produtivo** |
+| **`EQCI`** | **equipamento improdutivo** |
+| `MAT` | material |
+| `FEI` | fornecimento e instalação |
+| `SERV` | composição auxiliar |
+
+O manual dedica seções próprias a custo horário produtivo (§3.2.5) e improdutivo
+(§3.2.6). Para a Fase 2, isso é melhor que o SICRO: a separação já vem no tipo do
+insumo, não num fator aplicado depois.
+
+**A diferença que quebra comparação.** O SIEC declara que seus coeficientes
+**já embutem** duas coisas: as improdutividades inerentes à execução (paralisação
+para instrução de equipe, deslocamento no canteiro) **e as perdas de material**
+(cortes, transportes, reaproveitamentos). Ou seja, `perda_incluida = true` — como
+SINAPI e BEDEC, e **ao contrário** do SICRO, que trata os fatores por fora.
+
+Somar coeficiente SIEC com coeficiente SICRO sem declarar isso conta a perda uma
+vez em um e duas vezes no outro. É o motivo de o schema da Fase 2 exigir os
+campos `perda_incluida` e `hora_produtiva_apenas`.
 
 ---
 
