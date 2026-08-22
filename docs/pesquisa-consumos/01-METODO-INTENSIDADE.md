@@ -146,11 +146,57 @@ e denominador vêm do mesmo sistema de contas.
 
 ## Taxonomia de custo do SICRO como ponte
 
-O SICRO organiza custo direto em três grupos — **A** equipamentos, **B** mão de
-obra, **C** materiais — e é a única fonte brasileira que separa hora produtiva de
-improdutiva (FIT/FIU). Isso faz dele a ponte natural entre esta base top-down e a
-Fase 2 bottom-up: os grupos A/B/C mapeiam direto nas famílias `equipamentos`,
-`mao_de_obra` e as famílias de material.
+O SICRO organiza custo direto em equipamentos, mão de obra e materiais, e é a
+única fonte brasileira que trata explicitamente a perda de produtividade por
+fatores nomeados. Verificado no manual primário (MCIT 2ª edição, Volume 01,
+2025, 111 p., aprovado pela Diretoria Colegiada do DNIT em 21/10/2025):
+
+- **PEM — Produção de Equipe Mecânica** (§3.3.4) é o mecanismo de produtividade;
+  §3.3.2 define o *ciclo do serviço* e §3.3.3 o *líder da produção da equipe*.
+- **FIC — Fator de Influência de Chuvas** (Volume 04, em dois tomos).
+- **FIT — Fator de Interferência de Tráfego** (Volume 05).
+- As composições têm **parcela horária e parcela unitária** (Figura 3).
+- Os **cadernos técnicos** (memoriais de cálculo) é que trazem "as condições de
+  contorno adotadas nos cálculos dos **consumos dos materiais** e da **produção
+  horária dos serviços**" — ou seja, é ali, não no manual, que vivem os
+  coeficientes de consumo.
+
+Isso faz do SICRO a ponte natural entre esta base top-down e a Fase 2 bottom-up.
+RSMeans e BEDEC não têm equivalente declarado de FIC/FIT.
+
+## Estrutura de custo — e a armadilha do denominador
+
+`estrutura-custo-setor.csv` guarda participação percentual por família. É o
+insumo da rota indireta e, sozinha, já responde perguntas de dimensionamento.
+
+Dado extraído da PAIC:
+
+| Componente | 2022 | 2023 |
+| --- | --- | --- |
+| Despesas de pessoal | 48,3% | 49,0% |
+| Custo dos materiais de construção | 37,4% | 35,9% |
+| Obras e serviços de terceiros | 14,3% | 15,1% |
+
+**A armadilha.** Esse bloco tem denominador `custos_despesas_paic`. Existe outro
+bloco, do mesmo ano e da mesma fonte, com denominador `valor_obras_paic`, onde
+remunerações são **18,1%**. Os dois números descrevem coisas diferentes:
+
+- 48,3% = participação no **custo total declarado** pelas empresas;
+- 18,1% = participação no **valor das obras executadas**.
+
+Somar ou comparar os dois é erro. Por isso o arquivo tem coluna `denominador`
+obrigatória, e o validador usa `(setor, ano, denominador, fonte)` como chave do
+bloco de 100% — sem o denominador na chave, os dois blocos de 2022 somariam 200%
+e o validador aprovaria.
+
+**Segunda leitura, menos óbvia.** Os 14–15% de *obras e serviços de terceiros*
+contêm mão de obra subcontratada. Logo os 48,3% de despesas de pessoal
+**subestimam** a intensidade real de trabalho do setor. É coerente com o que as
+intensidades diretas mostram: serviços especializados (CNAE 43) têm 7,329
+pessoas-ano por R$ mi contra 4,633 da infraestrutura — a mão de obra que a
+construtora não carrega na folha aparece no faturamento de quem subcontrata.
+
+---
 
 ## Tiers de qualidade
 

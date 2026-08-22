@@ -148,11 +148,21 @@ def valida_intensidades(rows: list[dict], fontes: dict[str, dict], erros: Erros)
 
 def valida_estrutura_custo(rows: list[dict], fontes: dict[str, dict], erros: Erros) -> None:
     arquivo = ESTRUTURA.name
+    # O bloco e a chave (setor, ano, DENOMINADOR, fonte). O denominador entra na
+    # chave porque participacao sobre "valor das obras" e sobre "custos e despesas"
+    # sao bases distintas e nao se somam entre si.
     blocos: dict[tuple, float] = defaultdict(float)
+    denominadores_validos = {"valor_obras_paic", "receita_paic", "custos_despesas_paic",
+                             "capex_projeto", "valor_obra_contratada", "vbp"}
     for i, row in enumerate(rows, start=2):
         fid = row.get("fonte_id", "")
         if fid not in fontes:
             erros.add(arquivo, i, f"fonte_id '{fid}' nao existe em {FONTES.name}")
+        den = (row.get("denominador") or "").strip()
+        if not den:
+            erros.add(arquivo, i, "denominador obrigatorio - participacao sem base declarada nao diz nada")
+        elif den not in denominadores_validos:
+            erros.add(arquivo, i, f"denominador '{den}' fora de {sorted(denominadores_validos)}")
         try:
             pct = float(row["participacao_pct"])
         except (KeyError, ValueError):
@@ -160,12 +170,13 @@ def valida_estrutura_custo(rows: list[dict], fontes: dict[str, dict], erros: Err
             continue
         if not 0 <= pct <= 100:
             erros.add(arquivo, i, f"participacao_pct={pct} fora de [0,100]")
-        blocos[(row.get("setor"), row.get("ano_base"), fid)] += pct
+        blocos[(row.get("setor"), row.get("ano_base"), den, fid)] += pct
 
-    for (setor, ano, fid), soma in sorted(blocos.items()):
+    for (setor, ano, den, fid), soma in sorted(blocos.items()):
         if abs(soma - 100.0) > TOLERANCIA_SOMA_PCT:
             erros.add(arquivo, "bloco",
-                      f"({setor}, {ano}, {fid}) soma {soma:.1f}% - fora de 100% +/- {TOLERANCIA_SOMA_PCT:.0f} pp")
+                      f"({setor}, {ano}, {den}, {fid}) soma {soma:.1f}% - fora de "
+                      f"100% +/- {TOLERANCIA_SOMA_PCT:.0f} pp")
 
 
 def valida_crosswalk(rows: list[dict], intensidades: list[dict], erros: Erros) -> None:

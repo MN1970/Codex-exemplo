@@ -27,7 +27,7 @@ calibração metodológica, não como alvo de coleta.
 | 1 | Extração no recorte agregado CNAE 41/42/43 | **parcial** — 8 linhas, nenhuma verificada na fonte primária |
 | 2 | Descida ao segmento S1–S13 via SIDRA por classe CNAE | **bloqueada** — egress |
 | 3 | Comparação internacional (Economic Census/NAICS 237, BEA, OECD ICIO, Eurostat, INFRALATAM) | **tentada, não concluída** — numerador americano obtido, denominador bloqueado |
-| 4 | Estrutura de custo completa por setor (INCC, custos e despesas da PAIC) | **parcial** — 1 bloco, 81,9% não decomposto |
+| 4 | Estrutura de custo completa por setor (INCC, custos e despesas da PAIC) | **parcial** — 3 blocos (2022 e 2023) fechando 100%, só no recorte agregado |
 
 ## Matriz de cobertura
 
@@ -47,8 +47,9 @@ atingida, e o motivo está em `../../data/consumos/validacao/relatorio.md`.
 
 A PAIC publica, em release aberto, apenas os três grandes segmentos da seção F.
 Para chegar a portos, saneamento ou energia é preciso consultar o **SIDRA por
-classe CNAE** — e o SIDRA está bloqueado pela política de egress desta sessão,
-junto com o resto do domínio `ibge.gov.br`.
+classe CNAE, tabela 1761** — e o SIDRA está bloqueado pela política de egress
+desta sessão, junto com o resto do domínio `ibge.gov.br`, inclusive as APIs
+públicas `apisidra` e `servicodados`.
 
 Não é limitação de método. O método está pronto e testado no recorte agregado.
 É limitação de acesso, e se resolve rodando a mesma coleta de um ambiente com
@@ -56,8 +57,8 @@ egress liberado para os domínios listados no relatório.
 
 ## Ordem de trabalho quando o acesso abrir
 
-1. **SIDRA/PAIC por classe CNAE** (F-004) — desbloqueia S6 (42.91-0, classe
-   própria), S8 (42.22-7) e S9 (42.21-9) de uma vez. Maior retorno por hora.
+1. **SIDRA/PAIC por classe CNAE — tabela 1761** (F-004) — desbloqueia S6 **e S10**
+   (ambos em 42.91-0), S8 (42.22-7) e S9 (42.21-9) de uma vez. Maior retorno por hora.
 2. **Matriz de insumo-produto** (F-002) — resolve aço e cimento sem a ressalva
    da autoconstrução, porque numerador e denominador vêm do mesmo sistema.
 3. **Pesos do INCC** (F-079) — fecha a estrutura de custo e habilita a rota

@@ -28,12 +28,15 @@ A única camada capaz de gerar tier A.
   A fonte mais importante do projeto. Publica valor das obras e/ou serviços,
   pessoal ocupado, salários, e custos e despesas por classe CNAE. Divide-se um
   pelo outro e sai a intensidade, sem premissa intermediária.
+  Já extraída daqui a **estrutura de custos e despesas**: 2022 = 48,3% pessoal /
+  37,4% materiais / 14,3% terceiros; 2023 = 49,0 / 35,9 / 15,1. Atenção ao
+  denominador — é *custos e despesas*, não *valor das obras*.
 - **Matriz de insumo-produto (IBGE)** — `F-002`. Coeficiente técnico de aço,
   cimento e aluguel de máquinas por unidade de produção da construção. É a rota
   que **resolve a ressalva da autoconstrução**, porque numerador e denominador
   saem do mesmo sistema de contas.
-- **SIDRA (IBGE)** — `F-004`. Onde vivem as tabelas da PAIC por classe. É o
-  desbloqueio de S6, S8 e S9.
+- **SIDRA (IBGE)** — `F-004`. **Tabela 1761** é a da PAIC por classe CNAE. É o
+  desbloqueio de S6 e S10 (ambos em 42.91-0), S8 e S9 de uma só vez.
 - **SINAPI (Caixa/IBGE)** — `F-006`. Composições com coeficiente explícito.
   Atenção: **embute perda de material**, ao contrário do SICRO.
 - **CNAE 2.0 / CONCLA (IBGE)** — `F-007`. Classificação oficial. Necessária para
@@ -52,10 +55,16 @@ A única camada capaz de gerar tier A.
 
 44 fontes. Quase todas `custo_unitario_agregado` — denominadores de CAPEX.
 
-**Metodologia e composição:** SICRO 4 `F-019` e o **MCIT/DNIT** `F-020`. O SICRO
-é a única fonte brasileira que documenta produtividade de equipe mecânica e
-separa hora produtiva de improdutiva via FIT/FIU. Âncora metodológica do projeto,
-mesmo com rodovias fora do escopo de coleta.
+**Metodologia e composição:** SICRO 4 `F-019` e o **MCIT/DNIT** `F-020` —
+**esta é a única fonte do projeto efetivamente lida na origem** (via SharePoint,
+`fonte_primaria_lida`). O *Manual de Custos de Infraestrutura de Transportes*,
+2ª edição 2025, tem **oito volumes**: 01 Metodologia e Conceitos, 02 Mão de Obra,
+03 Preços Referenciais, 04 **FIC — Fator de Influência de Chuvas**, 05 **FIT —
+Fator de Interferência de Tráfego**, 06 Canteiro de Obras, 07 Administração
+Local, 08 Mobilização e Desmobilização. A produtividade sai da **PEM — Produção
+de Equipe Mecânica**. Os **coeficientes de consumo de material** estão nos
+*cadernos técnicos* (memoriais de cálculo), não no manual. Âncora metodológica do
+projeto, mesmo com rodovias fora do escopo de coleta.
 
 **Denominadores de CAPEX:** Novo PAC `F-021`, portal PPI `F-036`, BNDES `F-037`,
 PNL `F-022`, PELT `F-023`.

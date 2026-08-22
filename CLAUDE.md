@@ -575,10 +575,22 @@ mão de obra + 25 cwt de aço + 1,128 t de cimento + 1.088 bf de madeira) *parec
 coeficiente de consumo e **não é**: a ENR mantém as quantidades constantes para
 rastrear preço. Serve como deflator, nunca como consumo.
 
-**Estado (2026-08-22)** — 8 linhas de intensidade no recorte agregado CNAE
-41/42/43; os segmentos S1–S13 ainda vazios. Nenhuma linha verificada contra a
-fonte primária: o egress da sessão de coleta bloqueou `ibge.gov.br`, `snic.org.br`
-e demais. Detalhe em `data/consumos/validacao/relatorio.md`.
+**Estado (2026-08-22)** — 8 linhas de intensidade e 8 linhas de estrutura de
+custo (PAIC 2022 e 2023, três blocos fechando 100%), todas no recorte agregado
+CNAE 41/42/43; os segmentos S1–S13 ainda vazios. Nenhuma linha verificada contra
+a fonte primária: o egress bloqueou `ibge.gov.br` (inclusive as APIs `apisidra` e
+`servicodados`), `worldbank.org`, `enr.com` e demais — **web scraping é inviável
+nesta configuração de rede**. Detalhe em `data/consumos/validacao/relatorio.md`.
+
+**Armadilha do denominador, cobrada pelo validador** — participação sobre *custos
+e despesas* (pessoal 48,3% em 2022) e sobre *valor das obras* (remunerações
+18,1%) são bases distintas. A chave do bloco de 100% inclui `denominador`; sem
+isso os dois blocos de 2022 somariam 200%.
+
+**Correção de crosswalk** — a classe **42.91-0** inclui barragens e diques (exceto
+hidroelétrica) além de portos, dragagem e enrocamento. Logo **S6 e S10
+compartilham a mesma classe CNAE** e a PAIC não os separa. A tabela do SIDRA para
+PAIC por classe é a **1761**.
 
 **Regras duras, cobradas pelo validador:**
 
@@ -657,7 +669,8 @@ Codex-exemplo/
   de pesquisa (método direto × indireto; disciplinas obrigatórias de
   denominador, ano-base, deflator e moeda), JSON Schema de intensidade e de
   fonte, validador com autoteste de 8 regras duras, crosswalk
-  CNAE 2.0 ↔ S1–S13 ↔ NAICS, catálogo de 171 fontes em 7 camadas (BR,
+  CNAE 2.0 ↔ S1–S13 ↔ NAICS (S6 e S10 na mesma classe 42.91-0),
+  catálogo de 171 fontes em 7 camadas (BR,
   internacionais e EUA, ENR incluso), e 8 linhas de intensidade no recorte
   agregado CNAE 41/42/43. Adota a **Convenção A** de segmentos, alinhada à
   decisão da v5.0/v5.0.1 e ao dado de produção em

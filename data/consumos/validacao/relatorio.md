@@ -7,7 +7,7 @@ Validador: `tools/validate_consumos.py`
 ## Resultado
 
 ```text
-OK - 8 intensidades, 171 fontes, 2 linhas de estrutura de custo, 17 mapeamentos CNAE
+OK - 8 intensidades, 171 fontes, 8 linhas de estrutura de custo, 17 mapeamentos CNAE
 ```
 
 Exit code 0. Autoteste do validador: 8 de 8 regras duras disparam corretamente,
@@ -19,7 +19,7 @@ e linha válida passa limpa.
 | --- | --- | --- | --- |
 | Intensidades nos 5 setores prioritários | 40–60 linhas | **0** | não atingida |
 | Intensidades em recorte agregado CNAE | — | 8 linhas | fora da meta original, foi o que o acesso permitiu |
-| Estrutura de custo por setor | 6 blocos | 1 bloco, 81,9% não decomposto | não atingida |
+| Estrutura de custo por setor | 6 blocos | 3 blocos, 8 linhas, todos fechando 100% | parcial — só no recorte agregado |
 | Comparação internacional | 2 setores | 0 | não atingida |
 | Catálogo de fontes | 100–130 | **171** | superada |
 | Crosswalk CNAE ↔ NAICS | — | 17 mapeamentos (S1–S13 + 4 recortes), com grau de aderência | atingido |
@@ -158,6 +158,175 @@ razão 200 h ÷ 1,128 t ≈ 177 hh por tonelada de cimento é artefato do índic
 produtividade. Cadastrado como `indice_macro` e `cite_only`, com a advertência no
 campo `notas` do próprio CSV.
 
+## Segunda rodada de pesquisa (2026-08-22) — web scraping tentado e negado
+
+Antes de qualquer coleta, testei acesso direto às fontes, incluindo **APIs
+públicas** que dispensariam scraping de HTML:
+
+| Alvo | Resultado |
+| --- | --- |
+| `servicodados.ibge.gov.br` (API de agregados) | `EGRESS_BLOCKED` |
+| `apisidra.ibge.gov.br` (API SIDRA) | `EGRESS_BLOCKED` |
+| `api.worldbank.org` (API do Banco Mundial) | `EGRESS_BLOCKED` |
+| `www.enr.com` | `EGRESS_BLOCKED` |
+
+Somado aos quatro domínios negados na primeira rodada, e ao fato de que `curl`
+não tem saída de rede alguma no sandbox, a conclusão é firme: **web scraping é
+impossível nesta sessão**, e não por falta de tentativa. O proxy nega todo host,
+inclusive API pública e inclusive a Wikipédia usada como controle. O único canal
+de rede funcional é a busca web.
+
+### O que a busca rendeu
+
+**1. Estrutura de custos e despesas da PAIC — dois anos, ambos fechando 100%.**
+Este é o ganho principal da rodada: fecha os 81,9% que estavam indecompostos.
+
+| Componente | 2022 | 2023 |
+| --- | --- | --- |
+| Despesas de pessoal | 48,3% | 49,0% |
+| Custo dos materiais de construção | 37,4% | 35,9% |
+| Obras e serviços de terceiros | 14,3% | 15,1% |
+| **soma** | **100,0%** | **100,0%** |
+
+Duas leituras que o dado impõe:
+
+- O denominador aqui é **custos e despesas**, não valor das obras. Os 48,3% e os
+  18,1% de remunerações sobre valor das obras (bloco anterior) **não são
+  comparáveis**. Por isso `estrutura-custo-setor.csv` ganhou coluna
+  `denominador`, e o validador passou a incluí-la na chave do bloco — sem isso,
+  os dois blocos de 2022 somariam 200%.
+- Parte da mão de obra real do setor está em **terceiros** (14–15%), não em
+  despesas de pessoal. Ler o 48,3% como intensidade de trabalho subestima.
+
+**2. Correção no crosswalk — barragem não está no residual.** A nota explicativa
+da classe **42.91-0** inclui, além de portos, "enrocamentos, obras de dragagem,
+aterro hidráulico, **barragens, diques** (exceto para geração de energia
+hidroelétrica), instalação de cabo submarino". Consequências:
+
+- **S10 Barragens** sai de `agregado`/42.99-5 para `parcial`/**42.91-0**.
+- **S6 e S10 compartilham a mesma classe CNAE** — a PAIC não os separa. Isso
+  substitui a suposição anterior de que portos era o único segmento prioritário
+  com classe própria e limpa.
+- Barragem **hidroelétrica** fica fora da 42.91 e provavelmente cai em 42.21-9
+  (energia), o que mistura S10 com S9 nesse recorte.
+
+**3. A tabela do SIDRA é a 1761, não a 1757.** A tabela da PAIC por classe CNAE
+é a **1761**. Corrigido em `registro-fontes.csv` (F-004). É o desbloqueio de
+S6/S10, S8 e S9 de uma só vez.
+
+**4. Sobratema — dado de mercado obtido, mas não vira intensidade.** 58,2 mil
+máquinas vendidas em 2024 (+9% sobre 53,5 mil em 2023), das quais 36,6 mil de
+linha amarela (+14%); estimativa de 56,7 mil para 2025 (−2%). **Frota parada:
+18% em 2025 contra 11% em 2024.**
+
+Venda de máquina é **fluxo de investimento**, não consumo de hora-máquina —
+não gera linha de intensidade, e forçá-la seria o mesmo erro de denominador que
+o projeto evita. O dado de **frota parada** é o mais útil dos quatro: é medida
+de utilização, e alimenta diretamente a discussão de FIC/FIT na Fase 2.
+
+**5. Reforço quantitativo da ressalva da autoconstrução.** O SNIC publica a
+distribuição de cimento por canal de venda. O dado localizado (**2006**, antigo e
+citado apenas como ordem de grandeza) aponta 66,4% em revendas, 18,1% em
+industrial/construtoras, 12,9% em concreteiras e 2,6% em exportação. Se a maior
+parte do cimento sai por revenda, a intensidade da construção **formal** medida
+pela PAIC é bem menor que o limite superior de 123,9 t/R$ mi registrado na base.
+Confirma que aquela linha é teto, não valor central.
+
+### O que a busca não rendeu
+
+| Alvo | Situação |
+| --- | --- |
+| **Pesos do INCC** (F-079) | só a estrutura em dois grupos e as 7 capitais; **percentuais não obtidos** |
+| **PAIC por classe CNAE** | inacessível sem o SIDRA 1761 |
+| **Receita de NAICS 237** (F-137) | tentada em 3 formulações; exige `data.census.gov` |
+| **Valor absoluto de custos e despesas da PAIC** | só percentuais, sem os R$ |
+
+Sem o valor absoluto de custos e despesas, **não** dá para converter os 37,4% de
+materiais em quantidade física. Tentar seria inventar. As linhas de intensidade
+seguem em 8.
+
+## Terceira rodada — conectores contornam o egress
+
+Constatação central: **os conectores MCP não passam pelo proxy de egress da
+web.** SharePoint (Microsoft 365) e Supabase respondem normalmente, enquanto
+todo `WebFetch` é negado. Isso abre um caminho de dado que as duas primeiras
+rodadas não tinham.
+
+### Primeira fonte efetivamente lida na origem
+
+O **Manual de Custos de Infraestrutura de Transportes (MCIT/DNIT)** está no
+SharePoint da Manta e foi lido. É a **primeira e única fonte do projeto com
+`verificacao = fonte_primaria_lida`** — as outras 169 seguem catalogadas ou
+vindas de busca.
+
+Identificação verificada no documento: 2ª edição, Brasília 2025, 111 p., aprovado
+pela Diretoria Colegiada do DNIT em 21/10/2025 (Relato nº 191/2025), revisão pela
+FGV sob contratos 490/2021-00 e 647/2024-00. **Oito volumes:**
+
+| Vol | Título |
+| --- | --- |
+| 01 | Metodologia e Conceitos |
+| 02 | Mão de Obra |
+| 03 | Preços Referenciais |
+| 04 | **FIC — Fator de Influência de Chuvas** (Tomo 1 intensidade; Tomo 2 etapas) |
+| 05 | **FIT — Fator de Interferência de Tráfego** |
+| 06 | Canteiro de Obras |
+| 07 | Administração Local |
+| 08 | Mobilização e Desmobilização |
+
+### Erro próprio corrigido
+
+As duas primeiras rodadas afirmavam, em quatro documentos e no registro de
+fontes, que o SICRO separa hora produtiva de improdutiva "via **FIT/FIU**".
+**"FIU" não existe no SICRO.** Os fatores reais são **FIC** (chuvas, Volume 04) e
+**FIT** (tráfego, Volume 05), e a produtividade sai da **PEM — Produção de Equipe
+Mecânica** (§3.3.4 do Volume 01). Corrigido em todos os pontos.
+
+É precisamente a classe de erro que o `aluci-guard` existe para pegar: sigla
+plausível, propagada por repetição, que só cai quando alguém abre o documento.
+
+### Onde os coeficientes de consumo realmente estão
+
+O próprio manual responde: "os **cadernos técnicos** apresentam as condições de
+contorno adotadas nos cálculos dos **consumos dos materiais** e da **produção
+horária dos serviços**, suas respectivas memórias e as produções de equipes
+mecânicas".
+
+Ou seja, o coeficiente não está no manual — está nos **memoriais de cálculo /
+cadernos técnicos**. Endereço concreto para a Fase 2. O Volume 01 traz ainda a
+Tabela 4, com massas específicas referenciais de materiais, solos e agregados.
+
+### Supabase de produção — o que tem e o que não tem
+
+Tabela **`public.servicos`**, 143 linhas, descrita como "SICRO/SINAPI —
+composições de custo". Estrutura real conferida:
+
+`banco`, `mes_ano`, `codigo`, `descricao`, `unidade`, `grupo`, `custo_mg`,
+`custo_sp`, `custo_pr`, `custo_sc`, `embedding`.
+
+**Não há coluna de coeficiente nem de insumo.** É tabela de **preço unitário de
+serviço** por estado (SICRO 10-2025; ex.: código 0705199, "Corpo de BSCC
+2,50 × 2,50 m — moldado no local — altura do aterro 1,00 a 2,50 m", unidade `m`,
+grupo `G07-Bueiros-Celulares`, R$ 4.271,49 em MG). Pela regra dura do projeto —
+preço não entra na base — **não gera nenhuma linha de intensidade**.
+
+Também presentes: `sp258_drenagem_mapa` (12 linhas, quantidades de um projeto real
+mapeadas para códigos SICRO — bottom-up, projeto único) e `field_measurements`
+("medições reais de obra pós-execução"), que **existe mas está vazia** — a camada
+proprietária de maior valor segue sem dado.
+
+### Gaps do CLAUDE.md que estes acessos resolvem
+
+Fora do escopo desta base, mas verificado de passagem e vale registrar:
+
+| Gap | Achado |
+| --- | --- |
+| RLS desabilitado em 3 tabelas (AI-6) | **resolvido** — as 38 tabelas retornam `rls_enabled: true` |
+| Projeto `xgluoaa…` (G012) | **confirmado morto** — não aparece na organização; só existem 4 projetos |
+| 3 projetos INACTIVE | confirmado: `manta-tocantins`, `manta-rodovias`, `manta-portal-piloto` |
+| Embedder (G010) | divergência **é real e agora precisa**: `manta_rag_chunks` = 1024d bge-m3; `servicos` = 1536d OpenAI text-embedding-3-small. Dois embedders coexistindo, decisão MN pendente |
+| Contagens do registro | desatualizadas: `rag_collections` = 10 (não 9), `maestro_routing_keywords` = 61 (não 50), `manta_rag_chunks` = 292 (não 204), `manta_rag_documents` = 119 (não 111) |
+
 ## O que falta para fechar o piloto
 
 Por ordem de retorno:
@@ -165,8 +334,8 @@ Por ordem de retorno:
 1. **SIDRA/PAIC por classe CNAE** (F-004) — desbloqueia S6 (42.91-0, classe
    própria), S8 (42.22-7) e S9 (42.21-9) de uma vez.
 2. **Matriz de insumo-produto** (F-002) — elimina a ressalva da autoconstrução.
-3. **Pesos do INCC** (F-079) — fecha os 81,9% não decompostos da estrutura de
-   custo.
+3. **Pesos do INCC** (F-079) — decompõe os 37,4% de materiais por família física.
+   Os percentuais não saíram por busca.
 4. **Sobratema** (F-068) — única fonte séria de hora-máquina de equipamento no
    Brasil; a família `equipamentos` está hoje 100% vazia. Confirmar assinatura.
 5. **CONCLA** (F-007) — validar os 17 mapeamentos CNAE.

@@ -28,9 +28,13 @@ unidade de serviço:
 Fontes: SICRO 4, SINAPI, BEDEC/ITeC, USACE MII, tabelas estaduais e de
 concessionárias, *bid tabulations* de DOTs americanos.
 
-Ponto técnico crítico da Fase 2, herdado do estudo desta rodada: **SICRO separa
-hora produtiva de improdutiva (FIT/FIU); RSMeans e BEDEC não.** Comparar sem
-declarar a separação gera erro sistemático relevante. O schema da Fase 2 precisa
+Ponto técnico crítico da Fase 2, verificado no manual primário (MCIT 2ª ed.,
+Volume 01, lido via SharePoint): o SICRO trata perda de produtividade por
+**dois fatores nomeados** — **FIC, Fator de Influência de Chuvas** (Volume 04,
+com Tomo 1 de Fator de Intensidade de Chuvas e Tomo 2 de etapas de execução) e
+**FIT, Fator de Interferência de Tráfego** (Volume 05). A produtividade em si
+sai da **PEM — Produção de Equipe Mecânica** (§3.3.4). RSMeans e BEDEC não têm
+equivalente declarado. Comparar sem explicitar isso gera erro sistemático. O schema da Fase 2 precisa
 de um campo `hora_produtiva_apenas`, e material precisa de `perda_incluida`
 (SINAPI e BEDEC embutem perda, SICRO não).
 
