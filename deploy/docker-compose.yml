@@ -1,0 +1,165 @@
+version: '3.9'
+
+services:
+  # Maestro APScheduler background tasks
+  maestro-scheduler:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: maestro-apscheduler
+    restart: always
+    user: maestro:maestro
+    environment:
+      PYTHONUNBUFFERED: "1"
+      MAESTRO_ENV: production
+      MAESTRO_LOG_LEVEL: INFO
+      DATABASE_URL: postgresql://maestro:maestro_secure_pwd@postgres:5432/maestro_v5
+    ports:
+      - "8080:8080"  # Prometheus metrics
+    volumes:
+      - ./scripts:/opt/maestro/scripts:ro
+      - ./.claude:/opt/maestro/.claude:rw
+      - ./logs:/var/log/maestro:rw
+      - /etc/timezone:/etc/timezone:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      prometheus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - maestro-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # PostgreSQL database (for state tracking, optional)
+  postgres:
+    image: postgres:16-alpine
+    container_name: maestro-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: maestro
+      POSTGRES_PASSWORD: maestro_secure_pwd
+      POSTGRES_DB: maestro_v5
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - maestro-postgres-data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U maestro -d maestro_v5"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - maestro-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  # Prometheus monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: maestro-prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus-maestro.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - maestro-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  # AlertManager for alerts
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: maestro-alertmanager
+    restart: always
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./docker/alertmanager-maestro.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9093"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - maestro-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  # Grafana dashboards (optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: maestro-grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: maestro_grafana_pwd
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana-provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - maestro-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+volumes:
+  maestro-postgres-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  alertmanager-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  maestro-network:
+    driver: bridge

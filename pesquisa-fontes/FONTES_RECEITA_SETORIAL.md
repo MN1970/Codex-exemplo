@@ -126,3 +126,10 @@ final — Excel, JSON ou tabela Supabase — conforme previsto no plano original
    Supabase) e migrar este conteúdo para lá.
 4. Só depois disso: desenhar o cálculo do coeficiente receita→consumo
    (etapa de implementação, fora do escopo desta pesquisa).
+
+---
+
+_Nota de versão: este catálogo foi originalmente registrado como v4.3 no
+CLAUDE.md master; durante o merge com `main`, o registry já havia avançado
+para v5.1 (Design Agents ESG), então esta contribuição foi renumerada
+para **v5.2** para manter a sequência única de versões._
