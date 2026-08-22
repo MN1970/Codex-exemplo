@@ -4,7 +4,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
+Versão: **v4.3** (2026-08-22) — catálogo de fontes de receita setorial.
+Anterior: v4.2 (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
 Saneamento, Energia, Barragens).
 
 ---
@@ -104,6 +105,33 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## FONTES DE RECEITA SETORIAL — mão de obra, equipamento, aço, cimento
+
+Catálogo de fontes (Brasil + exterior) para calcular consumo de mão de
+obra/equipamento/aço/cimento a partir da RECEITA de projetos (complementa
+o modelo baseado em CAPEX do "Livro Azul"): ver
+[`pesquisa-fontes/FONTES_RECEITA_SETORIAL.md`](pesquisa-fontes/FONTES_RECEITA_SETORIAL.md).
+
+Resumo — melhor fonte por segmento:
+
+| Segmento | Melhor fonte Brasil | Melhor fonte exterior |
+|---|---|---|
+| Rodovias | ANTT (DFs + Plano de Contas + dados abertos) | Autostrade per l'Italia (ASPI) |
+| Ferrovias | CVM/DFP (Rumo, MRS, VLI) | SEC EDGAR 10-K (Union Pacific, NS, CSX) |
+| Portos | CVM (Santos Brasil, Wilson Sons) + ANTAQ Res. 49/2021 | *Port Economics, Management and Policy* (acadêmico) |
+| Aeroportos | ANAC (DFs por concessão) | Fraport AG / ICAO |
+| Saneamento | **SNIS** (FN005/FN010-014) | OFWAT (Reino Unido) |
+| Metrôs | Metrô-SP/CMSP + MetrôRio (SETRAM-RJ) | **NTD/APTA** (EUA) |
+| Energia | ANEEL CIEFSE/DCR + RI Taesa/CTEEP/Alupar | **FERC Form 1** (EUA) |
+| Barragens | Vale/Samarco (custo de descaracterização) + ANM | ICMM/GISTM + literatura acadêmica |
+
+Achado estrutural: nenhuma fonte de receita desagrega aço/cimento — isso
+continua vindo do lado CAPEX (Matriz de Insumo-Produto do IBGE, já em uso).
+Pendência: validar manualmente os números (WebFetch esteve bloqueado na
+sessão de pesquisa) e rodar `aluci-guard` antes de uso oficial.
+
+---
+
 ## SHAREPOINT — Routing rules (sp_agent_routing)
 
 | Agente | Pasta SP sugerida | Pattern |
@@ -136,6 +164,8 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 ```
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
+├── pesquisa-fontes/
+│   └── FONTES_RECEITA_SETORIAL.md    # 🆕 fontes de receita setorial (v4.3)
 └── .claude/
     └── agents/
         ├── agente-portos.md          # 🆕 S6
@@ -154,6 +184,9 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-22) — catálogo de fontes de receita setorial (mão de
+  obra, equipamento, aço, cimento) para os 8 segmentos, complementando o
+  modelo baseado em CAPEX. Ver `pesquisa-fontes/FONTES_RECEITA_SETORIAL.md`.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
