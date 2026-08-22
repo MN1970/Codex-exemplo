@@ -59,20 +59,39 @@ Registrado no `CLAUDE.md` v4.3 como planejado, não construído:
 - **Artefato React** de consulta por setor e família, com faixas P10/P50/P90 e
   rastreabilidade da fonte.
 
-## Divergência de numeração a resolver com MN
+## Numeração de segmentos — RESOLVIDA
 
-A skill `manta-maestro` instalada se descreve como **v5.0.1** com numeração
-diferente da deste repositório:
+A divergência sinalizada na primeira rodada **já estava resolvida** no
+`CLAUDE.md` da `main` (v5.0/v5.0.1, consolidado em v5.1). Vale registrar como
+ficou, porque a decisão tem lastro melhor do que documentação:
 
-| Código | `manta-maestro` v5.0.1 | `CLAUDE.md` deste repo (v4.2/v4.3) |
+A **Convenção A** é a canônica — `S6 = Portos … S10 = Barragens`, exatamente a
+numeração que esta base adotou. Não por escolha editorial: a investigação G014
+(`docs/SEGMENTOS-S12-S13-DECISION.md`) consultou a fonte de verdade real —
+`manta_agent_capabilities` no Supabase de produção — e encontrou `agent_id` de
+`03-S1` a `03-S13` na numeração legada. A Convenção B (S6 = Edificações …
+S11 = Barragens), que a skill `manta-maestro` instalada ainda descreve, **não
+tem lastro em dado de produção**.
+
+Nenhum remapeamento foi necessário. O `setor` das linhas desta base já está
+correto.
+
+Segmentos adicionais incorporados ao schema e ao crosswalk nesta rodada:
+
+| Código | Segmento | Estado no registro mestre |
 |---|---|---|
-| S6 | Edificações | **Portos** |
-| S7 | Portos | **Aeroportos** |
-| S8 | Aeroportos | **Saneamento** |
-| S9 | Saneamento | **Energia** |
-| S10 | Energia | **Barragens** |
-| S11 | Barragens | — |
+| **S11** | Mineração (`especialista-mineracao`) | `ativo=true` em produção desde 2026-07-12; sem agente `.md`, RAG ou routing — gap **G015** |
+| **S12** | Óleo & Gás | proposto, pendente gate MN |
+| **S13** | Edificações | proposto, pendente gate MN |
 
-Esta base segue a numeração **deste repositório**. Remapear depois é um `sed` no
-campo `setor`; escolher errado agora contaminaria todas as linhas. **Decisão de MN
-necessária** antes de a base crescer.
+Notas de cobertura estatística desses três:
+
+- **S13 Edificações** é o de melhor cobertura de todos — tem divisão CNAE
+  própria (41), e as linhas de `C41` desta base já servem diretamente para ele.
+- **S12 Óleo & Gás** tem par limpo no trecho de dutos: CNAE 42.23-5 ↔
+  NAICS 237120. Upstream (sonda, plataforma, refino) não é construção civil e
+  fica fora do escopo.
+- **S11 Mineração** é o pior caso: é indústria **extrativa** (CNAE seção B),
+  não construção. Só a parcela de obra civil do projeto entra, e cai no
+  residual 42.99-5. Intensidade via PAIC será muito imprecisa; usar fonte
+  setorial.

@@ -5,9 +5,21 @@
   "description": "Um registro = (setor, familia_insumo, denominador, ano_base, pais). Guarda QUANTO de insumo fisico e consumido por unidade de receita/investimento do setor. Nao guarda preco.",
   "type": "object",
   "required": [
-    "id", "setor", "familia_insumo", "valor", "unidade_fisica",
-    "denominador", "ano_base", "moeda", "pais", "metodo",
-    "fonte_id", "fonte_localizacao", "tier", "licenca", "verificacao"
+    "id",
+    "setor",
+    "familia_insumo",
+    "valor",
+    "unidade_fisica",
+    "denominador",
+    "ano_base",
+    "moeda",
+    "pais",
+    "metodo",
+    "fonte_id",
+    "fonte_localizacao",
+    "tier",
+    "licenca",
+    "verificacao"
   ],
   "additionalProperties": false,
   "properties": {
@@ -18,8 +30,26 @@
     },
     "setor": {
       "type": "string",
-      "description": "Segmento Manta (S1..S10) ou recorte CNAE agregado quando o dado nao desce ao segmento (C41, C42, C43, CF = secao F inteira).",
-      "enum": ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","C41","C42","C43","CF"]
+      "description": "Segmento Manta na Convencao A do CLAUDE.md v5.x (S6=Portos ... S10=Barragens, S11=Mineracao, S12=Oleo & Gas, S13=Edificacoes), ou recorte CNAE agregado quando o dado nao desce ao segmento (C41, C42, C43, CF = secao F inteira).",
+      "enum": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "S10",
+        "S11",
+        "S12",
+        "S13",
+        "C41",
+        "C42",
+        "C43",
+        "CF"
+      ]
     },
     "cnae": {
       "type": "string",
@@ -27,36 +57,111 @@
     },
     "familia_insumo": {
       "type": "string",
-      "enum": ["mao_de_obra","equipamentos","aco","concreto","cimento","agregados","combustivel","outros_materiais"]
+      "enum": [
+        "mao_de_obra",
+        "equipamentos",
+        "aco",
+        "concreto",
+        "cimento",
+        "agregados",
+        "combustivel",
+        "outros_materiais"
+      ]
     },
-    "valor": { "type": ["number","null"], "description": "Nulo obrigatoriamente quando licenca = cite_only." },
+    "valor": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Nulo obrigatoriamente quando licenca = cite_only."
+    },
     "unidade_fisica": {
       "type": "string",
-      "enum": ["hh/R$ mi","pessoas-ano/R$ mi","hm/R$ mi","t/R$ mi","m3/R$ mi","L/R$ mi","R$/R$ mi","hh/US$ mi","pessoas-ano/US$ mi","t/US$ mi","m3/US$ mi"]
+      "enum": [
+        "hh/R$ mi",
+        "pessoas-ano/R$ mi",
+        "hm/R$ mi",
+        "t/R$ mi",
+        "m3/R$ mi",
+        "L/R$ mi",
+        "R$/R$ mi",
+        "hh/US$ mi",
+        "pessoas-ano/US$ mi",
+        "t/US$ mi",
+        "m3/US$ mi"
+      ]
     },
     "denominador": {
       "type": "string",
-      "enum": ["receita_paic","valor_obras_paic","capex_projeto","valor_obra_contratada","vbp"],
+      "enum": [
+        "receita_paic",
+        "valor_obras_paic",
+        "capex_projeto",
+        "valor_obra_contratada",
+        "vbp"
+      ],
       "description": "A base do divisor. Receita de empresa (PAIC) != CAPEX de projeto (PPI/PAC/INFRALATAM) != valor de obra contratada. Nunca misturar na mesma linha."
     },
-    "ano_base": { "type": "integer", "minimum": 1990, "maximum": 2100 },
+    "ano_base": {
+      "type": "integer",
+      "minimum": 1990,
+      "maximum": 2100
+    },
     "deflator": {
-      "type": ["string","null"],
-      "enum": ["INCC","IPCA","IGP-DI","IGP-M","nominal_corrente","deflator_implicito_construcao", null],
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "INCC",
+        "IPCA",
+        "IGP-DI",
+        "IGP-M",
+        "nominal_corrente",
+        "deflator_implicito_construcao",
+        null
+      ],
       "description": "nominal_corrente = valor do proprio ano, sem deflacionamento. Obrigatorio explicitar."
     },
-    "moeda": { "type": "string", "enum": ["BRL","USD","USD_PPC","EUR","ARS"] },
-    "pais": { "type": "string", "description": "ISO 3166-1 alfa-2, ou 'MUNDO' para agregado global." },
-    "metodo": { "type": "string", "enum": ["direto","indireto"] },
+    "moeda": {
+      "type": "string",
+      "enum": [
+        "BRL",
+        "USD",
+        "USD_PPC",
+        "EUR",
+        "ARS"
+      ]
+    },
+    "pais": {
+      "type": "string",
+      "description": "ISO 3166-1 alfa-2, ou 'MUNDO' para agregado global."
+    },
+    "metodo": {
+      "type": "string",
+      "enum": [
+        "direto",
+        "indireto"
+      ]
+    },
     "memoria_calculo": {
-      "type": ["string","null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "A conta, reproduzivel. Obrigatorio quando metodo = indireto."
     },
     "premissas": {
-      "type": ["string","null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Premissas Manta que NAO vem da fonte (ex. horas trabalhadas por ano). Tudo que nao e dado da fonte entra aqui."
     },
-    "fonte_id": { "type": "string", "description": "FK -> registro-fontes.csv" },
+    "fonte_id": {
+      "type": "string",
+      "description": "FK -> registro-fontes.csv"
+    },
     "fonte_localizacao": {
       "type": "string",
       "minLength": 3,
@@ -64,26 +169,86 @@
     },
     "tier": {
       "type": "string",
-      "enum": ["A","B","C","D"],
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
       "description": "A estatistica oficial com quantidade e receita no mesmo recorte; B publicacao institucional ou de associacao setorial; C literatura academica; D fonte unica, projeto isolado ou dado nao verificado contra a fonte primaria."
     },
-    "licenca": { "type": "string", "enum": ["publico","licenciado","cite_only"] },
+    "licenca": {
+      "type": "string",
+      "enum": [
+        "publico",
+        "licenciado",
+        "cite_only"
+      ]
+    },
     "verificacao": {
       "type": "string",
-      "enum": ["fonte_primaria_lida","snippet_busca","catalogada_nao_verificada"],
+      "enum": [
+        "fonte_primaria_lida",
+        "snippet_busca",
+        "catalogada_nao_verificada"
+      ],
       "description": "fonte_primaria_lida = o documento foi aberto e lido. snippet_busca = o numero veio de resultado de busca, NAO do documento. Nunca usar snippet_busca em orcamento de cliente sem promover para fonte_primaria_lida."
     },
-    "url": { "type": ["string","null"] },
-    "notas": { "type": ["string","null"] }
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notas": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
   },
   "allOf": [
     {
-      "if": { "properties": { "metodo": { "const": "indireto" } }, "required": ["metodo"] },
-      "then": { "required": ["memoria_calculo"], "properties": { "memoria_calculo": { "type": "string", "minLength": 10 } } }
+      "if": {
+        "properties": {
+          "metodo": {
+            "const": "indireto"
+          }
+        },
+        "required": [
+          "metodo"
+        ]
+      },
+      "then": {
+        "required": [
+          "memoria_calculo"
+        ],
+        "properties": {
+          "memoria_calculo": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "licenca": { "const": "cite_only" } }, "required": ["licenca"] },
-      "then": { "properties": { "valor": { "const": null } } }
+      "if": {
+        "properties": {
+          "licenca": {
+            "const": "cite_only"
+          }
+        },
+        "required": [
+          "licenca"
+        ]
+      },
+      "then": {
+        "properties": {
+          "valor": {
+            "const": null
+          }
+        }
+      }
     }
   ]
 }

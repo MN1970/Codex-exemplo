@@ -22,7 +22,7 @@ Consequências práticas:
 
 - **Nenhum valor daqui vai para orçamento de cliente** antes de ser promovido a
   `fonte_primaria_lida`.
-- Os **segmentos S1–S10 estão vazios**. O dado disponível só existe no recorte
+- Os **segmentos S1–S13 estão vazios**. O dado disponível só existe no recorte
   agregado da CNAE (41 edificações, 42 obras de infraestrutura, 43 serviços
   especializados). Descer ao segmento exige o SIDRA, que está bloqueado.
 - O que **está** pronto e é reaproveitável: o método, o schema, o validador com
@@ -49,7 +49,7 @@ data/consumos/
 ├── schema/intensidade.schema.json
 ├── schema/fonte.schema.json
 ├── registro-fontes.csv            171 fontes catalogadas
-├── crosswalk-cnae-setores.csv     CNAE 2.0 <-> S1..S10 Manta <-> NAICS
+├── crosswalk-cnae-setores.csv     CNAE 2.0 <-> S1..S13 Manta <-> NAICS
 ├── intensidades-setor.csv         produto principal
 ├── estrutura-custo-setor.csv      participação % por família
 └── validacao/relatorio.md

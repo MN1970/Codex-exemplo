@@ -25,7 +25,7 @@ calibração metodológica, não como alvo de coleta.
 |---|---|---|
 | 0 | Método, schema, validador, crosswalk CNAE, catálogo de fontes | **concluída** |
 | 1 | Extração no recorte agregado CNAE 41/42/43 | **parcial** — 8 linhas, nenhuma verificada na fonte primária |
-| 2 | Descida ao segmento S1–S10 via SIDRA por classe CNAE | **bloqueada** — egress |
+| 2 | Descida ao segmento S1–S13 via SIDRA por classe CNAE | **bloqueada** — egress |
 | 3 | Comparação internacional (Economic Census/NAICS 237, BEA, OECD ICIO, Eurostat, INFRALATAM) | **tentada, não concluída** — numerador americano obtido, denominador bloqueado |
 | 4 | Estrutura de custo completa por setor (INCC, custos e despesas da PAIC) | **parcial** — 1 bloco, 81,9% não decomposto |
 
@@ -37,8 +37,8 @@ Gerada pelo validador, não mantida à mão:
 python3 tools/validate_consumos.py --stats
 ```
 
-Estado atual: **6 de 112 células** preenchidas. Todas no recorte agregado
-(C41, C42, C43, CF). Os dez segmentos S1–S10 estão **inteiramente vazios**.
+Estado atual: **6 de 136 células** preenchidas. Todas no recorte agregado
+(C41, C42, C43, CF). Os treze segmentos S1–S13 estão **inteiramente vazios**.
 
 Meta do piloto era 40 a 60 linhas cobrindo os 5 setores prioritários. Não foi
 atingida, e o motivo está em `../../data/consumos/validacao/relatorio.md`.

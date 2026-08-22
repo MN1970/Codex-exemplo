@@ -7,7 +7,7 @@ Validador: `tools/validate_consumos.py`
 ## Resultado
 
 ```
-OK - 8 intensidades, 171 fontes, 2 linhas de estrutura de custo, 14 mapeamentos CNAE
+OK - 8 intensidades, 171 fontes, 2 linhas de estrutura de custo, 17 mapeamentos CNAE
 ```
 
 Exit code 0. Autoteste do validador: 8 de 8 regras duras disparam corretamente,
@@ -22,10 +22,10 @@ e linha válida passa limpa.
 | Estrutura de custo por setor | 6 blocos | 1 bloco, 81,9% não decomposto | não atingida |
 | Comparação internacional | 2 setores | 0 | não atingida |
 | Catálogo de fontes | 100–130 | **171** | superada |
-| Crosswalk CNAE ↔ NAICS | — | 14 mapeamentos, com grau de aderência | atingido |
+| Crosswalk CNAE ↔ NAICS | — | 17 mapeamentos (S1–S13 + 4 recortes), com grau de aderência | atingido |
 | Método, schema, validador | — | completos e testados | atingido |
 
-Matriz de cobertura: **6 de 112 células**. Os dez segmentos S1–S10 estão
+Matriz de cobertura: **6 de 136 células**. Os treze segmentos S1–S13 estão
 inteiramente vazios.
 
 ## Causa: bloqueio de egress
@@ -169,7 +169,7 @@ Por ordem de retorno:
    custo.
 4. **Sobratema** (F-068) — única fonte séria de hora-máquina de equipamento no
    Brasil; a família `equipamentos` está hoje 100% vazia. Confirmar assinatura.
-5. **CONCLA** (F-007) — validar os 14 mapeamentos CNAE.
+5. **CONCLA** (F-007) — validar os 17 mapeamentos CNAE.
 6. **S7 e S10** — sem classe CNAE dedicada; só saem por fonte setorial
    (ANAC F-026; CBDB F-074 e SNISB F-041).
 7. **Comparação internacional** — Economic Census `EC2223KOB` (F-137) para
