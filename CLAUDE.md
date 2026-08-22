@@ -453,6 +453,10 @@ Agências reguladoras (Brasil): **ANTT** (rodovias/ferrovias), **ANEEL**
 Ministério das Cidades/**SNIS** (saneamento) — lista completa com o que
 cada uma publica em `pesquisa-fontes/FONTES_RECEITA_SETORIAL.md`.
 
+MEF (Modelo Econômico-Financeiro) por segmento com os coeficientes já
+aplicados em cascata (receita → mão de obra/material/serviços), 1 aba por
+segmento: `pesquisa-fontes/MEF_Receita_Setorial.xlsx`.
+
 ---
 
 ## SHAREPOINT — Routing rules (sp_agent_routing)
