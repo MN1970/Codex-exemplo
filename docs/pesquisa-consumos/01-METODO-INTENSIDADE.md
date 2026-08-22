@@ -244,6 +244,73 @@ campos `perda_incluida` e `hora_produtiva_apenas`.
 
 ---
 
+## Compra direta × cadeia inteira — reconciliação com o Livro Azul
+
+O portal **Livro Azul** da Manta (`F-181`) calcula intensidade física de cimento e
+aço para 6 segmentos. Esta base calculou os mesmos dois insumos por outro
+caminho. Os resultados divergem, e **entender por quê é mais útil que escolher um
+dos dois**.
+
+| Insumo | Esta base | Livro Azul | Gap |
+| --- | --- | --- | --- |
+| Cimento | 123,9 t/R$ mi (2024) | 109,13 t/R$ mi (2015) | **+13%** |
+| Aço | 18,63 t/R$ mi (2024) | 4,656 t/R$ mi (2015) | **+300%** |
+
+**Os métodos.** O Livro Azul usa a **Matriz de Insumo-Produto 2015 do IBGE**, aba
+11 "Coeficientes técnicos — insumos nacionais (Bn)", coluna "4180 Construção",
+conferida célula a célula: cimento = linhas 23001 (cimento puro, 1,3895%) + 23002
+(artefatos de cimento, 3,5212%) = 4,9107% do valor da produção; aço = 24912
+(semiacabados/laminados/tubos, 2,0664%) + 24922 (peças fundidas, 0,0286%) =
+2,0950%. Esta base divide **consumo nacional aparente** — SNIC para cimento,
+Instituto Aço Brasil para aço, com a participação de 37,3% da construção — pelo
+valor das obras da PAIC.
+
+**O ano-base agrava, não explica.** As duas linhas do portal estão a preços de
+2015; as desta base, de 2024. R$ 1 milhão de 2015 compra **mais** insumo físico
+que R$ 1 milhão de 2024, então o coeficiente de 2015 deveria ser o *maior* dos
+dois. Ele é o menor. Corrigir o ano-base **aumenta** o gap. Quantificar exige o
+deflator; sem ele, a comparação é só direcional.
+
+**A explicação está na assimetria.** Se fosse erro de medição ou de denominador, os
+dois insumos divergiriam parecido. Cimento fica em 13% e aço em 300% — e é isso
+que identifica a causa:
+
+- A **MIP** registra o que a construtora compra **diretamente** como produto de
+  aço. Aço que chega à obra embutido em estrutura pré-fabricada, tubo ou
+  pré-moldado é lançado em **outra linha** da matriz, não em 24912.
+- O **Instituto Aço Brasil** atribui à construção **a cadeia inteira**: os 37,3%
+  do consumo aparente incluem o aço que virou componente antes de chegar ao
+  canteiro.
+- No **cimento** isso quase não morde, porque cimento chega como cimento ensacado
+  ou concreto usinado — pouca transformação intermediária. Daí os 13%.
+
+Ou seja: **não há erro em nenhum dos dois.** São duas medidas de coisas
+diferentes, e o cimento serve de controle que prova isso.
+
+### Qual usar para qual pergunta
+
+| Pergunta | Use | Por quê |
+| --- | --- | --- |
+| Quanto de material o setor vai **comprar** (mercado, cadeia de suprimentos) | atribuição de cadeia (Aço Brasil, SNIC) | captura todo o insumo que termina em obra, inclusive o embutido |
+| Multiplicador econômico, insumo-produto, encadeamento setorial | **MIP/IBGE** | é consistente com o sistema de contas nacionais |
+| Orçar uma obra | **nenhuma das duas** | usa-se composição bottom-up (SICRO, SIEC, SINAPI) |
+
+### O que cada base adiciona à outra
+
+O portal tem o denominador de CAPEX por segmento e a composição de custo por
+setor, mas aplica **um coeficiente físico único** aos 6 segmentos — limitação que
+ele próprio declara, porque a MIP trata "Construção" como atividade agregada
+(CNAE 41–43). Esta base traz o método, o schema, o validador e a rota para
+**intensidade diferenciada por setor**, via PAIC por classe CNAE (SIDRA 1761) e os
+sistemas de custo por modal. E cobre S9 e S10, que o portal não inclui.
+
+A ressalva do próprio portal merece registro, porque é honesta e relevante: o
+coeficiente de cimento soma "artefatos de cimento", cujo valor inclui também
+areia, brita, água e mão de obra da concreteira — convertido a toneladas pelo
+preço do cimento puro, que é a escolha conservadora.
+
+---
+
 ## Tiers de qualidade
 
 | Tier | Critério |

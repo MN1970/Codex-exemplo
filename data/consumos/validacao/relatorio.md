@@ -21,7 +21,7 @@ e linha válida passa limpa.
 | Intensidades em recorte agregado CNAE | — | 8 linhas | fora da meta original, foi o que o acesso permitiu |
 | Estrutura de custo por setor | 6 blocos | 3 blocos, 8 linhas, todos fechando 100% | parcial — só no recorte agregado |
 | Comparação internacional | 2 setores | 0 | não atingida |
-| Catálogo de fontes | 100–130 | **180** | superada |
+| Catálogo de fontes | 100–130 | **181** | superada |
 | Crosswalk CNAE ↔ NAICS | — | 17 mapeamentos (S1–S13 + 4 recortes), com grau de aderência | atingido |
 | Método, schema, validador | — | completos e testados | atingido |
 
@@ -419,6 +419,30 @@ manual e o caderno de insumos foram parar lá. Para ter volume de coeficiente de
 S4 é preciso baixar esse caderno de `cptm.sp.gov.br/licitacoes` — mesma situação
 do SICFER, do ANEEL BPR e do Eletrobras OPE: identificado, endereçado, e
 dependente de rede liberada ou de alguém colocar o arquivo no SharePoint.
+
+## Reconciliação com o portal Livro Azul
+
+O portal da Manta (`F-181`, lido na origem) calcula os mesmos dois insumos por
+outro caminho — MIP/IBGE 2015 — e chega a cimento **109,13** e aço **4,656**
+t/R$ mi, contra **123,9** e **18,63** desta base. Gap de **+13% no cimento** e
+**+300% no aço**.
+
+A assimetria é o achado: se fosse erro de denominador, os dois divergiriam
+parecido. A MIP registra **compra direta** de produto de aço; aço embutido em
+pré-fabricado, tubo ou pré-moldado cai em outra linha da matriz. Já os 37,3% do
+Instituto Aço Brasil atribuem à construção **a cadeia inteira**. No cimento isso
+quase não morde, porque cimento chega como cimento ou concreto — e é justamente
+por isso que ali o gap cai para 13%. O cimento funciona como controle e prova a
+explicação.
+
+O ano-base **agrava**: as linhas do portal são a preços de 2015, as desta base de
+2024, e R$ 1 mi de 2015 compra mais insumo físico — logo o coeficiente de 2015
+deveria ser o maior, e é o menor.
+
+Registrado em `../../docs/pesquisa-consumos/01-METODO-INTENSIDADE.md` com a
+recomendação de qual usar para qual pergunta, e anotado no campo `notas` das duas
+linhas de material. Nenhum valor foi alterado — as duas medidas são legítimas e
+medem coisas diferentes.
 
 ## O que falta para fechar o piloto
 

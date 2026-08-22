@@ -563,7 +563,7 @@ composição serviço por serviço.
 `equipamentos`, `aco`, `concreto`, `cimento`, `agregados`, `combustivel`,
 `outros_materiais`.
 
-**Catálogo de fontes** — 180 fontes em 7 camadas: estatística oficial (PAIC e
+**Catálogo de fontes** — 181 fontes em 7 camadas: estatística oficial (PAIC e
 matriz de insumo-produto do IBGE são a espinha dorsal), governo e planejamento
 setorial, associações setoriais, índices econômicos, academia, multilaterais, e
 proprietária cite-only. Inclui 35 fontes do mercado americano
@@ -670,7 +670,7 @@ Codex-exemplo/
   denominador, ano-base, deflator e moeda), JSON Schema de intensidade e de
   fonte, validador com autoteste de 8 regras duras, crosswalk
   CNAE 2.0 ↔ S1–S13 ↔ NAICS (S6 e S10 na mesma classe 42.91-0),
-  catálogo de 180 fontes em 7 camadas (BR,
+  catálogo de 181 fontes em 7 camadas (BR,
   internacionais e EUA, ENR incluso), e 8 linhas de intensidade no recorte
   agregado CNAE 41/42/43. Adota a **Convenção A** de segmentos, alinhada à
   decisão da v5.0/v5.0.1 e ao dado de produção em
