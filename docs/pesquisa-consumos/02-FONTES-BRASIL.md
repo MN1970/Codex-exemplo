@@ -95,6 +95,51 @@ publica coeficiente explícito de mano de obra, equipo e material — formato ma
 rico que o edital brasileiro típico. É a melhor porta de entrada para S8 na
 Argentina.
 
+## Sistemas de custo referencial por segmento — um por modal
+
+Achado da rodada de 2026-08-22: o Brasil tem **um sistema de custo referencial
+por modal**, não só o SICRO. Cada um publica cadernos de composição, e é ali que
+vive o coeficiente de consumo. Esta é a rota mais direta para intensidade
+**diferenciada por setor** — que é justamente o que a MIP agregada do IBGE não
+entrega.
+
+| Segmento | Sistema | Onde está o coeficiente | Acesso |
+| --- | --- | --- | --- |
+| S1/S2 rodovias e OAE | **SICRO** (DNIT) `F-019`/`F-020` | cadernos técnicos / memoriais de cálculo | ✅ **lido** via SharePoint |
+| S3 ferrovia | **SICFER** (ANTT) `F-172` | V5 Materiais; V6 Manuais Técnicos, Conteúdo 02 Superestrutura | portal ANTT (egress bloqueia) |
+| S4 metrô | **SIEC** (CPTM) `F-173` | Caderno de Composições de Serviços + Caderno de Insumos | ✅ SharePoint da Manta |
+| S8 saneamento | SINAPI `F-006` + SABESP/SANEPAR/COPASA `F-057`–`F-059` | composições | portais (egress bloqueia) |
+| S9 energia | **ANEEL BPR** `F-174` | quantidades de materiais por módulo de LT e de SE | dados abertos, CSV |
+| S10 barragens | **Eletrobras OPE** `F-175` | composições por componente de UHE | acervo Eletrobras |
+
+Notas que mudam o valor de cada um:
+
+- **ANEEL BPR** `F-174` é o achado mais forte. Está em **dados abertos, em CSV**,
+  e a metodologia "traz a descrição das **quantidades de materiais**, equipamentos
+  e serviços" — portanto coeficiente físico, não só preço. Modular: subestação em
+  Módulo de Infraestrutura, de Manobra e de Equipamento; LT parametrizada por
+  tecnologia (CC/CA), classe de tensão, tipo de circuito, estrutura, fundação,
+  cabo condutor, arranjo e cabo para-raios. Há CSV dedicado de *estrutura em aço*.
+  Usar junto com o PRORET Submódulo 9.7 `F-178`, que define a atualização por
+  índices parametrizados.
+- **SIEC** `F-173` é o único **já acessível** além do SICRO: o manual está no
+  SharePoint da Manta em `01_BIBLIOTECA/01_ORÇAMENTO/01.05_BASE ORÇAMENTOS/SIEC/`.
+- **Eletrobras OPE** `F-175` é a melhor fonte encontrada para S10: orçamento
+  sintético de viabilidade com composições por componente de UHE — barragem,
+  tomada de água, conduto forçado, casa de força. Par documental com o MCSE.
+- **SICFER** `F-172` é o análogo ferroviário direto do SICRO, com 9+ volumes.
+  Não está no SharePoint; depende de acesso ao portal da ANTT.
+
+## Atualização do coeficiente-âncora de insumo-produto
+
+A MIP oficial mais recente do IBGE é a de **2015** (Contas Nacionais nº 62) —
+`F-002`. Para quem precisa de série mais nova, o **NEREUS/USP** `F-177` estima
+matrizes **anuais** (série 2010–2018 localizada), com trabalho equivalente no
+IE/UFRJ. É estimativa acadêmica (tier C), não estatística oficial, mas é a única
+forma de sair de 2015 sem esperar a próxima MIP do IBGE.
+
+---
+
 ## Camada 3 — Associações e institutos setoriais
 
 Onde está a **quantidade física** que a estatística oficial não abre.

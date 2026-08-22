@@ -21,7 +21,7 @@ e linha válida passa limpa.
 | Intensidades em recorte agregado CNAE | — | 8 linhas | fora da meta original, foi o que o acesso permitiu |
 | Estrutura de custo por setor | 6 blocos | 3 blocos, 8 linhas, todos fechando 100% | parcial — só no recorte agregado |
 | Comparação internacional | 2 setores | 0 | não atingida |
-| Catálogo de fontes | 100–130 | **171** | superada |
+| Catálogo de fontes | 100–130 | **179** | superada |
 | Crosswalk CNAE ↔ NAICS | — | 17 mapeamentos (S1–S13 + 4 recortes), com grau de aderência | atingido |
 | Método, schema, validador | — | completos e testados | atingido |
 
