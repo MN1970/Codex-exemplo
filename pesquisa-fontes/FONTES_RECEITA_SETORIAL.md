@@ -53,7 +53,7 @@ Um modelo híbrido — não um substituto — é a recomendação técnica corre
 
 | Segmento | Melhor fonte BRASIL | Melhor fonte EXTERIOR | Observação |
 |---|---|---|---|
-| **Rodovias** | ANTT — Demonstrações Financeiras das concessionárias + Plano de Contas/Manual de Contabilidade + datasets abertos "Receita de Pedágio"/"Custos Operacionais" (dados.antt.gov.br) | **Autostrade per l'Italia (ASPI)** — balanço 2023 já traz % pronto (manutenção ≈10,8% da receita, pessoal ≈10,1%) | SICRO sozinho é **insuficiente** (custo de obra, não de receita) |
+| **Rodovias** | ANTT — Demonstrações Financeiras das concessionárias + Plano de Contas/Manual de Contabilidade + datasets abertos "Receita de Pedágio"/"Custos Operacionais" (dados.antt.gov.br). **Par fechado**: Autoban 2024 — mão de obra+terceiros+material ≈ 8,7% da receita de pedágio | **Autostrade per l'Italia (ASPI)** — balanço 2023 já traz % pronto (manutenção ≈10,8% da receita, pessoal ≈10,1%) | SICRO sozinho é **insuficiente** (custo de obra, não de receita) |
 | **Ferrovias** | CVM/DFP de Rumo, MRS, VLI (VLI com número real: receita R$9,95bi / custo R$6,63bi em 2024) | **SEC EDGAR 10-K — Union Pacific, Norfolk Southern, CSX** (EUA) — "operating expenses" já por natureza (compensation & benefits, purchased services & materials, fuel, equipment rents) | Fonte mais forte de toda a Camada 2 internacional |
 | **Portos** | CVM (Santos Brasil, Wilson Sons — receita/EBITDA confirmados) + Resolução ANTAQ 49/2021 (Manual de Contas do Setor Portuário / SICRASP) | *Port Economics, Management and Policy* (livro-texto acadêmico aberto) — % mão de obra sobre OPEX por tipo de terminal (contêiner 25–50%, granel 15–20%, carga geral 40–75%) | Operadores globais (PSA, DP World, Hutchison) **não** desagregam custo por natureza publicamente — achado consistente com as 10 tentativas anteriores do Livro Azul |
 | **Aeroportos** | ANAC — Demonstrações Financeiras por concessão (fragmentado, ~15-20 aeroportos, sem painel único) | **Fraport AG** (Alemanha) — "Personnel expenses" vs. "Non-staff costs/cost of materials" explícitos; ICAO "State of Airport Economics" como benchmark agregado gratuito | Confirma achado do Livro Azul: Rodovias e Aeroportos são os setores com melhor evidência internacional |
@@ -180,6 +180,34 @@ permanecem como pendência de validação manual (fora desta sessão).
 
 ---
 
+## Rodada 3 — pares receita↔custo por projeto
+
+Uma terceira rodada (8 agentes, alvos cirúrgicos por segmento, só WebSearch)
+mirou em fechar o par **receita + custo do MESMO projeto/ano** — a rodada 2
+tinha, na maioria dos casos, só um lado do par. Resultado: **2 pares
+fechados/confirmados, 1 achado parcial novo, 5 seguem bloqueados** por
+exigirem leitura direta de PDF (WebFetch, indisponível nesta sessão).
+
+| Segmento | Resultado | Cálculo |
+|---|---|---|
+| Rodovias | **Par fechado** — Autoban 2024: receita de pedágio R$3.695.634mil (fonte: relatório de crédito Moody's Local, citando as DFs) | Custos (pessoal+terceiros+material = R$322.911mil) / receita ≈ **8,7%** |
+| Barragens | **Confirmado** — Vale 2025: pagamento de descaracterização de barragens US$378mi no ano cheio, separado de Brumadinho (US$299mi) — release oficial "Desempenho da Vale no 4T25 e 2025" | Sobre receita líquida 2025 da Vale — cálculo pendente do valor de receita 2025 (não coletado nesta rodada) |
+| Metrôs | **Achado parcial novo** — Metrô-SP 2024: energia de tração R$165,1mi (-12,6% a/a) | Sobre ROL R$3,02bi ≈ **5,5%** — soma-se a pessoal (61,9% já conhecido); material e serviços de terceiros continuam sem valor aberto |
+| Ferrovias | Bloqueado — Rumo e MRS só têm texto qualitativo ("custos subiram por mão de obra/manutenção"), sem tabela de valores | requer WebFetch |
+| Portos | Bloqueado — Santos Brasil e Wilson Sons: só lucro líquido/EBITDA, nota de custo por natureza não indexada | requer WebFetch |
+| Aeroportos | Bloqueado — DF da ANAC (Guarulhos) localizada mas conteúdo não indexado | requer WebFetch |
+| Saneamento | Bloqueado — Copasa 2024 tem receita (R$6,97bi) e custo total (R$4,8bi ≈68,9%) mas não a quebra por natureza; Sabesp só texto qualitativo | requer WebFetch |
+| Energia | Bloqueado — AEP/ITC/ALLETE só têm variação % ano a ano, não valor absoluto pareado com receita | requer WebFetch |
+
+**Conclusão da rodada 3**: confirma de forma definitiva (3ª vez) que o
+WebSearch, sem WebFetch, não consegue abrir a tabela interna de um PDF de
+demonstração financeira — só recupera o que já foi resumido em texto
+corrido por imprensa/corretora. Os 5 pares pendentes acima são a lista
+priorizada para validação manual fora desta sessão (baixar e ler os PDFs
+já localizados e linkados nas rodadas 1-3).
+
+---
+
 ## Detalhe completo por segmento
 
 As tabelas completas (todas as fontes candidatas pesquisadas em cada
@@ -189,6 +217,16 @@ confiabilidade) estão registradas nos relatórios brutos dos 8 agentes de
 pesquisa desta sessão. Recomenda-se, no próximo passo, consolidar esse
 detalhe em planilha (uma linha por fonte) quando o time decidir o formato
 final — Excel, JSON ou tabela Supabase — conforme previsto no plano original.
+
+## MEF por segmento (Modelo Econômico-Financeiro)
+
+Os coeficientes confirmados nas rodadas 1-3 foram estruturados em um
+workbook Excel com 1 aba por segmento — receita do projeto (input) →
+coeficientes confirmados/benchmark → consumo estimado (R$) de mão de
+obra, material e serviços. Cada célula de coeficiente cita a fonte e o
+selo de confiança (Confirmado BR / Confirmado internacional / Parcial /
+Pendente). Aço e cimento seguem fora do MEF — ponte explícita para o
+modelo CAPEX × IBGE-MIP do Livro Azul. Arquivo: `MEF_Receita_Setorial.xlsx`.
 
 ## Próximos passos
 
