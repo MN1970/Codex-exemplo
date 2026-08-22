@@ -386,6 +386,40 @@ O próprio SIEC cita **SIURB** — sistema de custos de obras públicas do munic
 de São Paulo — como uma de suas três referências de composição, ao lado de SINAPI
 e SICRO. Não estava no catálogo; registrado como `F-180`. Catálogo: 180 fontes.
 
+## Encargos sociais — a ponte entre folha e custo total de mão de obra
+
+O **Caderno de Insumos do SIEC**, data base **outubro/2024**, está no SharePoint
+em `.../SIEC/CustosReferenciais/` (em `.pdf` e `.xlsx`) e declara:
+
+> **Encargos sociais: 115,54% sobre mão de obra horista (hora)**
+
+Ou seja, o custo horário cheio é **~2,16×** o salário base. Isso permite uma
+checagem que antes não dava:
+
+- a base registra remunerações da PAIC 2022 em **18,1% do valor das obras**;
+- aplicando o fator de encargos, o custo cheio de mão de obra ficaria em torno de
+  **39% do valor das obras**;
+- as composições de custo do portal Livro Azul põem mão de obra entre **18% e
+  40% do CAPEX** por segmento (metrôs 18, portos 20, ferrovias 22, rodovias 28,
+  aeroportos 30, saneamento 40).
+
+Os 39% caem no topo dessa faixa, que é o esperado para uma média de toda a
+construção. **Não virou linha da base**, por dois motivos honestos: a rubrica da
+PAIC "salários, retiradas e outras remunerações" já pode conter parte dos
+encargos, e "retiradas" é remuneração de sócio, não folha — multiplicar pelo
+fator cheio arriscaria dupla contagem. Fica como ponte de ordem de grandeza, com
+o fator agora citável.
+
+### Limite encontrado
+
+O **Caderno de Insumos** é lista de **preço** (código, descrição, unidade, custo
+unitário) — pela regra dura do projeto, não gera linha. Os **coeficientes** estão
+no **Caderno de Composição de Serviços**, que **não está no SharePoint**: só o
+manual e o caderno de insumos foram parar lá. Para ter volume de coeficiente de
+S4 é preciso baixar esse caderno de `cptm.sp.gov.br/licitacoes` — mesma situação
+do SICFER, do ANEEL BPR e do Eletrobras OPE: identificado, endereçado, e
+dependente de rede liberada ou de alguém colocar o arquivo no SharePoint.
+
 ## O que falta para fechar o piloto
 
 Por ordem de retorno:
