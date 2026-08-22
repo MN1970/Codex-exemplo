@@ -11,8 +11,8 @@
     "note": "Recorte curado, nao e o indice completo do ano fiscal. rtoc.pdf e stoc.pdf nao puderam ser baixados (egresso de rede bloqueado)."
   },
   "counts": {
-    "total": 52,
-    "roadway": 45,
+    "total": 56,
+    "roadway": 49,
     "structures": 7
   },
   "indices": [
@@ -961,6 +961,82 @@
         "notes": null,
         "dnit_equivalent": null
       }
+    },
+    {
+      "index": "400-090",
+      "title": "Approach Slabs (Flexible Pavement Approaches)",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/400-090.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "400-091",
+      "title": "Approach Slabs (Rigid Pavement Approaches)",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/400-091.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "548-020",
+      "title": "MSE Retaining Wall Systems — Permanent",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-020.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "548-030",
+      "title": "MSE Retaining Wall Systems — Temporary",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-030.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
+        "dnit_equivalent": null
+      }
     }
   ],
   "manta_maestro": {
@@ -973,5 +1049,5 @@
     "sharepoint_path": "05-normas/"
   },
   "document_id": "MANTA-FDOT-20260822-001",
-  "document_version": "1.3"
+  "document_version": "1.6"
 }
