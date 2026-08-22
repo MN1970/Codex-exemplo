@@ -26,7 +26,7 @@ calibração metodológica, não como alvo de coleta.
 | 0 | Método, schema, validador, crosswalk CNAE, catálogo de fontes | **concluída** |
 | 1 | Extração no recorte agregado CNAE 41/42/43 | **parcial** — 8 linhas, nenhuma verificada na fonte primária |
 | 2 | Descida ao segmento S1–S10 via SIDRA por classe CNAE | **bloqueada** — egress |
-| 3 | Comparação internacional (OECD ICIO, Eurostat, EXIOBASE, INFRALATAM) | **não iniciada** — egress |
+| 3 | Comparação internacional (Economic Census/NAICS 237, BEA, OECD ICIO, Eurostat, INFRALATAM) | **tentada, não concluída** — numerador americano obtido, denominador bloqueado |
 | 4 | Estrutura de custo completa por setor (INCC, custos e despesas da PAIC) | **parcial** — 1 bloco, 81,9% não decomposto |
 
 ## Matriz de cobertura

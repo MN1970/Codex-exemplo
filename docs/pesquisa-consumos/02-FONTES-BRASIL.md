@@ -1,7 +1,7 @@
 # Fontes — Brasil
 
 Catálogo legível por máquina: `../../data/consumos/registro-fontes.csv`
-(136 fontes, BR + internacional). Este documento explica **o que cada camada
+(171 fontes, BR + internacional). Este documento explica **o que cada camada
 entrega** — que é a informação que evita o erro mais comum do projeto.
 
 Cada fonte tem um campo `entrega`. Ele governa o que a fonte pode originar:

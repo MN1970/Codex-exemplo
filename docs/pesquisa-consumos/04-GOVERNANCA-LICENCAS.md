@@ -8,14 +8,25 @@ Toda fonte de `registro-fontes.csv` carrega um campo `licenca` com três valores
 | `licenciado` | coeficiente entra **se** a Manta tiver assinatura vigente; marcar a linha e restringir acesso |
 | `cite_only` | **nada numérico.** Só metadado: cobertura, edição, o que entrega, como acessar |
 
-Distribuição atual: 118 públicas, 6 licenciadas, 12 cite-only.
+Distribuição atual (171 fontes): **143 públicas, 6 licenciadas, 22 cite-only**.
 
 ## Regra cite-only
 
-Doze fontes proprietárias estão catalogadas e **nenhum coeficiente delas entra na
-base**: RSMeans/Gordian, Spon's, Rawlinsons, Caterpillar Performance Handbook,
-Komatsu Handbook, EquipmentWatch Blue Book, ONDAC, Construdata, Revista Costos,
-BIMSA/Opus, BKI, Batiprix.
+Vinte e duas fontes proprietárias estão catalogadas e **nenhum coeficiente delas
+entra na base**.
+
+Composições e manuais: RSMeans/Gordian, Spon's, Rawlinsons, Caterpillar
+Performance Handbook, Komatsu Handbook, EquipmentWatch Blue Book, ONDAC,
+Construdata, Revista Costos, BIMSA/Opus, BKI, Batiprix.
+
+Índices comerciais (quase todos americanos): **ENR** — CCI, BCI, Cost Reports,
+Top 400 Contractors, Top 500 Design Firms —, Turner Building Cost Index,
+Mortenson, Rider Levett Bucknall, Dodge Construction Network, FMI.
+
+Vários dos índices publicam o **valor de manchete** abertamente; o que é
+proprietário é a base e a metodologia. Como todos são `indice_macro` ou
+`custo_unitario_agregado`, o validador já os impede de gerar linha de
+intensidade — a regra de licença é a segunda barreira, não a única.
 
 O que **pode** ser registrado sobre elas:
 

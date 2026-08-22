@@ -26,7 +26,7 @@ Consequências práticas:
   agregado da CNAE (41 edificações, 42 obras de infraestrutura, 43 serviços
   especializados). Descer ao segmento exige o SIDRA, que está bloqueado.
 - O que **está** pronto e é reaproveitável: o método, o schema, o validador com
-  autoteste, o catálogo de 136 fontes e o crosswalk CNAE com o grau de aderência
+  autoteste, o catálogo de 171 fontes e o crosswalk CNAE ↔ NAICS com o grau de aderência
   de cada segmento.
 
 Ver `validacao/relatorio.md` para o registro completo do que foi bloqueado e
@@ -39,16 +39,17 @@ docs/pesquisa-consumos/
 ├── README.md                      este arquivo
 ├── 00-PLANO-PESQUISA.md           escopo, fases, matriz de cobertura
 ├── 01-METODO-INTENSIDADE.md       método direto x indireto, com exemplo trabalhado
-├── 02-FONTES-BRASIL.md            fontes BR nas 6 camadas
+├── 02-FONTES-BRASIL.md            fontes BR nas 7 camadas
 ├── 03-FONTES-INTERNACIONAIS.md    multilaterais e agências
 ├── 04-GOVERNANCA-LICENCAS.md      matriz de licença, regra cite-only
-└── 05-BACKLOG.md                  Fase 2 e itens diferidos
+├── 05-BACKLOG.md                  Fase 2 e itens diferidos
+└── 06-FONTES-EUA.md               mercado americano, ENR e o par CNAE 42 <-> NAICS 237
 
 data/consumos/
 ├── schema/intensidade.schema.json
 ├── schema/fonte.schema.json
-├── registro-fontes.csv            136 fontes catalogadas
-├── crosswalk-cnae-setores.csv     CNAE 2.0 <-> S1..S10 Manta
+├── registro-fontes.csv            171 fontes catalogadas
+├── crosswalk-cnae-setores.csv     CNAE 2.0 <-> S1..S10 Manta <-> NAICS
 ├── intensidades-setor.csv         produto principal
 ├── estrutura-custo-setor.csv      participação % por família
 └── validacao/relatorio.md

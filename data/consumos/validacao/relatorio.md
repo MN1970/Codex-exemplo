@@ -7,7 +7,7 @@ Validador: `tools/validate_consumos.py`
 ## Resultado
 
 ```
-OK - 8 intensidades, 136 fontes, 2 linhas de estrutura de custo, 14 mapeamentos CNAE
+OK - 8 intensidades, 171 fontes, 2 linhas de estrutura de custo, 14 mapeamentos CNAE
 ```
 
 Exit code 0. Autoteste do validador: 8 de 8 regras duras disparam corretamente,
@@ -21,8 +21,8 @@ e linha válida passa limpa.
 | Intensidades em recorte agregado CNAE | — | 8 linhas | fora da meta original, foi o que o acesso permitiu |
 | Estrutura de custo por setor | 6 blocos | 1 bloco, 81,9% não decomposto | não atingida |
 | Comparação internacional | 2 setores | 0 | não atingida |
-| Catálogo de fontes | 100–130 | **136** | atingida |
-| Crosswalk CNAE | — | 14 mapeamentos, com grau de aderência | atingido |
+| Catálogo de fontes | 100–130 | **171** | superada |
+| Crosswalk CNAE ↔ NAICS | — | 14 mapeamentos, com grau de aderência | atingido |
 | Método, schema, validador | — | completos e testados | atingido |
 
 Matriz de cobertura: **6 de 112 células**. Os dez segmentos S1–S10 estão
@@ -114,6 +114,50 @@ leitura da fonte primária:
    x água/esgoto) **invertida** em relação à adotada. Todas as 14 linhas estão
    `status_verificacao = nao_verificado_concla`. **Conferir antes de usar.**
 
+## Tentativa de comparação internacional (EUA) — não concluída
+
+Depois da primeira rodada, o catálogo foi ampliado com 35 fontes americanas
+(`F-137`–`F-171`, ver `../../docs/pesquisa-consumos/06-FONTES-EUA.md`), com o
+objetivo de fechar o par **CNAE 42 ↔ NAICS 237** — o recorte de menor atrito
+entre as duas estatísticas.
+
+**Numerador obtido:** 1.097,1 mil postos de trabalho em NAICS 237 (heavy and
+civil engineering construction) em 2022.
+
+**Denominador não obtido.** As duas candidatas que apareceram não servem:
+
+| Candidata | Por que não serve |
+|---|---|
+| *Value of construction put in place* (Census `F-016`) — US$ 133,6 bi de rodovia em 2022 | é **gasto por categoria de obra**, não receita de estabelecimento, e cobre só parte do escopo de NAICS 237 |
+| Receita de NAICS 237 no Economic Census (`F-137`) | é **a base correta** — tabela `EC2223KOB`, *value of business done* — e não veio nos resultados de busca |
+
+Cruzar emprego de NAICS 237 com gasto do VIP seria exatamente o erro de
+denominador que este projeto existe para evitar. **Não foi calculado.**
+
+Com acesso à rede resolve-se em minutos: `data.census.gov`, tabela `EC2223KOB`
+ou `EC2223BASIC`, recorte NAICS 237. A linha resultante sairia com
+`metodo = direto`, `tier = A` e `verificacao = fonte_primaria_lida` — qualidade
+superior a de qualquer linha brasileira desta base hoje.
+
+### Sobre a premissa de 1.800 h/ano
+
+O **BLS CES** (`F-139`) resolve isso com dado observado do lado americano. Obtive
+apenas valores estaduais — 38,3 h/semana em Nova York e 37,6 h/semana em
+Washington, 2024 — e **não extrapolei de dois estados**. Sugere algo próximo de
+1.950–1.980 h/ano, acima das 1.800 h adotadas, mas o regime de trabalho
+americano não é o brasileiro: a premissa brasileira tem de sair do CAGED/RAIS
+(`F-008`, `F-009`).
+
+### Armadilha registrada no catálogo
+
+A cesta do **ENR Construction Cost Index** (`F-162`) — 200 h de mão de obra
+comum, 25 cwt de aço estrutural, 1,128 t de cimento portland, 1.088 board feet
+de 2x4 — *parece* um coeficiente de consumo e **não é**: a ENR mantém as
+quantidades constantes por construção, para que o índice reflita só preço. A
+razão 200 h ÷ 1,128 t ≈ 177 hh por tonelada de cimento é artefato do índice, não
+produtividade. Cadastrado como `indice_macro` e `cite_only`, com a advertência no
+campo `notas` do próprio CSV.
+
 ## O que falta para fechar o piloto
 
 Por ordem de retorno:
@@ -128,7 +172,9 @@ Por ordem de retorno:
 5. **CONCLA** (F-007) — validar os 14 mapeamentos CNAE.
 6. **S7 e S10** — sem classe CNAE dedicada; só saem por fonte setorial
    (ANAC F-026; CBDB F-074 e SNISB F-041).
-7. **Internacional** — OECD ICIO (F-012) e INFRALATAM (F-100).
+7. **Comparação internacional** — Economic Census `EC2223KOB` (F-137) para
+   fechar CNAE 42 ↔ NAICS 237; BEA Input-Output (F-138) como par da matriz do
+   IBGE; depois OECD ICIO (F-012) e INFRALATAM (F-100).
 
 Nada disso é limitação de método. O método está pronto, testado e roda no recorte
 agregado. É limitação de acesso à rede.

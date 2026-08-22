@@ -87,3 +87,15 @@ RSMeans/Gordian `F-125`, Spon's `F-126`, Rawlinsons `F-127`, Caterpillar
 Performance Handbook `F-128`, Komatsu Handbook `F-129`, EquipmentWatch Blue Book
 `F-130`, ONDAC `F-131`, Construdata `F-132`, Revista Costos `F-133`, BIMSA/Opus
 `F-134`, BKI `F-135`, Batiprix `F-136`.
+
+Os índices comerciais americanos — **ENR** `F-162`–`F-166`, Turner `F-167`,
+Mortenson `F-168`, RLB `F-169`, Dodge `F-170`, FMI `F-171` — estão em
+`06-FONTES-EUA.md`, junto com o aviso sobre a cesta do ENR CCI.
+
+## Estados Unidos
+
+Trinta e cinco fontes americanas (`F-137`–`F-171`) têm documento próprio:
+**`06-FONTES-EUA.md`**. Vale a separação porque a estrutura estatística
+americana espelha a brasileira quase item por item — Economic Census ↔ PAIC,
+BEA I-O ↔ matriz do IBGE, PCA ↔ SNIC, AISI ↔ Instituto Aço Brasil — o que faz do
+par **CNAE 42 ↔ NAICS 237** a comparação internacional de menor atrito.

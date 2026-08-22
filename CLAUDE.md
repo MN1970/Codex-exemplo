@@ -5,7 +5,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 operacionais no SharePoint.
 
 Versão: **v4.3** (2026-08-22) — base de consumos por receita setorial
-(programa de pesquisa + schema + catálogo de 136 fontes). Base anterior:
+(programa de pesquisa + schema + catálogo de 171 fontes BR/internacionais/EUA).
+Base anterior:
 v4.2 (2026-07-05) — expansão S6–S10 (Portos, Aeroportos, Saneamento,
 Energia, Barragens).
 
@@ -146,10 +147,17 @@ composição serviço por serviço.
 `equipamentos`, `aco`, `concreto`, `cimento`, `agregados`, `combustivel`,
 `outros_materiais`.
 
-**Catálogo de fontes** — 136 fontes em 7 camadas: estatística oficial (PAIC e
+**Catálogo de fontes** — 171 fontes em 7 camadas: estatística oficial (PAIC e
 matriz de insumo-produto do IBGE são a espinha dorsal), governo e planejamento
 setorial, associações setoriais, índices econômicos, academia, multilaterais, e
-proprietária cite-only.
+proprietária cite-only. Inclui 35 fontes do mercado americano
+(`docs/pesquisa-consumos/06-FONTES-EUA.md`), com o par **CNAE 42 ↔ NAICS 237**
+para comparação internacional.
+
+**Armadilha registrada** — a cesta do **ENR Construction Cost Index** (200 h de
+mão de obra + 25 cwt de aço + 1,128 t de cimento + 1.088 bf de madeira) *parece*
+coeficiente de consumo e **não é**: a ENR mantém as quantidades constantes para
+rastrear preço. Serve como deflator, nunca como consumo.
 
 **Estado (2026-08-22)** — 8 linhas de intensidade no recorte agregado CNAE
 41/42/43; os segmentos S1–S10 ainda vazios. Nenhuma linha verificada contra a
@@ -211,7 +219,8 @@ mapa de routing.
 - **v4.3** (2026-08-22) — base de consumos por receita setorial. Programa de
   pesquisa (método direto × indireto, disciplinas de denominador/deflator/moeda),
   JSON Schema de intensidade e de fonte, validador com autoteste, crosswalk
-  CNAE 2.0 ↔ S1–S10, catálogo de 136 fontes BR e internacionais em 7 camadas,
+  CNAE 2.0 ↔ S1–S10 ↔ NAICS, catálogo de 171 fontes BR, internacionais e dos
+  EUA (ENR incluso) em 7 camadas,
   e 8 linhas de intensidade no recorte agregado CNAE. Coleta limitada por
   bloqueio de egress — nenhuma linha verificada na fonte primária. Ticket
   MNT-2026-CONSUMOS-SETORIAIS.
