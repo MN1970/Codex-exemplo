@@ -448,6 +448,11 @@ continua vindo do lado CAPEX (Matriz de Insumo-Produto do IBGE, já em uso).
 Pendência: validar manualmente os números (WebFetch esteve bloqueado na
 sessão de pesquisa) e rodar `aluci-guard` antes de uso oficial.
 
+Agências reguladoras (Brasil): **ANTT** (rodovias/ferrovias), **ANEEL**
+(energia), **ANAC** (aeroportos), **ANTAQ** (portos), **ANM** (barragens),
+Ministério das Cidades/**SNIS** (saneamento) — lista completa com o que
+cada uma publica em `pesquisa-fontes/FONTES_RECEITA_SETORIAL.md`.
+
 ---
 
 ## SHAREPOINT — Routing rules (sp_agent_routing)

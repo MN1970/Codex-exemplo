@@ -64,6 +64,42 @@ Um modelo híbrido — não um substituto — é a recomendação técnica corre
 
 ---
 
+## Agências reguladoras — lista consolidada
+
+As tabelas por segmento acima citam várias agências espalhadas; esta seção
+reúne todas num só lugar, com o que cada uma publica e por que ela é (ou
+não) uma boa fonte para o objetivo deste catálogo (receita × consumo por
+natureza).
+
+### Brasil
+
+| Agência | Segmento | O que publica (relevante a este catálogo) | URL |
+|---|---|---|---|
+| **ANTT** — Agência Nacional de Transportes Terrestres | Rodovias, Ferrovias | Demonstrações financeiras por concessionária, Plano de Contas/Manual de Contabilidade (padrão obrigatório, com CVM/ARTESP), datasets abertos "Receita de Pedágio" e "Custos Operacionais", Relatório de Acompanhamento das Concessões Ferroviárias (SAFF) | gov.br/antt · dados.antt.gov.br |
+| **ANEEL** — Agência Nacional de Energia Elétrica | Energia (transmissão/distribuição/geração) | CIEFSE/DCR (Demonstrações Contábeis Regulatórias, plano de contas MCSE com PMSO — Pessoal/Material/Serviço de Terceiros/Outros — obrigatório para todas as concessionárias, não só as listadas), RAP por instalação, PRORET (metodologia, não dado bruto) | gov.br/aneel |
+| **ANAC** — Agência Nacional de Aviação Civil | Aeroportos | Demonstrações financeiras auditadas por concessão/bloco (receita tarifária + não tarifária); atenção: o "Painel de Indicadores" da ANAC é de **qualidade de serviço**, não financeiro — não confundir os dois | gov.br/anac |
+| **ANTAQ** — Agência Nacional de Transportes Aquaviários | Portos | Anuário Estatístico Portuário (operacional, não financeiro) + Resolução nº 49/2021 (Manual de Contas do Setor Portuário / SICRASP — plano de contas padronizado para administrações portuárias **e arrendatários**) | gov.br/antaq |
+| **ANM** — Agência Nacional de Mineração | Barragens | Boletim de Barragens de Mineração, relatórios trimestrais de descaracterização (a montante), SIGBM, CFEM — dado de status/royalty, não custo direto de gestão de barragem | gov.br/anm |
+| **Ministério das Cidades (SNIS)** | Saneamento | Sistema Nacional de Informações sobre Saneamento — receita operacional total (FN005) e despesa por natureza (pessoal FN010, produtos químicos FN011, energia FN013, terceiros FN014) por prestador, desde 1996 — **fonte mais forte de todo o catálogo no lado Brasil** | app4.mdr.gov.br/serieHistorica |
+
+Agências citadas nas tabelas por segmento mas de uso mais limitado para
+este objetivo específico (bom para contexto normativo/técnico, não para
+custo por natureza): **ANA** (recursos hídricos, cross-check de barragens
+de água), reguladores estaduais como **ARTESP** (SP), **AGERGS** (RS) —
+fiscalizam concessões rodoviárias estaduais mas não têm painel aberto de
+custo por natureza equivalente ao da ANTT.
+
+### Exterior
+
+| Agência/Órgão | País | Segmento | Por que é forte | URL |
+|---|---|---|---|---|
+| **FERC** (Federal Energy Regulatory Commission) — Form 1 | EUA | Energia (transmissão) | Contas regulatórias (Uniform System of Accounts) que isolam labor/materials/contract services por utility, série desde 1994, já parseada (PUDL/OpenEI) — **padrão-ouro internacional** | ferc.gov |
+| **FTA/NTD** (Federal Transit Administration — National Transit Database), operado com dados da **APTA** | EUA | Metrôs | Despesa operacional por natureza (labor, fringe benefits, materials & supplies) por agência de "heavy rail", com API pública, cruzável com receita tarifária — **padrão-ouro internacional** | transit.dot.gov/ntd |
+| **OFWAT** (Water Services Regulation Authority) | Reino Unido | Saneamento | Modelos de "base cost" com drivers power/people/service/materials, benchmarking financeiro do setor de água mais granular do mundo | ofwat.gov.uk |
+| **FHWA** (Federal Highway Administration) — Highway Statistics | EUA | Rodovias | Despesa de manutenção rodoviária por "object class"; cobre rodovia pública financiada por imposto, não concessão pedagiada privada | fhwa.dot.gov |
+
+---
+
 ## Proposta de padronização
 
 **Não existe uma única fonte que sirva a todos os 8 segmentos** — diferente
