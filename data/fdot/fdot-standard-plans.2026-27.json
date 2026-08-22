@@ -11,9 +11,9 @@
     "note": "Recorte curado, nao e o indice completo do ano fiscal. rtoc.pdf e stoc.pdf nao puderam ser baixados (egresso de rede bloqueado)."
   },
   "counts": {
-    "total": 56,
-    "roadway": 49,
-    "structures": 7
+    "total": 63,
+    "roadway": 53,
+    "structures": 10
   },
   "indices": [
     {
@@ -1037,6 +1037,132 @@
         "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
         "dnit_equivalent": null
       }
+    },
+    {
+      "index": "102-601",
+      "title": "Two-Lane and Multilane Roadway, Work Beyond the Shoulder",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-601.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Obra a partir de 15 pes (4,6 m) ou mais da pista de rolamento",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-602",
+      "title": "Two-Lane, Two-Way, Work On Shoulder",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-602.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-603",
+      "title": "Two-Lane, Two-Way, Work Within the Travel Way",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-603.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Exige rufo temporario (rumble strip) quando a velocidade regulamentada e >= 55 mph",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-670",
+      "title": "Motorist Awareness System (MAS)",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-670.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "450-199",
+      "title": "Prestressed I-Beams — Build-Up & Deflection Data",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-199.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "458-100",
+      "title": "Expansion Joint System — Strip Seal",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/458-100.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "458-110",
+      "title": "Expansion Joint System — Poured Joint with Backer Rod",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/458-110.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Abertura de referencia 2\" a 70F; maxima 3\" no sentido do trafego, conforme SDG 6.3/6.4",
+        "dnit_equivalent": null
+      }
     }
   ],
   "manta_maestro": {
@@ -1049,5 +1175,5 @@
     "sharepoint_path": "05-normas/"
   },
   "document_id": "MANTA-FDOT-20260822-001",
-  "document_version": "1.6"
+  "document_version": "1.8"
 }
