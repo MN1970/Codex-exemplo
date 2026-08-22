@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mantaassociados.com/schemas/consumos/fonte-1.json",
+  "title": "Fonte do catalogo de consumos",
+  "type": "object",
+  "required": ["fonte_id","nome","instituicao","camada","entrega","pais","licenca","verificacao"],
+  "additionalProperties": false,
+  "properties": {
+    "fonte_id": { "type": "string", "pattern": "^F-[0-9]{3}$" },
+    "nome": { "type": "string", "minLength": 3 },
+    "instituicao": { "type": "string" },
+    "camada": {
+      "type": "integer", "minimum": 1, "maximum": 7,
+      "description": "1 estatistica oficial; 2 governo e planejamento setorial; 3 associacoes e institutos setoriais; 4 indices e pesquisa economica; 5 academia; 6 multilaterais e agencias internacionais; 7 proprietaria cite-only"
+    },
+    "entrega": {
+      "type": "string",
+      "enum": ["coeficiente_fisico","custo_unitario_agregado","indice_macro","metodologia"],
+      "description": "O que a fonte de fato entrega. Fonte que entrega custo_unitario_agregado NAO pode originar linha em intensidades-setor.csv."
+    },
+    "setores": { "type": "string", "description": "Setores cobertos, separados por ponto e virgula. 'todos' quando transversal." },
+    "pais": { "type": "string" },
+    "periodicidade": { "type": ["string","null"] },
+    "licenca": { "type": "string", "enum": ["publico","licenciado","cite_only"] },
+    "verificacao": { "type": "string", "enum": ["fonte_primaria_lida","snippet_busca","catalogada_nao_verificada"] },
+    "url": { "type": ["string","null"] },
+    "como_acessar": { "type": ["string","null"], "description": "Para fonte paga ou de acesso restrito: como obter e a que custo aproximado." },
+    "notas": { "type": ["string","null"] }
+  }
+}

@@ -4,7 +4,12 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+Versão: **v5.2** (2026-08-22) — **base de consumos por receita setorial**.
+Programa de pesquisa, JSON Schema, validador e catálogo de 171 fontes
+(BR + internacionais + EUA) para intensidade de consumo de insumo por unidade
+de receita/investimento setorial. Ticket `MNT-2026-CONSUMOS-SETORIAIS`.
+
+Consolida **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
 Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
 assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
@@ -48,8 +53,9 @@ Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGE
 13. [Gaps abertos / pendências](#gaps-abertos--pendências)
 14. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
 15. [Deploy checklist v5.0](#deploy-checklist-v50)
-16. [Arquivos deste repositório](#arquivos-deste-repositório)
-17. [Histórico de versões](#histórico-de-versões)
+16. [Base de consumos por receita setorial](#base-de-consumos-por-receita-setorial-v52)
+17. [Arquivos deste repositório](#arquivos-deste-repositório)
+18. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -544,11 +550,76 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ---
 
+## BASE DE CONSUMOS POR RECEITA SETORIAL (v5.2)
+
+Quanto de insumo físico é consumido por unidade de receita/investimento em cada
+segmento de construção pesada. Abordagem **top-down**: intensidade macro, não
+composição serviço por serviço.
+
+- Programa, método e fontes: `docs/pesquisa-consumos/`
+- Dados, schema e validador: `data/consumos/`, `tools/validate_consumos.py`
+
+**Oito famílias de insumo** (vocabulário fechado): `mao_de_obra`,
+`equipamentos`, `aco`, `concreto`, `cimento`, `agregados`, `combustivel`,
+`outros_materiais`.
+
+**Catálogo de fontes** — 181 fontes em 7 camadas: estatística oficial (PAIC e
+matriz de insumo-produto do IBGE são a espinha dorsal), governo e planejamento
+setorial, associações setoriais, índices econômicos, academia, multilaterais, e
+proprietária cite-only. Inclui 35 fontes do mercado americano
+(`docs/pesquisa-consumos/06-FONTES-EUA.md`), com o par **CNAE 42 ↔ NAICS 237**
+para comparação internacional.
+
+**Armadilha registrada** — a cesta do **ENR Construction Cost Index** (200 h de
+mão de obra + 25 cwt de aço + 1,128 t de cimento + 1.088 bf de madeira) *parece*
+coeficiente de consumo e **não é**: a ENR mantém as quantidades constantes para
+rastrear preço. Serve como deflator, nunca como consumo.
+
+**Estado (2026-08-22)** — 8 linhas de intensidade e 8 linhas de estrutura de
+custo (PAIC 2022 e 2023, três blocos fechando 100%), todas no recorte agregado
+CNAE 41/42/43; os segmentos S1–S13 ainda vazios. Nenhuma linha verificada contra
+a fonte primária: o egress bloqueou `ibge.gov.br` (inclusive as APIs `apisidra` e
+`servicodados`), `worldbank.org`, `enr.com` e demais — **web scraping é inviável
+nesta configuração de rede**. Detalhe em `data/consumos/validacao/relatorio.md`.
+
+**Armadilha do denominador, cobrada pelo validador** — participação sobre *custos
+e despesas* (pessoal 48,3% em 2022) e sobre *valor das obras* (remunerações
+18,1%) são bases distintas. A chave do bloco de 100% inclui `denominador`; sem
+isso os dois blocos de 2022 somariam 200%.
+
+**Correção de crosswalk** — a classe **42.91-0** inclui barragens e diques (exceto
+hidroelétrica) além de portos, dragagem e enrocamento. Logo **S6 e S10
+compartilham a mesma classe CNAE** e a PAIC não os separa. A tabela do SIDRA para
+PAIC por classe é a **1761**.
+
+**Regras duras, cobradas pelo validador:**
+
+1. Fonte com `entrega = custo_unitario_agregado` (ministérios, PPI, Novo PAC,
+   Banco Mundial, INFRALATAM) **não** origina linha de intensidade — publica
+   CAPEX de projeto, não coeficiente. É denominador, não numerador.
+2. `licenca = cite_only` **nunca** carrega valor numérico.
+3. `metodo = indireto` exige `memoria_calculo` reproduzível.
+4. `denominador`, `ano_base` e `deflator` obrigatórios em toda linha — receita da
+   PAIC ≠ CAPEX de projeto ≠ valor de obra contratada.
+5. `verificacao = fonte_primaria_lida` só quando o documento foi aberto. Valor
+   `snippet_busca` não vai para entregável de cliente.
+
+```bash
+python3 tools/validate_consumos.py --stats     # valida + matriz de cobertura
+python3 tools/validate_consumos.py --selftest  # prova que as regras reprovam
+```
+
+**Coleção RAG `consumos` (prefixo `cns:`) — PLANEJADA, NÃO CRIADA.** Decisão de
+MN: o repositório é a fonte da verdade nesta rodada. Migração Supabase, agente
+horizontal Manta 17 e artefato React estão em `docs/pesquisa-consumos/05-BACKLOG.md`.
+
+---
+
 ## Arquivos deste repositório
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.0)
+├── CLAUDE.md                              # este arquivo (master registry, v5.2)
 ├── README.md
 ├── .claude/
 │   └── agents/
@@ -570,7 +641,8 @@ Codex-exemplo/
 │   ├── SEGMENTO-S11-MINERACAO-GAP-G015.md # G015 — S11 (Mineração) identificado; roadmap formalização (novo, 2026-07-31)
 │   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
-│   └── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
+│   ├── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
+│   └── pesquisa-consumos/                 # 🆕 v5.2 programa de pesquisa de consumos
 ├── sharepoint/
 │   ├── README.md
 │   └── 00-arquitetura/
@@ -579,6 +651,11 @@ Codex-exemplo/
 │   └── migrations/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
 │       └── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
+├── data/
+│   └── consumos/                          # 🆕 v5.2 base de consumos: schema, CSVs, 171 fontes
+├── tools/
+│   ├── validate_consumos.py               # 🆕 v5.2 validador da base (com autoteste)
+│   └── gen_intensidades.py                # 🆕 v5.2 memória de cálculo executável
 └── tests/
     └── routing/
         └── prompts.md                     # smoke tests de routing por segmento
@@ -588,6 +665,18 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.2** (2026-08-22) — **base de consumos por receita setorial**. Programa
+  de pesquisa (método direto × indireto; disciplinas obrigatórias de
+  denominador, ano-base, deflator e moeda), JSON Schema de intensidade e de
+  fonte, validador com autoteste de 8 regras duras, crosswalk
+  CNAE 2.0 ↔ S1–S13 ↔ NAICS (S6 e S10 na mesma classe 42.91-0),
+  catálogo de 181 fontes em 7 camadas (BR,
+  internacionais e EUA, ENR incluso), e 8 linhas de intensidade no recorte
+  agregado CNAE 41/42/43. Adota a **Convenção A** de segmentos, alinhada à
+  decisão da v5.0/v5.0.1 e ao dado de produção em
+  `manta_agent_capabilities`. Coleta limitada por bloqueio de egress —
+  nenhuma linha verificada na fonte primária, segmentos S1–S13 ainda vazios.
+  Ticket `MNT-2026-CONSUMOS-SETORIAIS`.
 - **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
   agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
   (ambiental, social, governança, integração), integração co-agente com 
