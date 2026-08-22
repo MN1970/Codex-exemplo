@@ -1,0 +1,141 @@
+# Maestro OS v6.0 — Example Workflow: Medium Project (3 segments, 12 agents)
+# Porto + Energia + Saneamento: Multi-segment project, balanced complexity
+# Execution: ~10 min, 450k tokens, dynamic 12 agents
+
+project:
+  id: "proj-porto-energia-saneamento"
+  name: "Terminal Portuário Paranaguá + Energia + Saneamento"
+  type: "multi_segment"
+  segments: ["S7", "S10", "S9"]
+  complexity: "medium"
+  description: |
+    Terminal portuário Paranaguá (dragagem, molhe, berço contêiner) +
+    Subestação ANEEL 230kV linha transmissão +
+    ETA São Vicente Lei 14.026, AySA
+  budget_estimate_usd: 1_150_000_000
+  timeline_months: 42
+  interdependencies:
+    - "S7 dragagem critical path impacts S9 foundation timing"
+    - "S10 power supply required for S9 ETA pumping stations"
+
+# Phase A: Complexity detection + agent selection
+detector:
+  enabled: true
+  expected_agents: 12
+  expected_complexity: "medium"
+
+# Phase B: ML inference (active for medium projects)
+ml_inference:
+  enabled: true
+  predict_routing: true
+  predict_duration: true
+  predict_risk: true
+  confidence_threshold: 0.75
+
+# Phase C: Workflow execution phases
+phases:
+  - phase_name: "fan_out"
+    description: "Parallel execution: 12 agents (3 verticals + 9 horizontals)"
+    agents:
+      # Vertical agents (segment specialists)
+      - "agente-portos"               # S7: Ports/maritime
+      - "agente-energia"              # S10: Energy/transmission
+      - "agente-saneamento"           # S9: Sanitation (priority: AySA)
+
+      # Horizontal agents (cross-cutting activities)
+      - "manta-05"                    # Budget consolidation
+      - "manta-07"                    # Schedule integration
+      - "manta-06"                    # BIM/3D modeling
+      - "manta-15"                    # Financial advisory
+      - "manta-01"                    # Claims & contingency
+      - "manta-02"                    # Procurement contracts
+      - "manta-13"                    # Business development
+      - "manta-14"                    # Presentations & stakeholder deck
+      - "maestro"                     # Routing/orchestration
+
+    timeout_minutes: 5
+    max_concurrent: 8
+    rate_limit_backoff: "exponential"
+
+  - phase_name: "consensus"
+    description: "3/5 super-majority voting on critical multi-segment decisions"
+    aspects:
+      - aspect: "orçamento_consolidado"
+        voters: ["agente-portos", "agente-energia", "agente-saneamento", "manta-05", "manta-15"]
+        threshold: 3  # 3/5 required
+
+      - aspect: "cronograma_integrado"
+        voters: ["manta-07", "agente-portos", "agente-energia", "agente-saneamento"]
+        threshold: 3  # Need consensus across all segments
+
+      - aspect: "risco_projeto"
+        voters: ["manta-01", "agente-saneamento", "manta-15", "agente-energia"]
+        threshold: 2  # Lower threshold for risk (tie-break escalates)
+
+  - phase_name: "what_if_analysis"
+    description: "Scenario simulation for critical path risks"
+    scenarios:
+      - type: "DELAY"
+        trigger: "dragagem takes 3 months extra"
+        params:
+          affected_segment: "S7"
+          delay_days: 90
+
+      - type: "BUDGET_OVERRUN"
+        trigger: "Labor cost inflation"
+        params:
+          increase_percent: 15.0
+
+      - type: "RISK_ESCALATION"
+        trigger: "Environmental license delay"
+        params:
+          risk_increase_percent: 10.0
+
+  - phase_name: "aggregate"
+    description: "Consolidate 12-agent outputs into integrated deliverables"
+    outputs:
+      - "orçamento_consolidado.xlsx"
+      - "cronograma_master.mpp"
+      - "modelo_financeiro.xlsx"
+      - "contrato_template_ANEEL.docx"
+      - "apresentacao_stakeholders.pptx"
+      - "matriz_risco.json"
+      - "relatorio_executivo.pdf"
+
+    timeout_minutes: 3
+
+# Execution parameters
+execution:
+  token_budget: 450000
+  rate_limit_handling: "exponential_backoff"
+  fallback_strategy: "escalate_to_manager"
+  parallel_workers: 8
+
+# Performance targets (medium projects)
+targets:
+  execution_time_minutes: 10
+  consensus_rate_percent: 80
+  token_efficiency_percent: 85
+
+# Advanced: Cross-agent dependencies for interdependency tracking
+dependencies:
+  - from_agent: "agente-portos"
+    to_agent: "agente-saneamento"
+    type: "foundation_timing"
+    impact: "critical"
+
+  - from_agent: "agente-energia"
+    to_agent: "agente-saneamento"
+    type: "power_supply"
+    impact: "critical"
+
+# Output artifacts
+artifacts:
+  - format: "docx"
+    name: "projeto_completo.docx"
+  - format: "xlsx"
+    name: "orçamento_detalhado.xlsx"
+  - format: "json"
+    name: "project_state.json"
+  - format: "pdf"
+    name: "resumo_executivo.pdf"

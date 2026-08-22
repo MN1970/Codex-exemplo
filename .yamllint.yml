@@ -1,0 +1,20 @@
+# Config do yamllint para o repositório Manta Maestro.
+# Aplica-se a: .github/workflows/*.yml, tests/**/*.yaml, e ao
+# frontmatter YAML extraído de .claude/agents/*.md (ver
+# scripts/lint_agent_frontmatter.py).
+extends: default
+
+rules:
+  line-length:
+    max: 140
+    level: warning
+  document-start:
+    present: false
+  truthy:
+    allowed-values: ["true", "false", "on"]
+  comments:
+    min-spaces-from-content: 1
+
+ignore: |
+  .git/
+  node_modules/

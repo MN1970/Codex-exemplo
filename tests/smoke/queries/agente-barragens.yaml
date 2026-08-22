@@ -1,0 +1,15 @@
+# 5 perguntas de exemplo para o smoke test do agente-barragens (Manta 03-S10).
+- prompt: "Preciso projetar uma barragem CFRD de 80m de altura. Quais premissas geotécnicas eu levanto primeiro?"
+  expect_any: ["cfrd", "barragem", "enrocamento", "face de concreto"]
+
+- prompt: "Como faço uma dam breach analysis pós-Brumadinho?"
+  expect_any: ["breach", "ruptura", "brumadinho", "pae"]
+
+- prompt: "Qual bulletin ICOLD cobre rejeitos filtrados (dry stack)?"
+  expect_any: ["icold", "dry stack", "rejeitos filtrados"]
+
+- prompt: "PNSB exige quais entregáveis para revisão periódica de segurança?"
+  expect_any: ["pnsb", "12.334", "revisão periódica", "segurança"]
+
+- prompt: "Tenho uma barragem TSF a montante que precisa descaracterizar — qual o roteiro?"
+  expect_any: ["tsf", "descaracterização", "alteamento", "montante"]
