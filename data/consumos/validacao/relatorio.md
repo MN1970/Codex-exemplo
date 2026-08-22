@@ -444,6 +444,42 @@ recomendação de qual usar para qual pergunta, e anotado no campo `notas` das d
 linhas de material. Nenhum valor foi alterado — as duas medidas são legítimas e
 medem coisas diferentes.
 
+## SICRO no SharePoint — mapeamento completo e conclusão negativa
+
+Varredura do acervo SICRO da Manta: **1.301 arquivos**, em três árvores.
+
+| Caminho | Conteúdo |
+| --- | --- |
+| `02_CLIENTE/00_SICRO/01_SicroPDF/` | PDFs originais, em `01_Sicro_Manuais`, `02_Sicro_Cadernos_de_Aplicacao`, `08_Sicro_Relatorios_Ocorrencias` |
+| `02_CLIENTE/00_SICRO/02_SicroJSON/` | **manuais já convertidos para JSON**, com `source_pdf`, `file_size_bytes` e `sha1` |
+| `04_IA/07_ORÇAMENTO - BASES/SICRO/` | `MANUAL DE CUSTO` e `CADERNO DE APLICAÇÃO` |
+
+Os **oito volumes** estão lá, com tomos e cadernos de aplicação: V01 Conceitos,
+V03 Preços Referenciais, V04 FIC (Tomos 1 e 2), V05 FIT, V06 Canteiro (Tomo 1
+módulos e projetos-tipo, Tomo 2 serviços e quantidades), V07 Administração Local,
+V08 Mobilização.
+
+**Achado lateral útil:** a árvore `02_SicroJSON` mostra que a Manta **já tem
+pipeline de extração** de SICRO para JSON estruturado, com hash de procedência.
+Quem for atacar a Fase 2 deve reusar isso em vez de reescrever.
+
+### A conclusão negativa, que é o ponto
+
+Os **cadernos técnicos / memoriais de cálculo** e as **Produções de Equipes
+Mecânicas** — que o próprio Volume 01 aponta como o lugar onde estão "os
+consumos dos materiais e a produção horária dos serviços" — **não estão no
+SharePoint**. Os "cadernos de aplicação" que existem são guias práticos de
+orçamentação, não os memoriais.
+
+O único volume cujo título promete quantidade é o **V06 Tomo 2**, e é quantidade
+de **projeto-tipo de canteiro** — custo indireto, não coeficiente de serviço de
+obra.
+
+Ou seja: o SICRO no SharePoint está **esgotado para fins de coeficiente de
+consumo**. Isso fecha a busca e transforma a pendência em pedido preciso: o que
+falta baixar do DNIT são os **memoriais de cálculo / cadernos técnicos**, não os
+manuais — esses já estão todos aqui.
+
 ## O que falta para fechar o piloto
 
 Por ordem de retorno:
