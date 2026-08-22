@@ -3,7 +3,7 @@
 Toda fonte de `registro-fontes.csv` carrega um campo `licenca` com três valores.
 
 | `licenca` | O que pode entrar na base |
-|---|---|
+| --- | --- |
 | `publico` | tudo — coeficiente, valor, tabela |
 | `licenciado` | coeficiente entra **se** a Manta tiver assinatura vigente; marcar a linha e restringir acesso |
 | `cite_only` | **nada numérico.** Só metadado: cobertura, edição, o que entrega, como acessar |
@@ -44,7 +44,7 @@ O que **não** pode:
 **Isso é regra de build, não recomendação.** O validador reprova qualquer linha
 com `licenca = cite_only` e `valor` preenchido:
 
-```
+```text
 licenca=cite_only com 'valor' preenchido - conteudo licenciado nao entra na base
 ```
 
@@ -59,7 +59,7 @@ python3 tools/validate_consumos.py --selftest
 Seis fontes onde o uso depende de contrato vigente da Manta:
 
 | Fonte | Por que importa |
-|---|---|
+| --- | --- |
 | **Sobratema** `F-068` | melhor fonte BR de frota e hora-máquina de equipamento |
 | **CII** `F-091` | benchmarking internacional de produtividade |
 | **Oxford Global Projects** `F-092` | base de desvio de custo (Flyvbjerg) |

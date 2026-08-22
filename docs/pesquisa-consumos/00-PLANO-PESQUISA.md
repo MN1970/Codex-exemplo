@@ -22,7 +22,7 @@ calibração metodológica, não como alvo de coleta.
 ## Fases
 
 | Fase | Conteúdo | Estado |
-|---|---|---|
+| --- | --- | --- |
 | 0 | Método, schema, validador, crosswalk CNAE, catálogo de fontes | **concluída** |
 | 1 | Extração no recorte agregado CNAE 41/42/43 | **parcial** — 8 linhas, nenhuma verificada na fonte primária |
 | 2 | Descida ao segmento S1–S13 via SIDRA por classe CNAE | **bloqueada** — egress |

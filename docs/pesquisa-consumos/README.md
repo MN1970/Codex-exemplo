@@ -34,7 +34,7 @@ o que falta para fechar o piloto.
 
 ## Estrutura
 
-```
+```text
 docs/pesquisa-consumos/
 ├── README.md                      este arquivo
 ├── 00-PLANO-PESQUISA.md           escopo, fases, matriz de cobertura

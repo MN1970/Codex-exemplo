@@ -18,7 +18,7 @@ O detalhamento que esta rodada deliberadamente não fez. Coeficiente físico por
 unidade de serviço:
 
 | Setor | Exemplos de coeficiente |
-|---|---|
+| --- | --- |
 | S6 Portos | dragagem `hm/m3` e `L diesel/m3`; enrocamento `t/m` de molhe; cravação `hm/m` |
 | S7 Aeroportos | pavimento de pista `kg cimento/m3` e `t CAP/m2`; balizamento `un/km` |
 | S8 Saneamento | rede `m3 escavação/m` e `hh/m` por DN e profundidade; ETA/ETE `m3 concreto` e `kg aço` por m3/dia de vazão |
@@ -79,7 +79,7 @@ correto.
 Segmentos adicionais incorporados ao schema e ao crosswalk nesta rodada:
 
 | Código | Segmento | Estado no registro mestre |
-|---|---|---|
+| --- | --- | --- |
 | **S11** | Mineração (`especialista-mineracao`) | `ativo=true` em produção desde 2026-07-12; sem agente `.md`, RAG ou routing — gap **G015** |
 | **S12** | Óleo & Gás | proposto, pendente gate MN |
 | **S13** | Edificações | proposto, pendente gate MN |

@@ -7,7 +7,7 @@ entrega** — que é a informação que evita o erro mais comum do projeto.
 Cada fonte tem um campo `entrega`. Ele governa o que a fonte pode originar:
 
 | `entrega` | Pode gerar linha de intensidade? |
-|---|---|
+| --- | --- |
 | `coeficiente_fisico` | sim |
 | `indice_macro` | sim, como deflator ou denominador auxiliar |
 | `metodologia` | não — orienta o método |
@@ -63,7 +63,7 @@ PNL `F-022`, PELT `F-023`.
 **Por setor prioritário:**
 
 | Setor | Fontes-chave |
-|---|---|
+| --- | --- |
 | S6 Portos | Planos Mestres Portuários `F-024`, PNLP `F-025`, estudos de arrendamento ANTAQ `F-039` |
 | S7 Aeroportos | estudos de concessão ANAC `F-026` — **essencial**, porque não há classe CNAE |
 | S8 Saneamento | PLANSAB `F-027`, SNIS `F-043`, tabelas SABESP `F-057`, SANEPAR `F-058`, COPASA `F-059`; **AySA `F-061`** e ERAS `F-062` para a Argentina |

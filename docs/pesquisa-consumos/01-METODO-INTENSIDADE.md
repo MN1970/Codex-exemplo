@@ -4,7 +4,7 @@
 
 Para um setor, um ano e um país:
 
-```
+```text
 intensidade = quantidade física de insumo consumida
               ─────────────────────────────────────
               receita / valor de obra / CAPEX do setor
@@ -13,7 +13,7 @@ intensidade = quantidade física de insumo consumida
 Oito famílias de insumo, vocabulário fechado:
 
 | Família | Unidade |
-|---|---|
+| --- | --- |
 | `mao_de_obra` | `pessoas-ano/R$ mi` e `hh/R$ mi` |
 | `equipamentos` | `hm/R$ mi` ou `R$/R$ mi` |
 | `aco` | `t/R$ mi` |
@@ -44,7 +44,7 @@ unidade de produção da construção.
 A fonte dá a **estrutura de custo** (% por família) e o preço médio do insumo. A
 quantidade física sai de:
 
-```
+```text
 quantidade = receita × participação% ÷ preço unitário médio
 ```
 
@@ -62,7 +62,7 @@ Dado da PAIC 2022 para o recorte CNAE 42 (obras de infraestrutura):
 
 **Passo 1 — intensidade direta.**
 
-```
+```text
 684.700 pessoas ÷ R$ 147.800 mi = 4,633 pessoas-ano por R$ 1 milhão
 ```
 
@@ -71,7 +71,7 @@ Linha `INT-C42-MAO_DE_OBRA-001`, `metodo = direto`, sem premissa nenhuma.
 **Passo 2 — conversão para homem-hora.** Aqui entra premissa, e ela precisa
 ficar visível:
 
-```
+```text
 4,633 pessoas-ano/R$ mi × 1.800 h/ano = 8.339 hh por R$ 1 milhão
 ```
 
@@ -84,7 +84,7 @@ inteira, e é por isso que ela não pode ficar implícita.
 **Passo 3 — leitura do resultado.** Comparando os três recortes de 2022:
 
 | Recorte | pessoas-ano/R$ mi |
-|---|---|
+| --- | --- |
 | 41 — construção de edifícios | 4,636 |
 | 42 — obras de infraestrutura | 4,633 |
 | 43 — serviços especializados | 7,329 |
@@ -103,7 +103,7 @@ Sem elas a base não presta, e o validador cobra as três.
 São bases diferentes e **não se misturam na mesma linha**:
 
 | `denominador` | O que é | Quem publica |
-|---|---|---|
+| --- | --- | --- |
 | `valor_obras_paic` | valor das obras e/ou serviços executados por empresas formais | PAIC/IBGE |
 | `receita_paic` | receita bruta/líquida das empresas | PAIC/IBGE |
 | `capex_projeto` | investimento previsto ou realizado de um projeto | PPI, Novo PAC, INFRALATAM |
@@ -155,7 +155,7 @@ Fase 2 bottom-up: os grupos A/B/C mapeiam direto nas famílias `equipamentos`,
 ## Tiers de qualidade
 
 | Tier | Critério |
-|---|---|
+| --- | --- |
 | **A** | estatística oficial com quantidade e receita no mesmo recorte (PAIC lida no SIDRA, MIP/IBGE, Eurostat, OECD ICIO) |
 | **B** | publicação institucional ou de associação setorial (SNIC, Aço Brasil, CBIC, Sobratema, FGV/IBRE, Banco Mundial, BID) |
 | **C** | literatura acadêmica |

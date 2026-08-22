@@ -13,7 +13,7 @@ motivos concretos, não por completude:
 ## Os pares BR ↔ US
 
 | Função | Brasil | Estados Unidos |
-|---|---|---|
+| --- | --- | --- |
 | Censo da construção (receita, pessoal, custo de material) | PAIC/IBGE `F-001` | **Economic Census — setor NAICS 23** `F-137` |
 | Matriz de insumo-produto | IBGE `F-002` | **BEA Input-Output Accounts** `F-138` |
 | Horas e ganhos na construção | CAGED/RAIS `F-008`,`F-009` | **BLS CES** `F-139` |
@@ -33,7 +33,7 @@ de cada segmento.
 O **ENR Construction Cost Index** tem uma cesta física fixa e pública:
 
 | Item | Quantidade |
-|---|---|
+| --- | --- |
 | mão de obra comum | **200 horas** (média de 20 cidades, salário + encargos) |
 | aço estrutural fabricado | **25 cwt** = 2.500 lb ≈ 1,13 t |
 | cimento portland a granel | **1,128 t** |
@@ -122,7 +122,7 @@ derivado de composição referencial como o SICRO. O **FHWA NHCCI** `F-143` é o
 ## Fontes federais por setor prioritário
 
 | Setor | Fonte americana |
-|---|---|
+| --- | --- |
 | S6 Portos | USACE MII `F-118` e CWCCIS `F-148`; AAPA `F-158`. Dragagem é bem documentada pelo USACE |
 | S7 Aeroportos | FAA `F-120`; ACRP via TRB `F-151` |
 | S8 Saneamento | EPA CWNS `F-149` e DWINSA `F-150`; AWWA `F-160` |

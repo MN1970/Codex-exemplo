@@ -6,7 +6,7 @@ Validador: `tools/validate_consumos.py`
 
 ## Resultado
 
-```
+```text
 OK - 8 intensidades, 171 fontes, 2 linhas de estrutura de custo, 17 mapeamentos CNAE
 ```
 
@@ -16,7 +16,7 @@ e linha válida passa limpa.
 ## Contra a meta do plano
 
 | Item | Meta | Entregue | Situação |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Intensidades nos 5 setores prioritários | 40–60 linhas | **0** | não atingida |
 | Intensidades em recorte agregado CNAE | — | 8 linhas | fora da meta original, foi o que o acesso permitiu |
 | Estrutura de custo por setor | 6 blocos | 1 bloco, 81,9% não decomposto | não atingida |
@@ -34,7 +34,7 @@ A política de rede desta sessão negou o acesso às fontes. Confirmado
 explicitamente pelo proxy, com erro `EGRESS_BLOCKED`, nestes domínios:
 
 | Domínio | O que se buscava |
-|---|---|
+| --- | --- |
 | `agenciadenoticias.ibge.gov.br` | PDF de divulgação da PAIC 2023 |
 | `biblioteca.ibge.gov.br` | informativo PAIC 2022 (tabelas por CNAE) |
 | `concla.ibge.gov.br` | tabela oficial CNAE 2.0, divisão 42 |
@@ -63,7 +63,7 @@ promovido a `fonte_primaria_lida`.
 ### Linhas produzidas
 
 | id | valor | unidade | ano |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `INT-C42-MAO_DE_OBRA-001` | 4,633 | pessoas-ano/R$ mi | 2022 |
 | `INT-C41-MAO_DE_OBRA-001` | 4,636 | pessoas-ano/R$ mi | 2022 |
 | `INT-C43-MAO_DE_OBRA-001` | 7,329 | pessoas-ano/R$ mi | 2022 |
@@ -127,7 +127,7 @@ civil engineering construction) em 2022.
 **Denominador não obtido.** As duas candidatas que apareceram não servem:
 
 | Candidata | Por que não serve |
-|---|---|
+| --- | --- |
 | *Value of construction put in place* (Census `F-016`) — US$ 133,6 bi de rodovia em 2022 | é **gasto por categoria de obra**, não receita de estabelecimento, e cobre só parte do escopo de NAICS 237 |
 | Receita de NAICS 237 no Economic Census (`F-137`) | é **a base correta** — tabela `EC2223KOB`, *value of business done* — e não veio nos resultados de busca |
 
