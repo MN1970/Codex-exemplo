@@ -459,7 +459,7 @@
     },
     {
       "index": "425-010",
-      "title": "Ditch Bottom Inlets Types C, D, E · Gutter Inlets Types S, V",
+      "title": "Structure Bottoms Type J and P",
       "book": "roadway",
       "segment_key": "dre",
       "segment_name": "Drenagem",
@@ -469,9 +469,9 @@
       ],
       "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-010.pdf",
       "spi_url": null,
-      "title_unconfirmed": true,
+      "title_unconfirmed": false,
       "manta": {
-        "notes": null,
+        "notes": "Tipo P ate 1,22m (4 pes) de diametro; Tipo J acima disso, com altura de parede >= 1,83m (6 pes) para acesso. Pode ser pre-moldado ou moldado in loco; formato retangular exige pre-moldado armado.",
         "dnit_equivalent": null
       }
     },
