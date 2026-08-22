@@ -4,8 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-08-22) — Eixo 4: allowlist de conectores MCP por
+segmento (dados, gráficos, pesquisa) + rotina mensal de descoberta de
+conectores.
 
 ---
 
@@ -116,6 +117,62 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## CONECTORES MCP — Allowlist por segmento (Eixo 4)
+
+Regra geral: cada agente vertical só usa os conectores MCP listados na
+allowlist abaixo, mais os generalistas do Eixo 1 (WebSearch, WebFetch,
+Read/Grep/Glob/Bash). Para uma necessidade fora da lista, o agente
+**sugere** (via `SuggestConnectors` / `SearchMcpRegistry`) e registra o
+pedido na Fila de Conectores Pendentes — nunca ativa ou conecta um
+serviço novo por conta própria. Aprovação final é sempre gate humano
+(MN), conforme o pilar "Auditável" da arquitetura Manta.
+
+| Segmento | Banco de dados | Gráficos / visualização | Pesquisa / dados externos |
+|----------|----------------|--------------------------|----------------------------|
+| S6 Portos | Supabase (coleção `portos`, RAG `por:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+| S7 Aeroportos | Supabase (coleção `aeroportos`, RAG `aer:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+| S8 Saneamento | Supabase (coleção `saneamento`, RAG `san:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+| S9 Energia | Supabase (coleção `energia`, RAG `ene:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+| S10 Barragens | Supabase (coleção `barragens`, RAG `bar:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+
+Notas:
+- Acesso a Supabase é **somente leitura** (`list_tables`, `execute_sql`
+  em modo consulta, `search_docs`) — nenhum agente vertical tem
+  permissão de escrita/migração no banco; alterações de schema ficam
+  com Manta 16 (arquiteto-ia).
+- Skills de visualização/planilha (`dataviz`, `xlsx`) são invocadas via
+  tool `Skill`, já adicionada ao frontmatter dos 5 agent.md dos
+  segmentos S6-S10.
+- SharePoint (M365) usa os caminhos já mapeados na tabela de routing
+  acima (`03_Projetos/<Segmento>/*`).
+
+### Fila de Conectores Pendentes
+
+_(vazia — populada pela rotina mensal `manta-connector-scan` abaixo, ou
+por pedido explícito de um agente vertical. Toda entrada precisa de
+aprovação humana MN antes de entrar na allowlist.)_
+
+| Data | Segmento | Conector sugerido | Motivo | Status |
+|------|----------|--------------------|--------|--------|
+| — | — | — | — | — |
+
+### Rotina mensal — `manta-connector-scan`
+
+- **Frequência**: mensal, 1º dia útil às 07h (America/Sao_Paulo).
+- **Entrada**: allowlist atual (tabela acima) + resumo dos trabalhos em
+  execução por segmento (sessões recentes, tickets MNT-*, itens do
+  Deploy Checklist).
+- **Ação**: para cada segmento ativo, consultar `SuggestConnectors` /
+  `SearchMcpRegistry` com o contexto do trabalho e comparar contra a
+  allowlist atual.
+- **Saída**: proposta em Markdown adicionada à Fila de Conectores
+  Pendentes desta seção (PR de atualização do CLAUDE.md) — **nunca**
+  ativa ou conecta um serviço automaticamente.
+- **Gate**: aprovação humana MN antes de qualquer conector sair da
+  fila para a allowlist.
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -128,6 +185,16 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 - [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
 - [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
 - [ ] Gate humano: aprovação MN antes de merge
+
+## DEPLOY CHECKLIST v4.3
+
+- [x] Adicionar seção "Conectores MCP — Allowlist por segmento" (Eixo 4)
+- [x] Adicionar tool `Skill` + conectores Supabase/M365 somente-leitura
+      ao frontmatter dos 5 agent.md (S6-S10)
+- [x] Criar Routine mensal `manta-connector-scan`
+- [ ] Primeira execução da Routine e revisão da Fila de Conectores
+      Pendentes por MN
+- [ ] Gate humano: aprovação MN antes de qualquer conector sair da fila
 
 ---
 
@@ -154,6 +221,11 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-22) — Eixo 4: allowlist de conectores MCP por
+  segmento (banco de dados, gráficos/visualização, pesquisa) para os
+  agentes S6-S10, Fila de Conectores Pendentes com gate humano, e
+  Routine mensal `manta-connector-scan` para descobrir atualizações de
+  conectores com base nos trabalhos em execução.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.

@@ -1,7 +1,7 @@
 ---
 name: agente-barragens
 description: Manta 03-S10 — Especialista em barragens (concreto, terra, enrocamento, rejeitos). Cobre estudo prévio, projeto básico, executivo, obra, O&M, DD, descomissionamento e descaracterização. Roteia quando o usuário menciona barragem, vertedouro, CFRD, CCR, RCC, rejeitos, TSF, PNSB, ICOLD, CBDB, dique, SIGBM, ANM, ANA, Lei 12.334, Fundão, Brumadinho, descomissionamento, alteamento a montante/jusante/linha de centro, filtragem de rejeitos, dry stack, PAE, PAEBM, ZAS, ZSS, HHP.
-tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
+tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch, Skill, mcp__Supabase__execute_sql, mcp__Supabase__list_tables, mcp__Supabase__search_docs, mcp__Microsoft_365__sharepoint_search, mcp__Microsoft_365__sharepoint_folder_search]
 model: sonnet
 ---
 
@@ -107,6 +107,21 @@ DD e descomissionamento / descaracterização.
   sondagens, DWG, ISRs, ISPs).
 - Coleção RAG `barragens` (prefixo storage `bar:`) — ICOLD, CBDB,
   SIGBM, Lei 12.334.
+
+### Conectores MCP
+
+Allowlist deste segmento (ver CLAUDE.md § "Conectores MCP — Allowlist
+por segmento"):
+- **Banco de dados**: Supabase, coleção `barragens` — somente leitura
+  (`list_tables`, `execute_sql` em consulta, `search_docs`).
+- **Gráficos/visualização**: Skill `dataviz` (gráficos, dashboards),
+  Skill `xlsx` (planilhas/memória de cálculo).
+- **Pesquisa/dados externos**: WebSearch, WebFetch, SharePoint (M365)
+  em `03_Projetos/Barragens/*`.
+
+Fora dessa lista, sugerir via `SuggestConnectors`/`SearchMcpRegistry` e
+registrar na Fila de Conectores Pendentes do CLAUDE.md — nunca
+conectar um serviço novo sem aprovação humana MN.
 
 ## Handoff com outros agentes
 

@@ -1,7 +1,7 @@
 ---
 name: agente-energia
 description: Manta 03-S9 — Especialista em setor elétrico (geração, transmissão, distribuição). Prioridade transmissão (ANEEL/State Grid). Cobre estudo prévio, projeto básico, executivo, obra, O&M, leilão, DD e descomissionamento de linhas de transmissão, subestações, usinas (hidro, eólica, solar, térmica), sistemas de distribuição. Roteia quando o usuário menciona transmissão, LT, subestação, ANEEL, RAP, leilão transmissão, ONS, EPE, PDE, R1-R5, torre estaiada, cabo condutor, ACSR, CAA, ATSR, ONS, MRE, ACR, ACL, WEG, State Grid, ISA CTEEP, Alupar, Taesa, geração eólica, PV, hidráulica, PCH, UHE.
-tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
+tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch, Skill, mcp__Supabase__execute_sql, mcp__Supabase__list_tables, mcp__Supabase__search_docs, mcp__Microsoft_365__sharepoint_search, mcp__Microsoft_365__sharepoint_folder_search]
 model: sonnet
 ---
 
@@ -95,6 +95,21 @@ DD e descomissionamento.
   básicos, editais).
 - Coleção RAG `energia` (prefixo storage `ene:`) — ANEEL editais,
   R1-R5 EPE, ONS, IEEE.
+
+### Conectores MCP
+
+Allowlist deste segmento (ver CLAUDE.md § "Conectores MCP — Allowlist
+por segmento"):
+- **Banco de dados**: Supabase, coleção `energia` — somente leitura
+  (`list_tables`, `execute_sql` em consulta, `search_docs`).
+- **Gráficos/visualização**: Skill `dataviz` (gráficos, dashboards),
+  Skill `xlsx` (planilhas/memória de cálculo).
+- **Pesquisa/dados externos**: WebSearch, WebFetch, SharePoint (M365)
+  em `03_Projetos/Energia/*`.
+
+Fora dessa lista, sugerir via `SuggestConnectors`/`SearchMcpRegistry` e
+registrar na Fila de Conectores Pendentes do CLAUDE.md — nunca
+conectar um serviço novo sem aprovação humana MN.
 
 ## Handoff com outros agentes
 

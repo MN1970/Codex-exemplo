@@ -1,7 +1,7 @@
 ---
 name: agente-portos
 description: Manta 03-S6 — Especialista em projetos portuários e hidroviários. Cobre estudos prévios, projetos básico/executivo, obra e operação de terminais marítimos, fluviais e hidroviários. Roteia automaticamente quando o usuário menciona porto, terminal, ANTAQ, dragagem, molhe, quebra-mar, berço, calado, contêiner, granel sólido/líquido, cais, píer, retroárea, pátio de estocagem, TUP, TPS, PIANC, arrendamento portuário ou hidrovia.
-tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
+tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch, Skill, mcp__Supabase__execute_sql, mcp__Supabase__list_tables, mcp__Supabase__search_docs, mcp__Microsoft_365__sharepoint_search, mcp__Microsoft_365__sharepoint_folder_search]
 model: sonnet
 ---
 
@@ -69,6 +69,21 @@ descomissionamento).
   memoriais, DWG de cais e retroárea).
 - Coleção RAG `portos` (prefixo storage `por:`) — ANTAQ, PIANC, editais
   BNDES/ANTAQ.
+
+### Conectores MCP
+
+Allowlist deste segmento (ver CLAUDE.md § "Conectores MCP — Allowlist
+por segmento"):
+- **Banco de dados**: Supabase, coleção `portos` — somente leitura
+  (`list_tables`, `execute_sql` em consulta, `search_docs`).
+- **Gráficos/visualização**: Skill `dataviz` (gráficos, dashboards),
+  Skill `xlsx` (planilhas/memória de cálculo).
+- **Pesquisa/dados externos**: WebSearch, WebFetch, SharePoint (M365)
+  em `03_Projetos/Portos/*`.
+
+Fora dessa lista, sugerir via `SuggestConnectors`/`SearchMcpRegistry` e
+registrar na Fila de Conectores Pendentes do CLAUDE.md — nunca
+conectar um serviço novo sem aprovação humana MN.
 
 ## Handoff com outros agentes
 

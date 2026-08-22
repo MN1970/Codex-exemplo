@@ -1,7 +1,7 @@
 ---
 name: agente-saneamento
 description: Manta 03-S8 — Especialista em saneamento básico (água, esgoto, drenagem urbana, resíduos sólidos). PRIORIDADE AySA (projeto Argentina). Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento de ETAs, ETEs, sistemas de adução, distribuição de água, coleta e tratamento de esgoto, drenagem urbana e resíduos. Roteia quando o usuário menciona saneamento, ETA, ETE, adutora, esgoto, água tratada, AySA, drenagem urbana, macrodrenagem, SNIS, PMSB, Lei 14.026, subsídio cruzado, elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, digestor, UASB, MBR.
-tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
+tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch, Skill, mcp__Supabase__execute_sql, mcp__Supabase__list_tables, mcp__Supabase__search_docs, mcp__Microsoft_365__sharepoint_search, mcp__Microsoft_365__sharepoint_folder_search]
 model: sonnet
 ---
 
@@ -90,6 +90,21 @@ básico, executivo, obra, O&M, licitação, DD e descomissionamento.
   editais, PMSB).
 - Coleção RAG `saneamento` (prefixo storage `san:`) — SNIS, IWA,
   NBR 12211-12218, Lei 14.026, editais BNDES.
+
+### Conectores MCP
+
+Allowlist deste segmento (ver CLAUDE.md § "Conectores MCP — Allowlist
+por segmento"):
+- **Banco de dados**: Supabase, coleção `saneamento` — somente leitura
+  (`list_tables`, `execute_sql` em consulta, `search_docs`).
+- **Gráficos/visualização**: Skill `dataviz` (gráficos, dashboards),
+  Skill `xlsx` (planilhas/memória de cálculo).
+- **Pesquisa/dados externos**: WebSearch, WebFetch, SharePoint (M365)
+  em `03_Projetos/Saneamento/*`.
+
+Fora dessa lista, sugerir via `SuggestConnectors`/`SearchMcpRegistry` e
+registrar na Fila de Conectores Pendentes do CLAUDE.md — nunca
+conectar um serviço novo sem aprovação humana MN.
 
 ## Handoff com outros agentes
 
