@@ -4,8 +4,10 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-08-22) — base de consumos por receita setorial
+(programa de pesquisa + schema + catálogo de 136 fontes). Base anterior:
+v4.2 (2026-07-05) — expansão S6–S10 (Portos, Aeroportos, Saneamento,
+Energia, Barragens).
 
 ---
 
@@ -131,11 +133,63 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## BASE DE CONSUMOS POR RECEITA SETORIAL (v4.3)
+
+Quanto de insumo físico é consumido por unidade de receita/investimento em cada
+segmento de construção pesada. Abordagem **top-down**: intensidade macro, não
+composição serviço por serviço.
+
+- Programa, método e fontes: `docs/pesquisa-consumos/`
+- Dados, schema e validador: `data/consumos/`, `tools/validate_consumos.py`
+
+**Oito famílias de insumo** (vocabulário fechado): `mao_de_obra`,
+`equipamentos`, `aco`, `concreto`, `cimento`, `agregados`, `combustivel`,
+`outros_materiais`.
+
+**Catálogo de fontes** — 136 fontes em 7 camadas: estatística oficial (PAIC e
+matriz de insumo-produto do IBGE são a espinha dorsal), governo e planejamento
+setorial, associações setoriais, índices econômicos, academia, multilaterais, e
+proprietária cite-only.
+
+**Estado (2026-08-22)** — 8 linhas de intensidade no recorte agregado CNAE
+41/42/43; os segmentos S1–S10 ainda vazios. Nenhuma linha verificada contra a
+fonte primária: o egress da sessão de coleta bloqueou `ibge.gov.br`, `snic.org.br`
+e demais. Detalhe em `data/consumos/validacao/relatorio.md`.
+
+**Regras duras, cobradas pelo validador:**
+
+1. Fonte com `entrega = custo_unitario_agregado` (ministérios, PPI, Novo PAC,
+   Banco Mundial, INFRALATAM) **não** origina linha de intensidade — publica
+   CAPEX de projeto, não coeficiente. É denominador, não numerador.
+2. `licenca = cite_only` **nunca** carrega valor numérico.
+3. `metodo = indireto` exige `memoria_calculo` reproduzível.
+4. `denominador`, `ano_base` e `deflator` obrigatórios em toda linha — receita da
+   PAIC ≠ CAPEX de projeto ≠ valor de obra contratada.
+5. `verificacao = fonte_primaria_lida` só quando o documento foi aberto. Valor
+   `snippet_busca` não vai para entregável de cliente.
+
+```bash
+python3 tools/validate_consumos.py --stats     # valida + matriz de cobertura
+python3 tools/validate_consumos.py --selftest  # prova que as regras reprovam
+```
+
+**Coleção RAG `consumos` (prefixo `cns:`) — PLANEJADA, NÃO CRIADA.** Decisão de
+MN: o repositório é a fonte da verdade nesta rodada. Migração Supabase, agente
+horizontal Manta 17 e artefato React estão em `docs/pesquisa-consumos/05-BACKLOG.md`.
+
+---
+
 ## Arquivos deste repositório
 
 ```
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
+├── docs/
+│   └── pesquisa-consumos/            # 🆕 v4.3 programa de pesquisa de consumos
+├── data/
+│   └── consumos/                     # 🆕 v4.3 schema + CSVs + registro de fontes
+├── tools/
+│   └── validate_consumos.py          # 🆕 v4.3 validador da base
 └── .claude/
     └── agents/
         ├── agente-portos.md          # 🆕 S6
@@ -154,6 +208,13 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-22) — base de consumos por receita setorial. Programa de
+  pesquisa (método direto × indireto, disciplinas de denominador/deflator/moeda),
+  JSON Schema de intensidade e de fonte, validador com autoteste, crosswalk
+  CNAE 2.0 ↔ S1–S10, catálogo de 136 fontes BR e internacionais em 7 camadas,
+  e 8 linhas de intensidade no recorte agregado CNAE. Coleta limitada por
+  bloqueio de egress — nenhuma linha verificada na fonte primária. Ticket
+  MNT-2026-CONSUMOS-SETORIAIS.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.

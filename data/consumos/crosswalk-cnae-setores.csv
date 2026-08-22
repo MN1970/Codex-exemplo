@@ -1,0 +1,15 @@
+setor_manta,nome_setor,cnae_grupo,cnae_classe,cnae_denominacao,aderencia,nace_equivalente,status_verificacao,observacao
+S1,Rodovias,42.1,42.11-1,Construcao de rodovias e ferrovias,parcial,F42.11,nao_verificado_concla,A classe agrega rodovias E ferrovias no mesmo codigo. Impossivel separar S1 de S3 pela PAIC sem microdado.
+S2,OAE - pontes e viadutos,42.1,42.12-0,Construcao de obras de arte especiais,exato,F42.13,nao_verificado_concla,Melhor aderencia da divisao 42. Serve de referencia de qualidade para as outras.
+S3,Ferrovia,42.1,42.11-1,Construcao de rodovias e ferrovias,parcial,F42.12,nao_verificado_concla,Compartilha classe com S1. Ver observacao de S1.
+S4,Metro,42.1,42.11-1,Construcao de rodovias e ferrovias,parcial,F42.12,nao_verificado_concla,A nota explicativa da classe inclui sistemas metropolitanos de superficie e subterraneos. Indistinguivel de S3 na estatistica.
+S5,Tuneis,42.9,42.99-5,Obras de engenharia civil nao especificadas anteriormente,agregado,F42.99,nao_verificado_concla,Sem classe dedicada. Cai em residual ou junto da obra linear que serve.
+S6,Portos,42.9,42.91-0,Obras portuarias maritimas e fluviais,exato,F42.91,nao_verificado_concla,UNICO setor prioritario com classe CNAE propria. Melhor candidato a intensidade setorial confiavel.
+S7,Aeroportos,42.9,42.99-5,Obras de engenharia civil nao especificadas anteriormente,agregado,F42.99,nao_verificado_concla,SEM CLASSE DEDICADA. Intensidade via PAIC sera indireta e de baixa precisao. Complementar com estudos de concessao da ANAC (F-026).
+S8,Saneamento,42.2,42.22-7,Construcao de redes de abastecimento de agua coleta de esgoto e construcoes correlatas,parcial,F42.21,nao_verificado_concla,Boa aderencia para REDES. ETA e ETE podem ser classificadas em 42.99-5 ou em 41 conforme a empresa. Verificar antes de usar.
+S9,Energia,42.2,42.21-9,Obras para geracao e distribuicao de energia eletrica e para telecomunicacoes,parcial,F42.22,nao_verificado_concla,A classe mistura energia com TELECOMUNICACOES. Superestima o setor eletrico. Ajuste necessario via PDE/EPE (F-028).
+S10,Barragens,42.9,42.99-5,Obras de engenharia civil nao especificadas anteriormente,agregado,F42.99,nao_verificado_concla,SEM CLASSE DEDICADA. Barragem de rejeito pode ainda cair na divisao 43 ou na propria mineracao. Complementar com CBDB (F-074) e SNISB (F-041).
+C41,Construcao de edificios (recorte agregado),41,41,Construcao de edificios,exato,F41,nao_verificado_concla,Recorte agregado publicado pela PAIC. Usado como comparacao.
+C42,Obras de infraestrutura (recorte agregado),42,42,Obras de infraestrutura,exato,F42,nao_verificado_concla,ANCORA DO PROJETO. E o nivel mais desagregado que a PAIC publica em release aberto.
+C43,Servicos especializados para construcao (recorte agregado),43,43,Servicos especializados para construcao,exato,F43,nao_verificado_concla,Recorte agregado. Muito mais intensivo em mao de obra - ver intensidades.
+CF,Total da industria da construcao (secao F),F,F,Construcao,exato,F,nao_verificado_concla,Soma de 41 + 42 + 43. Denominador dos indicadores nacionais de cimento e aco.

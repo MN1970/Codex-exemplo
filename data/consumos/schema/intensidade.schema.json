@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mantaassociados.com/schemas/consumos/intensidade-1.json",
+  "title": "Intensidade de consumo de insumo por receita setorial",
+  "description": "Um registro = (setor, familia_insumo, denominador, ano_base, pais). Guarda QUANTO de insumo fisico e consumido por unidade de receita/investimento do setor. Nao guarda preco.",
+  "type": "object",
+  "required": [
+    "id", "setor", "familia_insumo", "valor", "unidade_fisica",
+    "denominador", "ano_base", "moeda", "pais", "metodo",
+    "fonte_id", "fonte_localizacao", "tier", "licenca", "verificacao"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^INT-[A-Z0-9]+-[A-Z_]+-[0-9]{3}$",
+      "description": "INT-<setor>-<FAMILIA>-<seq>, ex. INT-C42-MAO_DE_OBRA-001"
+    },
+    "setor": {
+      "type": "string",
+      "description": "Segmento Manta (S1..S10) ou recorte CNAE agregado quando o dado nao desce ao segmento (C41, C42, C43, CF = secao F inteira).",
+      "enum": ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","C41","C42","C43","CF"]
+    },
+    "cnae": {
+      "type": "string",
+      "description": "Classe ou grupo CNAE 2.0 do recorte, quando aplicavel. Vazio quando a fonte nao usa CNAE."
+    },
+    "familia_insumo": {
+      "type": "string",
+      "enum": ["mao_de_obra","equipamentos","aco","concreto","cimento","agregados","combustivel","outros_materiais"]
+    },
+    "valor": { "type": ["number","null"], "description": "Nulo obrigatoriamente quando licenca = cite_only." },
+    "unidade_fisica": {
+      "type": "string",
+      "enum": ["hh/R$ mi","pessoas-ano/R$ mi","hm/R$ mi","t/R$ mi","m3/R$ mi","L/R$ mi","R$/R$ mi","hh/US$ mi","pessoas-ano/US$ mi","t/US$ mi","m3/US$ mi"]
+    },
+    "denominador": {
+      "type": "string",
+      "enum": ["receita_paic","valor_obras_paic","capex_projeto","valor_obra_contratada","vbp"],
+      "description": "A base do divisor. Receita de empresa (PAIC) != CAPEX de projeto (PPI/PAC/INFRALATAM) != valor de obra contratada. Nunca misturar na mesma linha."
+    },
+    "ano_base": { "type": "integer", "minimum": 1990, "maximum": 2100 },
+    "deflator": {
+      "type": ["string","null"],
+      "enum": ["INCC","IPCA","IGP-DI","IGP-M","nominal_corrente","deflator_implicito_construcao", null],
+      "description": "nominal_corrente = valor do proprio ano, sem deflacionamento. Obrigatorio explicitar."
+    },
+    "moeda": { "type": "string", "enum": ["BRL","USD","USD_PPC","EUR","ARS"] },
+    "pais": { "type": "string", "description": "ISO 3166-1 alfa-2, ou 'MUNDO' para agregado global." },
+    "metodo": { "type": "string", "enum": ["direto","indireto"] },
+    "memoria_calculo": {
+      "type": ["string","null"],
+      "description": "A conta, reproduzivel. Obrigatorio quando metodo = indireto."
+    },
+    "premissas": {
+      "type": ["string","null"],
+      "description": "Premissas Manta que NAO vem da fonte (ex. horas trabalhadas por ano). Tudo que nao e dado da fonte entra aqui."
+    },
+    "fonte_id": { "type": "string", "description": "FK -> registro-fontes.csv" },
+    "fonte_localizacao": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Onde exatamente na fonte. Tabela, pagina, codigo do agregado SIDRA, aba da planilha."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["A","B","C","D"],
+      "description": "A estatistica oficial com quantidade e receita no mesmo recorte; B publicacao institucional ou de associacao setorial; C literatura academica; D fonte unica, projeto isolado ou dado nao verificado contra a fonte primaria."
+    },
+    "licenca": { "type": "string", "enum": ["publico","licenciado","cite_only"] },
+    "verificacao": {
+      "type": "string",
+      "enum": ["fonte_primaria_lida","snippet_busca","catalogada_nao_verificada"],
+      "description": "fonte_primaria_lida = o documento foi aberto e lido. snippet_busca = o numero veio de resultado de busca, NAO do documento. Nunca usar snippet_busca em orcamento de cliente sem promover para fonte_primaria_lida."
+    },
+    "url": { "type": ["string","null"] },
+    "notas": { "type": ["string","null"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "metodo": { "const": "indireto" } }, "required": ["metodo"] },
+      "then": { "required": ["memoria_calculo"], "properties": { "memoria_calculo": { "type": "string", "minLength": 10 } } }
+    },
+    {
+      "if": { "properties": { "licenca": { "const": "cite_only" } }, "required": ["licenca"] },
+      "then": { "properties": { "valor": { "const": null } } }
+    }
+  ]
+}
