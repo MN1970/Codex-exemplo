@@ -4,7 +4,14 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+Versão: **v5.2** (2026-08-22) — **Conectores MCP**: allowlist de
+conectores por segmento (banco de dados, gráficos/visualização,
+pesquisa/dados) para S6–S10, Fila de Conectores Pendentes sujeita a
+gate humano MN, e Routine mensal `manta-connector-scan` que propõe
+atualizações com base no trabalho em execução. Ticket
+`MNT-2026-CONECTORES-MCP-EIXO-F`.
+
+Consolida v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
 Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
 assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
@@ -44,12 +51,14 @@ Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGE
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
-12. [Model tiering](#model-tiering)
-13. [Gaps abertos / pendências](#gaps-abertos--pendências)
-14. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
-15. [Deploy checklist v5.0](#deploy-checklist-v50)
-16. [Arquivos deste repositório](#arquivos-deste-repositório)
-17. [Histórico de versões](#histórico-de-versões)
+12. [Conectores MCP — Allowlist por segmento](#conectores-mcp--allowlist-por-segmento)
+13. [Model tiering](#model-tiering)
+14. [Gaps abertos / pendências](#gaps-abertos--pendências)
+15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
+16. [Deploy checklist v5.0](#deploy-checklist-v50)
+17. [Deploy checklist v5.2 — Conectores MCP](#deploy-checklist-v52--conectores-mcp)
+18. [Arquivos deste repositório](#arquivos-deste-repositório)
+19. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -436,6 +445,62 @@ em produção (ver seção RAG acima).
 
 ---
 
+## CONECTORES MCP — Allowlist por segmento
+
+Regra geral: cada agente vertical só usa os conectores MCP listados na
+allowlist abaixo, mais os generalistas herdados dos agentes horizontais
+(WebSearch, WebFetch, Read/Grep/Glob/Bash). Para uma necessidade fora da lista, o agente
+**sugere** (via `SuggestConnectors` / `SearchMcpRegistry`) e registra o
+pedido na Fila de Conectores Pendentes — nunca ativa ou conecta um
+serviço novo por conta própria. Aprovação final é sempre gate humano
+(MN), conforme o pilar "Auditável" da arquitetura Manta.
+
+| Segmento | Banco de dados | Gráficos / visualização | Pesquisa / dados externos |
+|----------|----------------|--------------------------|----------------------------|
+| S6 Portos | Supabase (coleção `portos`, RAG `por:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+| S7 Aeroportos | Supabase (coleção `aeroportos`, RAG `aer:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+| S8 Saneamento | Supabase (coleção `saneamento`, RAG `san:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+| S9 Energia | Supabase (coleção `energia`, RAG `ene:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+| S10 Barragens | Supabase (coleção `barragens`, RAG `bar:`) | Skill `dataviz`, Skill `xlsx` | WebSearch, WebFetch, SharePoint (M365) |
+
+Notas:
+- Acesso a Supabase é **somente leitura** (`list_tables`, `execute_sql`
+  em modo consulta, `search_docs`) — nenhum agente vertical tem
+  permissão de escrita/migração no banco; alterações de schema ficam
+  com Manta 16 (arquiteto-ia).
+- Skills de visualização/planilha (`dataviz`, `xlsx`) são invocadas via
+  tool `Skill`, já adicionada ao frontmatter dos 5 agent.md dos
+  segmentos S6-S10.
+- SharePoint (M365) usa os caminhos já mapeados na tabela de routing
+  acima (`03_Projetos/<Segmento>/*`).
+
+### Fila de Conectores Pendentes
+
+_(vazia — populada pela rotina mensal `manta-connector-scan` abaixo, ou
+por pedido explícito de um agente vertical. Toda entrada precisa de
+aprovação humana MN antes de entrar na allowlist.)_
+
+| Data | Segmento | Conector sugerido | Motivo | Status |
+|------|----------|--------------------|--------|--------|
+| — | — | — | — | — |
+
+### Rotina mensal — `manta-connector-scan`
+
+- **Frequência**: mensal, 1º dia útil às 07h (America/Sao_Paulo).
+- **Entrada**: allowlist atual (tabela acima) + resumo dos trabalhos em
+  execução por segmento (sessões recentes, tickets MNT-*, itens do
+  Deploy Checklist).
+- **Ação**: para cada segmento ativo, consultar `SuggestConnectors` /
+  `SearchMcpRegistry` com o contexto do trabalho e comparar contra a
+  allowlist atual.
+- **Saída**: proposta em Markdown adicionada à Fila de Conectores
+  Pendentes desta seção (PR de atualização do CLAUDE.md) — **nunca**
+  ativa ou conecta um serviço automaticamente.
+- **Gate**: aprovação humana MN antes de qualquer conector sair da
+  fila para a allowlist.
+
+---
+
 ## MODEL TIERING
 
 | Tier | Modelo | Uso típico |
@@ -542,6 +607,17 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 - [ ] Rodar consist-guard sobre este documento antes de merge
 - [ ] Gate humano: aprovação MN antes de merge
 
+## DEPLOY CHECKLIST v5.2 — Conectores MCP
+
+- [x] Adicionar seção "Conectores MCP — Allowlist por segmento" ao
+      CLAUDE.md master
+- [x] Adicionar tool `Skill` + conectores Supabase/M365 somente-leitura
+      ao frontmatter dos 5 `agente-*.v5.0.md` de S6-S10
+- [x] Criar Routine mensal `manta-connector-scan`
+- [ ] Primeira execução da Routine e revisão da Fila de Conectores
+      Pendentes por MN
+- [ ] Gate humano: aprovação MN antes de qualquer conector sair da fila
+
 ---
 
 ## Arquivos deste repositório
@@ -588,6 +664,12 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.2** (2026-08-22) — **Conectores MCP**: allowlist de conectores
+  por segmento (banco de dados, gráficos/visualização, pesquisa) para
+  os agentes S6-S10, Fila de Conectores Pendentes com gate humano MN, e
+  Routine mensal `manta-connector-scan` para descobrir atualizações de
+  conectores com base nos trabalhos em execução. Ticket
+  `MNT-2026-CONECTORES-MCP-EIXO-F`.
 - **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
   agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
   (ambiental, social, governança, integração), integração co-agente com 
