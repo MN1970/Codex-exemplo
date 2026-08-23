@@ -11,9 +11,9 @@
     "note": "Recorte curado, nao e o indice completo do ano fiscal. rtoc.pdf e stoc.pdf nao puderam ser baixados (egresso de rede bloqueado)."
   },
   "counts": {
-    "total": 63,
-    "roadway": 53,
-    "structures": 10
+    "total": 74,
+    "roadway": 54,
+    "structures": 20
   },
   "indices": [
     {
@@ -1163,6 +1163,205 @@
         "notes": "Abertura de referencia 2\" a 70F; maxima 3\" no sentido do trafego, conforme SDG 6.3/6.4",
         "dnit_equivalent": null
       }
+    },
+    {
+      "index": "455-001",
+      "title": "Prestressed Concrete Piles — Typical Details & Notes",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Folha-lider da familia; espiral W3.4 (12/14/18/24) ou W4.0 (30), cobrimento 3\"",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-002",
+      "title": "Driven Prestressed Pile — Dowel Extension",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-002.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Extensao de dowel com composto epoxi na cabeca da estaca",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-012",
+      "title": "12\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-012.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-018",
+      "title": "18\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-018.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-024",
+      "title": "24\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-024.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-030",
+      "title": "30\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-030.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-031",
+      "title": "30\" Square Prestressed Concrete Pile — High Moment",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-031.pdf",
+      "spi_url": null,
+      "title_unconfirmed": true,
+      "manta": {
+        "notes": "Titulo truncado no snippet apos 'High Moment'; concreto Classe VI >=6500 psi na transferencia",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-112",
+      "title": "12\" Square CFRP & SS Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-112.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Familia alternativa com armadura em CFRP/aco inoxidavel, mesmos tamanhos da familia convencional",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-118",
+      "title": "18\" Square CFRP & SS Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-118.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-124",
+      "title": "24\" Square CFRP & SS Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-124.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-600",
+      "title": "MSE Wall Coping (Precast or C-I-P)",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-600.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Largura 1'-8\", altura minima 7\", cobrimento tipico 2\"; WWR pode substituir armadura convencional (Secao 931)",
+        "dnit_equivalent": null
+      }
     }
   ],
   "manta_maestro": {
@@ -1175,5 +1374,5 @@
     "sharepoint_path": "05-normas/"
   },
   "document_id": "MANTA-FDOT-20260822-001",
-  "document_version": "1.8"
+  "document_version": "2.0"
 }

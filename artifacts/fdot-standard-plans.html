@@ -222,7 +222,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
       </div>
     </div>
     <div class="vbox">
-      <div><b>v1.9</b> · 23/08/2026</div>
+      <div><b>v2.0</b> · 23/08/2026</div>
       <div>MANTA-FDOT-20260822-001</div>
       <div>Classificação: Interno</div>
     </div>
@@ -274,7 +274,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
     </div>
 
     <h3>1.1 Situação da coleta</h3>
-    <p>Os 63 índices catalogados são reais e rastreados a documentos oficiais do FDOT — sumário, folha, instrução de uso, crosswalk de renumeração e pacotes de revisão. Nenhum número foi reconstruído de memória, em conformidade com R2.</p>
+    <p>Os 74 índices catalogados são reais e rastreados a documentos oficiais do FDOT — sumário, folha, instrução de uso, crosswalk de renumeração e pacotes de revisão. Nenhum número foi reconstruído de memória, em conformidade com R2.</p>
 
     <div class="tw">
       <table>
@@ -285,6 +285,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
           <tr><td>Índice completo do ano fiscal</td><td><span class="dot d-late"></span>Não obtido</td><td>Egresso de rede bloqueado para <span class="mono">fdot.gov</span></td></tr>
           <tr><td>Extração de imagem das pranchas</td><td><span class="dot d-late"></span>Não obtida</td><td>Mesmo bloqueio — PDFs não puderam ser baixados</td></tr>
           <tr><td>Título de <span class="mono">450-084</span></td><td><span class="dot d-run"></span>A confirmar</td><td>Depende do sumário oficial</td></tr>
+          <tr><td>Título completo de <span class="mono">455-031</span></td><td><span class="dot d-run"></span>A confirmar</td><td>Snippet truncou após "High Moment"; palavra completa não recuperada</td></tr>
           <tr><td>Título de <span class="mono">425-010</span></td><td><span class="dot d-ok"></span>Corrigido</td><td>Era "Ditch Bottom Inlets" — confirmado como <i>Structure Bottoms Type J and P</i></td></tr>
           <tr><td>Equivalência com projeto-tipo DNIT</td><td><span class="dot d-off"></span>Não iniciada</td><td>Etapa editorial posterior</td></tr>
         </tbody>
@@ -386,7 +387,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
   <!-- ════════ 3 ════════ -->
   <section class="tab" id="t3">
     <h2>3. Índice de folhas</h2>
-    <p class="lead">Recorte curado de 63 índices em 13 segmentos — 53 Roadway e 10 Structures. Cada número é link direto para o PDF oficial; a coluna SPI abre as instruções de uso onde existem.</p>
+    <p class="lead">Recorte curado de 74 índices em 13 segmentos — 54 Roadway e 20 Structures. Cada número é link direto para o PDF oficial; a coluna SPI abre as instruções de uso onde existem.</p>
     <div class="busca">
       <input type="search" id="q" placeholder="Filtrar por índice, título ou segmento" aria-label="Filtrar índice">
       <span id="hits"></span>
@@ -907,6 +908,38 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
       <figcaption><b>Só uma delas tem folha padrão.</b> A estaca de concreto protendido quadrada é padronizada em Standard Plan; as demais são projetadas caso a caso e governadas por especificação, não por projeto-tipo. Isso diz muito sobre onde o FDOT decidiu investir padronização — na peça pré-fabricada repetível.</figcaption>
     </figure>
 
+    <figure>
+      <svg viewBox="0 0 800 260" role="img" aria-label="Família de cinco estacas quadradas protendidas catalogadas pelo FDOT, de 12 a 30 polegadas de lado, desenhadas em escala relativa, com a regra de espiral de reforço destacada: fio W3.4 para todas exceto a de 30 polegadas, que usa W4.0.">
+        <text class="lb" x="24" y="26">Índice 455-001 · a folha-líder da família — 5 tamanhos quadrados catalogados</text>
+
+        <rect class="accbx" x="60" y="170" width="36" height="36"/><text class="tc sm" x="78" y="222">12"</text><text class="tc ix2" x="78" y="236">455-012</text>
+        <rect class="accbx" x="150" y="164" width="42" height="42"/><text class="tc sm" x="171" y="222">14"</text><text class="tc ix2" x="171" y="236">455-014</text>
+        <rect class="accbx" x="250" y="152" width="54" height="54"/><text class="tc sm" x="277" y="222">18"</text><text class="tc ix2" x="277" y="236">455-018</text>
+        <rect class="accbx" x="360" y="134" width="72" height="72"/><text class="tc sm" x="396" y="222">24"</text><text class="tc ix2" x="396" y="236">455-024</text>
+        <rect class="accbx" x="490" y="116" width="90" height="90"/><text class="tc sm" x="535" y="222">30"</text><text class="tc ix2" x="535" y="236">455-030 / 455-031 (alto momento)</text>
+
+        <line class="s" x1="30" y1="206" x2="700" y2="206" opacity=".3"/>
+
+        <rect class="tlbx" x="630" y="120" width="140" height="90"/>
+        <text class="sm" x="640" y="140">Espiral de reforço</text>
+        <text class="sm" x="640" y="158">W3.4 — 12"/14"/18"/24"</text>
+        <text class="sm" x="640" y="174">W4.0 — só na de 30"</text>
+        <text class="sm" x="640" y="192">Cobrimento 3"</text>
+
+        <text class="sm tc" x="400" y="20" opacity="0"> </text>
+      </svg>
+      <figcaption><b>Uma folha de notas gerais, oito folhas de tamanho.</b> O índice <code>455-001</code> não desenha estaca nenhuma — carrega as notas e detalhes comuns a toda a família (emenda, extensão de dowel, tabela de dados de estaca). Cada tamanho tem sua própria folha dimensional: 12", 14", 18", 24" e 30" convencional, mais uma variante de alto momento na própria 30" (<code>455-031</code>, concreto Classe VI, ≥6.500 psi na transferência). Não existe estaca quadrada de 20" no acervo atual — o crosswalk salta de 18" para 24".</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Emenda de estaca cravada e extensão de dowel com composto epóxi · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-002.pdf" target="_blank" rel="noopener">455-002</a></span></div>
+        <div><i>•</i><span>Instrumentação EDC (Embedment Data Collector) para monitorar cravação · <span class="mono">455-003</span></span></div>
+        <div><i>•</i><span>Alternativa não-convencional — armadura em CFRP/aço inoxidável, mesmos tamanhos · <span class="mono">455-101</span> série</span></div>
+      </div>
+    </figure>
+    <div class="quadro alt">
+      <div class="h">Pendência</div>
+      <p>Número exato de cordoalhas de protensão (bitola e quantidade) por tamanho de estaca não foi confirmado por citação literal do PDF — apenas a regra de espiral (W3.4/W4.0) e o cobrimento de 3" vieram de texto direto do índice <code>455-001</code>. A "Pile Data Table" é preenchida conforme SDG 3.5 e SDM 11.4, incluída junto às folhas de <i>Foundation Layout</i> do projeto — ela é o elo entre a peça catalogada e a quantidade real por obra.</p>
+    </div>
+
     <h3>5.4 Aterro estrutural e transição de encontro</h3>
     <p>O encontro estrutural em si (backwall, alas) não tem folha padrão — mas os dois elementos que o sustentam e o interligam ao aterro têm, sim, projeto-tipo. É uma correção ao que este documento afirmava em versão anterior.</p>
 
@@ -955,6 +988,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
 
         <rect class="accbx" x="80" y="42" width="60" height="20"/>
         <text class="sm" x="150" y="56">coping</text>
+        <text class="sm ix2" x="150" y="70">1'-8" larg. × 7" alt. mín. · 521-600</text>
 
         <rect class="bxf" x="80" y="62" width="60" height="34"/>
         <rect class="bxf" x="80" y="96" width="60" height="34"/>
@@ -981,9 +1015,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
 
         <line class="s" x1="40" y1="232" x2="660" y2="232"/>
       </svg>
-      <figcaption><b>O painel não segura terra sozinho.</b> Quem faz o trabalho estrutural são as tiras de reforço horizontais dentro do maciço; o painel de fachada é só o acabamento visível. A laje de nivelamento na base fica recuada no mínimo 30 cm do maciço reforçado, conforme o FDM 262.</figcaption>
+      <figcaption><b>O painel não segura terra sozinho.</b> Quem faz o trabalho estrutural são as tiras de reforço horizontais dentro do maciço; o painel de fachada é só o acabamento visível. A laje de nivelamento na base fica recuada no mínimo 30 cm do maciço reforçado, conforme o FDM 262. O coping tem folha própria — <code>521-600</code> — com largura de 1'-8" e altura mínima de 7", cobrimento típico de 2"; a tela soldada (WWR) pode substituir armadura convencional quando aprovada pela Seção 931. O <code>548-020</code> cataloga seis tipos de elevação de painel (2A a 2F) — variação tipológica confirmada, dimensões de cada tipo não recuperadas nesta pesquisa.</figcaption>
       <div class="legenda">
-        <div><i>•</i><span>Sistema permanente · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-020.pdf" target="_blank" rel="noopener">548-020</a> · temporário · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-030.pdf" target="_blank" rel="noopener">548-030</a></span></div>
+        <div><i>•</i><span>Sistema permanente · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-020.pdf" target="_blank" rel="noopener">548-020</a> · temporário · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-030.pdf" target="_blank" rel="noopener">548-030</a> · coping · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/idx/521-600.pdf" target="_blank" rel="noopener">521-600</a></span></div>
       </div>
     </figure>
 
@@ -1005,15 +1039,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
         <tbody>
           <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/idx/458-100.pdf" target="_blank" rel="noopener">458-100</a></td><td>Expansion Joint System, Strip Seal</td><td>—</td></tr>
           <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2025/spi/spi-458-110e.pdf" target="_blank" rel="noopener">458-110</a></td><td>Expansion Joint System, Poured Joint with Backer Rod</td><td>Abertura de referência 2" a 70°F; máxima 3" no sentido do tráfego (SDG 6.3/6.4)</td></tr>
-          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2025/idx/521-001.pdf" target="_blank" rel="noopener">521-001</a></td><td>Notas gerais da série — Concrete Barrier / Traffic Railing</td><td>Ancoragem por barras nomeadas (5P, 5S, 5R, 5W, 8S, 8T, 4P, 4V), sem índice próprio</td></tr>
-          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2025/idx/521-426.pdf" target="_blank" rel="noopener">521-426</a></td><td>Median Traffic Railing</td><td>—</td></tr>
-          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/idx/521-427.pdf" target="_blank" rel="noopener">521-427</a></td><td>Traffic Railing (36" Single-Slope)</td><td>—</td></tr>
+          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2025/idx/521-426.pdf" target="_blank" rel="noopener">521-426</a></td><td>Median Traffic Railing (36" Single-Slope)</td><td>—</td></tr>
+          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/idx/521-427.pdf" target="_blank" rel="noopener">521-427</a></td><td>Traffic Railing (36" Single-Slope)</td><td>MASH TL-4, literal na folha</td></tr>
         </tbody>
       </table>
     </div>
     <div class="quadro alt">
       <div class="h">O que não existe como Standard Plan</div>
       <p>Não há índice de junção modular ou finger joint (a SDG permite como alternativa de projeto, sem folha própria), nem índice separado de "ancoragem" de guarda-corpo — está embutido em cada folha <code>521-4xx</code>, com as juntas do guarda-corpo alinhadas às juntas do tabuleiro nos locais de dilatação. Também não existe Standard Plan de seção transversal completa do tabuleiro (vigas + laje + guarda-corpo + drenagem juntos): o único achado equivalente é o <i>LRFD Design Example #1</i> do Structures Design Office — um exemplo de cálculo, explicitamente <b>não um Standard Plan</b>, e não deve ser citado como tal.</p>
+    </div>
+    <div class="quadro">
+      <div class="h">Correção — 521-001 não é a folha de notas gerais da família</div>
+      <p>Versão anterior descrevia o <code>521-001</code> como "notas gerais" comuns à série de guarda-corpo 521-4xx. Confirmado por texto literal da própria folha: <code>521-001</code> é <b>"Concrete Barrier"</b> — a barreira de concreto tipo F-shape, um perfil próprio, não um índice-guarda-chuva de notas para os demais. Cada folha 521-4xx carrega suas próprias notas e armadura (padrão recorrente de bitolas 5S/5T/5X aparece em mais de uma folha, mas não há confirmação de que seja idêntico em todas).</p>
     </div>
 
     <div class="quadro">
@@ -1276,9 +1313,40 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
         </tbody>
       </table>
     </div>
+
+    <figure>
+      <svg viewBox="0 0 780 280" role="img" aria-label="Comparação de silhueta entre as duas famílias de perfil de guarda-corpo do FDOT: face vertical, usada nos índices 521-422 de 42 polegadas e 521-423 de 32 polegadas, e face única inclinada (single-slope), usada nos índices 521-426, 521-427 e 521-428, com o nível MASH TL-4 confirmado por texto literal apenas nos índices 521-422 e 521-427.">
+        <text class="lb" x="24" y="26">Duas famílias de perfil, não uma — vertical × single-slope</text>
+
+        <path class="accbx" d="M100 230 L100 90 L160 90 L160 230 Z"/>
+        <text class="tc sm" x="130" y="80">face vertical</text>
+        <text class="tc" x="130" y="252">521-422 · 42"</text>
+        <text class="tc ix2" x="130" y="266">MASH TL-4 — literal na folha</text>
+
+        <path class="accbx" d="M260 230 L260 110 L310 110 L310 230 Z"/>
+        <text class="tc" x="285" y="252">521-423 · 32"</text>
+        <text class="tc ix2" x="285" y="266">TL não confirmado por texto literal</text>
+
+        <path class="tlbx" d="M420 230 L420 90 L460 66 L470 66 L470 230 Z"/>
+        <text class="tc sm" x="445" y="80">face única inclinada</text>
+        <text class="tc" x="445" y="252">521-427 · 36"</text>
+        <text class="tc ix2" x="445" y="266">MASH TL-4 — literal na folha</text>
+
+        <path class="tlbx" d="M580 230 L580 66 L618 44 L628 44 L628 230 Z"/>
+        <text class="tc" x="604" y="252">521-428 · 42"</text>
+        <text class="tc ix2" x="604" y="266">TL não confirmado</text>
+
+        <line class="s" x1="30" y1="230" x2="720" y2="230"/>
+      </svg>
+      <figcaption><b>"Perfil alternativo" não é uma família só — são duas geometrias diferentes.</b> <code>521-422</code> (42") e <code>521-423</code> (32") são face vertical; <code>521-426</code> (mediano, 36"), <code>521-427</code> (36") e <code>521-428</code> (42") são face única inclinada (single-slope), não F-shape. O MASH TL-4 está confirmado por texto literal apenas nas folhas <code>521-422</code> e <code>521-427</code> — para as demais (<code>521-423</code>, <code>521-426</code>, <code>521-428</code>) a busca não recuperou o nível de ensaio na própria folha, e um valor TL-5 sugerido para o <code>521-428</code> por síntese de busca não tem confirmação literal e não deve ser usado.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Transição guarda-rail (W-beam) → barreira rígida nova: <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2026/idx/536-001.pdf" target="_blank" rel="noopener">536-001</a>. Para guarda-corpo <i>existente</i> de OAE, o conflito remete a <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/536-002.pdf" target="_blank" rel="noopener">536-002</a> + 521-404/405 — famílias de índice distintas para obra nova × existente.</span></div>
+      </div>
+    </figure>
+
     <div class="quadro alt">
       <div class="h">Pendência</div>
-      <p>O crosswalk indica variantes sem número individual confirmado: 32" F Shape, Median 32" F Shape, 42" F Shape e Corral Shape. Também está sem confirmação em qual dos dois livros a faixa <code>521-4xx</code> é publicada — guarda-corpo de ponte pode estar no Structures. Ambas resolvem na leitura dos sumários.</p>
+      <p>O crosswalk indica variantes sem número individual confirmado: 32" F Shape, Median 32" F Shape, 42" F Shape e Corral Shape. Também está sem confirmação em qual dos dois livros a faixa <code>521-4xx</code> é publicada — guarda-corpo de ponte pode estar no Structures. Ambas resolvem na leitura dos sumários. Ângulo de talude do single-slope, largura de base na linha do solo e equivalente métrico das alturas (32"/36"/42") não foram encontrados em fonte FDOT direta — só há valores de outros DOTs (Texas, Califórnia), que não devem ser atribuídos ao FDOT.</p>
     </div>
 
     <h3>7.2 Geometria, MOT, urbanização e demais</h3>
@@ -1426,7 +1494,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
         <dt>Documento</dt><dd>FDOT Standard Plans — catálogo comentado</dd>
         <dt>Objeto</dt><dd>Base de Referência Técnica — FDOT Standard Plans FY 2026-27</dd>
         <dt>Segmentos</dt><dd>S1 Rodovias · S2 OAE</dd>
-        <dt>Versão</dt><dd>v1.9 — visualiza o catálogo 6.2 de pré-fabricados de drenagem: composição vertical explodida (bottom 425-010 → anéis ASTM C478/frame 425-001 → grade 425-052), comparação dimensional Tipo P (circular ≤4'-0" / quadrado 3'-6") × Tipo J, e comparação testada tipo U (430-010) × saída em bico (430-021/022). 3 novos diagramas (total 19). v1.8 — aprofundamento por workflow de 5 agentes de pesquisa: corrige a faixa do MOT (<span class="mono">102-601</span> a <span class="mono">102-680</span>, não 628) e detalha 5 índices da série; corrige a distinção <span class="mono">000-515</span>×<span class="mono">000-516</span> (tipo de projeto, não pavimento flexível×rígido) e documenta o fim do índice de Clear Zone (hoje FDM 215); acrescenta 5.5 Diafragma/junta/guarda-corpo (<span class="mono">458-100</span>, <span class="mono">458-110</span>, <span class="mono">521-001/426/427</span>, preferência SDG por thickened slab end); lista as 7 famílias de contenção da SDG 3.12 além de MSE; confirma dimensão do <span class="mono">400-090</span> (30 pés) e o apoio simples do <span class="mono">400-091</span>; acrescenta critérios de montagem do <span class="mono">425-001</span>/<span class="mono">425-010</span> (anéis ASTM C478, Type P 4'-0"/3'-6", verificação de flutuação). 7 novos índices (total 63). O módulo de dimensionamento FPDM/RPDM do mesmo workflow voltou com confiança baixa (só snippets de busca, sem leitura direta do PDF) e foi deliberadamente deixado fora do corpo do documento — ver pendências. v1.7 corrige o título do índice <span class="mono">425-010</span> (era "Ditch Bottom Inlets Types C, D, E · Gutter Inlets Types S, V", confirmado como <i>Structure Bottoms Type J and P</i>) em todas as ocorrências e no dataset JSON; reescreve 4.3 Optional Base Group com quadro de fórmula (SN = a×t), exemplo numérico de substituição de camada e coluna de uso por material; acrescenta 2.2 Preços de referência com dois pay items confirmados do Historical Item Average Cost (14" e 24" square prestressed pile), declinando itens sem valor numérico confirmado (guardrail, meio-fio, base group). v1.6 corrigiu o encontro de OAE: aterro estrutural MSE (548-020/030) e laje de transição (400-090/091) têm folha padrão, ao contrário do que a v1.5 afirmava. Acrescentou detalhe de sistema MSE, aparelho de apoio chanfrado e comparação de grades da boca de lobo por peso/material — 4 novos índices e 4 novos diagramas (total 16). v1.5 adicionou cotas em m/in e 3 diagramas de pavimento/estrutura, e confirmou o roteamento Manta Maestro por citação direta. v1.4 corrigiu bug de escape que quebrava o JavaScript. v1.3 trocou o logo reconstruído por extração real do PDF institucional. v1.2 calibrou paleta e tipografia. v1.1 rodou a auditoria aluci-guard. v1.0 foi a primeira emissão no padrão Manta.</dd>
+        <dt>Versão</dt><dd>v2.0 — 3 pesquisas dirigidas aprofundam fundações, contenções e aterro estrutural: família completa de estacas quadradas protendidas (12"/14"/18"/24"/30", regra de espiral W3.4×W4.0, variante de alto momento, família CFRP/aço inoxidável — 9 novos índices); corrige uma imprecisão anterior sobre <span class="mono">521-001</span> (é "Concrete Barrier" F-shape, não notas gerais da família de guarda-corpo); distingue as duas famílias de perfil de contenção — face vertical (<span class="mono">521-422/423</span>) × single-slope (<span class="mono">521-426/427/428</span>) — com MASH TL-4 confirmado por texto literal só em <span class="mono">521-422</span> e <span class="mono">521-427</span>; acrescenta dimensão do coping MSE (<span class="mono">521-600</span>, 1'-8"×7") e a variação tipológica de painel (2A-2F) do <span class="mono">548-020</span>. 2 novos diagramas (total 21), 11 novos índices (total 74). v1.9 — visualiza o catálogo 6.2 de pré-fabricados de drenagem: composição vertical explodida (bottom 425-010 → anéis ASTM C478/frame 425-001 → grade 425-052), comparação dimensional Tipo P (circular ≤4'-0" / quadrado 3'-6") × Tipo J, e comparação testada tipo U (430-010) × saída em bico (430-021/022). 3 novos diagramas (total 19). v1.8 — aprofundamento por workflow de 5 agentes de pesquisa: corrige a faixa do MOT (<span class="mono">102-601</span> a <span class="mono">102-680</span>, não 628) e detalha 5 índices da série; corrige a distinção <span class="mono">000-515</span>×<span class="mono">000-516</span> (tipo de projeto, não pavimento flexível×rígido) e documenta o fim do índice de Clear Zone (hoje FDM 215); acrescenta 5.5 Diafragma/junta/guarda-corpo (<span class="mono">458-100</span>, <span class="mono">458-110</span>, <span class="mono">521-001/426/427</span>, preferência SDG por thickened slab end); lista as 7 famílias de contenção da SDG 3.12 além de MSE; confirma dimensão do <span class="mono">400-090</span> (30 pés) e o apoio simples do <span class="mono">400-091</span>; acrescenta critérios de montagem do <span class="mono">425-001</span>/<span class="mono">425-010</span> (anéis ASTM C478, Type P 4'-0"/3'-6", verificação de flutuação). 7 novos índices (total 63). O módulo de dimensionamento FPDM/RPDM do mesmo workflow voltou com confiança baixa (só snippets de busca, sem leitura direta do PDF) e foi deliberadamente deixado fora do corpo do documento — ver pendências. v1.7 corrige o título do índice <span class="mono">425-010</span> (era "Ditch Bottom Inlets Types C, D, E · Gutter Inlets Types S, V", confirmado como <i>Structure Bottoms Type J and P</i>) em todas as ocorrências e no dataset JSON; reescreve 4.3 Optional Base Group com quadro de fórmula (SN = a×t), exemplo numérico de substituição de camada e coluna de uso por material; acrescenta 2.2 Preços de referência com dois pay items confirmados do Historical Item Average Cost (14" e 24" square prestressed pile), declinando itens sem valor numérico confirmado (guardrail, meio-fio, base group). v1.6 corrigiu o encontro de OAE: aterro estrutural MSE (548-020/030) e laje de transição (400-090/091) têm folha padrão, ao contrário do que a v1.5 afirmava. Acrescentou detalhe de sistema MSE, aparelho de apoio chanfrado e comparação de grades da boca de lobo por peso/material — 4 novos índices e 4 novos diagramas (total 16). v1.5 adicionou cotas em m/in e 3 diagramas de pavimento/estrutura, e confirmou o roteamento Manta Maestro por citação direta. v1.4 corrigiu bug de escape que quebrava o JavaScript. v1.3 trocou o logo reconstruído por extração real do PDF institucional. v1.2 calibrou paleta e tipografia. v1.1 rodou a auditoria aluci-guard. v1.0 foi a primeira emissão no padrão Manta.</dd>
         <dt>Data de criação</dt><dd>22/08/2026</dd>
         <dt>Gerado por</dt><dd>Claude AI — Manta Associados</dd>
         <dt>Ferramenta</dt><dd>Claude Code · skills manta-maestro v5.0.1 + padrao-manta v2</dd>
@@ -1475,7 +1543,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);back
       <img src="data:image/png;base64,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" alt="Manta Associados" height="16" style="width:auto;display:block">
       <span>Desenvolvido por <b>Manta Associados</b> <span class="muted" style="font-style:italic">· Expertise que transforma desafios em soluções</span></span>
     </div>
-    <span>Interno · S1 Rodovias / S2 OAE · <span class="mono">MANTA-FDOT-20260822-001</span> · v1.9 · 23/08/2026</span>
+    <span>Interno · S1 Rodovias / S2 OAE · <span class="mono">MANTA-FDOT-20260822-001</span> · v2.0 · 23/08/2026</span>
   </div>
 </footer>
 
@@ -1487,14 +1555,14 @@ const METADATA = {
   documento: "FDOT Standard Plans — catálogo comentado",
   objeto: "Base de Referência Técnica — FDOT Standard Plans FY 2026-27",
   segmentos: ["S1-rodovias", "S2-oae"],
-  versao: "1.9",
+  versao: "2.0",
   data_criacao: "2026-08-22",
   gerado_por: "Claude AI — Manta Associados",
   ferramenta: "Claude Code · manta-maestro v5.0.1 · padrao-manta v2",
   classificacao: "Interno",
   fonte_primaria: "https://www.fdot.gov/design/standardplans/current/27",
-  indices_catalogados: 63,
-  diagramas: 19,
+  indices_catalogados: 74,
+  diagramas: 21,
   rag_colecao: "normas",
   rag_tabela: "ke_embeddings",
   conformidade: { R1: "declarada", R2: "conforme", R3: "executado_manual", R4: "conforme", R5: "n/a" }
@@ -1554,11 +1622,22 @@ const ROWS=[
   {i:"450-453",t:"18\" Florida Slab Beam",s:"est",b:"S",v:"S2"},
   {i:"450-511",t:"Beveled Bearing Plates",s:"est",b:"S",v:"S2"},
   {i:"450-512",t:"Beveled Bearing Plates",s:"est",b:"S",v:"S2"},
+  {i:"455-001",t:"Prestressed Concrete Piles — Typical Details &amp; Notes",s:"est",b:"S",v:"S2"},
+  {i:"455-002",t:"Driven Prestressed Pile — Dowel Extension",s:"est",b:"S",v:"S2"},
+  {i:"455-012",t:"12\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
   {i:"455-014",t:"14\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-018",t:"18\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-024",t:"24\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-030",t:"30\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-031",t:"30\" Square Prestressed Concrete Pile — High Moment",s:"est",b:"S",v:"S2",f:1},
+  {i:"455-112",t:"12\" Square CFRP &amp; SS Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-118",t:"18\" Square CFRP &amp; SS Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-124",t:"24\" Square CFRP &amp; SS Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
   {i:"400-090",t:"Approach Slabs (Flexible Pavement Approaches)",s:"apo",b:"R",v:"S1·S2"},
   {i:"400-091",t:"Approach Slabs (Rigid Pavement Approaches)",s:"apo",b:"R",v:"S1·S2"},
   {i:"548-020",t:"MSE Retaining Wall Systems — Permanent",s:"apo",b:"R",v:"S1·S2"},
   {i:"548-030",t:"MSE Retaining Wall Systems — Temporary",s:"apo",b:"R",v:"S1·S2"},
+  {i:"521-600",t:"MSE Wall Coping (Precast or C-I-P)",s:"apo",b:"R",v:"S1·S2"},
   {i:"520-001",t:"Curb and Gutter",s:"urb",b:"R",v:"S1"},
   {i:"522-001",t:"Sidewalks",s:"urb",b:"R",v:"S1"},
   {i:"522-002",t:"Detectable Warnings",s:"urb",b:"R",v:"S1"},
