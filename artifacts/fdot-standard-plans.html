@@ -1,0 +1,1695 @@
+<title>FDOT Standard Plans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700&display=swap">
+
+<style>
+:root{
+  --manta-ink:#241A15;
+  --manta-ink-2:#3A2A20;
+  --manta-accent:#C1552A;
+  --manta-accent-dark:#9A4320;
+  --manta-accent-tint:#F7E9DF;
+  --manta-title:#C1552A;
+  --manta-heading:#241A15;
+  --manta-title-tint:#F7E9DF;
+  --manta-text:#33281F;
+  --manta-muted:#6B7280;
+  --manta-border:#E5E7EB;
+  --manta-border-soft:#F3F4F6;
+  --manta-bg-alt:#F9FAFB;
+  --manta-bg:#FFFFFF;
+  --dot-hi:#C1552A;
+  --dot-mid:#EAC3AC;
+  --dot-lo:#B9BEC4;
+  --f-title:"Montserrat",Arial,Helvetica,sans-serif;
+  --f-body:"Inter",Calibri,system-ui,-apple-system,sans-serif;
+  --f-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--manta-bg);color:var(--manta-text);
+  font-family:var(--f-body);font-size:14.5px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;position:relative;
+}
+a{color:var(--manta-accent-dark);text-underline-offset:2px}
+a:hover{color:var(--manta-accent)}
+:focus-visible{outline:2px solid var(--manta-accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* marca d'água */
+.wm{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;display:grid;place-items:center}
+.wm span{font-family:var(--f-title);font-weight:700;font-size:clamp(40px,9vw,110px);
+  letter-spacing:.14em;color:var(--manta-title);opacity:.06;transform:rotate(-45deg);white-space:nowrap}
+
+/* faixa + cabeçalho */
+.stripe{height:4px;background:var(--manta-accent);position:relative;z-index:2}
+header{position:relative;z-index:2;background:var(--manta-bg);border-bottom:1px solid var(--manta-border);padding:16px 26px 14px}
+.hwrap{max-width:1340px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-start}
+.brandline{display:flex;gap:12px;align-items:center;margin-right:auto}
+.logo{flex:0 0 auto}
+.brandtxt .org{font-family:var(--f-title);font-weight:700;font-size:12px;letter-spacing:.14em;color:var(--manta-heading);text-transform:uppercase}
+.brandtxt h1{font-family:var(--f-title);font-weight:700;font-size:clamp(20px,2.6vw,27px);color:var(--manta-heading);margin:2px 0 0;line-height:1.15}
+.brandtxt .obj{font-size:13px;color:var(--manta-muted);margin-top:3px;max-width:70ch}
+.vbox{text-align:right;font-size:12px;color:var(--manta-muted);line-height:1.7;white-space:nowrap}
+.vbox b{color:var(--manta-text);font-weight:600}
+
+/* layout abas verticais */
+.layout{display:flex;max-width:1340px;margin:0 auto;position:relative;z-index:2}
+.sidenav{width:230px;flex-shrink:0;border-right:1px solid var(--manta-border);position:sticky;top:0;align-self:flex-start;padding:18px 0 26px;background:var(--manta-bg)}
+.sidenav .ttl{font-family:var(--f-title);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--manta-muted);padding:0 18px 8px}
+.sidenav button{display:block;width:100%;text-align:left;background:none;border:none;border-left:3px solid transparent;
+  padding:9px 18px;font-family:var(--f-body);font-size:13.5px;color:var(--manta-muted);cursor:pointer;line-height:1.35}
+.sidenav button:hover{color:var(--manta-heading)}
+.sidenav button.active{border-left-color:var(--manta-accent);color:var(--manta-heading);font-weight:600;background:var(--manta-bg-alt)}
+.sidenav .num{font-family:var(--f-mono);font-size:11.5px;margin-right:7px;color:var(--manta-accent)}
+main{flex:1;min-width:0;padding:22px 26px 60px;background:var(--manta-bg)}
+.tab{display:none}
+.tab.active{display:block}
+@media(max-width:760px){
+  .layout{flex-direction:column}
+  .sidenav{width:100%;display:flex;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--manta-border);position:static;padding:8px 0}
+  .sidenav .ttl{width:100%}
+  .sidenav button{width:auto;border-left:none;border-bottom:3px solid transparent;padding:8px 12px}
+  .sidenav button.active{border-left-color:transparent;border-bottom-color:var(--manta-accent)}
+}
+@media print{
+  .tab{display:block!important;page-break-inside:avoid}
+  .sidenav{display:none}
+  .wm span{opacity:.05}
+  body{font-size:11pt}
+}
+
+/* tipografia */
+h2{font-family:var(--f-title);font-weight:700;font-size:18px;color:var(--manta-accent);margin:0 0 6px;line-height:1.2;
+  text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:14px}
+h2::after{content:"";flex:1;height:2px;background:var(--manta-accent);min-width:24px}
+h3{font-family:var(--f-title);font-weight:700;font-size:14.5px;color:var(--manta-accent);margin:30px 0 8px;
+  text-transform:uppercase;letter-spacing:.04em;padding-bottom:7px;border-bottom:1px solid var(--manta-border)}
+h4{font-family:var(--f-title);font-weight:600;font-size:14.5px;color:var(--manta-title);margin:20px 0 2px}
+p{margin:9px 0 0;max-width:74ch}
+ul,ol{margin:9px 0 0;padding-left:20px;max-width:74ch}
+li{margin:4px 0}
+.lead{font-size:15.5px;color:var(--manta-text);max-width:70ch}
+.muted{color:var(--manta-muted);font-size:13px}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--manta-bg-alt);padding:1px 4px;border:1px solid var(--manta-border);border-radius:2px}
+.mono{font-family:var(--f-mono)}
+
+/* bloco de escopo */
+.escopo{border-left:3px solid var(--manta-accent);background:var(--manta-bg-alt);padding:14px 18px;margin:18px 0 0}
+.escopo dl{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin:0;font-size:13.5px}
+.escopo dt{color:var(--manta-muted)}
+.escopo dd{margin:0;color:var(--manta-text)}
+
+/* KPIs — máx 4, sem moldura */
+.kpis{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 0}
+.kpi{flex:1 1 150px;text-align:center;padding:18px 14px;background:var(--manta-ink);border-radius:3px}
+.kpi .n{font-family:var(--f-title);font-size:32px;font-weight:700;color:#fff;line-height:1}
+.kpi .l{font-size:12px;color:#C9BDB2;margin-top:6px}
+
+/* tabelas */
+.tw{overflow-x:auto;margin-top:14px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead th{text-align:left;padding:9px 12px;font-size:11.5px;font-weight:600;color:var(--manta-muted);
+  text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--manta-border);white-space:nowrap;background:var(--manta-bg)}
+tbody tr{border-bottom:1px solid var(--manta-border-soft)}
+tbody tr:nth-child(even){background:var(--manta-bg-alt)}
+tbody tr.grp{background:var(--manta-title-tint)}
+tbody tr.grp td{font-family:var(--f-title);font-size:11.5px;font-weight:600;color:var(--manta-title);
+  text-transform:uppercase;letter-spacing:.06em;padding:7px 12px}
+tbody tr.grp .sr{font-family:var(--f-mono);font-weight:400;text-transform:none;letter-spacing:0;color:var(--manta-muted);margin-left:8px}
+td{padding:8px 12px;color:var(--manta-text);vertical-align:top}
+td.ix{white-space:nowrap;font-family:var(--f-mono);font-size:12.5px}
+td.ix a{text-decoration:none;font-weight:500}
+td.ix a:hover{text-decoration:underline}
+th.n,td.n{text-align:right;font-family:var(--f-mono)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.d-ok{background:#10B981}.d-run{background:var(--manta-accent)}.d-late{background:#EF4444}.d-off{background:#9CA3AF}
+.pend{font-family:var(--f-mono);font-size:11px;color:var(--manta-accent-dark)}
+
+/* quadros */
+.quadro{border:1px solid var(--manta-border);border-left:3px solid var(--manta-accent);background:var(--manta-bg);padding:13px 16px;margin-top:16px}
+.quadro.alt{border-left-color:var(--manta-title)}
+.quadro .h{font-family:var(--f-title);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--manta-muted);margin-bottom:5px}
+.quadro p{margin:5px 0 0;font-size:13.5px}
+.quadro p:first-of-type{margin-top:0}
+.quadro ul{margin:6px 0 0;font-size:13.5px}
+
+/* figuras */
+figure{margin:18px 0 0;border:1px solid var(--manta-border);background:var(--manta-bg);padding:16px 14px 12px;overflow-x:auto}
+figure svg{max-width:100%;height:auto;display:block;margin:0 auto;color:var(--manta-text)}
+figcaption{font-size:12.5px;color:var(--manta-muted);margin-top:11px;max-width:78ch;line-height:1.55}
+figcaption b{color:var(--manta-text);font-weight:600}
+.s{stroke:currentColor;fill:none;stroke-width:1.3}
+.bx{stroke:var(--manta-border);fill:none;stroke-width:1.2}
+.bxf{stroke:#D9DDE2;stroke-width:1.2;fill:var(--manta-bg-alt)}
+.acc{stroke:var(--manta-accent);stroke-width:1.7;fill:none}
+.accbx{stroke:var(--manta-accent);stroke-width:1.4;fill:var(--manta-accent-tint)}
+.tlbx{stroke:var(--manta-title);stroke-width:1.4;fill:var(--manta-title-tint)}
+.dash{stroke-dasharray:5 3}
+figure text{fill:var(--manta-text);font-family:var(--f-body);font-size:12px}
+.tc{text-anchor:middle}.te{text-anchor:end}
+.lb{font-family:var(--f-title);text-transform:uppercase;letter-spacing:.07em;font-size:10px;fill:var(--manta-muted);font-weight:600}
+.sm{font-size:10.5px;fill:var(--manta-muted)}
+.ix2{font-family:var(--f-mono);font-size:10.5px;fill:var(--manta-accent-dark);font-weight:500}
+.mk-ink{fill:var(--manta-text)}
+.mk-acc{fill:var(--manta-accent)}
+.cal{fill:var(--manta-accent)}
+.caln{fill:#fff;font-size:11px;font-weight:600;text-anchor:middle;font-family:var(--f-body)}
+.legenda{margin-top:11px;padding-top:9px;border-top:1px solid var(--manta-border-soft);display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:5px 16px}
+.legenda div{display:flex;gap:7px;align-items:baseline;font-size:12.5px}
+.legenda i{flex:0 0 auto;width:16px;height:16px;border-radius:50%;background:var(--manta-accent);color:#fff;font-size:10.5px;font-weight:600;display:grid;place-items:center;font-style:normal}
+.legenda a{font-family:var(--f-mono);font-size:11.5px;text-decoration:none}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-family:var(--f-body);font-size:12.5px;font-weight:500;color:var(--manta-accent);
+  border:1px solid var(--manta-accent);border-radius:4px;padding:5px 12px;background:var(--manta-bg)}
+
+/* matriz de pontos — mesmo dispositivo da tabela "Competências da Equipe" do deck institucional */
+.dotm{margin-top:10px}
+.dotm .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--manta-border-soft)}
+.dotm .row:last-child{border-bottom:none}
+.dotm .lbl{font-size:13px;color:var(--manta-text)}
+.dotm .d{width:11px;height:11px;border-radius:50%;display:inline-block;margin-left:10px}
+.dotm .d.hi{background:var(--dot-hi)}
+.dotm .d.mid{background:var(--dot-mid)}
+.dotm .d.lo{background:var(--dot-lo)}
+.dotleg{display:flex;flex-wrap:wrap;gap:16px;margin-top:10px;font-size:12px;color:var(--manta-muted)}
+.dotleg span{display:inline-flex;align-items:center;gap:6px}
+.dotleg i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dotleg .hi{background:var(--dot-hi)}.dotleg .mid{background:var(--dot-mid)}.dotleg .lo{background:var(--dot-lo)}
+
+.urlbox{font-family:var(--f-mono);font-size:12px;background:var(--manta-bg-alt);border:1px solid var(--manta-border);padding:10px 13px;margin-top:14px;overflow-x:auto;white-space:nowrap;line-height:1.9}
+
+.busca{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+input[type="search"]{font-family:var(--f-body);font-size:13.5px;padding:7px 11px;width:min(300px,72vw);
+  background:var(--manta-bg);color:var(--manta-text);border:1px solid var(--manta-border);border-radius:2px}
+input[type="search"]::placeholder{color:var(--manta-muted)}
+#hits{font-family:var(--f-mono);font-size:12px;color:var(--manta-muted)}
+
+/* ficha técnica */
+.ficha{border:1px solid var(--manta-border);margin-top:16px}
+.ficha .cap{background:var(--manta-title-tint);padding:9px 14px;font-family:var(--f-title);font-size:12px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.09em;color:var(--manta-heading);border-bottom:1px solid var(--manta-border)}
+.ficha dl{display:grid;grid-template-columns:auto 1fr;gap:0;margin:0;font-size:13.5px}
+.ficha dt{padding:7px 14px;color:var(--manta-muted);border-bottom:1px solid var(--manta-border-soft);white-space:nowrap}
+.ficha dd{margin:0;padding:7px 14px;border-bottom:1px solid var(--manta-border-soft);color:var(--manta-text)}
+.ficha dl>*:nth-last-child(-n+2){border-bottom:none}
+
+footer{position:relative;z-index:2;border-top:1px solid var(--manta-border);background:var(--manta-bg);padding:12px 26px 26px}
+.fw{max-width:1340px;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:space-between;align-items:center;font-size:12px;color:var(--manta-muted)}
+.fw .fl{display:flex;align-items:center;gap:9px}
+</style>
+
+<div class="wm" aria-hidden="true"><span>MANTA ASSOCIADOS</span></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <marker id="ar" viewBox="0 0 7 7" refX="6" refY="3.5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><polygon class="mk-ink" points="0,0 7,3.5 0,7"/></marker>
+  <marker id="ara" viewBox="0 0 7 7" refX="6" refY="3.5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><polygon class="mk-acc" points="0,0 7,3.5 0,7"/></marker>
+</defs></svg>
+
+<div class="stripe"></div>
+
+<header>
+  <div class="hwrap">
+    <div class="brandline">
+      <img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVkAAAB/CAYAAABFcLFEAABXSElEQVR4nO2ddZybRfrAZ+aVuK+7VLZu1IUCLYUiLVdooeiPO+AOd7fDnSKH3HG4Q3EoUEqhpe6+bde6rnHP+878/tgk+yYbebObbFsu337y6b55552Z5E2ePPPMI+DBEwwrSlTMWJDmmEfFoKwrhmleKFLSo4/2XNKkSSOSH07P5b47Lcd5xTDNMgUNDUd7Pml6gxBgTy2QX/nxKdktP8/PweVqdsLRnlOaNGnEgQgAQEpD2ZJy+Q3/OTFr76kFyispCJmjPbE0AAAA4HAde+KyaZnrbx+rfT1DRuUQAAE52rNKkyaNaBABEBDS/ciUUjm3jFa99vSUjLUVWnYmAAAe7Qn+r2KQUsW3jNG9//QUw8oKDTMBEwACD0JIWs6mSXOcgDABBAMAAg8AIRyhZyY/O9Ww+oZRujf1Eqrw6E7xfwsWAfmiMtXdr83M3HVqgWwpjSBDAADhjzRp0hwf0NGWnxSC1OlF8sum50jP+bDK9ugPRxyveDFxDPgM/0dAEFDjM6RnXjFM83Sxih4MQGRhmhawadIcX9Ddy8/oDVQM0lw1TPPU3Hz5ZW9UWm/f0en+AaS/60klV05XXDFM89zETMk8CkGEY7y7mABCSPr9T5PmeIHGoNtcEI8SNTP84Yn6bze0eX54+6Dl9iYHtz/ls/uTo6Ch4dxyzd0LShTXSCgoASD+r5ffXJAWsmnSHCfQhCSwWw0hnJojO2OMQTL76zrny1/UWh93cdiSygn+GYEA0CfmyS++aLDmnznybpu32K2s9JZXmjTHFzQBiX9xZTRSnD9IecdJebIL3z1kuWdti/NDAgCXkhn+yRisYaddXqF9doSenQJB4iopBmlNNk2a4wkaE0BIHz21suR0wc1j9G/PLVT+7a1K8601Vu8WkBYAEdGyKH/pYO0jJ+XLl7IUZPvqJSDGtJMmTZpjB5r4fS/7DoSj9JKZT07J+uPnBsdbn1ZbHrR4cUuyJni8Q0MgnVekunZxufouDYv0APRvyU/SG19p0hxX0DhJZj4aQWZ+sfLKaTnycz+qsj64utH2ho8AVxK6Pi6BEFCj9NJTLxuqe6ZEzQwHIDlaaNpckCbN8QWNAQQ4iYFdagmlv2qE7sU5BYq/vl1pvnW/yf1L0jo/TsiU0YMuGaJ7ZnK29CwKQpTMzar0xleaNMcXtH/5mXTK1OyYB0/I/Gl9m+vLDw+b72p3cYeTP8qxhYxGmgUl6rvOLFZeL6WRDIDkq5xpF640aY4v/BFfqUlRABFE03MVi8ZmSOd+U2d//rs68zNeDOwpGezogqbmKC44f5D24TwFXQpA6qSg3xskLWTTpDlOoP02vpQiZyj1+YM1D8zOU1z2/mHzbVvbnV9gQvgUDzsglKrYSRcO1T09Si+dBUHql/NpAZsmzfEFjQkg/fMuEE+WnC6+cZTh491G5er3DxpvaXT4doPjdOmrYlD2ueXaf87OV14moaBkoBK3pDe+0qQ5vkipuSASEEE0JkN2SoUud9MvDfZ/f1ljftjB4Y4Bm0A/oRFgZ+ep/v6Xcu29OgmVCUByJB4mhCAI494Iv4dCWsimSXOcgAIbX/Eebg67v6uzvmz3YquY9vEeLEKS+cXq656cmrf7xDzVVRQEkqP9ZsQBDdNJ5zwwMW/T/w0zvKBhqUxhjte+PuxebFtebXliXYvrczHtA+9fmjRpjg+QMJdsrAeHAfdljfmhuzY2j/+tyf4+hwkWe22sh1ZK51wxwvDavSfkrh2kkc4coNedEHoJXfqPkZkf3Tk++8dStWRsQPvvz4PDBK9rcXx698bmCZ9Xm+5y89gu5joMIEmbC9KkOX7oduESYS4g/pVsp5ur/vf+zkt+abS9smSw/okKnWSmmGVuPAZppRPvPSFn9fpWxyefV5nuMXq4uv722V8kCKrmFWtvOaNYfYucQUoA+i/dMCakyuLd9PFh4x1VFvfaHoEJoZi+Sch/adKkOdahA8vQePjbBFqSGqtnw1PbW+dMyJKfd2657pFsOVPa38lACKnpucqlYwyy07+rsz61ssG8jCPA3d9++zKV8ZmKRecN0j2Wp2AGA9Df0ONuulxc0+fVpvs2t9o/4ADwCs8RAKDY+5BsTbZcp1tarNGcJbZ9s92+urKz89/JnIMAekp+/tNyhskRe8GutrZnu1yurcmagE4qHTUuJ+fueO0qOzvfaLbbVyVr3JFZWTdnyeUTY7Uxud37d7S2PpyM8UZkZt6YrVBMjtWmzmz+usZs/lj4nF4qHTM2J+fOZMyhv/gwtq+tr78i0evKtNolJVrtwlhtCAD8psbGO5wc19TnCYIENr4iteEJ8W1uc3y4s8P11ZxC9Y2nF2tuUbGUvj8TAgAABUvrlgzRPz4zX3X5x4e6bt1jdH5PCBgQl68CBTtu8WDDU6MzZHMASI40c/qwdWWD5eXv68xPeDGxRWkGRd2H7qVHUjHI5WMHGQzni22frVROP9jZ+WYqMq/ppNJhI7Ozb0hkdVRlMn2cTCE71GD4PzHvB0JI0my3/wqS9KOXo1TOKNPpzonVhseYa7Pb1/nH7e9408v1+nNjtbF5vXXhQlbOMLmJfF5SiZvjjH0QsmhMTs5tmQpF3KrPbQ7Hpv0dHS/1cXrdg2GRG1+xwsK8GDt/OGJ+7IGNTeN+bbC+4eWxLxmbY7lyZvD1o7O/uG5Uzrc5MrqiPy80HnIaZSwZbHjxnol560YZZHOSMX8fT7j1LfZPH9jUeMKXNaZ7YghYAIDf2Br/QcBRNhcoWLYgW6GYnoq+y3W6JckwP/UVBKG0WKs9W0zbfJXqFAnVf6UiESiE6MkFBU8jANiBHPfPhFYqHa6XyUaLaVum050HAED9GQ8FNqvjP+J/7o1erv7dg51XPLKledquTtdK3l9WtT8PhCA1NlN++v2TCrYvKjc8LaeRrj8vOBwKQmZmrvqqh6cU7plXpLlOQiFZf+eMAQAHze6NT21vmfvvfe1LOtziQorF9t/z39EBQQjL9fqkazIIQqZUp4upWaWaLIVisloiKRPTVkLT6kK1+oxUzymcTIVifEVGRsJL5DTdlGm1iyiEGDFtcxSKaUqGKerPeEj8jrh46u3erS/sapn/0u72RQ123wGchN14CU3J5pdob31gUsGuKTmqSykIRb1J0YAAwEEa6Ym3jc/745KKjFc1EjonkCynP482J3fkjX0dlz+9vWXWYYv7twRmhMSOcSzsehVrNGfSECqT2WeGXH6CRiodlMw+E6Vcp1sME9Cky/X6xamcTzTG5+beJ6PpvKMx9nEOLEvgniGEqFKdblF/BkSBiK/4j8RWcAQAblen48tHtzSc8OHBzpvNHr4rGX6leilTePmwzLduGpv7a7FKMqUvL1rL0kWXVGS9c8u4vFVlGukkAiHs77ycPmz/psb02D83N4zd0Gp7iyfEl+i8xI5FxJVlSylKiaQgR6mckcw+y3S6xQhCKpl9JgICgC3Rav+SyDW5SuUsGU3npmpO0ZCzbPaE3NwHBnrc4x29VDpaL5MNT+Sa/poMkHgtE/TJP9OLgfPXRsvzD2yqH/FzveUlN09c/dVqAURwiE4+4/YJ+WsuGpr5XzVL5YuZC4ugcm6R7s4HJhfumZanvhghRPV3Lj5MfBtb7R8/uLlhzDe1xnvcPDEnfBcAAARAKPr1HyMkc/MDQciUabVH1VSQq1KdJGeY7ESuYWlaVaTRnJmqOcWiIiPjrxly+aSjMfbxSl/MXAa5fJxWIhna1zFF5y7orwuT3YfbPqvqvH5di/W/C8oMj47JUPTblkVBxMzI01w+OkNx1oo60+Nrmq0vR9Eg4Ui9/My/lGc8madkhwGQnKipGot78xfVnXdUWdy/g/7bSaGYOR1LlREK1eozaAhVHIm5oSeKbIVihlIiKUjGvPpKoqaCAGU63XkHu7reAANsK0cIUVMKCp7+4fDhObgPK6e+Yna7K9c3NNySyDUZcvnoIQbDpbHauDnOtLO19QlMiGivFR5j0S6eCABJPLetSNAIscVa7UJzW9uBRK8FAAAaAHGfDCK2YRyaHd5dr+5pOatCJz91YZnh8WK1ZFx/+1SxdObiIZnPTc/T/HV5VeetB0zOn4E/zD9Hzo5cWG54ckyGYj4AyfkWdLh8dd/XGv+5qc32bmCcZCBmbsdS7gIpTRsKNJpT68zm5f3ta5BevzQZc+orNELqIq22Tz/8eSrVbBlN57g4bsDLLuWpVLMG6XQXHzIa3xyoMe0+X93e9vbnErmmVKs9N56Q9fK8dW97+4uYkJT4xmfI5eM1UmmfNNJBev0Fu9raHu/Ltai7/MyAL1NJpcn50zPbG6a/X9n+D5OHb01GqGqeUjLiH6Pzvv3riNzP8hTs2LNLM566fULhplEZyvnJ2NRyctj+XZ3psce3Nozd1GZ7GyS1rmFCG1/HhJCFEMIyna7fGz80QqoijWZ+MubUV/KUyhMTNRUEoBBiSrXamP6tqeSEvLyH2AF2JTse8dv8+yTI9DLZSK1EkpAtN4DoBDGpSErCEeBa12J97eHNR0b8WGd8yuXDzv76plIQ0uMzlX+5e2LxjlOLdbexFJL3t0+OJ9ymVttHj26uH/19bdc9Lg5bkv1eECB6Pt3/jhGKNJp5/f2C5ymVsxUse1R3ysv1+gv6c32ZXr8EgKNjMFdKJPnjc3LuOxpjHy/43QP77CUAIYT+e5z42Ikkc0nVR8jFYeM3tV13PLG1fsKWdtvnPky4/iaeIcFH3zVjnhBSZXFveGFn4ynvHmi9yOjhalPzDgAA/BFfx9PGFwAAsBSlKVSrT+9PH/0VcP2FpShNoUZzWqw2u1pbnycxInIy5fKJKpYV5V+bCoZnZv5dJ5WKcrD/XyRboZihYNmoNn8vz9v2t7fHDBUv1Wr/gvrgOooIgYQQCMQ8Uq0/dbh9lW/vb1380q6meTUW92ax84r96JtLVofLV//+gbbLX9jRMKvG6l4DkmoaiAQUP78BNhc4vN5mD8dZo53vT2CC31QQ1Rba5XTu5TD2RjufDApUqnlSmo4a5OL2+Yy72toec/p8UW2uDEXJxEaKpQKaoqRTCgqehgAcNRe4Y5l4poJ2u33z3o6OF2P1oZPJhomNFBOC/AlHxD4G4stNqi2uX1/c2Tjj3QOtl3W4fEcSmF+/Hw4fb/mxruuRJ7bUjdrSbnubpCA+P+KLht1ZuMQ8ev4bGLw8bztiNn8V7XyeUnliXx3jizSaMyU0rY52/nBX13swxcvwsjg/Es0222o3x3UeMZu/jdWuXKc7qvH8+Wr1nNKj7AZ3LEJDqCjRamMmQKozm780u937zS7XoWhtEIRUqVZ7XqLjIwIAEbvhMpDwhPi2tlvfeWZ7/bjvazv/6eKxs68bVqJMAxjgLW3Wj57ZVj9hxZGu+7yYRNXcUgIRbS4gsZatqYBGSFZlMn0U7bzfV7RPG1flOl1UO5eb48xNNttKsSGQfYGlKEOBWj0nVps6s/lrAACos1i+jtUuUy6foGLZ8mTOLxw+hlaPIEST8vMfT3Yk3vFOtlI5Q8GyUX3pMcZ8vdX6LQCA1Fks38Tqq6w77DuhwAQkzLYfc9PrKG21uDje9HO98cEnNtcN29Riea8/yWciLb15TEiVybnuxZ31sz6obF1q9Piqj8brJP5Uh2IeYIDvBoWQrMPh2GR2uaLmYCjX6S4ACWqcMprOyVepTo52vs5k+iLVL7RYozmTpShVtPM+nnc0WK0/AgBAu8Ox3unztUVrixCikuFtEYuDnZ1vdTmde6OdV0ulpcdKGsJjhcEGQ0ybf4fTudnu9TYCAECdyfQVJtEjKlUSSWmWXJ5QpCnCoDtGU9TGVwIke4ln9nL1Hx9qvfRfuxpmV5mdf/CEiJ53z2ZYqFbY5fbVf3iw9bJXdzecfMTmXpfM+SoYpKNRQkZy0RtfA2S2CUIjJOMx9taazV9Ea5OrUiUcXlqo0ZzB0nREAYcJwVVG40c0QvJE55sI8YRiq92+zsvznQAA4OV5S7PV+lus9qU63SLo9z9PBRzGzs1NTXfGEgQjs7Ku0/QjQunPBI2QqlCtjrnKqus2A2EAAOh0ubY7/AI3EghCVJZgEqMEEsQkJjMHayQz/jFc97qORaJCXkVC6m3u9a/sbjjxvQMtF7Q7fVWJeQx0Syenj7f8VNf58NNba0dub7e+i8MSaPcHGgH2tCL5lW+emHlAQcOEXJsSsMkOKBSEMgAhVWU0vh/ty00hRPtjvEUTKwDB5vHUtdrtaxmEFInOVyxyms7PValmxWpTZzZ/JfxRqzObv4zVPkMmG6ORSlOalrPBav3+iNn8XbTzLE2rJ+fnP53KORwv5KtUc6Q0nRHtPI+xr95iCb6XmBBXg8WyIlafJVrtQgShVOwcUuYnyyDAzi9WXPnSjOxdZ5cob2UQkCXWQ0zw7k7bJ8u2147/rrr9ToeXN4vL74p921otHy3bcWT8yvrO+32x87smBAQADteyM5dNzVh322j1awYJykqwB1H5ZPFRCKulEKIoCCUmt3tfl9O5M1q78gQSaShZtihbqZwW7XyNyfQZBsCTSiFbpNWewVJUVPslh7En/AvXYLX+5ON5V7RrEEJ0mVbbr6xNYtjS3HyHl+Oifn6LtNoz42lw/wvEC5U2ezyHTG73PuFzARt8NNRSaWmWXB6zooQQhAFMycZXQC5rJJThimHap5+blr1tYqZsYUKdxMGLie33JuOTz26vGbW+2fxvHya+aHOvsTjXv76nYc7Hh1qWGt3emmTOI0NKF90+Vvv+C9P1q0fomRP6ElVCAIAJpDkccIXWL+zIYaPx/WhtMhSKE9QSyWAx/RVrNAsZhCJqA35TwQcAAEDHEIL9BMbadAMAgE6nc4fd56sTPufD2Nxis/0W6zq/CaJfiZ7jYXa7K/e2t0d1OUIQwsn5+U9REKbsR+pYh6UoTZFWG9OH+4jZ/A0Is4a22u1r3D6fMdZ1iaS4FL3xRQgAUFytPwBAjxQILHFLVMywe8brl983IWNFkZIZI7YfMdi8fONX1a1/f3ln3ZSDRvvPPCY4MOcul7f248qmS1/fXX/iEatrTTLHlSKgPL9cec+bJxr2nFYoW0qjfqTpI+IqI6SixpcYaL9GWWsyfeHjeWeUNpJ45VP8oFgCrtPh2G72ePb7+0yJTVZO03m5SmU8U0FE00CdxfJVrOu0MtlQg0w2tu+zE8fO1tYnrB5PXbTzerl8xKjs7OtSPY9jlQK1+nSWojTRzhNCSF0E10SOEEej1fpzrL6LNZoFFISiVufd5gKQCntgqB2XAAAQgmhilvS0Z6dmbry8QvuCkkZRbSV9gLQ4PNvf3t8w/70DjYvq7a5tv9R3PPzijtpxOzus75Ik+rtCAOCULOk5r87K3H7VcNUjKhZF9fMUCwFQ7AYeORpClqEoBQAAOHy++ha7fW20dmVabdzQQxXLlmUqFFFT9FWbTB8TQngAeoR7sinV6RYhhKJuUGGM+foods9Gi+XnmCYDCPud6FkMHCH2LU1Nd8faBBuTnX2HkmX7ldn/eCXeSsXq8dQanc5dkc7FMxnIWTYvR6mcKWYe/vIzqQjnJH5pILy+uw8JjaQLS5XXvzIr+8C8QuU1DEyevZYQwFca7V+9trNu4qr6zvs9fHLzDBQp6VGPTdb//Ogk7fISFS1qaSwKKNK7gEAAgPgVRbIQCDtyuKvr3Wjt9HL5aK1UOjJWX+U63WIqioDjeN5VazZ/FjhOkU02piYNAABGt3uvxeOJ6Jhu9/nqupzO7bGuL9VqFw1EHa4as/nTJqs1asVcCU1rJ+blPQ5SbL441pDSdHZeDPdAAABosFh+wAB4Ip1rstlWxYpyRAkkR+rO/CTePzMB/Lv5vZa8PQJbK6EyrhmpffmJqdnrRuklpybT7StV2t7No7X/mZIlmRPP7gpRYnZZItJc0L0BOfCFEYTCrt5i+S7aB9Dv4hLLywDF+nC22O1/2L3e+sBxKjRZNcsOyohTqbTebP4+1uqnrtuWFxWtVDpEL5eP7eMURUMI4Tc1Nt7OYRxRWADQ/aOWE8c08mejUK0+PVYkISGExAou8fB8R5vdvj7WGMVa7VliTAZ+c4G4SKN4nUV8MaC3fRYINFwAIBisYcc9Mjnzp9vGGr7Ik9PD+jLOQIGguNjwbqtwIoivjDDQ3gUAhAo7H8bWSLasAGVa7bnRtDiDTDZGJ5ONiHZtuJacCk22VKc7h0ZIEu2831YX01WrzmL5OtYyHUIYd2MtWRjd7l3729tfi3YeIURPLSh4NhG3o+OdQXFCpV0c19Fqt/8Rq02dxRLzMyBnmKw8leqUeHNBiURMJUK3a1iP1trLvturbwim58oXPjc9a8tFQzRPKZjkVqVNFmINoglrsuIjvhI3jycB2m+TDVBlNH6Io4T3amWyimiJNEp1unOjmQrcPp+x3moNcZkKHzcZlMURfjavt77T5YppDrB5PNVGlytq5BUAfn9KAKIK8yRCdrS2PurweqMmsMmQy8f9r1S4lVBUlghTwY/xkoM3WCwrYq0QAACgXET6w5RFfAEoEKaCQICoD7+wldGU4rxy9W0vTM/ec0q+4gqUwuiZvhL8cQDJlHYi3qPAeAl4eSQLOswVqNVuX+MQLOuFIAgj2jwhAFSZVhvVVFBvtf7g5fmukHGTrMlqJZLhBplsTKw2R7o3PWJ+5AkAXH2chDEqiaQkS6EQ7U/ZHzw837G1uTlqTlkIIZyQm/uAlKb7lJj8eEJMye8jcbRUAABw+HxNHQ7HllhtCtXqeQxC2lhtEor4SigxCQkXoD3mgUhRWMHL/AIsU0bnXztK9/rjU7LXDddJTkp1JqZECZg9ohp/E9X8E7kXCZsi+g9L0yHCjifEVWMyfR6tfalOtyg892aGXD5RK5NFLPlNCCGHu7o+CH8+2eaCMp3uPIRQ1E2gaG49kThisXyD/V4QkfDbpwesZPjhrq73W222qHZEGcMYJublPQyOse9Skolb8tvl83U122xi3DnxkTi2dxnDZObHMRkgnEjEV+KCI/h/0BYbZn4IF7ZCwQwBhEO17KSHJ2auvGGU4YMMKVWa2AyST2Cu3X+Hva7+dS0+QczR0WR7BQVUGY0fRDMZKFm2OEsunyp8LlbeWafP19Jit/faJU+mJuvPjh+z5LfD622Op70E6HQ6t9u93oZYbUp1uoUD4WUAAAAYAM/GxsbbMMZRBf9gg+GSzASilY43lCxbkq1Uxkzg0mq3r/HyfMxggwBHLJbv+BjvJwDxAxNo4jcXxKMv+9ndAqnH+YuAnp9QCAR2Xhh8BoT+1f03hSA1O19+weRs6YIvamxPf3fEtszVx9LbyaH36wKg27GqWwb2qU8oxk3uaKQ6BCCysDO6XHuMTufODIWiVzFMhBAq1+uXtDoca/zXy0tjVAqtMho/jlRxlUEoaRFfOql0lE4mi+lextK05qyhQ38X22esZN8AAKBg2fwcpXJWs93+i9g++0O707n+kNH4TkVGxuWRztMISaYWFj7/7aFDMwZiPgNNiUazkI4SSRggS6GYck5FxTaRXcJ4FYyLNJozY1VtpgPZqeIh1ODEQEC3hgwhDBGYxH9WKHB7GoTOA4LQbXQZjeQXDtE8cHKB4pL3D1nu29Dq/AgPsD9Tj0LfI2LDhW1fVFoCIBIjOrs15gGXsYCJEHlFAOCqTaZPIglZAAAo1mrP3tjYeCtPiCtLLp8azSkeY8xXG40fRzqXzIivMp3uPARhTH9RlqKUmQrF+GSNCQAAZXr94oESsgAAsK25+cFijWaBjGEMkc7nKJVTBul0Fw/UfAYSMRtRCpbNVbBsQhnjYsFQlLxIqz2zJkrO5ZQWUhRuaAVDQklALIXaYwNtQ0wKEdoAAECunC69bazh/YcmZa0ZrGGjJhlJGSG22Ah25bBjkcAENiAHXpONkkOg2mT6lOP5iDuwSpYtCPhnDtLrL4imERjd7j1dLteOSOeYJHkXQAASzhKWLIr9ms5Ajefw+Rp2tLQ8EqvNxPz8R5Qxal4dj6hZdkiGXB7T/zlVxHIZQ5iITRCTeO4CIkhqEi5McVCICqsXBPK+9t4wC23bfX6EXjL9sUlZq68eoX9LL6UHJHRQGIYMSPiPRl8i4wJA8RtfR8dPNqJGafd6a9scjqi5eMt1uiUIQmlxDFNBjcn0CYni+J8sTTZToZikkkiOik1fzjA5uSqVqBDMZLGvo+PVWMm9lSybH892ebxRqtMtiuYemGpylcrZUoqK6LmBem04xXgkSo9gDQjI0L6Em0UBoQxAhHFJ2HUC0wVNQXZuoeKyZdOydy8sUd3FIjBgpTfC59fzfGKmFX8XYiO++no7+gWMEZZ5uKsramauIo1mfplWe160pSvGmD/c1RW1tE2yCgOWabWL45kKUsVABiYEIN2bYLfyGA9IjbqjjX+lctTqm0loWl2k0UTM+JWYd0ECBGyyOOT6CJ4EvcYJxOeD2O0EfQEAgIpFmksrtI89Oy1n+6QsWcqy04dr3r3mB/oqAaGoVIfdpdkH3rsgFke6w2zNkc7JWTZ7amHhc9GubbHbf3f4fBH9bZMFAkBaqtMtSOUY8SjWas9OdZWHcJpstpVi/EH/DGil0op4/s+ppiyKPVh0IcW+LINxmCAS2mSFBQ5bnPwRN4/doW3DTQTRhFpoX/lKdvAd4wyf3Tshc0Wxkom4IdMf4mreffxRAglE3x1reHi+o8Fi+SnaeRnDRM22dtho/BCkWDPPUiqnqCSSklSOEQ8JTWvzVap5Azws3tTYeFes5N5/Fvz+z0e1HLq/anNO+PM0FvnFTdgP1C91CIC9k0aFHW5uc36xqtH6+oVD9c+Mz5CeTiNICV28gl4JEPa+mIS5fEEAIERwXKZ0zih99uafGx1vfFZtedjixc2JTD/mSwvMC3a/voCoDc6h9yzj9ylSPe0W5Imn60k1h43G98r1+phZ6MPxcJw5XtRUMogXxw4AAIe6ut7pcDh29HUMg1w+piIj4/9itSnX688faM3S5vVW72pre3pifv5DAznuQAIhpOJtamJCyNbm5vt9PN/nH5wyne7cXJUqqusbTVGyYq12YWVnZ0geCbo7+ZM4F65EdFkCujexIAAA+Jf/vTvolhWYENLm4g4+t7N9wSiDbN5FQ3TPFqnYYb0sm36TQ7R+Qn1vIaApSM8vVv19Wo783M+qrY+tbLT9i8P9q+cV0FiDY8HAMfTPoa9G025zQTxw9y/WMSdkG63WX1w+X7ucZUWHbTbYbCvdPN+eynlRECqK1OozY7XhMfZtbW6+3x4lTFgMCoYpKdfpzmcoKmpWpgKVag6LkN6LsShH+GSxp7192RCD4RKNVBox2u54xyCVjtPEqchhcrn272pre5zEiNCLh4vjWmMJWQC6kyMd7Ox8XaiTJrTxlbhZNspSOtgg6FEQ8HXFe7pcK+7a0Dz2zf1dNxg9uD2SG1e4/TNSxJhwM0oroTKuGK577pmpubvGZ8jOBv3IrdnrPQlo7KTnNfWxX9GpDo9FkwEBwFNtMkX0dY3G4c7OqHlpk0WuSnWigmXzYrXpcDi22GNUKBWDw+c70ul0xnRwlzKMvlCjObU/4/QFDmPbxsbG22NlDTueKdPrF8dKwA5Adwh0fwQsAAA0Wa2/enk+Zn7qHJVqhpxhQjydECaAiA3nTDTSCPs3sXpKcvv/J8INMQgICV0pYwC8KxttL965vmnsiiPWVz0c8AS8E3q7ePX0I7QB9x4HgEIVU3HXeMOXd4zL/CZfwcSM/IkKCbUPg0jz6ZsNO6iixnocLT9ZMfijtkR9kR1eb3OzzbY61XMqE2HCqLdagyWh+wGJl2MWgPgZwFLFEYvl20aLJWZJleMRBCFTqtXGLHmECYla5SIRPDzf0RIjNwQA3RF1xVrt2SFzTCRBTCKEanvhiWF6CY+IQsPqwy3vHjRefc/m5ik7OlwredxtgY3WDwgRcJFzDCCI0KRs2RnPTsvZdvEQ3XNKBmUm+rqCtuaw9yU4Xp+0TfH5ZMExKmS7XK5tJpdrX/yW3bXCeEIcqZwPjZC8RK0+O1YbHmOuLglfQAD85cPjKCL5anXMEtUphNvY2Hgrh3HM9H7HGxky2cR4ZhCH19vY6XRuTcZ4R+LkGQYAgHKdLmQPABF/JHxKIr6IQLMM0zrDzsXsvdHu2/n0jrb5z+7qOLfR5jsUogVH0F6jabdCYcsgyC4sVd30/LTcPafkK/9OQyA6oXG4Fh0pmCLx9yqBBDHHKJgQX7XJ9KmIdnyV0RjVNzZZFKjVp0oZJmZuAavbfcjsdu9Pxng2r7fa6HLtidWGpShloVp9RjLGSxSzx7NvX3v7y0dj7FQRK+lQgPruMjP92osJcMRi+Z7HuFeODSGZCsUEFcsGbcSJ5JNN6OsdEDiYwFBTgbBPAgPn4y7VCADcjg7nF/dsah7/4WHzXTYvb+4xCYQJWsH/Ped7tyEAAL2Uyr56pP7VRybnrB+hl84FcdLA9USqhWnQYdptwpo/FB3xJdYR4ahQ053MO6bty+J2H+5wuTalei5lYRpFJOosll4lofsBFmkyWAyOUrrBna2tT9g8npT6JQ8UFISykrCleSTEpq4Ug4vjWtscjpifXRohSalWuyBwjMLDVpNlLgDCKrhBzTXKUp+I/5B7MXF8X2d+4o4NzaNWN9nf9vDYCwJjhC3hQ+ymvUwJoXMYpGHH3T8h88ebx2Qsz5HTFbFfGgCRkmz3CNvEtVlCxNdai5Ze8FjA6vXWttpsUcNsAeiuqtDfTYh4SGk6I1+lmhurjT93bMyqpIlyxGL5JlaqQQAAyFOpZsuOUvJsD893bWlqiprc+3giW6GYFq8Sr9PrbY9XqytB8BERQtv/Q4oACGiyYr7YCc4kIFxjbXgFNNBEtWQAADB7+cY39nde/tDWthP3mzzre7TW3tprcA4kbA6gx5wAAAAUgmhajvycp6fmbFkySPu4lIK9CrGFjBMmrIXac5+CEQDoJbgjPRLJIXEUIFUm04fRTvIY+6qNxrgmhf6Sp1TOkTGMPlYbm8dzpMvl2pnMcY1O5y6b11sXqw1DUfIijeasZI6bCNUm0wexknsfL5TpdHE3NZtstlUcIfZkjltvsazgMY5pfshQKCaoJZJyABIopAgASlw7AyCCBgtD7JbdWm6fN3JIrdWz8ZGtLTNf2N2xtMXJ1YVpyLE33fx/hEeVyWikPK9cfeeyGXkHZuUq/o9GoUmXhdpx93HkzbaEXghMYOPr2FVkAQDdy7No1Wzb7PYNVq/3cKrnMEivvyBemwardUW8Ok+JggHw1lss38drJyZAIlUQAPgNjY03x6tfdSyDAGBLdbpF8drFK4bYFywezwGT230gVhthCaaUZqwh4X8EYxICwq5bNBFxecNjgTe3OT7a3elccVqR9ub5Jaqb5LQg2bN//ECEVtjsACCBcz1zA4CADCmVd+0o/X/nFiqvfO+g+fbDFs8fPQKVROg79LUlImkTKa+TWM/xqTGZPjW7XDE/NIk46rs5rm11be1FkXbRjW73bpDAwmhdQ8N1FIQxixEaI6RJrDKZPo5ni4tXrbSv7G1vf7HL6dwZqw1PiBt2J80PJnDZ197+crwIOKPbLcp7Ix4dTufmldXV58nieDqYuu9X/8dzOLb+VlsbMZF4AI4QOwEg5qZSAIaiFJsaG2+L1YYAgGOFe/cDsr6h4Vq1YHMrEnafrxEAAODi4cMPamWyIfF69fK85f3du4s4jCNqKOGUqqUzb5tQuCYgsoQSBAaFLQAAEPBltfHBFUdM/xTTrxgMUrr0vHLd41Ny5IsYBIM/JFAwdvcxASHnBBPtsep2/40xwWtanB8P1komFSrpQeF9BCs+CPq/5JemHIsPt4mZ8zkVFdszoyS/FuLmONO7u3ZlgAFOVp4mTZq+gZKtFfUQEFNRNqGIUIQlV2B0ubna1/Z1LH10a9ucwxbvtsBGUbi9VLihJ7QbB1RFoQkAIYhm5yuWFijoQb2j1gRmiJDXJp4EC0Ue2/aCNGnSBEllfk1CBMIq+o4/ADgB74IEwIct7t8f2tw87d/7jFd2uvmW3vZa/zxECNvobluhfQjPJyQ2E8t1mhayadIcJ6Q0iXFQGIHIwhaAoKBKmdDAAHjXttjeuGtD48hvaq3PODnsCIwfFLbB+YZGbwU3x4Lzje62BcL6ID0XieJYK3meJk2a5IBAigQc6d76iaAVRlxip9y+6OSI8dMq4233b2qZtLnd9W0kE0I0rTuaCSGSCQSE9SEW0UL2GPaRTZMmTW9SqMkGt5JCl9ARNMdUarLhtDh9+1/Y1bbg8e1tp9davbt75tJ7bhGFbaBtLGHbl4mJz8OaFrJp0hxHpEyTBaDHYT8gjIL+seGa48AXBiT7je6fHtrSPPWtA8YbLB6+yz+tKOkYI29siTUhiETUD15awqZJc3yROk02oPWFLLMjCCMAAE7AT5alKD1Ikv3Si4FzVaP1xdvXNw1fccT2iofvzlAUbWMrZP5RTAjB6xMkAZtsWs6mSXMcgVL3jSU9GbCCAivqLr1oITs2O/vO2SUl7ykZJmnlne0cbn//UNe1929unbqz072Kx931XcK10qheCKBH2ApfH0ysmISotgNpWkmTJk3/oVO3kQK7BRDsFjpQKB6C5sdgqRbRc0AQMkMMhgtLNJqzdrW1PbunvX2Z2ACJOJBGu3fn0ztaTx2XIV9wwRDdk3kKpieig/RMPSBooX/+oecEUWOp8S44akJWTgG1ikHBfABOnlhtPtKvUioIAipPTpUXKqgKNYsMDIKsnSPGFgd3pNbG7fVi4OxLvxAAaJCg/BIVPUIrQVkyCiocHLF2ufnmaiu32871b956CcwtUTEj9RKULe3u29Ls4A/X2nz7vRi4+tM3AABkSlFhiZIeoZOgLIaCEpsXm9pdfH2djdvrFvGeIAioTAkqDBwTAEinGzdhQYRZPGQUUKkZFCzl7uSJzeYjXWKvl9JAqaFR1IgyAgBx88Rh9xFzIvOKBQQA5spReaGCHqqVoCwaQtriw131dq6y0c4f6u84GgZmlarpkQYJlStnoMrFEbvJg9trrL7dJi9pjXQNDcTXvUuYgBaLgoKpR+2DAAACu8VRX/xkWZpWT8zP/+dQg+Gyzc3Nd9WZzV9gQkSF5MUB7+h0frnP6Fp5SoH6mrNLNXeoWaQLSrZuKep/NbBH0Ia8rpBDcYjd+DqK3gXXj9K8dFKeNJjZf7/Jt/GmDcaTQB8Ev4aBWQtL5FefWii/OFNGFTIIMsLzPCbYwWHL7y3uz7+ocbxYZ+f3iumXRUA2J1920dkliqtKVNQICYVC8gRjQoibJ47dnd41n9bYn9vR5VsNRAbDIADoyVns/PMHKW8bomHGS+nQEt88JtjixR1/tLq/+qzG8Xyjgz8opt8ANATMjBzJOeeVK28pV9Oje80dE2znsGVzu2fFZzWO5w9buG3RFBQVDfXvnpxZGTj2YuL56++dY9pduE7sfK4eoX7u1ALZxYHjwxbf9mvXGaeJvX5WjmzRLaPVr8dqgwngOQx8DQ7u0NYOz8+rm1yf1tn5PYmu2KQIyE8tlF22oFjxj0IlNYShUEi+EQ4Trs3FH1nZ6Prgq1rHyxYf6RDbNwUBMy1bcvY5pYprh2mZSRIKysIT07g57Dps8W3/vMaxbH2752sO94QH0yBFmhEGgAQEKw5ImzANFvZoun124VJLpaWnlJZ+1GKzrdnY1HRbp9O5pf+zB8CLiX1FveXJTe2Oj84p1T44K09xCY0gFaKhCuJwA8I28LoS/emCKfZZ7i8qBhqmZkvOZCkUzCMwQsdOLVBQQxIVJpMy2fm3jNa8liWnC6O1oRBEapbSnVWsuGJOvmzpm5W2+76oc76ICYiaRrBQQVXcNU7zzjCdZFK0NghCKKehckqOdP7ELMm8Hxucb7+813qjG4OYmZpUNNTfNV773uRMyWkIRQ4coRBEeimVfXaJ4qq5BbKL3jtkf+STasczYrQnDQuz7hmnff+ETMmcaJmlkP89mVMgXzorV3rup9WOZ98+5HiAj6xcQOG9IgCTRHyxZRRQz8yR/kXYxzAdO7lQQQ1rcPAx81wE5wsBJbw+FsNYduIwHTtxSbni1t9b3Mtf3We91eQlLWKuLVZSI+4br/2wXMOOjtaGRpDOV9Dllw1V3X9GkexvL++13rCm1fN5vL41LMy6c6z27UlZktNQDEVISiPZKINk+kg9O21Dm+f7Z3aZrwhotiiVGZ3C7bDCFINB2yUBCdcOCwdCCPPU6hMXDB26flZR0X/j5ZhMBKObq//vgc6/PrC5ddpeo3ut0L82nstXgouEY9omOy1bcpaapUJSBzIUZE/OkyaUTWpGtuSch07QLQ8XsF4ee41uvq3TxbU4fDikbLOMRoqrR6ifvXSI8sFogqJQQVU8N1W/KlzA8pjwZg/f2eHimq1e3ijMxUshSJ1RrPjr/SfoPmERkPfutZsMCSpYNt3w+9Rs6fxwActhwrk47AzP8SujkeLK4erHbx2jeYNGgAEx0LMw94Vpht8nZknnCgUsjwm2enmj0c23uzkcYoJgKcReNER11/UjVS/BFCR6mpYtPUsjCb3fCEI0t0B2UbLHEsJSSDK3QL70XzMy1ldo6cnx2g/XMtOWTTP8FknAennsCWxmC8mU0Xn3T9B9vKhUfmOsHx4NAzOfnaL/ZUq29HShgMWYYIuHN3a4uGazh+/kcc/GPYQQTsuRnvnUFMOPagZmApDiLFwY+LXV7tH9f3Rn8xZqtv3RZIVQCNEVmZmXl2i1C3a2tj61r6PjJZ6QftvHAACkzubZ/NT2tlNOyJIvPn+w7vEsGV0YrtVGMCGIFrPx8mIK55LAvJPGXMGyUchJedLFH1Y7H+NwfFONloXZN4/WvCahe5bBZg/f8c4h+8Mb293fm724HWOA5TRUDdexUy4ZrLpvqI6ZAED3+7N0kPLOPV3etVs7vSEFASkImJtHa17PkNHBqrQeHru/rHW+/FOD850OD27w8cQrQVBWpKQqFg9S3jojR7ow8MWZmi2dv6Rccet7hx0Phc+ZhkBy5zjNO2XqnsKbmBCyud3z47dHnK9XW327OQw8KgbqJ2RK5i4uU9ycJacLAm1PL5Jf2u7ijrx9yPFApPeERoC9baz2v8UqJpgonscEr2pyfbi81vFii4Ov5gjhFDTSjDGwMy8crLy7VM2MCLQ9s1h+xR6j949fmtzvx3v/EyGaMD0xV7rovUP2h3wEJJwmscnhq3lut/WqwDEEACoZqCtRMSNm5kjOKdewowLnchV0yWOT9N9eu7ZrWrOLr4rUn0EC8++doP1QK6GCdl8fT3w/Nzrf/bnR9V6rk6/FBOAMKcqbkSNduLBUca2CQSoAun9grxqufqrVydeta/N8Fan/q4arnhLOiceE/7nR+d7Xdc5Xmhx8tRcTF4OAJEdGlZxdovjH/CL55bQ/IdUgDTPmmhHq557YabkkxUtUQUJrgbtTiM8pSMy7QAxShjFMKSx8ctHw4buLNZpzIIRUMvrlCfFtanN8cMf6phGfVZkftvs1rlheCAlwzArZXDkqH6Vng/XmfXxPjaMSNTt8sJo+QUw/8wpll+qkVFbg2OzhO69f13XiV3XOl1qduMbNAbsXA6fZS9rWt3m+vm5d54yt7e6VgfY0gvSlQ5UPIghC7udwHTNFOD8eE/zodvOFrx+w3VZn5/c6fMTixcBl44hxn5lb/+A286IPD9ufEPZxXpnipoDmIeQvpfLrJ2RKTw4cc5jwL+21XH/3ZtMZ69s8X7e5cG2XBzfX2fm9y2udz1/+e8eojW3uFcI+zh+kvGOoho5owpibL7t4Srb0dMHc+Zf3WW94fKfl4kMWbouNI0YXD6ydHtywqtn94TV/dE7b0en5LdAeQYguHaJ6gIZA1LJcDNkyVDrawM4KHPsENa0KlPSQYTpmal/6dXHEvr3T+0vgsa3Tu/L3Fs+n7xyyP3Dl2q5xz+w0X+nyh70DAIBOQmU+cIL2E2mUVca1IzXLcuV0ceDY7uUtd2zqOv2Z3da/7Tb6fm934/pOD26stHCb3zhov/uqNR0Tjth8QTs1gyBz/Sj1SyoGGsL7zpKiopPyZCGVhf9Tab37qV3Wyw9auC12jhi9GLgcHDBX2/idz++xXvXsbvNVwhXNyfmyJaUqanTKsnD1CNZw00AEEwKAKQmr1Uqlg+aWl39+Wnn5Cr1UOhYkzb+W2L6qNd9/78bm8X+0OD7lMOHCfzj8iNdkj+FghJNyZUtYwUbCh1WOEAE1t0B6oZh+xuh7vrgAAPBTo/PdWPY9HwHuf+2z3uzlSVBrqtCyJ+hYlCtsN1LPzqAEy/gDZu+mP1o9X0brlxBA3j1sf6jNyQVz5KpYSjvGwM4UtpNRQL2oTHGD8Llv6hyvfFXnejna98bBAfMj280X1Nl8wdcloZBk6WDlneFtEQD04nLFrcLnVje7Pv2mzvlKtLm7eGB9bpflKi9Pgpn58xRU2WANPT7aNYlyYq50kUywqfdxleOpwJIYQQjnFsiWJmusAJgA/vsG138e22G+hMMkaMMeomXHn5Qv65WAvURJjZyZIz0neD0m+KV91ut3dPlWRRujyYkP37fFdI7Th4P29ywZXXBGkfyK8LZDtcxEKY1kgWOTm2//vMb5PIjxFfy50f3Oni7v2sAxjSAzOUt6esoTxITmBAARhC0AfrfUlIAgRIUazdyFw4ZtnF5Q8LKMpnOS1XeHm6t6dW/Hkke3tc09bPZsBSD09YEE83CJbDegcpaGgDlF8CHvdHEtn9U4nmuw+4LVDWbmSs+R0kAZuYceNBIqRFNscfA18a6pd/AH2l1cQ3A+CDJZMlQgbKNlQ8u6tzr5unjKgw8D984u7+/C53JkVIjv9QmZkrlZMjo/cGzx8Mb3DtkfiTdnB0cs/zlgu0uo1UzNlp6pZWFIXa/BGnp8kYIeGpwTT3zvHbI/HK+waKOTP7Tf5N0YOEYQohE6dkq8eYkBAgCFpiGzh+/4tMbxdKOdC25uzsiRniNF8e93X1jX6vnypwbnu8LnFpcrbgm3nZ5aILuEQj0r1IMW77ZfmtwfxOu/wcFXLq91vCB87rRC2aUozHQa/plqd+MGnsROKI4J4Ld2elYKn8uRU6Up8y4AoMdtK9wGGxiSkG7PpYRssuJtlyHQCElGZGdfXabXn7ejpeXRyq6u/3AY98kHM5xDZvdvD29tmTEtR3nRuYO0D2VI6byAv6xYjtUEMYM09PgSNR20AW5s93zv4Ih5TYt7+YWDmTsBACBDSudNMEjmRLNtBbB4cafweIiGmQDiuJRiAviHt5uXymkY/FI3OnCIN0N4v+VqZjQFARPvS/HeIfvDPzY43woctzj5WuH5CZmSOcLjLR2eH80+0h5zwn42d3hWdLn55ky/kGYQZMZlSE5e3ewOlkIfY2BPRKjn81xj43bXi9y5r7Vxe8dmSIIrA60EZcVqL5ZyNT22XM0E7ZAb2z0r7D5iWd3i/uwyNXM/AABoWGSYnCWZ/3urJ+m12ggAZHmt44XTCuWXBoRogYIenCenBjc5+UP+ZmhchuQk4XW/NLo/iOV5ImRlo+v988uVtzEUZAEAoFBJD82WoeIWF64OtAn/TBUoqCEyCqhdPIjpk/9jvevtvUZvsJCo0YPbUhpWSwgIqZ0VKMoYbkJIUT7ZiMgYJnNaUdGyBUOHbipQqU4HSTIh8AR41rbY/3vPhuYxX9danvHwxJOYlBWXT3agvQvmFsguFu6srm52fwIAAGta3F8Il3Wn5Mvimgz2GL0h5V5OKZBdcGKuZHG86w5ZuC07u3yrAw+bD5uE5/caveuFWmOpmhlx2RDlg+HaSThNTv6wsN+2MB/SUhU9Uni8z+TbCETCYeCtNPtC3AnLVPQo4XGhskeLBQCAg2bvVrH9f13neOXezcZzAo9Vja6oxSsTYW6B7GLhJuzqJtcnAACwVnC/IYRwToHsQpCi9Jx1Nn5Ph5tvChzTCNLDdEzQpq1gkCpHTpUIr9ln8m4Q23+Li6/u8vBB9zAEISwVbGwCAMBBi2+r0DNBwSDVTaM1r0oQUMTqu9ODG4WfqXo7vz9lQjZgGghIhXBzQY+wPTpuSQa5fORpgwd/N6+8/DudVDoy/hXisHO489Mq0213b2we6/Bh0VFFCXxaB+y9klJANStH9pfAcYeLa97tX2JXWbgdjXYuoFmAqdmSMyJtIAj5ucH5rs3LmwPHEgpJ7xuv++iRidpvhmnpqXRYQIJY9pt96ytNvs3C55YOVt712kzDlmnZkgXxvhjRCF8ydgm++GLocPGNwmO9BIWYCzRsaDSU0YMjRgxF4oid37euzfNV4FFr5/ckMrdISCigODFXGixO2Onim3f573edjdtXa/UFA0ImZErm6CUwN1I//YUAQBoE5gkAANBLqOBYLCQyKQVD7mmXGzeL7Z/DwGfyhJaF0ktQiBmxzYXr1rW6vxY+N7dAvvTN2Zm7TyuQXa6ggVbseKnMwkUwgMH4fuGGV0jpbAAHVJMVgiBExVrt/IUVFZum5Oc/xyKkj3+VOFqdvkovJo74LXumk6yxk8WEDMkpBmnPh++PFvcXnH8JjgHg1ra6g5tLUhrJZuX2bEREostDml7ea71RqAFTCKLpObKzXpqesfbfMw07/jpU+dgQDTMBJfB+cBh4n99j+YfFwwd/1BCEcLCWHfvIRN2X756UeeDmUerXJ2Swp4rdhYcAQDkNVcLnXFxC9xO4uNBS1BIKhuySC00gAADg4XEy3A37zFg9e2K2nA76mG9oc3/nwcABQO/7LaORfGaObGGq5mL3EbPwWMP2/IAzCEpYCgbdAHlMsAeThEx/Lg6H3xtZeJtX99lubbRzIe5jeQq67I5x2v++d3LWoXvGaT6ckS2Jux8xoMEI4YmxA8+Bo1wUkKEo+eicnJsWjxx5oCIj4+8IAGn8q5LLsZi7YF6h7JLA0pHHBP/qNxUEWN3s+gSTHkfsufmyi+O9jp+b3O88ut18kdnDh9i8KASpUjUz4qIhqrten5Wx9f2TM6v/VqF8PE+OBkXrS0iVldtx60bj3Fqrb7/weQghzJLThWeVKK58Zqrhp+WnZrXcNlrz32FaZgqIIciJMCFyyNN/XuYVyi8N/I0xwb82u8Lut/sToVlmboE07v3uK5iQEPsqgqGmn/4OGuFG9uqy04Mbb9nQNWdXp2dt+DmdhMqcUyC/4OFJ+i++nJvd9sAE7ecTMth5NOwdeJLCLFyhO+1B2yzpEbYBTfdoabLhyBkma2ZR0SsLKirW5SqVJ4OB1C5Fbuj1NzpOLBoGZk7KlJwWOG5xcrXhNsYjNv6AcAk5TMdMzldQMcskAwDAby3uT/6+pnPid0ccb4RHMgXIVdAlFw5W3fnGiZk7rx+pflnNwJilqwEAoMrKbb9ufde0Nw5Y7w3kCA5HzVK6+cXyy1+cblj76ETtV0UKani8fv8XUDFQPzlLMj9w3Onmm/eafCE29CYHf6ja4tsVOB6iYcYXKf/c71+7Gx+5faNx3rO7zH9vc3IN4ZF9AAAgpZF8dp5s0VOT9T88N1X/2wgdM114HgEIU/KlFdphgyYDwXM9+Vih3/9AHKkuhAUhhJkKxfgzhgxZOae09FO1RBK3XHpSxj3GNNnZedLFEoGf4NoWz5dcWJQPBoBb0+JeHjhmKSSZnSuNu5EFAABtblz37G7rFZes7hj6xgHrPQfN3u1CM0IAGY0U55QqrvnXjIwNg9TxfUEdPmL5oMrx6IW/tg96aofpr9s7PKtdXG8vEhpBelqO7Kx/zczYMDtXsiRSX/9LzMqRLpIzKLjsXdPqXs5h4BW2IQCQ1c3uoEcBQyE23GH/z4iXANd39a7XL1ndMfSfW02L17W6v7V5sSW8HUIQjTJIpj03Vf/r4jL5rYHv9FHNXSCw1x4TmqwQBCEq0+sX/aWiYtvEvLzHJTStS/WQKe5fNAgCyr97DADoDiP9rSV06RhgbYv7S6Fw9F8n+rV0uHHDB1WOx65e2zX50tXtw/61z3LLfqN3k4/HIV/wAiU96LFJum9yZEhUHmEHB8wrGt1v3rrReMqFq9rLH99uunRDq/sHZ5gtTskg9Z3jtG9PymRPj9BN+JfjT1nsEgGAwu/36iZ3RPesda3ur4SBECfny86P58XRF+iwKE1MQpPs9FdqRbiRcbv0YuBa0+r5/N4tpgUX/tpRet9m419+bXJ9YvXyIRvcLIXYq4apnzyrWPZ3AFKYhQuAHnMB9GergoBEzGeQqoivZMDStHJcbu6dg/T6C7c2N99fZTS+T5KU+1KIWE12IDwxihT0sKEaJhgqa/NiY6GSHporp8vC20IAoM2HTTp/oEGhkh5aoaEnVlq4TYmMiQHgmp246vMa53PLa5zPl6vpcX+rUD06OVsaNFlkyuj8K4apnnhku+V8se8DAYCYvKT15yb3uz83ud/NkKCCi4Yo751fKP+/gJ+khELSa0eqX7jy9861gmxc2MWHblxJaZiQl4IsbGPLwZEQ7Sd8I01CoV6bLwNBnpwaNELPBlMY2n3YnK+gyjNlVEF4WwQBsnr5zkCeiEIlPXi4jpkSblroLwoWhig1Fi8Omn84TLxenrildPdmFYUgkiAotwHxOYJlNAq9N76EclITmw+b/mjzfPlHm+dLFYN055bKbzq3THFTYDWAEER/rVA9urHN831KE8QEk6X4vw4kWCpAmOqw+5czgW5FCSNMCN7d2vrMYIPhEgXL9jvKSyWRFM4uKXlzeGbmPzY2Nt7a5nCsA8ncsDuGEsScnC+9gKFQ0ICvkVCGe8frRCUg8YddXlRpsSUkZIUQAEiVldt+92bTGVcMUz11/iDlLYFzM3OkC/USa16XhyTkThWg04MbX9hj/cf2Ds8v90/QfRIIxy1UMoMnZIYGVJg9uKNQCYLmogwplRehy6hkyKh84bHZi0NymFrCjnVhLl6xyJVT5dkyqjhw3O7i65udkROpxOPkfOkFwny+apbS3T1e926sa4TMLZBdnGQhi4oV9DDhE10eHPRr9WDgcvPEIaVB8EfJIEV5nR4c4jIXDQpCRsuGvtcWr/j8suHYfNj01iH7/Rva3D88N83wi4xGCgC638eT8qRLUrbxRQAgOCwYodcmGAh6FyR/GoSQyq6u/y7fv3/s7ra2ZbwgyUVfgRDCbKVy0plDhqw6qaTkvWSmVDxWbLJ+U0G/YtNn5EgXhvumDtXQk/5SIr8h8BhnYE6J1w8GAH9YZX/U5OGDXwCGQmyFlp0YOM6QoAJhv3PypRGzhQkhAJC1rZ7lu43eNcLnR+rZkA2LOjsX4qkwTMvETb0XAAFAC1cDAHT7mgqPmxyh7kHdEXDiOLdUccPz0wyrAo95BbJL418VeZ6nRMgNkAjTsqVnySig7k8fQsrV1Bi9lAoqRj4ec5Umb/BH28URa7uLbxBeM0zHir432TJULHRNxISQOluPV4oEAYXwM3VmkfxKMa5/lRZu4y9hQSGjDOyM1JkLAus5v7YaSAQIIjyXsiUwIcTN820bGxtvquzo+M/kgoKnCjWa05HI6KpoUAgxgw2GpcVa7dm7W1uf2dvRsczL870M4QlyTER8jdEzs3MEGlJfyJLTBeMz2JM3tHu/DTw3VMtMvG6UZlng+I8W19c7usxRk3kEsPmIqd2J63WCvAdCjU/Dogxhv50uvvm3Fs/H8VIvEgBItcW3e1yGZHakfgEAYHund+VZxYpg8pDJWZLTNQzMFJNVf2Ime2qmtGe5zWHC7ej0rha22dHpXY0JIYGIukEaemyhgqpocPCV4f2FU6SiQjQ9sxeLCvcNZ4SemZavoON6hMQiQ0blnpApmbu21bM8fuu4oCVlypuFeQkaHPzBJicO5srAAOAdnZ5fh2jZcYHn5ubLLvymzvmveHkfAABgTr70QmEy8UY7d6jNhY8EJwABunqE+tnAHFwcdm5sc/8gRlOutvZ4XwAAgJZF2Sk3FwTEAgHCFXHoc6kQHOF9mj2e/T/X1CwoVKnOmFxQ8IROJhsW7VqxsBSlPCE//8HBBsPFW5ub76s2mT4DfbTXpsrfMFHmFsgvFIZVflxle+anBlfcpeOcAtnSCwer7uw5ll8oFLKNDv6gUKCM0LPTVDTU2+LU2qIhkKjZ0Egyh6/Httnq4us8PHYHSrVoJSi7QkNPFrN8zZCFLv8dvtAd4y3t7pVdbr7NIKWyAeg2m5w/SHn76wdst8Xql0VAfnmF6hFhXoLN7e4fzd7QKKMqG7+9ycFVFSq7a8kxCDEXDlbe/cROy2UghrDIkKCCkboerZvHBB8weTdHax+LOfmypcIMZp9V25f9UO98M951J+XJFl8yVHVv4HhugezCZAjZk3Kli8Ozbn1WbX82vN3KRvf755UpbwokUR+qZSbOypWe91uLO+IGbYAsGSo+t0x5Y0hfTa4PhNUrfBi4W118Xb6CLgegO/BifAZ7ys9N7nfizT/cpOTkiCWFO9qwJ6IrSqpD0PNcqtzIQvolhPD1Vus3yw8cmLChoeEWl88nuihcLDRSafkpZWUfnjVkyK+ZcrnoZUsYRz1BjJKG+qnZkrMCxz5MfN/Xu96os/N74j2+q3f+h8c9DuSTsySnC31b9xq961sFCVh0EirzulHqFxkYO/BjXqHskmx5j2bNY8Iftvp2BI4dHDFvbHN/FzimEaRuGKV+OTzjVTiD1fT4KVmSM4TPHbT4QnIHODhgXl4TmrHpvDLFTfMLZX+L9qMopYHyzrHat4Valo8n3vcO987exWHi+7jK8ZTwuTn5sgsXFMv+AaL0zyAgu2GU+mVhGr4mB3e4ysZtj/FyIyKlgGpmrjQYNs3x2LeiwfmmmPu9osH5pjC2f1KWdL4YX+ZoMBBIF5XKb7xznOZtWqDF7jd5Nq0SJNUJUG3jdq5rdX8TOKYQRDeNVr86UsfMDG8bIEuKih45QfelikXawHNdbr7167DUkhwBvtVNrhDviiuGqR4vUFAhuSbCyZSiwtMKZZcJn6s0+7amLKxWmKcgos9s0DabsiVwYAq9wIS49rS3P7d8//4x+zs6/s3hUHehvpKrUs08a+jQ32cVFb0lZ5heO7OxEFsZIZXmgslZktOFWeYPm307xG6mtDpxTaUgwYmCQerpOdIFgWMvBs63DtoeEG5ynpIvW/rCdMPvs3Ik52oYmMkiIKMRYKUIyAsVVMXfh6meuX6k+mVhgpptHZ5V4XN655D9YeHu8CANO+bVmRmbFpbIr8uUokIpAnIaAZZBQGaQoLxFJfIbn5qi/1EoqDpcXOOGNs93IIzltY4X9nR5glmVKASpm0ZrXr1vvPaTsQbmJBUN9TIKqDMkqODUAumlr043bDopX3aesI+PquxPHjRzETXNlY2u9ze3u4OVHigE0bUjNctuH6N5s0xFj5YioGQRkCkZpJuYyZ729GT9TzNyZcH3FWOC3zlkf0hYuE8sU7KlpwnNMDU2bu8RO78/1jUBWl24ttLUE5wioaBkdp70vFjXKGionprNnh14TMuWLJhXIL3sqmHKp/9zYsaOa0aonxMu441uvu3hbeYLfBj0KiEDAAD/2m+9qcPFB3MWqFlK99QU/Yqrh6ueH6SmxyloqFXQUJMvp4YsKZPf/urMjM2DBT9+HI+5ZbstV0eqwPtFreOFNmdPis0MGZ378nTDuosGK+7Ll1ODJQgoaARYBgKpmoEZp+ZLL102zfCbsDqH04ftKxtd76fcXNDtReDf3YroXQBTpckSGEcgOTmu6Y/6+qsqOzremFRQ8ESBWn1yrPZioBGSVGRmXlai1Z798b59g708L9atROyqImVC9tRC2SXC499bXJ+LTR8HAAC/Nbs/HaGXBDX5OfmyC1c0uN4C/qXvL03uD4doHCcsKlNcjyCECEI4TMdO+udE/WdeHnvNHtzuxcQto5FSJ0HZ4YXrutx860t7rdeFz6nWxu9etsdyza1jNG9I/F/SHDldfMMozYvXjlAvM3txu4vDdgZBiUFK5QZKhATw8tjzwh7rdZG+bF4MnI/tMF/05BT9T0VKZggA3YEMJ+XLzjspX3Yeh4nPwxO3jIbKSIX2fml0fvRulf3haD+OPgLcT+6wXPb8NGp1kYoZGuj/9CL5ZfMKZZdavbjLyxO3ikW6wK61kK/rnK/GWyJHY25+6P1e0+Jensj9Xt3s+nRMhiSoOZ6SL1v63RHX69HsorkKpuSxSYavI50Lp8HuO/zQNvOSVheujdamzYXrHttuuuihifovAtqpjEaK88qVN55XrrzRw2M3JoCP9L7xmPBvVNrujpae0+QlbY/vMF/y0ETd8kBtO42EMvy1Qv3Q/w1V/dPixZ1OH7ZREFJ6KcoJLxiJCSFvHrTd1+DgD4g2F9AIqWYVF/9HK5VWxG/dLUbDtVgQZi4QaLopERxi/as6Xa4tPxw+PO+XmprFZre7T24w4UgZRo+g+KxSf9TXX2Nxu+MmsU4V2TJUMkZQcoTDhFvT6k7Ixrau1f21m+tZQo42sDPy5KhE0AS/dsB2y0t7LTeEh72yFGKz5HRBgZIZZJBSOeECq8ri3XXrhq65jT05RUP4pcn9/r2bTQsa7L6Q8xSCyCClcgqUzKBsOV0YLmC73HzrQ9vMS2Llwm114bob13WduL3Ts1qYqwGA7iTiCgapwufr4bH73YO2R57Yab2Uj6NlGr245cb1XbO3dXh+FWr6CEKolVAZWXK6IFxQeHnsff+w7fFX9ttuSkQwBsiSoqJxBjaYkxVjgn9rcX+WSB/r2zxfewRh0cO07OR4S+p4uDjs/P6I47/X/dE1vcrK7YjXfqfRt/rWjcY59TZfr8+FhELSSALW4uG7Ht9hvvTTGuczsWTPLqPvt1s2GOccMHm3hN8XnYTKzFcyZTkKujhcwNq92PLiHsu1X9Q6XwAggSxcCEI0SK9fvLCiYuvUgoKXpBQVJ0kw7GUaiGSbxQACEvbBTQYEAJKg/ZKrMZk++/LAgQmbGxvv9fJ8zBLRyeaw0fjWFwcOjNvU2HiPm+PMMZqm5AfpxFzpeYHNIwC6c5u2OnFCQr/VhWsOWnqWkDSCzOzc0LBLTAD/VZ3rpb+t6Rz3zkHrQ80OLqqmAgAAh83enS/sMV9/zR9d0+rs/N5Ybbd2en+6ak3nxOd2m68+aPZtwzj656rdyTW+f8j2+BW/d4xf1+aJq12ZvKT1jk2meQ9tM19wwOTdIrQ/C3H4sG1Vo/Pjq9d2TnnrkP2+KOW6I/Z/52bTaY9tN198yOzdEW3ubg67Vje5Pr1hXdes/1ba7+FE9h/OjBzpOTKmRwAdsvi2tzgS87PtcOOmvSbv+sAxQ0Fmdp64sOoAPox9XW6+dUen57f/HLDec+WazvHP7Lb+TYwHh2Du2/6+tnPiK/sstzbYfYej5ffocvGtn1fbX7j8947Rq5rdH4hR7qqs3I7r13XNfGSb+cIdHe7fOIyjbmxbPHzXl7X2f/19befEr4+4Xgn0DxdWVGzNUihE++cF8HCceXdb23P72ttf8mJsDj+fo5BNOX/E0A2BLa6Ax1b3392vDYLuoK/PDtScUWOx/yBm3KkFBS+Mys6+Pl47DmPPp3v3Vth9vjrxr6oHJcsWnZCb+0i5Xn8+hVCf8py+u2tXjpvj2uK3DEVKUVnjcnPvrcjIuJyhqJBfYqPLtf/z/ftHRLu2r7AQyChB6WqOAJ8PxylbEAEGAimNQLAeGI+Bz0ti9oOyZah4kJoZq5OgLCkF5U6O2LrcfMthK7fD5MEtfVnpQACgioGGoVpmYoaUylXQUOPmidPixV01Vm5Xi4uv6YsGGOhby8LsoVrmBJ2EypZSUGHx4s4ON99YafJt9pHINsRE+s+QooIhGmaCTkJlMQhIbT5sbHXydYcsvm1eEfcFAgClFAhN1cgDO/Av8BgIZHQq7jcBnBcDJwAA0ACwDBVzY5N4eODymxeSpWihfDlVXqqiR+kkKBNBSJu9fEeTg6+qsXG7+nrP/UA5BVRDtMyELBlVrGKQ1oeJ1+bDxlort6/RwVdyEapxwIVDh27JUipFVRvtdTEAwOF11W9vaXussrPrbQx6EojkKORTlgwfsgEGt2GjC9vPK2vm11rsK3oNEIEEhKzbL2SPxGsbA5itUMyYUlDwVJZCMTmBst0AgL4L2QBaiWT4+NzcB8r0+kXIH8ttdLn2fb5/f9KSjKdJkya19MuFiwAAVBJp0eySotcWj6jYXqrVLIL+ZBGCct+9vAsi2GZTEfGVjE5Jm8Ox9uuDB2f+Vlf3fzaPpz7+JcnD7PHs/7Wubsk3Bw/OarJafyV+BnIOadKk6R+IkMi2JbEEhKVeJh8+r7z00wVDB6/OVShmQghQrOxbIRUTEpOHosNPYfLSOHKHjcZ3lu/fP257c/NjPp5PKEN+f2l3ONb/cPjwvJU1NX8xud374l+RJk2aYwW0tr7+qnqzeUVfNaSAtooJABAilKdSzVhQMXj1zKKClyIVUoxYhiYFlRG655Vcrc+LsXFrS8s9yw8cGF9tNH4evtOcSggAXJ3Z/NWvtbVJr3mfJk2a1IGMbveun2pqzvqpqmqB0elMWEsKL5DY7fqKqEyFYnx4sm4gbCc0F6TITzZVrmFWj+fQqtraJT8cOjSvw+HYPsBL+GM2LWSaNGl6gwAIhpt++2Vl5eT1DQ03uzlOdF5GAEL9XsO1VaFQDcm+BXo04FRost0TS6nsw812+y9fV1ZO/6O+/hqnz9enBB1p0qT5cxOy8cUT4tjb3v78p/v2Dd/X3v4Kx/MJuaJE11bDbLACYdvdPqWRvSkFA+A+0Nn56mf79g3f3dq6zMfzR7XiaJo0aY4tInoXuDmubV1DwzXfHDo0o9Fi+SWR5TCJoK2GaLogVNvFAAKQovIzqYzzD8fD810bm5pu+rqycuqRfti406RJ8+cipgtXp9O57YeqqlN/rq5eZHK5DiTScSRzQWQBnBpheLQknNHt3vVTdfUZP1VVLeB4PqFa8GnSpPnzIcZPlhyxWL788sCBSRsaGm5z+3wJ22ujpToUbIylQpMdEHNBtLHrrdZvOUJsR2n8NGnSHCOIDkbgCLHvaW9/5vP9+0fvb29/PdFyLpE12MBzKShL3r1eTy/Z06RJc1RJOOLLyXFNfzQ0/OOrysppjVbrqkR8RaN6IRAsug8xFQQwIbjVbv/Dx/NpTTJNmjRHlb6G1ZIul2vriqqqeb/W1p5vdrsPx79EcHFve23SNE6z2314VU3Nkp9qas7iCRnQyKw0adKkCadfSbsJIXyNyfRZvcXy/YjMzOvGZGffLmUYvejrk1hI0e3zGXe2tT21v6PjJQ7j9IZTmjRpjgmSUhmBw9i5q63tyWqT6aNxOTn3D83IuCyQNSoeft/aPm98YUL4g52db+9obX3I7vUOaAKXNGnSpIlHUgsp2r3e+rX19X/76sCBKYGsUWKu64smSwghTVbr6q8OHJiytr7+b2kBmyZNmmORlFSr7ey21562qqbmAovbXR2vfaKO+xa3u3pVTc0FK6qq5nW6XFvjX5EmTZo0R4eEklD3BRpC5cisrBvG5OTcKqFpbaQ2y/fvn9DlcokqaZwhk51gdrsrOUIGtDxMmjRp0vSFlGiyQjhC7Dvb2h79fP/+sZWdnW9H8a8Vrcl2ulxb0wI2TZo0xwspF7IBHD7fkTVHjvzft4cOzW622dYIz6WDBtKkSfNnZcCEbIB2h2P9d4cOnbKqpmZpwF6bTqaSJk2aNCmApSjNuJyc+9UsO/hozyVNmjRpUsH/A53WTFJ+MtBwAAAAAElFTkSuQmCC" alt="Manta Associados" height="34" style="width:auto;display:block">
+      <div class="brandtxt">
+        <div class="org">Manta Associados · Base de Referência Técnica</div>
+        <h1>FDOT Standard Plans</h1>
+        <div class="obj">Catálogo comentado dos projetos-tipo do Florida DOT — insumo de benchmark para os segmentos S1 Rodovias e S2 OAE.</div>
+      </div>
+    </div>
+    <div class="vbox">
+      <div><b>v2.0</b> · 23/08/2026</div>
+      <div>MANTA-FDOT-20260822-001</div>
+      <div>Classificação: Interno</div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidenav" aria-label="Índice do documento">
+    <div class="ttl">Índice</div>
+    <button class="active" data-t="t1"><span class="num">1</span>Escopo</button>
+    <button data-t="t2"><span class="num">2</span>O manual</button>
+    <button data-t="t3"><span class="num">3</span>Índice de folhas</button>
+    <button data-t="t4"><span class="num">4</span>Pavimentação</button>
+    <button data-t="t5"><span class="num">5</span>Pré-fabricados OAE</button>
+    <button data-t="t6"><span class="num">6</span>Drenagem</button>
+    <button data-t="t7"><span class="num">7</span>Demais blocos</button>
+    <button data-t="t8"><span class="num">8</span>Extração e duplicação</button>
+    <button data-t="t9"><span class="num">9</span>Fontes &amp; Ficha Técnica</button>
+  </nav>
+
+  <main>
+
+  <!-- ════════ 1 ════════ -->
+  <section class="tab active" id="t1">
+    <h2>1. Escopo</h2>
+    <p class="lead">Este documento reúne, comenta e indexa os projetos-tipo do Florida Department of Transportation, com foco nos blocos de maior retorno para reaproveitamento em projeto brasileiro.</p>
+
+    <div class="escopo">
+      <dl>
+        <dt>Tipo de documento</dt><dd>Base de Referência Técnica</dd>
+        <dt>Objeto</dt><dd>FDOT Standard Plans for Road and Bridge Construction — FY 2026-27</dd>
+        <dt>Destinatário</dt><dd>Equipe técnica Manta — segmentos S1 Rodovias e S2 OAE</dd>
+        <dt>Finalidade</dt><dd>Benchmark de projeto-tipo, catálogo de detalhes reaproveitáveis e insumo para a coleção RAG <span class="mono">normas</span></dd>
+        <dt>Fonte primária</dt><dd><a href="https://www.fdot.gov/design/standardplans/current/27" target="_blank" rel="noopener">fdot.gov/design/standardplans</a> — acesso público</dd>
+        <dt>Não é</dt><dd>Documento de projeto. Nenhuma folha aqui pode ser usada em contrato sem revisão de engenharia e adequação normativa.</dd>
+      </dl>
+      <div class="chips">
+        <span class="chip">S1 · Rodovias</span>
+        <span class="chip">S2 · OAE</span>
+        <span class="chip">Coleção RAG · normas</span>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="n">56</div><div class="l">Índices catalogados</div></div>
+      <div class="kpi"><div class="n">12</div><div class="l">Segmentos</div></div>
+      <div class="kpi"><div class="n">15</div><div class="l">Diagramas</div></div>
+      <div class="kpi"><div class="n">2</div><div class="l">Pendências de título</div></div>
+    </div>
+
+    <h3>1.1 Situação da coleta</h3>
+    <p>Os 74 índices catalogados são reais e rastreados a documentos oficiais do FDOT — sumário, folha, instrução de uso, crosswalk de renumeração e pacotes de revisão. Nenhum número foi reconstruído de memória, em conformidade com R2.</p>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th>Item</th><th>Situação</th><th>Bloqueio</th></tr></thead>
+        <tbody>
+          <tr><td>Índices catalogados (56)</td><td><span class="dot d-ok"></span>Verificados na fonte</td><td>—</td></tr>
+          <tr><td>Diagramas (8)</td><td><span class="dot d-ok"></span>Autorais, SVG embutido</td><td>—</td></tr>
+          <tr><td>Índice completo do ano fiscal</td><td><span class="dot d-late"></span>Não obtido</td><td>Egresso de rede bloqueado para <span class="mono">fdot.gov</span></td></tr>
+          <tr><td>Extração de imagem das pranchas</td><td><span class="dot d-late"></span>Não obtida</td><td>Mesmo bloqueio — PDFs não puderam ser baixados</td></tr>
+          <tr><td>Título de <span class="mono">450-084</span></td><td><span class="dot d-run"></span>A confirmar</td><td>Depende do sumário oficial</td></tr>
+          <tr><td>Título completo de <span class="mono">455-031</span></td><td><span class="dot d-run"></span>A confirmar</td><td>Snippet truncou após "High Moment"; palavra completa não recuperada</td></tr>
+          <tr><td>Título de <span class="mono">425-010</span></td><td><span class="dot d-ok"></span>Corrigido</td><td>Era "Ditch Bottom Inlets" — confirmado como <i>Structure Bottoms Type J and P</i></td></tr>
+          <tr><td>Equivalência com projeto-tipo DNIT</td><td><span class="dot d-off"></span>Não iniciada</td><td>Etapa editorial posterior</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quadro">
+      <div class="h">Como destravar</div>
+      <p>Liberar <span class="mono">www.fdot.gov</span> e <span class="mono">fdotwww.blob.core.windows.net</span> na política de rede do ambiente, ou anexar os arquivos <span class="mono">rtoc.pdf</span> e <span class="mono">stoc.pdf</span> à sessão. Qualquer um dos dois fecha as três pendências abertas de uma vez.</p>
+    </div>
+
+    <h3>1.2 Conformidade com as regras invioláveis</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Regra</th><th>Situação</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>R1 — sem nomes de empresa</td><td><span class="dot d-run"></span>Leitura declarada</td><td>FDOT é órgão público e objeto do documento, não cliente. Nenhum nome de cliente Manta aparece.</td></tr>
+          <tr><td>R2 — dado ausente = null + motivo</td><td><span class="dot d-ok"></span>Conforme</td><td>Pendências declaradas em 1.1 e no rodapé de cada bloco</td></tr>
+          <tr><td>R3 — aluci-guard</td><td><span class="dot d-ok"></span>Executado</td><td>Passagem manual em 22/08/2026 — resultado em 9.3. Módulo automatizado indisponível no ambiente</td></tr>
+          <tr><td>R4 — ID, versão e data</td><td><span class="dot d-ok"></span>Conforme</td><td><span class="mono">MANTA-FDOT-20260822-001</span> · v1.0 · 22/08/2026</td></tr>
+          <tr><td>R5 — valores em BRL @data</td><td><span class="dot d-off"></span>Não aplicável</td><td>Documento não carrega valores monetários</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ════════ 2 ════════ -->
+  <section class="tab" id="t2">
+    <h2>2. O manual</h2>
+    <p class="lead">Os Standard Plans for Road and Bridge Construction são o equivalente funcional do álbum de projetos-tipo do DNIT. O FDOT, porém, separa projeto-tipo de manual de projeto com muito mais rigor — e essa separação é a primeira coisa a entender.</p>
+    <p>Um Standard Plan é uma folha de desenho pronta e numerada que o projetista <b>não redesenha</b>: ele lista o índice na folha de <i>Summary of Standard Plans</i> e o desenho entra no contrato por referência. Critério de projeto — quando usar, com que geometria, sob que carga — mora em outro documento.</p>
+
+    <h3>2.1 A pilha documental</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Documento</th><th>Papel</th><th>Paralelo no Brasil</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026-fdm-complete.pdf" target="_blank" rel="noopener">FDM</a></td><td>FDOT Design Manual — critérios de projeto geométrico, drenagem, acessos. Edição 1º jan 2026</td><td>Manual de Projeto Geométrico + IPR-706</td></tr>
+          <tr><td><a href="https://www.fdot.gov/design/standardplans/current/27" target="_blank" rel="noopener">Standard Plans</a></td><td><b>Os projetos-tipo.</b> Folhas numeradas, incorporadas ao contrato por referência</td><td>Álbum de Projetos-Tipo DNIT</td></tr>
+          <tr><td><a href="https://www.fdot.gov/structures/structures-standard-plans" target="_blank" rel="noopener">Structures</a></td><td>Structures Manual — SDG diretrizes, SDM detalhamento, IDS instruções</td><td>Manual de OAE + NBR 7187/6118 aplicado</td></tr>
+          <tr><td><a href="https://www.fdot.gov/specifications/standard-specification-library" target="_blank" rel="noopener">Specifications</a></td><td>Especificações de serviço, medição e pagamento</td><td>Especificações de Serviço DNIT</td></tr>
+          <tr><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/fpo/fpc/publications/boe/2026-boe-manual.pdf" target="_blank" rel="noopener">BOE</a></td><td>Basis of Estimates — pay items, unidades, critérios de quantificação. Ed. 2026</td><td>SICRO, na parte de critérios</td></tr>
+          <tr><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/pm/publications/2026fpdm.pdf" target="_blank" rel="noopener">FPDM</a> / <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/pm/publications/2026rpdm.pdf" target="_blank" rel="noopener">RPDM</a></td><td>Dimensionamento de pavimento flexível e rígido. Ambos ed. 2026</td><td>Método DNIT / MeDiNa</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quadro alt">
+      <div class="h">Confusão a evitar</div>
+      <p>Standard <b>Plans</b> e Standard <b>Specifications</b> têm numeração parecida e são documentos diferentes. <code>334 Superpave</code>, <code>327 Milling</code> e <code>300 Prime and Tack</code> são seções da Specifications — não são índices de projeto-tipo. Citar um como o outro invalida a referência.</p>
+    </div>
+
+    <h3>2.2 Preços de referência — Historical Item Average Cost</h3>
+    <p>O companheiro natural do BOE é o relatório de <b>preço médio histórico por pay item</b>, publicado periodicamente pelo FDOT a partir dos contratos efetivamente licitados — o equivalente funcional de uma série histórica de SICRO, mas em dólar e por item de pagamento, não por composição.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Pay item</th><th>Descrição</th><th class="n">Preço médio ponderado</th><th>Amostra</th><th>Período</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">0455 34 2</td><td>14" Square Prestressed Concrete Pile (<span class="mono">455-014</span>)</td><td class="n">US$ 234,04 / pé linear</td><td>6 contratos · 12.197 pés</td><td>04/2025–03/2026</td></tr>
+          <tr><td class="mono">—</td><td>24" Square Prestressed Concrete Pile <span class="pend">item distinto, não confundir com o acima</span></td><td class="n">US$ 500,00 / pé linear</td><td>Market Area 07</td><td>até 06/2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="quadro alt">
+      <div class="h">Por que a lista para aqui</div>
+      <p>O relatório estadual (<i>Historical Item Average Cost — Statewide, 12 meses</i>) cobre também guardrail, meio-fio e sarjeta, calçada e Optional Base Group — mas a busca não trouxe o valor numérico exato desses itens, só a confirmação de que o relatório os contém. Preferimos <b>dois preços confirmados a uma lista longa com números não verificados</b>. Os demais ficam como pendência, não como estimativa.</p>
+    </div>
+    <p class="muted">Valores em dólar americano, na data e fonte do próprio FDOT — não convertidos para BRL, e não comparáveis a uma composição SICRO sem uma etapa própria de equivalência de escopo (o pay item FDOT mede só o material posto, sem BDI nem front-loading de mobilização, que têm tratamento contratual diferente do brasileiro).</p>
+
+    <h3>2.3 Numeração e os dois livros</h3>
+    <p>Todo índice tem seis dígitos no formato <code>NNN-NNN</code>. O acervo se divide em dois livros publicados separadamente — <b>Roadway</b> e <b>Structures</b> — cada um com seu sumário próprio (<span class="mono">rtoc.pdf</span> e <span class="mono">stoc.pdf</span>). A faixa dos três primeiros dígitos agrupa por assunto: 102 é controle de tráfego em obra, 450 é viga pré-moldada, 521 é barreira e guarda-corpo.</p>
+    <p>O índice <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-000.pdf" target="_blank" rel="noopener"><code>000-000</code></a> é o <i>Index Crosswalk</i>: mapeia a numeração antiga dos Design Standards (pré-2017) para os índices atuais. Serve para ler projeto antigo sem confundir referência.</p>
+
+    <h3>2.4 Vigência, revisões interinas e folha modificada</h3>
+    <p>Este é o ponto que mais gera erro em quem vem do modelo DNIT: <b>o jogo aplicável é o vigente na data da licitação</b> — a <i>letting date</i> — e não na data em que o projeto foi feito. Os Standard Plans são publicados por ano fiscal, e o FDOT ainda solta <i>Interim Revisions</i> e <i>Errata</i> ao longo do ano.</p>
+    <p>A consequência é direta: uma revisão publicada entre o projeto e a licitação altera quantitativo sem que ninguém redesenhe nada. É origem clássica de pleito — e é o motivo de o controle de versão entre anos fiscais precisar ser dado, não impressão.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Instrumento</th><th>Função</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://www.fdot.gov/design/standardplans/current/standard-plans---fy-2026-27-interim-revisions" target="_blank" rel="noopener">Interim Revisions FY 2026-27</a></td><td>Revisões publicadas no ano corrente</td></tr>
+          <tr><td><a href="https://www.fdot.gov/design/standardplans/current/standard-plans---fy-2026-27-errata" target="_blank" rel="noopener">Errata FY 2026-27</a></td><td>Correções</td></tr>
+          <tr><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/fy2026-27revisionlog.pdf" target="_blank" rel="noopener">Revisions Log FY 2026-27</a></td><td>Log consolidado, por índice</td></tr>
+          <tr><td><a href="https://www.fdot.gov/design/standardplans/irr/Status-Current" target="_blank" rel="noopener">Status das revisões</a></td><td>O que está em tramitação</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Quando o projeto precisa alterar uma folha padrão, ela vira <b>Modified Standard Plan</b>: sai do regime de referência e entra como folha do projeto, com carimbo próprio e responsabilidade do Engineer of Record. É por isso que o FDOT publica os arquivos <a href="https://www.fdot.gov/design/standardplans/current/dgns" target="_blank" rel="noopener">CADD em <code>.dgn</code></a> — para tornar a modificação rastreável.</p>
+
+    <h3>2.5 Padrão de URL</h3>
+    <p>Qualquer folha do FY 2026-27 resolve por composição, sem tabela de links. Confirmado contra folhas reais:</p>
+    <div class="urlbox">
+      …/design/standardplans/<b>2027</b>/idx/{ÍNDICE}.pdf &nbsp;→&nbsp; a folha de desenho<br>
+      …/design/standardplans/<b>2027</b>/spi/spi-{ÍNDICE}.pdf &nbsp;→&nbsp; Standard Plans Instructions
+    </div>
+    <p>O SPI explica <i>como usar</i> aquela folha — critério de aplicação, limites, o que fica a cargo do projetista. Vale mais que a folha em si quando o objetivo é entender a lógica de projeto.</p>
+  </section>
+
+  <!-- ════════ 3 ════════ -->
+  <section class="tab" id="t3">
+    <h2>3. Índice de folhas</h2>
+    <p class="lead">Recorte curado de 74 índices em 13 segmentos — 54 Roadway e 20 Structures. Cada número é link direto para o PDF oficial; a coluna SPI abre as instruções de uso onde existem.</p>
+    <div class="busca">
+      <input type="search" id="q" placeholder="Filtrar por índice, título ou segmento" aria-label="Filtrar índice">
+      <span id="hits"></span>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Índice</th><th>Título</th><th>Livro</th><th>Vert.</th><th>SPI</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="quadro">
+      <div class="h">Fora do recorte</div>
+      <p>Sinalização vertical e horizontal (séries 700 e 711) foi retirada por decisão de escopo. Elétrica e semáforos entram sumarizados na seção 7. O restante do ano fiscal depende da leitura do <span class="mono">rtoc.pdf</span> e do <span class="mono">stoc.pdf</span>.</p>
+    </div>
+  </section>
+
+  <!-- ════════ 4 ════════ -->
+  <section class="tab" id="t4">
+    <h2>4. Pavimentação</h2>
+    <p class="lead">O FDOT não tem álbum de seção-tipo de pavimento. O pacote não sai de projeto-tipo — sai de manual de dimensionamento e é materializado num entregável assinado. O projeto-tipo entra só nas peças complementares.</p>
+
+    <h3>4.1 Onde o pacote é decidido</h3>
+    <figure>
+      <svg viewBox="0 0 810 320" role="img" aria-label="Comparação de fluxo: no FDOT o pacote de pavimento chega ao contrato como folha do projeto assinada pelo Engineer of Record, e os projetos-tipo entram apenas por referência para peças complementares; no modelo DNIT a seção-tipo do álbum entra diretamente por referência.">
+        <text class="lb" x="20" y="26">FDOT</text>
+        <rect class="bxf" x="20" y="40" width="140" height="46"/><text class="tc" x="90" y="68">Dados de tráfego</text>
+        <line class="s" x1="160" y1="63" x2="194" y2="63" marker-end="url(#ar)"/>
+        <rect class="bxf" x="196" y="40" width="164" height="46"/><text class="tc" x="278" y="60">FPDM / RPDM</text><text class="tc sm" x="278" y="75">dimensionamento</text>
+        <line class="s" x1="360" y1="63" x2="394" y2="63" marker-end="url(#ar)"/>
+        <rect class="accbx" x="396" y="40" width="200" height="46"/><text class="tc" x="496" y="60">Typical Section Package</text><text class="tc sm" x="496" y="75">assinado pelo EOR</text>
+        <line class="acc" x1="596" y1="63" x2="646" y2="63" marker-end="url(#ara)"/>
+        <text class="tc ix2" x="621" y="52">folha</text><text class="tc ix2" x="621" y="84">do projeto</text>
+        <rect class="bxf" x="648" y="40" width="120" height="46"/><text class="tc" x="708" y="68">Contrato</text>
+        <rect class="bxf" x="396" y="118" width="200" height="42"/><text class="tc" x="496" y="136">Standard Plans</text><text class="tc sm" x="496" y="151">junta · subdreno · acesso</text>
+        <polyline class="s dash" points="596,139 708,139 708,90" marker-end="url(#ar)"/>
+        <text class="sm" x="614" y="131">por referência</text>
+        <line class="s" x1="20" y1="188" x2="790" y2="188" opacity=".3"/>
+        <text class="lb" x="20" y="216">DNIT / Brasil</text>
+        <rect class="bxf" x="20" y="230" width="140" height="46"/><text class="tc" x="90" y="258">Dados de tráfego</text>
+        <line class="s" x1="160" y1="253" x2="194" y2="253" marker-end="url(#ar)"/>
+        <rect class="bxf" x="196" y="230" width="164" height="46"/><text class="tc" x="278" y="250">Método de</text><text class="tc sm" x="278" y="265">dimensionamento</text>
+        <line class="s" x1="360" y1="253" x2="394" y2="253" marker-end="url(#ar)"/>
+        <rect class="tlbx" x="396" y="230" width="200" height="46"/><text class="tc" x="496" y="250">Álbum de projeto-tipo</text><text class="tc sm" x="496" y="265">seção-tipo pronta</text>
+        <line class="s" x1="596" y1="253" x2="646" y2="253" marker-end="url(#ar)"/>
+        <text class="tc sm" x="621" y="243">por</text><text class="tc sm" x="621" y="274">referência</text>
+        <rect class="bxf" x="648" y="230" width="120" height="46"/><text class="tc" x="708" y="258">Contrato</text>
+      </svg>
+      <figcaption><b>A diferença está na última seta.</b> No FDOT a folha que carrega o pacote é folha do projeto, assinada pelo Engineer of Record — os projetos-tipo entram por referência, e só para peças complementares. No modelo a que estamos acostumados, a seção-tipo já vem pronta do álbum. Isso muda quem responde pelo pacote e o que acontece quando o padrão é revisado.</figcaption>
+    </figure>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th></th><th>FDOT</th><th>DNIT / Brasil</th></tr></thead>
+        <tbody>
+          <tr><td>Dimensionamento</td><td>FPDM (flexível) e RPDM (rígido), ed. 2026</td><td>Método DNIT / MeDiNa</td></tr>
+          <tr><td>Onde o pacote aparece</td><td>Typical Section Package — folha do projeto</td><td>Seção-tipo do álbum</td></tr>
+          <tr><td>Quem assina</td><td>Engineer of Record, obrigatoriamente</td><td>Responsável técnico do projeto</td></tr>
+          <tr><td>Quando é exigido</td><td>Projeto que altere seção transversal <b>e</b> recapeamento</td><td>Conforme escopo contratado</td></tr>
+          <tr><td>Projeto-tipo cobre</td><td>Junta, substituição de placa, subdrenagem, acesso, encontro de ponte</td><td>A seção completa</td></tr>
+          <tr><td>Revestimento</td><td>Fixado por classe de via no FPDM</td><td>Definido em projeto</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quadro">
+      <div class="h">O que o Typical Section Package carrega — e o que não</div>
+      <p>A folha traz os dados de tráfego e o dimensionamento associados àquela seção. O <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026fdm913typsect.pdf" target="_blank" rel="noopener">FDM 913</a> é explícito no que <b>não</b> deve entrar: notas e detalhes de seção-tipo, seções parciais, e cotas e rótulos de construção do pavimento. O CADD do FDOT fornece <i>templates</i> que o projetista adapta. Exigência do entregável em <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026fdm120dsnsubmtls.pdf" target="_blank" rel="noopener">FDM 120</a>.</p>
+    </div>
+
+    <h3>4.2 Anatomia das camadas asfálticas</h3>
+    <p>A nomenclatura não bate com a nossa, e isso atrapalha leitura de projeto. O termo <i>binder course</i> praticamente não aparece: o que outros DOTs chamam assim, o FDOT chama <b>structural course</b>, designado <code>SP-</code> seguido do tamanho máximo nominal do agregado.</p>
+    <figure>
+      <svg viewBox="0 0 810 300" role="img" aria-label="Pilha de camadas asfálticas com dois conjuntos de rótulos: à esquerda a nomenclatura do FDOT, à direita o equivalente que usamos, mostrando que o structural course corresponde ao que chamamos de binder.">
+        <text class="lb te" x="268" y="34">Nomenclatura FDOT</text>
+        <text class="lb" x="542" y="34">Equivalente nosso</text>
+        <rect class="bxf" x="280" y="48" width="250" height="36"/>
+        <rect class="accbx" x="280" y="84" width="250" height="54"/>
+        <rect class="bxf" x="280" y="138" width="250" height="46"/>
+        <rect class="bxf" x="280" y="184" width="250" height="40"/>
+        <rect class="bx" x="280" y="224" width="250" height="36"/>
+        <text class="tc" x="405" y="70">Friction Course</text>
+        <text class="tc" x="405" y="107">Structural Course</text>
+        <text class="tc sm" x="405" y="123">SP-9.5 · SP-12.5 · SP-19.0</text>
+        <text class="tc" x="405" y="166">Base Course</text>
+        <text class="tc" x="405" y="209">Subbase</text>
+        <text class="tc sm" x="405" y="246">Subgrade</text>
+        <text class="te sm" x="268" y="64">FC-5 · FC-9.5 · FC-12.5</text>
+        <text class="te sm" x="268" y="78">aberta ou densa</text>
+        <text class="te sm" x="268" y="108">distribui a carga</text>
+        <text class="te sm" x="268" y="122">para a base</text>
+        <text class="te sm" x="268" y="160">Optional Base Group</text>
+        <text class="te sm" x="268" y="174">menu de materiais</text>
+        <text class="te sm" x="268" y="208">granular</text>
+        <text class="sm" x="542" y="64">capa de rolamento</text>
+        <text class="sm" x="542" y="78">atrito e drenagem superficial</text>
+        <text class="ix2" x="542" y="104">≈ binder / camada de ligação</text>
+        <text class="sm" x="542" y="120">nome que o FDOT não usa</text>
+        <text class="sm" x="542" y="166">base</text>
+        <text class="sm" x="542" y="209">sub-base</text>
+        <text class="sm" x="542" y="246">subleito</text>
+        <line class="s" x1="272" y1="66" x2="280" y2="66"/><line class="s" x1="272" y1="110" x2="280" y2="110"/>
+        <line class="s" x1="272" y1="166" x2="280" y2="166"/><line class="s" x1="272" y1="206" x2="280" y2="206"/>
+        <line class="acc" x1="530" y1="110" x2="538" y2="110"/><line class="s" x1="530" y1="66" x2="538" y2="66"/>
+        <line class="s" x1="530" y1="166" x2="538" y2="166"/><line class="s" x1="530" y1="206" x2="538" y2="206"/>
+        <text class="sm tc" x="405" y="282">FC-9.5 e FC-12.5 atendem à gradação de SP-9.5 e SP-12.5 — mesmo NMAS, função diferente</text>
+      </svg>
+      <figcaption><b>Uma pilha, dois vocabulários.</b> A camada destacada é a que mais confunde: <i>structural course</i> é o nosso binder. Friction e structural do mesmo tamanho nominal compartilham gradação — o que muda é a função e a espessura de aplicação.</figcaption>
+    </figure>
+
+    <h4>4.2.a Revestimento — como o FDOT escolhe</h4>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Mistura</th><th>Tipo</th><th>Característica</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">FC-5</td><td>Aberta (OGFC)</td><td>Aplicada em ¾", superfície resistente à derrapagem</td></tr>
+          <tr><td class="mono">FC-7</td><td>Aberta (OGFC)</td><td>Alternativa de OGFC na política de revestimento</td></tr>
+          <tr><td class="mono">FC-9.5</td><td>Densa (DGFC)</td><td>Permite lift de 1"</td></tr>
+          <tr><td class="mono">FC-12.5</td><td>Densa (DGFC)</td><td>Maior tamanho nominal</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>A escolha não é do projetista — o FPDM fixa por classe de via: <b>FC-5</b> em todo tronco de acesso controlado, independente da velocidade; <b>OGFC</b> (FC-5 ou FC-7) em arterial e coletora multifaixa com acostamento sem meio-fio; <b>DGFC</b> (FC-12.5 ou FC-9.5) nas demais, com acostamento ou meio-fio.</p>
+
+    <figure>
+      <svg viewBox="0 0 850 360" role="img" aria-label="Três pacotes de pavimento lado a lado em colunas, um por classe de via: acesso controlado, arterial ou coletora multifaixa, e demais vias. Cada coluna mostra o revestimento exigido pelo FPDM, mantendo estrutural, base, sub-base e subleito genéricos e iguais entre as três.">
+        <text class="lb" x="24" y="30">Pacote de pavimento por classe de via — FPDM 2026</text>
+
+        <text class="lb tc" x="163" y="58">Acesso controlado</text>
+        <text class="lb tc" x="425" y="58">Arterial / coletora multifaixa</text>
+        <text class="lb tc" x="687" y="58">Demais vias</text>
+        <text class="sm tc" x="163" y="72">qualquer velocidade de projeto</text>
+        <text class="sm tc" x="425" y="72">acostamento sem meio-fio</text>
+        <text class="sm tc" x="687" y="72">com acostamento ou meio-fio</text>
+
+        <rect class="accbx" x="83" y="86" width="160" height="30"/><text class="tc" x="163" y="106">FC-5</text>
+        <rect class="accbx" x="345" y="86" width="160" height="30"/><text class="tc" x="425" y="106">FC-5 ou FC-7</text>
+        <rect class="accbx" x="607" y="86" width="160" height="30"/><text class="tc" x="687" y="106">FC-12.5 ou FC-9.5</text>
+        <text class="ix2 tc" x="163" y="127">OGFC obrigatório</text>
+        <text class="ix2 tc" x="425" y="127">OGFC</text>
+        <text class="ix2 tc" x="687" y="127">DGFC</text>
+
+        <rect class="bxf" x="83" y="140" width="160" height="34"/>
+        <rect class="bxf" x="345" y="140" width="160" height="34"/>
+        <rect class="bxf" x="607" y="140" width="160" height="34"/>
+        <text class="tc sm" x="163" y="161">Structural Course · SP-</text>
+        <text class="tc sm" x="425" y="161">Structural Course · SP-</text>
+        <text class="tc sm" x="687" y="161">Structural Course · SP-</text>
+
+        <rect class="bxf" x="83" y="178" width="160" height="34"/>
+        <rect class="bxf" x="345" y="178" width="160" height="34"/>
+        <rect class="bxf" x="607" y="178" width="160" height="34"/>
+        <text class="tc sm" x="163" y="199">Base · Optional Base Group</text>
+        <text class="tc sm" x="425" y="199">Base · Optional Base Group</text>
+        <text class="tc sm" x="687" y="199">Base · Optional Base Group</text>
+
+        <rect class="bxf" x="83" y="216" width="160" height="30"/>
+        <rect class="bxf" x="345" y="216" width="160" height="30"/>
+        <rect class="bxf" x="607" y="216" width="160" height="30"/>
+        <text class="tc sm" x="163" y="235">Sub-base</text>
+        <text class="tc sm" x="425" y="235">Sub-base</text>
+        <text class="tc sm" x="687" y="235">Sub-base</text>
+
+        <rect class="bx" x="83" y="250" width="160" height="26"/>
+        <rect class="bx" x="345" y="250" width="160" height="26"/>
+        <rect class="bx" x="607" y="250" width="160" height="26"/>
+        <text class="tc sm" x="163" y="267">Subleito</text>
+        <text class="tc sm" x="425" y="267">Subleito</text>
+        <text class="tc sm" x="687" y="267">Subleito</text>
+
+        <line class="s dash" x1="303" y1="86" x2="303" y2="276" opacity=".35"/>
+        <line class="s dash" x1="565" y1="86" x2="565" y2="276" opacity=".35"/>
+
+        <text class="sm tc" x="425" y="300">a variação por classe está só no revestimento —</text>
+        <text class="sm tc" x="425" y="314">estrutural, base, sub-base e subleito seguem o dimensionamento (FPDM/RPDM), não a classificação viária</text>
+        <text class="sm tc" x="425" y="336">fonte: política de revestimento FPDM 2026 · não cobre exceções de projeto (pontes, interseções, pistas de pouso)</text>
+      </svg>
+      <figcaption><b>A classificação decide a capa, não o pacote inteiro.</b> As três colunas têm a mesma estrutura de camadas — o que muda é obrigatório por norma é o revestimento: aberto (OGFC) onde a drenagem superficial e o ruído importam mais, denso (DGFC) nas demais. Nenhuma das três é opção do projetista.</figcaption>
+    </figure>
+
+
+    <h3>4.3 Estrutura por tipo de material — o Optional Base Group</h3>
+    <p>Aqui o FDOT faz algo que não fazemos: em vez de especificar o material, o projeto especifica um <b>grupo de base</b>, e o construtor escolhe qualquer material não restrito daquele grupo. O que amarra a equivalência entre materiais tão diferentes é o <b>número estrutural (SN)</b> — o mesmo conceito da metodologia AASHTO de dimensionamento por camada.</p>
+
+    <div class="quadro">
+      <div class="h">O que é SN e LBR, em uma frase cada</div>
+      <p><b>Número estrutural (SN)</b> — a contribuição de uma camada para a capacidade de suporte do pavimento, calculada como coeficiente estrutural × espessura da camada. É a mesma camada podendo ser mais fina com material melhor, ou mais espessa com material mais fraco, desde que o produto seja igual.</p>
+      <p><b>LBR (Limerock Bearing Ratio)</b> — o índice de suporte usado na Flórida para classificar material de base e sub-base, equivalente em função ao CBR mais usado fora dos EUA. LBR 100 é o patamar de "uso geral" na tabela abaixo.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 780 170" role="img" aria-label="Fórmula do número estrutural: coeficiente estrutural multiplicado pela espessura da camada é igual ao número estrutural. Para trocar de material sem perder capacidade, a nova espessura é a espessura original multiplicada pela razão entre os coeficientes.">
+        <text class="lb" x="24" y="26">A equação por trás da equivalência</text>
+
+        <text class="tc" style="font-size:20px" x="140" y="76">a</text>
+        <text class="tc" style="font-size:20px" x="175" y="76">×</text>
+        <text class="tc" style="font-size:20px" x="210" y="76">t</text>
+        <text class="tc" style="font-size:20px" x="255" y="76">=</text>
+        <text class="tc ix2" style="font-size:20px" x="300" y="76">SN</text>
+        <text class="sm tc" x="140" y="98">coeficiente</text>
+        <text class="sm tc" x="210" y="98">espessura</text>
+        <text class="sm tc" x="300" y="98">número estrutural</text>
+
+        <line class="s dash" x1="360" y1="40" x2="360" y2="130" opacity=".4"/>
+
+        <text class="tc" style="font-size:18px" x="560" y="66">t₂ = t₁ ×</text>
+        <line class="s" x1="655" y1="52" x2="705" y2="52"/>
+        <text class="tc sm" x="680" y="46">a₁</text>
+        <text class="tc sm" x="680" y="66">a₂</text>
+        <text class="sm tc" x="620" y="98">espessura do material substituto,</text>
+        <text class="sm tc" x="620" y="112">para entregar o mesmo SN</text>
+
+        <text class="sm tc" x="390" y="150">coeficiente menor (a₂ &lt; a₁) exige espessura maior (t₂ &gt; t₁) — na mesma proporção inversa</text>
+      </svg>
+      <figcaption><b>Uma equação, todo o mecanismo.</b> O projeto fixa o SN exigido para a base; qualquer material do grupo que entregue esse SN é aceito. Trocar coquina por agregado graduado não muda o desempenho — muda quantos centímetros de espessura são necessários para chegar lá.</figcaption>
+    </figure>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th>Material</th><th>Papel</th><th>Uso</th><th class="n">LBR</th><th class="n">Coef. estrutural (a)</th></tr></thead>
+        <tbody>
+          <tr><td>Cemented Coquina</td><td>Base e sub-base</td><td>Geral</td><td class="n">100</td><td class="n">0,18</td></tr>
+          <tr><td>Shell Rock</td><td>Base e sub-base</td><td>Geral</td><td class="n">100</td><td class="n">0,18</td></tr>
+          <tr><td>Bank Run Shell</td><td>Base e sub-base</td><td>Geral</td><td class="n">100</td><td class="n">0,18</td></tr>
+          <tr><td>Graded Aggregate (B-12.5)</td><td>Base e sub-base</td><td>Geral</td><td class="n">100</td><td class="n">0,15</td></tr>
+          <tr><td>Limerock</td><td>Sub-base granular</td><td>Geral</td><td class="n">—</td><td class="n">—</td></tr>
+          <tr><td>Agregado de concreto reciclado</td><td>Sub-base granular</td><td>Geral</td><td class="n">—</td><td class="n">—</td></tr>
+          <tr><td>Soil Cement 500 psi</td><td>Base</td><td>Restrito</td><td class="n">—</td><td class="n">0,20</td></tr>
+          <tr><td>Soil Cement 300 psi</td><td>Base</td><td>Restrito</td><td class="n">—</td><td class="n">0,15</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quadro">
+      <div class="h">Exemplo numérico do mecanismo — ilustrativo, não é espessura de projeto</div>
+      <p>Suponha 30 cm de coquina (a = 0,18) atendendo o SN exigido para a base: <span class="mono">SN = 0,18 × 30 = 5,4</span>. Substituindo por graded aggregate (a = 0,15) para entregar o mesmo SN: <span class="mono">t = 5,4 ÷ 0,15 = 36 cm</span> — 6 cm a mais, para o mesmo desempenho estrutural. É exatamente essa troca que o construtor faz sem pedir aditivo, e é o que a figura de pacotes logo abaixo mostra entre quatro alternativas ao mesmo tempo.</p>
+      <p class="muted">A espessura de 30 cm de partida é arbitrária, só para a conta fechar redondo — o valor real de projeto vem do dimensionamento (FPDM/RPDM), nunca deste exemplo.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 850 380" role="img" aria-label="Quatro pacotes de pavimento comparados lado a lado, todos ancorados no mesmo asfalto acabado no topo. Revestimento e structural course são idênticos; a base varia de espessura conforme o coeficiente estrutural, e o fundo de cada pacote fica em cota diferente.">
+        <text class="lb" x="24" y="34">Alternativas de pacote · marco zero no asfalto acabado</text>
+        <line class="acc" x1="70" y1="70" x2="745" y2="70" stroke-width="2.4"/>
+        <text class="ix2 te" x="64" y="66">ASFALTO ACABADO</text>
+        <text class="sm te" x="64" y="80">cota 0 · greide</text>
+        <text class="sm te" x="80" y="86">Friction course</text>
+        <text class="sm te" x="80" y="117">Structural course</text>
+        <line class="s" x1="82" y1="82" x2="85" y2="82"/><line class="s" x1="82" y1="113" x2="85" y2="113"/>
+        <text class="lb" x="24" y="196">profundidade</text>
+        <line class="s" x1="46" y1="204" x2="46" y2="300" marker-end="url(#ar)"/>
+        <rect class="bxf" x="85" y="70" width="145" height="20"/><rect class="bxf" x="85" y="90" width="145" height="42"/>
+        <rect class="accbx" x="85" y="132" width="145" height="90"/><rect class="bxf" x="85" y="222" width="145" height="45"/>
+        <rect class="bx" x="85" y="267" width="145" height="22"/>
+        <text class="tc lb" x="157" y="172">Base</text><text class="tc" x="157" y="190">0,20</text>
+        <text class="tc sm" x="157" y="249">Sub-base</text><text class="tc sm" x="157" y="282">subleito</text>
+        <rect class="bxf" x="252" y="70" width="145" height="20"/><rect class="bxf" x="252" y="90" width="145" height="42"/>
+        <rect class="accbx" x="252" y="132" width="145" height="100"/><rect class="bxf" x="252" y="232" width="145" height="45"/>
+        <rect class="bx" x="252" y="277" width="145" height="22"/>
+        <text class="tc lb" x="324" y="177">Base</text><text class="tc" x="324" y="195">0,18</text>
+        <text class="tc sm" x="324" y="259">Sub-base</text><text class="tc sm" x="324" y="292">subleito</text>
+        <rect class="bxf" x="419" y="70" width="145" height="20"/><rect class="bxf" x="419" y="90" width="145" height="42"/>
+        <rect class="accbx" x="419" y="132" width="145" height="120"/><rect class="bxf" x="419" y="252" width="145" height="45"/>
+        <rect class="bx" x="419" y="297" width="145" height="22"/>
+        <text class="tc lb" x="491" y="187">Base</text><text class="tc" x="491" y="205">0,15</text>
+        <text class="tc sm" x="491" y="279">Sub-base</text><text class="tc sm" x="491" y="312">subleito</text>
+        <rect class="bxf" x="586" y="70" width="145" height="20"/><rect class="bxf" x="586" y="90" width="145" height="42"/>
+        <rect class="accbx" x="586" y="132" width="145" height="120"/><rect class="bxf" x="586" y="252" width="145" height="45"/>
+        <rect class="bx" x="586" y="297" width="145" height="22"/>
+        <text class="tc lb" x="658" y="187">Base</text><text class="tc" x="658" y="205">0,15</text>
+        <text class="tc sm" x="658" y="279">Sub-base</text><text class="tc sm" x="658" y="312">subleito</text>
+        <line class="s dash" x1="85" y1="267" x2="745" y2="267" opacity=".5"/>
+        <line class="acc" x1="745" y1="267" x2="745" y2="297" marker-start="url(#ara)" marker-end="url(#ara)"/>
+        <text class="ix2" x="752" y="279">+30 un.</text><text class="sm" x="752" y="293">escavação</text>
+        <text class="tc sm" x="157" y="336">Soil Cement</text><text class="tc sm" x="157" y="349">500 psi</text><text class="tc sm" x="157" y="362">uso restrito</text>
+        <text class="tc sm" x="324" y="336">Coquina · Shell Rock</text><text class="tc sm" x="324" y="349">Bank Run Shell</text><text class="tc sm" x="324" y="362">LBR 100 · uso geral</text>
+        <text class="tc sm" x="491" y="336">Graded Aggregate</text><text class="tc sm" x="491" y="349">LBR 100</text><text class="tc sm" x="491" y="362">uso geral</text>
+        <text class="tc sm" x="658" y="336">Soil Cement</text><text class="tc sm" x="658" y="349">300 psi</text><text class="tc sm" x="658" y="362">uso restrito</text>
+      </svg>
+      <figcaption><b>Mesmo greide, fundos diferentes.</b> Ancorando no asfalto acabado, o que o construtor escolhe fica visível: revestimento e <i>structural course</i> são idênticos nas quatro alternativas — só a base muda, e ela empurra o fundo do pacote para baixo. Coeficiente menor pede base mais espessa, e isso vira escavação, sub-base rebaixada e volume de terraplenagem. Os dois últimos pacotes têm o mesmo coeficiente e a mesma profundidade, apesar de materiais completamente diferentes — é essa equivalência que o Optional Base Group contratualiza. As espessuras são a razão exata entre os coeficientes, em unidades relativas, não espessuras de projeto.</figcaption>
+    </figure>
+
+    <div class="quadro alt">
+      <div class="h">Origem da folha — confirmada, renumeração ainda em aberto</div>
+      <p>O grupo de base e os números estruturais existiram como Design Standard <b>Index 00514, <i>Optional Base Group and Structural Numbers</i></b> — confirmado em múltiplos anos fiscais (FY 2006-07 a 2016-17) na numeração pré-2017, de dois dígitos. O que não está confirmado é para onde esse conteúdo migrou depois da renumeração: pode ter virado um Standard Plan atual (a localizar via <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-000.pdf" target="_blank" rel="noopener">crosswalk <code>000-000</code></a>), ou pode ter sido absorvido diretamente pelo FPDM/RPDM como critério de dimensionamento, sem sobreviver como folha separada — os dois manuais de pavimento já tratam de estrutura de camada. Qualquer uma das duas hipóteses fecha este bloco; nenhuma foi verificada ainda.</p>
+    </div>
+
+    <h3>4.4 Pavimento rígido — planta de juntas e corte</h3>
+    <figure>
+      <svg viewBox="0 0 810 270" role="img" aria-label="À esquerda, planta de um pavimento de concreto com junta longitudinal e juntas transversais. À direita, corte na junta transversal com a placa, a barra de transferência, o selante e as camadas de base e sub-base.">
+        <text class="lb" x="30" y="30">Planta de juntas</text>
+        <text class="lb" x="450" y="30">Corte na junta transversal</text>
+        <rect class="bxf" x="30" y="46" width="360" height="150"/>
+        <line class="acc" x1="30" y1="121" x2="390" y2="121"/>
+        <line class="s" x1="110" y1="46" x2="110" y2="196"/><line class="s" x1="190" y1="46" x2="190" y2="196"/>
+        <line class="s" x1="270" y1="46" x2="270" y2="196"/><line class="s" x1="350" y1="46" x2="350" y2="196"/>
+        <text class="ix2" x="34" y="115">junta longitudinal</text>
+        <line class="s" x1="110" y1="216" x2="190" y2="216" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text class="sm tc" x="150" y="234">espaçamento de placa</text>
+        <text class="sm tc" x="240" y="216">juntas transversais</text>
+        <line class="s" x1="240" y1="208" x2="240" y2="198" marker-end="url(#ar)"/>
+        <rect class="bxf" x="450" y="72" width="330" height="44"/><rect class="bxf" x="450" y="116" width="330" height="36"/>
+        <rect class="bx" x="450" y="152" width="330" height="30"/>
+        <text class="sm" x="458" y="99">Placa de concreto</text><text class="sm" x="458" y="139">Base</text><text class="sm" x="458" y="172">Sub-base</text>
+        <line class="s" x1="615" y1="72" x2="615" y2="116"/>
+        <rect class="accbx" x="609" y="68" width="12" height="8"/>
+        <line class="acc" x1="578" y1="94" x2="652" y2="94"/>
+        <circle class="accbx" cx="578" cy="94" r="3"/><circle class="accbx" cx="652" cy="94" r="3"/>
+        <text class="ix2 tc" x="615" y="60">selante</text>
+        <text class="ix2" x="660" y="88">barra de transferência</text>
+        <text class="sm" x="660" y="102">espaçamento ≤ 24"</text>
+        <text class="sm tc" x="615" y="206">a junta é a interface que decide a durabilidade</text>
+      </svg>
+      <figcaption><b>Planta e corte da mesma junta.</b> Em planta a junta é uma linha; em corte é o dispositivo que transfere carga entre placas. A barra de transferência com espaçamento não superior a 24" é o parâmetro que a folha padrão fixa.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Juntas de pavimento de concreto · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/350-001.pdf" target="_blank" rel="noopener">350-001</a></span></div>
+        <div><i>•</i><span>Substituição de placa · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/353-001.pdf" target="_blank" rel="noopener">353-001</a></span></div>
+        <div><i>•</i><span>Subdrenagem, dreno de bordo · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/446-001.pdf" target="_blank" rel="noopener">446-001</a></span></div>
+      </div>
+    </figure>
+
+    <div class="quadro">
+      <div class="h">4.5 · O que copiar deste bloco</div>
+      <p><b>Método.</b> O Optional Base Group é a ideia mais transportável: especificar desempenho (grupo + número estrutural) em vez de material, deixando a escolha para quem constrói. Reduz aditivo por indisponibilidade de jazida.</p>
+      <p><b>Detalhe.</b> Junta e substituição de placa (<code>350-001</code>, <code>353-001</code>) são quase prontos — geometria de junta depende pouco de norma local.</p>
+      <p><b>Não copiar.</b> Os materiais. Coquina, shell rock e bank run shell são geologia da Flórida; o que se aproveita é a lógica de equivalência por coeficiente, não a lista.</p>
+    </div>
+  </section>
+
+  <!-- ════════ 5 ════════ -->
+  <section class="tab" id="t5">
+    <h2>5. Pré-fabricados OAE</h2>
+    <p class="lead">É o acervo de maior valor do FDOT. A família Florida-I Beam substituiu as vigas AASHTO Type II–VI e virou referência internacional em vão médio. O <code>450-010</code> é a folha-cabeça da série; as folhas por altura seguem <code>450-0NN</code>, onde NN é a altura em polegadas.</p>
+
+    <h3>5.1 Planta e perfil longitudinal</h3>
+    <figure>
+      <svg viewBox="0 0 810 400" role="img" aria-label="Planta e perfil longitudinal de uma ponte de três vãos, alinhados pela mesma posição de apoio. Em planta, o tabuleiro, as linhas de viga e os eixos de apoio. Em perfil, a laje, as vigas, os aparelhos de apoio, as travessas e as fundações em estaca.">
+        <text class="lb" x="24" y="30">Planta</text>
+        <rect class="bxf" x="80" y="46" width="620" height="86"/>
+        <line class="s" x1="80" y1="63" x2="700" y2="63" opacity=".6"/><line class="s" x1="80" y1="80" x2="700" y2="80" opacity=".6"/>
+        <line class="s" x1="80" y1="98" x2="700" y2="98" opacity=".6"/><line class="s" x1="80" y1="115" x2="700" y2="115" opacity=".6"/>
+        <text class="sm" x="86" y="59">linhas de viga</text>
+        <line class="s dash" x1="90" y1="40" x2="90" y2="138"/><line class="s dash" x1="290" y1="40" x2="290" y2="138"/>
+        <line class="s dash" x1="490" y1="40" x2="490" y2="138"/><line class="s dash" x1="690" y1="40" x2="690" y2="138"/>
+        <text class="sm tc" x="190" y="152">vão 1</text><text class="sm tc" x="390" y="152">vão 2</text><text class="sm tc" x="590" y="152">vão 3</text>
+        <text class="sm te" x="76" y="93">largura</text>
+        <line class="s dash" x1="90" y1="152" x2="90" y2="212" opacity=".3"/><line class="s dash" x1="290" y1="152" x2="290" y2="212" opacity=".3"/>
+        <line class="s dash" x1="490" y1="152" x2="490" y2="212" opacity=".3"/><line class="s dash" x1="690" y1="152" x2="690" y2="212" opacity=".3"/>
+        <text class="lb" x="24" y="200">Perfil longitudinal</text>
+        <rect class="bxf" x="72" y="212" width="636" height="14"/>
+        <text class="sm te" x="66" y="223">laje</text>
+        <rect class="accbx" x="100" y="226" width="180" height="34"/><rect class="accbx" x="300" y="226" width="180" height="34"/><rect class="accbx" x="500" y="226" width="180" height="34"/>
+        <rect class="bxf" x="82" y="260" width="16" height="8"/><rect class="bxf" x="282" y="260" width="16" height="8"/>
+        <rect class="bxf" x="482" y="260" width="16" height="8"/><rect class="bxf" x="682" y="260" width="16" height="8"/>
+        <rect class="bxf" x="66" y="268" width="48" height="18"/><rect class="bxf" x="266" y="268" width="48" height="18"/>
+        <rect class="bxf" x="466" y="268" width="48" height="18"/><rect class="bxf" x="666" y="268" width="48" height="18"/>
+        <rect class="bxf" x="82" y="286" width="16" height="62"/><rect class="bxf" x="282" y="286" width="16" height="62"/>
+        <rect class="bxf" x="482" y="286" width="16" height="62"/><rect class="bxf" x="682" y="286" width="16" height="62"/>
+        <line class="s" x1="30" y1="348" x2="780" y2="348"/>
+        <text class="sm tc" x="90" y="368">encontro</text><text class="sm tc" x="290" y="368">apoio intermediário</text>
+        <text class="sm tc" x="490" y="368">apoio intermediário</text><text class="sm tc" x="690" y="368">encontro</text>
+        <circle class="cal" cx="190" cy="243" r="9"/><text class="caln" x="190" y="247">1</text>
+        <circle class="cal" cx="330" cy="264" r="9"/><text class="caln" x="330" y="268">2</text>
+        <circle class="cal" cx="530" cy="277" r="9"/><text class="caln" x="530" y="281">3</text>
+        <circle class="cal" cx="608" cy="317" r="9"/><text class="caln" x="608" y="321">4</text>
+      </svg>
+      <figcaption><b>Planta e perfil alinhados pelo eixo de apoio.</b> É esse alinhamento que torna o par legível: cada linha tracejada é o mesmo apoio nas duas vistas. A planta mostra quantas linhas de viga e a largura; o perfil mostra a altura da viga e a fundação. As duas decisões estão acopladas — vão maior pede viga mais alta, que pede apoio e fundação maiores.</figcaption>
+      <div class="legenda">
+        <div><i>1</i><span>Viga Florida-I Beam · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-010.pdf" target="_blank" rel="noopener">450-010</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-078.pdf" target="_blank" rel="noopener">450-078</a> — ou Slab Beam · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-453.pdf" target="_blank" rel="noopener">450-453</a></span></div>
+        <div><i>2</i><span>Placa de apoio chanfrada · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-511.pdf" target="_blank" rel="noopener">450-511</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-512.pdf" target="_blank" rel="noopener">450-512</a></span></div>
+        <div><i>3</i><span>Travessa — projeto específico, sem folha padrão</span></div>
+        <div><i>4</i><span>Estaca protendida quadrada 14" (0,356 m) · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-014.pdf" target="_blank" rel="noopener">455-014</a></span></div>
+      </div>
+    </figure>
+
+    <h3>5.2 Superestrutura — as duas alternativas padronizadas</h3>
+    <figure>
+      <svg viewBox="0 0 810 230" role="img" aria-label="Duas seções transversais lado a lado. À esquerda, tabuleiro sobre vigas Florida-I Beam altas e espaçadas, para vão médio. À direita, tabuleiro sobre lajes Florida Slab Beam justapostas e esbeltas, para vão curto.">
+        <text class="lb tc" x="200" y="28">Florida-I Beam · vão médio</text>
+        <text class="lb tc" x="610" y="28">Florida Slab Beam · vão curto</text>
+        <rect class="bxf" x="40" y="44" width="320" height="16"/>
+        <path class="acc" d="M78 60 h44 l-6 10 h-8 v26 h8 l6 10 h-44 l6-10 h8 v-26 h-8 z"/>
+        <path class="acc" d="M156 60 h44 l-6 10 h-8 v26 h8 l6 10 h-44 l6-10 h8 v-26 h-8 z"/>
+        <path class="acc" d="M234 60 h44 l-6 10 h-8 v26 h8 l6 10 h-44 l6-10 h8 v-26 h-8 z"/>
+        <path class="acc" d="M300 60 h44 l-6 10 h-8 v26 h8 l6 10 h-44 l6-10 h8 v-26 h-8 z"/>
+        <line class="s" x1="122" y1="126" x2="156" y2="126" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text class="sm tc" x="200" y="146">vigas espaçadas, alma alta</text>
+        <line class="s" x1="30" y1="60" x2="30" y2="106" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text class="sm te" x="24" y="86">altura</text>
+        <rect class="bxf" x="450" y="44" width="320" height="16"/>
+        <rect class="tlbx" x="456" y="60" width="72" height="22"/><rect class="tlbx" x="532" y="60" width="72" height="22"/>
+        <rect class="tlbx" x="608" y="60" width="72" height="22"/><rect class="tlbx" x="684" y="60" width="72" height="22"/>
+        <text class="sm tc" x="610" y="110">lajes justapostas, seção esbelta</text>
+        <line class="s" x1="440" y1="60" x2="440" y2="82" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text class="sm te" x="434" y="76">18" · 0,46 m</text>
+        <text class="sm tc" x="405" y="184">mesma largura de tabuleiro · a escolha do vão define a altura disponível</text>
+        <text class="sm tc" x="405" y="202">e a altura propaga para travessa e fundação</text>
+      </svg>
+      <figcaption><b>Seção transversal das duas alternativas.</b> A FIB usa poucas vigas altas e espaçadas; a Slab Beam usa muitas peças esbeltas justapostas, que funcionam quase como o próprio tabuleiro. Quando há restrição de gabarito vertical, a segunda resolve o que a primeira não resolve.</figcaption>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 850 280" role="img" aria-label="Escada de barras mostrando as oito alturas padronizadas da familia Florida-I Beam, de 36 a 96 polegadas, com a conversao em metros ao lado de cada barra.">
+        <text class="lb" x="24" y="26">Familia Florida-I Beam — alturas padronizadas</text>
+        <line class="s" x1="60" y1="230" x2="820" y2="230"/>
+        <text class="sm te" x="52" y="234">0</text>
+
+        <rect class="bxf" x="76" y="181" width="70" height="49"/><text class="tc" x="111" y="196">36"</text><text class="tc ix2" x="111" y="209">0,91 m</text><text class="tc sm" x="111" y="250">FIB-36</text>
+        <rect class="bxf" x="166" y="169" width="70" height="61"/><text class="tc" x="201" y="184">45"</text><text class="tc ix2" x="201" y="197">1,14 m</text><text class="tc sm" x="201" y="250">FIB-45</text>
+        <rect class="bxf" x="256" y="157" width="70" height="73"/><text class="tc" x="291" y="172">54"</text><text class="tc ix2" x="291" y="185">1,37 m</text><text class="tc sm" x="291" y="250">FIB-54</text>
+        <rect class="bxf" x="346" y="145" width="70" height="85"/><text class="tc" x="381" y="160">63"</text><text class="tc ix2" x="381" y="173">1,60 m</text><text class="tc sm" x="381" y="250">FIB-63</text>
+        <rect class="bxf" x="436" y="133" width="70" height="97"/><text class="tc" x="471" y="148">72"</text><text class="tc ix2" x="471" y="161">1,83 m</text><text class="tc sm" x="471" y="250">FIB-72</text>
+        <rect class="accbx" x="526" y="127" width="70" height="103"/><text class="tc" x="561" y="142">78"</text><text class="tc ix2" x="561" y="155">1,98 m</text><text class="tc sm" x="561" y="250">FIB-78</text>
+        <rect class="bxf" x="616" y="115" width="70" height="115"/><text class="tc" x="651" y="130">84"</text><text class="tc ix2" x="651" y="143">2,13 m</text><text class="tc sm" x="651" y="250">FIB-84 †</text>
+        <rect class="bxf" x="706" y="91" width="70" height="139"/><text class="tc" x="741" y="106">96"</text><text class="tc ix2" x="741" y="119">2,44 m</text><text class="tc sm" x="741" y="250">FIB-96 †</text>
+
+        <text class="sm" x="76" y="266">† altura vem da propria nomenclatura; titulo completo do indice 450-084 ainda nao fechado com o sumario oficial</text>
+      </svg>
+      <figcaption><b>Oito alturas, um sistema.</b> O numero no nome do indice e a propria altura da viga em polegadas — <span class="mono">450-078</span> e a FIB de 78". A folha <span class="mono">450-010</span> reune os detalhes comuns a toda a familia; cada altura tem sua propria folha de detalhamento.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Familia confirmada · <a href="https://www.scdot.org/content/dam/scdot-legacy/business/structuraldrawings/fibs/IM704_FIBs.pdf" target="_blank" rel="noopener">SCDOT IM704 — Florida-I Beam</a></span></div>
+        <div><i>•</i><span>Folha-cabeca · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-010.pdf" target="_blank" rel="noopener">450-010</a></span></div>
+      </div>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 700 320" role="img" aria-label="Secao transversal de uma Florida-I Beam com as cinco dimensoes principais cotadas em polegadas e metros: largura da mesa superior, espessura da mesa superior, largura da alma, largura da mesa inferior e espessura da mesa inferior.">
+        <text class="lb" x="24" y="26">Secao transversal cotada — Florida-I Beam</text>
+
+        <rect class="accbx" x="270" y="50" width="160" height="28"/>
+        <path class="bxf" d="M330 78 L330 96 L318 118 L318 214 L330 236 L330 254 L370 254 L370 236 L382 214 L382 118 L370 96 L370 78 Z"/>
+        <rect class="accbx" x="290" y="254" width="120" height="26"/>
+
+        <line class="s" x1="270" y1="40" x2="430" y2="40" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text class="tc" x="350" y="30">48" · 1,22 m</text>
+        <text class="sm tc" x="350" y="94">mesa superior</text>
+
+        <line class="s" x1="450" y1="50" x2="450" y2="78" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text x="458" y="68">3,5" · 0,089 m</text>
+
+        <line class="s" x1="450" y1="118" x2="450" y2="214" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text x="458" y="170">7" · 0,178 m</text>
+        <text class="sm" x="458" y="186">alma</text>
+
+        <line class="s" x1="290" y1="290" x2="410" y2="290" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text class="tc" x="350" y="308">38" · 0,965 m</text>
+        <text class="sm tc" x="350" y="246">mesa inferior</text>
+
+        <line class="s" x1="450" y1="254" x2="450" y2="280" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text x="458" y="270">7" · 0,178 m</text>
+      </svg>
+      <figcaption><b>Cinco cotas fecham a secao.</b> Mesa superior 48", alma 7", mesa inferior 38" x 7" de espessura — dimensoes documentadas como constantes entre as alturas de 36" a 78". Nao confirmadas para as FIB-84 e FIB-96, que podem usar proporcao diferente de mesa.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Fonte · <a href="https://www.fdot.gov/docs/default-source/structures/structuresmanual/currentrelease/precastbeamexample.pdf" target="_blank" rel="noopener">FDOT LRFD Design Example #1 — Precast Beam Bridge</a></span></div>
+      </div>
+    </figure>
+
+    <h4 style="margin-top:1.2rem">Aparelho de apoio — a peça que absorve a declividade</h4>
+    <figure>
+      <svg viewBox="0 0 700 220" role="img" aria-label="Detalhe do aparelho de apoio entre a viga e o capitel, mostrando a placa de apoio chanfrada compensando a declividade longitudinal da viga, de modo que a face de contato com o capitel fique nivelada.">
+        <text class="lb" x="24" y="26">Aparelho de apoio chanfrado — por que existe</text>
+
+        <line class="s dash" x1="60" y1="70" x2="640" y2="94" opacity=".4"/>
+        <text class="sm" x="60" y="62">viga com declividade longitudinal</text>
+
+        <path class="accbx" d="M300 84 L400 88 L400 108 L300 104 Z"/>
+        <text class="tc sm" x="350" y="100">placa chanfrada</text>
+
+        <rect class="bxf" x="300" y="108" width="100" height="16"/>
+        <text class="sm tc" x="350" y="150">capitel — face nivelada</text>
+        <line class="s" x1="300" y1="124" x2="400" y2="124"/>
+
+        <line class="s" x1="420" y1="86" x2="420" y2="106" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text x="428" y="98">chanfro compensa a declividade</text>
+
+        <text class="sm tc" x="350" y="190">sem a placa, a viga apoiaria em aresta — concentra tensão e não nivela</text>
+      </svg>
+      <figcaption><b>Um detalhe pequeno, uma falha grande se faltar.</b> A viga tem declividade longitudinal (para escoamento); o capitel é plano. A placa chanfrada faz essa transição — sem ela, o apoio vira linha em vez de área, concentrando tensão num ponto só.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Beveled Bearing Plates · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-511.pdf" target="_blank" rel="noopener">450-511</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-512.pdf" target="_blank" rel="noopener">450-512</a></span></div>
+      </div>
+    </figure>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th></th><th>Florida-I Beam</th><th>Florida Slab Beam</th></tr></thead>
+        <tbody>
+          <tr><td>Aplicação</td><td>Vão médio</td><td>Vão curto</td></tr>
+          <tr><td>Folha-cabeça</td><td class="mono">450-010</td><td class="mono">450-453 — 18"</td></tr>
+          <tr><td>Folhas por altura</td><td class="mono">450-0NN, NN em polegadas</td><td>Altura única</td></tr>
+          <tr><td>Seção transversal</td><td>Poucas vigas altas, espaçadas</td><td>Muitas peças esbeltas, justapostas</td></tr>
+          <tr><td>Gabarito vertical</td><td>Exige altura</td><td>Resolve restrição de altura</td></tr>
+          <tr><td>Apoio</td><td colspan="2">Placa chanfrada · <span class="mono">450-511</span> · <span class="mono">450-512</span></td></tr>
+          <tr><td>Fundação padronizada</td><td colspan="2">Estaca protendida quadrada 14" (0,356 m) · <span class="mono">455-014</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>5.3 Fundações</h3>
+    <figure>
+      <svg viewBox="0 0 810 250" role="img" aria-label="Quatro tipos de fundação lado a lado abaixo de uma linha de terreno comum: estaca de concreto protendido, estaca escavada, sapata e estaca hélice. Apenas a estaca protendida tem folha padrão própria.">
+        <line class="s" x1="20" y1="86" x2="790" y2="86"/>
+        <rect class="bxf" x="70" y="66" width="60" height="20"/>
+        <rect class="accbx" x="90" y="86" width="20" height="104"/>
+        <path class="accbx" d="M90 190 h20 l-10 14 z"/>
+        <text class="tc" x="100" y="226">Estaca protendida</text><text class="tc ix2" x="100" y="240">455-014</text>
+        <rect class="bxf" x="270" y="66" width="60" height="20"/>
+        <rect class="bxf" x="286" y="86" width="28" height="96"/>
+        <path class="bxf" d="M286 182 a14 14 0 0 0 28 0 z"/>
+        <text class="tc" x="300" y="226">Estaca escavada</text><text class="tc sm" x="300" y="240">projeto específico</text>
+        <rect class="bxf" x="470" y="66" width="60" height="20"/>
+        <rect class="bxf" x="450" y="86" width="100" height="26"/>
+        <text class="tc" x="500" y="226">Sapata</text><text class="tc sm" x="500" y="240">projeto específico</text>
+        <rect class="bxf" x="670" y="66" width="60" height="20"/>
+        <rect class="bxf" x="690" y="86" width="20" height="96"/>
+        <line class="s" x1="690" y1="102" x2="710" y2="112"/><line class="s" x1="690" y1="126" x2="710" y2="136"/><line class="s" x1="690" y1="150" x2="710" y2="160"/>
+        <text class="tc" x="700" y="226">Hélice contínua</text><text class="tc sm" x="700" y="240">projeto específico</text>
+        <text class="sm te" x="60" y="80">travessa</text>
+      </svg>
+      <figcaption><b>Só uma delas tem folha padrão.</b> A estaca de concreto protendido quadrada é padronizada em Standard Plan; as demais são projetadas caso a caso e governadas por especificação, não por projeto-tipo. Isso diz muito sobre onde o FDOT decidiu investir padronização — na peça pré-fabricada repetível.</figcaption>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 800 260" role="img" aria-label="Família de cinco estacas quadradas protendidas catalogadas pelo FDOT, de 12 a 30 polegadas de lado, desenhadas em escala relativa, com a regra de espiral de reforço destacada: fio W3.4 para todas exceto a de 30 polegadas, que usa W4.0.">
+        <text class="lb" x="24" y="26">Índice 455-001 · a folha-líder da família — 5 tamanhos quadrados catalogados</text>
+
+        <rect class="accbx" x="60" y="170" width="36" height="36"/><text class="tc sm" x="78" y="222">12"</text><text class="tc ix2" x="78" y="236">455-012</text>
+        <rect class="accbx" x="150" y="164" width="42" height="42"/><text class="tc sm" x="171" y="222">14"</text><text class="tc ix2" x="171" y="236">455-014</text>
+        <rect class="accbx" x="250" y="152" width="54" height="54"/><text class="tc sm" x="277" y="222">18"</text><text class="tc ix2" x="277" y="236">455-018</text>
+        <rect class="accbx" x="360" y="134" width="72" height="72"/><text class="tc sm" x="396" y="222">24"</text><text class="tc ix2" x="396" y="236">455-024</text>
+        <rect class="accbx" x="490" y="116" width="90" height="90"/><text class="tc sm" x="535" y="222">30"</text><text class="tc ix2" x="535" y="236">455-030 / 455-031 (alto momento)</text>
+
+        <line class="s" x1="30" y1="206" x2="700" y2="206" opacity=".3"/>
+
+        <rect class="tlbx" x="630" y="120" width="140" height="90"/>
+        <text class="sm" x="640" y="140">Espiral de reforço</text>
+        <text class="sm" x="640" y="158">W3.4 — 12"/14"/18"/24"</text>
+        <text class="sm" x="640" y="174">W4.0 — só na de 30"</text>
+        <text class="sm" x="640" y="192">Cobrimento 3"</text>
+
+        <text class="sm tc" x="400" y="20" opacity="0"> </text>
+      </svg>
+      <figcaption><b>Uma folha de notas gerais, oito folhas de tamanho.</b> O índice <code>455-001</code> não desenha estaca nenhuma — carrega as notas e detalhes comuns a toda a família (emenda, extensão de dowel, tabela de dados de estaca). Cada tamanho tem sua própria folha dimensional: 12", 14", 18", 24" e 30" convencional, mais uma variante de alto momento na própria 30" (<code>455-031</code>, concreto Classe VI, ≥6.500 psi na transferência). Não existe estaca quadrada de 20" no acervo atual — o crosswalk salta de 18" para 24".</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Emenda de estaca cravada e extensão de dowel com composto epóxi · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-002.pdf" target="_blank" rel="noopener">455-002</a></span></div>
+        <div><i>•</i><span>Instrumentação EDC (Embedment Data Collector) para monitorar cravação · <span class="mono">455-003</span></span></div>
+        <div><i>•</i><span>Alternativa não-convencional — armadura em CFRP/aço inoxidável, mesmos tamanhos · <span class="mono">455-101</span> série</span></div>
+      </div>
+    </figure>
+    <div class="quadro alt">
+      <div class="h">Pendência</div>
+      <p>Número exato de cordoalhas de protensão (bitola e quantidade) por tamanho de estaca não foi confirmado por citação literal do PDF — apenas a regra de espiral (W3.4/W4.0) e o cobrimento de 3" vieram de texto direto do índice <code>455-001</code>. A "Pile Data Table" é preenchida conforme SDG 3.5 e SDM 11.4, incluída junto às folhas de <i>Foundation Layout</i> do projeto — ela é o elo entre a peça catalogada e a quantidade real por obra.</p>
+    </div>
+
+    <h3>5.4 Aterro estrutural e transição de encontro</h3>
+    <p>O encontro estrutural em si (backwall, alas) não tem folha padrão — mas os dois elementos que o sustentam e o interligam ao aterro têm, sim, projeto-tipo. É uma correção ao que este documento afirmava em versão anterior.</p>
+
+    <figure>
+      <svg viewBox="0 0 780 260" role="img" aria-label="Corte esquemático do encontro de uma ponte mostrando, da via para o encontro: o aterro comum, o aterro estrutural em terra mecanicamente estabilizada apoiando a aproximação, a laje de transição vencendo o desnível até o encontro, e o encontro propriamente dito sobre estaca.">
+        <text class="lb" x="24" y="26">Corte esquemático — aterro estrutural e laje de transição</text>
+
+        <line class="s" x1="40" y1="190" x2="740" y2="190"/>
+        <path class="bxf" d="M40 190 L40 110 L260 190 Z"/>
+        <text class="sm" x="70" y="175">aterro comum</text>
+
+        <path class="accbx" d="M260 190 L260 96 L420 96 L420 190 Z"/>
+        <text class="tc sm" x="340" y="150">aterro estrutural</text>
+        <text class="tc ix2" x="340" y="166">MSE — terra mecanicamente estabilizada</text>
+        <line class="s" x1="264" y1="100" x2="416" y2="100" opacity=".5"/>
+        <line class="s" x1="264" y1="118" x2="416" y2="118" opacity=".5"/>
+        <line class="s" x1="264" y1="136" x2="416" y2="136" opacity=".5"/>
+        <line class="s" x1="264" y1="154" x2="416" y2="154" opacity=".5"/>
+        <line class="s" x1="264" y1="172" x2="416" y2="172" opacity=".5"/>
+
+        <rect class="tlbx" x="420" y="86" width="90" height="14" transform="skewY(-6)"/>
+        <path class="tlbx" d="M420 96 L510 82 L510 96 L420 106 Z"/>
+        <text class="tc sm" x="465" y="76">laje de transição</text>
+
+        <rect class="bxf" x="510" y="60" width="30" height="130"/>
+        <rect class="bxf" x="486" y="190" width="14" height="60"/>
+        <rect class="bxf" x="530" y="190" width="14" height="60"/>
+        <text class="tc sm" x="525" y="52">encontro</text>
+        <text class="tc sm" x="525" y="270">estaca — sem folha padrão nesta interface</text>
+
+        <circle class="cal" cx="150" cy="150" r="9"/><text class="caln" x="150" y="154">1</text>
+        <circle class="cal" cx="340" cy="196" r="9"/><text class="caln" x="340" y="200">2</text>
+        <circle class="cal" cx="465" cy="103" r="9"/><text class="caln" x="465" y="107">3</text>
+      </svg>
+      <figcaption><b>Duas folhas cobrem a transição, uma lacuna permanece no encontro em si.</b> O aterro estrutural absorve o empuxo próximo à estrutura sem depender do talude natural; a laje de transição tolera o recalque diferencial entre aterro e encontro rígido. O que ainda não tem projeto-tipo é o encontro propriamente dito — backwall, alas, banco de apoio. O <code>400-090</code> (pavimento flexível) tem 30 pés de comprimento, confirmado pelo próprio título da folha; o <code>400-091</code> (pavimento rígido) apoia a laje no encontro (end bent) de um lado e sobre o aterro do outro — apoio simples, não ligação monolítica, permitindo rotação e recalque conforme o aterro assenta.</figcaption>
+      <div class="legenda">
+        <div><i>1</i><span>Sistema MSE permanente · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-020.pdf" target="_blank" rel="noopener">548-020</a> — versão temporária em <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-030.pdf" target="_blank" rel="noopener">548-030</a></span></div>
+        <div><i>2</i><span>Laje de transição, pavimento flexível · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/400-090.pdf" target="_blank" rel="noopener">400-090</a> — pavimento rígido em <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/400-091.pdf" target="_blank" rel="noopener">400-091</a></span></div>
+        <div><i>3</i><span>Critério de projeto · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2023/2023fdm262retwalls.pdf" target="_blank" rel="noopener">FDM 262 — Retaining Walls</a></span></div>
+      </div>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 700 300" role="img" aria-label="Seção do sistema de contenção em terra mecanicamente estabilizada, mostrando o coping no topo, os painéis de fachada pré-moldados sobrepostos, as tiras de reforço horizontais entrando no maciço de solo reforçado, e a laje de nivelamento na base, recuada no mínimo trinta centímetros do maciço reforçado.">
+        <text class="lb" x="24" y="26">Sistema MSE — contenção em terra mecanicamente estabilizada</text>
+
+        <rect class="accbx" x="80" y="42" width="60" height="20"/>
+        <text class="sm" x="150" y="56">coping</text>
+        <text class="sm ix2" x="150" y="70">1'-8" larg. × 7" alt. mín. · 521-600</text>
+
+        <rect class="bxf" x="80" y="62" width="60" height="34"/>
+        <rect class="bxf" x="80" y="96" width="60" height="34"/>
+        <rect class="bxf" x="80" y="130" width="60" height="34"/>
+        <rect class="bxf" x="80" y="164" width="60" height="34"/>
+        <rect class="bxf" x="80" y="198" width="60" height="34"/>
+        <text class="sm" x="150" y="82">painéis de fachada</text>
+        <text class="sm" x="150" y="116">pré-moldados</text>
+
+        <line class="s" x1="140" y1="79" x2="420" y2="79" opacity=".55"/>
+        <line class="s" x1="140" y1="113" x2="420" y2="113" opacity=".55"/>
+        <line class="s" x1="140" y1="147" x2="420" y2="147" opacity=".55"/>
+        <line class="s" x1="140" y1="181" x2="420" y2="181" opacity=".55"/>
+        <line class="s" x1="140" y1="215" x2="420" y2="215" opacity=".55"/>
+        <text class="sm" x="420" y="145">tiras de reforço horizontais</text>
+
+        <rect class="tlbx" x="140" y="42" width="280" height="190"/>
+        <text class="tc sm" x="280" y="140">solo reforçado</text>
+
+        <rect class="bxf" x="60" y="232" width="100" height="18"/>
+        <text class="sm" x="60" y="264">laje de nivelamento</text>
+        <line class="s" x1="140" y1="241" x2="176" y2="241" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text class="sm" x="146" y="256">≥ 30 cm</text>
+
+        <line class="s" x1="40" y1="232" x2="660" y2="232"/>
+      </svg>
+      <figcaption><b>O painel não segura terra sozinho.</b> Quem faz o trabalho estrutural são as tiras de reforço horizontais dentro do maciço; o painel de fachada é só o acabamento visível. A laje de nivelamento na base fica recuada no mínimo 30 cm do maciço reforçado, conforme o FDM 262. O coping tem folha própria — <code>521-600</code> — com largura de 1'-8" e altura mínima de 7", cobrimento típico de 2"; a tela soldada (WWR) pode substituir armadura convencional quando aprovada pela Seção 931. O <code>548-020</code> cataloga seis tipos de elevação de painel (2A a 2F) — variação tipológica confirmada, dimensões de cada tipo não recuperadas nesta pesquisa.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Sistema permanente · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-020.pdf" target="_blank" rel="noopener">548-020</a> · temporário · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-030.pdf" target="_blank" rel="noopener">548-030</a> · coping · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/idx/521-600.pdf" target="_blank" rel="noopener">521-600</a></span></div>
+      </div>
+    </figure>
+
+    <div class="quadro">
+      <div class="h">MSE não é a única opção — a SDG lista sete famílias</div>
+      <p>A SDG Vol.1, Cap.3, seção 3.12 ("Retaining Walls") cobre, além de MSE (3.12.1): Steel Sheet Pile Walls (3.12.2), Concrete Sheet Piles (3.12.3), Soil Nails (3.12.4), Soldier Pile/Panel Walls (3.12.5), Modular Block Walls (3.12.6) e Geosynthetic Reinforced Soil — GRS — Walls and Abutments (3.12.7). O <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026fdm262retwalls.pdf" target="_blank" rel="noopener">FDM 262</a> trata especificamente dos tipos fora da Approved Product List (APL) — C-I-P wall systems, muros permanentes de estaca-prancha de concreto/aço, soldier pile walls, sistemas pré-moldados não proprietários. A escolha cabe ao Engineer of Record em conjunto com o Geotechnical Engineer, via "Permanent Retaining Wall Selection Process" da própria SDG — matriz de critério (altura, custo, espaço) não recuperada nesta pesquisa, fica como pendência.</p>
+    </div>
+
+    <div class="quadro alt">
+      <div class="h">5.6 · Onde a padronização para, agora com mais precisão</div>
+      <p>Travessa, pilar e o encontro estrutural em si (backwall, alas) <b>não têm folha padrão</b> no recorte levantado — seguem projeto específico. O que tem padrão é a interface: aterro estrutural (<code>548-020</code>/<code>548-030</code>) e laje de transição (<code>400-090</code>/<code>400-091</code>). A exceção adicional é a ponte de desvio provisório: o <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-230.pdf" target="_blank" rel="noopener"><code>102-230</code></a> padroniza inclusive o <i>pile bent</i> com travessa em estaca de tubo de aço. O FDOT padroniza a peça repetível e a interface de transição; deixa a substrutura definitiva no projeto.</p>
+    </div>
+
+    <h3>5.5 Diafragma, junta de dilatação e guarda-corpo</h3>
+    <p>O diafragma não tem folha própria — mora dentro dos índices da família da viga (<code>450-010</code> Florida-I Beam Typical Details & Notes; dados de altura/deflexão no <code>450-199</code>). A SDG não recomenda diafragma de extremidade (end diaphragm) para vigas-I simplesmente apoiadas e pré-tracionadas: o detalhe preferido é o <i>thickened slab end</i>; o diafragma de extremidade em profundidade total só é exigido quando as vigas não são paralelas à direção do tráfego.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Índice</th><th>Descrição</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/idx/458-100.pdf" target="_blank" rel="noopener">458-100</a></td><td>Expansion Joint System, Strip Seal</td><td>—</td></tr>
+          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2025/spi/spi-458-110e.pdf" target="_blank" rel="noopener">458-110</a></td><td>Expansion Joint System, Poured Joint with Backer Rod</td><td>Abertura de referência 2" a 70°F; máxima 3" no sentido do tráfego (SDG 6.3/6.4)</td></tr>
+          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2025/idx/521-426.pdf" target="_blank" rel="noopener">521-426</a></td><td>Median Traffic Railing (36" Single-Slope)</td><td>—</td></tr>
+          <tr><td class="mono"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/idx/521-427.pdf" target="_blank" rel="noopener">521-427</a></td><td>Traffic Railing (36" Single-Slope)</td><td>MASH TL-4, literal na folha</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="quadro alt">
+      <div class="h">O que não existe como Standard Plan</div>
+      <p>Não há índice de junção modular ou finger joint (a SDG permite como alternativa de projeto, sem folha própria), nem índice separado de "ancoragem" de guarda-corpo — está embutido em cada folha <code>521-4xx</code>, com as juntas do guarda-corpo alinhadas às juntas do tabuleiro nos locais de dilatação. Também não existe Standard Plan de seção transversal completa do tabuleiro (vigas + laje + guarda-corpo + drenagem juntos): o único achado equivalente é o <i>LRFD Design Example #1</i> do Structures Design Office — um exemplo de cálculo, explicitamente <b>não um Standard Plan</b>, e não deve ser citado como tal.</p>
+    </div>
+    <div class="quadro">
+      <div class="h">Correção — 521-001 não é a folha de notas gerais da família</div>
+      <p>Versão anterior descrevia o <code>521-001</code> como "notas gerais" comuns à série de guarda-corpo 521-4xx. Confirmado por texto literal da própria folha: <code>521-001</code> é <b>"Concrete Barrier"</b> — a barreira de concreto tipo F-shape, um perfil próprio, não um índice-guarda-chuva de notas para os demais. Cada folha 521-4xx carrega suas próprias notas e armadura (padrão recorrente de bitolas 5S/5T/5X aparece em mais de uma folha, mas não há confirmação de que seja idêntico em todas).</p>
+    </div>
+
+    <div class="quadro">
+      <div class="h">5.7 · Por que não copiar direto</div>
+      <p>Três condicionantes muito específicas da Flórida: ambiente marinho agressivo, com classe de agressividade amarrada a cobrimento e classe de concreto; solo arenoso e calcário com cavidades; e resiliência a furacão e <i>storm surge</i>. Somado à carga AASHTO: geometria de perfil e critério de vão × altura transportam bem — armadura, protensão e cobrimento exigem recálculo.</p>
+    </div>
+  </section>
+
+  <!-- ════════ 6 ════════ -->
+  <section class="tab" id="t6">
+    <h2>6. Drenagem pré-moldada</h2>
+    <p class="lead">O bloco mais transportável de todos, e o mais padronizado: caixa, boca de lobo, testada e saída têm folha própria, com tipos catalogados por letra. A física é a mesma e a geometria depende pouco de norma local.</p>
+
+    <h3>6.1 Planta e perfil longitudinal</h3>
+    <figure>
+      <svg viewBox="0 0 810 400" role="img" aria-label="Planta e perfil longitudinal de um trecho de drenagem, alinhados pela posição das estruturas. Em planta, a via com meio-fio, três estruturas de captação e a rede de tubos até a saída. Em perfil, o terreno, as estruturas com profundidades crescentes, os tubos com declividade e a saída.">
+        <text class="lb" x="24" y="30">Planta</text>
+        <rect class="bxf" x="60" y="46" width="660" height="72"/>
+        <text class="sm" x="68" y="70">pista</text>
+        <line class="s" x1="60" y1="118" x2="720" y2="118"/>
+        <text class="sm" x="68" y="132">meio-fio e sarjeta</text>
+        <rect class="accbx" x="103" y="140" width="16" height="16"/><rect class="accbx" x="283" y="140" width="16" height="16"/><rect class="accbx" x="463" y="140" width="16" height="16"/>
+        <line class="s" x1="119" y1="148" x2="283" y2="148" marker-end="url(#ar)"/>
+        <line class="s" x1="299" y1="148" x2="463" y2="148" marker-end="url(#ar)"/>
+        <line class="s" x1="479" y1="148" x2="636" y2="148" marker-end="url(#ar)"/>
+        <path class="accbx" d="M638 138 l22 10 -22 10 z"/>
+        <text class="sm tc" x="111" y="172">DBI-1</text><text class="sm tc" x="291" y="172">DBI-2</text>
+        <text class="sm tc" x="471" y="172">DBI-3</text><text class="sm tc" x="660" y="172">saída</text>
+        <text class="sm tc" x="201" y="140">rede de tubos</text>
+        <line class="s dash" x1="111" y1="176" x2="111" y2="212" opacity=".3"/><line class="s dash" x1="291" y1="176" x2="291" y2="212" opacity=".3"/>
+        <line class="s dash" x1="471" y1="176" x2="471" y2="212" opacity=".3"/><line class="s dash" x1="649" y1="176" x2="649" y2="212" opacity=".3"/>
+        <text class="lb" x="24" y="208">Perfil longitudinal</text>
+        <polyline class="s" points="60,232 300,240 500,248 720,262"/>
+        <text class="sm" x="64" y="226">terreno</text>
+        <rect class="accbx" x="101" y="236" width="20" height="62"/><rect class="accbx" x="281" y="243" width="20" height="66"/><rect class="accbx" x="461" y="250" width="20" height="70"/>
+        <line class="s" x1="121" y1="292" x2="281" y2="299"/><line class="s" x1="121" y1="298" x2="281" y2="305"/>
+        <line class="s" x1="301" y1="303" x2="461" y2="310"/><line class="s" x1="301" y1="309" x2="461" y2="316"/>
+        <line class="s" x1="481" y1="314" x2="632" y2="322"/><line class="s" x1="481" y1="320" x2="632" y2="328"/>
+        <path class="accbx" d="M632 316 l24 14 -24 8 z"/>
+        <text class="sm" x="150" y="288">declividade →</text>
+        <text class="sm tc" x="111" y="336">profundidade cresce a jusante</text>
+        <line class="s" x1="30" y1="352" x2="780" y2="352" opacity=".3"/>
+        <circle class="cal" cx="111" cy="266" r="9"/><text class="caln" x="111" y="270">1</text>
+        <circle class="cal" cx="291" cy="232" r="9"/><text class="caln" x="291" y="236">2</text>
+        <circle class="cal" cx="664" cy="300" r="9"/><text class="caln" x="664" y="304">3</text>
+        <text class="sm tc" x="405" y="376">o par planta + perfil é o que revela conflito de cota — a planta sozinha não mostra</text>
+      </svg>
+      <figcaption><b>Planta e perfil alinhados pelas estruturas.</b> A planta resolve posição e traçado; o perfil resolve profundidade, declividade e cota de fundo — e é nele que aparece o conflito com interferências. Desenhar um sem o outro é o erro que mais gera retrabalho em projeto de drenagem.</figcaption>
+      <div class="legenda">
+        <div><i>1</i><span>Boca de lobo em vala, tipos C, D, E e H · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-052.pdf" target="_blank" rel="noopener">425-052</a></span></div>
+        <div><i>2</i><span>Tampão, aro e laje de topo · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-001.pdf" target="_blank" rel="noopener">425-001</a></span></div>
+        <div><i>3</i><span>Saída em bico · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-021.pdf" target="_blank" rel="noopener">430-021</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-022.pdf" target="_blank" rel="noopener">430-022</a> — ou testada U · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-010.pdf" target="_blank" rel="noopener">430-010</a></span></div>
+      </div>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 780 260" role="img" aria-label="Comparação das grades da boca de lobo tipo C, D, E e H por peso e restrição de material, todas montadas sobre a mesma caixa pré-moldada do índice 425-052.">
+        <text class="lb" x="24" y="26">Índice 425-052 — uma caixa, quatro grades</text>
+
+        <rect class="bxf" x="60" y="150" width="660" height="60"/>
+        <text class="sm tc" x="390" y="184">mesma caixa pré-moldada · <tspan class="mono">425-052</tspan></text>
+
+        <rect class="accbx" x="80" y="110" width="130" height="40"/><text class="tc" x="145" y="134">Tipo C</text>
+        <rect class="accbx" x="230" y="110" width="130" height="40"/><text class="tc" x="295" y="134">Tipo D</text>
+        <rect class="accbx" x="420" y="110" width="130" height="40"/><text class="tc" x="485" y="134">Tipo E</text>
+        <rect class="accbx" x="570" y="110" width="130" height="40"/><text class="tc" x="635" y="134">Tipo H</text>
+
+        <text class="sm tc" x="145" y="98">≈ 725 lb</text>
+        <text class="sm tc" x="295" y="98">sem ferro fundido</text>
+        <text class="sm tc" x="485" y="98">≈ 967 lb</text>
+        <text class="sm tc" x="635" y="98">3 ou 4 grades</text>
+        <text class="sm tc" x="635" y="98" dy="14">≈ 235–465 lb cada</text>
+
+        <text class="sm tc" x="390" y="240">grade de aço obrigatória em vãos vazados e onde há tráfego de bicicleta — em qualquer tipo</text>
+      </svg>
+      <figcaption><b>O peso da grade é o dado que mais varia — não a caixa.</b> As quatro letras compartilham a mesma caixa pré-moldada; o que muda é a grade acoplada, e cada uma tem restrição própria. A Tipo D não aceita grade de ferro fundido em nenhuma hipótese; grade de aço é obrigatória em fenda vazada ou onde há ciclista.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Pesos e restrições de material · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2022/idx/425-052eeee.pdf" target="_blank" rel="noopener">425-052 (folha de grades)</a></span></div>
+      </div>
+    </figure>
+
+    <h3>6.2 Catálogo de peças pré-moldadas</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Peça</th><th>Folha</th><th>Tipos catalogados</th></tr></thead>
+        <tbody>
+          <tr><td>Boca de lobo em vala</td><td class="ix"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-052.pdf" target="_blank" rel="noopener">425-052</a></td><td>Tipos C, D, E e H</td></tr>
+          <tr><td>Estrutura de bueiro/inspeção — Tipo J e P</td><td class="ix"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-010.pdf" target="_blank" rel="noopener">425-010</a></td><td>Tipo P ≤ 1,22 m de diâmetro; Tipo J acima disso</td></tr>
+          <tr><td>Tampões, aros, lajes de topo</td><td class="ix"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-001.pdf" target="_blank" rel="noopener">425-001</a></td><td>Detalhes suplementares</td></tr>
+          <tr><td>Caixa em bueiro celular</td><td class="ix"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-090.pdf" target="_blank" rel="noopener">425-090</a></td><td>Modificação de segurança</td></tr>
+          <tr><td>Saída em bico</td><td class="ix"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-021.pdf" target="_blank" rel="noopener">430-021</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-022.pdf" target="_blank" rel="noopener">430-022</a></td><td><i>Mitered End Sections</i></td></tr>
+          <tr><td>Testada de concreto tipo U</td><td class="ix"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-010.pdf" target="_blank" rel="noopener">430-010</a></td><td>Com grade, tubo 15" a 30" (375–750 mm)</td></tr>
+          <tr><td>Detalhes diversos</td><td class="ix"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-001.pdf" target="_blank" rel="noopener">430-001</a></td><td>Transversal ao sistema</td></tr>
+          <tr><td>Subdrenagem de pavimento</td><td class="ix"><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/446-001.pdf" target="_blank" rel="noopener">446-001</a></td><td>Dreno de bordo em <i>draincrete</i></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 760 420" role="img" aria-label="Vista explodida da composição vertical de uma estrutura de drenagem: bottom Tipo J ou P do índice 425-010 na base, anéis de ajuste ASTM C478 de até 12 polegadas, top e frame Type 7 ou 8 do índice 425-001, e a grade de captação do índice 425-052 no topo, cada peça com seu índice de origem indicado.">
+        <text class="lb" x="24" y="26">Três folhas, uma estrutura — composição vertical</text>
+
+        <rect class="accbx" x="290" y="60" width="180" height="34"/>
+        <text class="tc sm" x="380" y="82">grade — Tipo C/D/E/H</text>
+        <line class="s dash" x1="470" y1="77" x2="620" y2="77" opacity=".5"/>
+        <text class="sm" x="626" y="81"><tspan class="mono">425-052</tspan></text>
+
+        <rect class="tlbx" x="270" y="94" width="220" height="26"/>
+        <text class="tc sm" x="380" y="112">frame — Type 7 (Inlet) ou Type 8 (Manhole)</text>
+        <line class="s dash" x1="490" y1="107" x2="620" y2="107" opacity=".5"/>
+        <text class="sm" x="626" y="111"><tspan class="mono">425-001</tspan></text>
+
+        <rect class="bxf" x="280" y="120" width="200" height="18"/>
+        <text class="tc sm" x="380" y="134" font-size="10">top slab</text>
+
+        <rect class="accbx" x="295" y="138" width="170" height="16" opacity=".65"/>
+        <rect class="accbx" x="300" y="154" width="160" height="16" opacity=".55"/>
+        <rect class="accbx" x="305" y="170" width="150" height="16" opacity=".45"/>
+        <text class="sm" x="470" y="150">anéis de ajuste</text>
+        <text class="sm" x="470" y="164">ASTM C478 · "grade rings"</text>
+        <text class="sm" x="470" y="178">até 12" no total</text>
+        <line class="s dash" x1="465" y1="162" x2="620" y2="162" opacity=".5"/>
+        <text class="sm" x="626" y="166"><tspan class="mono">425-001</tspan></text>
+
+        <path class="bxf" d="M310 188 L450 188 L450 340 A70 70 0 0 1 310 340 Z"/>
+        <text class="tc sm" x="380" y="230">estrutura — bottom</text>
+        <text class="tc sm" x="380" y="246">Tipo P (circular ≤ 4'-0"</text>
+        <text class="tc sm" x="380" y="260">ou quadrado 3'-6")</text>
+        <text class="tc sm" x="380" y="278">Tipo J (maior, retangular</text>
+        <text class="tc sm" x="380" y="292">só em concreto armado)</text>
+        <line class="s dash" x1="450" y1="260" x2="620" y2="260" opacity=".5"/>
+        <text class="sm" x="626" y="264"><tspan class="mono">425-010</tspan></text>
+
+        <line class="s" x1="60" y1="360" x2="700" y2="360"/>
+        <text class="sm tc" x="380" y="382">"Adjustable" deve constar na tampa quando o frame ajustável é usado</text>
+        <text class="sm tc" x="380" y="398">estrutura &gt; 14 pés abaixo do lençol médio de maré alta → verificar flutuação</text>
+
+        <circle class="cal" cx="240" cy="77" r="9"/><text class="caln" x="240" y="81">1</text>
+        <circle class="cal" cx="240" cy="107" r="9"/><text class="caln" x="240" y="111">2</text>
+        <circle class="cal" cx="240" cy="162" r="9"/><text class="caln" x="240" y="166">3</text>
+        <circle class="cal" cx="240" cy="260" r="9"/><text class="caln" x="240" y="264">4</text>
+      </svg>
+      <figcaption><b>Nenhuma dessas três folhas desenha a estrutura inteira — cada uma resolve uma fatia da pilha.</b> O 425-010 dá o fundo e a parede; o 425-001 dá o topo, o frame e os anéis de ajuste; o 425-052 dá a grade de captação. Section 425 das Standard Specifications chama esse conjunto de "Inlets, Manholes, and Junction Boxes" — mesma família construtiva, variando só a função hidráulica.</figcaption>
+      <div class="legenda">
+        <div><i>1</i><span>Grade — 4 tipos, mesma caixa · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-052.pdf" target="_blank" rel="noopener">425-052</a></span></div>
+        <div><i>2</i><span>Frame ajustável — troca Type 8 por Type 7 quando a espessura mínima acima do tubo não cabe · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-001.pdf" target="_blank" rel="noopener">425-001</a></span></div>
+        <div><i>3</i><span>Anéis ASTM C478 — ajuste de até 12" com tijolo ou anel pré-moldado · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-001.pdf" target="_blank" rel="noopener">425-001</a></span></div>
+        <div><i>4</i><span>Bottom Tipo J/P — concreto Classe II (ou Classe IV se o projeto indicar) · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-010.pdf" target="_blank" rel="noopener">425-010</a></span></div>
+      </div>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 780 260" role="img" aria-label="Comparação das duas alternativas dimensionais do Structure Bottom Tipo P: Alternativa A circular de até 4 pés e 0 polegadas de diâmetro, moldada em tijolo ou concreto armado, e Alternativa B quadrada de 3 pés e 6 polegadas, exigindo concreto armado; ao lado, o Tipo J para estruturas maiores com altura de parede igual ou superior a 6 pés para permitir acesso.">
+        <text class="lb" x="24" y="26">425-010 — Tipo P (duas alternativas) × Tipo J</text>
+
+        <circle class="accbx" cx="150" cy="140" r="72"/>
+        <text class="tc sm" x="150" y="136">Tipo P</text>
+        <text class="tc sm" x="150" y="150">Alt. A — circular</text>
+        <text class="tc ix2" x="150" y="230">≤ 4'-0" Ø · tijolo ou concreto armado</text>
+
+        <rect class="accbx" x="310" y="80" width="120" height="120"/>
+        <text class="tc sm" x="370" y="136">Tipo P</text>
+        <text class="tc sm" x="370" y="150">Alt. B — quadrado</text>
+        <text class="tc ix2" x="370" y="230">3'-6" de lado · só concreto armado</text>
+
+        <path class="tlbx" d="M540 60 L680 60 L680 220 L540 220 Z"/>
+        <line class="s" x1="540" y1="60" x2="540" y2="220" opacity=".4"/>
+        <line class="s" x1="580" y1="60" x2="580" y2="220" opacity=".25"/>
+        <line class="s" x1="620" y1="60" x2="620" y2="220" opacity=".25"/>
+        <line class="s" x1="660" y1="60" x2="660" y2="220" opacity=".25"/>
+        <text class="tc sm" x="610" y="136">Tipo J</text>
+        <text class="tc sm" x="610" y="150">maior — retangular</text>
+        <text class="tc ix2" x="610" y="230">parede ≥ 6'-0" p/ acesso · só concreto armado</text>
+
+        <line class="s dash" x1="222" y1="140" x2="308" y2="140" marker-end="url(#ar)" opacity=".5"/>
+        <line class="s dash" x1="430" y1="140" x2="538" y2="140" marker-end="url(#ar)" opacity=".5"/>
+      </svg>
+      <figcaption><b>"Tipo P" não é uma forma só — é uma faixa de tamanho com duas soluções construtivas.</b> Abaixo de 4'-0" (circular) ou 3'-6" (quadrado), a estrutura pode ser moldada em tijolo (só a alternativa circular admite isso) ou concreto armado. Acima disso, ou em planta retangular, o Tipo J exige concreto armado e altura de parede mínima de 6 pés para permitir a entrada de um operador — o critério de troca é acesso, não só carga.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Estruturas com mais de 14 pés de profundidade abaixo do nível d'água médio de maré alta exigem verificação de flutuação · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-010.pdf" target="_blank" rel="noopener">425-010</a></span></div>
+      </div>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 780 260" role="img" aria-label="Comparação lado a lado das duas soluções de saída de bueiro catalogadas: testada de concreto tipo U do índice 430-010, com grade e faixa de diâmetro de tubo de 15 a 30 polegadas, e a saída em bico — mitered end section — dos índices 430-021 e 430-022, que acompanha a inclinação do talude sem testada vertical."
+        >
+        <text class="lb" x="24" y="26">Duas saídas catalogadas — quando usar cada uma</text>
+
+        <path class="bxf" d="M60 210 L60 110 L220 110 L220 210 Z"/>
+        <rect class="accbx" x="60" y="98" width="160" height="14"/>
+        <text class="tc sm" x="140" y="90">testada tipo U</text>
+        <line class="s" x1="80" y1="150" x2="200" y2="150" opacity=".4"/>
+        <line class="s" x1="80" y1="170" x2="200" y2="170" opacity=".25"/>
+        <text class="tc ix2" x="140" y="230">grade · tubo 15"–30" (375–750 mm)</text>
+        <line class="s dash" x1="80" y1="130" x2="200" y2="130" marker-start="url(#ar)" marker-end="url(#ar)" opacity=".5"/>
+        <text class="sm tc" x="140" y="122">testada vertical</text>
+
+        <text class="lb" x="330" y="26" opacity="0"> </text>
+        <line class="s" x1="330" y1="210" x2="500" y2="210"/>
+        <path class="accbx" d="M330 210 L500 210 L470 150 L400 150 Z" opacity=".85"/>
+        <path class="bxf" d="M400 150 L470 150 L455 118 L415 118 Z"/>
+        <text class="tc sm" x="415" y="90">saída em bico</text>
+        <text class="tc sm" x="415" y="104">(mitered end)</text>
+        <text class="tc ix2" x="415" y="230">acompanha a inclinação do talude, sem testada vertical</text>
+
+        <line class="s" x1="30" y1="240" x2="750" y2="240" opacity=".3"/>
+        <text class="sm tc" x="600" y="150">escolha por espaço e</text>
+        <text class="sm tc" x="600" y="164">estética do talude —</text>
+        <text class="sm tc" x="600" y="178">não por diâmetro de tubo</text>
+
+        <circle class="cal" cx="230" cy="150" r="9"/><text class="caln" x="230" y="154">1</text>
+        <circle class="cal" cx="510" cy="150" r="9"/><text class="caln" x="510" y="154">2</text>
+      </svg>
+      <figcaption><b>As duas soluções resolvem a mesma transição — tubo para canal aberto — por caminhos opostos.</b> A testada tipo U é uma peça vertical com grade, útil onde há pouco espaço e se quer restringir acesso ao tubo. A saída em bico dispensa testada: a boca do tubo é cortada no ângulo do talude e o próprio terreno faz a transição, sem grade.</figcaption>
+      <div class="legenda">
+        <div><i>1</i><span>Testada de concreto tipo U, com grade · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-010.pdf" target="_blank" rel="noopener">430-010</a></span></div>
+        <div><i>2</i><span>Mitered End Sections · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-021.pdf" target="_blank" rel="noopener">430-021</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-022.pdf" target="_blank" rel="noopener">430-022</a></span></div>
+      </div>
+    </figure>
+
+    <h4 style="margin-top:1.2rem">Grau de aproveitamento por peça</h4>
+    <div class="dotm">
+      <div class="row"><span class="lbl">Boca de lobo em vala — catálogo por tipo é o que nos falta</span><span class="d hi"></span></div>
+      <div class="row"><span class="lbl">Bocas de lobo e caixas de sarjeta</span><span class="d hi"></span></div>
+      <div class="row"><span class="lbl">Tampões, aros, lajes de topo — referência direta</span><span class="d hi"></span></div>
+      <div class="row"><span class="lbl">Caixa em bueiro celular — resolvemos caso a caso hoje</span><span class="d hi"></span></div>
+      <div class="row"><span class="lbl">Saída em bico — peça pré-moldada repetível</span><span class="d hi"></span></div>
+      <div class="row"><span class="lbl">Testada de concreto tipo U — 375 a 750 mm na conversão</span><span class="d hi"></span></div>
+      <div class="row"><span class="lbl">Detalhes diversos</span><span class="d hi"></span></div>
+      <div class="row"><span class="lbl">Subdrenagem de pavimento — pouco usado aqui, vale estudo</span><span class="d mid"></span></div>
+    </div>
+    <div class="dotleg">
+      <span><i class="hi"></i>Alto — adotar como referência direta</span>
+      <span><i class="mid"></i>Médio — vale estudo antes de adotar</span>
+      <span><i class="lo"></i>Baixo / não avaliado</span>
+    </div>
+
+    <div class="quadro">
+      <div class="h">6.3 · A lógica de catálogo por tipo</div>
+      <p><b>O que o FDOT faz.</b> Uma única folha (<code>425-052</code>) carrega quatro tipos — C, D, E e H — e o projetista escolhe pela situação, sem redesenhar nada. O construtor recebe peça pré-moldada catalogada.</p>
+      <p><b>O que fazemos.</b> Tendemos a desenhar a caixa a cada projeto. O ganho aqui não é o desenho — é a lógica de catálogo por tipo, que reduz variação e permite pré-moldar.</p>
+      <p><b>Critério, não desenho.</b> Para dimensionar, a referência é o <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026fdm916drainstruct.pdf" target="_blank" rel="noopener">FDM 916 — Drainage Structures</a>.</p>
+    </div>
+  </section>
+
+  <!-- ════════ 7 ════════ -->
+  <section class="tab" id="t7">
+    <h2>7. Demais blocos</h2>
+    <p class="lead">Catalogados e linkados, sem o tratamento comparado das seções 4 a 6.</p>
+
+    <h3>7.1 Contenções</h3>
+    <p>A série 521 é o melhor exemplo de padronização com variantes de todo o acervo: uma folha-base de barreira, um leque de perfis alternativos crash-testados, e um conjunto próprio de transições para conectar sistemas diferentes. O <code>521-427</code> foi avaliado como equivalente ou superior a perfis testados em MASH TL-4.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Grupo</th><th>Folhas</th><th>Aproveitamento</th></tr></thead>
+        <tbody>
+          <tr><td>Típicas — barreira e guardrail</td><td class="mono">521-001 · 536-001</td><td>Referência de partida</td></tr>
+          <tr><td>Alternativas de perfil — vertical, single-slope, mediano, 32" a 42" (0,81–1,07 m)</td><td class="mono">521-422 · 521-423 · 521-426 · 521-427 · 521-428</td><td>Alto como catálogo. O nível MASH TL-x é o que permite comparar com nosso nível de contenção</td></tr>
+          <tr><td>Transições a ponte existente</td><td class="mono">521-404 · 521-405 · 536-002</td><td>Muito alto — transição entre sistemas é o ponto mais fraco do nosso acervo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 780 280" role="img" aria-label="Comparação de silhueta entre as duas famílias de perfil de guarda-corpo do FDOT: face vertical, usada nos índices 521-422 de 42 polegadas e 521-423 de 32 polegadas, e face única inclinada (single-slope), usada nos índices 521-426, 521-427 e 521-428, com o nível MASH TL-4 confirmado por texto literal apenas nos índices 521-422 e 521-427.">
+        <text class="lb" x="24" y="26">Duas famílias de perfil, não uma — vertical × single-slope</text>
+
+        <path class="accbx" d="M100 230 L100 90 L160 90 L160 230 Z"/>
+        <text class="tc sm" x="130" y="80">face vertical</text>
+        <text class="tc" x="130" y="252">521-422 · 42"</text>
+        <text class="tc ix2" x="130" y="266">MASH TL-4 — literal na folha</text>
+
+        <path class="accbx" d="M260 230 L260 110 L310 110 L310 230 Z"/>
+        <text class="tc" x="285" y="252">521-423 · 32"</text>
+        <text class="tc ix2" x="285" y="266">TL não confirmado por texto literal</text>
+
+        <path class="tlbx" d="M420 230 L420 90 L460 66 L470 66 L470 230 Z"/>
+        <text class="tc sm" x="445" y="80">face única inclinada</text>
+        <text class="tc" x="445" y="252">521-427 · 36"</text>
+        <text class="tc ix2" x="445" y="266">MASH TL-4 — literal na folha</text>
+
+        <path class="tlbx" d="M580 230 L580 66 L618 44 L628 44 L628 230 Z"/>
+        <text class="tc" x="604" y="252">521-428 · 42"</text>
+        <text class="tc ix2" x="604" y="266">TL não confirmado</text>
+
+        <line class="s" x1="30" y1="230" x2="720" y2="230"/>
+      </svg>
+      <figcaption><b>"Perfil alternativo" não é uma família só — são duas geometrias diferentes.</b> <code>521-422</code> (42") e <code>521-423</code> (32") são face vertical; <code>521-426</code> (mediano, 36"), <code>521-427</code> (36") e <code>521-428</code> (42") são face única inclinada (single-slope), não F-shape. O MASH TL-4 está confirmado por texto literal apenas nas folhas <code>521-422</code> e <code>521-427</code> — para as demais (<code>521-423</code>, <code>521-426</code>, <code>521-428</code>) a busca não recuperou o nível de ensaio na própria folha, e um valor TL-5 sugerido para o <code>521-428</code> por síntese de busca não tem confirmação literal e não deve ser usado.</figcaption>
+      <div class="legenda">
+        <div><i>•</i><span>Transição guarda-rail (W-beam) → barreira rígida nova: <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2026/idx/536-001.pdf" target="_blank" rel="noopener">536-001</a>. Para guarda-corpo <i>existente</i> de OAE, o conflito remete a <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/536-002.pdf" target="_blank" rel="noopener">536-002</a> + 521-404/405 — famílias de índice distintas para obra nova × existente.</span></div>
+      </div>
+    </figure>
+
+    <div class="quadro alt">
+      <div class="h">Pendência</div>
+      <p>O crosswalk indica variantes sem número individual confirmado: 32" F Shape, Median 32" F Shape, 42" F Shape e Corral Shape. Também está sem confirmação em qual dos dois livros a faixa <code>521-4xx</code> é publicada — guarda-corpo de ponte pode estar no Structures. Ambas resolvem na leitura dos sumários. Ângulo de talude do single-slope, largura de base na linha do solo e equivalente métrico das alturas (32"/36"/42") não foram encontrados em fonte FDOT direta — só há valores de outros DOTs (Texas, Califórnia), que não devem ser atribuídos ao FDOT.</p>
+    </div>
+
+    <h3>7.2 Geometria, MOT, urbanização e demais</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Bloco</th><th>Série</th><th>Cobertura</th><th>Aproveitamento</th></tr></thead>
+        <tbody>
+          <tr><td>Geometria geral</td><td class="mono">000</td><td>Superelevação rural e urbana, entroncamentos, terminais de ramo, terraplenagem</td><td>A separação rural/urbano da superelevação é mais explícita que a nossa</td></tr>
+          <tr><td>MOT — tráfego em obra</td><td class="mono">102</td><td><span class="mono">102-600</span> se aplica a toda obra; faixa <span class="mono">102-601</span> a <span class="mono">102-680</span> traz aplicações típicas</td><td>Alto — acervo mais completo que o nosso equivalente</td></tr>
+          <tr><td>Urbanização e acessibilidade</td><td class="mono">520 · 522</td><td>Meio-fio e sarjeta, calçada, piso tátil</td><td>Piso tátil segue ADA, não NBR 9050 — comparar, não copiar</td></tr>
+          <tr><td>Cerca, erosão, paisagismo</td><td class="mono">550 · 570 · 580</td><td>Localização de cerca, erosão permanente, paisagismo</td><td>Médio — muito ligado a clima e vegetação local</td></tr>
+          <tr><td>Elétrica e semáforos</td><td class="mono">600</td><td>Dutos e caixas, postes, braços projetados, cabeças, detecção, CFTV</td><td>Sumarizado por decisão de escopo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quadro alt">
+      <div class="h">Correção — faixa real do 102-6xx e o que cada índice cobre</div>
+      <p>Versão anterior indicava a faixa <code>102-601</code> a <code>102-628</code>; o correto, confirmado por instrução própria de revisão FY 2021-22, é <code>102-601</code> a <code>102-680</code>. Cinco índices confirmados individualmente: <code>102-601</code> Two-Lane and Multilane, Work Beyond the Shoulder (obra a partir de 15 pés/4,6 m da pista); <code>102-602</code> Two-Lane Two-Way, Work On Shoulder; <code>102-603</code> Two-Lane Two-Way, Work Within the Travel Way (exige rufo temporário quando a velocidade regulamentada é ≥ 55 mph); <code>102-660</code> Pedestrian Control for Closure of Sidewalks; <code>102-670</code> Motorist Awareness System (MAS).</p>
+    </div>
+    <div class="quadro">
+      <div class="h">000-515 × 000-516 e o fim do índice de Clear Zone</div>
+      <p>A distinção entre <code>000-515</code> (Turnouts and Driveways, critério geral — largura mínima 4 pés, pavimentação obrigatória acima de 4.000 veíc/dia) e <code>000-516</code> (Turnouts — Resurfacing Projects, aplicável a projeto de recapeamento) é <b>tipo de projeto</b>, não pavimento flexível × rígido. Também não existe mais Standard Plan de "Clear Zone": a numeração pré-2016 tinha o Índice 700 "Roadside Offsets" com essa tabela; a série 700 atual foi realocada para sinalização (<code>700-040</code>, <code>700-041</code>, <code>700-101</code>), e o critério de faixa livre lateral vive hoje no FDM, Capítulo 215 "Roadside Safety". A superelevação máxima tabulada no <code>000-510</code> (e=0,10) confirma o valor do FDM 210 para rodovias de alta velocidade (5% nas de baixa velocidade).</p>
+    </div>
+  </section>
+
+  <!-- ════════ 8 ════════ -->
+  <section class="tab" id="t8">
+    <h2>8. Extração e duplicação</h2>
+    <p class="lead">O acervo é público, versionado e distribuído em CADD aberto — raro entre DOTs e efetivamente reaproveitável. O que muda é o grau de liberdade em cada camada.</p>
+
+    <h3>8.1 O que dá para extrair</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Insumo</th><th>Uso</th></tr></thead>
+        <tbody>
+          <tr><td>Folha em PDF</td><td>Leitura e referência. Link por composição de URL, sem tabela</td></tr>
+          <tr><td>Arquivo <span class="mono">.dgn</span> e células CEL</td><td>Geometria editável em MicroStation, publicada pelo FDOT para permitir modificação. É a via para duplicar e adaptar</td></tr>
+          <tr><td>SPI</td><td>A lógica de projeto por trás da folha: quando aplicar, limites, o que fica a cargo do projetista. É o que se transporta melhor</td></tr>
+          <tr><td>Template de seção-tipo do CADD</td><td>Ponto de partida do Typical Section Package</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>8.2 Os três graus de reaproveitamento</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Grau</th><th>O que é</th><th>Condição</th></tr></thead>
+        <tbody>
+          <tr><td><span class="dot d-ok"></span>A — Referência de critério</td><td>Ler SPI e FDM para entender a decisão de projeto</td><td>Livre. É onde está a maior parte do valor</td></tr>
+          <tr><td><span class="dot d-run"></span>B — Adaptação de detalhe</td><td>Partir do <span class="mono">.dgn</span> e converter unidade, material e norma</td><td>Exige revisão de engenharia — cobrimento, classe de concreto e carga são calibrados para a Flórida</td></tr>
+          <tr><td><span class="dot d-late"></span>C — Cópia direta</td><td>Usar a folha como está</td><td>Não recomendado. MASH, ADA em lugar de NBR 9050, classe de agressividade e carga AASHTO não correspondem</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>8.3 Prioridade de duplicação, por retorno</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th class="n">#</th><th>Bloco</th><th>Justificativa</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td>Transições de contenção · <span class="mono">521-404 · 521-405 · 536-002</span></td><td>Resolve o ponto mais fraco do nosso acervo</td></tr>
+          <tr><td class="n">2</td><td>Drenagem · séries <span class="mono">425 · 430 · 446</span></td><td>Física igual, geometria transportável, retorno rápido</td></tr>
+          <tr><td class="n">3</td><td>Pavimento rígido · <span class="mono">350-001 · 353-001</span></td><td>Junta e substituição de placa quase prontos</td></tr>
+          <tr><td class="n">4</td><td>Pré-fabricados · <span class="mono">450 · 455</span></td><td>Alto valor, mas exige recálculo, não conversão</td></tr>
+          <tr><td class="n">5</td><td>Pacote de pavimento</td><td>Copiar o método (Typical Section Package assinado pelo EOR), não a seção</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>8.4 Encaixe no Manta Maestro v5.0.1</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Camada</th><th>Destino</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Segmentos atendidos</td><td class="mono">S1-rodovias · S2-oae</td><td>Taxonomia v5.0.1 confirmada</td></tr>
+          <tr><td>Coleção RAG</td><td class="mono">normas</td><td>Coleção já existente (DNIT, ANTT, ARTESP, ANEEL). <b>Não criar coleção nova</b></td></tr>
+          <tr><td>Tabela</td><td class="mono">ke_embeddings</td><td>Projeto <span class="mono">ogxxgvgtulrbbppshjie</span> · BAAI/bge-small-en-v1.5 384d</td></tr>
+          <tr><td>Pasta SharePoint</td><td class="mono">05-normas/</td><td>Caminho canônico das coleções de norma</td></tr>
+          <tr><td>Dado canônico</td><td class="mono">data/fdot/fdot-standard-plans.2026-27.json</td><td>Separado da apresentação, para regerar sem retrabalho</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="quadro alt">
+      <div class="h">Correção de plano anterior</div>
+      <p>Versões anteriores deste trabalho previam criar uma coleção RAG <code>fdot:</code> em <code>rag_chunks</code>. A revisão contra o Maestro v5.0.1 mostrou que isso está errado em dois pontos: o acervo pertence à coleção <b>normas</b>, já existente, e a tabela de produção é <b>ke_embeddings</b> — não <code>rag_chunks</code>.</p>
+    </div>
+
+    <div class="quadro">
+      <div class="h">Roteamento confirmado contra a fonte — Manta Maestro v5.0.1</div>
+      <p>Verificado diretamente na tabela de aliases de roteamento do skill (§2, "Aliases de roteamento"):</p>
+      <div class="urlbox">
+"ponte", "viaduto", "túnel", "OAE"&nbsp;&nbsp;→&nbsp;&nbsp;S2-oae<br>
+"rodovia", "asfalto", "concessão rod"&nbsp;&nbsp;→&nbsp;&nbsp;S1-rodovias
+      </div>
+      <p>As duas verticais usadas neste documento existem tal como grafadas na taxonomia canônica — não são aproximação. Skills vinculadas ao S1 incluem <span class="mono">rodovias-geotecnia</span>, <span class="mono">autodesk-toolkit</span> e <span class="mono">cqp-cad-bridge</span>; ao S2, <span class="mono">gr04-infraestrutura-pontes</span> e <span class="mono">leitura-diagrama-engenharia</span> — nenhuma delas cobre hoje o conteúdo deste documento, que é justamente a lacuna que ele preenche.</p>
+    </div>
+
+    <h3>8.5 Pendências abertas</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Pendência</th><th>Bloqueio</th></tr></thead>
+        <tbody>
+          <tr><td>Índice completo do ano fiscal</td><td>Depende de <span class="mono">rtoc.pdf</span> e <span class="mono">stoc.pdf</span></td></tr>
+          <tr><td>Extração de imagem das pranchas</td><td>Depende do download dos PDFs — as figuras aqui são autorais</td></tr>
+          <tr><td>Folha do Optional Base Group</td><td>Antigo Index 514; número atual depende do crosswalk</td></tr>
+          <tr><td>Família FIB completa</td><td>Só <span class="mono">450-078</span> confirmado; <span class="mono">450-084</span> com título a confirmar</td></tr>
+          <tr><td>Livro da faixa <span class="mono">521-4xx</span></td><td>Guarda-corpo de ponte pode estar no Structures</td></tr>
+          <tr><td>Variantes de contenção F Shape e Corral</td><td>Sem número individual</td></tr>
+          <tr><td>Equivalência com projeto-tipo DNIT</td><td>Não mapeada</td></tr>
+          <tr><td>Preço médio de guardrail, meio-fio/sarjeta, calçada e Optional Base Group</td><td>Relatório Historical Item Average Cost confirmado como fonte, mas a busca não trouxe o valor numérico desses itens</td></tr>
+          <tr><td>Dimensionamento numérico FPDM/RPDM (SN via AASHTO 1993, ESAL, espaçamento de junta JPCP, LBR-40 do subleito estabilizado)</td><td>Rede bloqueou leitura direta do PDF; achados só via snippet de busca, com ambiguidades sinalizadas pelo próprio agente de pesquisa — não incorporados ao corpo do texto para não arriscar dado não verificado</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ════════ 9 ════════ -->
+  <section class="tab" id="t9">
+    <h2>9. Fontes &amp; Ficha Técnica</h2>
+    <p class="lead">Todo índice deste documento saiu de um documento oficial do FDOT — sumário, folha, instrução, crosswalk ou pacote de revisão. Nenhum de memória.</p>
+
+    <h3>9.1 Fontes</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Grupo</th><th>Documento</th></tr></thead>
+        <tbody>
+          <tr><td>Standard Plans</td><td><a href="https://www.fdot.gov/design/standardplans/current/27" target="_blank" rel="noopener">FY 2026-27</a> · <a href="https://www.fdot.gov/design/standardplans/sprbc.shtm" target="_blank" rel="noopener">publicações</a> · <a href="https://www.fdot.gov/design/standardplans/current/dgns" target="_blank" rel="noopener">CADD DGN/CEL</a></td></tr>
+          <tr><td>Sumários</td><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/rtoc.pdf" target="_blank" rel="noopener">rtoc.pdf</a> (Roadway) · <a href="https://www.fdot.gov/structures/structures-standard-plans" target="_blank" rel="noopener">Structures Standard Plans</a></td></tr>
+          <tr><td>FDM 2026</td><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026-fdm-complete.pdf" target="_blank" rel="noopener">completo</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026fdm115stdplans.pdf" target="_blank" rel="noopener">115 Standard Plans</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026fdm913typsect.pdf" target="_blank" rel="noopener">913 Typical Sections</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026fdm120dsnsubmtls.pdf" target="_blank" rel="noopener">120 Design Submittals</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2026/2026fdm916drainstruct.pdf" target="_blank" rel="noopener">916 Drainage</a></td></tr>
+          <tr><td>Pavimento</td><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/pm/publications/2026fpdm.pdf" target="_blank" rel="noopener">FPDM 2026</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/pm/publications/2026rpdm.pdf" target="_blank" rel="noopener">RPDM 2026</a> · <a href="https://www.fdot.gov/roadway/pm/publications.shtm" target="_blank" rel="noopener">publicações</a></td></tr>
+          <tr><td>Orçamento e especificação</td><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/fpo/fpc/publications/boe/2026-boe-manual.pdf" target="_blank" rel="noopener">Basis of Estimates 2026</a> · <a href="https://www.fdot.gov/specifications/standard-specification-library" target="_blank" rel="noopener">Standard Specification Library</a></td></tr>
+          <tr><td>Controle de versão</td><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/fy2026-27revisionlog.pdf" target="_blank" rel="noopener">Revisions Log FY 2026-27</a> · <a href="https://www.fdot.gov/design/standardplans/irr/Status-Current" target="_blank" rel="noopener">Status das revisões</a></td></tr>
+          <tr><td>SPI consultados</td><td><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2022/spi/spi-450-010.pdf" target="_blank" rel="noopener">450-010</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2022/spi/spi-102-600series.pdf" target="_blank" rel="noopener">102 series</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/spi/spi-536-001.pdf" target="_blank" rel="noopener">536-001</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/spi/spi-522-series.pdf" target="_blank" rel="noopener">522 series</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/spi/spi-330-001.pdf" target="_blank" rel="noopener">330-001</a> · <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/spi/spi-649-030series2.pdf" target="_blank" rel="noopener">649-030</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>9.2 Ficha técnica</h3>
+    <div class="ficha">
+      <div class="cap">Ficha Técnica do Documento</div>
+      <dl>
+        <dt>Cliente</dt><dd>Interno — Manta Associados</dd>
+        <dt>Projeto</dt><dd>Base de referência técnica · benchmark internacional de projeto-tipo</dd>
+        <dt>Documento</dt><dd>FDOT Standard Plans — catálogo comentado</dd>
+        <dt>Objeto</dt><dd>Base de Referência Técnica — FDOT Standard Plans FY 2026-27</dd>
+        <dt>Segmentos</dt><dd>S1 Rodovias · S2 OAE</dd>
+        <dt>Versão</dt><dd>v2.0 — 3 pesquisas dirigidas aprofundam fundações, contenções e aterro estrutural: família completa de estacas quadradas protendidas (12"/14"/18"/24"/30", regra de espiral W3.4×W4.0, variante de alto momento, família CFRP/aço inoxidável — 9 novos índices); corrige uma imprecisão anterior sobre <span class="mono">521-001</span> (é "Concrete Barrier" F-shape, não notas gerais da família de guarda-corpo); distingue as duas famílias de perfil de contenção — face vertical (<span class="mono">521-422/423</span>) × single-slope (<span class="mono">521-426/427/428</span>) — com MASH TL-4 confirmado por texto literal só em <span class="mono">521-422</span> e <span class="mono">521-427</span>; acrescenta dimensão do coping MSE (<span class="mono">521-600</span>, 1'-8"×7") e a variação tipológica de painel (2A-2F) do <span class="mono">548-020</span>. 2 novos diagramas (total 21), 11 novos índices (total 74). v1.9 — visualiza o catálogo 6.2 de pré-fabricados de drenagem: composição vertical explodida (bottom 425-010 → anéis ASTM C478/frame 425-001 → grade 425-052), comparação dimensional Tipo P (circular ≤4'-0" / quadrado 3'-6") × Tipo J, e comparação testada tipo U (430-010) × saída em bico (430-021/022). 3 novos diagramas (total 19). v1.8 — aprofundamento por workflow de 5 agentes de pesquisa: corrige a faixa do MOT (<span class="mono">102-601</span> a <span class="mono">102-680</span>, não 628) e detalha 5 índices da série; corrige a distinção <span class="mono">000-515</span>×<span class="mono">000-516</span> (tipo de projeto, não pavimento flexível×rígido) e documenta o fim do índice de Clear Zone (hoje FDM 215); acrescenta 5.5 Diafragma/junta/guarda-corpo (<span class="mono">458-100</span>, <span class="mono">458-110</span>, <span class="mono">521-001/426/427</span>, preferência SDG por thickened slab end); lista as 7 famílias de contenção da SDG 3.12 além de MSE; confirma dimensão do <span class="mono">400-090</span> (30 pés) e o apoio simples do <span class="mono">400-091</span>; acrescenta critérios de montagem do <span class="mono">425-001</span>/<span class="mono">425-010</span> (anéis ASTM C478, Type P 4'-0"/3'-6", verificação de flutuação). 7 novos índices (total 63). O módulo de dimensionamento FPDM/RPDM do mesmo workflow voltou com confiança baixa (só snippets de busca, sem leitura direta do PDF) e foi deliberadamente deixado fora do corpo do documento — ver pendências. v1.7 corrige o título do índice <span class="mono">425-010</span> (era "Ditch Bottom Inlets Types C, D, E · Gutter Inlets Types S, V", confirmado como <i>Structure Bottoms Type J and P</i>) em todas as ocorrências e no dataset JSON; reescreve 4.3 Optional Base Group com quadro de fórmula (SN = a×t), exemplo numérico de substituição de camada e coluna de uso por material; acrescenta 2.2 Preços de referência com dois pay items confirmados do Historical Item Average Cost (14" e 24" square prestressed pile), declinando itens sem valor numérico confirmado (guardrail, meio-fio, base group). v1.6 corrigiu o encontro de OAE: aterro estrutural MSE (548-020/030) e laje de transição (400-090/091) têm folha padrão, ao contrário do que a v1.5 afirmava. Acrescentou detalhe de sistema MSE, aparelho de apoio chanfrado e comparação de grades da boca de lobo por peso/material — 4 novos índices e 4 novos diagramas (total 16). v1.5 adicionou cotas em m/in e 3 diagramas de pavimento/estrutura, e confirmou o roteamento Manta Maestro por citação direta. v1.4 corrigiu bug de escape que quebrava o JavaScript. v1.3 trocou o logo reconstruído por extração real do PDF institucional. v1.2 calibrou paleta e tipografia. v1.1 rodou a auditoria aluci-guard. v1.0 foi a primeira emissão no padrão Manta.</dd>
+        <dt>Data de criação</dt><dd>22/08/2026</dd>
+        <dt>Gerado por</dt><dd>Claude AI — Manta Associados</dd>
+        <dt>Ferramenta</dt><dd>Claude Code · skills manta-maestro v5.0.1 + padrao-manta v2</dd>
+        <dt>Classificação</dt><dd>Interno</dd>
+        <dt>ID</dt><dd class="mono">MANTA-FDOT-20260822-001</dd>
+      </dl>
+    </div>
+
+    <h3>9.3 Auditoria anti-alucinação (R3)</h3>
+    <p>Passagem <span class="mono">aluci-guard</span> Pacote A executada em 22/08/2026 sobre a íntegra do documento. O módulo automatizado da skill não está disponível neste ambiente — apenas o <span class="mono">SKILL.md</span> foi sincronizado, sem <span class="mono">auditor.py</span> nem os registries. Seguindo a política <i>fail-loud</i> da própria skill, <b>a execução automatizada não foi simulada</b>: a auditoria abaixo é manual, aplicando as mesmas regras AL-01 a AL-03.</p>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th>Regra</th><th>Ocorrências</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td>AL-01 — norma ABNT / lei federal fabricada</td><td>2 referências · nenhuma lei</td><td><span class="dot d-run"></span>Sem indício de fabricação. <span class="mono">NBR 7187/6118</span> e <span class="mono">NBR 9050</span> são normas reais, citadas apenas como paralelo comparativo. Lookup por registry não executado</td></tr>
+          <tr><td>AL-02 — URL morta ou DOI inventado</td><td>48 URLs distintas · nenhum DOI</td><td><span class="dot d-run"></span>Validação estrutural aprovada: 0 falhas de forma, 0 sem TLS. Verificação de <i>aliveness</i> impossível — egresso bloqueado. Ressalva material abaixo</td></tr>
+          <tr><td>AL-03 — código SICRO inexistente</td><td>0</td><td><span class="dot d-off"></span>Não aplicável — o documento não cita SICRO</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quadro alt">
+      <div class="h">Ressalva material — AL-02</div>
+      <p>Das 48 URLs, <b>25 foram derivadas por composição de padrão</b> (19 no formato <span class="mono">/2027/idx/{índice}.pdf</span> e 6 em <span class="mono">/spi/</span>), não copiadas de uma fonte que as exibisse.</p>
+      <p>O padrão em si está confirmado: folhas <span class="mono">455-014</span>, <span class="mono">521-001</span>, <span class="mono">102-230</span> e <span class="mono">425-052</span> foram observadas nesse formato, e o mesmo padrão aparece em múltiplos anos fiscais para outros índices. O que <b>não</b> foi verificado é a existência da instância FY 2026-27 de cada folha individualmente — uma folha retirada ou renumerada no ano corrente produziria link morto sem que isso apareça aqui.</p>
+      <p><b>Ação sugerida:</b> ao destravar o egresso, rodar verificação HTTP nas 25 URLs derivadas antes de circular o documento fora da equipe técnica.</p>
+    </div>
+
+    <div class="quadro">
+      <div class="h">Achado fora do Pacote A</div>
+      <p>A auditoria detectou <b>inconsistência numérica</b>: a v1.0 declarava 48 índices catalogados, enquanto a tabela contém 52 (45 Roadway + 7 Structures). Corrigido nesta v1.1 em todas as ocorrências — KPI, seção 1.1, seção 3 e objeto <span class="mono">METADATA</span>. Verificação complementar: nenhum índice duplicado, e nenhuma URL de folha aponta para índice ausente da tabela.</p>
+    </div>
+
+    <h3>9.4 Nota de conformidade</h3>
+    <p>Documento revisado contra as regras invioláveis R1–R5 do Manta Maestro v5.0.1 — quadro na seção 1.2. Com a passagem desta auditoria, <b>R1, R2, R3 e R4 estão atendidas</b> e R5 não se aplica. A ressalva de AL-02 acima permanece aberta e deve ser fechada antes de circulação externa.</p>
+    <p class="muted">Nenhum nome de cliente Manta aparece neste documento. As referências ao Florida Department of Transportation identificam o órgão público que é objeto e fonte do estudo, com acervo de acesso público.</p>
+  </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="fw">
+    <div class="fl">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAAB/CAYAAAAO0ffFAAAgaklEQVR4nO1deXhT1bZf++RkaIZmaNOmLXSgFNoygyCj4ANEQC6IKIrvPofrrE+fIyKIKCoCiuNzutfhKg4XQRARLiA4MCMiRWlL53lM0zRNmjQ5Ofv9kZzkJE3ac5Kcgk9/33c+SrLP2mvvddbaa6299gmsuSRhT6ZKPBr+xEUPlZhIuj1P/Wq6khwJu+emULuuNHTdnqd+RUGihAvN3J/oCYIAyRUD5Hd8PjO5cd88A50dLxlHYACQkShuabb8gb9PT/rtigHKO0QIiS80s38CAABQvlYy/ZXJ+qOPjda8kxgnMmBAgAGAwIAAY8+ll4kMD49Uvb1xYuKhXI1kGgCgC835HxUJMlHGw6O0mzdOTNifqxaPozEAc2GMMUFjwDQAMBcghIbpxJe+NCnhuwdGaN/XSUUDL+wQ/liQECC/ZpDqiben6QuuGBC3jCSQGANA8EUyqhcMEYFEc9PlN08xyK7+tKzzud3VtjedNLb15yD+SCAQiMYmyq66PU+9MUNF5gBASLkwn5Ee1QtPUCUm1HfmqTfMTpPf/I9iy2O/GB27w9D8ExEiRU7m3p6n3jReL50jIhBB9zK7NAaMMWCSBo+p7AuZ8eL8teN1Xx9r7t794fmOx+ptVGHMOP+DQkGihCXZ6icWZirulYqQFKBvjfCaSkxiHNpUhgRCaJIhbv6oBOmMr6q63viy0rLOTtEd0TD/RwQCIKenyv/6nznqpw1yjw/Rm9Vjg2lHYh43MYgjCcX1g5XLL0+Nu/Gjko6Vhxq7PsUAFD8qf0zkqCWTb83VvDRMJ5mIgP+aQ4NX42gMGEfo9SfJyQEPjdJ9OHug8rYPis2PVFicP0XAyx8CGgmRtixH8+zlafJlEhGSMN4hXzDLGom9sUHkQGiETjpt/cSkw/tqbR9sKe9Y0+GkG6Oh+P8JJALZnHTVfddlx69QSwgdAH8LxwZmOyexUBGSQOJ5Gco7JhvkSz4rs6z5rq7zHy4M9hiQ/l0CIRCN0MmuuHmo9sXMeHE+gF9booHfVAICOoYJknipSHfnMO1rswYo/vZhsfmRwnbHtzEj/juBPo4c/F9DtC9emixbIEKIiIlmeOF3TjyqF3MMipeMWnOJfu/RZvv2T0vNK1rsVGnse7m4EEcS6oWZ8SuuylDeLyOJOIDYL/j+cAAQROqc9AVEIGJKiuKa0Ymy2TurrC/vqjK/6KTBKkhnFxbEJIPihusHa9amKsgsAOE8NG8UgElawE4YyMWi+Otz1E/NSFXcvLnU/Oiplq4vaYzdAnfbL8hSSSbcOFS7cYROdhmCGDkMvQBjj7hIGgOOzqvkjiQ5mfE/IxI+P2tSfrf5vOnhOpvrLPxOwweVmEhekq15ekaa8mapCEkjde/5wuecCGkqQwERiBiVGDczV5ty4tta67vbK8xrbRTd2m8MRAmSAMmMVNVdi7M1q7RSkR4gNgKjMcYEQn0KwuuZYoJxTvq6HBTt2FVlecPqpC1c2vd1SQhCOi8j/r/XT0o9Oz1VdacIgTQG4xcSRJ5WNuup8aknbslLeFUtEenZe2SRXlYn3bmtvOOFI432rVzaM/NHsPfiersoGqjtFeZnVhxvGPt9vXUzRWOa6729XRoZabh9WMLbqy5JOTRYLZvWT0LgBZ2UzLp7uP6zx8cm/zsrXjqasVLRXBSN6SONti1PHG8Yt7W8fYXDTVu53EcDwt4kM7eUF/ZqsdFBlb9baPyvb+s631yao3shVyudxkXF+8JgjWz8qksM3x1tsv1ra1n7SlM3VRUtzWghJZBqTobm4fkZ8Q/LxYQSIHqzSNMYl3U4T3xealpe1uE4hH0kEeJC29sGk4wK9tkhZt8HuMLSfWzD6aZZ45Lk1y7J1j6bLBdn8R5FEBBCoikpymWjEuLm7qqybNhfa36FwuCIlm4krIzVK665drD2+VSFOAcg2rSgB212qn5refuTJ5usn1AATvZ3GABxlQMv5yRUGzfGrpPNtk/PtNp3zBoY/z9zM9QPqyQiHfehhIZCQmqXDtGtm5amuvXzkrZHfjV1fYMx9Ev4MEAhGXNdTsKGkYlxswBi43h0uWjL/tqON76pMr/gpHFnmGaIkxw8JtITDnCJPXpr5KTprt3V5uePN1o3X5WleXJqqvImMUFEXSmWIhfn3D8y+cuzbfZ9W0qNDzXZqeJoaYaDnCQSF2RpV89IU90mExFxsYjHKBpTP7XYvtxeblrV6ugzc4S4ycETg5N9VC74b+DwNJicVM1H5423f19veWdxdsLzwxNks6Jd/wgCiUbr5XNztQNmHKjr/N891e3Pd1F0ezQ02RAhJJ5sUN26KFu7RisVGQCi1zIMAKVmx/FtZaYVpR2O7/ncx7ENH1PJHTVW56lXCxrnjUxULFicrXsuTSnJi9Z7kZKiuHmZmkcmJCuWbq9of/KnZuunboxdkdJDAChbLbtsyeCEDdnx0vGIQCgW2fvWLlf1zsr2p082Wzfz4w8RXJL9tLe4i3PmhMb8ph4DUAVG2/Yik23v1FT1nfMztSvjJaKoK6V1MvHAW/P0H0xNUd32RVnbo9Wd3cf50tBIyPSFg3TPTjQol4kIJIqkCiAYDoq2flvb8dq+mvaNDjc2R0KDu3OCaZLmrnEYR2BFnDR0HazrePlkc+enczN0Ky9Li79NKvJkziMGQmiIVj71sXGyH481dn68s9K02uJ01/d1m4RAyukDNPfNy9CskItF8QDRm0WKpl0/t9i27ahoW2lyUBWR0sGAuDkn3jY8NC5SljywuujmL8qM9x9ptLy3cFDCc6MSFfOjowggQoR4aqr61pGJigV7qtrX/dhgeSOMeULDdfKrFmcnrk9VSvIAYpMMruhwnPyy3Li8rMPxA0T/DHB2TjAGTALHHjHXhn2gweYseOvXxgW5WvkViwYlrMuIl46JlqZKQuqvG6LfNCVV/bdtZcZHitq79oE3rWeQS4Yvyk5YPypRMQ8gNu59q91V9U2l6ekTzZ0fMf3EAlx4Y3KV3tKFyOK4KICL27v2vni668dLDfE3zc9KeEojJQ3REk1VSofdPTL16wKjbeeeqra1lyTFL5sxQH2vlCTksZhdB+W2HqzreO1gbfuG2Jcl8nJOMOcdcCH2mSgM9iONlrdPt1q3zB6oXT49TXOfjCTk0dAUIUSO1SsXj9ErFzOfRcu7m8bUz63WL3ZVGFeauqnK6KiFBlcHCWPAwGykcnkaPQdCouItLOwUbdpZ2bb8WKPlg/mDEtaOTlQuEhGIjA31yJmmMY0rLd3Hd5a3Pl5hcRyGGJrFEODnnGCMMObg6mOMBN8pbHW4ij8sbLouWx13+V8GJa7Lio+bEAu6kbDd5nDV7Kk0PnWqpXMz7pdiX8Q5HKCZJDNX5ySScCAC4PIO+8HXztRNHaNXLZubmfB0Ypw4IyqCPNp2udwdh+rNrx+oNW100tgSTb98gBHP3QEMgLkuiv0JN8auUy2Wf54z2XZOS1U/8B/pukelIlFU619voGlMn261/GtPZduTpm5XuVD9hAXmbCoxxhj3ecyKdccFgZ1yt++rMa052WR5/8rMxGfHJKmujzSBHWoIGGNc2WE/uquydXl1p+NIlOxGDD7bOgA8jlnxXZURAIqlaTU7qZrPS5puOtpofvuqLP36LHXcFMQ7gR3Y3ORw1vy7yvjkmRbL53TQ/li0UIgJbbcbWymac76Ss3OCATDBZ7udD3LU0ql352vf0UqINF439sF3Tafj6Jtna6d/XNR4Q0uXq4xfyYDnSepyuTv2VhnXbjxVOfx0i+WjWAqNJEByZbr8jven64sUJOK1N4k5XgA8Kpn5xkJiAiTzMhR3TDHIrtlS0fnCnhrr/7romJ0loM8aO/9VbLLunpSivefygQmPy8UiTV83UTTtOtvauXVfTdsqk8MZcV4xFBAAytNIpt4zLH5TnpYcx8VTD6LAKeXFOpGKBHFOmKVTLRUl3J6n2Th7gOLWj85bnvip1b6DF6Fe4KRx5w/1pvWnWzs+mTlQ/+R4g/oWUZj1r6rDdnRPVeuKaov9x1j1zyBRRqb/LVe5blaabClJIBEAgBvzWyYwAOIyxwE1J1w1jqPHyu7A92+mSpy3cqxu28/G7n3/PN/xeI3VVcCVVl/odLrrdpQ33XWiqf2dKzOT1g3WKGYRCBEAACaHs3J/deuaglZLzA9fyghQLspSPrBssOIxlYSIj4oY5pZk9tecYO5OJT9r6VlXmIPKGAAIAhHjk2RXjtRJZuyp7Xp3S5llrZWijbzI9sJio6379IeFtfOGapULLk9PXFVisu4+XG96qdsd27wiAkCXJskW3ZmvWp/pfUNCtPCU3vUN77E4pnRBiCSz94lgOX7I+7mUJGSLspT3z0iNW/ZJaeeag3XW92N1lg5jcBebrDvOm6xfCZEwSFeSI+4eFr9pgl4yMxZliT4grsVCCAAQJmhvqoXLxZcTJnEaePk9VI1UlHjvcM0bL0xKPjJCJ70CxTAbKlSW56GRmr9PTJL2WUuDCH5CxV5TyeUCoIFgCmI5XBFNBNvE+v7GAP4QA0GOWjLm2Uv1ex8dnfBlqpzMi6Sf/gKBQMSlHab5+uGeHXBOF/acHeBc788HnjDDr1094pEetBFMSZEv2jQl6af/HKLeoBATWn499g+41m/w1jhv5oTDhQEAE0zmhMvFC4glIFbwG/byCjCOFCmuzY5/9NUpyb/OTFPcTgDEaHsndvA9cBBLe8xhjpj+EOKXOcF8Dh3jYKH4TWOobIbvNu+k6OPItPtGaN9ZNzH5SL5Wenks179YgDH5YRdTvhaKeZMhl4v2vj2Ps6nkz4zvX9/aFmR6gwXIFjYChIZqJBPWjtfvf2BEwieJMlHU5xOiBcOr5++gcUVHmqupZDROIFMJ/tiEGSD7b4BgkxOofey/RQQSzUiT3/D6VMNv1w6KXxMnQpoI2IkhAl+jFSzACGlydU6w532VAFwaBzxpXICByYGyk9R+Omwh+gXYM6nN1sI4kpDfOET91KYphtNTDPIbCQAi0mmKFH5+es4Jezz86SLujiJg4HwiNTJmAu/3naj0CTFIw5g1I0CQgW0AAFLkZNajoxM2PzMh6ccctWQyf86iRMDaFmKdDvo/RyAelg8TNPYkmfu++OcqsffeUAKiWRpG96qJPU5k+r4fppNOeX5C0nf3DNN9oJOR6fznij+YFGHg2hbodEUGxN05wYCJHk5BLxfvQfr+ZSY9xBrHahsu5mOe7kB6HpAiJJk9UHHzK5OTzy7KVK2QEKCMgNWIEMyf/3N+y4qXBNfMCQaPxgljKpk1jg64P4QH2aMfBMxeVq/tgtYYlYRQ35Sref6lyYbTE5LirkECxX/BFqIHfxDZQw6AEFfLx/Iq+74hEhNABw2Ovcb5B4+gsctd7XDTjsC2weYx3EQF0kpTSnKWj0n4YtU4/Z4MpTjq8vZg9GkhInzQAYCzcwIAQNAcG/OOU7wjYd5A25v2nGzu+vKxo42jT7bYd7lo7A4wpT460FN4EPS990aECDRGL5u1cVLyydvytG+pJUQq72nsbWisvpj1jTVk39+8aHoP73O6MI0JDAhzXRT56BwGlqPhNX+hwguPdmHcbKfObzrTsnD9L60LqjtdRcHa6hd4eDrsScWAgBQR5LwM1V0vT0kpmJuuepAkQMJzPkOOK6Av3zh7hjD8wNVUeuTLyznhyQxmDyJ4HQDfYAFof3xP/9pm37PiWMPo9wvbHjB10y0hA3MWHcyiE8Anqx+NVJR4e75204uTUgrGJsb9BaKI/3rTeGZMEdLlvK2DscdUYq6pFl65SvCuUxj54g/f04nZTgsCjAPDDBrAub+u87XHj9aP3lNteaubgm7GKw0ZuHvpsLW0Zz8AA1Xi3BVjE7YvH6PfmaYQD49shkNoeTA/kfkEnEyl/5VQXGMHnowEPpXByeUeDIV8ICwuuvGj86Z7Vp5smPhLq32/mwbcGx0ImLTQOUUCEcSE5Lj5L002/PzXIdpNSjGh5zsuph8Impdgc80P3PfjAAATGGPhMicsxyTQCULB3/VKvc7qOrPxl+Z5LxW0LqnrdJUEaGsILQunhWwBigkkWZSlevDlySm/zkxT3kUikHEeV1A/oRII/OeKR5IZPO/y4ppk5sUPMwgao0AzyaaJEfN9nzlsDED90tr15coTDWM/LTWv6HS6zX5zGCQ81r/+73u2wQCgk4mS7xmue+vZSw1Hh+lks6GP7SN/xidI04O0kLeFQpwzJ9gTx4X00qI3lcBKDYX2KgPWBs6bD04a276pMr+w/FjDiO/qrR92u2knMH0Ema+AdaiHGQ3kYbBaMmb1OP2/HxqVuM0gJ3N7HxpAqI1PvwD5ax3G3Gt/aO/uADfnhC8jDDMQzllAPk3hq80AAGanu+4fhcZbnznVPL2wvfuoX7t6apmPBxzEA/hNKQCAiEDEZIP86o2TDD8tHaxZJxOhHrWSAf0EhzWs7yMKwAF6PAyhLuTROOAUxwEQ/J8igBCahgLWAY82RrQsAADgSkv38WdPNU579WzrssYuqipIk3t3jLx/BGdn4khCeW12/OOvTE0tuixFcUtw/MfWYs//QztEvAaCeDgnGAu7nxU4gWwTEihAzO3AUG+gTzbbPlt1vH7M1rKOtTaKtvYUIMNTGAEG8YYBIFEmSr1vhO69py5J/mGIWjoNeU/UBNyPw9/PR3p8SjMwABZYcP61BiCcAPv2KrnC4cbmHZXtq1ccaxh5uMH2LxeNKaZ/toCCeQvUvkDeEEIoTyud+OyEpO/vHZ6wWemtPgsnQPb9PMH1BgzgsasxmbRwfIR1FHDAAGN6KL7NQVW+fa512XOnmmeVdjh/pr2Jg3Dax3zHrMN+AfrNH0EgYkaaYtkABTm4Z/YntAD5gGcxlKAahzFrAsJ7egA0D6+SB+jSDscPz5xsmPzuOdMdRoe7sS/zyfAXSoDhQ4BAGuzveYnCe0iFI4Q2lRBgfoInCMA3eIG03pM+O9TY+Y8Vx+qG76y0vNhF0Tamf58AffwGZkFCr38QUoAQREPINQ7Ak2wVZNI871EJ9fSGNC9Cvj8EAAC6KGzaUmZ6dPWJxgknW+xfhzKf4axDOPMZyvxDEA2u4Cw4L98CalyIfSrWBHj+6/teMI0LRmOXq/DVguaF6043z620OM/6eenJW0gBMm17E2AkjHE/+eMTnHBmCgc+ob74LfgJj5FXyQO40OTY+8xPDZM+KDI90NHtbvOy1cO54OI99mU+OYKTEjFkhdM45ukMMDEhBggANI84TiIS6SBG5ehOGroO1Flee+xoff6e6s43u920w8d6CAEG8B/GfPru5wkea5xH44R71LE/M++bhLDeGWfBjU5OfnxGZubHSnH0r8tnYKXols0lbfetPtk06YzRccBNe17hGaw9Yb1P8AuQPT7Er2iAU1vmWSKA5+YoHz6C84GhBEizmOECAiHxkISEG5fk558ZYzCsJokoz177geuszjMbf2m64uWC1iX1NldpgAnsRYDhsicCeZVewcXwNGyoHuiAwQabGU/fkcRxEpKMH5+W9vSSvLwzg7TapQRCUb8u3wv6F2PX9lXHG8Z+cr79cYvT88b1AAF6G/aVfcF8TDpX54TlVQqiccwLTBnhhdQ032eRhwPxMlnWzKysz+YNHrw/US4fHyv+nTS27qnpWL/yRMPog3XWDyja83t3PR2U8ME7HyCe/gYR0dY2R/QQVqi1DgPwrWUJBkIIpcbHT184dOjRy9LT31NKJDErRzc5qJr3iox/e+pk0+TfTI5D7Pivr/CBpzHjucYJiIBSgt4FGJMAXEQQZK5ef+vi3NzTI5OSHhMhFN3b1v3AVZ3dJzecbp75xq/Gv7bYqVqA8OED8x3wMJU83ksmvODYMQ7zXsweMRHw8yq5QCYWJ0wcOHD9Nfn5ZzPU6qsRQpwO3PcFN8auE822T5YfrR/2RZl5rdVFdwL07n3ywMWxO+AXVrBZDKF9EJMf2egBjUw2eHZ29tYrs7P36GSy0RCz+A937qg0r151vGHs4UbbForGVCjnhU9/XNc4hrbwG6nhNM3vmAAt4K+0EggRA9Xq2Yvy8o5PGTDgjTgy+retM2h1UGVv/da69Lmfm2eXmrtPAfQID2IexwHLVAo2ab06JcDWSB6mMsK3+ZAEIR2WnHzPkvz8s8P1+gdIIrq3rbNRYnZ8v/ZU49S3fzPeZnRQDQBe54RPNHDRJJm9wqKDzGIo8ynQflxIxInF+snp6a8sHDr0xACVai7EyHy6MXQfarS+t/JYw6ivKjte7Hbjbn6S47YfJ7hX6QtlwpjKoPpE4WKSMEiQy4dfmZOza0529i6tTBZZOXoIWCnauKWs/dEnjjeMtrloE9f7eDw9gptKzBzEC3ZKAsrYAPWrxrFBIERkaDTzFuXmnpiYlrZJQhBR/9okg6YuV7GTxjY+7PCh368BeHC2gfkMYlxzwhdikUg+0mB48Lrhw4tyExPvIoB7OXqscBHtDgR6WL61jhWwMhp5oTQuGHKxOGlaevqbC3Nzj6Qolf8B/fk6Do5OF/Y5JzzepMAH7HXNn5eEQE3zaSR3tRf6vVAIIaRXKMbOHzJk/6ysrC3xUukQgbv09Ms7HLiAuUrW+ndRaBwbBELEIJ3umsW5uT+PT01dJyVJod/mx3ONEzSOC0x1AYTLXwqTOYkFJCSpHJOS8vji3NyCHJ3uZqHe5sBV4/olyexLuIaK6YC11vHbHeA0QBpj+kxj4wab09nEm/EQUEmlA2dkZr7/l6FDjyQrFNMg1nPHN8ksWCwA3lNAIXKVwZ+BEFqPMS5ua3tvW2Hh6LPNza+4aTriXzBmgBBCyUrlhKuGDDlweWbmx7HcPuK/xgllKv2Z//C7AkIH4Bhjh9vdfLyu7sFthYWjq83mb2gc9QETEBGEOCchYdmS/PxzYw2GpyQikToG3F4cmRNPJwFprVCpLqYeJeaCC6Zp7u4u3FdRsXBfWdnV7XZ7USz6kIhEykvS0tZcnZv7c7ZWewNEsf5FUsksEPouFgL/Z0KFJAF0McbuGotl57aionHHamsftrtcbbHoRy2TZc8cNOjTBUOGHNTL5ZdGSObiqDkJZxbZXiUtrKn0pUuDQWNs/7WlZdO2wsJRha2t71I0HZMfRUpRqaYtGDr0h8vS0z+Qi8UD+NzLdQe830wlzcqWhPYqBatk7vPHQbsoqv5wTc2dO4uLp9ZZLAdj0SlJENJcvf7mJXl5Bd7iXa7gKgt+giMJQnVZRsbfNTJZrwfb/dRxD22DIFPJ0khBtJ6rF2K023/aXVo659uKiuvMDkdZLPqWicU6PiWDh2tq7u1wOCq4tudsKgmEiME63XWLcnNPTRow4HWZSJTU+x2oh1kMtdZ5NDJ6Ty8YGIDjD6z5QFW0t3+xvaho3Mm6ulVOt9saa556Q6nJ9MGXRUVjTtTVrXRQlLmXppHFcRKRSDEiOfm+pcOHnx9jMDwpIQhNGPqYHQJAkPaxYjgfMwKAN10XTVvONDc/t7WwcFiJ0fhxLOI/Pn0XNDc/v+W334b+2tz8usvt7rEt5F/jIqxplJKkZkJa2jPXDcstyE9MuJMAkAa2QAFmsadTwi4W6l/nhAusTmfN99XVN+0qKZnZbLUej7b2kw8cbnfLsbq6+7cXFU0oa2vbQmNPMa4X0TsnGABUUln6jMz0t68blns6S6P2vZmVVXrXw6sMsdYJkTmJBVHcbLMd+ur8+WnfV1Xd0tndXRM9Se4wd3cXHqyqWrrz/PnL6i2WgxgzL/ACIHCgNHmDEYAuTp4/Jztry8KhOd+lKBTTEGJ+uSL0rkDQe7dinqsE4PzT2lxAlZpM/9xWWDjmdEPD86FMmJBosdmO7i4tnbO/omJxu8NxDgCAOFRTc2eN2bwnUlPAzoIgRBCpKtXUhbk5301LH/B6SLMYbD49lxDOSdSl7cFw0rTpVGPjym1FRWPLTaatsUifcQUGoKrM5h0HKyuXAQAQJoejYG9FxYK9ZWULTV1d5/gT7JmDRIgQ6RWKscEbqMBuxzaVAsVxQoUZlu7ukgOVlUt3l5TMabXZTvfn+gfeh5wA8KWCvt5eXHzp0drahxwUxbk6CSAwLgt/sCNoVwDYOUyBNlKFnU+6wWr99qvi4imHa2ru7XK5WoTsLBgBzokbY9tvLS0vbzl3Lv9cS8ublNvt4EMsvFaFPwDiaS/IBEflVXIFDeAoMhrf+uLcufyzTU2vuNzuWP1kdq8I6VU6KKr5SG3tvTtLSqbWdXR8y8cUhDzsHpTqCn57HQhUuiCUqQyFbre77Xh9/YNfFRdPqo7CZ+CKXsMBY1fXz7vLyq7YV15+Dd+tkL4OewSGCrGf4P5cdNgwORwFe8vL5+8tK1tIud1dQvXDJY7D1R0d27cXFU04Vlv7qMPl4r3+hdvWYTkvQmhcv5jKcH3XWCxfUxh3CtUB5wCcwtj6a0vLi1sLC0cWtrS8wzcV1PsOuAAlghgL5lVeDOCdOemiqPrDtbV37ygunlxnsRzgE8uE9T4xzZkGl51iGmO6yWo97HK7BXviLzQiTXnhNrv91J6ysjkHKyuvNzscpbxu7rn+xUwzzA5H6YGKiqV7KyoWuDGv2v3fFaKqEcQYuyva27+o6ej4Zphe/9+jkpMfk4nFnDcPPeEDjolz4nC5TGeamzcUtra+TtG0YE7BxYKYFHdSNN1V0Ny8vry9/bMxBsPqoYmJNxMcz117Y7+InRMaY/d5o/HDX5qanrE6nf2aBL6QiGnpgtXprDlUU3PbjqKiiUw2m8t9kWgcxhjXWyzf7Sgqmniopua2P5LQAASqOTF61r8rD1RU3NDhcJT31Z5vsNrhcJQfqKi4YU9Z2Ryj3X4qck5/vxD68AuQCCmHJyU9MMpgeERKkppQbbYVFo5rs9tPc6GXGBd3idnhKKYw7tfSgosNgp//ojC2eksBRhcbjR+Gif84a5zRbj/1RxcaQD8e3LO5XNU/Vlff8nVJyYyGzs4f2d/9fw6UhUK//wB6i812dFdJycwDFRXLmPWvn/ez/kS0kIhE6jEGw+p4iSTnQvPye8P/AcgW+4C23KY6AAAAAElFTkSuQmCC" alt="Manta Associados" height="16" style="width:auto;display:block">
+      <span>Desenvolvido por <b>Manta Associados</b> <span class="muted" style="font-style:italic">· Expertise que transforma desafios em soluções</span></span>
+    </div>
+    <span>Interno · S1 Rodovias / S2 OAE · <span class="mono">MANTA-FDOT-20260822-001</span> · v2.0 · 23/08/2026</span>
+  </div>
+</footer>
+
+<script>
+const METADATA = {
+  id: "MANTA-FDOT-20260822-001",
+  cliente: "Interno — Manta Associados",
+  projeto: "Base de referência técnica — benchmark internacional de projeto-tipo",
+  documento: "FDOT Standard Plans — catálogo comentado",
+  objeto: "Base de Referência Técnica — FDOT Standard Plans FY 2026-27",
+  segmentos: ["S1-rodovias", "S2-oae"],
+  versao: "2.0",
+  data_criacao: "2026-08-22",
+  gerado_por: "Claude AI — Manta Associados",
+  ferramenta: "Claude Code · manta-maestro v5.0.1 · padrao-manta v2",
+  classificacao: "Interno",
+  fonte_primaria: "https://www.fdot.gov/design/standardplans/current/27",
+  indices_catalogados: 74,
+  diagramas: 21,
+  rag_colecao: "normas",
+  rag_tabela: "ke_embeddings",
+  conformidade: { R1: "declarada", R2: "conforme", R3: "executado_manual", R4: "conforme", R5: "n/a" }
+};
+
+const SEGS=[
+  ["geo","Geometria geral","000"],["ter","Terraplenagem","120"],
+  ["pav","Pavimentação","330 · 350 · 353 · 370 · 446"],
+  ["ctip","Contenções típicas","521 · 536"],["calt","Contenções alternativas","521-4xx"],
+  ["ctra","Contenções — transições a ponte","521 · 536"],
+  ["dre","Drenagem","425 · 430 · 446"],["est","Estruturas pré-fabricadas","450 · 455"],
+  ["apo","Aterro estrutural e transição de encontro","400 · 548"],
+  ["urb","Urbanização e acessibilidade","520 · 522"],["mot","MOT / Temporary Traffic Control","102"],
+  ["cer","Cerca, erosão e paisagismo","550 · 570 · 580"],
+  ["ele","Elétrica e semáforos (sumarizado)","630 · 641 · 649 · 653 · 660"]
+];
+const SEGNAME=Object.fromEntries(SEGS.map(s=>[s[0],s[1]]));
+
+const ROWS=[
+  {i:"000-000",t:"Index Crosswalk",s:"geo",b:"R",v:"S1"},
+  {i:"000-506",t:"Miscellaneous Earthwork Details",s:"geo",b:"R",v:"S1"},
+  {i:"000-510",t:"Superelevation — Rural Highways",s:"geo",b:"R",v:"S1"},
+  {i:"000-511",t:"Superelevation — Urban Areas",s:"geo",b:"R",v:"S1"},
+  {i:"000-515",t:"Turnouts",s:"geo",b:"R",v:"S1"},
+  {i:"000-516",t:"Turnouts",s:"geo",b:"R",v:"S1"},
+  {i:"000-525",t:"Ramp Terminals",s:"geo",b:"R",v:"S1"},
+  {i:"120-001",t:"Embankment Utilization",s:"ter",b:"R",v:"S1"},
+  {i:"330-001",t:"Paved and Graded Driveways",s:"pav",b:"R",v:"S1",spi:"2024"},
+  {i:"350-001",t:"Concrete Pavement Joints",s:"pav",b:"R",v:"S1"},
+  {i:"353-001",t:"Concrete Slab Replacement",s:"pav",b:"R",v:"S1"},
+  {i:"370-001",t:"Bridge Approach Expansion Joint — Concrete Pavement with Special Select Soil Base",s:"pav",b:"R",v:"S1·S2"},
+  {i:"446-001",t:"Concrete Pavement Subdrainage (draincrete edgedrain)",s:"pav",b:"R",v:"S1"},
+  {i:"521-001",t:"Concrete Barriers",s:"ctip",b:"R",v:"S1"},
+  {i:"536-001",t:"Guardrail",s:"ctip",b:"R",v:"S1",spi:"2024"},
+  {i:"521-422",t:"Traffic Railing — 42\" Vertical Shape",s:"calt",b:"R",v:"S1·S2"},
+  {i:"521-423",t:"Traffic Railing — 32\" Vertical Shape",s:"calt",b:"R",v:"S1·S2"},
+  {i:"521-426",t:"Traffic Railing — Median 36\" Single-Slope",s:"calt",b:"R",v:"S1·S2"},
+  {i:"521-427",t:"Traffic Railing — 36\" Single-Slope",s:"calt",b:"R",v:"S1·S2"},
+  {i:"521-428",t:"Traffic Railing — 42\" Single-Slope",s:"calt",b:"R",v:"S1·S2"},
+  {i:"458-100",t:"Expansion Joint System — Strip Seal",s:"est",b:"S",v:"S2"},
+  {i:"458-110",t:"Expansion Joint System — Poured Joint with Backer Rod",s:"est",b:"S",v:"S2"},
+  {i:"521-404",t:"Guardrail Transitions — Existing Post &amp; Beam Bridge Railings (Narrow &amp; Recessed Curbs)",s:"ctra",b:"R",v:"S1·S2"},
+  {i:"521-405",t:"Guardrail Transitions — Existing Post &amp; Beam Bridge Railings (Wide Curbs)",s:"ctra",b:"R",v:"S1·S2"},
+  {i:"536-002",t:"Guardrail Transitions and Connections for Existing Bridges",s:"ctra",b:"R",v:"S1·S2"},
+  {i:"425-001",t:"Manhole Covers, Frames, Tops, and Supplementary Details",s:"dre",b:"R",v:"S1"},
+  {i:"425-010",t:"Structure Bottoms Type J and P",s:"dre",b:"R",v:"S1"},
+  {i:"425-052",t:"Ditch Bottom Inlet Types C, D, E, and H",s:"dre",b:"R",v:"S1",spi:"2023"},
+  {i:"425-090",t:"Safety Modifications for Inlets in Box Culverts",s:"dre",b:"R",v:"S1"},
+  {i:"430-001",t:"Miscellaneous Drainage Details",s:"dre",b:"R",v:"S1"},
+  {i:"430-010",t:"U-Type Concrete Endwalls with Grates — 15\" to 30\" Pipe",s:"dre",b:"R",v:"S1"},
+  {i:"430-021",t:"Mitered End Sections",s:"dre",b:"R",v:"S1",spi:"2027"},
+  {i:"430-022",t:"Mitered End Sections",s:"dre",b:"R",v:"S1"},
+  {i:"450-010",t:"Florida-I Beam — Typical Details &amp; Notes",s:"est",b:"S",v:"S2",spi:"2022"},
+  {i:"450-199",t:"Prestressed I-Beams — Build-Up &amp; Deflection Data",s:"est",b:"S",v:"S2",spi:"2022"},
+  {i:"450-078",t:"Florida-I 78 Beam — Standard Details",s:"est",b:"S",v:"S2"},
+  {i:"450-084",t:"Florida-I 84 Beam — Standard Details",s:"est",b:"S",v:"S2",f:1},
+  {i:"450-453",t:"18\" Florida Slab Beam",s:"est",b:"S",v:"S2"},
+  {i:"450-511",t:"Beveled Bearing Plates",s:"est",b:"S",v:"S2"},
+  {i:"450-512",t:"Beveled Bearing Plates",s:"est",b:"S",v:"S2"},
+  {i:"455-001",t:"Prestressed Concrete Piles — Typical Details &amp; Notes",s:"est",b:"S",v:"S2"},
+  {i:"455-002",t:"Driven Prestressed Pile — Dowel Extension",s:"est",b:"S",v:"S2"},
+  {i:"455-012",t:"12\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-014",t:"14\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-018",t:"18\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-024",t:"24\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-030",t:"30\" Square Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-031",t:"30\" Square Prestressed Concrete Pile — High Moment",s:"est",b:"S",v:"S2",f:1},
+  {i:"455-112",t:"12\" Square CFRP &amp; SS Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-118",t:"18\" Square CFRP &amp; SS Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"455-124",t:"24\" Square CFRP &amp; SS Prestressed Concrete Pile",s:"est",b:"S",v:"S2"},
+  {i:"400-090",t:"Approach Slabs (Flexible Pavement Approaches)",s:"apo",b:"R",v:"S1·S2"},
+  {i:"400-091",t:"Approach Slabs (Rigid Pavement Approaches)",s:"apo",b:"R",v:"S1·S2"},
+  {i:"548-020",t:"MSE Retaining Wall Systems — Permanent",s:"apo",b:"R",v:"S1·S2"},
+  {i:"548-030",t:"MSE Retaining Wall Systems — Temporary",s:"apo",b:"R",v:"S1·S2"},
+  {i:"521-600",t:"MSE Wall Coping (Precast or C-I-P)",s:"apo",b:"R",v:"S1·S2"},
+  {i:"520-001",t:"Curb and Gutter",s:"urb",b:"R",v:"S1"},
+  {i:"522-001",t:"Sidewalks",s:"urb",b:"R",v:"S1"},
+  {i:"522-002",t:"Detectable Warnings",s:"urb",b:"R",v:"S1"},
+  {i:"102-230",t:"Temporary Detour Bridge Details — Steel Pipe Pile Backwall Bent",s:"mot",b:"R",v:"S1·S2"},
+  {i:"102-600",t:"General Information for Traffic Control Through Work Zones",s:"mot",b:"R",v:"S1"},
+  {i:"102-601",t:"Two-Lane and Multilane Roadway, Work Beyond the Shoulder",s:"mot",b:"R",v:"S1"},
+  {i:"102-602",t:"Two-Lane, Two-Way, Work On Shoulder",s:"mot",b:"R",v:"S1"},
+  {i:"102-603",t:"Two-Lane, Two-Way, Work Within the Travel Way",s:"mot",b:"R",v:"S1"},
+  {i:"102-660",t:"Pedestrian Control for Closure of Sidewalks",s:"mot",b:"R",v:"S1"},
+  {i:"102-670",t:"Motorist Awareness System (MAS)",s:"mot",b:"R",v:"S1"},
+  {i:"550-004",t:"Fence Location",s:"cer",b:"R",v:"S1"},
+  {i:"570-001",t:"Permanent Erosion Control",s:"cer",b:"R",v:"S1"},
+  {i:"580-001",t:"Landscape Installation",s:"cer",b:"R",v:"S1"},
+  {i:"630-001",t:"Conduit Installation Details",s:"ele",b:"R",v:"S1"},
+  {i:"641-010",t:"Concrete CCTV Pole",s:"ele",b:"R",v:"S1"},
+  {i:"649-010",t:"Steel Strain Pole",s:"ele",b:"R",v:"S1"},
+  {i:"653-001",t:"Pedestrian Control Signal Installation Details",s:"ele",b:"R",v:"S1"},
+  {i:"660-001",t:"Vehicle Loop Installation Details",s:"ele",b:"R",v:"S1"}
+];
+
+const B="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/";
+const sheet=i=>B+"2027/idx/"+i+".pdf";
+const spiU=(i,y)=>B+(y||"2027")+"/spi/spi-"+i+".pdf";
+
+const tbody=document.getElementById("rows"),hits=document.getElementById("hits");
+function render(q=""){
+  q=q.trim().toLowerCase();
+  const list=ROWS.filter(r=>!q||(r.i+" "+r.t+" "+SEGNAME[r.s]).toLowerCase().includes(q));
+  tbody.innerHTML=""; let cur=null;
+  list.forEach(r=>{
+    if(r.s!==cur){
+      cur=r.s; const m=SEGS.find(x=>x[0]===cur);
+      const h=document.createElement("tr"); h.className="grp";
+      h.innerHTML='<td colspan="5">'+m[1]+'<span class="sr">série '+m[2]+'</span></td>';
+      tbody.appendChild(h);
+    }
+    const tr=document.createElement("tr");
+    tr.innerHTML='<td class="ix"><a href="'+sheet(r.i)+'" target="_blank" rel="noopener">'+r.i+'</a></td>'
+      +'<td>'+r.t+(r.f?' <span class="pend">título a confirmar</span>':'')+'</td>'
+      +'<td>'+(r.b==="R"?"Roadway":"Structures")+'</td>'
+      +'<td class="mono">'+r.v+'</td>'
+      +'<td class="ix">'+(r.spi?'<a href="'+spiU(r.i,r.spi)+'" target="_blank" rel="noopener">SPI</a>':'—')+'</td>';
+    tbody.appendChild(tr);
+  });
+  hits.textContent=list.length+" de "+ROWS.length;
+}
+document.getElementById("q").addEventListener("input",e=>render(e.target.value));
+render();
+
+document.querySelectorAll(".sidenav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".sidenav button").forEach(x=>x.classList.toggle("active",x===b));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.id===b.dataset.t));
+  window.scrollTo({top:0,behavior:"smooth"});
+}));
+</script>

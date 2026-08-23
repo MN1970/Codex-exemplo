@@ -1,0 +1,1378 @@
+{
+  "schema": "manta-fdot-standard-plans/1",
+  "fiscal_year": "2026-27",
+  "effective_basis": "letting_date",
+  "source": {
+    "roadway_toc": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/rtoc.pdf",
+    "structures_toc": "https://www.fdot.gov/structures/structures-standard-plans",
+    "portal": "https://www.fdot.gov/design/standardplans/current/27",
+    "retrieved_at": "2026-08-22",
+    "complete": false,
+    "note": "Recorte curado, nao e o indice completo do ano fiscal. rtoc.pdf e stoc.pdf nao puderam ser baixados (egresso de rede bloqueado)."
+  },
+  "counts": {
+    "total": 74,
+    "roadway": 54,
+    "structures": 20
+  },
+  "indices": [
+    {
+      "index": "000-000",
+      "title": "Index Crosswalk",
+      "book": "roadway",
+      "segment_key": "geo",
+      "segment_name": "Geometria geral",
+      "series": "000",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-000.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "000-506",
+      "title": "Miscellaneous Earthwork Details",
+      "book": "roadway",
+      "segment_key": "geo",
+      "segment_name": "Geometria geral",
+      "series": "000",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-506.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "000-510",
+      "title": "Superelevation — Rural Highways",
+      "book": "roadway",
+      "segment_key": "geo",
+      "segment_name": "Geometria geral",
+      "series": "000",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-510.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "000-511",
+      "title": "Superelevation — Urban Areas",
+      "book": "roadway",
+      "segment_key": "geo",
+      "segment_name": "Geometria geral",
+      "series": "000",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-511.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "000-515",
+      "title": "Turnouts",
+      "book": "roadway",
+      "segment_key": "geo",
+      "segment_name": "Geometria geral",
+      "series": "000",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-515.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "000-516",
+      "title": "Turnouts",
+      "book": "roadway",
+      "segment_key": "geo",
+      "segment_name": "Geometria geral",
+      "series": "000",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-516.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "000-525",
+      "title": "Ramp Terminals",
+      "book": "roadway",
+      "segment_key": "geo",
+      "segment_name": "Geometria geral",
+      "series": "000",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/000-525.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "120-001",
+      "title": "Embankment Utilization",
+      "book": "roadway",
+      "segment_key": "ter",
+      "segment_name": "Terraplenagem",
+      "series": "120",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/120-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "330-001",
+      "title": "Paved and Graded Driveways",
+      "book": "roadway",
+      "segment_key": "pav",
+      "segment_name": "Pavimentação",
+      "series": "330 · 350 · 353 · 370 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/330-001.pdf",
+      "spi_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/spi/spi-330-001.pdf",
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "350-001",
+      "title": "Concrete Pavement Joints",
+      "book": "roadway",
+      "segment_key": "pav",
+      "segment_name": "Pavimentação",
+      "series": "330 · 350 · 353 · 370 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/350-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "353-001",
+      "title": "Concrete Slab Replacement",
+      "book": "roadway",
+      "segment_key": "pav",
+      "segment_name": "Pavimentação",
+      "series": "330 · 350 · 353 · 370 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/353-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "370-001",
+      "title": "Bridge Approach Expansion Joint — Concrete Pavement with Special Select Soil Base",
+      "book": "roadway",
+      "segment_key": "pav",
+      "segment_name": "Pavimentação",
+      "series": "330 · 350 · 353 · 370 · 446",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/370-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "446-001",
+      "title": "Concrete Pavement Subdrainage (draincrete edgedrain)",
+      "book": "roadway",
+      "segment_key": "pav",
+      "segment_name": "Pavimentação",
+      "series": "330 · 350 · 353 · 370 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/446-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-001",
+      "title": "Concrete Barriers",
+      "book": "roadway",
+      "segment_key": "ctip",
+      "segment_name": "Contenções típicas",
+      "series": "521 · 536",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "536-001",
+      "title": "Guardrail",
+      "book": "roadway",
+      "segment_key": "ctip",
+      "segment_name": "Contenções típicas",
+      "series": "521 · 536",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/536-001.pdf",
+      "spi_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2024/spi/spi-536-001.pdf",
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-422",
+      "title": "Traffic Railing — 42\" Vertical Shape",
+      "book": "roadway",
+      "segment_key": "calt",
+      "segment_name": "Contenções alternativas",
+      "series": "521-4xx",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-422.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-423",
+      "title": "Traffic Railing — 32\" Vertical Shape",
+      "book": "roadway",
+      "segment_key": "calt",
+      "segment_name": "Contenções alternativas",
+      "series": "521-4xx",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-423.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-426",
+      "title": "Traffic Railing — Median 36\" Single-Slope",
+      "book": "roadway",
+      "segment_key": "calt",
+      "segment_name": "Contenções alternativas",
+      "series": "521-4xx",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-426.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-427",
+      "title": "Traffic Railing — 36\" Single-Slope",
+      "book": "roadway",
+      "segment_key": "calt",
+      "segment_name": "Contenções alternativas",
+      "series": "521-4xx",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-427.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-428",
+      "title": "Traffic Railing — 42\" Single-Slope",
+      "book": "roadway",
+      "segment_key": "calt",
+      "segment_name": "Contenções alternativas",
+      "series": "521-4xx",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-428.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-404",
+      "title": "Guardrail Transitions — Existing Post & Beam Bridge Railings (Narrow & Recessed Curbs)",
+      "book": "roadway",
+      "segment_key": "ctra",
+      "segment_name": "Contenções — transições a ponte",
+      "series": "521 · 536",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-404.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-405",
+      "title": "Guardrail Transitions — Existing Post & Beam Bridge Railings (Wide Curbs)",
+      "book": "roadway",
+      "segment_key": "ctra",
+      "segment_name": "Contenções — transições a ponte",
+      "series": "521 · 536",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-405.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "536-002",
+      "title": "Guardrail Transitions and Connections for Existing Bridges",
+      "book": "roadway",
+      "segment_key": "ctra",
+      "segment_name": "Contenções — transições a ponte",
+      "series": "521 · 536",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/536-002.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "425-001",
+      "title": "Manhole Covers, Frames, Tops, and Supplementary Details",
+      "book": "roadway",
+      "segment_key": "dre",
+      "segment_name": "Drenagem",
+      "series": "425 · 430 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "425-010",
+      "title": "Structure Bottoms Type J and P",
+      "book": "roadway",
+      "segment_key": "dre",
+      "segment_name": "Drenagem",
+      "series": "425 · 430 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-010.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Tipo P ate 1,22m (4 pes) de diametro; Tipo J acima disso, com altura de parede >= 1,83m (6 pes) para acesso. Pode ser pre-moldado ou moldado in loco; formato retangular exige pre-moldado armado.",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "425-052",
+      "title": "Ditch Bottom Inlet Types C, D, E, and H",
+      "book": "roadway",
+      "segment_key": "dre",
+      "segment_name": "Drenagem",
+      "series": "425 · 430 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-052.pdf",
+      "spi_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2023/spi/spi-425-052.pdf",
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "425-090",
+      "title": "Safety Modifications for Inlets in Box Culverts",
+      "book": "roadway",
+      "segment_key": "dre",
+      "segment_name": "Drenagem",
+      "series": "425 · 430 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/425-090.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "430-001",
+      "title": "Miscellaneous Drainage Details",
+      "book": "roadway",
+      "segment_key": "dre",
+      "segment_name": "Drenagem",
+      "series": "425 · 430 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "430-010",
+      "title": "U-Type Concrete Endwalls with Grates — 15\" to 30\" Pipe",
+      "book": "roadway",
+      "segment_key": "dre",
+      "segment_name": "Drenagem",
+      "series": "425 · 430 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-010.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "430-021",
+      "title": "Mitered End Sections",
+      "book": "roadway",
+      "segment_key": "dre",
+      "segment_name": "Drenagem",
+      "series": "425 · 430 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-021.pdf",
+      "spi_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/spi/spi-430-021.pdf",
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "430-022",
+      "title": "Mitered End Sections",
+      "book": "roadway",
+      "segment_key": "dre",
+      "segment_name": "Drenagem",
+      "series": "425 · 430 · 446",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/430-022.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "450-010",
+      "title": "Florida-I Beam — Typical Details & Notes",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-010.pdf",
+      "spi_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2022/spi/spi-450-010.pdf",
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "450-078",
+      "title": "Florida-I 78 Beam — Standard Details",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-078.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "450-084",
+      "title": "Florida-I 84 Beam — Standard Details",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-084.pdf",
+      "spi_url": null,
+      "title_unconfirmed": true,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "450-453",
+      "title": "18\" Florida Slab Beam",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-453.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "450-511",
+      "title": "Beveled Bearing Plates",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-511.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "450-512",
+      "title": "Beveled Bearing Plates",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-512.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-014",
+      "title": "14\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-014.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "520-001",
+      "title": "Curb and Gutter",
+      "book": "roadway",
+      "segment_key": "urb",
+      "segment_name": "Urbanização e acessibilidade",
+      "series": "520 · 522",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/520-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "522-001",
+      "title": "Sidewalks",
+      "book": "roadway",
+      "segment_key": "urb",
+      "segment_name": "Urbanização e acessibilidade",
+      "series": "520 · 522",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/522-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "522-002",
+      "title": "Detectable Warnings",
+      "book": "roadway",
+      "segment_key": "urb",
+      "segment_name": "Urbanização e acessibilidade",
+      "series": "520 · 522",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/522-002.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-230",
+      "title": "Temporary Detour Bridge Details — Steel Pipe Pile Backwall Bent",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-230.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-600",
+      "title": "General Information for Traffic Control Through Work Zones",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-600.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-660",
+      "title": "Pedestrian Control for Closure of Sidewalks",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-660.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "550-004",
+      "title": "Fence Location",
+      "book": "roadway",
+      "segment_key": "cer",
+      "segment_name": "Cerca, erosão e paisagismo",
+      "series": "550 · 570 · 580",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/550-004.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "570-001",
+      "title": "Permanent Erosion Control",
+      "book": "roadway",
+      "segment_key": "cer",
+      "segment_name": "Cerca, erosão e paisagismo",
+      "series": "550 · 570 · 580",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/570-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "580-001",
+      "title": "Landscape Installation",
+      "book": "roadway",
+      "segment_key": "cer",
+      "segment_name": "Cerca, erosão e paisagismo",
+      "series": "550 · 570 · 580",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/580-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "630-001",
+      "title": "Conduit Installation Details",
+      "book": "roadway",
+      "segment_key": "ele",
+      "segment_name": "Elétrica e semáforos (sumarizado)",
+      "series": "630 · 641 · 649 · 653 · 660",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/630-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "641-010",
+      "title": "Concrete CCTV Pole",
+      "book": "roadway",
+      "segment_key": "ele",
+      "segment_name": "Elétrica e semáforos (sumarizado)",
+      "series": "630 · 641 · 649 · 653 · 660",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/641-010.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "649-010",
+      "title": "Steel Strain Pole",
+      "book": "roadway",
+      "segment_key": "ele",
+      "segment_name": "Elétrica e semáforos (sumarizado)",
+      "series": "630 · 641 · 649 · 653 · 660",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/649-010.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "653-001",
+      "title": "Pedestrian Control Signal Installation Details",
+      "book": "roadway",
+      "segment_key": "ele",
+      "segment_name": "Elétrica e semáforos (sumarizado)",
+      "series": "630 · 641 · 649 · 653 · 660",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/653-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "660-001",
+      "title": "Vehicle Loop Installation Details",
+      "book": "roadway",
+      "segment_key": "ele",
+      "segment_name": "Elétrica e semáforos (sumarizado)",
+      "series": "630 · 641 · 649 · 653 · 660",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/660-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "400-090",
+      "title": "Approach Slabs (Flexible Pavement Approaches)",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/400-090.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "400-091",
+      "title": "Approach Slabs (Rigid Pavement Approaches)",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/400-091.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "548-020",
+      "title": "MSE Retaining Wall Systems — Permanent",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-020.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "548-030",
+      "title": "MSE Retaining Wall Systems — Temporary",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/548-030.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Interface aterro-encontro; encontro estrutural em si (backwall/alas) segue sem folha padrão",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-601",
+      "title": "Two-Lane and Multilane Roadway, Work Beyond the Shoulder",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-601.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Obra a partir de 15 pes (4,6 m) ou mais da pista de rolamento",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-602",
+      "title": "Two-Lane, Two-Way, Work On Shoulder",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-602.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-603",
+      "title": "Two-Lane, Two-Way, Work Within the Travel Way",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-603.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Exige rufo temporario (rumble strip) quando a velocidade regulamentada e >= 55 mph",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "102-670",
+      "title": "Motorist Awareness System (MAS)",
+      "book": "roadway",
+      "segment_key": "mot",
+      "segment_name": "MOT / Temporary Traffic Control",
+      "series": "102",
+      "verticals": [
+        "S1"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/102-670.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "450-199",
+      "title": "Prestressed I-Beams — Build-Up & Deflection Data",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/450-199.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "458-100",
+      "title": "Expansion Joint System — Strip Seal",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/458-100.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "458-110",
+      "title": "Expansion Joint System — Poured Joint with Backer Rod",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/458-110.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Abertura de referencia 2\" a 70F; maxima 3\" no sentido do trafego, conforme SDG 6.3/6.4",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-001",
+      "title": "Prestressed Concrete Piles — Typical Details & Notes",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-001.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Folha-lider da familia; espiral W3.4 (12/14/18/24) ou W4.0 (30), cobrimento 3\"",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-002",
+      "title": "Driven Prestressed Pile — Dowel Extension",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-002.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Extensao de dowel com composto epoxi na cabeca da estaca",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-012",
+      "title": "12\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-012.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-018",
+      "title": "18\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-018.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-024",
+      "title": "24\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-024.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-030",
+      "title": "30\" Square Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-030.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-031",
+      "title": "30\" Square Prestressed Concrete Pile — High Moment",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-031.pdf",
+      "spi_url": null,
+      "title_unconfirmed": true,
+      "manta": {
+        "notes": "Titulo truncado no snippet apos 'High Moment'; concreto Classe VI >=6500 psi na transferencia",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-112",
+      "title": "12\" Square CFRP & SS Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-112.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Familia alternativa com armadura em CFRP/aco inoxidavel, mesmos tamanhos da familia convencional",
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-118",
+      "title": "18\" Square CFRP & SS Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-118.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "455-124",
+      "title": "24\" Square CFRP & SS Prestressed Concrete Pile",
+      "book": "structures",
+      "segment_key": "est",
+      "segment_name": "Estruturas pré-fabricadas",
+      "series": "450 · 455",
+      "verticals": [
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/455-124.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": null,
+        "dnit_equivalent": null
+      }
+    },
+    {
+      "index": "521-600",
+      "title": "MSE Wall Coping (Precast or C-I-P)",
+      "book": "roadway",
+      "segment_key": "apo",
+      "segment_name": "Aterro estrutural e transição de encontro",
+      "series": "400 · 548",
+      "verticals": [
+        "S1",
+        "S2"
+      ],
+      "pdf_url": "https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/design/standardplans/2027/idx/521-600.pdf",
+      "spi_url": null,
+      "title_unconfirmed": false,
+      "manta": {
+        "notes": "Largura 1'-8\", altura minima 7\", cobrimento tipico 2\"; WWR pode substituir armadura convencional (Secao 931)",
+        "dnit_equivalent": null
+      }
+    }
+  ],
+  "manta_maestro": {
+    "verticals": [
+      "S1-rodovias",
+      "S2-oae"
+    ],
+    "rag_collection": "normas",
+    "rag_table": "ke_embeddings",
+    "sharepoint_path": "05-normas/"
+  },
+  "document_id": "MANTA-FDOT-20260822-001",
+  "document_version": "2.0"
+}
