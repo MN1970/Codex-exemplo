@@ -4,11 +4,19 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.2** (2026-08-22) — catálogo de fontes de receita setorial
+Versão: **v5.3** (2026-08-23) — review de arquitetura manta-arquiteto-ia
+(Etapas 1-4, gate humano concluído): backend real de dispatch via Claude
+Agent SDK (`backend/maestro_dispatch.py`), aluci-guard como hook
+PreToolUse determinístico, e correção de 3 bugs reais pré-existentes na
+suíte de testes (`tests/lib/agent_loader.py`, `pytest.ini`,
+`.claude/agents/`) encontrados durante a implementação. Ver seção
+"REVIEW DE ARQUITETURA — v5.3" abaixo.
+
+Anterior: v5.2 (2026-08-22) — catálogo de fontes de receita setorial
 (mão de obra, equipamento, aço, cimento) para os 8 segmentos S1-S10. Ver
 `pesquisa-fontes/FONTES_RECEITA_SETORIAL.md`.
 
-Anterior: v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
 Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
 assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
@@ -284,16 +292,16 @@ total operacional até gate MN.
 | Código | Agente | Aliases | Tier default | Status |
 |--------|--------|---------|--------------|--------|
 | Manta 00 | maestro (router) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
-| Manta 01 | claims | 02-C, manta-claims | Opus | ✅ Operacional |
-| Manta 02 | contratual | manta-02, contratual | Sonnet | ✅ Operacional |
-| Manta 04 | imobiliario | manta-04 | Sonnet | ✅ Operacional |
-| Manta 05 | orcamento | manta-05 | Sonnet | ✅ Operacional |
-| Manta 06 | modelagem | manta-06 | Sonnet/Opus | ✅ Operacional |
-| Manta 07 | cronograma | manta-07 | Sonnet | ✅ Operacional |
-| Manta 13 | bd | manta-13, business-dev | Sonnet | ✅ Operacional |
-| Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
-| Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
-| Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
+| Manta 01 | claims | 02-C, manta-claims, agente-claims | Opus | ✅ Operacional |
+| Manta 02 | contratual | manta-02, contratual, agente-contratual | Sonnet | ✅ Operacional |
+| Manta 04 | imobiliario | manta-04, agente-imobiliario | Sonnet | ✅ Operacional |
+| Manta 05 | orcamento | manta-05, agente-orcamento | Sonnet | ✅ Operacional |
+| Manta 06 | modelagem | manta-06, agente-modelagem | Sonnet/Opus | ✅ Operacional |
+| Manta 07 | cronograma | manta-07, agente-cronograma | Sonnet | ✅ Operacional |
+| Manta 13 | bd | manta-13, business-dev, agente-bd | Sonnet | ✅ Operacional |
+| Manta 14 | apresentacoes | manta-14-pptx, agente-apresentacoes | Sonnet | ✅ Operacional |
+| Manta 15 | advisory | manta-15, advisory, agente-advisory | Sonnet/Opus | ✅ Operacional |
+| Manta 16 | arquiteto-ia | manta-15-arq, agente-arquiteto-ia | Opus | ✅ Operacional |
 | Manta 20 | esg | manta-20-esg, agente-esg | Sonnet | 🆕 v1.0 (P3-04 Design Agent) |
 
 ### Verticais por segmento (C3) — 9 operacionais + 1 parcial + 2 propostos
@@ -489,6 +497,114 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ---
 
+## REVIEW DE ARQUITETURA — v5.3 (manta-arquiteto-ia, 2026-08-23)
+
+Review de 4 etapas (Diagnóstico → Propostas → Implementação → Registro,
+gate humano por proposta) aplicado ao próprio Manta Maestro. Ticket
+implícito: fechar a lacuna "Maestro existe como especificação + sessões
+manuais, não como serviço rodando" encontrada na Etapa 1.
+
+**Etapa 2 (Propostas) → Etapa 3 (Implementação) — 4 propostas, todas
+aprovadas por MN:**
+
+1. **Backend real via Claude Agent SDK** — `backend/maestro_dispatch.py`
+   (endpoint FastAPI `/maestro/dispatch` + `/maestro/agents`) e
+   `backend/agent_registry.py` (parser de `.claude/agents/*.md`,
+   promovido de `tests/lib/` para código de produção — único parser
+   compartilhado entre backend e testes, evita divergência). Aplica
+   tiering de `.claude/settings.json::model_defaults` por agente e usa
+   o hook aluci-guard (item 2) como `PreToolUse`. **Não** duplica a
+   infraestrutura de jobs agendados já existente
+   (`scripts/apscheduler_setup.py`, `deploy/Dockerfile`) — aquela cobre
+   rotação de secrets/reindex/purge; esta cobre o caminho
+   prompt→routing→resposta que só existia como sessão manual.
+   Limitação documentada no próprio módulo: `maestro.v5.0.md` (o router)
+   não tem frontmatter YAML, então seu corpo é usado como system prompt
+   bruto em vez de virar `AgentDefinition` como os verticais.
+2. **aluci-guard como hook PreToolUse determinístico** —
+   `.claude/hooks/pretooluse_aluci_guard.py`, registrado como step 4 em
+   `.claude/settings.json::hooks.pre_tool_use.steps`. Bloqueia
+   Write/Edit citando NBR/Lei/SICRO com formato implausível (dígitos
+   fora de faixa, ano futuro). É uma checagem heurística de *formato*,
+   não substitui a auditoria de conteúdo da skill `aluci-guard` nem de
+   `scripts/ke_aluci_guard_audit.py`.
+3. **Model tiering em código** — **retificada durante a implementação**:
+   já existia, completa, em `.claude/settings.json::model_defaults`
+   (`tier_horizontal`/`tier_vertical`, um model ID por agente). O
+   diagnóstico original (Etapa 1) estava incompleto por não ter lido
+   esse arquivo. O achado real e novo, registrado como gap em vez de
+   corrigido por adivinhação, é outro: os model IDs pinados em
+   `settings.json` (`claude-sonnet-5-20250701`, `claude-opus-5-20250701`)
+   não correspondem aos nomes genéricos da tabela "Model Tiering" deste
+   documento ("Claude Sonnet 4.6", "Claude Opus 4.7/4.8") — ver Gaps
+   abertos.
+4. **Normalizar sufixo `.v5.0.md`** — **proposta original retirada**:
+   `docs/DEPLOYMENT-GUIDE.md` (Fase 3) e `VERSIONS.json` mostram que o
+   sufixo é um mecanismo de versionamento/pin de produção intencional
+   (checksum + `pinned_by: ["prod"]`), não uma inconsistência de nome —
+   renomear os 6 arquivos pinados (`maestro`, `agente-saneamento`,
+   `agente-energia`, `agente-portos`, `agente-aeroportos`,
+   `agente-barragens`) quebraria esse mecanismo e uma cadeia de
+   runbooks operacionais reais (`S6-GO-LIVE-CHECKLIST.md`,
+   `S6-GO-LIVE-RUNBOOK.md`, `.github/DEPLOYMENT-APPROVALS.md`) que
+   citam esses caminhos literalmente. **Fix real aplicado no lugar**:
+   `Path.stem` só remove o `.md` final, então o slug computado por
+   `tests/lib/agent_loader.py` (hoje `backend/agent_registry.py`) ficava
+   `"agente-saneamento.v5.0"` em vez de `"agente-saneamento"`, quebrando
+   `load_agent()` para os 6 arquivos pinados. Corrigido normalizando o
+   slug (`_slug_from_stem`), sem tocar nos arquivos.
+
+**Bugs pré-existentes encontrados e corrigidos durante a Etapa 3** (não
+faziam parte de nenhuma das 4 propostas, mas bloqueavam a verificação
+delas — corrigidos com o mesmo padrão de transparência deste
+documento: achado real, não escondido):
+
+- `tests/lib/agent_loader.py::load_all_agents()` derrubava a coleta
+  inteira dos testes (`AgentParseError`) ao encontrar qualquer
+  `.claude/agents/*.md` sem frontmatter YAML — e há 8 desses hoje
+  (`agente-analytics-p3-07.md`, `agente-esg.md`,
+  `agente-procurement-p3-08.md`, `example_background_agent_skill.md`,
+  `maestro.v5.0.md`, `manta-21-stakeholder.md`, `manta-25-kg.md`,
+  `sicro-similaridade-skill.md` — a maioria documentos de "Design
+  Phase" estacionados em `.claude/agents/` antes de virarem agente
+  real). Corrigido: ignora com aviso por padrão, `strict=True` restaura
+  o comportamento antigo. **Antes desta correção, `tests/unit/` inteiro
+  não rodava** — o que provavelmente também explica parte do "Agent
+  Test Suite" vermelho no CI do `main` (além dos 2 YAML de workflow já
+  diagnosticados em sessão anterior).
+- `pytest.ini` não registrava os markers `ci`/`perf`/`integration`/
+  `asyncio` (só `unit`/`smoke`/`rag`) — com `--strict-markers`, isso
+  gerava `INTERNALERROR` (não uma falha de teste normal) assim que
+  qualquer teste com nodeid contendo "cross_agent" era coletado (ex:
+  `tests/test_cross_agent_flows.py`), derrubando a suíte inteira.
+  Corrigido adicionando os 4 markers faltantes (o `conftest.py` já os
+  registrava dinamicamente via `addinivalue_line`, mas isso não bastava
+  sob `--strict-markers` nesta versão do pytest) + `pytest-asyncio` em
+  `tests/requirements.txt` (estava só no `requirements.txt` raiz).
+- `test_every_agent_file_is_registered_in_claude_md` (ficou mascarado
+  pelo bug acima, nunca rodava) falhava de verdade: os 9 agentes
+  horizontais legados (`agente-claims`, `agente-contratual`,
+  `agente-imobiliario`, `agente-orcamento`, `agente-modelagem`,
+  `agente-cronograma`, `agente-bd`, `agente-apresentacoes`,
+  `agente-advisory`, `agente-arquiteto-ia`) são citados na tabela
+  "Horizontais" deste CLAUDE.md só pelo nome curto ("claims",
+  "contratual"...), nunca pelo slug de arquivo (`agente-claims.md`).
+  Corrigido adicionando o slug como alias na coluna "Aliases" de cada
+  linha (mesmo padrão já usado na linha do Manta 20/ESG).
+
+**Cobertura de teste nova**: `tests/unit/test_agent_loader_versioning.py`
+(regressão do bug de slug), `tests/unit/test_aluci_guard_hook.py`,
+`tests/unit/test_maestro_dispatch.py` — todos sem rede/API key. Suíte
+`tests/unit` completa: 190 passed (era impossível medir "completa"
+antes desta Etapa 3, já que a coleta não terminava).
+
+**Etapa 4 (Registro)**: esta seção. Ticket de referência:
+`MNT-2026-ARQ-REVIEW-V5.3` (não existe ainda como ticket formal em
+sistema externo — citado aqui só como identificador de rastreabilidade
+interna ao repositório).
+
+---
+
 ## GAPS ABERTOS / PENDÊNCIAS
 
 - **Numeração de segmento divergente (novo, encontrado nesta
@@ -504,6 +620,18 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   agente `.md`, RAG, rota SP ou routing keyword — mesma situação em que
   S12/S13 estavam antes desta rodada. **Documentação em `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md`** com roadmap de
   formalização. Ação: aprovação MN + checklist idêntico a S12/S13.
+- **Model IDs divergentes entre CLAUDE.md e `.claude/settings.json`
+  (novo, encontrado na Etapa 3 do review v5.3)**: a tabela "Model
+  Tiering" deste documento usa nomes genéricos de linha de produto
+  ("Claude Sonnet 4.6", "Claude Opus 4.7/4.8", "Claude Haiku 4.5"),
+  enquanto `.claude/settings.json::model_defaults` pina IDs de modelo
+  concretos (`claude-sonnet-5-20250701`, `claude-opus-5-20250701`,
+  `claude-haiku-4-5-20251001`) — aparentemente uma geração adiante
+  (Sonnet 5/Opus 5, não 4.6/4.7). Não sabemos qual dos dois documentos
+  ficou desatualizado primeiro nem se a migração para a linha 5 já foi
+  intencional e só não voltou para este CLAUDE.md — não resolvido aqui
+  por adivinhação. Ação: confirmar com MN qual é a linha de modelo
+  correta em produção hoje e atualizar o lado desatualizado.
 - **Embedder (G010)**: `docs/EMBEDDER-DECISION.md` recomenda migrar
   para `bge-m3`, partindo da premissa de que produção roda
   `bge-small-en-v1.5` com 0% migrado. `docs/SUPABASE-PROJECT-AUDIT.md`
@@ -588,11 +716,16 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.2)
+├── CLAUDE.md                              # este arquivo (master registry, v5.3)
 ├── README.md
+├── backend/                                # 🆕 v5.3 — Manta 00 como serviço (Proposta 1)
+│   ├── agent_registry.py                  # parser único de .claude/agents/*.md (produção + testes)
+│   └── maestro_dispatch.py                # FastAPI: /maestro/dispatch, /maestro/agents
 ├── pesquisa-fontes/
-│   └── FONTES_RECEITA_SETORIAL.md         # 🆕 fontes de receita setorial (v5.2)
+│   └── FONTES_RECEITA_SETORIAL.md         # fontes de receita setorial (v5.2)
 ├── .claude/
+│   ├── hooks/
+│   │   └── pretooluse_aluci_guard.py      # 🆕 v5.3 — aluci-guard determinístico (Proposta 2)
 │   └── agents/
 │       ├── agente-portos.md               # S6 (v1.1.0, revisado 2026-07-31)
 │       ├── agente-aeroportos.md           # S7
@@ -630,6 +763,26 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.3** (2026-08-23) — **Review de arquitetura manta-arquiteto-ia
+  concluído (Etapas 1-4, gate humano MN)**. Implementadas 3 das 4
+  propostas originais: backend real de dispatch via Claude Agent SDK
+  (`backend/maestro_dispatch.py` + `backend/agent_registry.py`),
+  aluci-guard como hook PreToolUse determinístico
+  (`.claude/hooks/pretooluse_aluci_guard.py`), e correção do bug real
+  de resolução de slug para os 6 agentes pinados em produção
+  (`agente-X.v5.0.md`). A 4ª proposta (renomear os arquivos pinados)
+  foi **retirada** ao se descobrir, já na implementação, que o sufixo
+  de versão é um mecanismo de produção intencional documentado em
+  `docs/DEPLOYMENT-GUIDE.md` — não uma inconsistência. Também corrigidos,
+  como efeito colateral necessário para conseguir rodar/verificar os
+  testes: `pytest.ini` sem 4 markers usados por `conftest.py`
+  (causava `INTERNALERROR`, não apenas falha, em qualquer coleta que
+  tocasse `test_cross_agent_flows.py`), `tests/lib/agent_loader.py`
+  derrubando a coleta inteira ao encontrar qualquer agente sem
+  frontmatter (8 arquivos hoje), e 9 agentes horizontais legados sem
+  o slug de arquivo citado neste CLAUDE.md. Novo gap registrado: IDs de
+  modelo divergentes entre a tabela "Model Tiering" deste documento e
+  `.claude/settings.json`. Ver seção "REVIEW DE ARQUITETURA — v5.3".
 - **v5.2** (2026-08-22) — catálogo de fontes de receita setorial (mão de
   obra, equipamento, aço, cimento) para os 8 segmentos S1-S10 (Rodovias,
   Ferrovias, Portos, Aeroportos, Saneamento, Metrôs, Energia, Barragens),

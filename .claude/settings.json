@@ -229,6 +229,14 @@
           "description": "Allow DDL (DROP/DELETE/TRUNCATE) only within explicit test transaction",
           "on_match": "check_context",
           "details": "Must see 'BEGIN TEST TRANSACTION' in prior context"
+        },
+        {
+          "step": 4,
+          "name": "aluci_guard_check",
+          "description": "Bloqueia Write/Edit citando norma/lei/SICRO com formato implausível (heurística determinística — não substitui a auditoria completa de aluci-guard/ke_aluci_guard_audit.py nem revisão humana)",
+          "script": ".claude/hooks/pretooluse_aluci_guard.py",
+          "on_violation": "block",
+          "comment": "Adicionado na Etapa 3 (Implementação) do review manta-arquiteto-ia — P3-04-ish, torna aluci-guard determinístico em vez de depender do modelo lembrar de invocá-lo"
         }
       ]
     },
