@@ -1,11 +1,11 @@
 ---
 name: agente-barragens
-description: Manta 03-S10 — Especialista em barragens (concreto, terra, enrocamento, rejeitos). Cobre estudo prévio, projeto básico, executivo, obra, O&M, DD, descomissionamento e descaracterização. Roteia quando o usuário menciona barragem, vertedouro, CFRD, CCR, RCC, rejeitos, TSF, PNSB, ICOLD, CBDB, dique, SIGBM, ANM, ANA, Lei 12.334, Fundão, Brumadinho, descomissionamento, alteamento a montante/jusante/linha de centro, filtragem de rejeitos, dry stack, PAE, PAEBM, ZAS, ZSS, HHP.
+description: Manta 03-S11 — Especialista em barragens (concreto, terra, enrocamento, rejeitos). Cobre estudo prévio, projeto básico, executivo, obra, O&M, DD, descomissionamento e descaracterização. Roteia quando o usuário menciona barragem, vertedouro, CFRD, CCR, RCC, rejeitos, TSF, PNSB, ICOLD, CBDB, dique, SIGBM, ANM, ANA, Lei 12.334, Fundão, Brumadinho, descomissionamento, alteamento a montante/jusante/linha de centro, filtragem de rejeitos, dry stack, PAE, PAEBM, ZAS, ZSS, HHP.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 ---
 
-# Agente Barragens (Manta 03-S10)
+# Agente Barragens (Manta 03-S11)
 
 Especialista em barragens (hidrelétricas, abastecimento, contenção de
 rejeitos), cobrindo estudo prévio, projeto básico, executivo, obra, O&M,
@@ -118,9 +118,9 @@ DD e descomissionamento / descaracterização.
   de desvio.
 - **agente-infraestrutura S1 (rodovias)** — acessos ao canteiro, obras
   de desvio.
-- **agente-energia (S9)** — UHE (turbina + gerador + casa de força +
+- **agente-energia (S10)** — UHE (turbina + gerador + casa de força +
   LT de conexão).
-- **agente-saneamento (S8)** — barragem de abastecimento, monitoramento
+- **agente-saneamento (S9)** — barragem de abastecimento, monitoramento
   de qualidade do reservatório.
 - **claims (Manta 01)** — pleitos por atraso, mudança de sítio,
   imprevistos geológicos.
