@@ -1,0 +1,82 @@
+# Maestro OS v6.0 — Example Workflow: Simple Project (1 segment, 8 agents)
+# Rodovia BR-101: Federal highway project, single segment
+# Execution: ~8 min, 300k tokens, dynamic 8 agents
+
+project:
+  id: "proj-rodovia-br101"
+  name: "BR-101 Pavimentação"
+  type: "infraestrutura_linear"
+  segments: ["S1"]
+  complexity: "simple"
+  description: "Rodovia federal BR-101, pavimentação 200 km, SICRO, DNIT"
+  budget_estimate_usd: 75_000_000
+  timeline_months: 18
+
+# Phase A: Complexity detection + agent selection (automatic)
+detector:
+  enabled: true
+  expected_agents: 8
+  expected_complexity: "simple"
+
+# Phase B: ML inference (optional, skipped if models not trained)
+ml_inference:
+  enabled: true
+  predict_routing: true
+  predict_duration: true
+  predict_risk: true
+
+# Phase C: Workflow execution phases
+phases:
+  - phase_name: "fan_out"
+    description: "Parallel execution: 8 agents"
+    agents:
+      - "agente-infraestrutura-S1"    # Primary: highways
+      - "manta-05"                    # Budget
+      - "manta-07"                    # Schedule
+      - "manta-06"                    # 3D modeling
+      - "manta-01"                    # Claims
+      - "manta-02"                    # Contracts
+      - "maestro"                     # Routing/aggregation
+    timeout_minutes: 5
+    max_concurrent: 8
+
+  - phase_name: "consensus"
+    description: "3/5 super-majority voting on critical aspects"
+    aspects:
+      - aspect: "orçamento"
+        voters: ["agente-infraestrutura-S1", "manta-05"]
+        threshold: 1  # 2/2 required for simple
+
+      - aspect: "cronograma"
+        voters: ["manta-07", "agente-infraestrutura-S1"]
+        threshold: 1  # 2/2 required
+
+  - phase_name: "aggregate"
+    description: "Consolidate outputs into deliverables"
+    outputs:
+      - "budget_consolidated"
+      - "schedule_integrated"
+      - "risk_assessment"
+      - "contract_template"
+    timeout_minutes: 2
+
+# Execution parameters
+execution:
+  token_budget: 300000
+  rate_limit_handling: "exponential_backoff"
+  fallback_strategy: "escalate_to_human"
+
+# Performance targets
+targets:
+  execution_time_minutes: 8
+  consensus_rate_percent: 85
+  token_efficiency_percent: 90
+
+# Output artifacts
+artifacts:
+  - format: "pdf"
+    name: "executive_summary.pdf"
+  - format: "docx"
+    name: "projeto_executivo.docx"
+  - format: "json"
+    name: "project_data.json"
