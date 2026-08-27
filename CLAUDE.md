@@ -4,7 +4,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
+Versão: **v4.3** (2026-08-27) — skill transversal `ler-acervo-tecnico`
+(Eixo 1). v4.2 (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
 Saneamento, Energia, Barragens).
 
 ---
@@ -53,6 +54,17 @@ Todos os agentes verticais suportam as 8 fases via intake Q2:
 6. Processo competitivo / licitação
 7. Due diligence / M&A
 8. Encerramento / descomissionamento
+
+### Eixo 4 — Skills transversais (utilitários, sem código Manta dedicado)
+
+Skills de suporte, usáveis por qualquer agente (horizontal ou
+vertical), sem eixo de segmento próprio. Diferem dos agentes do Eixo 1
+por não terem intake/roteamento dedicado no Maestro — são invocados
+pelo nome ou por palavra-chave de gatilho.
+
+| Skill | Função | Status |
+|-------|--------|--------|
+| `ler-acervo-tecnico` | Lê e inventaria acervos técnicos recebidos de Clientes (SharePoint/OneDrive/local); detecta codificação do emissor; gera Nota Técnica de briefing + planilha de inventário | 🆕 Criado 2026-08-27 |
 
 ---
 
@@ -129,6 +141,22 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 - [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
 - [ ] Gate humano: aprovação MN antes de merge
 
+## DEPLOY CHECKLIST v4.3
+
+Ver runbook completo em `docs/DEPLOY-v4.3.md`.
+
+- [x] Criar skill `.claude/skills/ler-acervo-tecnico/` + mirror
+      `sharepoint/02-skills-transversais/ler-acervo-tecnico/`
+- [x] Registrar skill na seção Eixo 4 deste `CLAUDE.md`
+- [ ] Confirmar código Manta (se algum) a atribuir ao skill — hoje
+      registrado como "sem código Manta dedicado" (utilitário)
+- [ ] Registrar skill no catálogo (skill registry) do Maestro operacional
+- [ ] Upload do `SKILL.md`/`refs/`/`prompts/` para SP em
+      `02-skills-transversais/`
+- [ ] Testar o pipeline com um acervo real de cada fonte (SharePoint,
+      OneDrive, diretório local)
+- [ ] Gate humano: aprovação MN antes de merge
+
 ---
 
 ## Arquivos deste repositório
@@ -137,23 +165,35 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
 └── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+    ├── agents/
+    │   ├── agente-portos.md          # S6
+    │   ├── agente-aeroportos.md      # S7
+    │   ├── agente-saneamento.md      # S8 — prioridade AySA
+    │   ├── agente-energia.md         # S9 — ANEEL/State Grid
+    │   └── agente-barragens.md       # S10
+    └── skills/
+        └── ler-acervo-tecnico/       # 🆕 v4.3 — skill transversal (Eixo 4)
+            ├── SKILL.md
+            ├── refs/
+            │   ├── padrao-codificacao.md
+            │   └── template-nota-tecnica.md
+            └── prompts/starters.md
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
 no repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
-serve como referência canônica versionada dos agentes verticais e do
-mapa de routing.
+serve como referência canônica versionada dos agentes verticais, dos
+skills transversais e do mapa de routing.
 
 ---
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-27) — skill transversal `ler-acervo-tecnico`
+  (leitura/inventário de acervos técnicos de Cliente via SharePoint,
+  OneDrive ou diretório local; gera Nota Técnica de briefing + planilha
+  de inventário). Generalização do processo manual usado no briefing
+  "Acervo Técnico do Ferroanel Norte — EPL/DERSA" (projeto MRS).
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
