@@ -4,7 +4,14 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+Versão: **v5.2** (2026-08-27) — novo skill transversal
+**`ler-acervo-tecnico`** (Eixo F — Funcionais, F4/Extração): lê e
+inventaria acervos técnicos recebidos de Cliente (SharePoint, OneDrive
+ou diretório local), decifra a codificação do emissor e gera Nota
+Técnica de briefing + planilha de inventário. Ticket
+`MNT-2026-SKILL-LER-ACERVO`.
+
+v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
 Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
 assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
@@ -184,7 +191,7 @@ status por funcional. Resumo:
 | F1 | IA (routing, model tiering) | Maestro (Manta 00) + lógica de routing desta seção |
 | F2 | SharePoint (indexação, sync) | MCP `SharePoint_Manta` — leitura completa; escrita/upload disponível via tools do MCP, mas sync automático `.claude/agents/` ↔ SP ainda manual |
 | F3 | Portal (web, SSO, permissões) | `portal-gestao-manta`, `portal-megaprojeto-builder`, `portal-metro-l4` |
-| F4 | Extração (PDF/DWG parser) | `autodesk-toolkit`, `cqp-cad-bridge`, `evtea-extractor`, `pdf` |
+| F4 | Extração (PDF/DWG parser) | `autodesk-toolkit`, `cqp-cad-bridge`, `evtea-extractor`, `pdf`, `ler-acervo-tecnico` 🆕 v5.2 (inventário de acervos técnicos via SharePoint/OneDrive/local) |
 | F5 | Notificação (email, Slack, webhook) | Routines (`send_later`, `create_trigger`), subscribe PR activity, `slack-gif-creator` (parcial) |
 | F6 | Trace (audit log, approval gates) | `consist-guard` (rastreabilidade), histórico SharePoint, session logs, gate humano MN nos checklists |
 | F7 | Guardrails (validação, aluci-guard, consist-guard) | `aluci-guard`, `consist-guard`, `context-guardian` |
@@ -542,24 +549,47 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 - [ ] Rodar consist-guard sobre este documento antes de merge
 - [ ] Gate humano: aprovação MN antes de merge
 
+### Adendo v5.2 — skill `ler-acervo-tecnico`
+
+Checklist específico do novo skill (não interfere nos itens v5.0
+acima); runbook completo em `docs/DEPLOY-v4.3.md`.
+
+- [x] Criar `.claude/skills/ler-acervo-tecnico/` + mirror
+      `sharepoint/02-skills-transversais/ler-acervo-tecnico/`
+- [x] Registrar em Eixo F (F4/Extração) e no changelog deste `CLAUDE.md`
+- [ ] Confirmar se o skill recebe código Manta formal ou permanece
+      utilitário sem código
+- [ ] Registrar no skill registry do Maestro operacional
+- [ ] Upload do mirror para SP em `02-skills-transversais/`
+- [ ] Testar pipeline (SharePoint, OneDrive, diretório local, fontes
+      combinadas, acervo sem índice/sem padrão de codificação)
+- [ ] Gate humano: aprovação MN antes de merge
+
 ---
 
 ## Arquivos deste repositório
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.0)
+├── CLAUDE.md                              # este arquivo (master registry, v5.2)
 ├── README.md
 ├── .claude/
-│   └── agents/
-│       ├── agente-portos.md               # S6 (v1.1.0, revisado 2026-07-31)
-│       ├── agente-aeroportos.md           # S7
-│       ├── agente-saneamento.md           # S8 — prioridade AySA
-│       ├── agente-energia.md              # S9 — ANEEL/State Grid
-│       ├── agente-barragens.md            # S10
-│       ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
-│       ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
-│       └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
+│   ├── agents/
+│   │   ├── agente-portos.md               # S6 (v1.1.0, revisado 2026-07-31)
+│   │   ├── agente-aeroportos.md           # S7
+│   │   ├── agente-saneamento.md           # S8 — prioridade AySA
+│   │   ├── agente-energia.md              # S9 — ANEEL/State Grid
+│   │   ├── agente-barragens.md            # S10
+│   │   ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
+│   │   ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
+│   │   └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
+│   └── skills/
+│       └── ler-acervo-tecnico/            # 🆕 v5.2 — skill transversal (Eixo F4/Extração)
+│           ├── SKILL.md
+│           ├── refs/
+│           │   ├── padrao-codificacao.md
+│           │   └── template-nota-tecnica.md
+│           └── prompts/starters.md
 ├── docs/
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
@@ -570,11 +600,14 @@ Codex-exemplo/
 │   ├── SEGMENTO-S11-MINERACAO-GAP-G015.md # G015 — S11 (Mineração) identificado; roadmap formalização (novo, 2026-07-31)
 │   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
+│   ├── DEPLOY-v4.3.md                     # 🆕 runbook do skill ler-acervo-tecnico (registry/SP/testes)
 │   └── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
 ├── sharepoint/
 │   ├── README.md
-│   └── 00-arquitetura/
-│       └── ARQUITETURA-AGENTES-IA.md      # v3.0.0 — documento de arquitetura de referência (4 eixos)
+│   ├── 00-arquitetura/
+│   │   └── ARQUITETURA-AGENTES-IA.md      # v3.0.0 — documento de arquitetura de referência (4 eixos)
+│   └── 02-skills-transversais/
+│       └── ler-acervo-tecnico/            # 🆕 v5.2 — mirror do skill p/ upload SharePoint
 ├── supabase/
 │   └── migrations/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
@@ -588,6 +621,16 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.2** (2026-08-27) — skill transversal `ler-acervo-tecnico` (Eixo
+  F — F4/Extração): lê e inventaria acervos técnicos recebidos de
+  Cliente via SharePoint, OneDrive ou diretório local (inclusive fontes
+  combinadas), decifra o padrão de codificação do emissor (esquema
+  DERSA documentado como caso de referência), cruza com índice-mestre
+  quando existir, identifica lacunas e gera Nota Técnica de briefing +
+  planilha de inventário (1 aba/disciplina). Generalização do processo
+  manual do briefing "Acervo Técnico do Ferroanel Norte — EPL/DERSA"
+  (projeto MRS, 27/08/2026). Sem código Manta dedicado — utilitário
+  transversal, mapeado em Eixo F. Ticket `MNT-2026-SKILL-LER-ACERVO`.
 - **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
   agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
   (ambiental, social, governança, integração), integração co-agente com 

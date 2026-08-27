@@ -7,12 +7,14 @@ mnassociados.sharepoint.com/sites/Engenharia
   └── Documentos Compartilhados/
       └── 04_IA/
           └── Manta-Maestro/
-              └── 01-agentes-fundamentais/
-                  ├── agente-portos/       ← este mirror
-                  ├── agente-aeroportos/   ← este mirror
-                  ├── agente-saneamento/   ← este mirror
-                  ├── agente-energia/      ← este mirror
-                  └── agente-barragens/    ← este mirror
+              ├── 01-agentes-fundamentais/
+              │   ├── agente-portos/       ← este mirror
+              │   ├── agente-aeroportos/   ← este mirror
+              │   ├── agente-saneamento/   ← este mirror
+              │   ├── agente-energia/      ← este mirror
+              │   └── agente-barragens/    ← este mirror
+              └── 02-skills-transversais/
+                  └── ler-acervo-tecnico/  ← este mirror (v4.3)
 ```
 
 Cada subpasta aqui contém o `SKILL.md` pronto para upload. Ao concluir

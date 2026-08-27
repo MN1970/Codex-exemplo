@@ -31,6 +31,7 @@ Uma plataforma escalável de **20 agentes IA** (11 horizontais + 9 verticais S1�
 | **docs/DEPLOYMENT-GUIDE.md** | Step-by-step deploy (8 fases, 48h → go-live) |
 | **docs/ROUTING-REFERENCE.md** | Especificação completa R1 (3-stage pipeline, keywords) |
 | **DEPLOY-CHECKLIST.md** | Quick reference checklist (imprimir e marcar) |
+| **.claude/skills/ler-acervo-tecnico/** | v5.2 — skill transversal: lê/inventaria acervos técnicos de Cliente (SharePoint/OneDrive/local), gera Nota Técnica de briefing + planilha de inventário |
 
 ### Scripts
 

@@ -315,12 +315,12 @@ jobs:
           echo "::group::Test Fixtures Validation"
           if [ -f tests/fixtures/prompts_golden_40.json ]; then
             python -c "
-import json
-with open('tests/fixtures/prompts_golden_40.json') as f:
-    data = json.load(f)
-    assert len(data['test_cases']) == 40, 'Expected 40 test cases'
-    print(f'✅ Golden fixtures: {len(data[\"test_cases\"])} cases')
-"
+            import json
+            with open('tests/fixtures/prompts_golden_40.json') as f:
+                data = json.load(f)
+                assert len(data['test_cases']) == 40, 'Expected 40 test cases'
+                print(f'✅ Golden fixtures: {len(data[\"test_cases\"])} cases')
+            "
           else
             echo "❌ Fixtures file not found"
             exit 1
