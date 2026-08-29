@@ -173,7 +173,26 @@ Casos que falharem: iterar nas keywords do
 
 ---
 
-## 6. Rollback
+## 6. Extensão do registry `aluci-guard` (S6-S10)
+
+**Arquivos prontos:** `docs/aluci-guard/registry-extension-{portos,
+aeroportos,saneamento,energia,barragens}.md` + consolidação em
+`docs/aluci-guard/README.md` (neste PR).
+
+- [x] Extrair das 5 SKILL.md as referências normativas/legais citadas
+  (57 no total: 15 compatíveis com o schema atual `normas_abnt.py`/
+  `leis_federais.py`, 42 exigindo categoria nova — setorial/
+  internacional).
+- [ ] Gate MN: decidir nome/formato das categorias novas de registry
+  (`normas_setoriais.py`, `normas_internacionais.py`, possível fatia
+  argentina para saneamento/AySA).
+- [ ] Confirmar onde vive o código-fonte real da skill `aluci-guard`
+  (o ambiente atual só tem o `SKILL.md`, sem `auditor.py`/`registry/`)
+  para abrir PR lá com as 57 entradas.
+- [ ] Validar vigência real das 57 entradas antes de marcá-las
+  `vigente` no registry de produção.
+
+## 7. Rollback
 
 Se algo der errado após o deploy dos PRs + Supabase migration:
 
@@ -195,6 +214,8 @@ Se algo der errado após o deploy dos PRs + Supabase migration:
 - [x] Migração Supabase candidata escrita (`.sql` neste PR).
 - [x] Prompts de teste de routing escritos (`.md` neste PR).
 - [x] SP site canônico identificado.
+- [x] Extração das referências normativas das 5 SKILL.md p/ aluci-guard
+  (`docs/aluci-guard/`, neste PR) — 57 entradas aguardando gate MN.
 - [ ] Merge dos PRs pelo MN.
 - [ ] Aplicação da migração Supabase.
 - [ ] Criação manual das 10 pastas SP (5 agentes + 5 projetos).
