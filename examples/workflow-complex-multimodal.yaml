@@ -1,0 +1,205 @@
+# Maestro OS v6.0 — Example Workflow: Complex Project (4+ segments, 16 agents)
+# Complexo Multimodal: Maximum escalation, parallel execution optimization
+# Execution: ~15 min, 600k tokens, dynamic 16 agents
+
+project:
+  id: "proj-complexo-multimodal"
+  name: "Complexo Multimodal de Transporte Integrado"
+  type: "mega_project"
+  segments: ["S1", "S2", "S3", "S4"]
+  complexity: "complex"
+  description: |
+    Complexo multimodal de transporte:
+    - Rodovia expressa SP-500 (150 km, 6 faixas)
+    - OAE críticas (20 pontes, viadutos)
+    - Ferrovia carga eletrificada
+    - Metrô linha metropolitana
+    Projeto executivo + licitação + obra simultânea 4 fases
+    Orçamento: R$ 10B+, Timeline: 60 meses
+  budget_estimate_usd: 2_000_000_000
+  timeline_months: 60
+  phases: ["estudo_previo", "projeto_basico", "projeto_executivo", "obra", "operacao"]
+
+# Phase A: Maximum agent escalation for complex projects
+detector:
+  enabled: true
+  expected_agents: 16
+  expected_complexity: "complex"
+  dynamic_selection: true
+
+# Phase B: Advanced ML inference with multi-model ensemble
+ml_inference:
+  enabled: true
+  predict_routing: true
+  predict_duration: true
+  predict_risk: true
+  ensemble_voting: true  # Use voting across multiple models
+  confidence_threshold: 0.70
+
+# Phase C: Workflow execution phases — optimized for 16-agent parallelism
+phases:
+  - phase_name: "fan_out"
+    description: "Parallel execution: 16 agents (4 verticals + 12 horizontals)"
+    agents:
+      # Vertical agents (segment specialists, all 4 active)
+      - "agente-infraestrutura-S1"    # Highways
+      - "agente-infraestrutura-S2"    # OAE/Bridges
+      - "agente-infraestrutura-S3"    # Railways
+      - "agente-infraestrutura-S4"    # Metro/Urban
+
+      # Horizontal agents (12 selected based on criticality)
+      - "maestro"                     # Orchestration hub
+      - "manta-05"                    # Budget (critical for R$ 10B)
+      - "manta-07"                    # Schedule (60-month critical path)
+      - "manta-06"                    # BIM/3D (4+ segments integration)
+      - "manta-01"                    # Claims (high-risk mega-project)
+      - "manta-02"                    # Contracts (complex procurement)
+      - "manta-15"                    # Advisory (strategic planning)
+      - "manta-13"                    # BD (stakeholder management)
+      - "manta-14"                    # Presentations (governance)
+
+    timeout_minutes: 6
+    max_concurrent: 8
+    batching_strategy: "staggered"  # Prevent API rate limits
+
+  - phase_name: "inter_segment_consensus"
+    description: "Multi-level consensus voting across 4 segments"
+
+    # Level 1: Segment-specific voting
+    segment_votes:
+      - segment: "S1"
+        voters: ["agente-infraestrutura-S1", "manta-05", "manta-07"]
+        threshold: 2
+
+      - segment: "S2"
+        voters: ["agente-infraestrutura-S2", "manta-05", "manta-07"]
+        threshold: 2
+
+      - segment: "S3"
+        voters: ["agente-infraestrutura-S3", "manta-05", "manta-07"]
+        threshold: 2
+
+      - segment: "S4"
+        voters: ["agente-infraestrutura-S4", "manta-05", "manta-07"]
+        threshold: 2
+
+    # Level 2: Cross-segment integration voting
+    integration_aspects:
+      - aspect: "orçamento_consolidado_R$10B"
+        voters: ["manta-05", "manta-15", "agente-infraestrutura-S1", "agente-infraestrutura-S2", "agente-infraestrutura-S3"]
+        threshold: 3  # 3/5 required across segments
+
+      - aspect: "cronograma_60_meses_integrado"
+        voters: ["manta-07", "agente-infraestrutura-S1", "agente-infraestrutura-S2", "agente-infraestrutura-S3", "agente-infraestrutura-S4"]
+        threshold: 3  # All segments must agree on critical path
+
+      - aspect: "risco_mega_projeto"
+        voters: ["manta-01", "manta-15", "agente-infraestrutura-S1", "agente-infraestrutura-S3"]
+        threshold: 2  # 2/4 for risk (escalates if split)
+
+  - phase_name: "what_if_analysis_advanced"
+    description: "Complex scenario simulation for interdependent segments"
+    scenarios:
+      - name: "cenario_dragagem_metro"
+        type: "DELAY"
+        trigger: "Metro excavation (S4) adds 6 months critical path"
+        segments_affected: ["S1", "S3", "S4"]
+        delay_days: 180
+        impact_chain:
+          - "S4 metro delay → S1 highway access ramp timing"
+          - "S4 metro delay → S3 rail connection scheduling"
+
+      - name: "cenario_inflacao_laboris"
+        type: "BUDGET_OVERRUN"
+        trigger: "Labor cost inflation across all 4 segments"
+        inflation_percent: 25.0
+        segments_affected: ["S1", "S2", "S3", "S4"]
+
+      - name: "cenario_risco_ambiental"
+        type: "RISK_ESCALATION"
+        trigger: "Environmental license delays for metro (S4)"
+        segments_affected: ["S4"]
+        risk_increase_percent: 15.0
+
+  - phase_name: "aggregate_and_synthesize"
+    description: "16-agent consolidation into unified project plan"
+    outputs:
+      - "orçamento_consolidado_R$10B.xlsx"
+      - "cronograma_master_60_meses.mpp"
+      - "matriz_interdependencias.json"
+      - "contrato_master_procurement.docx"
+      - "modelo_financeiro_estrategico.xlsx"
+      - "analise_risco_completo.pdf"
+      - "apresentacao_conselho_acionistas.pptx"
+      - "plano_execucao_4_fases.docx"
+
+    timeout_minutes: 4
+    synthesis_strategy: "consensus_weighted"
+
+# Execution parameters (maximum for complex projects)
+execution:
+  token_budget: 600000
+  rate_limit_handling: "exponential_backoff_v2"
+  fallback_strategy: "escalate_to_board"
+  parallel_workers: 8
+  queue_size: 16
+
+# Performance targets (complex projects)
+targets:
+  execution_time_minutes: 15
+  consensus_rate_percent: 75
+  token_efficiency_percent: 80
+
+# Advanced: Full interdependency matrix
+interdependencies:
+  - from: "S1"
+    to: "S4"
+    type: "access_ramp"
+    criticality: "high"
+    mitigation: "parallel design phases"
+
+  - from: "S2"
+    to: "S1"
+    type: "structural_integration"
+    criticality: "medium"
+    mitigation: "early foundation coordination"
+
+  - from: "S3"
+    to: "S4"
+    type: "rail_metro_integration"
+    criticality: "high"
+    mitigation: "shared underground infrastructure"
+
+  - from: "S4"
+    to: "S1"
+    type: "critical_path_constraint"
+    criticality: "critical"
+    mitigation: "accelerated metro phase 1"
+
+# Output artifacts (comprehensive for stakeholder review)
+artifacts:
+  - format: "docx"
+    name: "projeto_executivo_completo.docx"
+    size_mb: 150
+
+  - format: "xlsx"
+    name: "orçamento_detalhado_4_segmentos.xlsx"
+    size_mb: 50
+
+  - format: "json"
+    name: "project_graph_interdependencies.json"
+    size_mb: 10
+
+  - format: "pdf"
+    name: "analise_risco_executivo.pdf"
+    size_mb: 25
+
+  - format: "mpp"
+    name: "cronograma_master_microsoft_project.mpp"
+    size_mb: 80
+
+# Governance & approval workflow
+governance:
+  approval_chain: ["project_manager", "technical_director", "cfo", "board"]
+  review_deadline_days: 5
+  escalation_threshold: "consensus < 75%"
