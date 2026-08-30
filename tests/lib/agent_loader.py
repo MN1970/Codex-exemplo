@@ -51,6 +51,37 @@ ALLOWED_TOOLS = {
 
 ALLOWED_MODEL_TIERS = {"haiku", "sonnet", "opus"}
 
+# Arquivos em .claude/agents/*.md que NÃO são subagentes Claude Code
+# prontos para validação de registro — excluídos explicitamente em vez
+# de forçar frontmatter/seções fabricadas neles:
+#
+# - Specs "Design Phase" (P3-04/P3-07/P3-08/P3-09, Manta 20/21/25):
+#   documentos de proposta em formato de spec longa (seções numeradas,
+#   em inglês/EXECUTIVE SUMMARY), ainda não convertidos para o formato
+#   operacional conciso (frontmatter + "## Contexto de domínio" +
+#   "## Handoff com outros agentes") usado pelos agentes já aprovados —
+#   inclusive os "propostos, pendente gate MN" como agente-oleo-gas.md/
+#   agente-edificacoes.md, que já seguem esse formato apesar de também
+#   aguardarem aprovação. Promover estes 5 exige reescrever a spec no
+#   formato operacional + passar pelo gate MN, não apenas frontmatter.
+# - example_background_agent_skill.md: documentação de referência/how-to
+#   sobre background agents, não a definição de um agente.
+# - sicro-similaridade-skill.md: documentação de uma skill (não de um
+#   agente) — o próprio título já diz "SKILL:".
+# - maestro.v5.0.md: spec do router Manta 00 em formato de documento de
+#   arquitetura, não um subagente Claude Code — não segue o formato de
+#   frontmatter usado pelos spokes S1-S13.
+EXCLUDED_FROM_REGISTRY = {
+    "agente-analytics-p3-07.md",
+    "agente-esg.md",
+    "agente-procurement-p3-08.md",
+    "manta-21-stakeholder.md",
+    "manta-25-kg.md",
+    "example_background_agent_skill.md",
+    "sicro-similaridade-skill.md",
+    "maestro.v5.0.md",
+}
+
 
 @dataclass(frozen=True)
 class AgentDef:
@@ -110,7 +141,11 @@ def parse_agent_file(path: Path) -> AgentDef:
 def load_all_agents() -> list[AgentDef]:
     if not AGENTS_DIR.exists():
         return []
-    return [parse_agent_file(p) for p in sorted(AGENTS_DIR.glob("*.md"))]
+    return [
+        parse_agent_file(p)
+        for p in sorted(AGENTS_DIR.glob("*.md"))
+        if p.name not in EXCLUDED_FROM_REGISTRY
+    ]
 
 
 def load_agent(slug: str) -> AgentDef:
