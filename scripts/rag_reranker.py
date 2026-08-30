@@ -157,43 +157,15 @@ class SonnetCrossEncoder:
     Usa prompt engineering para extrair relevância scores.
     """
 
-    def __init__(self, model: str = "claude-3-5-sonnet-20241022"):
-        self.model = model
-        if ANTHROPIC_AVAILABLE:
-            self.client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        else:
-            self.client = None
-        self.max_tokens = 2048
-
-    def build_prompt(self, query: str, chunks: List[Dict]) -> str:
-        """
-        Build prompt para Sonnet 5 cross-encoder.
-
-        Estratégia:
-        1. Contexto: explica tarefa de reranking
-        2. Query: pergunta original
-        3. Chunks: lista numerada de chunks com suas fontes
-        4. Instruções: score 0-1, retornar JSON
-        5. Exemplos: 2-3 exemplos de scoring
-        """
-
-        chunks_text = "\n\n".join(
-            f"{i+1}. **ID**: {c.get('chunk_id', 'unknown')}\n"
-            f"   **Fonte**: {c.get('source', 'desconhecida')}\n"
-            f"   **Score BM25**: {c.get('bm25_score', 0):.3f}\n"
-            f"   **Texto**: {c.get('text', '')[:500]}\n"
-            for i, c in enumerate(chunks)
-        )
-
-        prompt = f"""## Tarefa: Reranking de Chunks RAG
+    # Bloco estático do prompt — idêntico em toda chamada, então fica no
+    # `system` com prompt caching (cache_control ephemeral): só o texto
+    # dinâmico (query + chunks) muda por request, então não deveria ser
+    # recomputado/recobrado a cada chamada.
+    SYSTEM_PROMPT = """## Tarefa: Reranking de Chunks RAG
 
 Você é um especialista em engenharia civil que avalia relevância de documentos técnicos.
 
-### Pergunta Original:
-"{query}"
-
-### Chunks Recuperados:
-{chunks_text}
+Você receberá uma pergunta original e uma lista de chunks recuperados (BM25 + embedding).
 
 ### Instruções:
 1. Avalie cada chunk por relevância relativa à pergunta
@@ -212,20 +184,59 @@ Você é um especialista em engenharia civil que avalia relevância de documento
 - 0.0-0.29: Irrelevante ou off-topic
 
 ### Retorne EXATAMENTE este JSON (sem markdown, sem comentários):
-{{
+{
   "rankings": [
-    {{
+    {
       "chunk_id": "san_001",
       "score": 0.95,
       "reasoning": "Responde diretamente sobre dimensionamento de ETA"
-    }},
+    },
     ...
   ]
-}}
+}
 
-Comece diretamente com {{ - não inclua explicação extra.
-"""
-        return prompt
+Comece diretamente com { - não inclua explicação extra."""
+
+    def __init__(self, model: str = "claude-sonnet-4-5"):
+        self.model = model
+        if ANTHROPIC_AVAILABLE:
+            self.client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        else:
+            self.client = None
+        self.max_tokens = 2048
+
+    def _build_chunks_block(self, chunks: List[Dict]) -> str:
+        """Formata a lista de chunks recuperados (parte dinâmica, por request)."""
+        return "\n\n".join(
+            f"{i+1}. **ID**: {c.get('chunk_id', 'unknown')}\n"
+            f"   **Fonte**: {c.get('source', 'desconhecida')}\n"
+            f"   **Score BM25**: {c.get('bm25_score', 0):.3f}\n"
+            f"   **Texto**: {c.get('text', '')[:500]}\n"
+            for i, c in enumerate(chunks)
+        )
+
+    def build_user_content(self, query: str, chunks: List[Dict]) -> str:
+        """
+        Build a parte dinâmica do prompt (query + chunks) — o que de fato
+        muda a cada chamada. Usada por `rerank()` junto com SYSTEM_PROMPT
+        (enviado via `system` com cache_control) para não recobrar/
+        recomputar o bloco estático em toda request.
+        """
+        return f"""### Pergunta Original:
+"{query}"
+
+### Chunks Recuperados:
+{self._build_chunks_block(chunks)}"""
+
+    def build_prompt(self, query: str, chunks: List[Dict]) -> str:
+        """
+        Build o prompt completo (estático + dinâmico) para Sonnet.
+
+        Mantido para compatibilidade (uso standalone/debug/testes) —
+        equivalente ao que `rerank()` efetivamente envia, só que como um
+        único bloco em vez de `system` (cacheável) + `user` (dinâmico).
+        """
+        return f"{self.SYSTEM_PROMPT}\n\n{self.build_user_content(query, chunks)}"
 
     def rerank(self, query: str, chunks: List[Dict]) -> Dict[str, Any]:
         """
@@ -248,11 +259,18 @@ Comece diretamente com {{ - não inclua explicação extra.
             return self._mock_rerank(query, chunks)
 
         try:
-            prompt = self.build_prompt(query, chunks)
+            prompt = self.build_user_content(query, chunks)
 
             message = self.client.messages.create(
                 model=self.model,
                 max_tokens=self.max_tokens,
+                system=[
+                    {
+                        "type": "text",
+                        "text": self.SYSTEM_PROMPT,
+                        "cache_control": {"type": "ephemeral"}
+                    }
+                ],
                 messages=[
                     {
                         "role": "user",
@@ -285,7 +303,17 @@ Comece diretamente com {{ - não inclua explicação extra.
                 "latency_ms": round(latency_ms, 2),
                 "tokens": {
                     "input": message.usage.input_tokens,
-                    "output": message.usage.output_tokens
+                    "output": message.usage.output_tokens,
+                    # Presentes só quando prompt caching participou da
+                    # chamada (SDKs mais antigos podem não popular estes
+                    # campos) — úteis para medir o ganho do cache_control
+                    # no SYSTEM_PROMPT sem quebrar quem não olha para eles.
+                    "cache_creation_input_tokens": getattr(
+                        message.usage, "cache_creation_input_tokens", 0
+                    ),
+                    "cache_read_input_tokens": getattr(
+                        message.usage, "cache_read_input_tokens", 0
+                    )
                 }
             }
 

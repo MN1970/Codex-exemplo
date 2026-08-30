@@ -22,10 +22,18 @@ def rag_reindex_job(repo_root: Path = None) -> Dict:
         repo_root = Path.cwd()
 
     try:
-        # Import existing RAG reindexer
-        import sys
-        sys.path.insert(0, str(repo_root / "scripts"))
-        from rag_reindex import RAGReindexer
+        # Import existing RAG reindexer. O arquivo é `rag-reindex.py`
+        # (hífen) — não importável via `import rag_reindex`/`from
+        # rag_reindex import ...` (esse módulo nunca existiu), então
+        # carregamos pelo caminho do arquivo em vez de renomeá-lo (o
+        # nome com hífen está referenciado em dezenas de docs/configs).
+        import importlib.util
+
+        module_path = repo_root / "scripts" / "rag-reindex.py"
+        spec = importlib.util.spec_from_file_location("rag_reindex", module_path)
+        rag_reindex = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(rag_reindex)
+        RAGReindexer = rag_reindex.RAGReindexer
 
         reindexer = RAGReindexer(repo_root)
         stats = reindexer.run()
