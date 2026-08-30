@@ -4,7 +4,13 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.2** (2026-08-30) — **Padrões de output por cliente**: nova
+Versão: **v5.3** (2026-08-30) — **Templates Motiva implementados**:
+`docs/templates/EAP-PADRAO-MOTIVA.xlsx` e
+`docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`, aprovados
+por MN, reproduzindo o padrão documentado em v5.2 (paleta neutra Manta
+até confirmação da marca).
+
+Consolida v5.2 (2026-08-30) — **Padrões de output por cliente**: nova
 seção que referencia o padrão de entregável (EAP em Excel/PPT,
 relatório, codificação de documentos, identidade visual) por cliente,
 começando pela Motiva (ex-CCR Rodovias).
@@ -453,7 +459,7 @@ cliente ao gerar output para ele.
 
 | Cliente | Doc de referência | Status |
 |---------|--------------------|--------|
-| Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) | ✅ EAP Excel/relatório/codificação · ⚠️ cores de marca não localizadas — usar `padrao-manta` até confirmação |
+| Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) · templates: [`EAP-PADRAO-MOTIVA.xlsx`](docs/templates/EAP-PADRAO-MOTIVA.xlsx), [`PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`](docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx) | ✅ EAP Excel/PPT/relatório/codificação implementados (aprovado MN) · ⚠️ cores de marca não localizadas — templates usam paleta neutra Manta até confirmação |
 
 ---
 
@@ -582,7 +588,10 @@ Codex-exemplo/
 │       ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
 │       └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
 ├── docs/
-│   ├── PADRAO-OUTPUT-MOTIVA.md            # 🆕 v5.2 — padrão de output cliente Motiva
+│   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
+│   ├── templates/
+│   │   ├── EAP-PADRAO-MOTIVA.xlsx               # 🆕 v5.3 — template EAP (capa + hierarquia 4 níveis)
+│   │   └── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (⚠️ numeração de S divergente — ver Gaps)
@@ -610,6 +619,23 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.3** (2026-08-30) — **Templates Motiva implementados** (aprovado
+  por MN). Dois arquivos novos em `docs/templates/`:
+  - `EAP-PADRAO-MOTIVA.xlsx` — aba Capa (bloco de cabeçalho + legenda
+    de preenchimento automático/manual) e aba EAP (cabeçalho de 16
+    colunas, hierarquia de 4 níveis com 2 itens-modelo, fórmulas de
+    custo total/preço unitário/preço total/% — validadas com
+    recálculo LibreOffice, 0 erros).
+  - `PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx` — capa (versalete +
+    campos Cliente/Elaboração/Status), slide de sumário com as 5
+    seções documentadas e slide-modelo de conteúdo com o rodapé
+    padrão `[Rodovia] · [Segmento] · MOTIVA · [Seção] · nº/total`
+    (validado com `office/validate.py` e QA visual).
+  - Paleta: grayscale neutro (padrão Manta) em ambos os arquivos —
+    cor institucional da Motiva segue não confirmada (ver v5.2/seção
+    5 de `PADRAO-OUTPUT-MOTIVA.md`); nota registrada no gerador e nas
+    notas do orador da capa do PPTX para troca fácil quando a marca
+    for confirmada. Ticket `MNT-2026-MOTIVA-258-PATTERN`.
 - **v5.2** (2026-08-30) — padrão de output do cliente Motiva
   documentado (`docs/PADRAO-OUTPUT-MOTIVA.md`): formato de EAP em
   Excel (template v8, hierarquia de 4 níveis, código interno) e em

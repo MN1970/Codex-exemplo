@@ -14,6 +14,23 @@ relatório, e usar a norma de codificação de documentos do cliente.
 Última varredura: 2026-08-30. Ver seção "Fontes" para os caminhos
 exatos consultados.
 
+**Templates implementados** (aprovado por MN, 2026-08-30) — reproduzem
+a estrutura documentada abaixo e ficam disponíveis para uso direto pelos
+agentes verticais:
+
+- [`templates/EAP-PADRAO-MOTIVA.xlsx`](templates/EAP-PADRAO-MOTIVA.xlsx) — capa
+  com bloco de cabeçalho/legenda + aba EAP com cabeçalho, hierarquia de
+  4 níveis e fórmulas de custo/preço (ver seção 1).
+- [`templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`](templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx) —
+  capa, sumário de seções e slide-modelo de conteúdo com o rodapé
+  padrão (ver seção 2).
+
+Cores institucionais da Motiva continuam **não confirmadas** (seção 5)
+— os dois templates usam uma paleta neutra em escala de cinza (padrão
+Manta) até a marca oficial ser confirmada pelo cliente; a nota está
+registrada no gerador de cada arquivo e nas notas do orador da capa do
+PPTX.
+
 ---
 
 ## 1. EAP — formato Excel
