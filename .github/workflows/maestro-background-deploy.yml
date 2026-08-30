@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install schedule requests prometheus-client python-dotenv pydantic
+          pip install schedule requests prometheus-client python-dotenv pydantic APScheduler pytz
 
       - name: Validate scheduler configuration
         run: |
@@ -76,12 +76,13 @@ jobs:
           from pathlib import Path
           import sys
           sys.path.insert(0, 'scripts')
-          from apscheduler_setup import MaestroScheduler
+          from apscheduler_setup import APSchedulerManager
 
-          scheduler = MaestroScheduler(Path.cwd())
-          print(f'✓ Scheduler initialized with {len(scheduler.jobs)} jobs')
-          for name, runner in scheduler.jobs.items():
-              print(f'  - {name}: {runner.config.schedule_cron}')
+          manager = APSchedulerManager(Path.cwd())
+          count = manager.register_all_jobs()
+          print(f'✓ Scheduler initialized with {count} jobs')
+          for job in manager.scheduler.get_jobs():
+              print(f'  - {job.id}: {job.trigger}')
           "
 
   # Build Docker image
@@ -131,7 +132,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Image digest
-        run: echo "Built image digest: ${{ steps.build.outputs.digest }}"
+        run: 'echo "Built image digest: ${{ steps.build.outputs.digest }}"'
 
   # Run tests in Docker container
   test:
@@ -164,7 +165,7 @@ jobs:
 
       - name: Install test dependencies
         run: |
-          pip install schedule requests prometheus-client python-dotenv pydantic pytest pytest-asyncio
+          pip install schedule requests prometheus-client python-dotenv pydantic APScheduler pytz pytest pytest-asyncio
 
       - name: Run unit tests
         run: |
