@@ -1,0 +1,302 @@
+<!--
+  TEMPLATE DE RELATÓRIO — PADRÃO MANTA ASSOCIADOS
+  ================================================
+  Template único e reutilizável para os relatórios gerados pelos agentes
+  do Manta Maestro. Implementa as 6 regras obrigatórias da skill
+  `padrao-manta` (abas verticais numeradas, logo + cores oficiais,
+  indicador do objeto do artefato, tabelas/quadros, rastreabilidade
+  completa, numeração). Ver diagnóstico completo em
+  `docs/DIAGNOSTICO-DESIGN-RELATORIOS.md`.
+
+  COMO USAR
+  ---------
+  1. Substitua todos os tokens {{ASSIM}} pelos dados reais do relatório.
+  2. Substitua o <svg> do logo (marcado "LOGO PLACEHOLDER" abaixo) pelo
+     logo oficial assim que `assets/logo-manta.svg` existir — ver
+     `assets/README.md` para o passo a passo. Não peça a um modelo de IA
+     para "redesenhar" o logo: sempre referencie o arquivo real.
+  3. As seções 1–3 são exemplos de conteúdo (Visão Geral, Dados, Riscos) —
+     ajuste/adicione abas conforme o relatório, sempre numeradas em
+     sequência e sempre terminando em "N. Fontes & Ficha Técnica".
+  4. Marca d'água já vem configurada como "B — diagonal repetida"
+     (escolha registrada em docs/mockups/relatorio-diagnostico-manta-maestro.html,
+     aba 5). Para trocar de opção, ver as 5 variantes documentadas lá.
+-->
+<!doctype html>
+<title>{{DOCUMENTO}} — Manta Associados</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#FFFFFF; --bg-alt:#F9FAFB; --surface:#FFFFFF; --border:#E5E7EB;
+  --text:#374151; --muted:#6B7280; --heading:#5D3A1A; --title:#8B4A2D;
+  --accent:#E07B3D; --accent-dark:#C45A2B;
+  --ok:#10B981; --bad:#EF4444;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#241A14; --bg-alt:#2E2119; --surface:#2A1E17; --border:#4A382C;
+    --text:#EDE4DA; --muted:#B8A99A; --heading:#F2C9A0; --title:#E8B685;
+    --accent:#E8935A; --accent-dark:#D97D42;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#241A14; --bg-alt:#2E2119; --surface:#2A1E17; --border:#4A382C;
+  --text:#EDE4DA; --muted:#B8A99A; --heading:#F2C9A0; --title:#E8B685;
+  --accent:#E8935A; --accent-dark:#D97D42;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;
+  font-size:15px;line-height:1.6}
+h1,h2,h3{font-family:Montserrat,Arial,sans-serif;text-wrap:balance;margin:0}
+code,.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+
+.band{height:4px;background:linear-gradient(90deg,var(--accent),var(--accent-dark))}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px 28px;border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand h1{font-size:17px;color:var(--heading);letter-spacing:.01em}
+.brand .sub{font-size:12.5px;color:var(--muted)}
+.topbar .meta{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+
+.layout{display:flex;position:relative}
+.sidenav{width:230px;flex-shrink:0;border-right:1px solid var(--border);
+  position:sticky;top:0;align-self:flex-start;height:100vh;overflow-y:auto;padding:18px 0}
+.sidenav button{display:block;width:100%;text-align:left;background:none;border:none;
+  border-left:3px solid transparent;padding:11px 20px;font-size:13.5px;
+  color:var(--muted);cursor:pointer;font-family:Inter,sans-serif}
+.sidenav button b{color:inherit;font-weight:600;margin-right:6px}
+.sidenav button.active{border-left-color:var(--accent);color:var(--heading);
+  font-weight:600;background:var(--bg-alt)}
+.sidenav button:hover:not(.active){background:var(--bg-alt)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+main{flex:1;min-width:0;padding:36px 44px 80px;position:relative}
+.tab{display:none}.tab.active{display:block}
+
+.quadro{border-left:3px solid var(--border);background:var(--bg-alt);
+  padding:14px 18px;border-radius:2px;margin:18px 0 28px;font-size:14px;color:var(--text)}
+.quadro p{margin:0}
+.quadro .eyebrow{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.quadro.accent{border-left-color:var(--accent)}
+.quadro.accent .eyebrow{color:var(--accent-dark)}
+
+h2.sec{font-size:22px;color:var(--title);margin-bottom:4px}
+h2.sec .num{color:var(--accent);margin-right:8px;font-variant-numeric:tabular-nums}
+.sec-intro{color:var(--muted);font-size:13.5px;margin:6px 0 22px;max-width:65ch}
+.governing-thought{font-family:Montserrat,sans-serif;font-size:19px;font-weight:600;
+  color:var(--heading);line-height:1.4;margin:2px 0 24px;max-width:60ch}
+h3.sub{font-size:16px;color:var(--text);margin:26px 0 10px}
+h3.sub .num{color:var(--accent-dark);margin-right:6px}
+p{max-width:68ch;margin:10px 0}
+
+.kpis{display:flex;gap:32px;margin:8px 0 28px;flex-wrap:wrap}
+.kpi{text-align:center;padding:4px 8px}
+.kpi .n{font-family:Montserrat,sans-serif;font-size:34px;font-weight:700;color:var(--accent);
+  font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:4px;text-transform:uppercase;
+  letter-spacing:.04em}
+
+table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 22px;font-size:13.5px}
+thead th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
+  background:var(--bg-alt);border-bottom:2px solid var(--border)}
+tbody td{padding:11px 12px;border-bottom:1px solid var(--border);
+  vertical-align:top;line-height:1.5;word-wrap:break-word}
+tbody tr:nth-child(even){background:var(--bg-alt)}
+tbody tr:hover td{background:color-mix(in srgb, var(--accent) 7%, var(--bg))}
+th.center,td.center{text-align:center}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tcap{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin:22px 0 -2px}
+
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;
+  vertical-align:middle}
+.dot.ok{background:var(--ok)} .dot.warn{background:var(--accent)} .dot.bad{background:var(--bad)}
+.dot.none{background:#9CA3AF}
+
+footer.doc-footer{border-top:1px solid var(--border);padding:14px 44px;font-size:11.5px;
+  color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+.ficha{width:100%;max-width:520px;border-collapse:collapse;font-size:13px;margin:16px 0}
+.ficha td{padding:7px 4px;border-bottom:1px solid var(--border)}
+.ficha td:first-child{color:var(--muted);width:160px}
+.ficha td:last-child{font-family:'JetBrains Mono',monospace;font-size:12.5px}
+
+.watermark{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSczMjAnIGhlaWdodD0nMjAwJz4KPGRlZnM+CjxwYXR0ZXJuIGlkPSd3bScgd2lkdGg9JzMyMCcgaGVpZ2h0PScyMDAnIHBhdHRlcm5Vbml0cz0ndXNlclNwYWNlT25Vc2UnIHBhdHRlcm5UcmFuc2Zvcm09J3JvdGF0ZSgtMzApJz4KPHRleHQgeD0nMTAnIHk9JzExMCcgZm9udC1mYW1pbHk9J01vbnRzZXJyYXQsQXJpYWwsc2Fucy1zZXJpZicgZm9udC13ZWlnaHQ9JzcwMCcgZm9udC1zaXplPSczMCcgZmlsbD0nIzhCNEEyRCc+TUFOVEEgQVNTT0NJQURPUzwvdGV4dD4KPC9wYXR0ZXJuPgo8L2RlZnM+CjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbGw9J3VybCgjd20pJy8+Cjwvc3ZnPgo=");
+  background-repeat:repeat;opacity:.09}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .watermark{opacity:.13}}
+:root[data-theme="dark"] .watermark{opacity:.13}
+
+@media(max-width:820px){
+  .layout{flex-direction:column}
+  .sidenav{position:static;height:auto;display:flex;flex-wrap:wrap;border-right:none;
+    border-bottom:1px solid var(--border)}
+  main{padding:24px 20px 60px}
+  .kpis{gap:20px}
+}
+@media print{
+  .tab{display:block!important;page-break-after:always}
+  .sidenav{display:none}
+  main{padding:20px}
+}
+</style>
+
+<script>
+  // Rastreabilidade — Regra 5 do padrão Manta. Preencher com os dados reais.
+  const METADATA = {
+    cliente: "{{CLIENTE}}",
+    projeto: "{{PROJETO}}",
+    documento: "{{DOCUMENTO}}",
+    objeto: "{{OBJETO}}",
+    destinatario: "{{DESTINATARIO}}",
+    versao: "{{VERSAO}}",
+    data_criacao: "{{DATA}}",
+    gerado_por: "{{GERADO_POR}}",
+    classificacao: "{{CLASSIFICACAO}}",
+    id: "{{ID}}"
+  };
+</script>
+
+<div class="watermark"></div>
+<div class="band"></div>
+<div class="topbar">
+  <div class="brand">
+    <!-- LOGO PLACEHOLDER — trocar pelo arquivo real (ver assets/README.md) -->
+    <svg width="30" height="30" viewBox="0 0 30 30">
+      <rect width="30" height="30" rx="4" fill="#E07B3D"/>
+      <text x="15" y="21" font-family="Montserrat,Arial,sans-serif" font-size="17"
+            font-weight="700" fill="#fff" text-anchor="middle">M</text>
+    </svg>
+    <div>
+      <h1>MANTA ASSOCIADOS · {{DOCUMENTO}} — {{OBJETO}}</h1>
+      <div class="sub">{{DESTINATARIO}}</div>
+    </div>
+  </div>
+  <div class="meta">{{VERSAO}} · {{DATA}}<br>{{ID}}</div>
+</div>
+
+<div class="layout">
+  <nav class="sidenav" id="nav">
+    <button class="active" data-tab="t1"><b>1.</b>Visão geral</button>
+    <button data-tab="t2"><b>2.</b>Dados</button>
+    <button data-tab="t3"><b>3.</b>Riscos &amp; pendências</button>
+    <button data-tab="t4"><b>4.</b>Fontes &amp; ficha técnica</button>
+  </nav>
+
+  <main>
+    <!-- TAB 1 — Visão geral -->
+    <section class="tab active" id="t1">
+      <h2 class="sec"><span class="num">1.</span>{{TITULO_ACAO_SECAO_1}}</h2>
+      <p class="sec-intro">Uma frase objetiva sobre o que esta seção mostra e por quê.</p>
+
+      <!-- Mensagem principal do relatório inteiro — o "governing thought" do
+           Pyramid Principle (McKinsey/BCG/Bain): a conclusão geral do documento,
+           antes de qualquer detalhe. Uma frase, sem qualificadores. -->
+      <p class="governing-thought">{{MENSAGEM_PRINCIPAL}}</p>
+
+      <div class="quadro accent">
+        <span class="eyebrow">Escopo</span>
+        <p>{{DOCUMENTO}} — {{OBJETO}}. Preparado para {{DESTINATARIO}}. Cobre o período/etapa
+        {{PERIODO_OU_ETAPA}}.</p>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="n">{{KPI_1_VALOR}}</div><div class="l">{{KPI_1_LABEL}}</div></div>
+        <div class="kpi"><div class="n">{{KPI_2_VALOR}}</div><div class="l">{{KPI_2_LABEL}}</div></div>
+        <div class="kpi"><div class="n">{{KPI_3_VALOR}}</div><div class="l">{{KPI_3_LABEL}}</div></div>
+      </div>
+
+      <h3 class="sub"><span class="num">1.1</span>Resumo</h3>
+      <span class="tcap">Tabela 1.1</span>
+      <table>
+        <colgroup><col style="width:22%"><col style="width:18%"><col style="width:60%"></colgroup>
+        <thead><tr><th>Item</th><th>Status</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>{{ITEM_1}}</td><td><span class="dot ok"></span>Concluído</td><td>{{OBS_1}}</td></tr>
+          <tr><td>{{ITEM_2}}</td><td><span class="dot warn"></span>Em andamento</td><td>{{OBS_2}}</td></tr>
+          <tr><td>{{ITEM_3}}</td><td><span class="dot none"></span>Não iniciado</td><td>{{OBS_3}}</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- TAB 2 — Dados -->
+    <section class="tab" id="t2">
+      <h2 class="sec"><span class="num">2.</span>{{TITULO_ACAO_SECAO_2}}</h2>
+      <p class="sec-intro">Uma frase objetiva sobre a conclusão desta seção.</p>
+
+      <h3 class="sub"><span class="num">2.1</span>{{SUBTITULO_2_1}}</h3>
+      <span class="tcap">Tabela 2.1</span>
+      <table>
+        <thead><tr><th>{{COLUNA_A}}</th><th>{{COLUNA_B}}</th><th class="num">{{COLUNA_C_NUM}}</th></tr></thead>
+        <tbody>
+          <tr><td>{{LINHA_1_A}}</td><td>{{LINHA_1_B}}</td><td class="num">{{LINHA_1_C}}</td></tr>
+          <tr><td>{{LINHA_2_A}}</td><td>{{LINHA_2_B}}</td><td class="num">{{LINHA_2_C}}</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- TAB 3 — Riscos & pendências -->
+    <section class="tab" id="t3">
+      <h2 class="sec"><span class="num">3.</span>{{TITULO_ACAO_SECAO_3}}</h2>
+      <p class="sec-intro">Uma frase objetiva sobre o que precisa de atenção.</p>
+
+      <span class="tcap">Tabela 3.1</span>
+      <table>
+        <colgroup><col style="width:28%"><col style="width:14%"><col style="width:58%"></colgroup>
+        <thead><tr><th>Risco/Pendência</th><th class="center">Severidade</th><th>Ação</th></tr></thead>
+        <tbody>
+          <tr><td>{{RISCO_1}}</td><td class="center"><span class="dot bad"></span>Alta</td><td>{{ACAO_1}}</td></tr>
+          <tr><td>{{RISCO_2}}</td><td class="center"><span class="dot warn"></span>Média</td><td>{{ACAO_2}}</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- TAB 4 — Fontes & ficha técnica -->
+    <section class="tab" id="t4">
+      <h2 class="sec"><span class="num">4.</span>Fontes &amp; ficha técnica</h2>
+
+      <h3 class="sub"><span class="num">4.1</span>Fontes consultadas</h3>
+      <ul>
+        <li>{{FONTE_1}}</li>
+        <li>{{FONTE_2}}</li>
+      </ul>
+
+      <h3 class="sub"><span class="num">4.2</span>Ficha técnica</h3>
+      <table class="ficha">
+        <tr><td>Cliente</td><td>{{CLIENTE}}</td></tr>
+        <tr><td>Projeto</td><td>{{PROJETO}}</td></tr>
+        <tr><td>Documento</td><td>{{DOCUMENTO}}</td></tr>
+        <tr><td>Objeto</td><td>{{OBJETO}}</td></tr>
+        <tr><td>Versão</td><td>{{VERSAO}} ({{O_QUE_MUDOU}})</td></tr>
+        <tr><td>Data de criação</td><td>{{DATA}}</td></tr>
+        <tr><td>Gerado por</td><td>{{GERADO_POR}}</td></tr>
+        <tr><td>Classificação</td><td>{{CLASSIFICACAO}}</td></tr>
+        <tr><td>ID</td><td>{{ID}}</td></tr>
+      </table>
+    </section>
+  </main>
+</div>
+
+<footer class="doc-footer">
+  <span>Manta Associados | {{CLIENTE}} | {{PROJETO}} | {{VERSAO}}</span>
+  <span>{{ID}}</span>
+</footer>
+
+<script>
+(function(){
+  const buttons = document.querySelectorAll('#nav button');
+  buttons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      buttons.forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+})();
+</script>

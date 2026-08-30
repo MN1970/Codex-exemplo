@@ -7,6 +7,12 @@ ID do documento: `MANTA-REDESIGN-RELATORIOS-20260829-01`
 Mockup interativo (antes/depois + causa raiz do logo):
 `docs/mockups/relatorio-diagnostico-manta-maestro.html`
 
+Padrão visual definido a partir deste diagnóstico ("MBB + Engenharia"):
+`docs/PADRAO-VISUAL-RELATORIOS-MAESTRO.md`
+
+Template de produção pronto para uso pelos agentes:
+`templates/relatorio-padrao-manta.html`
+
 ---
 
 ## 1. Diagnóstico
@@ -29,16 +35,21 @@ numeração/ficha técnica/marca d'água) contra o padrão Manta.
 ## 2. Proposta
 
 - [x] Diagnóstico registrado (este documento + mockup)
+- [x] Padrão visual combinado "MBB + Engenharia" definido — ver
+      `docs/PADRAO-VISUAL-RELATORIOS-MAESTRO.md`
+- [x] Template único de relatório (HTML/CSS) consolidado, com as 6 regras
+      obrigatórias do padrão Manta + o padrão MBB + Engenharia já
+      aplicados — `templates/relatorio-padrao-manta.html`. Os agentes
+      passam a *preencher* os tokens `{{ASSIM}}` desse template, não
+      recriá-lo a cada chamada
 - [ ] Obter o arquivo oficial do logo (SVG de preferência) — ver
       `assets/README.md`
 - [ ] Commitar o logo real em `assets/logo-manta.svg` (ou `.png`)
 - [ ] Gerar o base64 a partir do arquivo real e embutir no template
-- [ ] Consolidar um template único de relatório (HTML/CSS) com as 6 regras
-      obrigatórias do padrão Manta já aplicadas — os agentes passam a
-      *preencher* esse template, não recriá-lo a cada chamada
 - [ ] Atualizar a skill `padrao-manta` para referenciar o asset real e
       remover o fallback "desenhar SVG inline"
-- [ ] Migrar 1 relatório piloto e validar com o time
+- [ ] Migrar 1 relatório piloto usando `templates/relatorio-padrao-manta.html`
+      e validar com o time
 - [ ] Propagar o template para os demais agentes do Maestro
 - [ ] Gate humano: aprovação MN antes de propagar
 
