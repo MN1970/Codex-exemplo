@@ -4,10 +4,16 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
-Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
-assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
-integração com S6–S10, RAG + compliance mapping.
+Versão: **v5.2** (2026-08-30) — registro da skill transversal C1
+`manta-visual-dinamico` (padrão visual dinâmico para artefatos HTML),
+complementando `padrao-manta` no Eixo F (F8 — Padronização). Aditivo
+sobre a v5.1; nenhuma decisão de arquitetura anterior foi alterada.
+
+Consolida v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design
+Agent**. Expande o framework com novo agente horizontal **Manta 20
+(manta-20-esg)** — assessment ESG, 4 dimensões (Ambiental/Social/
+Governança/Integração), integração com S6–S10, RAG + compliance
+mapping.
 
 Consolida v5.0.1 operacional (2026-07-31):
 - **v5.0.0 operacional** (aprovado 2026-07-22): 20 agentes em produção,
@@ -15,7 +21,8 @@ Consolida v5.0.1 operacional (2026-07-31):
 - **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
   gaps G010/G012/G014 resolvidos, 15 Sonnets investigação paralela.
 
-Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGENT` (novo).
+Tickets: `MNT-2026-VISUAL-DINAMICO` (novo) + `MNT-2026-CONSOLIDACAO-ARCH-V5`
+(operacional) + `MNT-2026-P3-04-ESG-AGENT`.
 
 > **Nota de proveniência**: este arquivo **reconcilia** dois work streams
 > paralelos na mesma data:
@@ -188,7 +195,7 @@ status por funcional. Resumo:
 | F5 | Notificação (email, Slack, webhook) | Routines (`send_later`, `create_trigger`), subscribe PR activity, `slack-gif-creator` (parcial) |
 | F6 | Trace (audit log, approval gates) | `consist-guard` (rastreabilidade), histórico SharePoint, session logs, gate humano MN nos checklists |
 | F7 | Guardrails (validação, aluci-guard, consist-guard) | `aluci-guard`, `consist-guard`, `context-guardian` |
-| F8 | Padronização (templates, estilos, nomenclatura) | `padrao-manta`, `cl-design`, `brand-guidelines`, `docx`, `pptx`, `xlsx` |
+| F8 | Padronização (templates, estilos, nomenclatura) | `padrao-manta`, `manta-visual-dinamico` (v5.2 — degradê de cor, tabelas, Excel mock, grade×abas), `cl-design`, `brand-guidelines`, `docx`, `pptx`, `xlsx` |
 
 ---
 
@@ -419,6 +426,64 @@ Migração candidata das 5 coleções v4.2:
 
 ---
 
+## SKILLS TRANSVERSAIS (C1) — Padrão Visual
+
+Skills reutilizáveis (camada C1 da arquitetura) que qualquer agente
+horizontal ou vertical invoca para garantir consistência visual e de
+conteúdo nos artefatos entregues ao cliente.
+
+| Skill | Cobre | Usar com |
+|-------|-------|----------|
+| `padrao-manta` | Esqueleto obrigatório (logo, abas, rastreabilidade) | Todo artefato para cliente |
+| `manta-visual-dinamico` | Refinamento dinâmico (degradê de cor, tabelas, texto, Excel, grade×abas) | **v4.3** — junto com `padrao-manta` em artefatos institucionais/cliente |
+
+### `manta-visual-dinamico` — regras-chave
+
+1. **Degradê de cor por bloco** — 5 tons interpolando terracota→vinho
+   (`#E0793D → #BF4D19 → #8F3D22 → #7A3B22 → #5F2C2B`), aplicado por
+   seção/bloco (band do cabeçalho, borda superior de cards, sidenav e
+   sub-abas ativas). Transições suaves (`background .3s ease`; troca de
+   aba com `fadeIn .28s ease`). Nunca usar cores fora da família
+   terracota/vinho na casca Manta — verde/azul/vermelho só em mockups
+   que representem a paleta de OUTRA metodologia sendo comparada
+   (ex.: navy do BCG, vermelho do Bain).
+2. **Retigráfico ≠ Tempo × Caminho** — retigráfico é inventário linear
+   georreferenciado por km (régua horizontal, sem eixo de tempo);
+   Tempo×Caminho é avanço de obra por frente de serviço (eixo X = km,
+   eixo Y = tempo; linhas diagonais = velocidade de avanço). Rotular
+   explicitamente qual é qual; nunca representar retigráfico com linhas
+   diagonais nem Tempo×Caminho com régua estática.
+3. **Tabelas** — zebra em tom Manta (terracota ~4,5% / vinho ~4%),
+   nunca cinza neutro. Mantém a regra "quadros e tabelas, nunca cards"
+   do `padrao-manta`.
+4. **Texto** — bullets curtos em vez de parágrafo corrido (relatórios
+   SCL/AACE/MBB/FIDIC e elementos técnicos); `<b>` apenas no dado que
+   carrega a conclusão (número, prazo, metodologia, responsável);
+   quebrar frases com mais de ~15 palavras.
+5. **Apresentações** — cards que simulam slide (McKinsey/BCG/Bain/
+   Deloitte) usam tópicos curtos, não blocos de texto.
+6. **Excel mock** — ribbon/nome do `.xlsx`, barra de fórmulas (célula
+   ativa + `fx`), cabeçalho congelado (`border-bottom: 2px solid
+   var(--maroon)`), abas de etapa (`xltabs`) quando o modelo é passo a
+   passo (aba ativa na cor de acento do bloco).
+7. **Grade × Abas** — quando o artefato compara mais de 6 exemplos,
+   oferecer as duas visões (grade agrupada por seção com banda colorida
+   / abas verticais + sub-abas horizontais + painel ampliado) a partir
+   de uma ÚNICA fonte de dados JS (`const S = [...]`), nunca duplicando
+   conteúdo. Botão de alternância `Grade`/`Abas` no topo; nunca remover
+   uma visão sem confirmação explícita do usuário.
+8. **Versionamento** — ajuste de estilo/cor pode substituir a versão
+   atual quando o usuário pedir "mude"/"altere"/"corrija"; nova visão,
+   novo bloco de conteúdo ou reestruturação de navegação gera nova
+   versão do arquivo (`-v2`, `-v3`...), preservando a anterior.
+
+Aplicar `manta-visual-dinamico` SEMPRE junto com `padrao-manta` em
+artefatos para cliente ou uso institucional — `padrao-manta` define o
+esqueleto obrigatório, `manta-visual-dinamico` refina cor, tabela,
+texto e navegação por cima.
+
+---
+
 ## SHAREPOINT — Routing rules (sp_agent_routing)
 
 Confirmado por auditoria real: tabela `sp_agent_routing` tem 9 linhas
@@ -548,7 +613,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.0)
+├── CLAUDE.md                              # este arquivo (master registry, v5.2)
 ├── README.md
 ├── .claude/
 │   └── agents/
@@ -588,6 +653,13 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.2** (2026-08-30) — registro da skill transversal C1
+  `manta-visual-dinamico` no mapa de skills do Maestro (Eixo F, F8 —
+  Padronização): degradê de cor por bloco (terracota→vinho), distinção
+  Retigráfico × Tempo×Caminho, zebra de tabela em tom Manta, texto
+  resumido com negrito nos destaques, mock de Excel realista e
+  alternância grade/abas. Usar sempre em conjunto com `padrao-manta`
+  em artefatos institucionais. Ticket `MNT-2026-VISUAL-DINAMICO`.
 - **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
   agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
   (ambiental, social, governança, integração), integração co-agente com 
