@@ -4,8 +4,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-08-30) — registro da skill transversal
+`manta-visual-dinamico` (padrão visual dinâmico para artefatos HTML).
 
 ---
 
@@ -104,6 +104,64 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## SKILLS TRANSVERSAIS (C1) — Padrão Visual
+
+Skills reutilizáveis (camada C1 da arquitetura) que qualquer agente
+horizontal ou vertical invoca para garantir consistência visual e de
+conteúdo nos artefatos entregues ao cliente.
+
+| Skill | Cobre | Usar com |
+|-------|-------|----------|
+| `padrao-manta` | Esqueleto obrigatório (logo, abas, rastreabilidade) | Todo artefato para cliente |
+| `manta-visual-dinamico` | Refinamento dinâmico (degradê de cor, tabelas, texto, Excel, grade×abas) | **v4.3** — junto com `padrao-manta` em artefatos institucionais/cliente |
+
+### `manta-visual-dinamico` — regras-chave
+
+1. **Degradê de cor por bloco** — 5 tons interpolando terracota→vinho
+   (`#E0793D → #BF4D19 → #8F3D22 → #7A3B22 → #5F2C2B`), aplicado por
+   seção/bloco (band do cabeçalho, borda superior de cards, sidenav e
+   sub-abas ativas). Transições suaves (`background .3s ease`; troca de
+   aba com `fadeIn .28s ease`). Nunca usar cores fora da família
+   terracota/vinho na casca Manta — verde/azul/vermelho só em mockups
+   que representem a paleta de OUTRA metodologia sendo comparada
+   (ex.: navy do BCG, vermelho do Bain).
+2. **Retigráfico ≠ Tempo × Caminho** — retigráfico é inventário linear
+   georreferenciado por km (régua horizontal, sem eixo de tempo);
+   Tempo×Caminho é avanço de obra por frente de serviço (eixo X = km,
+   eixo Y = tempo; linhas diagonais = velocidade de avanço). Rotular
+   explicitamente qual é qual; nunca representar retigráfico com linhas
+   diagonais nem Tempo×Caminho com régua estática.
+3. **Tabelas** — zebra em tom Manta (terracota ~4,5% / vinho ~4%),
+   nunca cinza neutro. Mantém a regra "quadros e tabelas, nunca cards"
+   do `padrao-manta`.
+4. **Texto** — bullets curtos em vez de parágrafo corrido (relatórios
+   SCL/AACE/MBB/FIDIC e elementos técnicos); `<b>` apenas no dado que
+   carrega a conclusão (número, prazo, metodologia, responsável);
+   quebrar frases com mais de ~15 palavras.
+5. **Apresentações** — cards que simulam slide (McKinsey/BCG/Bain/
+   Deloitte) usam tópicos curtos, não blocos de texto.
+6. **Excel mock** — ribbon/nome do `.xlsx`, barra de fórmulas (célula
+   ativa + `fx`), cabeçalho congelado (`border-bottom: 2px solid
+   var(--maroon)`), abas de etapa (`xltabs`) quando o modelo é passo a
+   passo (aba ativa na cor de acento do bloco).
+7. **Grade × Abas** — quando o artefato compara mais de 6 exemplos,
+   oferecer as duas visões (grade agrupada por seção com banda colorida
+   / abas verticais + sub-abas horizontais + painel ampliado) a partir
+   de uma ÚNICA fonte de dados JS (`const S = [...]`), nunca duplicando
+   conteúdo. Botão de alternância `Grade`/`Abas` no topo; nunca remover
+   uma visão sem confirmação explícita do usuário.
+8. **Versionamento** — ajuste de estilo/cor pode substituir a versão
+   atual quando o usuário pedir "mude"/"altere"/"corrija"; nova visão,
+   novo bloco de conteúdo ou reestruturação de navegação gera nova
+   versão do arquivo (`-v2`, `-v3`...), preservando a anterior.
+
+Aplicar `manta-visual-dinamico` SEMPRE junto com `padrao-manta` em
+artefatos para cliente ou uso institucional — `padrao-manta` define o
+esqueleto obrigatório, `manta-visual-dinamico` refina cor, tabela,
+texto e navegação por cima.
+
+---
+
 ## SHAREPOINT — Routing rules (sp_agent_routing)
 
 | Agente | Pasta SP sugerida | Pattern |
@@ -154,6 +212,12 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-30) — registro da skill transversal C1
+  `manta-visual-dinamico` no mapa de skills do Maestro: degradê de cor
+  por bloco (terracota→vinho), distinção Retigráfico × Tempo×Caminho,
+  zebra de tabela em tom Manta, texto resumido com negrito nos
+  destaques, mock de Excel realista e alternância grade/abas. Usar
+  sempre em conjunto com `padrao-manta` em artefatos institucionais.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
