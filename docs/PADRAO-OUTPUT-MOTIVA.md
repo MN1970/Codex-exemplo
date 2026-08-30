@@ -40,7 +40,7 @@ Data-base.
 
 Legenda (linhas 18–19, idêntica nos 4 arquivos lidos):
 
-```
+```text
 LEGENDA:    CÉLULAS COM PREENCHIMENTO AUTOMÁTICO
             CÉLULAS PARA PREENCHIMENTO MANUAL
 ```
@@ -134,7 +134,7 @@ Motiva, em 3 níveis:
 
 Exemplos observados:
 
-```
+```text
 MD-SP0000258-226.255-620-L09/101
 RS-BR000/00-0000.00-PRT-A1-GR/IT.C-201
 ```
@@ -182,7 +182,7 @@ em qualquer entregável até a cor oficial ser confirmada.
 
 ## Fontes (SharePoint · site Engenharia)
 
-```
+```text
 Documentos Compartilhados/Projeto 01/01.37 - MOTIVA (SP Vias - Duplicação SP_258)
 Documentos Compartilhados/Projeto 01/01.44 - MOTIVA (Concessionárias 11)/01.44.04
 Documentos Compartilhados/Projeto 01/01.52 - CSA (Adequação OAE's - MOTIVA)
