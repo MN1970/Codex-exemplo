@@ -318,8 +318,10 @@ jobs:
           import json
           with open('tests/fixtures/prompts_golden_40.json') as f:
               data = json.load(f)
-              assert len(data['test_cases']) == 40, 'Expected 40 test cases'
-              print(f'✅ Golden fixtures: {len(data[\"test_cases\"])} cases')
+              actual = len(data['test_cases'])
+              expected = data['metadata']['total_cases']
+              assert actual == expected, f'metadata.total_cases={expected} mas test_cases tem {actual}'
+              print(f'✅ Golden fixtures: {actual} cases (metadata em sincronia)')
           "
           else
             echo "❌ Fixtures file not found"
