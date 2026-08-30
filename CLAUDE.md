@@ -4,7 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
+Versão: **v4.3** (2026-08-30) — padrão de output por cliente (Motiva).
+
+Versão anterior: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
 Saneamento, Energia, Barragens).
 
 ---
@@ -116,6 +118,19 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## PADRÕES DE OUTPUT POR CLIENTE
+
+Referências canônicas de formato de entregável (EAP em Excel/PPT,
+relatório, codificação de documentos, identidade visual) por cliente,
+levantadas do SharePoint. Todo agente vertical deve seguir o padrão do
+cliente ao gerar output para ele.
+
+| Cliente | Doc de referência | Status |
+|---------|--------------------|--------|
+| Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) | ✅ EAP Excel/relatório/codificação · ⚠️ cores de marca não localizadas — usar `padrao-manta` até confirmação |
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -136,6 +151,8 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 ```
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
+├── docs/
+│   └── PADRAO-OUTPUT-MOTIVA.md       # 🆕 v4.3 — padrão de output cliente Motiva
 └── .claude/
     └── agents/
         ├── agente-portos.md          # 🆕 S6
@@ -154,6 +171,13 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-08-30) — padrão de output do cliente Motiva
+  documentado (`docs/PADRAO-OUTPUT-MOTIVA.md`): formato de EAP em
+  Excel (template v8, hierarquia de 4 níveis, código interno) e em
+  PowerPoint, estrutura do relatório Caderno de Premissas FEL-1, norma
+  de codificação de documentos CCR/Motiva. Cores de marca: lacuna
+  confirmada em duas varreduras do SharePoint (geral e pastas
+  "Material Recebido" de 10 projetos) — nenhum brandbook localizado.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
