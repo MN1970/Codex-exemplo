@@ -70,6 +70,16 @@ descomissionamento.
 8. **Cronograma e orçamento** — SICRO adaptado + custos ANAC de
   referência (BID/PPP concessões).
 
+## Formato de saída (relatórios)
+
+Todo relatório/documento gerado por este agente segue o padrão visual
+oficial do Manta Maestro — preencher os tokens `{{ASSIM}}` de
+`templates/relatorio-padrao-manta.html`, nunca recriar o layout do zero.
+O padrão combina as 6 regras obrigatórias da skill `padrao-manta` com o
+padrão "MBB + Engenharia" (título de ação, mensagem principal/"governing
+thought", tabelas numeradas com coluna de largura fixa) — ver
+`docs/PADRAO-VISUAL-RELATORIOS-MAESTRO.md`.
+
 ## Ferramentas e integrações
 
 - Repositórios ANAC (RBAC, INFRAERO/GRU/Fraport releases), ICAO

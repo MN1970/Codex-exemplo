@@ -50,7 +50,13 @@ numeração/ficha técnica/marca d'água) contra o padrão Manta.
       remover o fallback "desenhar SVG inline"
 - [ ] Migrar 1 relatório piloto usando `templates/relatorio-padrao-manta.html`
       e validar com o time
-- [ ] Propagar o template para os demais agentes do Maestro
+- [x] Propagar a referência ao template para os 5 agentes verticais deste
+      repositório (`.claude/agents/agente-{portos,aeroportos,saneamento,
+      energia,barragens}.md` — seção "Formato de saída (relatórios)")
+- [ ] Propagar para os demais ~15 agentes (Manta 00-02, 04-07, 13-16,
+      S1-S4) — vivem no repositório operacional do Maestro (`manta-hub` ou
+      equivalente), não acessível nesta sessão. Precisa de `add_repo` com
+      o nome real do repositório, ou aplicação manual pelo time
 - [ ] Gate humano: aprovação MN antes de propagar
 
 ## 3. Fontes
