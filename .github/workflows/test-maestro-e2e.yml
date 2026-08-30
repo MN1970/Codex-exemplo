@@ -291,7 +291,7 @@ jobs:
       - name: Validate CLAUDE.md v5.0
         run: |
           echo "::group::CLAUDE.md v5.0 Validation"
-          if grep -q "v5.0" CLAUDE.md && grep -q "8 pilares" CLAUDE.md; then
+          if grep -q "v5.0" CLAUDE.md && grep -q "4 eixos" CLAUDE.md; then
             echo "✅ CLAUDE.md v5.0 is valid"
           else
             echo "❌ CLAUDE.md v5.0 is missing"
