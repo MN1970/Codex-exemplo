@@ -51,9 +51,13 @@ code,.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
 main{flex:1;min-width:0;padding:36px 44px 80px;position:relative}
 .tab{display:none}.tab.active{display:block}
 
-.scope{border-left:3px solid var(--accent);background:var(--bg-alt);
-  padding:14px 18px;border-radius:2px;font-size:14px;color:var(--text);margin:18px 0 28px}
-.scope b{color:var(--heading)}
+.quadro{border-left:3px solid var(--border);background:var(--bg-alt);
+  padding:14px 18px;border-radius:2px;margin:18px 0 28px;font-size:14px;color:var(--text)}
+.quadro p{margin:0}
+.quadro .eyebrow{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.quadro.accent{border-left-color:var(--accent)}
+.quadro.accent .eyebrow{color:var(--accent-dark)}
 
 h2.sec{font-size:22px;color:var(--title);margin-bottom:4px}
 h2.sec .num{color:var(--accent);margin-right:8px;font-variant-numeric:tabular-nums}
@@ -64,16 +68,23 @@ p{max-width:68ch;margin:10px 0}
 ul,ol{max-width:68ch;padding-left:20px}
 li{margin:6px 0}
 
-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
-thead th{text-align:left;padding:9px 12px;font-size:11.5px;font-weight:600;
-  color:var(--muted);text-transform:uppercase;letter-spacing:.05em;
-  border-bottom:2px solid var(--border)}
-tbody td{padding:9px 12px;border-bottom:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 22px;font-size:13.5px}
+thead th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
+  background:var(--bg-alt);border-bottom:2px solid var(--border)}
+tbody td{padding:11px 12px;border-bottom:1px solid var(--border);
+  vertical-align:top;line-height:1.5;word-wrap:break-word}
 tbody tr:nth-child(even){background:var(--bg-alt)}
+tbody tr:hover td{background:color-mix(in srgb, var(--accent) 7%, var(--bg))}
 tbody tr.bad td:first-child{border-left:3px solid var(--bad)}
 tbody tr.ok td:first-child{border-left:3px solid var(--ok)}
+th.center,td.center{text-align:center}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tcap{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin:22px 0 -2px}
 
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;
+  vertical-align:middle}
 .dot.bad{background:var(--bad)} .dot.ok{background:var(--ok)} .dot.warn{background:var(--accent)}
 
 /* mockup frame: an isolated "screenshot" — fixed light palette regardless of page theme */
@@ -131,10 +142,6 @@ tbody tr.ok td:first-child{border-left:3px solid var(--ok)}
 .good-foot{border-top:1px solid #E5E7EB;padding:8px 18px;font-size:9.5px;color:#9CA3AF;
   display:flex;justify-content:space-between}
 
-.callout{display:flex;gap:12px;padding:14px 16px;border-radius:4px;margin:16px 0;
-  border:1px solid var(--border);background:var(--bg-alt)}
-.callout b{color:var(--heading)}
-.callout.root{border-color:var(--accent);border-width:1px}
 
 .steps{list-style:none;padding:0;margin:16px 0;max-width:68ch}
 .steps li{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
@@ -218,7 +225,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
       <div class="sub">Auditoria visual e proposta de padronização · destinatário: equipe Manta Maestro</div>
     </div>
   </div>
-  <div class="meta">v1.2 · 29/08/2026<br>MANTA-REDESIGN-RELATORIOS-20260829-01</div>
+  <div class="meta">v1.3 · 29/08/2026<br>MANTA-REDESIGN-RELATORIOS-20260829-01</div>
 </div>
 
 <div class="layout">
@@ -240,11 +247,14 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
       Maestro é, portanto, gerado do zero a partir da descrição do padrão — e é isso que produz
       a inconsistência que você está sentindo.</p>
 
-      <div class="scope"><b>Escopo:</b> como não há uma amostra real anexada nesta sessão para
-      auditar pixel a pixel, o quadro abaixo reconstrói os desvios <b>mais comuns</b> que aparecem
-      quando um relatório é gerado sem um template fixo — os mesmos que a seção "PROIBIDO" do
-      padrão Manta já lista. Se você anexar um relatório real (link ou arquivo), refaço esta
-      seção com o diff exato.</div>
+      <div class="quadro accent">
+        <span class="eyebrow">Escopo</span>
+        <p>Como não há uma amostra real anexada nesta sessão para auditar pixel a pixel, o
+        quadro abaixo reconstrói os desvios <b>mais comuns</b> que aparecem quando um relatório
+        é gerado sem um template fixo — os mesmos que a seção "PROIBIDO" do padrão Manta já
+        lista. Se você anexar um relatório real (link ou arquivo), refaço esta seção com o diff
+        exato.</p>
+      </div>
 
       <h3 class="sub"><span class="num">1.1</span>Reconstrução do padrão típico</h3>
       <div class="shot">
@@ -272,7 +282,9 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
       <div class="shot-label">reconstrução ilustrativa dos desvios mais comuns — não é um relatório real</div>
 
       <h3 class="sub"><span class="num">1.2</span>O que quebra o padrão Manta aqui</h3>
+      <span class="tcap">Tabela 1.2</span>
       <table>
+        <colgroup><col style="width:17%"><col style="width:49%"><col style="width:34%"></colgroup>
         <thead><tr><th>Item</th><th>Encontrado</th><th>Regra do padrão Manta</th></tr></thead>
         <tbody>
           <tr class="bad"><td><span class="dot bad"></span>Logo</td><td>Caixa genérica "LOGO?" — o modelo redesenha o monograma a cada geração, sem arquivo de referência</td><td>Regra 2 — logo idêntico, arquivo fixo</td></tr>
@@ -285,10 +297,13 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
         </tbody>
       </table>
 
-      <div class="callout root"><b>Causa raiz:</b> todos os itens acima têm a mesma origem —
-      não existe um <b>template único e travado</b> (HTML/CSS + arquivo de logo) que os agentes
-      preencham. O modelo relê a especificação em texto e "desenha de memória" a cada relatório,
-      então layout, cores e principalmente o logo saem levemente diferentes toda vez.</div>
+      <div class="quadro accent">
+        <span class="eyebrow">Causa raiz</span>
+        <p>Todos os itens acima têm a mesma origem — não existe um <b>template único e
+        travado</b> (HTML/CSS + arquivo de logo) que os agentes preencham. O modelo relê a
+        especificação em texto e "desenha de memória" a cada relatório, então layout, cores e
+        principalmente o logo saem levemente diferentes toda vez.</p>
+      </div>
     </section>
 
     <!-- TAB 2 -->
@@ -337,7 +352,9 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
       <div class="shot-label">mesma estrutura de dados do exemplo anterior, redesenhada sob o padrão Manta</div>
 
       <h3 class="sub"><span class="num">2.2</span>O que muda, item a item</h3>
+      <span class="tcap">Tabela 2.2</span>
       <table>
+        <colgroup><col style="width:17%"><col style="width:39%"><col style="width:44%"></colgroup>
         <thead><tr><th>Item</th><th>Antes</th><th>Depois</th></tr></thead>
         <tbody>
           <tr class="ok"><td><span class="dot ok"></span>Logo</td><td>redesenhado a cada geração</td><td>arquivo único embutido (ver seção 3)</td></tr>
@@ -356,15 +373,16 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
       <p class="sec-intro">Este é o ponto que mais gera atrito, e a causa é mecânica, não de gosto.</p>
 
       <h3 class="sub"><span class="num">3.1</span>Diagnóstico</h3>
-      <div class="callout root">
-      <div><b>Não existe hoje um arquivo real do logo em nenhum lugar acessível.</b> A skill
-      <code>padrao-manta</code> referencia <code>assets/logo-manta.png</code>, mas esse arquivo
-      não existe — nem neste repositório, nem em qualquer caminho que esta sessão consiga ler.
-      A própria skill já prevê esse cenário: "na ausência do arquivo, usar a marca SVG inline"
-      — ou seja, o modelo desenha um quadrado laranja com um "M" <b>de memória</b>, a cada
-      relatório, porque nunca recebeu os bytes reais do logo para reutilizar. Pequenas variações
-      de proporção, tom de laranja e tipografia do monograma aparecem a cada execução — por isso
-      "nunca fica idêntico".</div>
+      <div class="quadro accent">
+        <span class="eyebrow">Diagnóstico</span>
+        <p><b>Não existe hoje um arquivo real do logo em nenhum lugar acessível.</b> A skill
+        <code>padrao-manta</code> referencia <code>assets/logo-manta.png</code>, mas esse
+        arquivo não existe — nem neste repositório, nem em qualquer caminho que esta sessão
+        consiga ler. A própria skill já prevê esse cenário: "na ausência do arquivo, usar a
+        marca SVG inline" — ou seja, o modelo desenha um quadrado laranja com um "M" <b>de
+        memória</b>, a cada relatório, porque nunca recebeu os bytes reais do logo para
+        reutilizar. Pequenas variações de proporção, tom de laranja e tipografia do monograma
+        aparecem a cada execução — por isso "nunca fica idêntico".</p>
       </div>
 
       <div class="logo-compare">
@@ -456,14 +474,16 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
         <div class="wm-layer wm-e"><span class="wm-word">MANTA ASSOCIADOS · CONFIDENCIAL</span></div>
       </div>
 
-      <table style="margin-top:22px">
-        <thead><tr><th>Opção</th><th>Quando usar</th><th>Opacidade sugerida</th></tr></thead>
+      <span class="tcap" style="margin-top:22px">Tabela 5.1</span>
+      <table>
+        <colgroup><col style="width:22%"><col style="width:58%"><col style="width:20%"></colgroup>
+        <thead><tr><th>Opção</th><th>Quando usar</th><th class="center">Opacidade sugerida</th></tr></thead>
         <tbody>
-          <tr><td>A · Diagonal única</td><td>Padrão atual da skill — bom equilíbrio para a maioria dos relatórios</td><td>5–9%</td></tr>
-          <tr><td>B · Diagonal repetida</td><td>Documentos sensíveis — reforça a marca em cada rolagem de tela</td><td>6–10%</td></tr>
-          <tr><td>C · Monograma disperso</td><td>Relatórios densos em tabela — menos intrusivo que texto corrido sobre os dados</td><td>8–12%</td></tr>
-          <tr><td>D · Selo no rodapé</td><td>Relatórios de leitura longa — mantém a área de conteúdo 100% limpa</td><td>15–20%</td></tr>
-          <tr><td>E · Faixa lateral</td><td>Documentos com classificação (Confidencial/Restrito)</td><td>18–24%</td></tr>
+          <tr><td>A · Diagonal única</td><td>Padrão atual da skill — bom equilíbrio para a maioria dos relatórios</td><td class="center">5–9%</td></tr>
+          <tr><td>B · Diagonal repetida</td><td>Documentos sensíveis — reforça a marca em cada rolagem de tela</td><td class="center">6–10%</td></tr>
+          <tr><td>C · Monograma disperso</td><td>Relatórios densos em tabela — menos intrusivo que texto corrido sobre os dados</td><td class="center">8–12%</td></tr>
+          <tr><td>D · Selo no rodapé</td><td>Relatórios de leitura longa — mantém a área de conteúdo 100% limpa</td><td class="center">15–20%</td></tr>
+          <tr><td>E · Faixa lateral</td><td>Documentos com classificação (Confidencial/Restrito)</td><td class="center">18–24%</td></tr>
         </tbody>
       </table>
       <p class="sec-intro"><b>Opção adotada: B · Diagonal repetida</b> — já aplicada em toda esta
@@ -489,7 +509,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
         <tr><td>Projeto</td><td>Manta Maestro — Sistema de Relatórios</td></tr>
         <tr><td>Documento</td><td>Diagnóstico e Proposta de Redesign</td></tr>
         <tr><td>Objeto</td><td>Auditoria de design + solução para o logo</td></tr>
-        <tr><td>Versão</td><td>v1.2 (marca d'água do documento inteiro trocada para B · diagonal repetida, escolhida pelo usuário)</td></tr>
+        <tr><td>Versão</td><td>v1.3 (colunas com largura fixa e numeradas nas tabelas, quadros unificados com rótulo, alinhamento e hover refinados)</td></tr>
         <tr><td>Data de criação</td><td>29/08/2026</td></tr>
         <tr><td>Gerado por</td><td>Claude AI — Manta Associados</td></tr>
         <tr><td>Classificação</td><td>Interno</td></tr>
