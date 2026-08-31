@@ -85,6 +85,10 @@ licitação orçamentária e parecer de conformidade de preço.
   BDI histórico, pareceres de viabilidade, marcos regulatórios.
 - Integração com Manta 05 (cronograma) para curva de desembolso e Manta 02
   (contratual) para reajuste.
+- **Cliente Motiva (ex-CCR Rodovias)**: toda EAP/orçamento gerado para
+  essa cliente segue o template `docs/templates/EAP-PADRAO-MOTIVA.xlsx`
+  (capa + hierarquia de 4 níveis + fórmulas de custo/preço) — ver
+  `docs/PADRAO-OUTPUT-MOTIVA.md` seção 1 para o padrão completo.
 
 ## Handoff com outros agentes
 

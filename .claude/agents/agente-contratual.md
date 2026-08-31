@@ -89,6 +89,11 @@ comercial, conformidade regulatória e negociação de termos.
   jurisprudência, marcos regulatórios, pareceres.
 - Integração com Manta 01 (claims) para análise de responsabilidade e
   Manta 05 (orçamento) para custo de aditivo.
+- **Cliente Motiva (ex-CCR Rodovias)**: documentos técnicos seguem a
+  norma de codificação própria do cliente (3 níveis — concessionária ·
+  rodovia+UF+km+tipo de obra · tipo de documento+fase+revisão), não a
+  numeração interna Manta padrão — ver `docs/PADRAO-OUTPUT-MOTIVA.md`
+  seção 4.
 
 ## Handoff com outros agentes
 

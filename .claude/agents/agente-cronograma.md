@@ -88,6 +88,11 @@ faseamento de obra e impacto de interferências urbanas.
   (planejamento).
 - Integração com Manta 05 (orçamento) para curva de desembolso e Manta 07
   (cronograma) para replanejamento.
+- **Cliente Motiva (ex-CCR Rodovias)**: quantitativos de cronograma
+  alimentam as seções do deck de Planejamento Gerencial (ver
+  agente-apresentacoes e `docs/PADRAO-OUTPUT-MOTIVA.md` seção 2) — não
+  gerar slide de EAP isolado; a EAP detalhada fica na planilha (ver
+  agente-orcamento).
 
 ## Handoff com outros agentes
 

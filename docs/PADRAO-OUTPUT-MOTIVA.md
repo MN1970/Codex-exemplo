@@ -31,6 +31,21 @@ Manta) até a marca oficial ser confirmada pelo cliente; a nota está
 registrada no gerador de cada arquivo e nas notas do orador da capa do
 PPTX.
 
+**Ligado ao routing e aos agentes de output** (2026-08-31, v5.4) — o
+Maestro (Manta 00) aplica este padrão automaticamente quando a sessão
+menciona `Motiva`/`CCR Rodovias`/`SP-258`/`SP-330`/`Contorno Apucarana`
+(ver seção ROUTING do `CLAUDE.md`), e os 4 agentes horizontais que de
+fato geram o entregável citam este documento na própria seção
+"Ferramentas e integrações": `agente-orcamento.md` (EAP Excel),
+`agente-cronograma.md` (insumo do Planejamento Gerencial),
+`agente-apresentacoes.md` (PPT) e `agente-contratual.md` (codificação
+de documentos).
+
+**Ainda pendente**: upload dos 2 templates para o SharePoint real da
+equipe (`sites/Engenharia/.../04_IA/Manta-Maestro/`) — hoje só existem
+versionados neste repositório; o MCP SharePoint disponível é somente
+leitura, então essa etapa é manual.
+
 ---
 
 ## 1. EAP — formato Excel
