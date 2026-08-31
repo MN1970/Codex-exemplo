@@ -215,7 +215,15 @@ class APSchedulerManager:
         """Job: RAG Reindex (R6) — Daily @ 02:00 UTC"""
         logger.info("[JOB] Starting RAG Reindex...")
         try:
-            from rag_reindex import RAGReindexer
+            # Arquivo é `rag-reindex.py` (hífen) — não importável via
+            # `from rag_reindex import ...`; carregar pelo caminho.
+            import importlib.util
+
+            module_path = self.repo_root / "scripts" / "rag-reindex.py"
+            spec = importlib.util.spec_from_file_location("rag_reindex", module_path)
+            rag_reindex = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(rag_reindex)
+            RAGReindexer = rag_reindex.RAGReindexer
             reindexer = RAGReindexer(self.repo_root)
             result = reindexer.run()
             logger.info(f"[JOB] ✓ RAG Reindex completed: {json.dumps(result, indent=2)}")

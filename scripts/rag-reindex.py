@@ -114,6 +114,7 @@ class RAGReindexer:
             "note": "Cache holds top-5 reranked results for recent queries"
         }
 
+        self.rag_dir.mkdir(parents=True, exist_ok=True)
         cache_file = self.rag_dir / "cache_metadata.json"
         with open(cache_file, "w") as f:
             json.dump(cache_metadata, f, indent=2)
