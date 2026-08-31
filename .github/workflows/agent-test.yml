@@ -24,6 +24,7 @@ on:
       - "CLAUDE.md"
       - "supabase/migrations/**"
       - "tests/**"
+      - "pytest.ini"
       - ".github/workflows/agent-test.yml"
   push:
     branches:

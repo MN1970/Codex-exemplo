@@ -4,7 +4,18 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.1** (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+Versão: **v5.3** (2026-08-30) — **Templates Motiva implementados**:
+`docs/templates/EAP-PADRAO-MOTIVA.xlsx` e
+`docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`, aprovados
+por MN, reproduzindo o padrão documentado em v5.2 (paleta neutra Manta
+até confirmação da marca).
+
+Consolida v5.2 (2026-08-30) — **Padrões de output por cliente**: nova
+seção que referencia o padrão de entregável (EAP em Excel/PPT,
+relatório, codificação de documentos, identidade visual) por cliente,
+começando pela Motiva (ex-CCR Rodovias).
+
+Consolida v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
 Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
 assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
@@ -15,7 +26,9 @@ Consolida v5.0.1 operacional (2026-07-31):
 - **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
   gaps G010/G012/G014 resolvidos, 15 Sonnets investigação paralela.
 
-Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGENT` (novo).
+Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) +
+`MNT-2026-P3-04-ESG-AGENT` + `MNT-2026-MOTIVA-258-PATTERN` (novo,
+padrão de output por cliente).
 
 > **Nota de proveniência**: este arquivo **reconcilia** dois work streams
 > paralelos na mesma data:
@@ -44,12 +57,13 @@ Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGE
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
-12. [Model tiering](#model-tiering)
-13. [Gaps abertos / pendências](#gaps-abertos--pendências)
-14. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
-15. [Deploy checklist v5.0](#deploy-checklist-v50)
-16. [Arquivos deste repositório](#arquivos-deste-repositório)
-17. [Histórico de versões](#histórico-de-versões)
+12. [Padrões de output por cliente](#padrões-de-output-por-cliente)
+13. [Model tiering](#model-tiering)
+14. [Gaps abertos / pendências](#gaps-abertos--pendências)
+15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
+16. [Deploy checklist v5.0](#deploy-checklist-v50)
+17. [Arquivos deste repositório](#arquivos-deste-repositório)
+18. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -436,6 +450,19 @@ em produção (ver seção RAG acima).
 
 ---
 
+## PADRÕES DE OUTPUT POR CLIENTE
+
+Referências canônicas de formato de entregável (EAP em Excel/PPT,
+relatório, codificação de documentos, identidade visual) por cliente,
+levantadas do SharePoint. Todo agente vertical deve seguir o padrão do
+cliente ao gerar output para ele.
+
+| Cliente | Doc de referência | Status |
+|---------|--------------------|--------|
+| Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) · templates: [`EAP-PADRAO-MOTIVA.xlsx`](docs/templates/EAP-PADRAO-MOTIVA.xlsx), [`PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`](docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx) | ✅ EAP Excel/PPT/relatório/codificação implementados (aprovado MN) · ⚠️ cores de marca não localizadas — templates usam paleta neutra Manta até confirmação |
+
+---
+
 ## MODEL TIERING
 
 | Tier | Modelo | Uso típico |
@@ -548,7 +575,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.0)
+├── CLAUDE.md                              # este arquivo (master registry, v5.2)
 ├── README.md
 ├── .claude/
 │   └── agents/
@@ -561,6 +588,10 @@ Codex-exemplo/
 │       ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
 │       └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
 ├── docs/
+│   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
+│   ├── templates/
+│   │   ├── EAP-PADRAO-MOTIVA.xlsx               # 🆕 v5.3 — template EAP (capa + hierarquia 4 níveis)
+│   │   └── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (⚠️ numeração de S divergente — ver Gaps)
@@ -588,6 +619,31 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.3** (2026-08-30) — **Templates Motiva implementados** (aprovado
+  por MN). Dois arquivos novos em `docs/templates/`:
+  - `EAP-PADRAO-MOTIVA.xlsx` — aba Capa (bloco de cabeçalho + legenda
+    de preenchimento automático/manual) e aba EAP (cabeçalho de 16
+    colunas, hierarquia de 4 níveis com 2 itens-modelo, fórmulas de
+    custo total/preço unitário/preço total/% — validadas com
+    recálculo LibreOffice, 0 erros).
+  - `PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx` — capa (versalete +
+    campos Cliente/Elaboração/Status), slide de sumário com as 5
+    seções documentadas e slide-modelo de conteúdo com o rodapé
+    padrão `[Rodovia] · [Segmento] · MOTIVA · [Seção] · nº/total`
+    (validado com `office/validate.py` e QA visual).
+  - Paleta: grayscale neutro (padrão Manta) em ambos os arquivos —
+    cor institucional da Motiva segue não confirmada (ver v5.2/seção
+    5 de `PADRAO-OUTPUT-MOTIVA.md`); nota registrada no gerador e nas
+    notas do orador da capa do PPTX para troca fácil quando a marca
+    for confirmada. Ticket `MNT-2026-MOTIVA-258-PATTERN`.
+- **v5.2** (2026-08-30) — padrão de output do cliente Motiva
+  documentado (`docs/PADRAO-OUTPUT-MOTIVA.md`): formato de EAP em
+  Excel (template v8, hierarquia de 4 níveis, código interno) e em
+  PowerPoint, estrutura do relatório Caderno de Premissas FEL-1, norma
+  de codificação de documentos CCR/Motiva. Cores de marca: lacuna
+  confirmada em duas varreduras do SharePoint (geral e pastas
+  "Material Recebido" de 10 projetos) — nenhum brandbook localizado.
+  Ticket `MNT-2026-MOTIVA-258-PATTERN`.
 - **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
   agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
   (ambiental, social, governança, integração), integração co-agente com 
