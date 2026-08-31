@@ -301,20 +301,32 @@ total operacional até gate MN.
 
 ### Horizontais (transversais a todos os segmentos) — 11 agentes
 
-| Código | Agente | Aliases | Tier default | Status |
-|--------|--------|---------|--------------|--------|
-| Manta 00 | maestro (router) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
-| Manta 01 | claims | 02-C, manta-claims | Opus | ✅ Operacional |
-| Manta 02 | contratual | manta-02, contratual | Sonnet | ✅ Operacional |
-| Manta 04 | imobiliario | manta-04 | Sonnet | ✅ Operacional |
-| Manta 05 | orcamento | manta-05 | Sonnet | ✅ Operacional |
-| Manta 06 | modelagem | manta-06 | Sonnet/Opus | ✅ Operacional |
-| Manta 07 | cronograma | manta-07 | Sonnet | ✅ Operacional |
-| Manta 13 | bd | manta-13, business-dev | Sonnet | ✅ Operacional |
-| Manta 14 | apresentacoes | manta-14-pptx | Sonnet | ✅ Operacional |
-| Manta 15 | advisory | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
-| Manta 16 | arquiteto-ia | manta-15-arq | Opus | ✅ Operacional |
-| Manta 20 | esg | manta-20-esg, agente-esg | Sonnet | 🆕 v1.0 (P3-04 Design Agent) |
+| Código | Agente | Arquivo | Aliases | Tier default | Status |
+|--------|--------|---------|---------|--------------|--------|
+| Manta 00 | maestro (router) | `maestro.v5.0.md` (spec de arquitetura — ver nota) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
+| Manta 01 | claims | `agente-claims.md` | 02-C, manta-claims | Opus | ✅ Operacional |
+| Manta 02 | contratual | `agente-contratual.md` | manta-02, contratual | Sonnet | ✅ Operacional |
+| Manta 04 | imobiliario | `agente-imobiliario.md` | manta-04 | Sonnet | ✅ Operacional |
+| Manta 05 | orcamento | `agente-orcamento.md` | manta-05 | Sonnet | ✅ Operacional |
+| Manta 06 | modelagem | `agente-modelagem.md` | manta-06 | Sonnet/Opus | ✅ Operacional |
+| Manta 07 | cronograma | `agente-cronograma.md` | manta-07 | Sonnet | ✅ Operacional |
+| Manta 13 | bd | `agente-bd.md` | manta-13, business-dev | Sonnet | ✅ Operacional |
+| Manta 14 | apresentacoes | `agente-apresentacoes.md` | manta-14-pptx | Sonnet | ✅ Operacional |
+| Manta 15 | advisory | `agente-advisory.md` | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
+| Manta 16 | arquiteto-ia | `agente-arquiteto-ia.md` | manta-15-arq | Opus | ✅ Operacional |
+| Manta 20 | esg | `agente-esg.md` (spec de design, excluída do registro de teste — ver nota) | manta-20-esg, agente-esg | Sonnet | 🆕 v1.0 (P3-04 Design Agent) |
+
+> **Nota sobre `maestro.v5.0.md` e `agente-esg.md`**: ambos vivem em
+> `.claude/agents/` mas estão em `EXCLUDED_FROM_REGISTRY`
+> (`tests/lib/agent_loader.py`) — o primeiro é a spec de arquitetura do
+> router Manta 00 em formato de documento, não um subagente Claude
+> Code; o segundo é a spec "Design Phase" do P3-04 (seções numeradas,
+> ainda não convertida para o formato operacional de frontmatter +
+> "Contexto de domínio" + "Handoff" usado pelos demais agentes). Os
+> outros 4 agentes de Fase 3 (`agente-analytics-p3-07.md`,
+> `agente-procurement-p3-08.md`, `manta-21-stakeholder.md`,
+> `manta-25-kg.md`) estão na mesma situação — specs de design, não
+> agentes operacionais — por isso não aparecem nas tabelas acima.
 
 ### Verticais por segmento (C3) — 9 operacionais + 1 parcial + 2 propostos
 
