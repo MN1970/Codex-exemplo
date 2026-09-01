@@ -4,7 +4,17 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.3** (2026-08-30) — **Templates Motiva implementados**:
+Versão: **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
+agentes de output**: nova keyword de cliente na seção ROUTING
+(`Motiva|CCR Rodovias|SP-258|SP-330|Contorno Apucarana` → aplica
+`docs/PADRAO-OUTPUT-MOTIVA.md` como co-agente de padrão de output) +
+referência direta ao documento em `agente-orcamento.md`,
+`agente-cronograma.md`, `agente-apresentacoes.md` e
+`agente-contratual.md` (os 4 horizontais que de fato geram o
+entregável EAP/cronograma/PPT/codificação). Upload dos templates para
+o SharePoint da equipe segue pendente (ação manual — ver Gaps).
+
+Consolida v5.3 (2026-08-30) — **Templates Motiva implementados**:
 `docs/templates/EAP-PADRAO-MOTIVA.xlsx` e
 `docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`, aprovados
 por MN, reproduzindo o padrão documentado em v5.2 (paleta neutra Manta
@@ -377,6 +387,14 @@ IF menção a ferrovia|trilho|AMV|dormente|via permanente
 
 IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
    → agente-infraestrutura S4
+
+IF menção a Motiva|CCR Rodovias|SP-258|SP-330|Contorno Apucarana
+   → aplicar docs/PADRAO-OUTPUT-MOTIVA.md (padrão de output do cliente —
+     co-agente com o vertical/horizontal em escopo, não substitui o
+     dispatch primário por segmento). Ver seção "Padrões de output por
+     cliente" e a referência em cada agente que gera o entregável
+     (agente-orcamento, agente-cronograma, agente-apresentacoes,
+     agente-contratual).
 ```
 
 **S12/S13 ainda NÃO têm keyword de routing** (confirmado em
@@ -471,7 +489,7 @@ cliente ao gerar output para ele.
 
 | Cliente | Doc de referência | Status |
 |---------|--------------------|--------|
-| Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) · templates: [`EAP-PADRAO-MOTIVA.xlsx`](docs/templates/EAP-PADRAO-MOTIVA.xlsx), [`PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`](docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx) | ✅ EAP Excel/PPT/relatório/codificação implementados (aprovado MN) · ⚠️ cores de marca não localizadas — templates usam paleta neutra Manta até confirmação |
+| Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) · templates: [`EAP-PADRAO-MOTIVA.xlsx`](docs/templates/EAP-PADRAO-MOTIVA.xlsx), [`PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`](docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx) | ✅ EAP Excel/PPT/relatório/codificação implementados (aprovado MN) · ✅ routing por cliente + referenciado em agente-orcamento/cronograma/apresentacoes/contratual · ⚠️ cores de marca não localizadas — templates usam paleta neutra Manta até confirmação · ⚠️ upload para o SharePoint da equipe ainda pendente (ação manual, MCP atual é read-only) |
 
 ---
 
@@ -531,6 +549,18 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 - **S12/S13 sem RAG, sem rota SharePoint, sem keyword de routing** —
   agentes existem como arquivo, mas não são despacháveis pelo Maestro
   hoje.
+- **Templates Motiva sem upload real para o SharePoint da equipe
+  (novo)**: `docs/templates/EAP-PADRAO-MOTIVA.xlsx` e
+  `PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx` existem versionados
+  neste repositório e já estão referenciados no routing e nos agentes
+  de output (v5.4), mas ainda não foram copiados para
+  `sites/Engenharia/.../04_IA/Manta-Maestro/` onde a equipe de fato
+  trabalha — o MCP SharePoint disponível hoje é somente leitura (mesma
+  limitação já registrada em `docs/DEPLOY-v4.2.md`). Ação: alguém com
+  acesso de escrita ao SharePoint sobe os 2 arquivos manualmente.
+- **Cor institucional da Motiva não confirmada** — ver seção 5 de
+  `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
+  até confirmação do cliente.
 
 ---
 
@@ -631,6 +661,26 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
+  agentes de output** (aprovado por MN). Duas mudanças de
+  comportamento, não só documentação:
+  - Nova regra na seção ROUTING: menção a `Motiva`/`CCR Rodovias`/
+    `SP-258`/`SP-330`/`Contorno Apucarana` aplica
+    `docs/PADRAO-OUTPUT-MOTIVA.md` como co-agente de padrão de output,
+    no mesmo estilo já usado para `manta-20-esg` — não substitui o
+    dispatch primário por segmento.
+  - Referência direta ao documento na seção "Ferramentas e
+    integrações" dos 4 agentes horizontais que de fato produzem o
+    entregável para a Motiva: `agente-orcamento.md` (EAP Excel),
+    `agente-cronograma.md` (insumo do Planejamento Gerencial),
+    `agente-apresentacoes.md` (PPT), `agente-contratual.md` (norma de
+    codificação de documentos do cliente).
+  - Ainda pendente (fora do alcance desta sessão): upload dos 2
+    templates para o SharePoint real da equipe (`sites/Engenharia/
+    .../04_IA/Manta-Maestro/`) — hoje só existem versionados neste
+    repositório; e confirmação da cor institucional da Motiva (segue
+    lacuna, ver seção 5 de `PADRAO-OUTPUT-MOTIVA.md`).
+  Ticket `MNT-2026-MOTIVA-258-PATTERN`.
 - **v5.3** (2026-08-30) — **Templates Motiva implementados** (aprovado
   por MN). Dois arquivos novos em `docs/templates/`:
   - `EAP-PADRAO-MOTIVA.xlsx` — aba Capa (bloco de cabeçalho + legenda
