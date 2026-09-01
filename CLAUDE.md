@@ -4,8 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
+Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
+proposta técnico-comercial.
 
 ---
 
@@ -116,6 +117,23 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## MODELO MESTRE DE PROPOSTA
+
+Análise de referência sobre uso da proposta MNT-2026-COM-1183_D (Concessão
+Rota 2 de Julho) como modelo mestre de propostas técnico-comerciais do
+Manta Maestro, validada contra a skill `proposta-comercial` (agente
+A7-bd/Manta 13-bd — 18 seções canônicas). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
+
+Recomendação: adotar como variante especializada "PTC-Infraestrutura/
+Concessão de grande porte", incorporando ao padrão os blocos de dados
+oficiais rastreáveis, cenários com success fee opcional, método do
+paramétrico em etapas, infraestrutura incluída e ficha técnica de
+fechamento — sem substituir o modo genérico M1 da skill. Alteração na
+skill em si depende de gate humano (MN) e é feita na fonte no SharePoint,
+fora deste repositório.
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -154,6 +172,9 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.1** (2026-09-01) — análise e recomendação de modelo mestre de
+  proposta técnico-comercial, validada contra a proposta MNT-2026-COM-1183_D
+  e a skill `proposta-comercial` (A7-bd). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.

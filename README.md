@@ -7,6 +7,8 @@ Manta Associados. Versiona:
   por segmento + ciclo de vida).
 - `.claude/agents/*.md` — definições canônicas dos agentes verticais
   novos (S6–S10 adicionados na v4.2).
+- `docs/MODELO-MESTRE-PROPOSTA.md` — análise e recomendação sobre modelo
+  mestre de proposta técnico-comercial (v4.2.1).
 
 ## Estrutura
 
@@ -24,7 +26,7 @@ Manta Associados. Versiona:
 
 ## Versão atual
 
-**v4.2** — 2026-07-05 — expansão S6–S10.
+**v4.2.1** — 2026-09-01 — expansão S6–S10 (v4.2) + modelo mestre de proposta.
 
 ## Como usar
 
