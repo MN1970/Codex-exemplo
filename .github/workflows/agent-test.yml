@@ -196,6 +196,7 @@ jobs:
           - agente-saneamento
           - agente-energia
           - agente-barragens
+          - agente-oleo-gas
     steps:
       - uses: actions/checkout@v4
 
