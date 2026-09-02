@@ -31,6 +31,7 @@ Uma plataforma escalável de **20 agentes IA** (11 horizontais + 9 verticais S1�
 | **docs/DEPLOYMENT-GUIDE.md** | Step-by-step deploy (8 fases, 48h → go-live) |
 | **docs/ROUTING-REFERENCE.md** | Especificação completa R1 (3-stage pipeline, keywords) |
 | **DEPLOY-CHECKLIST.md** | Quick reference checklist (imprimir e marcar) |
+| **docs/PORTAL-BACKEND-PLANO.md** | Plano de arquitetura do backend do Portal IA (MNT-2026-ARQ-0001) — proposta |
 
 ### Scripts
 

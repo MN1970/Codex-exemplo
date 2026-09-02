@@ -643,7 +643,11 @@ Codex-exemplo/
 │   ├── SEGMENTO-S11-MINERACAO-GAP-G015.md # G015 — S11 (Mineração) identificado; roadmap formalização (novo, 2026-07-31)
 │   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
-│   └── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
+│   ├── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
+│   ├── PORTAL-BACKEND-PLANO.md            # MNT-2026-ARQ-0001 — backend do Portal IA (proposta)
+│   └── portal-backend/
+│       ├── schema-draft.sql               # anexo A — schema candidato (portal_core/docs/ai/ops)
+│       └── api-contract.md                # anexo B — contrato /v1
 ├── sharepoint/
 │   ├── README.md
 │   └── 00-arquitetura/
