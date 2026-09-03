@@ -88,6 +88,13 @@ de artefatos visuais para apresentação ao cliente, regulador ou investor.
   · nº/total`) — ver `docs/PADRAO-OUTPUT-MOTIVA.md` seção 2. A EAP não
   vira slide isolado nesse padrão; seus quantitativos alimentam as
   seções do deck (ver agente-cronograma).
+- **Institucional Manta (sem cliente)**: pitch/kickoff/material de
+  divulgação da própria Manta segue o template `docs/templates/
+  APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx` (11 slides, regra
+  "máximo 4 elementos por slide", logo real, paleta terracota/vinho) —
+  ver `docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md`. Nunca
+  substitui um padrão de cliente já definido (Motiva, etc.) — só se
+  aplica quando não há cliente na sessão.
 
 ## Handoff com outros agentes
 
