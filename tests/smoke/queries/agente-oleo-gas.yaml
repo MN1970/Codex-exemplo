@@ -1,0 +1,18 @@
+# 5 perguntas de exemplo para o smoke test do agente-oleo-gas (Manta 03-S12).
+# `expect_any`: pelo menos um destes termos (case-insensitive) deve
+# aparecer na resposta — checagem de relevância mínima, não de
+# corretude técnica completa (isso é responsabilidade de QA humano).
+- prompt: "Preciso dimensionar um tanque atmosférico de armazenamento numa base de distribuição. Qual norma rege o casco e o teto?"
+  expect_any: ["api 650", "api 653", "tanque", "teto flutuante"]
+
+- prompt: "Vamos traçar um gasoduto que cruza uma rodovia e um curso d'água — quais normas de tubulação e travessia se aplicam?"
+  expect_any: ["asme b31", "b31.8", "b31.4", "travessia", "duto"]
+
+- prompt: "Que estudo de segurança de processo é obrigatório antes do licenciamento de um terminal de GLP?"
+  expect_any: ["hazop", "nfpa", "análise de risco"]
+
+- prompt: "Qual órgão regula a outorga de dutovia de derivados no Brasil e o que preciso submeter?"
+  expect_any: ["anp", "outorga", "rtq"]
+
+- prompt: "Como dimensiono a bacia de contenção de uma tancagem de combustível líquido inflamável?"
+  expect_any: ["nfpa 30", "bacia de contenção", "dique"]
