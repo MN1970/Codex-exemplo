@@ -4,8 +4,8 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
-Saneamento, Energia, Barragens).
+Versão: **v4.3** (2026-09-03) — padrão de marca (`branding/`) para capas
+de propostas.
 
 ---
 
@@ -116,6 +116,29 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## PADRÃO DE MARCA — Capas de Proposta
+
+Ativos oficiais de identidade visual da Manta Associados, em `branding/`,
+usados por todo agente/skill que gera propostas técnicas ou comerciais
+(agente A7-bd / Manta 13, skills `proposta-comercial`, `proposta-tecnica-rod`,
+`padrao-manta`):
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `branding/logo-manta.jpg` | Logo oficial "Manta Associados" |
+| `branding/capa-padrao-proposta.pdf` | Capa-modelo de Proposta Técnica (ex.: MNT-2026-COM-1192_A / MOTIVA) |
+| `branding/PADRAO-PROPOSTA.md` | Especificação da estrutura obrigatória da capa |
+
+Toda capa de proposta (técnica ou comercial) deve seguir o layout descrito em
+`branding/PADRAO-PROPOSTA.md`: código do documento (`MNT-YYYY-TIPO-SEQ`),
+título "PROPOSTA" + subtítulo, campos "Responsável"/"Empresa", padrão gráfico
+de losangos terracota e logo Manta no rodapé.
+
+⚠️ Pendência: logo atual está em baixa resolução (249×104px, extraído de PDF).
+Solicitar versão vetorial (SVG/AI) para substituir.
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -136,6 +159,10 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 ```
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
+├── branding/                         # 🆕 v4.3 — padrão de marca
+│   ├── logo-manta.jpg
+│   ├── capa-padrao-proposta.pdf
+│   └── PADRAO-PROPOSTA.md
 └── .claude/
     └── agents/
         ├── agente-portos.md          # 🆕 S6
@@ -154,6 +181,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-09-03) — adicionado `branding/` com logo Manta Associados,
+  capa-padrão de proposta técnica (MNT-2026-COM-1192_A) e especificação
+  `PADRAO-PROPOSTA.md` para uso obrigatório em toda proposta gerada pelos
+  agentes/skills da Manta.
 - **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
