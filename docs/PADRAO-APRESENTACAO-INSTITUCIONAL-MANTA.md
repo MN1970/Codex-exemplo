@@ -15,10 +15,16 @@ identidade da empresa, presença global, portfólio de projetos
 de infraestrutura (Livro Azul ABDIB) e o MantaHub/Hub de Agentes para
 gestão de concessão.
 
-**Template implementado** (v1.0, 2026-09-03, pendente gate humano MN):
+**Template implementado** (v1.0, 2026-09-03, conteúdo aprovado por MN):
 
 - [`templates/APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx`](templates/APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx) —
   11 slides, condensação das 24 páginas fonte.
+- [`templates/examples/apresentacao-institucional-manta/`](templates/examples/apresentacao-institucional-manta/) —
+  galeria com o render de cada slide em PNG (ver seção "Galeria de
+  exemplos" abaixo) + `base64-manifest.json` com todas as imagens
+  codificadas em base64, para uso onde arquivo de imagem não é
+  acessível diretamente (ingestão em RAG/MantaHub, exemplos few-shot
+  para o `agente-apresentacoes`, embutir em outro artefato).
 
 ## Regra de condensação — "4 elementos por slide"
 
@@ -88,6 +94,44 @@ deste documento + do PDF fonte). Validação aplicada antes da entrega:
    "MantaHub" ultrapassando a margem direita do slide — corrigido
    recalculando a largura do cartão a partir do espaço realmente
    disponível.
+
+## Galeria de exemplos
+
+Render de cada um dos 11 slides (PNG, 110dpi), para consulta visual
+direta sem precisar abrir o `.pptx`. Arquivos em
+`templates/examples/apresentacao-institucional-manta/`.
+
+| # | Slide | Preview |
+|---|-------|---------|
+| 1 | Capa | ![Capa](templates/examples/apresentacao-institucional-manta/01-capa.png) |
+| 2 | Quem Somos — 4 valores | ![Quem Somos](templates/examples/apresentacao-institucional-manta/02-quem-somos-valores.png) |
+| 3 | Presença Global e Portfólio de Serviços | ![Presença Global](templates/examples/apresentacao-institucional-manta/03-presenca-global-servicos.png) |
+| 4 | Projetos de Referência | ![Projetos de Referência](templates/examples/apresentacao-institucional-manta/04-projetos-referencia.png) |
+| 5 | Projetos Internacionais | ![Projetos Internacionais](templates/examples/apresentacao-institucional-manta/05-projetos-internacionais.png) |
+| 6 | Governança e Liderança | ![Governança e Liderança](templates/examples/apresentacao-institucional-manta/06-governanca-lideranca.png) |
+| 7 | Mercado de Infraestrutura — Brasil | ![Mercado Brasil](templates/examples/apresentacao-institucional-manta/07-mercado-infraestrutura-brasil.png) |
+| 8 | MantaHub — Plataforma Integrada | ![MantaHub](templates/examples/apresentacao-institucional-manta/08-mantahub-plataforma.png) |
+| 9 | Hub de Agentes — Gestão de Concessão | ![Hub de Agentes](templates/examples/apresentacao-institucional-manta/09-hub-agentes-concessao.png) |
+| 10 | Trilhas de Atuação | ![Trilhas de Atuação](templates/examples/apresentacao-institucional-manta/10-trilhas-atuacao.png) |
+| 11 | Encerramento | ![Encerramento](templates/examples/apresentacao-institucional-manta/11-encerramento.png) |
+
+Logo real extraído do PDF fonte (RGB + soft mask recompostos,
+transparência real — ver seção "Identidade visual"):
+[`logo-manta-color.png`](templates/examples/apresentacao-institucional-manta/logo-manta-color.png)
+(fundo claro) e
+[`logo-manta-white.png`](templates/examples/apresentacao-institucional-manta/logo-manta-white.png)
+(fundo escuro).
+
+### Manifesto base64
+
+[`templates/examples/apresentacao-institucional-manta/base64-manifest.json`](templates/examples/apresentacao-institucional-manta/base64-manifest.json)
+traz as 11 imagens de slide + os 2 logos, cada um como `data URI`
+`image/png` em base64, num único JSON (`itens[].base64`). Use este
+manifesto (em vez dos arquivos `.png` soltos) quando o consumidor não
+tiver acesso a arquivo — por exemplo, ingestão como exemplo few-shot no
+`agente-apresentacoes`, carga em uma coleção RAG do Manta Maestro, ou
+embutir a imagem diretamente em outro artefato HTML/JSON sem depender
+de um caminho de arquivo.
 
 ## Uso pelos agentes
 
