@@ -365,6 +365,8 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs: [regression-gate, router-e2e, cross-agent-flows]
+    permissions:
+      statuses: write
     outputs:
       can-merge: ${{ steps.decision.outputs.can_merge }}
 
