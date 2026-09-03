@@ -125,12 +125,15 @@ Manta Maestro, validada contra a skill `proposta-comercial` (agente
 A7-bd/Manta 13-bd — 18 seções canônicas). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
 
 Recomendação: adotar como variante especializada "PTC-Infraestrutura/
-Concessão de grande porte", incorporando ao padrão os blocos de dados
-oficiais rastreáveis, cenários com success fee opcional, método do
-paramétrico em etapas, infraestrutura incluída e ficha técnica de
-fechamento — sem substituir o modo genérico M1 da skill. Alteração na
-skill em si depende de gate humano (MN) e é feita na fonte no SharePoint,
-fora deste repositório.
+Concessão de grande porte" (modo **M6**), incorporando ao padrão os blocos
+de dados oficiais rastreáveis, cenários com success fee opcional, método
+do paramétrico em etapas, infraestrutura incluída e ficha técnica de
+fechamento — sem substituir o modo genérico M1 da skill. O texto pronto
+para colar na skill de produção está em
+`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`. Alteração na skill em si
+depende de gate humano (MN) e é feita na fonte no SharePoint, fora deste
+repositório — publicação ainda pendente (sem acesso de escrita ao
+SharePoint nesta sessão).
 
 ---
 

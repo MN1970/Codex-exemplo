@@ -141,6 +141,12 @@ valeram a pena reter:
   SharePoint ao **gate humano MN** antes de propagar para produção,
   conforme checklist de deploy do Manta Maestro.
 
+O bloco de texto pronto para colar na skill de produção — variante **M6**,
+com os 5 itens acima já redigidos — está em
+`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`. Falta apenas o passo manual de
+publicação no SharePoint (esta sessão não tem acesso de escrita àquele
+conector).
+
 ---
 
 *Análise feita a partir da leitura integral do PDF `MNT-2026-COM-1183_D`
