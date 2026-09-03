@@ -100,10 +100,9 @@ documento nunca substitui um padrão de cliente já definido.
 
 ## Pendências
 
-- **Gate humano MN**: o conteúdo condensado (quais 4 itens por slide
-  foram escolhidos a partir das 24 páginas originais) ainda não foi
-  formalmente aprovado — está pendente review antes de virar padrão
-  operacional.
+- ~~**Gate humano MN**: aprovação do conteúdo condensado~~ — **aprovado
+  por MN em 2026-09-03**, conferido contra o PDF fonte reenviado na
+  mesma sessão. Padrão considerado operacional.
 - **Upload para o SharePoint da equipe**: o template existe apenas
   versionado neste repositório; o MCP SharePoint disponível hoje é
   somente leitura, então a cópia para

@@ -502,7 +502,7 @@ cliente ao gerar output para ele.
 | Cliente | Doc de referência | Status |
 |---------|--------------------|--------|
 | Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) · templates: [`EAP-PADRAO-MOTIVA.xlsx`](docs/templates/EAP-PADRAO-MOTIVA.xlsx), [`PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`](docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx) | ✅ EAP Excel/PPT/relatório/codificação implementados (aprovado MN) · ✅ routing por cliente + referenciado em agente-orcamento/cronograma/apresentacoes/contratual · ⚠️ cores de marca não localizadas — templates usam paleta neutra Manta até confirmação · ⚠️ upload para o SharePoint da equipe ainda pendente (ação manual, MCP atual é read-only) |
-| Manta (institucional — sem cliente) | [`docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md`](docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md) · template: [`APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx`](docs/templates/APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx) | 🆕 v1.0 — condensado a partir do PDF institucional real da empresa (`ABR_APR_INST_MANTA_Nova`, 24 slides), padronizado em 11 slides · regra "máx. 4 elementos por slide" (`padrao-manta` v3) · paleta oficial terracota `#BF4D19` / vinho `#5F2C2B` · logo real extraído do PDF fonte · referenciado em `agente-apresentacoes.md` · ⚠️ pendente gate humano MN e upload para o SharePoint da equipe (MCP atual é read-only) |
+| Manta (institucional — sem cliente) | [`docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md`](docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md) · template: [`APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx`](docs/templates/APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx) | 🆕 v1.0 — condensado a partir do PDF institucional real da empresa (`ABR_APR_INST_MANTA_Nova`, 24 slides), padronizado em 11 slides · regra "máx. 4 elementos por slide" (`padrao-manta` v3) · paleta oficial terracota `#BF4D19` / vinho `#5F2C2B` · logo real extraído do PDF fonte · referenciado em `agente-apresentacoes.md` · ✅ conteúdo aprovado por MN (2026-09-03) · ⚠️ upload para o SharePoint da equipe ainda pendente (MCP atual é read-only) |
 
 ---
 
@@ -574,13 +574,12 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 - **Cor institucional da Motiva não confirmada** — ver seção 5 de
   `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
   até confirmação do cliente.
-- **Apresentação Institucional Manta sem gate humano e sem upload ao
-  SharePoint (novo, v5.5)**: `docs/templates/
-  APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx` foi gerado a partir do
-  PDF institucional real fornecido por MN, mas ainda não recebeu
-  aprovação formal nem foi copiado para o SharePoint da equipe (mesma
-  limitação de MCP read-only registrada para os templates Motiva).
-  Ação: aprovação MN + upload manual.
+- **Apresentação Institucional Manta sem upload ao SharePoint (v5.5)**:
+  `docs/templates/APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx` —
+  conteúdo condensado **aprovado por MN em 2026-09-03**; segue apenas
+  o upload manual para o SharePoint da equipe (mesma limitação de MCP
+  read-only registrada para os templates Motiva). Ação: alguém com
+  acesso de escrita ao SharePoint sobe o arquivo.
 
 ---
 
