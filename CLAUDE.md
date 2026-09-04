@@ -4,7 +4,13 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
+Versão: **v5.4.1** (2026-09-04) — implantação do par de skills
+`sessao-salvar` / `sessao-retomar` (handoff de sessão entre plataformas
+Claude) em `.claude/skills/`. Ver seção "SKILLS — Handoff de sessão
+entre plataformas". Conector SharePoint Manta ainda não habilitado
+nesta sessão para gravação real dos handoffs.
+
+Consolida v5.4 (2026-08-31) — **Padrão Motiva ligado ao routing e aos
 agentes de output**: nova keyword de cliente na seção ROUTING
 (`Motiva|CCR Rodovias|SP-258|SP-330|Contorno Apucarana` → aplica
 `docs/PADRAO-OUTPUT-MOTIVA.md` como co-agente de padrão de output) +
@@ -67,13 +73,14 @@ padrão de output por cliente).
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
-12. [Padrões de output por cliente](#padrões-de-output-por-cliente)
-13. [Model tiering](#model-tiering)
-14. [Gaps abertos / pendências](#gaps-abertos--pendências)
-15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
-16. [Deploy checklist v5.0](#deploy-checklist-v50)
-17. [Arquivos deste repositório](#arquivos-deste-repositório)
-18. [Histórico de versões](#histórico-de-versões)
+12. [Skills — Handoff de sessão entre plataformas](#skills--handoff-de-sessão-entre-plataformas)
+13. [Padrões de output por cliente](#padrões-de-output-por-cliente)
+14. [Model tiering](#model-tiering)
+15. [Gaps abertos / pendências](#gaps-abertos--pendências)
+16. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
+17. [Deploy checklist v5.0](#deploy-checklist-v50)
+18. [Arquivos deste repositório](#arquivos-deste-repositório)
+19. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -480,6 +487,49 @@ em produção (ver seção RAG acima).
 
 ---
 
+## SKILLS — Handoff de sessão entre plataformas
+
+Par de skills `sessao-salvar` / `sessao-retomar` implantado em
+`.claude/skills/` neste repositório (referência canônica), para permitir
+handoff de sessão entre plataformas Claude (Chat, Cowork, Code): a
+primeira destila e sobe o estado da sessão para o SharePoint, a segunda
+localiza e carrega o handoff mais recente em outra plataforma
+(`04_IA/12_HANDOFFS/{projeto}/{AAAAMMDD-HHMM}/`). Relaciona-se com F2
+(SharePoint) e F6 (Trace/audit log) do Eixo F.
+
+| Skill | Descrição | Gatilho | Localização | Status |
+|-------|-----------|---------|--------------|--------|
+| sessao-salvar | Destila a sessão atual em `HANDOFF.md` e sobe para o SharePoint | "salvar sessão", "handoff", "vou continuar no Code/Chat/Cowork" | `.claude/skills/sessao-salvar/SKILL.md` | 🆕 Implantado 2026-09-04 (local) |
+| sessao-retomar | Localiza o handoff mais recente do projeto no SharePoint e retoma o trabalho a partir dos "Próximos passos" | "retomar sessão", "retomar handoff", "/sessao-retomar {projeto}" | `.claude/skills/sessao-retomar/SKILL.md` | 🆕 Implantado 2026-09-04 (local) |
+
+**Pré-requisito operacional (bloqueio parcial ativo em 2026-09-04):**
+ambas as skills exigem um conector MCP do SharePoint conectado à sessão.
+`sessao-salvar` precisa de ferramentas de **escrita** (`list_folders`,
+`create_folder`, `upload_file`); `sessao-retomar` precisa apenas de
+ferramentas de **leitura** (`list_folders`, `list_files`,
+`read_document`, `download_file`). Nesta sessão de implantação, o
+conector **"SharePoint Manta"** aparece instalado na org mas **não
+habilitado no chat** (`enabledInChat: false`), e o conector
+**"Microsoft 365"** (habilitado) expõe ferramentas de leitura/busca
+(`sharepoint_search`, `sharepoint_folder_search`) — o suficiente, em
+princípio, para viabilizar `sessao-retomar` (não testado nesta sessão),
+mas sem `upload_file`/`create_folder` para `sessao-salvar`. A mesma
+limitação de escrita já registrada em F2/Gaps abertos para os templates
+Motiva. `sessao-salvar` só conseguirá gravar de fato no SharePoint
+quando o conector correto for habilitado com escopo de escrita nessa
+sessão/chat.
+
+> **Nota de proveniência**: os commits desta branch também traziam uma
+> seção "MODELO MESTRE DE PROPOSTA" (v4.2.1, análise da proposta
+> MNT-2026-COM-1183_D e recomendação de modo M6 para a skill
+> `proposta-comercial`) e os arquivos `docs/MODELO-MESTRE-PROPOSTA.md` /
+> `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`. Esse workstream **não
+> existe em `main`** (não foi mergeado antes da consolidação v5.0–v5.4) e
+> não foi reintroduzido aqui por estar fora do escopo desta mudança —
+> fica sinalizado em "Gaps abertos" para decisão do MN.
+
+---
+
 ## PADRÕES DE OUTPUT POR CLIENTE
 
 Referências canônicas de formato de entregável (EAP em Excel/PPT,
@@ -508,6 +558,27 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ## GAPS ABERTOS / PENDÊNCIAS
 
+- **Conector SharePoint Manta não habilitado (novo, 2026-09-04)**: a
+  skill `sessao-salvar` (ver seção "SKILLS") depende de um conector MCP
+  do SharePoint com ferramentas de escrita (`create_folder`,
+  `upload_file`). Nesta sessão de implantação o conector "SharePoint
+  Manta" aparece instalado na org mas não habilitado no chat, e o
+  "Microsoft 365" habilitado só tem ferramentas de leitura. Mesma
+  limitação de escrita já registrada mais abaixo para os templates
+  Motiva ("Templates Motiva sem upload real..."). Ação: habilitar o
+  conector correto com escopo de escrita antes de validar um handoff
+  real.
+- **Workstream "Modelo mestre de proposta" (v4.2.1) ausente em `main`
+  (novo, 2026-09-04)**: a branch usada para implantar `sessao-salvar`
+  trazia commits anteriores (não desta sessão) com uma análise do
+  modelo mestre de proposta técnico-comercial (`docs/MODELO-MESTRE-
+  PROPOSTA.md`, `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`, variante
+  de modo M6 para a skill `proposta-comercial`) que nunca foi mergeada
+  em `main` — não existe hoje neste CLAUDE.md nem nos arquivos do
+  repositório em `main`. Não foi reintroduzido nesta mudança por estar
+  fora do escopo (implantação da skill de handoff). Ação: MN decide se
+  esse workstream deve ser recuperado/mergeado separadamente ou
+  descartado.
 - **Numeração de segmento divergente (novo, encontrado nesta
   consolidação)**: `docs/DISCIPLINAS-D01-D20.md`,
   `docs/ATIVIDADES-A1-A10.md` e uma linha em
@@ -610,6 +681,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 - [ ] Rodar aluci-guard sobre este documento antes de merge
 - [ ] Rodar consist-guard sobre este documento antes de merge
 - [ ] Gate humano: aprovação MN antes de merge
+- [ ] Habilitar conector SharePoint Manta (ou Microsoft 365 com escopo de escrita) para permitir gravação real dos handoffs da skill `sessao-salvar` (leitura de `sessao-retomar` pode já funcionar via Microsoft 365 — não testado nesta sessão)
 
 ---
 
@@ -617,18 +689,23 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.2)
+├── CLAUDE.md                              # este arquivo (master registry, v5.4.1)
 ├── README.md
 ├── .claude/
-│   └── agents/
-│       ├── agente-portos.md               # S6 (v1.1.0, revisado 2026-07-31)
-│       ├── agente-aeroportos.md           # S7
-│       ├── agente-saneamento.md           # S8 — prioridade AySA
-│       ├── agente-energia.md              # S9 — ANEEL/State Grid
-│       ├── agente-barragens.md            # S10
-│       ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
-│       ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
-│       └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
+│   ├── agents/
+│   │   ├── agente-portos.md               # S6 (v1.1.0, revisado 2026-07-31)
+│   │   ├── agente-aeroportos.md           # S7
+│   │   ├── agente-saneamento.md           # S8 — prioridade AySA
+│   │   ├── agente-energia.md              # S9 — ANEEL/State Grid
+│   │   ├── agente-barragens.md            # S10
+│   │   ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
+│   │   ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
+│   │   └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
+│   └── skills/
+│       ├── sessao-salvar/
+│       │   └── SKILL.md                   # 🆕 v5.4.1 — salva handoff de sessão no SharePoint
+│       └── sessao-retomar/
+│           └── SKILL.md                   # 🆕 v5.4.1 — retoma handoff salvo por sessao-salvar
 ├── docs/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
@@ -661,6 +738,12 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.1** (2026-09-04) — implantação do par de skills `sessao-salvar`
+  / `sessao-retomar` (handoff de sessão entre plataformas Claude) em
+  `.claude/skills/`, com entrada no catálogo de skills, item de deploy
+  checklist e gap aberto sobre o conector SharePoint Manta (instalado
+  mas não habilitado no chat desta sessão — ver seção "SKILLS — Handoff
+  de sessão entre plataformas" e "Gaps abertos").
 - **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
   agentes de output** (aprovado por MN). Duas mudanças de
   comportamento, não só documentação:
