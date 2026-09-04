@@ -4,9 +4,10 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
+Versão: **v4.2.2** (2026-09-04) — v4.2 expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+proposta técnico-comercial + implantação da skill `sessao-salvar`
+(handoff de sessão entre plataformas).
 
 ---
 
@@ -137,6 +138,31 @@ SharePoint nesta sessão).
 
 ---
 
+## SKILLS — Handoff de sessão entre plataformas
+
+Skill `sessao-salvar` implantada em `.claude/skills/sessao-salvar/SKILL.md`
+neste repositório (referência canônica), para permitir handoff de sessão
+entre plataformas Claude (Chat, Cowork, Code) salvando o estado da sessão
+no SharePoint (`04_IA/12_HANDOFFS/{projeto}/{AAAAMMDD-HHMM}/`).
+
+| Skill | Descrição | Gatilho | Localização | Status |
+|-------|-----------|---------|--------------|--------|
+| sessao-salvar | Destila a sessão atual em `HANDOFF.md` e sobe para o SharePoint | "salvar sessão", "handoff", "vou continuar no Code/Chat/Cowork" | `.claude/skills/sessao-salvar/SKILL.md` | 🆕 Implantado 2026-09-04 (local) |
+| sessao-retomar | Retoma um handoff salvo por `sessao-salvar` em outra plataforma | "retomar sessão", "/sessao-retomar {projeto}" | — | ⏳ Pendente (definição ainda não recebida neste repositório) |
+
+**Pré-requisito operacional (bloqueio ativo em 2026-09-04):** a skill exige
+um conector MCP do SharePoint conectado à sessão com ferramentas de
+escrita (`list_folders`, `create_folder`, `upload_file`). Nesta sessão de
+implantação, o conector **"SharePoint Manta"** aparece instalado na org
+mas **não habilitado no chat** (`enabledInChat: false`), e o conector
+**"Microsoft 365"** (habilitado) expõe apenas ferramentas de
+leitura/busca (`sharepoint_search`, `sharepoint_folder_search`) — sem
+`upload_file`/`create_folder`. A skill está pronta, mas a gravação real
+no SharePoint só funcionará quando o conector correto for habilitado com
+escopo de escrita nessa sessão/chat.
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -149,6 +175,7 @@ SharePoint nesta sessão).
 - [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
 - [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
 - [ ] Gate humano: aprovação MN antes de merge
+- [ ] Habilitar conector SharePoint Manta (ou Microsoft 365 com escopo de escrita) para permitir gravação real dos handoffs da skill `sessao-salvar`
 
 ---
 
@@ -158,12 +185,15 @@ SharePoint nesta sessão).
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
 └── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+    ├── agents/
+    │   ├── agente-portos.md          # 🆕 S6
+    │   ├── agente-aeroportos.md      # 🆕 S7
+    │   ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
+    │   ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
+    │   └── agente-barragens.md       # 🆕 S10
+    └── skills/
+        └── sessao-salvar/
+            └── SKILL.md               # 🆕 handoff de sessão entre plataformas
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
@@ -175,6 +205,11 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.2** (2026-09-04) — implantação da skill `sessao-salvar` (handoff
+  de sessão entre plataformas Claude) em
+  `.claude/skills/sessao-salvar/SKILL.md`. Conector SharePoint Manta
+  ainda não habilitado nesta sessão para gravação real — ver seção
+  SKILLS.
 - **v4.2.1** (2026-09-01) — análise e recomendação de modelo mestre de
   proposta técnico-comercial, validada contra a proposta MNT-2026-COM-1183_D
   e a skill `proposta-comercial` (A7-bd). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
