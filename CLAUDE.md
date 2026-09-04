@@ -4,11 +4,11 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.1** (2026-09-04) — implantação da skill `sessao-salvar`
-(handoff de sessão entre plataformas Claude) em
-`.claude/skills/sessao-salvar/SKILL.md`. Ver seção "SKILLS — Handoff de
-sessão entre plataformas". Conector SharePoint Manta ainda não
-habilitado nesta sessão para gravação real dos handoffs.
+Versão: **v5.4.1** (2026-09-04) — implantação do par de skills
+`sessao-salvar` / `sessao-retomar` (handoff de sessão entre plataformas
+Claude) em `.claude/skills/`. Ver seção "SKILLS — Handoff de sessão
+entre plataformas". Conector SharePoint Manta ainda não habilitado
+nesta sessão para gravação real dos handoffs.
 
 Consolida v5.4 (2026-08-31) — **Padrão Motiva ligado ao routing e aos
 agentes de output**: nova keyword de cliente na seção ROUTING
@@ -489,28 +489,35 @@ em produção (ver seção RAG acima).
 
 ## SKILLS — Handoff de sessão entre plataformas
 
-Skill `sessao-salvar` implantada em `.claude/skills/sessao-salvar/SKILL.md`
-neste repositório (referência canônica), para permitir handoff de sessão
-entre plataformas Claude (Chat, Cowork, Code) salvando o estado da sessão
-no SharePoint (`04_IA/12_HANDOFFS/{projeto}/{AAAAMMDD-HHMM}/`). Relaciona-se
-com F2 (SharePoint) e F6 (Trace/audit log) do Eixo F.
+Par de skills `sessao-salvar` / `sessao-retomar` implantado em
+`.claude/skills/` neste repositório (referência canônica), para permitir
+handoff de sessão entre plataformas Claude (Chat, Cowork, Code): a
+primeira destila e sobe o estado da sessão para o SharePoint, a segunda
+localiza e carrega o handoff mais recente em outra plataforma
+(`04_IA/12_HANDOFFS/{projeto}/{AAAAMMDD-HHMM}/`). Relaciona-se com F2
+(SharePoint) e F6 (Trace/audit log) do Eixo F.
 
 | Skill | Descrição | Gatilho | Localização | Status |
 |-------|-----------|---------|--------------|--------|
 | sessao-salvar | Destila a sessão atual em `HANDOFF.md` e sobe para o SharePoint | "salvar sessão", "handoff", "vou continuar no Code/Chat/Cowork" | `.claude/skills/sessao-salvar/SKILL.md` | 🆕 Implantado 2026-09-04 (local) |
-| sessao-retomar | Retoma um handoff salvo por `sessao-salvar` em outra plataforma | "retomar sessão", "/sessao-retomar {projeto}" | — | ⏳ Pendente (definição ainda não recebida neste repositório) |
+| sessao-retomar | Localiza o handoff mais recente do projeto no SharePoint e retoma o trabalho a partir dos "Próximos passos" | "retomar sessão", "retomar handoff", "/sessao-retomar {projeto}" | `.claude/skills/sessao-retomar/SKILL.md` | 🆕 Implantado 2026-09-04 (local) |
 
-**Pré-requisito operacional (bloqueio ativo em 2026-09-04):** a skill exige
-um conector MCP do SharePoint conectado à sessão com ferramentas de
-escrita (`list_folders`, `create_folder`, `upload_file`). Nesta sessão de
-implantação, o conector **"SharePoint Manta"** aparece instalado na org
-mas **não habilitado no chat** (`enabledInChat: false`), e o conector
-**"Microsoft 365"** (habilitado) expõe apenas ferramentas de
-leitura/busca (`sharepoint_search`, `sharepoint_folder_search`) — sem
-`upload_file`/`create_folder`. A mesma limitação de escrita já registrada
-em F2/Gaps abertos para os templates Motiva. A skill está pronta, mas a
-gravação real no SharePoint só funcionará quando o conector correto for
-habilitado com escopo de escrita nessa sessão/chat.
+**Pré-requisito operacional (bloqueio parcial ativo em 2026-09-04):**
+ambas as skills exigem um conector MCP do SharePoint conectado à sessão.
+`sessao-salvar` precisa de ferramentas de **escrita** (`list_folders`,
+`create_folder`, `upload_file`); `sessao-retomar` precisa apenas de
+ferramentas de **leitura** (`list_folders`, `list_files`,
+`read_document`, `download_file`). Nesta sessão de implantação, o
+conector **"SharePoint Manta"** aparece instalado na org mas **não
+habilitado no chat** (`enabledInChat: false`), e o conector
+**"Microsoft 365"** (habilitado) expõe ferramentas de leitura/busca
+(`sharepoint_search`, `sharepoint_folder_search`) — o suficiente, em
+princípio, para viabilizar `sessao-retomar` (não testado nesta sessão),
+mas sem `upload_file`/`create_folder` para `sessao-salvar`. A mesma
+limitação de escrita já registrada em F2/Gaps abertos para os templates
+Motiva. `sessao-salvar` só conseguirá gravar de fato no SharePoint
+quando o conector correto for habilitado com escopo de escrita nessa
+sessão/chat.
 
 > **Nota de proveniência**: os commits desta branch também traziam uma
 > seção "MODELO MESTRE DE PROPOSTA" (v4.2.1, análise da proposta
@@ -674,7 +681,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 - [ ] Rodar aluci-guard sobre este documento antes de merge
 - [ ] Rodar consist-guard sobre este documento antes de merge
 - [ ] Gate humano: aprovação MN antes de merge
-- [ ] Habilitar conector SharePoint Manta (ou Microsoft 365 com escopo de escrita) para permitir gravação real dos handoffs da skill `sessao-salvar`
+- [ ] Habilitar conector SharePoint Manta (ou Microsoft 365 com escopo de escrita) para permitir gravação real dos handoffs da skill `sessao-salvar` (leitura de `sessao-retomar` pode já funcionar via Microsoft 365 — não testado nesta sessão)
 
 ---
 
@@ -695,8 +702,10 @@ Codex-exemplo/
 │   │   ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
 │   │   └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
 │   └── skills/
-│       └── sessao-salvar/
-│           └── SKILL.md                   # 🆕 v5.4.1 — handoff de sessão entre plataformas
+│       ├── sessao-salvar/
+│       │   └── SKILL.md                   # 🆕 v5.4.1 — salva handoff de sessão no SharePoint
+│       └── sessao-retomar/
+│           └── SKILL.md                   # 🆕 v5.4.1 — retoma handoff salvo por sessao-salvar
 ├── docs/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
@@ -729,13 +738,12 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.1** (2026-09-04) — implantação da skill `sessao-salvar`
-  (handoff de sessão entre plataformas Claude) em
-  `.claude/skills/sessao-salvar/SKILL.md`, com entrada no catálogo de
-  skills, item de deploy checklist e gap aberto sobre o conector
-  SharePoint Manta (instalado mas não habilitado no chat desta sessão —
-  ver seção "SKILLS — Handoff de sessão entre plataformas" e "Gaps
-  abertos"). Skill complementar `sessao-retomar` ainda não recebida.
+- **v5.4.1** (2026-09-04) — implantação do par de skills `sessao-salvar`
+  / `sessao-retomar` (handoff de sessão entre plataformas Claude) em
+  `.claude/skills/`, com entrada no catálogo de skills, item de deploy
+  checklist e gap aberto sobre o conector SharePoint Manta (instalado
+  mas não habilitado no chat desta sessão — ver seção "SKILLS — Handoff
+  de sessão entre plataformas" e "Gaps abertos").
 - **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
   agentes de output** (aprovado por MN). Duas mudanças de
   comportamento, não só documentação:
