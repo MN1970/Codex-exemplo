@@ -133,6 +133,31 @@ tiver acesso a arquivo — por exemplo, ingestão como exemplo few-shot no
 embutir a imagem diretamente em outro artefato HTML/JSON sem depender
 de um caminho de arquivo.
 
+### Registro no Supabase (RAG)
+
+Registrado no projeto `manta-maestro` (`ogxxgvgtulrbbppshjie`) em
+2026-09-03, seguindo o mesmo padrão usado pelas coleções técnicas
+(rodovias, saneamento, energia etc.):
+
+- `rag_collections`: 1 linha nova, `slug='institucional'`,
+  `storage_prefix='inst:'`, `initial_sources` apontando para o PPTX, o
+  PDF fonte e o logo.
+- `rag_chunks`: 12 linhas novas (`collection='institucional'`,
+  `segment='institucional'`) — uma por slide (resumo curto do
+  conteúdo, no mesmo estilo terso das demais linhas da tabela) + uma
+  para o logo. `source` referencia o caminho do PNG correspondente em
+  `templates/examples/apresentacao-institucional-manta/`.
+
+**Nota de escopo**: `rag_chunks.content` é usado em produção para
+resumos curtos (~1-3 frases), não para blobs grandes — as linhas
+existentes de outras coleções (saneamento, energia, portos…) seguem
+esse padrão. Por isso as imagens em base64 **não foram inseridas**
+nessa coluna (um PNG em base64 tem 50-150 KB+, muito acima do que as
+demais linhas da tabela carregam); o base64 de fato fica no
+`base64-manifest.json` (Git), e o Supabase guarda só a referência
+textual + caminho do arquivo, para não quebrar a convenção que outras
+sessões já usam nessa tabela.
+
 ## Uso pelos agentes
 
 Referenciado em `agente-apresentacoes.md` (Manta 14) como o template
