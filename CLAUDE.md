@@ -4,7 +4,19 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
+Versão: **v5.5** (2026-09-03) — **Padrão de Apresentação Institucional
+Manta**: nova referência de output *sem cliente* — condensação do PDF
+institucional real da empresa (`ABR_APR_INST_MANTA_Nova.pdf`, 24
+slides) em um template de 11 slides (`docs/templates/
+APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx`), seguindo a regra
+"máximo 4 elementos por slide" da skill `padrao-manta` v3 (paleta
+oficial terracota `#BF4D19` / vinho `#5F2C2B`, logo real extraído do
+PDF fonte). Documentado em
+`docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md` e referenciado em
+`agente-apresentacoes.md`. Pendente gate humano MN e upload para o
+SharePoint da equipe (ver Gaps).
+
+Consolida v5.4 (2026-08-31) — **Padrão Motiva ligado ao routing e aos
 agentes de output**: nova keyword de cliente na seção ROUTING
 (`Motiva|CCR Rodovias|SP-258|SP-330|Contorno Apucarana` → aplica
 `docs/PADRAO-OUTPUT-MOTIVA.md` como co-agente de padrão de output) +
@@ -490,6 +502,7 @@ cliente ao gerar output para ele.
 | Cliente | Doc de referência | Status |
 |---------|--------------------|--------|
 | Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) · templates: [`EAP-PADRAO-MOTIVA.xlsx`](docs/templates/EAP-PADRAO-MOTIVA.xlsx), [`PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`](docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx) | ✅ EAP Excel/PPT/relatório/codificação implementados (aprovado MN) · ✅ routing por cliente + referenciado em agente-orcamento/cronograma/apresentacoes/contratual · ⚠️ cores de marca não localizadas — templates usam paleta neutra Manta até confirmação · ⚠️ upload para o SharePoint da equipe ainda pendente (ação manual, MCP atual é read-only) |
+| Manta (institucional — sem cliente) | [`docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md`](docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md) · template: [`APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx`](docs/templates/APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx) | 🆕 v1.0 — condensado a partir do PDF institucional real da empresa (`ABR_APR_INST_MANTA_Nova`, 24 slides), padronizado em 11 slides · regra "máx. 4 elementos por slide" (`padrao-manta` v3) · paleta oficial terracota `#BF4D19` / vinho `#5F2C2B` · logo real extraído do PDF fonte · referenciado em `agente-apresentacoes.md` · ✅ conteúdo aprovado por MN (2026-09-03) · ⚠️ upload para o SharePoint da equipe ainda pendente (MCP atual é read-only) |
 
 ---
 
@@ -561,6 +574,12 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 - **Cor institucional da Motiva não confirmada** — ver seção 5 de
   `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
   até confirmação do cliente.
+- **Apresentação Institucional Manta sem upload ao SharePoint (v5.5)**:
+  `docs/templates/APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx` —
+  conteúdo condensado **aprovado por MN em 2026-09-03**; segue apenas
+  o upload manual para o SharePoint da equipe (mesma limitação de MCP
+  read-only registrada para os templates Motiva). Ação: alguém com
+  acesso de escrita ao SharePoint sobe o arquivo.
 
 ---
 
@@ -617,7 +636,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.2)
+├── CLAUDE.md                              # este arquivo (master registry, v5.5)
 ├── README.md
 ├── .claude/
 │   └── agents/
@@ -631,9 +650,11 @@ Codex-exemplo/
 │       └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
 ├── docs/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
+│   ├── PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md  # 🆕 v5.5 — padrão institucional (sem cliente)
 │   ├── templates/
 │   │   ├── EAP-PADRAO-MOTIVA.xlsx               # 🆕 v5.3 — template EAP (capa + hierarquia 4 níveis)
-│   │   └── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
+│   │   ├── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
+│   │   └── APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx  # 🆕 v5.5 — 11 slides, 4 elementos/slide
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (⚠️ numeração de S divergente — ver Gaps)
@@ -661,6 +682,28 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.5** (2026-09-03) — **Padrão de Apresentação Institucional
+  Manta**. Fonte: PDF institucional real da empresa
+  (`ABR_APR_INST_MANTA_Nova.pdf`, 24 slides), fornecido por MN para uso
+  como apresentação padrão do ecossistema Manta Maestro. Trabalho:
+  - Extração do logo real (RGB + soft mask do PDF) para uso fiel em
+    fundo claro e escuro — sem placeholder.
+  - Condensação em `docs/templates/
+    APRESENTACAO-INSTITUCIONAL-PADRAO-MANTA.pptx`, 11 slides, seguindo
+    a regra "máximo 4 elementos por slide" pedida por MN e já
+    compatível com o limite "5-6 elementos" da skill `padrao-manta` v3
+    (paleta oficial terracota `#BF4D19` / vinho `#5F2C2B`).
+  - Validado: schema/relações OOXML (`validate.py`), conteúdo sem
+    placeholder (`markitdown`), QA visual das 11 páginas renderizadas
+    (LibreOffice + `pdftoppm`) — 2 rodadas, corrigindo sobreposição
+    logo/kicker e um cartão fora da margem direita no slide MantaHub.
+  - Documentado em `docs/PADRAO-APRESENTACAO-INSTITUCIONAL-MANTA.md` e
+    adicionado à seção "Padrões de output por cliente" (linha
+    institucional, sem cliente).
+  - **Pendente**: gate humano MN sobre o conteúdo condensado e upload
+    do arquivo para o SharePoint real da equipe (MCP atual é
+    read-only — mesma limitação dos templates Motiva).
+  Sem ticket formal — pedido direto de MN nesta sessão.
 - **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
   agentes de output** (aprovado por MN). Duas mudanças de
   comportamento, não só documentação:
