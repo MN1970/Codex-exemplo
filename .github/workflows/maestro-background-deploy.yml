@@ -131,7 +131,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Image digest
-        run: echo "Built image digest: ${{ steps.build.outputs.digest }}"
+        run: 'echo "Built image digest: ${{ steps.build.outputs.digest }}"'
 
   # Run tests in Docker container
   test:

@@ -19,6 +19,7 @@ from backend.agent_registry import (  # noqa: E402,F401
     ALLOWED_MODEL_TIERS,
     ALLOWED_TOOLS,
     CLAUDE_MD,
+    EXCLUDED_FROM_REGISTRY,
     REPO_ROOT,
     VERSION_SUFFIX_RE,
     AgentDef,

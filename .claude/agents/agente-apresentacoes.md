@@ -82,6 +82,12 @@ de artefatos visuais para apresentação ao cliente, regulador ou investor.
 - Coleção RAG `apresentações` (prefixo storage `apt:`) — exemplos de deck
   bem estruturado, guia de storytelling, brand guidelines.
 - Integração com dataviz skill para recomendação de gráfico.
+- **Cliente Motiva (ex-CCR Rodovias)**: decks de planejamento gerencial
+  seguem o template `docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`
+  (capa versalete, rodapé fixo `[Rodovia] · [Segmento] · MOTIVA · [Seção]
+  · nº/total`) — ver `docs/PADRAO-OUTPUT-MOTIVA.md` seção 2. A EAP não
+  vira slide isolado nesse padrão; seus quantitativos alimentam as
+  seções do deck (ver agente-cronograma).
 
 ## Handoff com outros agentes
 

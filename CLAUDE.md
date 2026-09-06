@@ -4,19 +4,53 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.3** (2026-08-23) — review de arquitetura manta-arquiteto-ia
-(Etapas 1-4, gate humano concluído): backend real de dispatch via Claude
-Agent SDK (`backend/maestro_dispatch.py`), aluci-guard como hook
-PreToolUse determinístico, e correção de 3 bugs reais pré-existentes na
-suíte de testes (`tests/lib/agent_loader.py`, `pytest.ini`,
-`.claude/agents/`) encontrados durante a implementação. Ver seção
-"REVIEW DE ARQUITETURA — v5.3" abaixo.
+Versão: **v5.6** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
+agentes de output**: nova keyword de cliente na seção ROUTING
+(`Motiva|CCR Rodovias|SP-258|SP-330|Contorno Apucarana` → aplica
+`docs/PADRAO-OUTPUT-MOTIVA.md` como co-agente de padrão de output) +
+referência direta ao documento em `agente-orcamento.md`,
+`agente-cronograma.md`, `agente-apresentacoes.md` e
+`agente-contratual.md` (os 4 horizontais que de fato geram o
+entregável EAP/cronograma/PPT/codificação). Upload dos templates para
+o SharePoint da equipe segue pendente (ação manual — ver Gaps).
 
-Anterior: v5.2 (2026-08-22) — catálogo de fontes de receita setorial
+> **Nota de renumeração (merge de 2026-09-06)**: v5.2-v5.4 foram
+> atribuídas de forma independente e conflitante em dois branches
+> paralelos a partir da mesma base v5.1 — este branch (catálogo de
+> receita setorial em 22/08, review de arquitetura em 23/08) e `main`
+> (padrão de output Motiva em 30/08-31/08). Resolvido no merge
+> preservando **ambos** os conteúdos, renumerados por ordem
+> cronológica real (v5.2/v5.3 = este branch, datados antes; v5.4-v5.6
+> = a sequência Motiva de `main`, renumerada de v5.2-v5.4 para
+> v5.4-v5.6). `docs/PADRAO-OUTPUT-MOTIVA.md` (linha que cita "v5.4")
+> foi atualizado para "v5.6" para não divergir. Mesmo padrão de
+> transparência já usado neste arquivo para a reconciliação v5.0.0/v5.0
+> — achado registrado, não escondido.
+
+Consolida v5.5 (2026-08-30) — **Templates Motiva implementados**:
+`docs/templates/EAP-PADRAO-MOTIVA.xlsx` e
+`docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`, aprovados
+por MN, reproduzindo o padrão documentado em v5.4 (paleta neutra Manta
+até confirmação da marca).
+
+Consolida v5.4 (2026-08-30) — **Padrões de output por cliente**: nova
+seção que referencia o padrão de entregável (EAP em Excel/PPT,
+relatório, codificação de documentos, identidade visual) por cliente,
+começando pela Motiva (ex-CCR Rodovias).
+
+Consolida v5.3 (2026-08-23) — **review de arquitetura
+manta-arquiteto-ia** (Etapas 1-4, gate humano concluído): backend real
+de dispatch via Claude Agent SDK (`backend/maestro_dispatch.py`),
+aluci-guard como hook PreToolUse determinístico, e correção de 3 bugs
+reais pré-existentes na suíte de testes (`tests/lib/agent_loader.py`,
+`pytest.ini`, `.claude/agents/`) encontrados durante a implementação.
+Ver seção "REVIEW DE ARQUITETURA — v5.3" abaixo.
+
+Consolida v5.2 (2026-08-22) — catálogo de fontes de receita setorial
 (mão de obra, equipamento, aço, cimento) para os 8 segmentos S1-S10. Ver
 `pesquisa-fontes/FONTES_RECEITA_SETORIAL.md`.
 
-v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
+Consolida v5.1 (2026-08-02) — **Design Agents (P3-04): ESG/Impact Design Agent**.
 Expande o framework com novo agente horizontal **Manta 20 (manta-20-esg)** —
 assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
@@ -27,7 +61,9 @@ Consolida v5.0.1 operacional (2026-07-31):
 - **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
   gaps G010/G012/G014 resolvidos, 15 Sonnets investigação paralela.
 
-Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGENT` (novo).
+Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) +
+`MNT-2026-P3-04-ESG-AGENT` + `MNT-2026-MOTIVA-258-PATTERN` (novo,
+padrão de output por cliente).
 
 > **Nota de proveniência**: este arquivo **reconcilia** dois work streams
 > paralelos na mesma data:
@@ -56,12 +92,13 @@ Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) + `MNT-2026-P3-04-ESG-AGE
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
-12. [Model tiering](#model-tiering)
-13. [Gaps abertos / pendências](#gaps-abertos--pendências)
-14. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
-15. [Deploy checklist v5.0](#deploy-checklist-v50)
-16. [Arquivos deste repositório](#arquivos-deste-repositório)
-17. [Histórico de versões](#histórico-de-versões)
+12. [Padrões de output por cliente](#padrões-de-output-por-cliente)
+13. [Model tiering](#model-tiering)
+14. [Gaps abertos / pendências](#gaps-abertos--pendências)
+15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
+16. [Deploy checklist v5.0](#deploy-checklist-v50)
+17. [Arquivos deste repositório](#arquivos-deste-repositório)
+18. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -289,20 +326,32 @@ total operacional até gate MN.
 
 ### Horizontais (transversais a todos os segmentos) — 11 agentes
 
-| Código | Agente | Aliases | Tier default | Status |
-|--------|--------|---------|--------------|--------|
-| Manta 00 | maestro (router) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
-| Manta 01 | claims | 02-C, manta-claims, agente-claims | Opus | ✅ Operacional |
-| Manta 02 | contratual | manta-02, contratual, agente-contratual | Sonnet | ✅ Operacional |
-| Manta 04 | imobiliario | manta-04, agente-imobiliario | Sonnet | ✅ Operacional |
-| Manta 05 | orcamento | manta-05, agente-orcamento | Sonnet | ✅ Operacional |
-| Manta 06 | modelagem | manta-06, agente-modelagem | Sonnet/Opus | ✅ Operacional |
-| Manta 07 | cronograma | manta-07, agente-cronograma | Sonnet | ✅ Operacional |
-| Manta 13 | bd | manta-13, business-dev, agente-bd | Sonnet | ✅ Operacional |
-| Manta 14 | apresentacoes | manta-14-pptx, agente-apresentacoes | Sonnet | ✅ Operacional |
-| Manta 15 | advisory | manta-15, advisory, agente-advisory | Sonnet/Opus | ✅ Operacional |
-| Manta 16 | arquiteto-ia | manta-15-arq, agente-arquiteto-ia | Opus | ✅ Operacional |
-| Manta 20 | esg | manta-20-esg, agente-esg | Sonnet | 🆕 v1.0 (P3-04 Design Agent) |
+| Código | Agente | Arquivo | Aliases | Tier default | Status |
+|--------|--------|---------|---------|--------------|--------|
+| Manta 00 | maestro (router) | `maestro.v5.0.md` (spec de arquitetura — ver nota) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
+| Manta 01 | claims | `agente-claims.md` | 02-C, manta-claims | Opus | ✅ Operacional |
+| Manta 02 | contratual | `agente-contratual.md` | manta-02, contratual | Sonnet | ✅ Operacional |
+| Manta 04 | imobiliario | `agente-imobiliario.md` | manta-04 | Sonnet | ✅ Operacional |
+| Manta 05 | orcamento | `agente-orcamento.md` | manta-05 | Sonnet | ✅ Operacional |
+| Manta 06 | modelagem | `agente-modelagem.md` | manta-06 | Sonnet/Opus | ✅ Operacional |
+| Manta 07 | cronograma | `agente-cronograma.md` | manta-07 | Sonnet | ✅ Operacional |
+| Manta 13 | bd | `agente-bd.md` | manta-13, business-dev | Sonnet | ✅ Operacional |
+| Manta 14 | apresentacoes | `agente-apresentacoes.md` | manta-14-pptx | Sonnet | ✅ Operacional |
+| Manta 15 | advisory | `agente-advisory.md` | manta-15, advisory | Sonnet/Opus | ✅ Operacional |
+| Manta 16 | arquiteto-ia | `agente-arquiteto-ia.md` | manta-15-arq | Opus | ✅ Operacional |
+| Manta 20 | esg | `agente-esg.md` (spec de design, excluída do registro de teste — ver nota) | manta-20-esg, agente-esg | Sonnet | 🆕 v1.0 (P3-04 Design Agent) |
+
+> **Nota sobre `maestro.v5.0.md` e `agente-esg.md`**: ambos vivem em
+> `.claude/agents/` mas estão em `EXCLUDED_FROM_REGISTRY`
+> (`tests/lib/agent_loader.py`) — o primeiro é a spec de arquitetura do
+> router Manta 00 em formato de documento, não um subagente Claude
+> Code; o segundo é a spec "Design Phase" do P3-04 (seções numeradas,
+> ainda não convertida para o formato operacional de frontmatter +
+> "Contexto de domínio" + "Handoff" usado pelos demais agentes). Os
+> outros 4 agentes de Fase 3 (`agente-analytics-p3-07.md`,
+> `agente-procurement-p3-08.md`, `manta-21-stakeholder.md`,
+> `manta-25-kg.md`) estão na mesma situação — specs de design, não
+> agentes operacionais — por isso não aparecem nas tabelas acima.
 
 ### Verticais por segmento (C3) — 9 operacionais + 1 parcial + 2 propostos
 
@@ -363,6 +412,14 @@ IF menção a ferrovia|trilho|AMV|dormente|via permanente
 
 IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
    → agente-infraestrutura S4
+
+IF menção a Motiva|CCR Rodovias|SP-258|SP-330|Contorno Apucarana
+   → aplicar docs/PADRAO-OUTPUT-MOTIVA.md (padrão de output do cliente —
+     co-agente com o vertical/horizontal em escopo, não substitui o
+     dispatch primário por segmento). Ver seção "Padrões de output por
+     cliente" e a referência em cada agente que gera o entregável
+     (agente-orcamento, agente-cronograma, agente-apresentacoes,
+     agente-contratual).
 ```
 
 **S12/S13 ainda NÃO têm keyword de routing** (confirmado em
@@ -481,6 +538,19 @@ em produção (ver seção RAG acima).
 | agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
 | agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, pendente gate S12 |
 | agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, pendente gate S13 |
+
+---
+
+## PADRÕES DE OUTPUT POR CLIENTE
+
+Referências canônicas de formato de entregável (EAP em Excel/PPT,
+relatório, codificação de documentos, identidade visual) por cliente,
+levantadas do SharePoint. Todo agente vertical deve seguir o padrão do
+cliente ao gerar output para ele.
+
+| Cliente | Doc de referência | Status |
+|---------|--------------------|--------|
+| Motiva (ex-CCR Rodovias) | [`docs/PADRAO-OUTPUT-MOTIVA.md`](docs/PADRAO-OUTPUT-MOTIVA.md) · templates: [`EAP-PADRAO-MOTIVA.xlsx`](docs/templates/EAP-PADRAO-MOTIVA.xlsx), [`PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx`](docs/templates/PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx) | ✅ EAP Excel/PPT/relatório/codificação implementados (aprovado MN) · ✅ routing por cliente + referenciado em agente-orcamento/cronograma/apresentacoes/contratual · ⚠️ cores de marca não localizadas — templates usam paleta neutra Manta até confirmação · ⚠️ upload para o SharePoint da equipe ainda pendente (ação manual, MCP atual é read-only) |
 
 ---
 
@@ -660,6 +730,18 @@ interna ao repositório).
 - **S12/S13 sem RAG, sem rota SharePoint, sem keyword de routing** —
   agentes existem como arquivo, mas não são despacháveis pelo Maestro
   hoje.
+- **Templates Motiva sem upload real para o SharePoint da equipe
+  (novo)**: `docs/templates/EAP-PADRAO-MOTIVA.xlsx` e
+  `PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx` existem versionados
+  neste repositório e já estão referenciados no routing e nos agentes
+  de output (v5.4), mas ainda não foram copiados para
+  `sites/Engenharia/.../04_IA/Manta-Maestro/` onde a equipe de fato
+  trabalha — o MCP SharePoint disponível hoje é somente leitura (mesma
+  limitação já registrada em `docs/DEPLOY-v4.2.md`). Ação: alguém com
+  acesso de escrita ao SharePoint sobe os 2 arquivos manualmente.
+- **Cor institucional da Motiva não confirmada** — ver seção 5 de
+  `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
+  até confirmação do cliente.
 
 ---
 
@@ -716,7 +798,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.3)
+├── CLAUDE.md                              # este arquivo (master registry, v5.6)
 ├── README.md
 ├── backend/                                # 🆕 v5.3 — Manta 00 como serviço (Proposta 1)
 │   ├── agent_registry.py                  # parser único de .claude/agents/*.md (produção + testes)
@@ -736,6 +818,10 @@ Codex-exemplo/
 │       ├── agente-oleo-gas.md             # S12 — 🟠 proposto, pendente gate MN
 │       └── agente-edificacoes.md          # S13 — 🟠 proposto, pendente gate MN
 ├── docs/
+│   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.4 — padrão de output cliente Motiva
+│   ├── templates/
+│   │   ├── EAP-PADRAO-MOTIVA.xlsx               # v5.5 — template EAP (capa + hierarquia 4 níveis)
+│   │   └── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # v5.5 — template capa/sumário/conteúdo
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (⚠️ numeração de S divergente — ver Gaps)
@@ -763,6 +849,58 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+> **Nota de renumeração** (ver também o topo deste arquivo): as versões
+> v5.2-v5.4 abaixo tiveram numeração conflitante entre dois branches
+> paralelos originados da mesma v5.1. Preservados ambos os conteúdos;
+> renumerados por data real — v5.2/v5.3 (este branch, 22-23/08) antes de
+> v5.4-v5.6 (branch Motiva de `main`, 30-31/08, originalmente numeradas
+> v5.2-v5.4 nesse branch).
+
+- **v5.6** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
+  agentes de output** (aprovado por MN). Duas mudanças de
+  comportamento, não só documentação:
+  - Nova regra na seção ROUTING: menção a `Motiva`/`CCR Rodovias`/
+    `SP-258`/`SP-330`/`Contorno Apucarana` aplica
+    `docs/PADRAO-OUTPUT-MOTIVA.md` como co-agente de padrão de output,
+    no mesmo estilo já usado para `manta-20-esg` — não substitui o
+    dispatch primário por segmento.
+  - Referência direta ao documento na seção "Ferramentas e
+    integrações" dos 4 agentes horizontais que de fato produzem o
+    entregável para a Motiva: `agente-orcamento.md` (EAP Excel),
+    `agente-cronograma.md` (insumo do Planejamento Gerencial),
+    `agente-apresentacoes.md` (PPT), `agente-contratual.md` (norma de
+    codificação de documentos do cliente).
+  - Ainda pendente (fora do alcance desta sessão): upload dos 2
+    templates para o SharePoint real da equipe (`sites/Engenharia/
+    .../04_IA/Manta-Maestro/`) — hoje só existem versionados neste
+    repositório; e confirmação da cor institucional da Motiva (segue
+    lacuna, ver seção 5 de `PADRAO-OUTPUT-MOTIVA.md`).
+  Ticket `MNT-2026-MOTIVA-258-PATTERN`.
+- **v5.5** (2026-08-30) — **Templates Motiva implementados** (aprovado
+  por MN). Dois arquivos novos em `docs/templates/`:
+  - `EAP-PADRAO-MOTIVA.xlsx` — aba Capa (bloco de cabeçalho + legenda
+    de preenchimento automático/manual) e aba EAP (cabeçalho de 16
+    colunas, hierarquia de 4 níveis com 2 itens-modelo, fórmulas de
+    custo total/preço unitário/preço total/% — validadas com
+    recálculo LibreOffice, 0 erros).
+  - `PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx` — capa (versalete +
+    campos Cliente/Elaboração/Status), slide de sumário com as 5
+    seções documentadas e slide-modelo de conteúdo com o rodapé
+    padrão `[Rodovia] · [Segmento] · MOTIVA · [Seção] · nº/total`
+    (validado com `office/validate.py` e QA visual).
+  - Paleta: grayscale neutro (padrão Manta) em ambos os arquivos —
+    cor institucional da Motiva segue não confirmada (ver v5.4/seção
+    5 de `PADRAO-OUTPUT-MOTIVA.md`); nota registrada no gerador e nas
+    notas do orador da capa do PPTX para troca fácil quando a marca
+    for confirmada. Ticket `MNT-2026-MOTIVA-258-PATTERN`.
+- **v5.4** (2026-08-30) — padrão de output do cliente Motiva
+  documentado (`docs/PADRAO-OUTPUT-MOTIVA.md`): formato de EAP em
+  Excel (template v8, hierarquia de 4 níveis, código interno) e em
+  PowerPoint, estrutura do relatório Caderno de Premissas FEL-1, norma
+  de codificação de documentos CCR/Motiva. Cores de marca: lacuna
+  confirmada em duas varreduras do SharePoint (geral e pastas
+  "Material Recebido" de 10 projetos) — nenhum brandbook localizado.
+  Ticket `MNT-2026-MOTIVA-258-PATTERN`.
 - **v5.3** (2026-08-23) — **Review de arquitetura manta-arquiteto-ia
   concluído (Etapas 1-4, gate humano MN)**. Implementadas 3 das 4
   propostas originais: backend real de dispatch via Claude Agent SDK
@@ -773,16 +911,26 @@ Codex-exemplo/
   (`agente-X.v5.0.md`). A 4ª proposta (renomear os arquivos pinados)
   foi **retirada** ao se descobrir, já na implementação, que o sufixo
   de versão é um mecanismo de produção intencional documentado em
-  `docs/DEPLOYMENT-GUIDE.md` — não uma inconsistência. Também corrigidos,
-  como efeito colateral necessário para conseguir rodar/verificar os
-  testes: `pytest.ini` sem 4 markers usados por `conftest.py`
-  (causava `INTERNALERROR`, não apenas falha, em qualquer coleta que
-  tocasse `test_cross_agent_flows.py`), `tests/lib/agent_loader.py`
-  derrubando a coleta inteira ao encontrar qualquer agente sem
-  frontmatter (8 arquivos hoje), e 9 agentes horizontais legados sem
-  o slug de arquivo citado neste CLAUDE.md. Novo gap registrado: IDs de
-  modelo divergentes entre a tabela "Model Tiering" deste documento e
-  `.claude/settings.json`. Ver seção "REVIEW DE ARQUITETURA — v5.3".
+  `docs/DEPLOYMENT-GUIDE.md` — não uma inconsistência; **retificado no
+  merge com `main` de 2026-09-06**: o branch Motiva (PR #88) renomeou
+  os 5 arquivos verticais pinados de qualquer forma
+  (`agente-saneamento.v5.0.md` → `agente-saneamento.md` etc., mantendo
+  só `maestro.v5.0.md`, que segue sem frontmatter) — decisão do
+  repositório já mesclada em `main`, adotada aqui em vez de revertida.
+  `backend/agent_registry.py` mantém a normalização de sufixo como
+  defesa adicional (não depende de nenhum arquivo ainda estar
+  sufixado). Também corrigidos, como efeito colateral necessário para
+  conseguir rodar/verificar os testes: `pytest.ini` sem 4 markers
+  usados por `conftest.py` (causava `INTERNALERROR`, não apenas falha,
+  em qualquer coleta que tocasse `test_cross_agent_flows.py`),
+  `tests/lib/agent_loader.py` derrubando a coleta inteira ao encontrar
+  qualquer agente sem frontmatter (8 arquivos hoje — o branch Motiva
+  chegou à mesma correção de forma independente, via
+  `EXCLUDED_FROM_REGISTRY`; reconciliado no merge, ver nota abaixo), e
+  9 agentes horizontais legados sem o slug de arquivo citado neste
+  CLAUDE.md. Novo gap registrado: IDs de modelo divergentes entre a
+  tabela "Model Tiering" deste documento e `.claude/settings.json`. Ver
+  seção "REVIEW DE ARQUITETURA — v5.3".
 - **v5.2** (2026-08-22) — catálogo de fontes de receita setorial (mão de
   obra, equipamento, aço, cimento) para os 8 segmentos S1-S10 (Rodovias,
   Ferrovias, Portos, Aeroportos, Saneamento, Metrôs, Energia, Barragens),

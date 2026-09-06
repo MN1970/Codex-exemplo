@@ -40,17 +40,19 @@ CLAUDE_MD = REPO_ROOT / "CLAUDE.md"
 
 FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---\n(.*)$", re.DOTALL)
 
-# Agentes promovidos a produção ganham um arquivo "pinado" com sufixo de
-# versão (ex: `agente-saneamento.v5.0.md`, ver docs/DEPLOYMENT-GUIDE.md
-# Fase 3 + VERSIONS.json) em vez de sobrescrever o arquivo de trabalho.
-# `Path.stem` só remove o `.md` final, então esse sufixo sobrava no slug
-# computado ("agente-saneamento.v5.0" em vez de "agente-saneamento"),
-# quebrando `load_agent(slug)` (que procurava "{slug}.md" literal e
-# nunca encontrava os 6 arquivos pinados) e o carregamento dinâmico de
-# AgentDefinition no backend. Isto normaliza o slug sem renomear os
-# arquivos pinados — a convenção de versionamento é intencional
-# (checksums em VERSIONS.json, `skill_version_pin` em
-# .claude/settings.json) e não deve ser desfeita.
+# Alguns agentes promovidos a produção passaram por um período em que
+# ganhavam um arquivo "pinado" com sufixo de versão (ex:
+# `agente-saneamento.v5.0.md`, ver docs/DEPLOYMENT-GUIDE.md Fase 3 +
+# VERSIONS.json) em vez de sobrescrever o arquivo de trabalho. PR #88
+# (branch Motiva, mesclado em `main` em 2026-09-01) renomeou os 5
+# arquivos verticais pinados para o nome sem sufixo
+# (`agente-saneamento.v5.0.md` → `agente-saneamento.md` etc.) — decisão
+# do repositório, adotada aqui. `maestro.v5.0.md` segue com o sufixo
+# (nunca teve frontmatter, então nunca dependeu do parser abaixo).
+# Mantido como defesa: `Path.stem` só remove o `.md` final, então um
+# eventual arquivo futuro com sufixo de versão (`.vN.N`) ainda teria o
+# slug computado corretamente em vez de vazar o sufixo para
+# `load_agent(slug)`/AgentDefinition.
 VERSION_SUFFIX_RE = re.compile(r"\.v\d+(?:\.\d+)*$")
 
 
@@ -74,6 +76,39 @@ ALLOWED_TOOLS = {
 }
 
 ALLOWED_MODEL_TIERS = {"haiku", "sonnet", "opus"}
+
+# Arquivos em .claude/agents/*.md que NÃO são subagentes Claude Code
+# prontos para validação de registro — excluídos explicitamente em vez
+# de forçar frontmatter/seções fabricadas neles (mesma lista adotada em
+# `main` PR #88, reconciliada aqui no merge de 2026-09-06):
+#
+# - Specs "Design Phase" (P3-04/P3-07/P3-08/P3-09, Manta 20/21/25):
+#   documentos de proposta em formato de spec longa (seções numeradas,
+#   em inglês/EXECUTIVE SUMMARY), ainda não convertidos para o formato
+#   operacional conciso (frontmatter + "## Contexto de domínio" +
+#   "## Handoff") usado pelos agentes já aprovados.
+# - example_background_agent_skill.md: documentação de referência/how-to
+#   sobre background agents, não a definição de um agente.
+# - sicro-similaridade-skill.md: documentação de uma skill (não de um
+#   agente) — o próprio título já diz "SKILL:".
+# - maestro.v5.0.md: spec do router Manta 00 em formato de documento de
+#   arquitetura, não um subagente Claude Code — não segue o formato de
+#   frontmatter usado pelos verticais S1-S13.
+#
+# Qualquer arquivo NÃO nesta lista que ainda assim não tenha frontmatter
+# válido é pego pelo fallback try/except em `load_all_agents()` (com
+# aviso), então uma lacuna nesta lista nunca derruba a coleta/o dispatch
+# — só deixa de ter a razão documentada acima.
+EXCLUDED_FROM_REGISTRY = {
+    "agente-analytics-p3-07.md",
+    "agente-esg.md",
+    "agente-procurement-p3-08.md",
+    "manta-21-stakeholder.md",
+    "manta-25-kg.md",
+    "example_background_agent_skill.md",
+    "sicro-similaridade-skill.md",
+    "maestro.v5.0.md",
+}
 
 
 @dataclass(frozen=True)
@@ -134,18 +169,21 @@ def parse_agent_file(path: Path) -> AgentDef:
 def load_all_agents(*, strict: bool = False) -> list[AgentDef]:
     """Carrega todo `.claude/agents/*.md`.
 
-    Por padrão (`strict=False`) ignora — com aviso — arquivos sem
-    frontmatter YAML válido (ex: documentos de design ainda não
-    promovidos a agente real, como `agente-analytics-p3-07.md`, ou o
-    router `maestro.v5.0.md`, que também não tem frontmatter) em vez de
-    derrubar a coleta/o dispatch inteiro. Use `strict=True` para
-    re-obter o comportamento antigo (propagar o erro).
+    Arquivos em `EXCLUDED_FROM_REGISTRY` são pulados silenciosamente
+    (documentos conhecidos, não agentes — ver comentário acima do
+    conjunto). Qualquer OUTRO arquivo sem frontmatter YAML válido é
+    pulado também, mas com aviso (`strict=False`, padrão) — defesa
+    contra um futuro arquivo malformado ainda não catalogado derrubar a
+    coleta/o dispatch inteiro. Use `strict=True` para propagar o erro
+    em vez de avisar (comportamento antigo).
     """
     if not AGENTS_DIR.exists():
         return []
 
     agents = []
     for path in sorted(AGENTS_DIR.glob("*.md")):
+        if path.name in EXCLUDED_FROM_REGISTRY:
+            continue
         try:
             agents.append(parse_agent_file(path))
         except AgentParseError as exc:
