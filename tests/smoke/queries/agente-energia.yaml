@@ -1,0 +1,15 @@
+# 5 perguntas de exemplo para o smoke test do agente-energia (Manta 03-S9).
+- prompt: "Estamos avaliando um leilão de transmissão da ANEEL, pode me ajudar a estruturar a análise?"
+  expect_any: ["aneel", "leilão", "transmissão", "rap"]
+
+- prompt: "Preciso da RAP referencial para uma LT de 500kV, 250km. Como estimo?"
+  expect_any: ["rap", "lt", "500kv", "transmissão"]
+
+- prompt: "Como faço o estudo de ampacidade para condutor ACSR 636 MCM?"
+  expect_any: ["ampacidade", "acsr", "condutor"]
+
+- prompt: "Qual arranjo de subestação recomenda para 230kV?"
+  expect_any: ["subestação", "230kv", "arranjo", "barramento"]
+
+- prompt: "ONS pede um estudo de fluxo de potência — pode revisar minha modelagem?"
+  expect_any: ["ons", "fluxo de potência", "modelagem"]

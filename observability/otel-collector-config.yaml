@@ -1,0 +1,62 @@
+# otel-collector-config.yaml
+# Manta Maestro — pipeline padrão (LOCAL): apps -> collector -> Jaeger.
+#
+# Usado pelo `docker-compose.yml` base (sem overlay Datadog). Para também
+# exportar para Datadog, suba com o overlay:
+#   docker compose -f docker-compose.yml -f docker-compose.datadog.yml up
+# (que troca este arquivo por otel-collector-config.datadog.yaml).
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  memory_limiter:
+    check_interval: 5s
+    limit_mib: 400
+    spike_limit_mib: 100
+
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+
+  resource:
+    attributes:
+      - key: manta.stack
+        value: "observability-local"
+        action: upsert
+
+exporters:
+  otlp/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+
+  # Fica visível nos logs do container (`docker compose logs otel-collector`)
+  # — útil para debug rápido sem abrir a UI do Jaeger.
+  debug:
+    verbosity: basic
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [otlp/jaeger, debug]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      # Jaeger não aceita métricas — em modo local elas só passam pelo
+      # debug exporter. Para métricas persistidas localmente, adicione um
+      # exporter `prometheus` aqui e um serviço Prometheus/Grafana ao
+      # docker-compose (fora do escopo mínimo deste setup).
+      exporters: [debug]

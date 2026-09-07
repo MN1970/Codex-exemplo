@@ -1,0 +1,298 @@
+{
+  "accuracy_top1": 0.8125,
+  "accuracy_top3": 0.8438,
+  "total_tests": 32,
+  "passed": 26,
+  "failed": 6,
+  "confusion_matrix": {
+    "agente-portos": {
+      "agente-portos": 5
+    },
+    "agente-aeroportos": {
+      "agente-aeroportos": 5
+    },
+    "agente-saneamento": {
+      "agente-saneamento": 6
+    },
+    "agente-energia": {
+      "agente-energia": 5,
+      "agente-saneamento": 1
+    },
+    "agente-barragens": {
+      "agente-barragens": 5,
+      "agente-saneamento": 1
+    },
+    "agente-infraestrutura S1": {
+      "agente-saneamento": 1
+    },
+    "agente-infraestrutura S2": {
+      "agente-saneamento": 1
+    },
+    "agente-infraestrutura S3": {
+      "agente-saneamento": 1
+    },
+    "agente-infraestrutura S4": {
+      "agente-saneamento": 1
+    }
+  },
+  "slow_routes": [],
+  "timestamp": "2026-07-25T00:46:04.837752+00:00",
+  "results": [
+    {
+      "prompt": "Preciso de um preliminar de dragagem para o terminal de cont\u00eaineres do Porto do Itaqui.",
+      "expected": "agente-portos",
+      "actual": "agente-portos",
+      "rank": 1,
+      "latency_ms": 0.05,
+      "status": "pass"
+    },
+    {
+      "prompt": "Como dimensiono a defensa de um ber\u00e7o para navio Panamax?",
+      "expected": "agente-portos",
+      "actual": "agente-portos",
+      "rank": 1,
+      "latency_ms": 0.03,
+      "status": "pass"
+    },
+    {
+      "prompt": "A ANTAQ pede um cronograma de arrendamento para o TUP; ajuda?",
+      "expected": "agente-portos",
+      "actual": "agente-portos",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Qual PIANC bulletin cobre projeto de quebra-mar em enrocamento?",
+      "expected": "agente-portos",
+      "actual": "agente-portos",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Estamos com calado insuficiente no canal \u2014 preciso de plano de dragagem.",
+      "expected": "agente-portos",
+      "actual": "agente-portos",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Quero dimensionar a pista de pouso do aeroporto regional (c\u00f3digo 3C).",
+      "expected": "agente-aeroportos",
+      "actual": "agente-aeroportos",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Qual RBAC cobre projeto de p\u00e1tio de aeronaves?",
+      "expected": "agente-aeroportos",
+      "actual": "agente-aeroportos",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Preciso do PCN da pista para opera\u00e7\u00e3o de A320neo.",
+      "expected": "agente-aeroportos",
+      "actual": "agente-aeroportos",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Como projeto o balizamento CAT II para opera\u00e7\u00e3o noturna?",
+      "expected": "agente-aeroportos",
+      "actual": "agente-aeroportos",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "ICAO Annex 14 permite offset lateral de RWY na minha configura\u00e7\u00e3o?",
+      "expected": "agente-aeroportos",
+      "actual": "agente-aeroportos",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Preciso projetar uma ETA de ciclo completo para 200 mil hab.",
+      "expected": "agente-saneamento",
+      "actual": "agente-saneamento",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Como calculo golpe de ar\u00edete na adutora de 800mm?",
+      "expected": "agente-saneamento",
+      "actual": "agente-saneamento",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "AySA me pediu um estudo de reabilita\u00e7\u00e3o da Planta Norte.",
+      "expected": "agente-saneamento",
+      "actual": "agente-saneamento",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Qual m\u00e9todo de dimensionamento de rede de esgoto pela NBR 9649?",
+      "expected": "agente-saneamento",
+      "actual": "agente-saneamento",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Estou preparando o PMSB do munic\u00edpio; por onde come\u00e7ar?",
+      "expected": "agente-saneamento",
+      "actual": "agente-saneamento",
+      "rank": 1,
+      "latency_ms": 0.01,
+      "status": "pass"
+    },
+    {
+      "prompt": "A Lei 14.026 exige quais m\u00e9tricas do SNIS para universaliza\u00e7\u00e3o?",
+      "expected": "agente-saneamento",
+      "actual": "agente-saneamento",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Estamos avaliando um leil\u00e3o de transmiss\u00e3o da ANEEL em 2027, pode me ajudar?",
+      "expected": "agente-energia",
+      "actual": "agente-energia",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Preciso da RAP referencial para uma LT de 500kV, 250km.",
+      "expected": "agente-energia",
+      "actual": "agente-energia",
+      "rank": 1,
+      "latency_ms": 0.01,
+      "status": "pass"
+    },
+    {
+      "prompt": "Como fa\u00e7o o estudo de ampacidade para condutor ACSR 636 MCM?",
+      "expected": "agente-energia",
+      "actual": "agente-saneamento",
+      "rank": 2,
+      "latency_ms": 0.02,
+      "status": "partial"
+    },
+    {
+      "prompt": "Qual arranjo de subesta\u00e7\u00e3o recomenda para 230kV?",
+      "expected": "agente-energia",
+      "actual": "agente-energia",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "ONS pede um estudo de fluxo \u2014 pode revisar minha modelagem?",
+      "expected": "agente-energia",
+      "actual": "agente-energia",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "EPE liberou o R3 do projeto; preciso conferir contra o edital.",
+      "expected": "agente-energia",
+      "actual": "agente-energia",
+      "rank": 1,
+      "latency_ms": 0.01,
+      "status": "pass"
+    },
+    {
+      "prompt": "Preciso projetar uma barragem CFRD de 80m de altura.",
+      "expected": "agente-barragens",
+      "actual": "agente-barragens",
+      "rank": 1,
+      "latency_ms": 0.01,
+      "status": "pass"
+    },
+    {
+      "prompt": "Como fa\u00e7o dam breach analysis p\u00f3s-Brumadinho?",
+      "expected": "agente-barragens",
+      "actual": "agente-saneamento",
+      "rank": 5,
+      "latency_ms": 0.02,
+      "status": "partial"
+    },
+    {
+      "prompt": "Qual bulletin ICOLD cobre rejeitos filtrados (dry stack)?",
+      "expected": "agente-barragens",
+      "actual": "agente-barragens",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "PNSB exige quais entreg\u00e1veis para revis\u00e3o peri\u00f3dica?",
+      "expected": "agente-barragens",
+      "actual": "agente-barragens",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Tenho uma barragem TSF a montante que precisa descaracterizar.",
+      "expected": "agente-barragens",
+      "actual": "agente-barragens",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "O SIGBM da ANM me alertou sobre categoria de risco \u2014 o que fa\u00e7o?",
+      "expected": "agente-barragens",
+      "actual": "agente-barragens",
+      "rank": 1,
+      "latency_ms": 0.02,
+      "status": "pass"
+    },
+    {
+      "prompt": "Preciso do or\u00e7amento SICRO para pavimento CBUQ 5cm.",
+      "expected": "agente-infraestrutura S1",
+      "actual": "agente-saneamento",
+      "rank": -1,
+      "latency_ms": 0.02,
+      "status": "fail"
+    },
+    {
+      "prompt": "Como projeto uma viga PRP para viaduto sobre a rodovia?",
+      "expected": "agente-infraestrutura S2",
+      "actual": "agente-saneamento",
+      "rank": -1,
+      "latency_ms": 0.02,
+      "status": "fail"
+    },
+    {
+      "prompt": "Qual AMV recomenda para p\u00e1tio ferrovi\u00e1rio?",
+      "expected": "agente-infraestrutura S3",
+      "actual": "agente-saneamento",
+      "rank": -1,
+      "latency_ms": 0.02,
+      "status": "fail"
+    },
+    {
+      "prompt": "Vou escavar uma esta\u00e7\u00e3o de metr\u00f4 pelo m\u00e9todo NATM.",
+      "expected": "agente-infraestrutura S4",
+      "actual": "agente-saneamento",
+      "rank": -1,
+      "latency_ms": 0.02,
+      "status": "fail"
+    }
+  ]
+}

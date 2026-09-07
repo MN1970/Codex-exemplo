@@ -1,0 +1,13 @@
+# Mapeia o "tier" declarado no frontmatter do agente (`model: sonnet`)
+# para um model ID real da API Anthropic.
+#
+# Atualize este arquivo quando um novo model ID for lançado — os
+# agentes continuam declarando apenas o tier ("haiku" | "sonnet" |
+# "opus"), nunca um ID de modelo fixo, para não precisarmos editar 20
+# arquivos de agente a cada atualização de modelo.
+haiku: claude-haiku-4-5
+sonnet: claude-sonnet-4-5
+opus: claude-opus-4-1
+
+# Quando `model:` combina dois tiers (ex: "sonnet/opus"), o smoke test
+# usa o primeiro tier da lista (o "default" documentado no README/CLAUDE.md).
