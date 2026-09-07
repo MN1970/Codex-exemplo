@@ -5,13 +5,14 @@
 **Versão:** 5.0.0 (2026-07-22)  
 **Status:** Operacional  
 **Última atualização:** 2026-07-22  
-**Mantido por:** mneves@mantaassociados.com
+**Mantido por:** <mneves@mantaassociados.com>
 
 ---
 
 ## 📋 Sumário Executivo
 
 A v5.0.0 consolida a expansão S6–S10 (Portos, Aeroportos, Saneamento, Energia, Barragens) com:
+
 - **20 agentes operacionais** (11 horizontais + 9 verticais por segmento)
 - **5 novos agentes verticais** especializados em infraestrutura setorial
 - **Router inteligente (Maestro)** com regras de roteamento por padrão de menção
@@ -133,7 +134,7 @@ Todos os agentes verticais (S1–S10) suportam trabalho em todas as 8 fases:
 
 ### 6.1 Estrutura de pastas
 
-```
+```text
 04_IA/Manta-Maestro/
 ├── 00-arquitetura/
 │   ├── ARQUITETURA-AGENTES-IA-v5.0.0.md ← Este arquivo
@@ -153,11 +154,11 @@ Todos os agentes verticais (S1–S10) suportam trabalho em todas as 8 fases:
 
 | Pasta SP | Agente | Padrão | Prioridade |
 |----------|--------|--------|-----------|
-| 03_Projetos/Saneamento/* | agente-saneamento (S8) | *.pdf, *.dwg, *.xlsx | 🔴 Alta (AYSÁ) |
-| 03_Projetos/Energia/* | agente-energia (S9) | *.pdf, *.dwg, *.xlsx | 🔴 Alta (ANEEL) |
-| 03_Projetos/Portos/* | agente-portos (S6) | *.pdf, *.dwg, *.xlsx | 🟡 Média |
-| 03_Projetos/Aeroportos/* | agente-aeroportos (S7) | *.pdf, *.dwg, *.xlsx | 🟡 Média |
-| 03_Projetos/Barragens/* | agente-barragens (S10) | *.pdf, *.dwg, *.xlsx | 🟡 Média |
+| 03_Projetos/Saneamento/* | agente-saneamento (S8) | *.pdf,*.dwg, *.xlsx | 🔴 Alta (AYSÁ) |
+| 03_Projetos/Energia/* | agente-energia (S9) | *.pdf,*.dwg, *.xlsx | 🔴 Alta (ANEEL) |
+| 03_Projetos/Portos/* | agente-portos (S6) | *.pdf,*.dwg, *.xlsx | 🟡 Média |
+| 03_Projetos/Aeroportos/* | agente-aeroportos (S7) | *.pdf,*.dwg, *.xlsx | 🟡 Média |
+| 03_Projetos/Barragens/* | agente-barragens (S10) | *.pdf,*.dwg, *.xlsx | 🟡 Média |
 
 ---
 
@@ -178,7 +179,7 @@ Todos os agentes verticais (S1–S10) suportam trabalho em todas as 8 fases:
 
 ## 8. SUPORTE &amp; MANUTENÇÃO
 
-**Mantido por:** mneves@mantaassociados.com  
+**Mantido por:** <mneves@mantaassociados.com>  
 **Repositório master:** `/Codex-exemplo` (GitHub)  
 **Próximos passos:** v5.1 (Q3 2026) — integração com LLM multimodal
 

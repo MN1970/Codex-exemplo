@@ -40,7 +40,8 @@ node infra/agent-registry/expert-finder-demo.js
 ```
 
 **Expected output:**
-```
+
+```text
 🎉 All sample queries routed correctly to their expert agents!
 Passed: 10/10 (100%)
 ```
@@ -108,7 +109,7 @@ const ranker = new ExpertRanker({
 
 ### Per-Agent Calculation
 
-```
+```text
 Score = (
   0.40 × semantic_score +
   0.30 × historical_score +
@@ -121,7 +122,8 @@ Score = (
 ### Example: "ETA para 200k hab"
 
 **Agent: agente-saneamento**
-```
+
+```text
 Semantic (40%):    0.70 × 0.40 = 0.280
 Historical (30%):  0.85 × 0.30 = 0.255
 Capability (15%):  0.80 × 0.15 = 0.120
@@ -136,21 +138,27 @@ FINAL SCORE:                    = 0.758 ✅ 75.8% confidence
 ## Key Features
 
 ### ✅ Tie-Breaking
+
 If top 2 agents within 2% confidence → pick cheaper one:
-```
+
+```text
 Agent A: 75.5% (Sonnet, cheaper) ← Wins!
 Agent B: 75.3% (Opus, expensive)
 ```
 
 ### ✅ Circuit Breaker
+
 Escalate to Opus if:
+
 - Confidence < 60% (configurable)
 - Top 2 scores ambiguous (< 2% margin)
 - No candidates available
 
 ### ✅ Explainability
+
 Each result includes human-readable reasoning:
-```
+
+```text
 "Semantic match (70%); High success rate (13/15); 
 Has required tools; Efficient tier (sonnet); 
 Fast SLA (800ms p99). Confidence: 75.0%."
@@ -161,6 +169,7 @@ Fast SLA (800ms p99). Confidence: 75.0%."
 ## Configuration Examples
 
 ### Conservative (Trust History More)
+
 ```typescript
 new ExpertRanker({
   weights: {
@@ -175,6 +184,7 @@ new ExpertRanker({
 ```
 
 ### Cost-Conscious (Prefer Cheap Agents)
+
 ```typescript
 new ExpertRanker({
   weights: {
@@ -188,6 +198,7 @@ new ExpertRanker({
 ```
 
 ### SLA-Strict (Penalize Slow Agents)
+
 ```typescript
 new ExpertRanker({
   weights: {
@@ -228,12 +239,14 @@ const ranked = result.ranked;  // Same structure
 ## Database Integration (Phase 2)
 
 **ExpertRanker reads from:**
+
 - `routing_events` — historical routing decisions
 - `routing_feedback` — user feedback (correct/wrong/slow/incomplete)
 - `agent_health` — latency & error metrics
 - `agent_capabilities` — tools, skills, RAG collections
 
 **Via dependency injection:**
+
 ```typescript
 const ranker = new ExpertRanker({
   historyProvider: new SupabaseHistoryProvider(supabaseClient),
@@ -246,10 +259,12 @@ const ranker = new ExpertRanker({
 ## Documentation
 
 ### Detailed Guides
+
 - **`EXPERT-FINDER-v5.0.md`** — Full API reference, usage examples, test results
 - **`EXPERT-FINDER-ARCHITECTURE.md`** — System design, integration points, troubleshooting
 
 ### This File
+
 - **`EXPERT-FINDER-QUICKSTART.md`** ← You are here
 
 ---
@@ -269,18 +284,21 @@ ExpertRanker slightly prefers Sonnet (good balance) over Opus unless confidence 
 ## Testing
 
 ### Run Demo
+
 ```bash
 node infra/agent-registry/expert-finder-demo.js
 # Output: ✅ Passed: 10/10 (100%)
 ```
 
 ### Run Unit Tests
+
 ```bash
 npm test --prefix infra/agent-registry
 # (Requires Node ≥18 with TypeScript)
 ```
 
 ### Manual Test
+
 ```typescript
 const ranker = new ExpertRanker();
 const result = await ranker.findExperts(
@@ -295,21 +313,25 @@ console.log(JSON.stringify(result.ranked[0], null, 2));
 ## Next Steps
 
 ### Phase 1 ✅ (Complete)
+
 - [x] ExpertRanker implementation
 - [x] 10 sample queries all passing
 - [x] Documentation complete
 
 ### Phase 2 (Next)
+
 - [ ] Wire real Supabase history
 - [ ] Implement real capability matching
 - [ ] Deploy to staging
 
 ### Phase 3
+
 - [ ] A/B test vs. v2.0
 - [ ] Gather user feedback
 - [ ] Tune weights
 
 ### Phase 4
+
 - [ ] Thompson Sampling feedback loop
 - [ ] Quarterly KPI reviews
 - [ ] 100% production rollout
@@ -319,19 +341,23 @@ console.log(JSON.stringify(result.ranked[0], null, 2));
 ## Troubleshooting
 
 **Q: My agent never ranks high**
+
 - Check: Does query match your agent's keywords?
 - Check: Is routing_feedback populated with successes?
 - Check: Are tools/skills configured in agent_capabilities?
 
 **Q: Confidence always < 60%**
+
 - Likely: Synthetic history fallback (no real feedback yet)
 - Fix: Wait for real traffic, or tune `confidenceThreshold`
 
 **Q: Wrong agent ranked first**
+
 - Debug: Print `result.ranked[0].scores` to see breakdown
 - Adjust: Which signal boosted wrong agent? Tune that weight.
 
 **Q: Performance issues with many agents**
+
 - Note: Current design optimal for 20-50 agents
 - Scale: Consider HNSW indexing for 100+ agents
 

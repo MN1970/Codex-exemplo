@@ -25,7 +25,7 @@ The Phase 2 composition orchestrator adds four key capabilities to Phase 1:
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  CrossSegmentComposer (orchestrator)                        │
 ├─────────────────────────────────────────────────────────────┤
@@ -45,7 +45,7 @@ The Phase 2 composition orchestrator adds four key capabilities to Phase 1:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Key classes:
+### Key classes
 
 - **ResourcePool**: Caches shared RAG chunks (edital, normativa, Lei 14.026) across agents to avoid redundant queries.
 - **CostTracker**: Estimates and tracks token consumption per-agent and globally; enforces budget limits.
@@ -284,7 +284,7 @@ The `CrossSegmentComposer` natively supports 5 known composition patterns:
 **Dependencies:** Serial (energia depends on barragem's NA, volume, vazão)  
 **Cost:** ~4–5 agents' worth of tokens
 
-```
+```yaml
 Query: "Preciso projetar uma UHE com barragem CFRD de 100m e LT de 500kV."
 Pattern match: ✅ UHE_PATTERN
 Detected agents: [barragens (primary), energia (secondary)]
@@ -297,7 +297,7 @@ Schedule: serial (barragem → energia)
 **Dependencies:** None (parallel, independent scopes)  
 **Cost:** ~2–3 agents' worth of tokens
 
-```
+```yaml
 Query: "ETE nova + subestação 138kV no mesmo canteiro."
 Pattern match: ✅ ETE_SUBESTACAO_PATTERN
 Detected agents: [saneamento (primary), energia (secondary)]
@@ -310,7 +310,7 @@ Schedule: parallel (no data dependency)
 **Dependencies:** None (parallel, independent)  
 **Cost:** ~2–3 agents' worth
 
-```
+```yaml
 Query: "Porto arrendado no Amazonas com pátio + pista para carga aérea."
 Pattern match: ✅ PORTO_PISTA_PATTERN
 Detected agents: [portos (primary), aeroportos (secondary)]
@@ -323,7 +323,7 @@ Schedule: parallel
 **Dependencies:** Serial (traçado respeta zona de autossalvamento)  
 **Cost:** ~2–3 agents' worth
 
-```
+```yaml
 Query: "Adutora atravessando barragem de rejeitos TSF."
 Pattern match: ✅ ADUTORA_BARRAGEM_PATTERN
 Detected agents: [barragens (consult), saneamento (primary)]
@@ -336,7 +336,7 @@ Schedule: serial (barragens consult before saneamento finalizes traçado)
 **Dependencies:** None (parallel, often cross-checked in merge)  
 **Cost:** ~1–2 agents' worth
 
-```
+```yaml
 Query: "Pleito de reequilíbrio econômico-financeiro precisa de quantitativo."
 Pattern match: ✅ CLAIM_ORCAMENTO_PATTERN
 Detected agents: [manta-01-claims (primary), manta-05-orcamento (secondary)]

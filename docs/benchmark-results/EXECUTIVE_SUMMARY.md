@@ -9,11 +9,13 @@
 ## Key Findings
 
 ### Contaminador Principal: S10 (Barragens)
+
 - Representa 3 das 8 contaminações cruzadas (37.5%)
 - Termos estruturais genéricos ("terraplenagem", "fundação", "drenagem") capturados incorretamente
 - Embedding model não discrimina contexto (rodovia ≠ barragem para "terraplenagem")
 
 ### Termos Ambíguos Críticos
+
 | Termo | Domínios afetados | Problema |
 |-------|------------------|----------|
 | terraplenagem | S1, S2, S10 | Subleito (rodovia) vs. aterro (barragem) |
@@ -26,14 +28,18 @@
 ## Recommended Action Plan
 
 ### Phase 1: HOJE (1-2h) — Strategy 1
+
 **Normalização de prefixos + anti-termos**
+
 - Reduzir peso de `bar:` de 1.0 → 0.85
 - Adicionar tabela `domain_anti_terms` com 10-15 pares exclusivos
 - Modificar função de busca para penalizar cross-domain
 - **Impacto esperado:** Recall@1 +5-8%, contaminação -30-40%
 
 ### Phase 2: ESTA SEMANA (4-6h) — Strategy 2
+
 **Enriquecer corpus com contexto diferenciador**
+
 - Criar 50-100 synthetic chunks por domínio
 - Adicionar `context_tag` + `disambiguator` para termos ambíguos
 - Validar com domain experts
@@ -41,7 +47,9 @@
 - **Impacto esperado:** Recall@1 +8-12%, contaminação -50-70%
 
 ### Phase 3: FALLBACK (8-12h) — Strategy 3
+
 **Trocar embedding model + semantic layer**
+
 - Avaliar upgrade ada-002 → text-embedding-3-large
 - Implementar semantic disambiguation pós-embedding
 - Custo-benefício: ⚠️ Alto esforço, execute APENAS se Phase 1+2 insuficientes
@@ -59,6 +67,7 @@
 ---
 
 ## Success Criteria
+
 - ✅ Recall@1 ≥ 70% (CRITICAL)
 - ✅ Contaminação ≤ 5% (CRITICAL)
 - ✅ Recall@3 ≥ 85%
@@ -68,4 +77,5 @@ Phase 1 alone should hit first threshold; Phase 1+2 should hit all three.
 ---
 
 ## Next Step
+
 Execute Phase 1 implementation today, then re-run benchmark to validate improvements.

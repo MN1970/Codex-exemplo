@@ -14,7 +14,7 @@ Esta pasta contém a **base de conhecimento técnico completo** sobre drenagem e
 
 ## Estrutura de Arquivos
 
-```
+```text
 drenagem/
 ├── README.md                                    # Este arquivo
 ├── 00-indice-maestro.md                         # Índice geral + roteiro de consulta
@@ -36,6 +36,7 @@ drenagem/
 **Arquivo**: `01-fundamentos-hidrologicos.md`
 
 Aborda:
+
 - Ciclo da água e componentes (precipitação, infiltração, evapotranspiração, escoamento)
 - Bacias hidrográficas e delimitação de áreas de drenagem
 - **Tempo de concentração** (Kirpich, Giandotti)
@@ -126,7 +127,7 @@ Esta base é **100% alinhada** com:
 
 ## Integração com Outros Módulos Rodoviários
 
-```
+```text
 GEOMETRIA           PAVIMENTAÇÃO        DRENAGEM            OAE
 ├─ Traçado         ├─ Estrutura        ├─ Hidrologia       ├─ Ponte
 ├─ Alinhamento     ├─ Materiais        ├─ Superficial      ├─ Viaduto
@@ -148,6 +149,7 @@ GEOMETRIA           PAVIMENTAÇÃO        DRENAGEM            OAE
 3. **Duplicação (Vale do Paraíba, SP)** — Bacia de infiltração como inovação
 
 Cada caso apresenta:
+
 - Contexto hidrológico
 - Dados de chuva e capacidade de infiltração
 - Solução implementada

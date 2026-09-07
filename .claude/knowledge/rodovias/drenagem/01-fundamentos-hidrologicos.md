@@ -10,6 +10,7 @@
 ## 1. Introdução
 
 A drenagem em projetos rodoviários é essencial para:
+
 - Proteger o pavimento de infiltração de água
 - Garantir estabilidade de taludes e aterros
 - Prevenir erosão e inundações
@@ -23,7 +24,7 @@ Os **fundamentos hidrológicos** são a base para dimensionar sistemas de drenag
 
 ### 2.1 Componentes do Ciclo da Água
 
-```
+```json
 [PRECIPITAÇÃO] → Nuvens
      ↓
 [INTERCEPTAÇÃO] → Vegetação
@@ -58,13 +59,14 @@ A base conceitual de toda análise hidrológica é:
 $$P = Q + ET + I_a + \Delta S$$
 
 Onde:
+
 - **P** = Precipitação (mm)
 - **Q** = Escoamento superficial (mm)
 - **ET** = Evapotranspiração (mm)
 - **I_a** = Retenção inicial / infiltração inicial (mm)
 - **ΔS** = Variação de armazenamento no solo (mm)
 
-### Em regime permanente (simplificado):
+### Em regime permanente (simplificado)
 
 $$Q = P - ET - f$$
 
@@ -78,6 +80,7 @@ $$Q = P - ET - f$$
 ### 4.1 Conceitos
 
 A precipitação é quantificada em:
+
 - **Altura (mm)**: acumulada em um período
 - **Intensidade (mm/h)**: altura por unidade de tempo
 - **Duração (min ou h)**: período da chuva
@@ -100,6 +103,7 @@ Para rodovias no Brasil, adotam-se períodos de retorno (Tr) conforme DNIT ES 13
 $$X_{Tr} = X_{m} + K_n \cdot S$$
 
 Onde:
+
 - **X_Tr** = Precipitação para período de retorno Tr (mm)
 - **X_m** = Precipitação média histórica (mm)
 - **K_n** = Fator de frequência (tabelado)
@@ -108,6 +112,7 @@ Onde:
 **Exemplo com valores reais — Federal Vd=100 (rodovia federal, BR-XXX)**:
 
 Suponha uma série histórica de precipitações máximas anuais:
+
 - Precipitação média: X_m = 95 mm
 - Desvio padrão: S = 22 mm
 - Fator de frequência para Tr=25 anos: K_n = 2,970
@@ -143,6 +148,7 @@ Para cada ponto de drenagem, determina-se:
 | Coeficiente de compacidade | Kc | adimensional | Forma da bacia (circular ou alongada) |
 
 **Exemplo prático**:
+
 - Bacia a montante de um bueiro: A = 12,5 ha
 - Comprimento do talvegue: L = 750 m
 - Declive: I_m = 0,032 m/m (3,2%)
@@ -164,11 +170,13 @@ Isso determina a **duração crítica da chuva** para o dimensionamento.
 $$t_c = 57 \times \left( \frac{L^3}{H} \right)^{0,385}$$
 
 Onde:
+
 - **t_c** = tempo de concentração (minutos)
 - **L** = comprimento do talvegue (km)
 - **H** = diferença de nível (m)
 
 **Exemplo**:
+
 - L = 0,750 km (750 m)
 - H = L × I_m = 750 × 0,032 = 24 m
 
@@ -181,6 +189,7 @@ $$t_c = 57 \times \left( \frac{0,750^3}{24} \right)^{0,385} = 57 \times (0,00976
 $$t_c = \frac{4 \times \sqrt{A} + 1,5 \times L}{0,8 \times \sqrt{H_{m}}}$$
 
 Onde:
+
 - **A** = área da bacia (km²)
 - **L** = comprimento do talvegue (km)
 - **H_m** = altura média da bacia (m)
@@ -194,12 +203,14 @@ A relação entre intensidade (i), duração (t) e frequência (período de reto
 $$i = \frac{K \times T_r^a}{(t + b)^c}$$
 
 Onde:
+
 - **i** = intensidade (mm/min)
 - **T_r** = período de retorno (anos)
 - **t** = duração (min)
 - **K, a, b, c** = constantes regionais (obtidas de estações meteorológicas)
 
 **Exemplo para região federal (Brasília/Centro-Oeste)**:
+
 - K = 58,5; a = 0,153; b = 12; c = 1,02
 
 Para **Tr = 25 anos** e **t = t_c = 5,5 min**:
@@ -219,6 +230,7 @@ O **Método Racional** é a abordagem recomendada pelo DNIT para pequenas bacias
 $$Q = 0,278 \times C \times i \times A$$
 
 Onde:
+
 - **Q** = vazão de projeto (m³/s)
 - **C** = coeficiente de escoamento (coeficiente de runoff), adimensional, 0 < C < 1
 - **i** = intensidade de precipitação (mm/h), para duração = t_c
@@ -245,6 +257,7 @@ $$C = \frac{\sum (C_i \times A_i)}{\sum A_i}$$
 ### 7.3 Exemplo Prático: Cálculo de Vazão
 
 **Dados do projeto**:
+
 - Área de bacia: A = 12,5 ha
 - Cobertura: 40% pavimento asfáltico (C = 0,98), 60% grama (C = 0,25)
 - Intensidade de chuva (Tr = 25 anos, t_c = 5,5 min): i = 245 mm/h
@@ -269,6 +282,7 @@ Dimensionamento: **Bueiro com vazão de projeto Q = 461,5 m³/s**
 ### 8.1 Conceito
 
 A evapotranspiração é a perda conjunta de água por:
+
 - **Evaporação**: direta de superfícies de água e solo
 - **Transpiração**: através de plantas
 
@@ -277,6 +291,7 @@ A evapotranspiração é a perda conjunta de água por:
 $$ET_0 = \frac{0,408 \times \Delta \times (R_n - G) + \gamma \times \frac{C_n}{T + 273} \times u_2 \times (e_s - e_a)}{\Delta + \gamma \times (1 + C_d \times u_2)}$$
 
 Componentes:
+
 - **R_n** = radiação líquida (MJ/m²/dia)
 - **G** = fluxo de calor no solo (MJ/m²/dia)
 - **T** = temperatura média do ar (°C)
@@ -296,6 +311,7 @@ Para fins de projeto de drenagem, adotam-se valores médios:
 | Sul (Santa Catarina, RS) | 900–1.100 | 2–3 mm/dia |
 
 **Observação prática**: Em projetos de drenagem rodoviária, a ET é relevante para:
+
 - Estimativa de recarga aquífera em períodos secos
 - Redução de vazão em escoamento permanent (drenadouros)
 - Dimensionamento de bacias de infiltração e retenção
@@ -307,6 +323,7 @@ Para fins de projeto de drenagem, adotam-se valores médios:
 ### 9.1 Definição e Importância
 
 A **infiltração (f)** é a capacidade de um solo absorver água. É crítica para:
+
 - Drenagem subsuperficial (camadas drenantes do pavimento)
 - Dimensionamento de trincheiras drenantes e drenos perimetrais
 - Previsão de recarga aquífera e elevação de lençol freático
@@ -318,6 +335,7 @@ A taxa de infiltração diminui com o tempo:
 $$f(t) = f_c + \frac{\Delta \theta \times S_f}{F(t)}$$
 
 Onde:
+
 - **f(t)** = taxa de infiltração no tempo t (mm/h)
 - **f_c** = infiltração final (capacidade de saturação) (mm/h)
 - **Δθ** = variação de umidade do solo (adimensional)
@@ -340,6 +358,7 @@ Conforme DNIT ES 131/86:
 | **CL** — Argila de baixa compressibilidade | Muito baixa | 0,05–0,2 | Praticamente impermeável |
 
 **Exemplos de uso**:
+
 - Dreno perimetral (ao pé de aterro): utilizar GW ou GP com f_c > 20 mm/h
 - Camada drenante sob pavimento: selecionar SW com f_c 10–20 mm/h
 - Base de terrapleno em zona de lençol freático elevado: exigir f_c > 5 mm/h
@@ -349,6 +368,7 @@ Conforme DNIT ES 131/86:
 Norma: DNIT ES 132/86
 
 Procedimento:
+
 1. Cravação de cilindros (externo e interno) no solo
 2. Enchimento com água
 3. Medição de taxa de infiltração em cilindro interno por período mínimo de 30 min
@@ -356,6 +376,7 @@ Procedimento:
 **Resultado**: Taxa de infiltração em mm/h (f)
 
 **Exemplo**:
+
 - Volume de água descarregado: 500 mL
 - Tempo: 10 minutos
 - Altura coluna no cilindro: 10 cm
@@ -377,6 +398,7 @@ $$C_{ajustado} = C_{inicial} - k \times f_c$$
 Onde k é um fator de redução conforme a estrutura drenante.
 
 **Exemplo**:
+
 - Q_chuva = 461,5 m³/s (calculado)
 - Se houver camada drenante com f_c = 15 mm/h ≈ 0,25 m³/s/ha
 - Para A = 12,5 ha: Q_infiltrada ≈ 0,25 × 12,5 = 3,125 m³/s
@@ -456,12 +478,14 @@ Onde V = velocidade (m/s), R = raio hidráulico (m), I = declividade do canal (m
 ### Caso 1: BR-116 (Trecho Belo Horizonte–São Paulo) — Drenagem em Serra
 
 **Contexto**:
+
 - Região: Serra da Mantiqueira (Minas Gerais)
 - Precipitação anual: 2.200 mm
 - Período de retorno adotado: 50 anos (OAE críticas)
 - Área de bacia típica: 8 ha
 
 **Levantamento hidrológico**:
+
 - Precipitação máxima (P_50): 185 mm
 - Tempo de concentração (t_c): 7,2 min
 - Intensidade de chuva (t_c, Tr=50): 220 mm/h
@@ -472,6 +496,7 @@ Onde V = velocidade (m/s), R = raio hidráulico (m), I = declividade do canal (m
 $$Q = 0,278 \times 0,35 \times 220 \times 8 = 171,5 \text{ m}^3\text{/s}$$
 
 **Solução implementada**:
+
 - Bueiro de concreto: Ø 1.500 mm × 2 tubos (vazão individual ~100 m³/s cada)
 - Drenagem lateral: trincheira drenante paralela ao pavimento (material GW)
 - Proteção: manta geotêxtil + rochas de proteção
@@ -483,17 +508,20 @@ $$Q = 0,278 \times 0,35 \times 220 \times 8 = 171,5 \text{ m}^3\text{/s}$$
 ### Caso 2: Rodovia Federal Vd=100 — Sertão Nordestino (Ceará)
 
 **Contexto**:
+
 - Região: Semiárida com secas prolongadas
 - Precipitação anual: 650 mm (muito irregular)
 - Período de retorno adotado: 25 anos
 - Área de bacia típica: 15 ha (topografia plana a suave)
 
 **Particularidades**:
+
 - ET anual muito elevada: ~1.900 mm/ano
 - Infiltração de solo (Argila CL): f_c ≈ 0,15 mm/h (muito baixa)
 - Risco de enchentes relativo a eventos pontuais
 
 **Levantamento hidrológico**:
+
 - Precipitação máxima (P_25): 95 mm
 - Tempo de concentração: 12,5 min (bacia extensa, declive suave)
 - Intensidade: 150 mm/h
@@ -504,6 +532,7 @@ $$Q = 0,278 \times 0,35 \times 220 \times 8 = 171,5 \text{ m}^3\text{/s}$$
 $$Q = 0,278 \times 0,38 \times 150 \times 15 = 239 \text{ m}^3\text{/s}$$
 
 **Solução implementada**:
+
 - Drenos perimetrais simples (não duplos) por economia
 - Bueiro principal: Ø 1.200 mm único
 - Valetas laterais com grama (estabilidade contra erosão em clima seco)
@@ -516,12 +545,14 @@ $$Q = 0,278 \times 0,38 \times 150 \times 15 = 239 \text{ m}^3\text{/s}$$
 ### Caso 3: Duplicação de Rodovia — Vale do Paraíba (São Paulo)
 
 **Contexto**:
+
 - Rodovia já operacional; duplicação exigiu minimizar interferência
 - Precipitação: 1.400 mm/ano
 - Período de retorno: 25 anos (não crítico; aterro estável)
 - Área de bacia nova (pista duplicada): 6,5 ha
 
 **Levantamento**:
+
 - Precipitação máxima (P_25): 165 mm
 - Tempo de concentração: 5,8 min (declive moderado)
 - Intensidade: 240 mm/h
@@ -532,6 +563,7 @@ $$Q = 0,278 \times 0,38 \times 150 \times 15 = 239 \text{ m}^3\text{/s}$$
 $$Q = 0,278 \times 0,75 \times 240 \times 6,5 = 341 \text{ m}^3\text{/s}$$
 
 **Solução inovadora**:
+
 - Implantação de **bacia de infiltração** (não apenas escoamento)
 - Dimensionamento: 850 m² × 0,8 m de profundidade (material GW)
 - Objetivo: reduzir vazão para bueiro existente (capacidade limitada)
@@ -596,7 +628,7 @@ Ao iniciar projeto de drenagem rodoviária, verificar:
 
 ### Repositórios de Dados Climáticos (Brasil)
 
-14. **ANA** — Agência Nacional de Águas; Portal HidroWeb (http://www.snirh.gov.br/hidroweb/)
+14. **ANA** — Agência Nacional de Águas; Portal HidroWeb (<http://www.snirh.gov.br/hidroweb/>)
 15. **INMET** — Instituto Nacional de Meteorologia; Séries históricas de precipitação
 16. **CPRM** — Serviço Geológico do Brasil; Mapas de risco hidrológico
 

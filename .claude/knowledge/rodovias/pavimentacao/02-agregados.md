@@ -11,6 +11,7 @@
 ## 🎯 Objetivo
 
 Aprofundar conhecimento do agente em **agregados para pavimentação**, cobrindo:
+
 - ✅ Conceitos fundamentais (tipos, origem, composição)
 - ✅ Propriedades técnicas (granulometria, resistência, absorção)
 - ✅ Seleção e especificação (DNIT/ABNT/NBR)
@@ -29,6 +30,7 @@ Aprofundar conhecimento do agente em **agregados para pavimentação**, cobrindo
 **Agregado** é o material granular que forma a matriz do pavimento, representando **85-95%** do volume total. Em rodovias brasileiras, agregados são classificados por:
 
 #### Por Origem Geológica
+
 | Tipo | Origem | Exemplo | Durabilidade | Custo |
 |------|--------|---------|--------------|-------|
 | **Pétreos Naturais** | Depósitos sedimentares | Areia, seixo | Média a boa | Baixo |
@@ -37,10 +39,12 @@ Aprofundar conhecimento do agente em **agregados para pavimentação**, cobrindo
 | **Escórias Industriais** | Subprodutos siderúrgicos | Escória de aciaria, forno | Excelente | Baixo |
 
 #### Por Graduação (Contínua vs. Descontínua)
+
 - **Contínua**: Distribuição equilibrada de todos os tamanhos (BGS, brita graduada)
 - **Descontínua**: Falta de frações intermediárias (seixo aberto, brita abierta)
 
 #### Por Tamanho Efetivo
+
 - **Filler** (agregado miúdo fino): < 0,075 mm
 - **Areia média**: 0,075 - 0,425 mm
 - **Areia grossa**: 0,425 - 2 mm
@@ -77,30 +81,35 @@ A natureza mineralógica define a **resistência** e **durabilidade** do agregad
 A disponibilidade de agregados varia significativamente por **região geológica**:
 
 #### Região Norte
+
 - **Disponibilidade**: Seixo aluvionar abundante (rios Amazonas, Negro, Solimões)
 - **Qualidade**: Média (calcário, pouca rocha dura)
 - **Casos**: BR-174 (Manaus-Boa Vista), BR-230 (Transamazônica) — dependem de reciclagem
 - **Custo transporte**: Alto (distâncias > 500 km até jazidas de rocha dura)
 
 #### Região Nordeste
+
 - **Disponibilidade**: Rocha cristalina (gnaisses, xistos) em maciços; seixo em rios
 - **Qualidade**: Média a boa (granitos degradados = areia natural)
 - **Casos**: BR-116 (Ceará-Paraíba), BR-101 (Pernambuco) — mistura seixo + rocha britada
 - **Custo transporte**: Médio (jazidas locais < 100 km)
 
 #### Região Centro-Oeste
+
 - **Disponibilidade**: Rocha sedimentar (calcário, arenito), laterita
 - **Qualidade**: Média (calcário frágil, arenito mole)
 - **Casos**: BR-267, BR-262 (Mato Grosso) — reforçam com basalto de Goiás
 - **Custo transporte**: Médio a alto (basalto de Goiás: ~ 300 km)
 
 #### Região Sudeste
+
 - **Disponibilidade**: Rocha cristalina (granito, gnaisse), basalto (Paraná, S.Paulo)
 - **Qualidade**: Excelente (basalto) a boa (granito britado)
 - **Casos**: BR-116 (duplicação SP-RJ), BR-101 (litoral SP) — usam basalto e granito britado
 - **Custo transporte**: Baixo (jazidas locais < 50 km)
 
 #### Região Sul
+
 - **Disponibilidade**: Basalto vulcânico (Paraná, Santa Catarina), xisto (Rio Grande do Sul)
 - **Qualidade**: Excelente (basalto), boa (xisto)
 - **Casos**: BR-116 (Paraná, Santa Catarina), BR-101 (Rio Grande do Sul) — predomina basalto
@@ -113,6 +122,7 @@ A disponibilidade de agregados varia significativamente por **região geológica
 ### 2.1 Granulometria (Distribuição de Tamanhos)
 
 A **curva granulométrica** define a proporcionalidade entre diferentes frações e é essencial para:
+
 - Resistência e compactação (volume de vazios mínimo)
 - Aderência cimento/betume
 - Estabilidade mecânica
@@ -124,6 +134,7 @@ Para uma distribuição **contínua otimizada**:
 $$P(d) = 100 \times \left( \frac{d}{D} \right)^{0.45}$$
 
 Onde:
+
 - **P(d)** = Percentual que passa pela peneira de abertura d (%)
 - **d** = Abertura da peneira (mm)
 - **D** = Diâmetro máximo do agregado (mm)
@@ -156,6 +167,7 @@ Onde:
 - Recomendação DNIT: **IRC ≥ 80%** para sub-base
 
 ##### Valores Típicos por Tipo (Basalto região Sul)
+
 | Material | IRC (%) | Aplicação Recomendada |
 |----------|---------|----------------------|
 | Basalto fresco | 98-100 | CBUQ, binder, base |
@@ -172,6 +184,7 @@ Onde:
 - Recomendação DNIT: **CPA ≥ 55** para camada de rolamento (CBUQ)
 
 ##### Valores Típicos
+
 | Agregado | CPA | Aplicação |
 |----------|-----|-----------|
 | Basalto | 55-65 | Recomendado para CBUQ |
@@ -184,6 +197,7 @@ Onde:
 ### 2.3 Absorção de Água
 
 **Definição**: Capacidade de absorver água, afetando:
+
 - Coesão com betume/cimento
 - Expansão/contração por umidade
 - Durabilidade em climas úmidos
@@ -193,6 +207,7 @@ Onde:
 $$A_{abs} = \frac{M_{saturado} - M_{seco}}{M_{seco}} \times 100 \%$$
 
 **Limites DNIT (ES 032/2005)**:
+
 - **A_abs ≤ 2%**: Excelente (granito, basalto) → recomendado
 - **2% < A_abs ≤ 3%**: Bom (gnaisse, xisto) → aceitável
 - **A_abs > 3%**: Fraco (calcário alterado, arenito) → não recomendado
@@ -268,7 +283,7 @@ $$A_{abs} = \frac{M_{saturado} - M_{seco}}{M_{seco}} \times 100 \%$$
 
 #### Faixa A (CBUQ Tradicional)
 
-```
+```text
 Peneira (mm)    Passos Acumulados (%)
 ─────────────────────────────────
 25.0            100
@@ -285,7 +300,7 @@ Peneira (mm)    Passos Acumulados (%)
 
 #### Faixa B (CBUQ Drenante)
 
-```
+```text
 Peneira (mm)    Passos Acumulados (%)
 ─────────────────────────────────
 19.0            100
@@ -321,6 +336,7 @@ Peneira (mm)    Passos Acumulados (%)
 #### Passo 2: Análise DNIT para CBUQ
 
 **Critérios Mínimos CBUQ**:
+
 - IRC ≥ 90% ✅ Basalto OK / ❌ Granito não conforme
 - CPA ≥ 55 ✅ Basalto OK / ❌ Granito abaixo
 - Absorção ≤ 2% ✅ Basalto OK / ✅ Granito OK / ✅ Seixo OK
@@ -333,7 +349,7 @@ Peneira (mm)    Passos Acumulados (%)
 
 Aproximar curva granulométrica a:
 
-```
+```text
 Faixa A (CBUQ) — Alvo para 100 kg de agregado
 
 Peneira 25.0 mm   : 100.0 kg
@@ -356,6 +372,7 @@ Cálculo teórico de **volume de vazios** na mistura:
 $$V_{vazios} = 1 - \frac{M_{agregado}}{D_{agregado} \times V_{total}}$$
 
 Para basalto com densidade ~2.9 g/cm³ e compactação:
+
 - **Porosidade alvo**: 4-6% (deixa espaço para betume)
 - **Teor betume estimado**: 5.5-6.5% em peso do agregado
 
@@ -441,7 +458,7 @@ O SICRO 2026 agrupa custos de agregados por tipo e tamanho. Exemplos:
 
 #### Volumes
 
-```
+```text
 Camada       Espessura  Área (2 pistas)  Volume    Densidade  Peso
 ─────────────────────────────────────────────────────────────────────
 CBUQ         5 cm       7200 m²         360 m³    2.45 t/m³  882 t
@@ -454,6 +471,7 @@ Total                                 2160 m³              5292 t
 #### Composição por Fração (SICRO)
 
 **CBUQ (882 t)**:
+
 - Brita 1 (40%): 353 t × R$ 42.50 = R$ 15.003 k
 - Pedrisco (25%): 221 t × R$ 48.00 = R$ 10.608 k
 - Areia (30%): 265 t × R$ 52.00 = R$ 13.780 k
@@ -461,16 +479,19 @@ Total                                 2160 m³              5292 t
 - **Subtotal CBUQ**: R$ 43.131 k
 
 **Binder (1764 t)**:
+
 - Brita 1 (45%): 794 t × R$ 42.50 = R$ 33.745 k
 - Areia (50%): 882 t × R$ 52.00 = R$ 45.864 k
 - Filler (5%): 88 t × R$ 85.00 = R$ 7.480 k
 - **Subtotal Binder**: R$ 87.089 k
 
 **Base BGS (2646 t)**:
+
 - BGS 0-25 mm 100%: 2646 t × R$ 35.00 = **R$ 92.610 k**
 
 #### **CUSTO TOTAL AGREGADOS — 1 km pavimento**
-```
+
+```text
 CBUQ        R$ 43.131 k
 Binder      R$ 87.089 k
 Base BGS    R$ 92.610 k
@@ -479,6 +500,7 @@ TOTAL       R$ 222.830 k  (~R$ 223 k/km)
 ```
 
 **Proporção no custo total do pavimento**:
+
 - Agregados: ~35-40% do pavimento (restante = betume, mão de obra, equipment)
 
 ---
@@ -539,6 +561,7 @@ TOTAL       R$ 222.830 k  (~R$ 223 k/km)
 ### 7.1 Caso 1: BR-116 — Duplicação Trecho Paraíba do Sul-Itatiaia (RJ)
 
 **Dados Projeto**:
+
 - Extensão: 22 km
 - Velocidade: 100 km/h
 - Pavimento: CBUQ 5 cm + Binder 10 cm + BGS 15 cm
@@ -560,6 +583,7 @@ TOTAL       R$ 222.830 k  (~R$ 223 k/km)
 ### 7.2 Caso 2: BR-163 — Reabilitação Trecho Goiás (Seleção Local)
 
 **Dados Projeto**:
+
 - Extensão: 45 km
 - Pavimento: Fresagem 2 cm + CBUQ novo 4 cm + Binder 8 cm
 - Tráfego: 3 M veículos/ano
@@ -623,7 +647,7 @@ TOTAL       R$ 222.830 k  (~R$ 223 k/km)
 
 Use este checklist para validar agregados em projetos:
 
-```
+```json
 [ ] 1. Identificar jazidas candidatas no raio de 200 km
 [ ] 2. Coletar amostras de 50 kg cada jazida
 [ ] 3. Executar ensaios DNIT (IRC, CPA, absorção, granulometria)

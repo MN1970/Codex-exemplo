@@ -14,6 +14,7 @@
 **Purpose:** Comprehensive drift detection against CLAUDE.md v5.0 + VERSIONS.json
 
 **Features:**
+
 - ✅ Reads 5 agents from `.claude/agents/` (S6-S10 segment)
 - ✅ Validates against canonical 20-agent registry (CANONICAL_20_AGENTS)
 - ✅ Checksum validation (MD5) against VERSIONS.json v5.0 spec
@@ -31,6 +32,7 @@
 **File:** `scripts/audit_agents.py` (568 lines)
 
 **Key Classes/Functions:**
+
 - `parse_agent_frontmatter()` — Extract YAML from .md files
 - `calculate_checksum()` — MD5 validation
 - `load_versions_json()` — Read canonical specs
@@ -49,6 +51,7 @@
 **Purpose:** Auto-synchronize agents to canonical v5.0 spec
 
 **Features:**
+
 - ✅ Single agent or bulk regeneration
 - ✅ Drift detection before regeneration
 - ✅ Canonical spec templates (5 agents supported)
@@ -64,6 +67,7 @@
 **File:** `scripts/regenerate_skill.py` (411 lines)
 
 **Key Functions:**
+
 - `regenerate_agent()` — Sync single agent
 - `regenerate_all_agents()` — Bulk sync
 - `generate_agent_content_template()` — Content factory
@@ -71,6 +75,7 @@
 - `update_settings_json()` — Version pinning
 
 **Supported Agents (Templates):**
+
 - agente-saneamento (S8) ⭐ PRIORITY
 - agente-energia (S9)
 - agente-portos (S6)
@@ -84,6 +89,7 @@
 **Purpose:** JSON Schema for audit output validation
 
 **Features:**
+
 - ✅ Full JSON Schema Draft 7 compliance
 - ✅ audit_agents.json schema definition
 - ✅ divergence_report.json structure documented
@@ -95,6 +101,7 @@
 **File:** `scripts/audit_report_schema.json` (250 lines)
 
 **Use case:** Validate CI outputs with:
+
 ```bash
 jq --arg schema "$(cat audit_report_schema.json)" '.records' audit_agents.json
 ```
@@ -106,6 +113,7 @@ jq --arg schema "$(cat audit_report_schema.json)" '.records' audit_agents.json
 **Purpose:** End-to-end CI/CD integration examples
 
 **Coverage:**
+
 - ✅ GitHub Actions (.github/workflows/audit-agents.yml)
 - ✅ GitLab CI (.gitlab-ci.yml)
 - ✅ Jenkins (Jenkinsfile)
@@ -126,6 +134,7 @@ jq --arg schema "$(cat audit_report_schema.json)" '.records' audit_agents.json
 **Purpose:** Quick reference for operators
 
 **Sections:**
+
 - ✅ Quick summary (3-tool workflow)
 - ✅ File overview (core + generated outputs)
 - ✅ Usage guide (7 common tasks)
@@ -156,7 +165,7 @@ jq --arg schema "$(cat audit_report_schema.json)" '.records' audit_agents.json
 
 ### Validation Flow
 
-```
+```text
 audit_agents.py
   ├─ Load agent files (.md)
   ├─ Extract frontmatter (YAML)
@@ -174,7 +183,7 @@ audit_agents.py
 
 ### Current Test Run (2026-07-25)
 
-```
+```text
 Total agents scanned: 5
 Synced: 0
 Drift detected: 5
@@ -200,6 +209,7 @@ Exit code: 1 (threshold exceeded)
 ### On-Demand (After Audit Run)
 
 ✅ `rag_evals/audit_agents.json` (4.2 KB)
+
 ```json
 {
   "records": [...],
@@ -218,6 +228,7 @@ Exit code: 1 (threshold exceeded)
 ```
 
 ✅ `rag_evals/divergence_report.json` (3.0 KB)
+
 ```json
 {
   "schema_version": "1.0",
@@ -243,22 +254,26 @@ Exit code: 1 (threshold exceeded)
 ## CLI Usage Examples
 
 ### Quick Audit
+
 ```bash
 python scripts/audit_agents.py
 ```
 
 ### Verbose with HTML output
+
 ```bash
 python scripts/audit_agents.py --output-format html --verbose
 ```
 
 ### Strict threshold (CI/CD)
+
 ```bash
 python scripts/audit_agents.py --divergence-threshold 0
 echo $? # Exit code: 0=pass, 1=fail
 ```
 
 ### With Slack alert
+
 ```bash
 python scripts/audit_agents.py \
   --slack-webhook https://hooks.slack.com/services/YOUR/WEBHOOK \
@@ -266,6 +281,7 @@ python scripts/audit_agents.py \
 ```
 
 ### Auto-remediate (dry-run first)
+
 ```bash
 python scripts/regenerate_skill.py --all --dry-run
 python scripts/regenerate_skill.py --all  # Apply
@@ -273,6 +289,7 @@ python scripts/audit_agents.py  # Verify
 ```
 
 ### Fix single agent
+
 ```bash
 python scripts/regenerate_skill.py --agent agente-saneamento --verbose
 ```
@@ -316,6 +333,7 @@ cp scripts/audit_report_schema.json /production/scripts/
 ### 2. Update CI Pipelines
 
 Choose your CI platform and follow:
+
 - **GitHub Actions**: `.github/workflows/audit-agents.yml` (in guide)
 - **GitLab CI**: `.gitlab-ci.yml` (in guide)
 - **Jenkins**: `Jenkinsfile` (in guide)
@@ -333,9 +351,10 @@ chmod +x .git/hooks/pre-commit
 ### 4. Schedule Daily Audit (Optional)
 
 Use your CI system's scheduling:
+
 - GitHub: `schedule` trigger (cron)
 - GitLab: `only:schedules`
-- Jenkins: Build periodically (H 2 * * *)
+- Jenkins: Build periodically (H 2 ** *)
 
 ### 5. Set Up Slack Alerts (Optional)
 
@@ -352,15 +371,18 @@ python scripts/audit_agents.py \
 ## Maintenance Tasks
 
 ### Weekly
+
 - [ ] Review `divergence_report.json` from daily audits
 - [ ] Update VERSIONS.json checksums if intentional changes made
 
 ### Monthly
+
 - [ ] Archive old audit reports (> 90 days)
 - [ ] Review and deprecate old agent versions in VERSIONS.json
 - [ ] Update audit_agents.py if new agents added
 
 ### Quarterly
+
 - [ ] Audit CI/CD integration health
 - [ ] Review Slack alert patterns
 - [ ] Update canonical agent specs in regenerate_skill.py
@@ -393,7 +415,7 @@ python scripts/audit_agents.py \
 
 ### Data Flow
 
-```
+```text
 CLAUDE.md v5.0 (canonical spec)
     ↓
     └─→ audit_agents.py
@@ -447,7 +469,7 @@ Re-audit cycle:
 - **CI integration**: [CI_INTEGRATION_GUIDE.md](./CI_INTEGRATION_GUIDE.md) — Platform-specific examples
 - **Output schema**: [audit_report_schema.json](./audit_report_schema.json) — JSON validation
 - **Source code**: Inline comments + docstrings in audit_agents.py, regenerate_skill.py
-- **Contact**: mneves@mantaassociados.com
+- **Contact**: <mneves@mantaassociados.com>
 
 ---
 
@@ -467,6 +489,7 @@ Re-audit cycle:
 ## Quick Copy-Paste References
 
 ### Run full audit cycle
+
 ```bash
 cd /home/user/Codex-exemplo
 python scripts/audit_agents.py --verbose
@@ -477,12 +500,14 @@ python scripts/audit_agents.py --verbose
 ```
 
 ### Set up GitHub Actions
+
 ```bash
 mkdir -p .github/workflows
 cat CI_INTEGRATION_GUIDE.md | sed -n '/Example: \.github\/workflows/,/^$/p' > .github/workflows/audit-agents.yml
 ```
 
 ### Pre-commit hook
+
 ```bash
 cp CI_INTEGRATION_GUIDE.md scripts/pre-commit.sh
 chmod +x scripts/pre-commit.sh

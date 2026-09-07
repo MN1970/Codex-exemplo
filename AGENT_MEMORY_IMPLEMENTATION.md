@@ -2,7 +2,7 @@
 
 **Status:** READY FOR DEPLOYMENT  
 **Date:** 2026-07-25  
-**Owner:** mneves@mantaassociados.com  
+**Owner:** <mneves@mantaassociados.com>  
 **Ticket:** MNT-2026-AGENT-MEMORY-CACHE
 
 ---
@@ -24,7 +24,7 @@ Complete schema design for agent_memory cache layer implementing R10 (automatic 
 
 Complete schema definition:
 
-```
+```yaml
 Tables:
 ├─ agent_memory (ephemeral, TTL 480 min)
 ├─ agent_state (persistent, embeddings)
@@ -58,6 +58,7 @@ RLS Policies:
 ```
 
 **Execute via:**
+
 ```bash
 supabase db push
 # OR
@@ -69,6 +70,7 @@ psql "$SUPABASE_DB_URL" -f supabase/migrations/2026_07_25_v5_0_agent_memory_cach
 **`scripts/agent_memory_init.py`** (280 lines)
 
 Initializer:
+
 - Validates SQL syntax (4 tables, 7 indexes, 3 functions, 1 trigger, 2 RLS policies)
 - Checks constraints and column definitions
 - Validates grants (AUTHENTICATED + SERVICE_ROLE)
@@ -76,6 +78,7 @@ Initializer:
 - Dry-run mode for pre-deployment validation
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_init.py \
   --supabase-url=$SUPABASE_URL \
@@ -86,6 +89,7 @@ python scripts/agent_memory_init.py \
 **`scripts/agent_memory_purge.py`** (370 lines)
 
 Scheduled purge executor (runs daily @ 03:00 UTC):
+
 - Executes R10 policy: DELETE expired + low-rating entries
 - Calculates before/after metrics
 - Logs to agent_memory_purge_log (append-only audit)
@@ -93,6 +97,7 @@ Scheduled purge executor (runs daily @ 03:00 UTC):
 - Slack alerts if threshold exceeded (> 10 GB freed or > 10k rows)
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_purge.py \
   --supabase-url=$SUPABASE_URL \
@@ -105,6 +110,7 @@ python scripts/agent_memory_purge.py \
 **`scripts/agent_memory_validate.py`** (380 lines)
 
 Post-deployment validator:
+
 - Verifies all tables exist with correct columns
 - Checks indexes are created
 - Validates functions callable
@@ -113,6 +119,7 @@ Post-deployment validator:
 - Tests sample insert/select/purge operations
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_validate.py \
   --supabase-url=$SUPABASE_URL \
@@ -125,6 +132,7 @@ python scripts/agent_memory_validate.py \
 **`scripts/agent_memory_policy.json`** (280 lines)
 
 Configuration file defining:
+
 - TTL policy (480 min default)
 - Purge rules (priority-ordered)
 - Memory/chunk thresholds (soft/hard limits)
@@ -139,6 +147,7 @@ Configuration file defining:
 **`scripts/AGENT_MEMORY_README.md`** (400+ lines)
 
 Complete guide including:
+
 - Overview & architecture
 - Table schemas with indexes
 - RLS policy explanation
@@ -157,7 +166,7 @@ Summary of deliverables and deployment plan.
 
 ## Architecture Diagram
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────────┐
 │                    Agent Memory Cache (R10)                        │
 └────────────────────────────────────────────────────────────────────┘
@@ -212,6 +221,7 @@ RLS Policy (agent_id isolation):
 ### Phase 4 — Observability (T-12h before go-live)
 
 **Step 1: Validate SQL** (5 min)
+
 ```bash
 cd /home/user/Codex-exemplo
 python scripts/agent_memory_init.py \
@@ -221,7 +231,8 @@ python scripts/agent_memory_init.py \
 ```
 
 Expected output:
-```
+
+```text
 ✓ SQL syntax validation passed
 ✓ All 7 critical indexes found
 ✓ RLS policies validation passed
@@ -231,6 +242,7 @@ Result: Dry-run validation passed
 ```
 
 **Step 2: Apply Migration** (2-5 min)
+
 ```bash
 supabase db push
 # or
@@ -238,6 +250,7 @@ psql "$SUPABASE_DB_URL" -f supabase/migrations/2026_07_25_v5_0_agent_memory_cach
 ```
 
 **Step 3: Validate Schema** (5 min)
+
 ```bash
 python scripts/agent_memory_validate.py \
   --supabase-url=$SUPABASE_URL \
@@ -246,7 +259,8 @@ python scripts/agent_memory_validate.py \
 ```
 
 Expected output:
-```
+
+```text
 ✓ Table agent_memory exists with 11 columns
 ✓ Table agent_state exists with 11 columns
 ✓ Index idx_agent_memory_expires_at
@@ -261,6 +275,7 @@ Result: Schema validation successful
 ```
 
 **Step 4: Test Purge (dry-run)** (2 min)
+
 ```bash
 python scripts/agent_memory_purge.py \
   --supabase-url=$SUPABASE_URL \
@@ -269,7 +284,8 @@ python scripts/agent_memory_purge.py \
 ```
 
 Expected output:
-```
+
+```text
 Memory metrics BEFORE purge:
   Total memory: 167.99 MB
   Total chunks: 991
@@ -288,6 +304,7 @@ Result: Dry-run validation passed
 **Step 5: Setup APScheduler** (5 min)
 
 Configure daily trigger via Claude Code:
+
 ```python
 from mcp__bf7c680d-5fdc-5ef4-b4a0-abadb619bf0a__create_trigger import create_trigger
 
@@ -309,9 +326,10 @@ trigger = create_trigger(
 
 **Step 6: Verify Grafana** (5 min)
 
-Navigate to: https://grafana.manta-internal.com/d/agent-memory-cache
+Navigate to: <https://grafana.manta-internal.com/d/agent-memory-cache>
 
 Panels should show:
+
 - [ ] Cache Size by Agent (memory_size_mb)
 - [ ] Chunk Count by Agent
 - [ ] Purge Operations (time series)
@@ -320,6 +338,7 @@ Panels should show:
 **Step 7: Production Execution** (2 min)
 
 First real purge:
+
 ```bash
 python scripts/agent_memory_purge.py \
   --supabase-url=$SUPABASE_URL \
@@ -373,6 +392,7 @@ python scripts/agent_memory_purge.py \
 If critical issues post-deployment:
 
 **Step 1: Disable APScheduler**
+
 ```bash
 python -c "
 from mcp__... import delete_trigger
@@ -381,6 +401,7 @@ delete_trigger('agent-memory-purge-daily')
 ```
 
 **Step 2: Drop Tables** (via psql as service_role)
+
 ```sql
 BEGIN;
 DROP TRIGGER IF EXISTS trg_agent_memory_rating_update ON agent_memory;
@@ -396,6 +417,7 @@ COMMIT;
 ```
 
 **Step 3: Log Incident**
+
 ```bash
 echo "Rollback executed at $(date)" >> ROLLBACK_LOG.md
 ```
@@ -404,7 +426,7 @@ echo "Rollback executed at $(date)" >> ROLLBACK_LOG.md
 
 ## File Paths
 
-```
+```text
 /home/user/Codex-exemplo/
 ├── supabase/
 │   └── migrations/
@@ -452,7 +474,7 @@ echo "Rollback executed at $(date)" >> ROLLBACK_LOG.md
 
 ## Support & Contacts
 
-- **Owner:** mneves@mantaassociados.com
+- **Owner:** <mneves@mantaassociados.com>
 - **Slack:** #agent-ops (alerts)
 - **Ticket:** MNT-2026-AGENT-MEMORY-CACHE
 - **Docs:** scripts/AGENT_MEMORY_README.md

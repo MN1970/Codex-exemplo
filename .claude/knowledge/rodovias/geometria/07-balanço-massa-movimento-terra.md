@@ -13,7 +13,7 @@
 
 Balanço de massa é o **estudo quantitativo de movimentos de terra** ao longo do projeto de uma rodovia, buscando:
 
-```
+```yaml
 Objetivo:
 ├─ Balancear volumes de corte (cut) com volumes de aterro (fill)
 ├─ Minimizar transporte de solo
@@ -33,7 +33,7 @@ Se Volume_Corte ≈ Volume_Aterro → Projeto "balanceado" (ideal)
 
 Quando solo é escavado em corte, seu volume aumenta (empolamento):
 
-```
+```text
 Tipo de Solo | Densidade Natural | Fator Empolamento (FE) | Densidade Solto
 ─────────────────────────────────────────────────────────────────────────
 Argila       | 1,600 kg/m³       | 1.30-1.40             | 2,080 kg/m³
@@ -52,7 +52,7 @@ Volume solto = 100 × 1.35 = 135 m³
 
 Ao compactar aterro, o volume se reduz:
 
-```
+```text
 Tipo de Solo | Grau de Compactação | Fator Compactação (FC)
 ─────────────────────────────────────────────────────────────
 Ótimo        | 95-98% Proctor       | 0.85-0.90
@@ -76,7 +76,7 @@ Volume final compactado = 150 × 0.92 = 138 m³
 **Aplicação**: Rodovias, ferrovias, canais  
 **Princípio**: Visualizar movimento de terra ao longo do eixo da rodovia
 
-```
+```yaml
 Vantagem:
 ├─ Determinar otimamente a origem e destino de material
 ├─ Calcular distância média de transporte
@@ -92,7 +92,8 @@ Ferramenta:
 **Passo 1: Cálculo de Seções Transversais**
 
 Para cada estaca (a cada 20m ou 50m):
-```
+
+```text
 Entrada (estaca 0+000):
 ├─ Cota natural: 450.00m
 ├─ Cota de projeto: 450.50m
@@ -117,7 +118,7 @@ Estaca 0+040 (passa de aterro para corte):
 
 **Passo 2: Acumulação de Volumes**
 
-```
+```text
 Estaca  | Tipo      | Volume (m³) | Corte/Aterro | Volume Acumulado
 ────────────────────────────────────────────────────────────────────
 0+000   | Aterro    | +122        | Aterro       | +122
@@ -132,7 +133,7 @@ Estaca  | Tipo      | Volume (m³) | Corte/Aterro | Volume Acumulado
 
 **Passo 3: Plotar Diagrama de Brückner**
 
-```
+```text
 Volume Acumulado (m³)
                     
        +300 ┌─────────────────────
@@ -153,7 +154,7 @@ Volume Acumulado (m³)
 
 ### 2.3 Interpretação do Diagrama
 
-```
+```text
 Regra de Leitura:
 ────────────────
 
@@ -176,7 +177,7 @@ Exemplo BR-116:
 
 A **distância média de transporte** é calculada pela área entre a curva de Brückner e a linha de compensação.
 
-```
+```text
 Fórmula:
 ────────
 Distância Média (m) = Área do Diagrama / Volume Total Transportado
@@ -192,7 +193,7 @@ Interpretação:
 
 ### 3.2 Limites Econômicos (Free Haul Distance)
 
-```
+```text
 Free Haul Distance (FHD):
 ────────────────────────
 
@@ -223,7 +224,7 @@ Typical FHD valores:
 
 ### 4.1 Custo Total de Movimento de Terra
 
-```
+```text
 Custo Total = Custo_Escavação + Custo_Transporte + Custo_Aterro + Custo_BotaFora
 
 Detalhamento:
@@ -247,7 +248,7 @@ Detalhamento:
 
 ### 4.2 Exemplo Prático: BR-116 (1km)
 
-```
+```yaml
 DADOS:
 ─────
 Comprimento: 1000m
@@ -295,7 +296,7 @@ Percentual do Custo Total da Rodovia:
 
 **Cenário 1: Balanceamento Perfeito (ideal)**
 
-```
+```text
 Corte = Aterro = 125,000 m³ (aplicar FE)
 │
 ├─ Escavação: 125,000 × R$ 8.50 = R$ 1,062,500
@@ -309,7 +310,7 @@ Economia vs Cenário 1: R$ 8,585,000 - R$ 2,637,500 = R$ 5,947,500 (69% reduçã
 
 **Cenário 2: Aproveitamento de Empréstimo Local**
 
-```
+```text
 Se houver bota-fora autorizado PRÓXIMO (500m vs 2km):
 
 Empréstimo local (500m):
@@ -329,7 +330,7 @@ Economia vs cenário anterior: R$ 2,550,000 - R$ 2,400,000 = R$ 150,000
 
 Além de Brückner, usa-se a **linha de compensação** para definir seções de corte-aterro:
 
-```
+```yaml
 Conceito:
 ─────────
 Uma linha horizontal no diagrama de Brückner que:
@@ -363,7 +364,7 @@ Exemplo Visual:
 
 Para grandes trechos, usa-se **múltiplas seções de compensação**:
 
-```
+```yaml
 Exemplo: Rodovia com 10km de extensão
 
 ├─ Seção 1 (km 0-3): Balanceamento local
@@ -387,7 +388,7 @@ Benefício:
 
 ### 6.1 Integração em MX Road
 
-```
+```text
 MX Road > Earth Works > Mass Diagram:
 
 1. Importar alinhamento H + perfil V
@@ -441,7 +442,7 @@ print(f"Distância média de transporte: {distancia_media:.1f}m")
 
 ## 7. Checklist de Otimização
 
-```
+```text
 ANÁLISE DE MOVIMENTO DE TERRA:
 
 Fase 1 — Diagnóstico:

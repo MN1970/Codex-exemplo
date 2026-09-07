@@ -19,7 +19,7 @@ Background agents enable long-running tasks (> 30 seconds) without blocking the 
 
 ## Architecture Diagram
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │ User Input: "Analise geotécnica de túnel de 5 km" + CAD (1.5MB) │
 └─────────────────────────────┬───────────────────────────────────┘
@@ -87,6 +87,7 @@ Background agents enable long-running tasks (> 30 seconds) without blocking the 
 ### Python Scripts (3)
 
 #### 1. `scripts/background_agent_framework.py`
+
 - **Classes**: `BackgroundAgentFramework`, `JobStatus`, `BackgroundJobResult`
 - **Public API**:
   - `background_spawn(agent_id, prompt, timeout_seconds, metadata, callback_url)` → job_id
@@ -99,6 +100,7 @@ Background agents enable long-running tasks (> 30 seconds) without blocking the 
   - Cleanup expired jobs (> 7 days)
 
 #### 2. `scripts/agent_state_manager.py`
+
 - **Classes**: `AgentStateManager`, `StateEntry`
 - **Public API**:
   - `store_result(agent_id, session_id, result_text, prompt, rating, ttl)` → bool
@@ -116,6 +118,7 @@ Background agents enable long-running tasks (> 30 seconds) without blocking the 
   - Embedding generation + caching (R9 feedback loop)
 
 #### 3. `scripts/agent_job_queue.py`
+
 - **Classes**: `BackgroundJobQueue`, `BackgroundJobWorker`
 - **Public API**:
   - `start_queue()` → bool
@@ -133,6 +136,7 @@ Background agents enable long-running tasks (> 30 seconds) without blocking the 
 ### SQL Migration (1)
 
 #### `supabase/migrations/2026_07_25_agent_background_jobs.sql`
+
 - **Tables**:
   - `agent_jobs` — Job queue (id, status, prompt, result, retry_count, etc.)
   - `agent_job_logs` — Audit trail (append-only, status transitions)
@@ -157,6 +161,7 @@ Background agents enable long-running tasks (> 30 seconds) without blocking the 
 ### Skill Example (1)
 
 #### `.claude/agents/example_background_agent_skill.md`
+
 - Runnable example: S5 (Túneis) geotechnical analysis
 - Shows:
   - How to estimate processing time
@@ -182,6 +187,7 @@ psql "$SUPABASE_DB_URL" -f supabase/migrations/2026_07_25_agent_background_jobs.
 ```
 
 **Verifies:**
+
 - ✅ 3 tables created (agent_jobs, agent_job_logs, agent_job_metrics)
 - ✅ 4 indexes created
 - ✅ 3 functions created
@@ -522,6 +528,7 @@ $ python scripts/agent_job_queue.py start &
 ```
 
 **Solution:**
+
 - Check if processor is running
 - Check logs for errors
 - Verify Supabase connectivity (env vars)
@@ -539,6 +546,7 @@ LIMIT 10;
 ```
 
 **Solution:**
+
 - Increase `timeout_seconds` parameter
 - Optimize agent code
 - Check if agent is hanging (not returning)
@@ -554,6 +562,7 @@ WHERE expires_at < NOW();
 ```
 
 **Solution:**
+
 - Trigger purge: `python scripts/agent_state_manager.py purge --agent-id manta-03-s5`
 - Or schedule daily via APScheduler
 
@@ -562,10 +571,11 @@ WHERE expires_at < NOW();
 **Diagnosis:**
 
 ```bash
-$ echo $SUPABASE_URL $SUPABASE_KEY | grep -v "^$"
+echo $SUPABASE_URL $SUPABASE_KEY | grep -v "^$"
 ```
 
 **Solution:**
+
 - Set env vars in `.env.local` (dev) or Key Vault (prod)
 - See credentials section in settings.json
 

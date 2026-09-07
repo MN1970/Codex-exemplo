@@ -26,6 +26,7 @@
 mitigação de impacto ambiental e social para projetos de infraestrutura.
 
 **Características**:
+
 - **Tipo**: Horizontal (não é vertical de segmento)
 - **Modelo**: Claude Sonnet (análise multi-dimensional)
 - **Ativação**: Co-agente disparado pelo Maestro quando termos ESG detectados
@@ -75,7 +76,7 @@ IF any(kw in prompt.lower() for kw in keywords_esg):
 
 ### Diagrama de fluxo
 
-```
+```text
 ┌─────────────────┐
 │   User Input    │
 │   (intake)      │
@@ -180,7 +181,7 @@ Manta 20:
 
 **Exemplo (S9 - Energia)**:
 
-```
+```text
 Agente-energia → "LT atravessa 20 km de Cerrado nativo, fase de viabilidade"
                   ↓
                   Manta 20 calcula:
@@ -219,6 +220,7 @@ Agente-energia → Ajusta capex (+R$ 12M), CAPEX recalculado → Manta 05 (orça
 **Entrada**: Compliance roadmap (LP IBAMA 24 meses, RAP ANEEL 4 meses, etc).
 
 **Saída**: Atividades paralelas adicionadas:
+
 - T_ESG_01: EIA/RIMA (meses 1–9)
 - T_ESG_02: Diálogo stakeholder (meses 1–18)
 - T_ESG_03: Offset site preparation (meses 3–36)
@@ -231,6 +233,7 @@ Agente-energia → Ajusta capex (+R$ 12M), CAPEX recalculado → Manta 05 (orça
 **Entrada**: ESG scorecard + compliance gaps.
 
 **Saída**: Templates contratuais com:
+
 - Cláusulas ambientais (offset, biodiversidade)
 - SLA de carbon reduction
 - Aprovação FUNAI (se aplicável)
@@ -244,7 +247,8 @@ Agente-energia → Ajusta capex (+R$ 12M), CAPEX recalculado → Manta 05 (orça
 Manta 15 desenha estratégia de engagement detalhada.
 
 **Fluxo**:
-```
+
+```text
 Manta 20 → { comunidades: 12, ongs: 3, indigenas: 1, órgãos: 4 }
           + { social_license_score: 65/100, conflict_risk: ALTO }
            ↓
@@ -270,7 +274,7 @@ Manta 15 → Plano de engajamento 18-mês, co-design workshops,
 
 ### Fluxo 1: Assessment Inicial (fase Viabilidade)
 
-```
+```text
 User → Maestro: "Quero fazer uma transmissão em Goiás (Cerrado)"
                 │
                 ├─→ Manta 20 (ESG)
@@ -299,7 +303,7 @@ User → Maestro: "Quero fazer uma transmissão em Goiás (Cerrado)"
 
 ### Fluxo 2: Monitoramento Contínuo (Obra em Execução)
 
-```
+```text
 Fase 4 (Obra) → Manta 20 (monitoramento mensal):
               • Desflorestamento real vs. baseline
               • Certificação offset (pagamentos)
@@ -346,6 +350,7 @@ Fase 4 (Obra) → Manta 20 (monitoramento mensal):
 ### Tier Sonnet (padrão para Manta 20)
 
 **Capacidades**:
+
 - Análise multi-dimensional (4D ESG)
 - Leitura de GeoJSON (spatial footprint)
 - Cálculo de scoring (ISA, social license, carbon)
@@ -358,7 +363,7 @@ Fase 4 (Obra) → Manta 20 (monitoramento mensal):
 
 ### Contexto de prompt
 
-```
+```text
 Entrada típica: 32–64K tokens
 ├─ ESG framework (4D, normas): 8K
 ├─ GeoJSON footprint: 4K
@@ -548,6 +553,7 @@ prompt: "Vou fazer um porto em Laguna (SC), dragagem de 2M m³"
 **Status**: ✅ Pronto para implementação  
 
 **Próximos passos**:
+
 1. Provisão de RAG collections (Supabase, week 1–2)
 2. Integração Maestro routing (week 2–3)
 3. Testes com S6–S10 (week 3)

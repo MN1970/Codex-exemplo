@@ -9,6 +9,7 @@
 ## Pre-Deployment (48 hours before)
 
 ### Code & Build
+
 - [ ] Code review completed and approved
 - [ ] All tests passing (smoke + integration)
 - [ ] Security audit completed
@@ -17,6 +18,7 @@
 - [ ] Git commits tagged with version (v6.0-YYYYMMDD)
 
 ### Documentation
+
 - [ ] API documentation reviewed
 - [ ] Deployment guide reviewed
 - [ ] Runbooks prepared
@@ -24,6 +26,7 @@
 - [ ] Escalation contacts confirmed
 
 ### Infrastructure
+
 - [ ] Supabase database provisioned
 - [ ] Database schema migrations tested in staging
 - [ ] RAG collections prepared and validated
@@ -33,6 +36,7 @@
 - [ ] Backups scheduled and tested
 
 ### Communication
+
 - [ ] Stakeholders notified of deployment window
 - [ ] Support team briefed on system architecture
 - [ ] On-call engineer assigned for deployment
@@ -45,6 +49,7 @@
 ### Pre-Deployment Checks (T-2 hours)
 
 **System Status:**
+
 - [ ] All services healthy in staging
 - [ ] Database backups verified
 - [ ] Monitoring dashboards prepared
@@ -53,6 +58,7 @@
 - [ ] Supabase connection tested
 
 **Code Verification:**
+
 - [ ] Correct version tag verified
 - [ ] Docker image verified in registry
 - [ ] Configuration files prepared
@@ -62,12 +68,14 @@
 ### Deployment (T-0 to T+30 min)
 
 **Phase 1: Blue-Green Setup (T-0 to T+5 min)**
+
 - [ ] Deploy new version (blue environment)
 - [ ] Run smoke tests in blue environment
 - [ ] Verify all components healthy
 - [ ] Database migrations completed successfully
 
 **Phase 2: Canary Rollout (T+5 to T+15 min)**
+
 - [ ] Route 10% traffic to blue environment
 - [ ] Monitor error rates (target: <1%)
 - [ ] Monitor response times (target: <2s p99)
@@ -75,6 +83,7 @@
 - [ ] Verify consensus voting working
 
 **Phase 3: Full Cutover (T+15 to T+30 min)**
+
 - [ ] Route 50% traffic to blue
 - [ ] Monitor metrics for 5 minutes
 - [ ] Route 100% traffic to blue
@@ -85,6 +94,7 @@
 ### Post-Deployment Validation (T+30 to T+60 min)
 
 **Functional Testing:**
+
 - [ ] Run test workflow (simple): Target <8 min
 - [ ] Run test workflow (medium): Target <10 min
 - [ ] Verify agent responses <30s each
@@ -93,6 +103,7 @@
 - [ ] Check database entries created correctly
 
 **Performance Validation:**
+
 - [ ] Execution time within targets
 - [ ] Token usage within budgets
 - [ ] Queue executor working (max 8 concurrent)
@@ -100,6 +111,7 @@
 - [ ] No 429 errors in logs
 
 **Monitoring:**
+
 - [ ] All dashboards showing green
 - [ ] No critical alerts triggered
 - [ ] Error rate <0.1%
@@ -111,6 +123,7 @@
 ## Post-Deployment (First 24 hours)
 
 ### Continuous Monitoring
+
 - [ ] Check metrics every 30 minutes (first 4 hours)
 - [ ] Review logs for warnings or errors
 - [ ] Verify database backups completed
@@ -118,6 +131,7 @@
 - [ ] Check token usage against budgets
 
 ### Incident Response
+
 - [ ] Escalation contacts on standby
 - [ ] Incident response team briefed
 - [ ] Rollback procedures tested
@@ -125,6 +139,7 @@
 - [ ] Status page updated
 
 ### Operations
+
 - [ ] Document any issues encountered
 - [ ] Update runbooks with lessons learned
 - [ ] Archive deployment logs
@@ -135,6 +150,7 @@
 ## 48-Hour Stability Window
 
 ### System Stability Checks
+
 - [ ] Uptime: 99.9%+
 - [ ] Error rate: <0.1%
 - [ ] Consensus resolution: >85%
@@ -142,6 +158,7 @@
 - [ ] Token usage: <budget allocated
 
 ### Operational Readiness
+
 - [ ] Support team confident in operations
 - [ ] On-call procedures tested
 - [ ] Alerting rules validated
@@ -149,6 +166,7 @@
 - [ ] Team debriefing completed
 
 ### Sign-Off
+
 - [ ] Engineering lead sign-off: _______________
 - [ ] Operations lead sign-off: _______________
 - [ ] Product manager sign-off: _______________
@@ -159,6 +177,7 @@
 ## Rollback Decision Criteria
 
 **Automatic Rollback Triggered If:**
+
 - [ ] Error rate >5% for >5 minutes
 - [ ] Uptime <95% for >10 minutes
 - [ ] Response time p99 >5 seconds for >10 minutes
@@ -167,6 +186,7 @@
 - [ ] 3+ critical alerts triggered simultaneously
 
 **Manual Rollback Criteria:**
+
 - [ ] Data corruption detected
 - [ ] Security vulnerability discovered
 - [ ] Unrecoverable state reached
@@ -175,23 +195,27 @@
 ### Rollback Procedure (If Needed)
 
 **Step 1: Decision** (within 5 minutes)
+
 - [ ] Technical lead confirms rollback necessity
 - [ ] Stakeholders notified
 - [ ] Runbook reviewed
 
 **Step 2: Execution** (0–10 minutes)
+
 - [ ] Stop accepting new workflows
 - [ ] Route traffic back to green environment
 - [ ] Verify green environment healthy
 - [ ] Run smoke tests on green
 
 **Step 3: Verification** (10–20 minutes)
+
 - [ ] Confirm all workflows executing
 - [ ] Monitor metrics return to normal
 - [ ] Check data integrity
 - [ ] Notify stakeholders of resolution
 
 **Step 4: Post-Mortem** (within 24 hours)
+
 - [ ] Root cause analysis
 - [ ] Document findings
 - [ ] Prepare corrective actions
@@ -202,6 +226,7 @@
 ## Sign-Off
 
 **Deployment Team:**
+
 - Engineering Lead: _________________ Date: _______
 - Ops Lead: _________________ Date: _______
 - QA Lead: _________________ Date: _______
@@ -213,9 +238,10 @@
 **Status:** ☐ Successful ☐ Rolled Back ☐ Partial
 
 **Notes:**
-_________________________________________________________________
-_________________________________________________________________
-_________________________________________________________________
+
+- \_________________________________________________________________
+- \_________________________________________________________________
+- \_________________________________________________________________
 
 ---
 

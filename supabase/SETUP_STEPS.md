@@ -4,7 +4,7 @@ Passo-a-passo para inicializar o banco de dados Supabase para produção.
 
 ## ✅ Pré-requisitos
 
-- [ ] Supabase project criado (https://app.supabase.com)
+- [ ] Supabase project criado (<https://app.supabase.com>)
 - [ ] CLI instalado: `npm install -g supabase`
 - [ ] Python 3.10+ instalado
 - [ ] Acesso à conexão Supabase (host, user, password)
@@ -26,6 +26,7 @@ nano .env
 ```
 
 **Check:** Testar conexão
+
 ```bash
 psql $SUPABASE_DB_URL -c "SELECT VERSION();"
 ```
@@ -40,6 +41,7 @@ psql $SUPABASE_DB_URL < migrations/001_sicro_similaridade_tables.sql
 ```
 
 **Check:** Verificar tabelas criadas
+
 ```bash
 psql $SUPABASE_DB_URL -c "\dt sicro_*"
 # Deve retornar: 7 tabelas (sicro_insumos, price_history, migration_map, etc)
@@ -55,6 +57,7 @@ psql $SUPABASE_DB_URL < seed/001_sicro_seed.sql
 ```
 
 **Check:** Verificar dados
+
 ```bash
 psql $SUPABASE_DB_URL -c "SELECT COUNT(*) FROM sicro_insumos;"
 # Deve retornar: 25
@@ -73,7 +76,8 @@ python scripts/generate_embeddings.py
 ```
 
 **Output esperado:**
-```
+
+```yaml
 INFO: Carregando modelo BAAI/bge-small-en-v1.5...
 INFO: Conectando ao Supabase...
 INFO: Processando 25 itens...
@@ -83,6 +87,7 @@ INFO: Batch salvo: 25 embeddings
 ```
 
 **Check:** Verificar embeddings
+
 ```bash
 psql $SUPABASE_DB_URL -c "SELECT COUNT(*) FROM sicro_insumos WHERE embedding IS NOT NULL;"
 # Deve retornar: 25
@@ -158,20 +163,24 @@ EOF
 ## ⚠️ Troubleshooting
 
 ### Erro: "pgvector extension not found"
+
 ```bash
 psql $SUPABASE_DB_URL -c "CREATE EXTENSION IF NOT EXISTS vector;"
 ```
 
 ### Erro: "Connection refused"
+
 - Verificar host/port em `SUPABASE_DB_URL`
 - Verificar se IP está whitelisted
 - Teste: `psql -h db.supabase.co -U postgres -c "SELECT VERSION();"`
 
 ### Erro: "Embeddings generation timeout"
+
 - Aumentar timeout em `generate_embeddings.py`
 - Reduzir `BATCH_SIZE` de 50 para 25
 
 ### Query lenta após embeddings
+
 ```sql
 -- Recriar índice com mais lists
 DROP INDEX idx_sicro_embedding;
@@ -202,9 +211,10 @@ psql $SUPABASE_DB_URL -c "DROP EXTENSION IF NOT EXISTS vector;"
 
 ---
 
-## 🎉 Pronto!
+## 🎉 Pronto
 
 Se todos os checks passaram, o banco de dados está pronto para:
+
 1. ✅ Skill `sicro-similaridade` operacional
 2. ✅ Integração com agentes Manta
 3. ✅ Consultas de busca em tempo real

@@ -24,6 +24,7 @@ Realizar avaliação e mitigação de riscos ambientais, sociais e de governanç
 ## 2. CAPACIDADES
 
 ### 2.1 Biodiversity Assessment
+
 - Integração com dados INPE (MapBiomas, PRODES, CERRADO 2050)
 - Cálculo automático de Índice de Sensibilidade Ambiental (ISA)
 - Identificação de áreas protegidas (UC, TI, APP, RL) via Geoprocessing
@@ -31,12 +32,14 @@ Realizar avaliação e mitigação de riscos ambientais, sociais e de governanç
 - Recomendações de rota alternativa (transmissão, Porto, aeroporto)
 
 ### 2.2 Social License Scoring
+
 - Mapa de stakeholders (comunidades locais, ONGs, órgãos públicos, concessão)
 - Scoring: percepção comunitária (0–100), risco de contestação legal, grau de mobilização
 - Cenários de engajamento: bottom-up (co-design), top-down (consulta prévia)
 - Análise de impactos cumulativos com projetos vizinhos
 
 ### 2.3 Carbon Accounting
+
 - Escopo 1: emissões diretas (movimento de terra, cimento, combustível)
 - Escopo 2: energia elétrica (grid brasileiro ~80 gCO₂/kWh)
 - Escopo 3: cadeia de suprimentos (aço, asfalto, insumos)
@@ -44,6 +47,7 @@ Realizar avaliação e mitigação de riscos ambientais, sociais e de governanç
 - Roadmap de redução (eficiência, renováveis, offset de carbono)
 
 ### 2.4 Compliance Mapping
+
 - Check-list dinâmico de requisitos regulatórios por segmento (S6–S10)
 - Timeline de licenciamentos (LI → LP → LO, 18–36 meses típico)
 - Alertas para requisitos contraditórios (ex: ANEEL vs IBAMA)
@@ -65,7 +69,8 @@ Realizar avaliação e mitigação de riscos ambientais, sociais e de governanç
 ## 4. INTEGRAÇÃO COM VERTICAIS (S6–S10)
 
 ### 4.1 Energia (S9 — Transmissão ANEEL)
-```
+
+```yaml
 Entrada:
   • Linha de transmissão: 138 kV, São Paulo → Minas Gerais, 250 km
   • Faixa de servidão: 50 m (padrão ANEEL)
@@ -86,7 +91,8 @@ Integração S9:
 ```
 
 ### 4.2 Portos (S6 — Terminal ANTAQ)
-```
+
+```yaml
 Entrada:
   • Expansão de terminal de contêineres em mangue (Atlântico Sul)
   • Dragagem, derrocamento, construção cais: 60 hectares
@@ -107,7 +113,8 @@ Integração S6:
 ```
 
 ### 4.3 Saneamento (S8 — ETA/AySA)
-```
+
+```yaml
 Entrada:
   • Estação de Tratamento de Água (ETA) em bacia Paraná, 500.000 m³/dia
   • Impacto hídrico: retirada + descarga tratada
@@ -128,6 +135,7 @@ Integração S8:
 ```
 
 ### 4.4 Barragens (S10) & Aeroportos (S7)
+
 - **S10**: Impacto de reservatório (assentamento 2.500 famílias, perda habitat 80 km²), carbon = -80 tCO₂e/ano (geração renovável)
 - **S7**: Pista de pouso (supressão Cerrado 600 ha), social = comunidade indígena + urbana adjacente, carbono = aviação (Escopo 3 complexo)
 
@@ -149,6 +157,7 @@ Integração S8:
 | **IPCC AR6** | Climate scenarios, TCFD | 2023 | Risco climático |
 
 **Supabase collections** (já criadas v4.2):
+
 - `esg:inpe-mapbiomas` (raster GeoTIFF)
 - `esg:ibama-uc` (vector shapefile)
 - `esg:stakeholder-mapping` (template + histórico)
@@ -159,9 +168,11 @@ Integração S8:
 ## 6. CASOS DE USO
 
 ### Caso 1: Linha de Transmissão 138 kV (Energia S9)
+
 **Contexto**: CEMIG propõe nova LT conectando hidrelétrica Furnas → Triângulo Mineiro, 180 km
 
 **Fluxo**:
+
 1. Maestro (Manta 00) roteia para manta-20-esg (detecção "transmissão + ambiental")
 2. manta-20-esg recebe traçado preliminar, consulta INPE + IBAMA
 3. Resultado: rota atual = 68/100 ESG score (16 km em Cerrado sentido restritivo)
@@ -170,9 +181,11 @@ Integração S8:
 6. Output: ESG scorecard + revised route + licenciamento timeline
 
 ### Caso 2: Terminal Portuário (Portos S6)
+
 **Contexto**: Operador portuário (TECON) expande terminal em Paranaguá (PR), área com mangue adjacente
 
 **Fluxo**:
+
 1. Manta 13 (BD) identifica oportunidade → roteia para S6 + manta-20-esg
 2. manta-20-esg faz footprint (60 ha, 5 espécies ameaçadas, 120 pescadores)
 3. Social license score: 38/100 (risco alto de contestação)
@@ -181,9 +194,11 @@ Integração S8:
 6. Integration S6: agente-portos escolhe cenário 2 → ativa manta-20-esg para monitor 36 meses
 
 ### Caso 3: Estação de Tratamento de Esgoto (Saneamento S8 — AySA)
+
 **Contexto**: AySA (Buenos Aires) planeja ETE em Matanza–Riachuelo com tecnologia BRM, impacto hídrico em zona de vulnerabilidade social
 
 **Fluxo**:
+
 1. Manta 05 (Orçamento) estima capex; Manta 07 (Cronograma) propõe timeline
 2. Maestro roteia para S8 + manta-20-esg (saneamento + social risk)
 3. manta-20-esg mapeia: 2.800 hab. informais 500 m jusante, histór. conflito água
@@ -197,7 +212,8 @@ Integração S8:
 ## 7. PROMPT & ROUTING
 
 ### Ativadores para Manta 20 (manta-20-esg)
-```
+
+```text
 IF menção a biodiversidade|ambiental|ESG|carbono|offset|Mata Atlântica
    |Cerrado|Amazônia|mangue|APP|RL|IBAMA|social license
    |stakeholder|impacto comunitário|consulta prévia|FUNAI|
@@ -212,6 +228,7 @@ IF menção compliance ESG|governança|TCFD|SASB|GRI
 ```
 
 ### Integração com Manta 00 (Maestro)
+
 ```python
 def route_esg(intake_prompt: str) -> Agent:
     """
@@ -250,6 +267,7 @@ def route_esg(intake_prompt: str) -> Agent:
 ## 9. ENTRADAS & SAÍDAS
 
 ### Entrada típica
+
 ```json
 {
   "projeto": "LT Furnas → Triângulo Mineiro",
@@ -263,6 +281,7 @@ def route_esg(intake_prompt: str) -> Agent:
 ```
 
 ### Saída padrão
+
 ```json
 {
   "esg_scorecard": {
@@ -291,6 +310,7 @@ def route_esg(intake_prompt: str) -> Agent:
 **Tier padrão**: Claude Sonnet (multi-dimensional reasoning, structured output)
 
 **Contexto típico**: 32K–64K tokens
+
 - Dados INPE (GeoJSON raster): 8–12K
 - Legislation + templates: 10K
 - Prompt + exemplos ESG: 4–6K

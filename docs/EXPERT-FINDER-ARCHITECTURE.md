@@ -6,7 +6,7 @@
 
 ## System Architecture Diagram
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                         Query Input                              │
 │                    "ETA para 200k hab"                           │
@@ -84,7 +84,7 @@
 
 ### Per-Agent Scoring (Detailed)
 
-```
+```yaml
 Agent: agente-saneamento
 Query: "ETA para 200k hab"
 ├── Semantic (40% weight)
@@ -128,7 +128,7 @@ Query: "ETA para 200k hab"
 
 ### Read Operations (Parallel Fetch)
 
-```
+```text
 ExpertRanker.findExperts(agents, query)
   │
   ├─ For each agent in parallel:
@@ -199,12 +199,14 @@ const ranker = new ExpertRanker({
 ### 1. maestro-v2-routing.ts (Existing)
 
 **Reuses:**
+
 - `AgentRecord` interface
 - `tokenize()` & `Bm25Index`
 - `cosineSimilarity()` & embedding utilities
 - `MaestroRoutingError` class
 
 **Enhances:**
+
 - `rankAgents()` → `ExpertRanker.rankAgents()` (richer signals)
 - `evaluateCircuitBreaker()` → same logic, same thresholds
 
@@ -224,6 +226,7 @@ const agent = result.primaryChoice?.agent;
 ### 3. Feedback Loop (feedback_loop.py)
 
 **ExpertRanker → Thompson Sampling:**
+
 - Write `routing_events.chosen_agent_id`, `chosen_confidence`, `latency_ms`
 - Write `routing_feedback.feedback`, `reward` (1.0 for 'correct', 0.5 for 'incomplete', etc.)
 - Read `agent_posteriors` to influence historical scores
@@ -231,6 +234,7 @@ const agent = result.primaryChoice?.agent;
 ### 4. Auto-Registration Service
 
 When a new agent joins (via `.claude/agents/*.md`):
+
 1. `parse-agent-md.js` extracts expertise & capabilities
 2. Seeds `agents` + `agent_expertise` + `agent_capabilities` tables
 3. ExpertRanker picks it up automatically next ranking call
@@ -303,7 +307,7 @@ const ranker = new ExpertRanker({
 
 ### Time Complexity
 
-```
+```text
 rankAgents(N agents):
   ├─ For each agent: O(N)
   │  ├─ BM25 score: O(Q) where Q = query tokens (~10)
@@ -318,7 +322,7 @@ For 20 agents: ~32-100ms (serial), ~50-150ms with DB calls
 
 ### Space Complexity
 
-```
+```text
 O(N * (embedding_dims + metadata))
   ≈ O(20 * (1536 + 50)) = ~32KB per ranking
   → negligible
@@ -354,6 +358,7 @@ test('circuit breaker', () => {
 ### Integration Tests (10 Sample Queries)
 
 All 10 test queries route to correct expert agent (100% pass rate):
+
 - Query → tokenize → compute per-agent scores → rank → assert top.agent.id
 
 ### Stress Tests (Pending Phase 2)
@@ -367,24 +372,28 @@ All 10 test queries route to correct expert agent (100% pass rate):
 ## Rollout Plan
 
 ### Phase 1: Foundation (✅ Done)
+
 - ExpertRanker implementation
 - TypeScript + JavaScript demo
 - 10 sample queries passing
 - Backward compat with v2.0
 
 ### Phase 2: Data Integration (Next)
+
 - Wire Supabase history provider
 - Implement real capability matching
 - Backfill routing_feedback from logs
 - Deploy to staging
 
 ### Phase 3: Optimization
+
 - A/B test vs. v2.0 (50/50 traffic split)
 - Gather user feedback (thumbs up/down)
 - Tune weights based on KPIs
 - Monitor latency + cost
 
 ### Phase 4: Feedback Loop
+
 - Thompson Sampling integration
 - Quarterly KPI review
 - Graduated rollout to 100% production
@@ -396,17 +405,23 @@ All 10 test queries route to correct expert agent (100% pass rate):
 ### "My agent never ranks high"
 
 **Check:**
+
 1. Keywords: Does query tokenize to your agent's keywords?
+
    ```bash
    tokenize("your query")  # Should overlap with agent.keywords
    ```
+
 2. History: Does routing_feedback show success?
+
    ```sql
    SELECT feedback, COUNT(*) FROM routing_feedback
    WHERE agent_id = 'your-agent'
    GROUP BY feedback;
    ```
+
 3. Capability: Are tools/skills configured?
+
    ```sql
    SELECT * FROM agent_capabilities WHERE agent_id = 'your-agent';
    ```
@@ -414,11 +429,13 @@ All 10 test queries route to correct expert agent (100% pass rate):
 ### "Confidence always < 0.6"
 
 **Likely causes:**
+
 1. Synthetic history fallback (no real routing_feedback)
 2. Query too generic (matches many agents equally)
 3. Agent keywords misaligned with real usage
 
 **Fix:**
+
 1. Wait for real traffic to accumulate history
 2. Refine keywords in agent definition
 3. Lower `confidenceThreshold` if needed (⚠️ less safe)
@@ -426,6 +443,7 @@ All 10 test queries route to correct expert agent (100% pass rate):
 ### "Wrong agent ranked first"
 
 **Debug:**
+
 ```typescript
 const ranker = new ExpertRanker();
 const result = await ranker.findExperts(agents, query);
@@ -438,6 +456,7 @@ console.log(result.ranked.map(r => ({
 ```
 
 Compare score breakdown (which signal boosted wrong agent?):
+
 - Semantic: Keyword overlap too high?
 - Historical: Noise in feedback loop?
 - Capability: Tool matching too broad?

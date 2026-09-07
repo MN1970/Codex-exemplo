@@ -1,4 +1,5 @@
 # S6 Launch Documentation Index
+
 **Version: v5.0 | Agent: Manta 03-S6 (Portos) | Launch Date: 2026-07-25**
 
 Complete guide to all S6 go-live and post-launch documentation. **Start here.**
@@ -67,7 +68,7 @@ Complete guide to all S6 go-live and post-launch documentation. **Start here.**
 
 ## DOCUMENT MAP (Full Index)
 
-```
+```text
 S6 Launch Documentation/
 │
 ├── 🚀 GO-LIVE (Launch Day T-6h to T+0)
@@ -97,7 +98,7 @@ S6 Launch Documentation/
 
 ## TIMELINE & DOCUMENT USAGE
 
-```
+```text
 T-24h (Day before)
 ├─ READ: S6-GO-LIVE-CHECKLIST.md (30 min, understand phases)
 ├─ READ: SLACK-CHANNEL-SETUP.md (15 min, execute setup)
@@ -145,6 +146,7 @@ T+7d onwards (Normal Operations)
 ## WHO SHOULD READ WHAT
 
 ### MN (Decision Maker)
+
 - ✅ S6-GO-LIVE-CHECKLIST.md (phases 0, 2, 9 only)
 - ✅ S6-GO-LIVE-RUNBOOK.md (skim decision tree)
 - ✅ .github/DEPLOYMENT-APPROVALS.md (sign-offs)
@@ -152,6 +154,7 @@ T+7d onwards (Normal Operations)
 - ✅ docs/S6-POST-LAUNCH-MONITORING.md (daily reports)
 
 ### Tech Lead
+
 - ✅ S6-GO-LIVE-CHECKLIST.md (full read, then reference)
 - ✅ S6-GO-LIVE-RUNBOOK.md (full read, open during launch)
 - ✅ .github/DEPLOYMENT-APPROVALS.md (sign-offs for phases they lead)
@@ -159,6 +162,7 @@ T+7d onwards (Normal Operations)
 - ✅ S6-ROLLBACK-PLAN.md (emergency, read before launch)
 
 ### DevOps/SRE
+
 - ✅ S6-GO-LIVE-CHECKLIST.md (phases 3–7, full details)
 - ✅ S6-GO-LIVE-RUNBOOK.md (open during launch for troubleshooting)
 - ✅ SLACK-CHANNEL-SETUP.md (execute all 10 steps)
@@ -166,11 +170,13 @@ T+7d onwards (Normal Operations)
 - ✅ S6-ROLLBACK-PLAN.md (own execution if triggered)
 
 ### QA/Test Lead
+
 - ✅ S6-GO-LIVE-CHECKLIST.md (phases 8, focus on tests)
 - ✅ S6-GO-LIVE-RUNBOOK.md (skim for context)
 - ✅ .github/DEPLOYMENT-APPROVALS.md (phase 8 sign-offs)
 
 ### On-Call Engineer (Launch Day)
+
 - ✅ S6-GO-LIVE-RUNBOOK.md (full read, keep open all day)
 - ✅ S6-GO-LIVE-CHECKLIST.md (reference during execution)
 - ✅ S6-ROLLBACK-PLAN.md (emergency procedure)
@@ -178,6 +184,7 @@ T+7d onwards (Normal Operations)
 - 📱 Have MN phone number ready
 
 ### DBA
+
 - ✅ S6-GO-LIVE-CHECKLIST.md (phases 3–4, database focus)
 - ✅ S6-ROLLBACK-PLAN.md (STEP 4: database restore)
 - ✅ docs/S6-POST-LAUNCH-MONITORING.md (DB health checks)
@@ -200,12 +207,14 @@ T+7d onwards (Normal Operations)
 ## CRITICAL DECISION GATES (Go/No-Go)
 
 ### T+0 (Launch Authorization)
+
 **Decision:** Approve deployment  
 **Decision Maker:** MN  
 **Reference:** .github/DEPLOYMENT-APPROVALS.md PHASE 9  
 **Condition:** All phases 1–8 complete and signed off
 
 ### T+24h (Continue or Monitor Longer)
+
 **Decision:** Keep in production or investigate further  
 **Decision Maker:** MN + Tech Lead  
 **Reference:** docs/S6-POST-LAUNCH-MONITORING.md (Daily Report)  
@@ -213,6 +222,7 @@ T+7d onwards (Normal Operations)
 **No-Go if:** Any metric fails 2x consecutive hours
 
 ### T+7d (GA Promotion or Rollback)
+
 **Decision:** Promote to GA, continue monitoring, or rollback  
 **Decision Maker:** MN  
 **Reference:** docs/S6-POST-LAUNCH-MONITORING.md (Weekly Summary)  
@@ -220,6 +230,7 @@ T+7d onwards (Normal Operations)
 **No-Go if:** Any metric consistently below threshold
 
 ### Emergency (Anytime)
+
 **Decision:** Immediate rollback  
 **Decision Maker:** MN or on-call if MN unavailable  
 **Reference:** S6-ROLLBACK-PLAN.md  
@@ -231,7 +242,8 @@ T+7d onwards (Normal Operations)
 ## QUICK REFERENCE CARDS
 
 ### Pre-Launch Checklist (T-6h to T+0)
-```
+
+```text
 ☐ Phase 1: Pre-deployment validation (code, DB, RAG, tests)
 ☐ Phase 2: Pre-deployment sign-off (MN approval)
 ☐ Phase 3: Database migrations (6 tables, indexes, RLS)
@@ -245,7 +257,8 @@ T+7d onwards (Normal Operations)
 ```
 
 ### Launch Day Actions (T+0)
-```
+
+```text
 1. Start monitoring: Open Grafana dashboard in browser
 2. Open runbook: S6-GO-LIVE-RUNBOOK.md (decision tree)
 3. Slack ready: Join #s6-launch and #agent-ops channels
@@ -255,7 +268,8 @@ T+7d onwards (Normal Operations)
 ```
 
 ### Troubleshooting Quick Links
-```
+
+```text
 Routing accuracy low?      → ACTION 12A (S6-GO-LIVE-RUNBOOK.md)
 Error rate high?           → ACTION 13A/13B (runbook)
 Latency spike?             → ACTION 14A (runbook, disable reranker)
@@ -314,7 +328,8 @@ VERSIONS.json
 **Recipients:** @mantaassociados.com (core team)
 
 **Subject lines:**
-```
+
+```yaml
 T-24h: "[GO-LIVE] Manta 03-S6 Agente-Portos v5.0 — Launch in 24 hours"
 T-6h:  "[GO-LIVE] S6 Launch TODAY at 08:00 UTC"
 T+0:   "[LIVE] Manta 03-S6 Agente-Portos v5.0 is now in production"
@@ -322,14 +337,16 @@ T+24h: "[REPORT] S6 Daily Status — All systems nominal"
 ```
 
 ### Slack Channels
-```
+
+```text
 #agent-ops        ← Real-time alerts, incidents
 #s6-launch        ← Launch day updates, status
 #s6-monitoring    ← Daily reports, long-term health
 ```
 
 ### Internal Wiki / Shared Drive
-```
+
+```text
 Link to this index (S6-LAUNCH-INDEX.md)
 Link to all 6 documents (in order)
 Updated daily with latest report link
@@ -352,16 +369,19 @@ Updated daily with latest report link
 ## SUPPORT & ESCALATION
 
 **In case of questions before launch:**
-- Email: mneves@mantaassociados.com
+
+- Email: <mneves@mantaassociados.com>
 - Slack: @mneves (DM)
 - Phone: [Fill in from emergency contacts in SLACK-CHANNEL-SETUP.md]
 
 **During launch (T+0 to T+6h):**
+
 - On-Call Engineer: Check S6-GO-LIVE-RUNBOOK.md
 - Tech Lead: Oversee runbook execution
 - MN: Available for critical decisions (phone on)
 
 **Post-launch (T+1d onwards):**
+
 - Daily reports → email to MN
 - Weekly decisions → recorded in DEPLOYMENT-APPROVALS.md
 - Issues → track in ROLLBACK_LOG.md (if applicable)

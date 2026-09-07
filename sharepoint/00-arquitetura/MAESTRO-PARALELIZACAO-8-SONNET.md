@@ -24,7 +24,7 @@ Configuração otimizada do Maestro (Manta 00 router) para executar **8 agentes 
 
 ### Pool de 8 Agentes (Claude Sonnet 5)
 
-```
+```text
 Maestro (Manta 00)
     ├─→ [1] Manta 02 — contratual (análise documental)
     ├─→ [2] Manta 04 — imobiliario (projetos imob.)
@@ -38,7 +38,7 @@ Maestro (Manta 00)
 
 ### Fluxo de Execução
 
-```
+```json
 [Usuário input]
       ↓
 [Maestro — intake Q2]
@@ -61,11 +61,13 @@ Maestro (Manta 00)
 ## Especificação Técnica
 
 ### Modelo Padrão
+
 - **Tier**: Claude Sonnet 5 (modelo padrão pool)
 - **Fallback leve**: Haiku 4.5 (queries estruturadas < 500 tokens)
 - **Fallback pesado**: Opus 5 (síntese final se contexto > 50k tokens)
 
 ### Limites
+
 | Parâmetro | Valor | Notas |
 |-----------|-------|-------|
 | Agentes paralelos | 8 | Fixo, respeitando quota Claude SDK |
@@ -74,6 +76,7 @@ Maestro (Manta 00)
 | Peso síntese | Opus 5 | Só se resultado > 50k tokens |
 
 ### Priorização
+
 1. **🔴 Crítica**: Saneamento (S8-AySA), Energia (S9-ANEEL)
 2. **🟡 Alta**: Orçamento (05), Cronograma (07), Contratual (02)
 3. **🟢 Normal**: Imobiliário (04), BD (13), Apresentações (14)
@@ -83,6 +86,7 @@ Maestro (Manta 00)
 ## Casos de Uso
 
 ### ✓ USAR paralelização (fan-out 8 agentes)
+
 - Projeto multi-disciplina (ex: saneamento + transmissão + imobiliário)
 - Intake complexo que envolve ≥3 disciplinas diferentes
 - Análise de viabilidade que exige custo + cronograma + legal simultâneos
@@ -92,6 +96,7 @@ Maestro (Manta 00)
 → Dispara S8 (saneamento) + S9 (energia) + 04 (imob.) + 05 (orçamento) em paralelo
 
 ### ✗ NÃO usar paralelização
+
 - Query de uma única disciplina (roubar vs. Sonnet puro)
 - Projeto pequeno que não justifica overhead
 - Debugs/testes (usar Haiku direto)

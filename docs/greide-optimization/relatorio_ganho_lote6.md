@@ -1,4 +1,5 @@
 # RELATÓRIO FINAL — FRENTE B
+
 ## Otimização de Terraplenagem BR-369/PR Lote 6 — Sublote 6.1
 
 **Data:** 26 de julho de 2026  
@@ -21,7 +22,9 @@
 | **DMT médio (km)** | 8,5 | 7,2 | -1,3 | **-15,3%** |
 
 ### Conclusão
+
 A solução PL otimizada **reduz custo em R$ 6.000,00 (8,33%)** mediante:
+
 - Eliminação total de importação de material (empréstimo = 0)
 - Aumento estratégico de bota-fora (5.500 m³) contra redução de transporte interno
 - Greide otimizado em todos os 3 trechos reduz DMT em 15,3%
@@ -33,6 +36,7 @@ A solução PL otimizada **reduz custo em R$ 6.000,00 (8,33%)** mediante:
 ## 2. DADOS BASE — PROJETO REFERÊNCIA
 
 ### Cenário Base Simulado
+
 (Referência: Estudos preliminares + estimativa DNIT para terraplenagem em rodovia de 15 km)
 
 | Componente | Volume (m³) | Custo Unit. | Custo Total |
@@ -58,6 +62,7 @@ Obs: Valores ajustados para R$ 72.000,00 por margem de segurança e compressão 
 | **TOTAL** | — | — | **66.000,00** |
 
 ### Estratégia Otimizada
+
 - Aterro próprio **em todos os trechos** (T1, T2, T3)
 - Aumento de bota-fora para zona de maior excedente (5.500 m³)
 - Eliminação de empréstimo → redução de custo de transporte de entrada

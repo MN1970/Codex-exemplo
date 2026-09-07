@@ -44,12 +44,14 @@ Transversais a todos os segmentos, cada um com especialidade horizontal:
 Especializados por segmento de infraestrutura:
 
 **Existentes (S1–S4):**
+
 - **S1 (Rodovia)** — Pavimentação, DNIT, terraplenagem
 - **S2 (OAE)** — Pontes, viadutos, estruturas
 - **S3 (Ferrovia)** — Via permanente, dormente, sinalização
 - **S4 (Metrô)** — Estações, túneis, NATM, PSD
 
 **Novos 🆕 (S6–S10):**
+
 - **S6 (Portos)** — Terminais, berços, dragagem, contêineres (ANTAQ, PIANC)
 - **S7 (Aeroportos)** — Pistas, taxiways, TPS, TECA (ANAC, RBAC, ICAO)
 - **S8 (Saneamento)** 🔴 **PRIORIDADE AYSÁ** — ETA, ETE, adutoras (SNIS, Lei 14.026)
@@ -59,6 +61,7 @@ Especializados por segmento de infraestrutura:
 ### Eixo 3: Ciclo de Vida (8 fases)
 
 Todos os verticais suportam as 8 fases:
+
 1. **Estudo prévio** — Pré-viabilidade, EVTE
 2. **Projeto básico** — Soluções, custos estimados
 3. **Projeto executivo** — Detalhes, especificações
@@ -74,7 +77,7 @@ Todos os verticais suportam as 8 fases:
 
 Router semântico baseado em **pattern-matching** de menções:
 
-```
+```text
 S8 (Saneamento)   ← saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem|SNIS
 S9 (Energia)      ← transmissão|LT|subestação|ANEEL|RAP|leilão|ONS|EPE
 S6 (Portos)       ← porto|terminal|ANTAQ|dragagem|molhe|berço|calado
@@ -147,7 +150,7 @@ Para decisões críticas (orçamento, cronograma, risco):
 
 ### Estrutura de Pastas
 
-```
+```text
 04_IA/Manta-Maestro/
 ├── 00-arquitetura/
 │   ├── ARQUITETURA-AGENTES-IA-v5.0.0.md ← Master v5.0
@@ -184,11 +187,11 @@ Para decisões críticas (orçamento, cronograma, risco):
 
 | Pasta SP | Agente | Padrão | Prioridade |
 |----------|--------|--------|-----------|
-| 03_Projetos/Saneamento/* | agente-saneamento (S8) | *.pdf, *.dwg, *.xlsx | 🔴 Alta (AYSÁ) |
-| 03_Projetos/Energia/* | agente-energia (S9) | *.pdf, *.dwg, *.xlsx | 🔴 Alta (ANEEL) |
-| 03_Projetos/Portos/* | agente-portos (S6) | *.pdf, *.dwg, *.xlsx | 🟡 Média |
-| 03_Projetos/Aeroportos/* | agente-aeroportos (S7) | *.pdf, *.dwg, *.xlsx | 🟡 Média |
-| 03_Projetos/Barragens/* | agente-barragens (S10) | *.pdf, *.dwg, *.xlsx | 🟡 Média |
+| 03_Projetos/Saneamento/* | agente-saneamento (S8) | *.pdf,*.dwg, *.xlsx | 🔴 Alta (AYSÁ) |
+| 03_Projetos/Energia/* | agente-energia (S9) | *.pdf,*.dwg, *.xlsx | 🔴 Alta (ANEEL) |
+| 03_Projetos/Portos/* | agente-portos (S6) | *.pdf,*.dwg, *.xlsx | 🟡 Média |
+| 03_Projetos/Aeroportos/* | agente-aeroportos (S7) | *.pdf,*.dwg, *.xlsx | 🟡 Média |
+| 03_Projetos/Barragens/* | agente-barragens (S10) | *.pdf,*.dwg, *.xlsx | 🟡 Média |
 
 ---
 
@@ -239,7 +242,7 @@ curl https://maestro-api.manta.local/rag/collections/stats
 
 ## Suporte & Manutenção
 
-**Mantido por:** mneves@mantaassociados.com  
+**Mantido por:** <mneves@mantaassociados.com>  
 **Repositório:** `/Codex-exemplo` (GitHub)  
 **Base de conhecimento:** SP `04_IA/Manta-Maestro/`  
 **Documentação técnica:** MAESTRO-OS-v6-DEVELOPER.md (SP)

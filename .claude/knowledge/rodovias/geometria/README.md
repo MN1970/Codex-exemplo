@@ -10,13 +10,17 @@
 ## 🎯 Comece Aqui
 
 ### Novo no Tema?
+
 👉 Leia em ordem:
+
 1. **01-elementos-geometricos.md** (30 min) — Conceitos fundamentais
 2. **02-calculos-praticos.md** (45 min) — Exemplos reais passo-a-passo
 3. **00-indice-maestro.md** (15 min) — Visão geral da estrutura
 
 ### Precisa de Referência Rápida?
+
 👉 Vá diretamente para:
+
 - **Raio mínimo?** → Doc 01, Seção "Alinhamento Horizontal"
 - **Superelevação?** → Doc 04, Seção "Superelevação"
 - **Orçamento?** → Doc 02, Seção "Cálculos SICRO"
@@ -24,7 +28,9 @@
 - **Brückner?** → Doc 07
 
 ### Implementando em Projeto?
+
 👉 Siga o fluxo:
+
 1. **Doc 05** (Normas DNIT) — Valide contra ES 101/97
 2. **Doc 01-03** (Elementos & Cálculos) — Dimensione geometria
 3. **Doc 03** (Softwares) — Use MX Road ou Civil 3D
@@ -37,6 +43,7 @@
 ### 🔹 Nível 1 — Fundação (30 min)
 
 **[01-elementos-geometricos.md](./01-elementos-geometricos.md)**
+
 - Alinhamento horizontal: conceitos, fórmulas, tabelas
 - Alinhamento vertical: rampas, curvas parabólicas
 - Seção transversal: componentes, dimensões
@@ -49,6 +56,7 @@
 ### 🔹 Nível 2 — Aplicação (60 min)
 
 **[02-calculos-praticos.md](./02-calculos-praticos.md)**
+
 - Caso 1: BR Federal (Vd=100)
 - Caso 2: Rodovia Estadual (Vd=80, montanhosa)
 - Orçamento SICRO integrado
@@ -57,6 +65,7 @@
 **Quando usar**: Dimensionar projeto novo, orçar, planejar execução
 
 **[03-softwares-referencias.md](./03-softwares-referencias.md)**
+
 - MX Road: workflow prático
 - Civil 3D: corridors e assemblies
 - SICRO: integração de custos
@@ -69,6 +78,7 @@
 ### 🔹 Nível 3 — Especialização (2-4 horas)
 
 **[04-integracao-sharepoint-maestro.md](./04-integracao-sharepoint-maestro.md)**
+
 - Mapeamento com SharePoint Manta Maestro
 - SKILL.md integration
 - RAG prefixes: `rod:geom:*`
@@ -77,6 +87,7 @@
 **Quando usar**: Integrar com Manta, fazer upload em SharePoint
 
 **[04-curvas-horizontais-avancado.md](./04-curvas-horizontais-avancado.md)**
+
 - Clotóides simples e duplas
 - Espirais logarítmicas
 - Radii variáveis
@@ -85,6 +96,7 @@
 **Quando usar**: Curvas complexas, terreno desafiador
 
 **[05-normas-dnit-brasileiras.md](./05-normas-dnit-brasileiras.md)**
+
 - ES 101/97 completa
 - ES 131/86 (drenagem)
 - NBR standards
@@ -94,6 +106,7 @@
 **Quando usar**: Validar conformidade, citar normas, auditoria
 
 **[06-intersecoes-dispositivos-seguranca.md](./06-intersecoes-dispositivos-seguranca.md)**
+
 - Rotatórias: fórmulas, dimensionamento
 - Cloverleaf completa: custos R$80-120M
 - PARCLO (A, B, D): custos R$45-60M
@@ -105,6 +118,7 @@
 **Quando usar**: Projeto de interseção, análise de risco, orçamento
 
 **[07-balanço-massa-movimento-terra.md](./07-balanço-massa-movimento-terra.md)**
+
 - Diagrama de Brückner: construção passo-a-passo
 - Free Haul Distance (FHD)
 - Custos de escavação, transporte, compactação
@@ -115,6 +129,7 @@
 **Quando usar**: Otimizar movimento terra, reduzir custo transporte
 
 **[08-especializacoes-paralelas.md](./08-especializacoes-paralelas.md)**
+
 - 20 especializações (20 agentes Sonnet)
 - Tópicos: DNIT, clotóides, superelevação, visibilidade, V, taludes, pavimentação, casos reais, softwares, SICRO, drone, interseções, drenagem, segurança, testes, reabilitação, integração, templates, roadmap
 
@@ -125,6 +140,7 @@
 ## 🗂️ Índice Maestro
 
 **[00-indice-maestro.md](./00-indice-maestro.md)** — Visão geral da estrutura completa
+
 - Status do workflow paralelo (20 agentes)
 - Matriz de cobertura por fase de projeto
 - Integração com RAG Supabase
@@ -135,6 +151,7 @@
 ## 🧪 Testes & Validação
 
 **[../tests/geometria-rodovias-validation.md](../tests/geometria-rodovias-validation.md)** — 5 smoke tests
+
 - Teste 1: Raio mínimo & superelevação
 - Teste 2: Visibilidade em curva
 - Teste 3: Orçamento SICRO
@@ -146,7 +163,8 @@
 ## 🚀 Fluxos de Uso
 
 ### Fluxo 1: Projetar Rodovia Nova
-```
+
+```text
 1. Doc 01 → Entender conceitos
 2. Doc 05 → Validar contra normas
 3. Doc 02 → Calcular dimensões
@@ -157,7 +175,8 @@
 ```
 
 ### Fluxo 2: Analisar Rodovia Existente
-```
+
+```text
 1. Doc 06 → Verificar interseções
 2. Doc 01 → Comparar contra parâmetros
 3. Doc 08 (Teste 5) → Análise de risco
@@ -166,7 +185,8 @@
 ```
 
 ### Fluxo 3: Resolver Problema Específico
-```
+
+```text
 "Qual raio mínimo para Vd=100?"
 → Doc 01, Seção "Alinhamento Horizontal"
 
@@ -206,7 +226,8 @@
 ## 🔗 Integração com Manta
 
 ### RAG (Supabase)
-```
+
+```text
 Coleção: rodovias
 Prefixo: rod:geom:*
 
@@ -224,7 +245,8 @@ Sub-prefixos:
 ```
 
 ### SharePoint Manta
-```
+
+```text
 01-agentes-fundamentais/agente-infraestrutura-s1/
 ├── refs/
 │   ├── 01-elementos-geometricos.md
@@ -238,6 +260,7 @@ Sub-prefixos:
 ```
 
 ### SKILL.md (Agente-infraestrutura S1)
+
 ```yaml
 disciplinas: [Geometria, Pavimentação, Terraplenagem, Drenagem]
 normas: [ES 101/97, ES 131/86, IPR 702, IPR 726, NBR 6123, 11682, 14644]
@@ -264,17 +287,20 @@ rag_prefix: rod:geom:*
 ## ✅ Checklist de Uso
 
 ### Antes de Usar
+
 - [ ] Entendeu nível de detalhe necessário
 - [ ] Identificou documento apropriado
 - [ ] Validou fonte normativa (ES 101/97)
 
 ### Ao Usar
+
 - [ ] Consultou exemplos práticos
 - [ ] Comparou com casos reais
 - [ ] Confirmou valores contra tabelas
 - [ ] Citou fonte em projeto/parecer
 
 ### Após Usar
+
 - [ ] Documentou decisões tomadas
 - [ ] Validou contra norma
 - [ ] Agregou novo caso/lição aprendida (feedback)
@@ -286,6 +312,7 @@ rag_prefix: rod:geom:*
 ### Próximas Fases (Roadmap)
 
 **Fase II — Disciplinas Transversais** (após aprovação MN)
+
 - Pavimentação (20 agentes)
 - Terraplenagem (15 agentes)
 - Drenagem (15 agentes)
@@ -293,6 +320,7 @@ rag_prefix: rod:geom:*
 - Timeline: 15-20 dias
 
 **Fase III — Inteligência Avançada**
+
 - Machine Learning: previsão de falhas
 - Otimizador de traçado: minimizar custo
 - Big Data: análise integrada clima+tráfego+accidents
@@ -302,17 +330,20 @@ rag_prefix: rod:geom:*
 ## 📞 Suporte & Feedback
 
 ### Dúvidas Frequentes
+
 - "Qual raio mínimo?" → Doc 01, tabela
 - "Como orçar?" → Doc 02, seção SICRO
 - "Qual Vd?" → Doc 04 (teste 4)
 - "Curva perigosa?" → Doc 06 + Doc 08 (teste 5)
 
 ### Reportar Problema
+
 - Erro técnico: abre issue no GitHub
 - Falta de conteúdo: request em backlog
 - Atualização SICRO: sincroniza com DNIT mensal
 
 ### Contribuir
+
 - Adicionar caso real: cria PR com novo exemplo
 - Melhorar fórmula: valida contra norma + submete review
 - Expandir tópico: coordena com PM (Maurício Neves)
@@ -332,4 +363,3 @@ rag_prefix: rod:geom:*
 **Última atualização**: 2026-08-04  
 **Próxima review**: Após aprovação MN (Fase II)  
 **Mantido por**: Agente-infraestrutura S1 + Manta 16 (Arquiteto IA)
-

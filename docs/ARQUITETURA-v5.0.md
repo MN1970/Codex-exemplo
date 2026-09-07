@@ -34,18 +34,21 @@ Fallback: se confiança < 0.85, retorna ambiguidade e solicita clarificação.
 ### Mecanismo (3 estágios)
 
 **Estágio 1: Keyword extraction + BM25 + embedding**
+
 - Parse prompt → keywords
 - BM25 lookup em todas as coleções RAG
 - Embedding similarity vs. 20 agent profiles
 - Score: `0.4 × kw_relevance + 0.4 × emb_sim + 0.15 × rag + 0.05 × history`
 
 **Estágio 2: Context injection**
+
 - Infer phase (estudo → projeto-executivo → obra → etc.)
 - Detectar file processing (DWG, PDF)
 - Allocate context window (4k–16k tokens)
 - Pin RAG collection (san:v5.0 vs ene:v4.9, etc.)
 
 **Estágio 3: Tiering + fallback**
+
 - Compute complexity score (R7)
 - Decide tier: Haiku vs Sonnet vs Opus
 - Setup fallback cascade (R8)
@@ -79,6 +82,7 @@ ORDER BY runs DESC;
 **Escopo:** Estudos prévios, projetos, licitação de terminais portuários.
 
 **Skills v5.0:**
+
 - Análise de calado e capacidade
 - Cálculo de dragagem
 - PIANC wave climate analysis
@@ -93,6 +97,7 @@ ORDER BY runs DESC;
 **Escopo:** Pistas, TPS, TECA, balizamento, concessões.
 
 **Skills v5.0:**
+
 - Cálculo de PCN (Pavement Classification Number)
 - Design de taxiways (ICAO Annex 14)
 - SIL (Safety Integrity Level) para sistemas de guia
@@ -106,6 +111,7 @@ ORDER BY runs DESC;
 **Escopo:** ETAs, ETEs, adução, esgotamento, drenagem urbana. PRIORIDADE AySA.
 
 **Skills v5.0:**
+
 - Dimensionamento de estações (ABNT NBR 12211-12218)
 - Cálculo de OPEX (subsídio cruzado)
 - Tratamento avançado (UASB, MBR, DAF)
@@ -119,6 +125,7 @@ ORDER BY runs DESC;
 **Escopo:** Transmissão (LT), subestações, geração, licitações ANEEL.
 
 **Skills v5.0:**
+
 - Cálculo de capacidade termal (ACSR, CAA)
 - Fluxo de potência (power flow)
 - Econômico: RAP (Receita Anual Permitida), MRE (Mecanismo de Realocação)
@@ -132,6 +139,7 @@ ORDER BY runs DESC;
 **Escopo:** Barragens de terra/concreto, rejeitos, PAE, desativação.
 
 **Skills v5.0:**
+
 - CFRD (Concrete Face Rockfill Dam) design
 - TSF (Tailings Storage Facility) estabilidade
 - Instrumentação & monitoramento
@@ -143,6 +151,7 @@ ORDER BY runs DESC;
 ### Skill Versioning (P8)
 
 Cada skill pinned a v5.0:
+
 ```json
 {
   "skill_version_pin": {
@@ -160,7 +169,7 @@ Checksums validados em `.claude/agents/VERSIONS.json` (immutable).
 
 ### Phases Supported
 
-```
+```text
 1. ESTUDO PRÉVIO
    Input: Brief, benchmarks
    Output: Diagnóstico, viabilidade order-of-magnitude
@@ -213,6 +222,7 @@ Checksums validados em `.claude/agents/VERSIONS.json` (immutable).
 ### Intake Declarativo
 
 Usuário informa fase:
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -232,7 +242,7 @@ Maestro infere via embedding se ausente.
 
 ### Arquitetura
 
-```
+```yaml
 Query: "Qual o custo de uma ETA em São Paulo?"
   ↓
 [1] BM25 Lookup (Elasticsearch)
@@ -263,7 +273,7 @@ Agent receives: Top-5 results (relevance 0.65–0.95)
 
 ### Cache Policy (R6)
 
-```
+```text
 cache_key = hash(query, agent_id)
 cache_ttl = 7 days
 
@@ -301,7 +311,7 @@ encerramento: 0.9
 
 ### Decision Tree
 
-```
+```text
 IF input_tokens < 2000 AND complexity < 3.0:
   model_tier = "haiku-4-5"       # cost: $0.08/1M
 ELIF input_tokens < 10000 AND complexity < 6.0:
@@ -312,7 +322,7 @@ ELSE:
 
 ### Fallback Cascade (R8)
 
-```
+```text
 1. Submit to model_tier
 2. IF timeout after 60s:
    - Log: {run_id, model_tier, latency_ms, timeout=true}
@@ -328,7 +338,7 @@ ELSE:
 
 Expected savings vs. always-Opus: **45–65%**
 
-```
+```text
 Baseline (v4.2): 100% Sonnet → avg $0.08/run
 v5.0 with tiering:
   - 60% Haiku: 0.60 × $0.008 = $0.0048
@@ -367,6 +377,7 @@ CREATE TABLE agent_runs (
 ### Metrics & Dashboards
 
 **Real-time (Grafana):**
+
 - Cost per agent per day (bar chart)
 - Latency p50/p95/p99 (line chart)
 - Error rate by segment (gauge)
@@ -374,6 +385,7 @@ CREATE TABLE agent_runs (
 - Feedback score trend (3-month rolling avg)
 
 **Alerts (Slack #agent-ops):**
+
 - Error spike: > 3 timeouts/hour
 - Cost spike: > 20% daily budget
 - Feedback drop: avg < 3.0/5
@@ -386,7 +398,8 @@ CREATE TABLE agent_runs (
 ### Background Triggers
 
 **Trigger 1: RAG Reindex (R6)**
-```
+
+```yaml
 Cron: 0 2 * * *  (daily 02:00 UTC)
 Job: rag-reindex.py
 Task:
@@ -398,7 +411,8 @@ SLA: Complete in < 30 minutes
 ```
 
 **Trigger 2: Embedding Retraining (R9)**
-```
+
+```yaml
 Cron: 0 3 * * 0  (Sunday 03:00 UTC)
 Job: embedding-retrain.py
 Task:
@@ -412,7 +426,8 @@ SLA: Complete in < 2 hours
 ```
 
 **Trigger 3: Memory Purge (R10)**
-```
+
+```yaml
 Cron: 30 3 * * *  (daily 03:30 UTC)
 Job: memory-purge.py
 Task:
@@ -428,6 +443,7 @@ SLA: Complete in < 15 minutes per agent
 ### Persistence
 
 Triggers stored in Supabase `agent_triggers` table:
+
 ```json
 {
   "trigger_id": "trig_rag-reindex-daily",
@@ -447,7 +463,7 @@ Survives container restarts.
 
 ### Structure
 
-```
+```text
 .claude/agents/
 ├── agente-saneamento.md         # live (unversioned symlink)
 ├── agente-saneamento.v5.0.md    # production
@@ -482,11 +498,13 @@ Survives container restarts.
 ### Guarantees
 
 **Immutability:**
+
 - Checksum validates file content (MD5)
 - If file modified, healthcheck fails
 - Automatic revert via rollback.py
 
 **Rollback:**
+
 - Load skill v4.9 via checksum
 - Revert RAG to san:v4.9:chunks
 - Update skill_version_pin in settings.json
@@ -494,6 +512,7 @@ Survives container restarts.
 - **RTO:** < 2 minutes
 
 **Deprecation:**
+
 - Mark v4.9 as deprecated (30-day grace)
 - Daily reminder in Slack (15d, 7d, 1d before end)
 - Auto-disable at grace period end
@@ -544,6 +563,7 @@ See `DEPLOYMENT-GUIDE.md` (Phase 1–8).
 **Backward compatible?** Yes (R1–R5 unchanged, R6–R10 opt-in).
 
 **Recommended migration:**
+
 1. Staging deployment (Phase 1–7 in DEPLOYMENT-GUIDE.md)
 2. Run tests (Phase 6)
 3. Monitor 24h (Phase 8)

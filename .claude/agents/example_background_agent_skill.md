@@ -9,6 +9,7 @@
 ## Cenário: Análise Geotécnica Completa de Túnel (S5)
 
 Usuário submete projeto de túnel de 5 km. Análise exige:
+
 - Processamento de modelo CAD (1.5 MB) → 45s
 - Simulação geotécnica → 60s
 - Análise de riscos + relatório → 30s
@@ -419,7 +420,7 @@ Output:
 
 ### User submits long analysis
 
-```
+```yaml
 User: "Analise viabilidade geotécnica de túnel de 5 km. Arquivo: tunel.dwg (1.5MB)"
 
 Agent (S5):
@@ -482,6 +483,7 @@ $ curl -X POST http://api.manta.local/jobs/550e8400-/rate \
 ## Tabelas Supabase Envolvidas
 
 ### agent_jobs (Job Queue)
+
 ```sql
 id (UUID)
 agent_id (TEXT) — "manta-03-s5"
@@ -498,6 +500,7 @@ metadata (JSONB)
 ```
 
 ### agent_memory (Result Storage)
+
 ```sql
 — Via store_result() na completion handler
 agent_id (TEXT)
@@ -509,6 +512,7 @@ expires_at (TIMESTAMPTZ) — NOW() + 480 min
 ```
 
 ### agent_state (Metrics & Embeddings)
+
 ```sql
 — Via update_agent_state() na completion handler
 agent_id (TEXT)
@@ -519,6 +523,7 @@ total_memory_size_bytes (BIGINT)
 ```
 
 ### agent_job_metrics (Aggregations)
+
 ```sql
 — Auto-populated by trigger on completion
 agent_id (TEXT)
@@ -538,13 +543,13 @@ avg_duration_seconds (FLOAT8)
 **Check:** Is job queue processor running?
 
 ```bash
-$ python scripts/agent_job_queue.py status
+python scripts/agent_job_queue.py status
 ```
 
 If not, start it:
 
 ```bash
-$ python scripts/agent_job_queue.py start &
+python scripts/agent_job_queue.py start &
 ```
 
 ### Job times out on first attempt
@@ -566,7 +571,7 @@ Retry happens automatically (max 2x).
 **Check:** Expired memories are not purged. Trigger cleanup:
 
 ```bash
-$ python scripts/agent_state_manager.py purge --agent-id manta-03-s5
+python scripts/agent_state_manager.py purge --agent-id manta-03-s5
 ```
 
 Or configure cron job (APScheduler):
@@ -588,7 +593,7 @@ scheduler.add_job(
 
 Background agents implement **P7** (Orquestração em Background):
 
-```
+```text
 Maestro (R1) rota prompt → Agente vertical (S1-S10)
      ↓
 Agente detecta long-running task (> 30s)
@@ -617,7 +622,7 @@ Embedding fine-tuning semanal (R9 feedback loop)
 
 ## Files Delivered
 
-```
+```text
 scripts/
   ├── background_agent_framework.py    — Core: spawn, status, list
   ├── agent_state_manager.py           — Store/retrieve state

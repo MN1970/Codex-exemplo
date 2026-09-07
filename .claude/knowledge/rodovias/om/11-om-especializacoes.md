@@ -12,7 +12,7 @@
 ## Índice de Tópicos
 
 1. [Manutenção Rotina & Preventiva](#1-manutenção-rotina--preventiva)
-2. [Avaliação de Condição (PCI/ICP)](#2-avaliação-de-condição-pciIcp)
+2. [Avaliação de Condição (PCI/ICP)](#2-avaliação-de-condição-pciicp)
 3. [Inspeção Estrutural & Geoposicionamento](#3-inspeção-estrutural--geoposicionamento)
 4. [Monitoramento de Tráfego (VDM)](#4-monitoramento-de-tráfego-vdm)
 5. [Qualidade de Água em Drenagem](#5-qualidade-de-água-em-drenagem)
@@ -84,12 +84,14 @@ Manutenção preventiva é o conjunto de atividades executadas regularmente para
 ### Procedimento de Campo (ICP — DNIT 010/2003-PRO)
 
 **Etapas:**
+
 1. Planejamento: Define amostra 1 a cada 200 m (SU = 20 m)
 2. Levantamento: Inspeção visual, fotografias, medições
 3. Pós-processamento: Cálculo dedução por defeito
 4. Relatório: Mapa de situação, recomendações
 
 **Defeitos avaliados:**
+
 - Trincas (transversal, longitudinal, fadiga, refletida)
 - Panelas (pequena, média, grande)
 - Desgaste e remendos
@@ -141,6 +143,7 @@ Manutenção preventiva é o conjunto de atividades executadas regularmente para
 **Datum**: SIRGAS 2000 (Sistema de Referência Geocêntrico para as Américas)
 
 **Equipamentos:**
+
 - **GPS Autônomo**: Precisão ±5–10 m (para planejamento)
 - **DGPS**: Precisão ±1–2 m (para manutenção)
 - **RTK**: Precisão ±0.05 m (para detalhes estruturais)
@@ -150,7 +153,7 @@ Manutenção preventiva é o conjunto de atividades executadas regularmente para
 
 **Bridge inspection (age: 32 anos, Vd = 100 km/h)**
 
-```
+```text
 GPS RTK coordinates: 22°51'7.5"S, 45°22'41.2"W (−22.8541°, −45.3782°)
 Date: 2026-07-15
 Lesions mapped:
@@ -233,7 +236,7 @@ VDM 1.063 = **Classe V (1.000–3.000)** = Rodovia federal primária
 
 Para projetar bacia de decantação:
 
-```
+```text
 Vs = (g × ρ_sedimento / (18 × μ_água)) × d²
 
 Exemplo: Areia fina (d = 50 μm), ρ = 2.65 g/cm³, μ = 0.01 poise (20°C)
@@ -246,6 +249,7 @@ Profundidade necessária = Vs × tempo = 0.36 cm/s × 7.200 s = 25.9 cm ≈ 30 c
 ### Coleta de Amostras (Protocolo ABNT ISO 5667-1)
 
 **Procedimento:**
+
 1. Identificar ponto representativo (sem estagnação, fluxo laminar)
 2. Coletar em frasco estéril (500 mL mínimo)
 3. Preservar temperatura ≤ 4°C
@@ -289,6 +293,7 @@ Pavimento degrada em 3 fases:
 ### Exemplo de Projeção — BR-116 (2020–2035)
 
 **Dados entrada:**
+
 - Vd = 100 km/h
 - CBUQ 5 cm, base 15 cm
 - Clima tropical de altitude
@@ -338,7 +343,7 @@ Pavimento degrada em 3 fases:
 
 ### Orçamento Integrado (1 km com múltiplos defeitos)
 
-```
+```yaml
 Pothole: 5 unid. × R$ 250 = R$ 1.250
 Trincas: 200 m × R$ 8 = R$ 1.600
 Lama: 150 m² × R$ 10 = R$ 1.500
@@ -365,11 +370,13 @@ Total: R$ 10.367 (com BDI 24,15%)
 ### Procedimento de Limpeza (Valeta Triangular)
 
 **Equipamentos:**
+
 - Enxada, pá (manual, < 500 m)
 - Retroescavadeira (mecanizado, > 500 m)
 - Vassoura (limpeza final)
 
 **Etapas:**
+
 1. Demarcação: seções 500–1.000 m/dia
 2. Remoção sedimento: montante → jusante (sem reversão)
 3. Remoção vegetação: capina, raízes em estruturas
@@ -379,12 +386,14 @@ Total: R$ 10.367 (com BDI 24,15%)
 ### Limpeza de Bueiros
 
 **Método:**
+
 1. Inspeção com vídeo drone (antes)
 2. Jateamento hidráulico 200–250 bar
 3. Sucção com caminhão vácuo (finos)
 4. Inspeção pós-limpeza (confirmação vazão)
 
 **Custos (2024):**
+
 - Vídeo inspeção: R$ 800
 - Jateamento (2h): 2 × R$ 450 = R$ 900
 - Sucção (4 m³): 4 × R$ 75 = R$ 300
@@ -421,7 +430,8 @@ LCC = Custo total de aquisição, operação e descarte, trazido a valor present
 ### Exemplo — Pavimento Flexível vs. Rígido (30 anos)
 
 **Cenário A: CBUQ**
-```
+
+```text
 VP ano 0: R$ 330.100 (construção)
 VP anos 1–9 (manutenção): R$ 18.000 (PV @ 6%)
 VP ano 10 (reforço): R$ 265.200 / (1.06)¹⁰ = R$ 148.000
@@ -430,7 +440,8 @@ Total VPL: R$ 546.100/km
 ```
 
 **Cenário B: Concreto Portland (CPACC)**
-```
+
+```text
 VP ano 0: R$ 380.000 (construção)
 VP anos 1–9 (manutenção mínima): R$ 2.000
 VP anos 20–22 (reparo junta): R$ 35.000
@@ -476,17 +487,20 @@ Total VPL: R$ 417.000/km
 ### Exemplo Real — BR-116 RJ (Reforço 2019)
 
 **Situação inicial (2018):**
+
 - Idade: 22 anos
 - ICP: 58 (bom, limite)
 - Deflexão: 87 × 10⁻² mm
 
 **Intervenção (2019):**
+
 - Reforço CBUQ 6 cm
 - Custo: R$ 35,2 M (245.000 m²)
 - Duração: 18 semanas
 - Taxa execução: 1.361 m/dia
 
 **Resultado (2024, 5 anos pós):**
+
 - ICP: 82 (muito bom)
 - Deflexão: 45 × 10⁻² mm (redução 48%)
 - Fissuras: < 1%
@@ -495,7 +509,8 @@ Total VPL: R$ 417.000/km
 ### Métodos de Dimensionamento
 
 **AASHTO 1993 (método tradicional):**
-```
+
+```text
 SN_requerido = a₁×D₁ + a₂×m₂×D₂ + a₃×m₃×D₃
 
 SN: Structural Number (capacidade estrutural)
@@ -505,7 +520,8 @@ m: fator de drenagem
 ```
 
 **M-E (Mecanístico-Empírico, NCHRP 1-37A):**
-```
+
+```text
 Critério de fadiga: εₜ < εₜ_limite (tensão tração base)
 Critério deformação: εᵥ < εᵥ_limite (compressão subleito)
 ```
@@ -545,6 +561,7 @@ Critério deformação: εᵥ < εᵥ_limite (compressão subleito)
 ## Conclusão — Integração RAG
 
 Este documento consolida 10 especialidades O&M com:
+
 - ✅ 546.734 tokens de conteúdo técnico
 - ✅ Tabelas DNIT 2024 e SICRO
 - ✅ 12+ casos reais brasileiros (BR-116, BR-101, BR-277, BR-381, concessões)
@@ -555,6 +572,7 @@ Este documento consolida 10 especialidades O&M com:
 **Status**: Pronto para integração em RAG Supabase (prefixo: `rod:om:*`)
 
 **Próximas ações:**
+
 1. Consolidar docs 08-pav, 09-terra, 10-dren (workflow pendentes)
 2. Criar migrations/ RAG para 4 coleções (rod:pav, rod:terra, rod:dren, rod:om)
 3. Validar com 20+ testes (prompts contra agente-infraestrutura S1)
@@ -563,6 +581,7 @@ Este documento consolida 10 especialidades O&M com:
 ---
 
 **Elaborado conforme:**
+
 - Padrões DNIT e legislação rodoviária brasileira (2024)
 - Ciclo de vida Manta 03-S1: Fase 5 (O&M)
 - Valores reais de rodovias federais (Vd=100, tráfego 1–20k VDM)

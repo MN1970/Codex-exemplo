@@ -12,7 +12,7 @@
 
 ### 📁 Pasta Canônica Manta
 
-```
+```text
 SharePoint > Documentos Compartilhados > 04_IA > Manta-Maestro
 ├── 00-arquitetura/
 │   └── ARQUITETURA-AGENTES-IA.md (v2.0.0)
@@ -77,7 +77,8 @@ SharePoint > Documentos Compartilhados > 04_IA > Manta-Maestro
 **Criado em**: `.claude/knowledge/rodovias/geometria/01-elementos-geometricos.md`
 
 **Espelhamento em SharePoint**:
-```
+
+```text
 01-agentes-fundamentais/agente-infraestrutura-s1/refs/
 ├── 01-elementos-geometricos.md  (este arquivo)
 ├── tabelas-raios-minimos.xlsx
@@ -86,6 +87,7 @@ SharePoint > Documentos Compartilhados > 04_IA > Manta-Maestro
 ```
 
 **Conteúdo a integrar**:
+
 1. Normas DNIT ES 101/97 ✅
 2. Tabelas de raio mínimo ✅
 3. Fórmulas de clotóide ✅
@@ -98,7 +100,8 @@ SharePoint > Documentos Compartilhados > 04_IA > Manta-Maestro
 **Criado em**: `.claude/knowledge/rodovias/geometria/02-calculos-praticos.md`
 
 **Espelhamento em SharePoint**:
-```
+
+```text
 01-agentes-fundamentais/agente-infraestrutura-s1/exemplos/
 ├── caso-1-br-vd100.md          # Rodovia Federal
 ├── caso-2-estadual-vd80.md     # Rodovia Estadual
@@ -108,6 +111,7 @@ SharePoint > Documentos Compartilhados > 04_IA > Manta-Maestro
 ```
 
 **Conteúdo a integrar**:
+
 1. Caso BR (Vd=100) ✅
 2. Caso Estadual (Vd=80) ✅
 3. BR-116 real ✅
@@ -120,7 +124,8 @@ SharePoint > Documentos Compartilhados > 04_IA > Manta-Maestro
 **Criado em**: `.claude/knowledge/rodovias/geometria/03-softwares-referencias.md`
 
 **Espelhamento em SharePoint**:
-```
+
+```text
 01-agentes-fundamentais/agente-infraestrutura-s1/
 ├── SKILL.md                    (atualizar com referências)
 ├── tools/
@@ -134,6 +139,7 @@ SharePoint > Documentos Compartilhados > 04_IA > Manta-Maestro
 ```
 
 **Conteúdo a integrar**:
+
 1. MX Road workflow ✅
 2. Civil 3D assembly ✅
 3. SICRO integração ✅
@@ -226,7 +232,7 @@ intake:
 
 ### Do CLAUDE.md (Registro Mestre)
 
-```
+```text
 Routing (Maestro — Manta 00):
 ────────────────────────────
 IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
@@ -249,7 +255,7 @@ rodovias (prefixo: rod:)
 
 ### Do ARQUITETURA-AGENTES-IA.md (v2.0.0)
 
-```
+```text
 Agente Vertical (Eixo 2):
 ────────────────────────
 Manta 03-S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional
@@ -283,13 +289,15 @@ Após consolidação, validar contra documentos no SharePoint:
 
 ### Teste 1: Recuperar Norma DNIT
 
-**Prompt**: 
-```
+**Prompt**:
+
+```text
 "Qual é a fórmula de raio mínimo segundo DNIT ES 101/97? 
 Cite a página específica da norma."
 ```
 
 **Validação**:
+
 - Agente recupera: `rod:geom:normas:dnit-es-101`
 - Resposta: R_mín = V² / (127 × (e + f))
 - Página: ES 101/97, Item 5.2.1
@@ -299,12 +307,14 @@ Cite a página específica da norma."
 ### Teste 2: Caso Histórico BR-116
 
 **Prompt**:
-```
+
+```text
 "Qual foi o raio mínimo adotado no projeto da BR-116 SP-MG? 
 Qual superelevação máxima foi usada?"
 ```
 
 **Validação**:
+
 - Agente recupera: `rod:geom:casos:br-116-sp-mg`
 - Resposta baseada em `01-agentes-fundamentais/.../exemplos/br-116-sp-mg-real.md`
 - R ≈ 350-500m, e_máx ≈ 7-8%
@@ -314,11 +324,13 @@ Qual superelevação máxima foi usada?"
 ### Teste 3: SICRO Atual
 
 **Prompt**:
-```
+
+```text
 "Qual é o custo unitário SICRO atual (2026) para CBUQ 5cm?"
 ```
 
 **Validação**:
+
 - Agente recupera: `rod:geom:sicro:composicoes`
 - Resposta: ~R$ 95-100/m² (valor atualizado 2026)
 - Fonte: SICRO oficial
@@ -327,7 +339,7 @@ Qual superelevação máxima foi usada?"
 
 ## 6. Fluxo de Consolidação
 
-```
+```text
 ┌─────────────────────────────────────────────────┐
 │ 1. Workflow 20 agentes (em andamento)           │
 │    └─ Gera 20 documentos especializados         │
@@ -407,14 +419,13 @@ Qual superelevação máxima foi usada?"
 
 | Responsabilidade | Contato | Email | Status |
 |------------------|---------|-------|--------|
-| PM (Agente S1) | Maurício Neves | mn@manta.br | Ativo |
-| Revisor Técnico | [Eng. Rodovias] | tech@manta.br | Ativo |
-| Arquiteto IA | [Manta 16] | manta-arq@manta.br | Ativo |
-| QA / Testes | [QA Team] | qa@manta.br | Ativo |
+| PM (Agente S1) | Maurício Neves | <mn@manta.br> | Ativo |
+| Revisor Técnico | [Eng. Rodovias] | <tech@manta.br> | Ativo |
+| Arquiteto IA | [Manta 16] | <manta-arq@manta.br> | Ativo |
+| QA / Testes | [QA Team] | <qa@manta.br> | Ativo |
 
 ---
 
 **Status**: 🔄 Integração com Manta Maestro planejada  
 **Próxima Review**: Após consolidação workflow (24-48h)  
 **Versionamento**: v4.2 → v4.3 (ao merge)
-

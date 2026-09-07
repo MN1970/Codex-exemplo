@@ -1,4 +1,6 @@
 reports/
+tests/test_run.log
+node_modules/
 .pytest_cache/
 __pycache__/
 *.pyc

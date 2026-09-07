@@ -59,6 +59,7 @@ O tópico 2 cobre **seleção e especificação de agregados** para pavimentaç�
 **Pergunta**: "Qual agregado usar em uma BR com tráfego alto?"
 
 **Resposta esperada** (baseada em T2):
+
 - Basalto britado (IRC ≥ 98%, CPA ≥ 62, absorção < 1%)
 - Aplicar faixa granulométrica DNIT Faixa A para CBUQ
 - Custo aprox. R$ 42-50/t (tabela SICRO 2026)
@@ -102,7 +103,7 @@ O tópico 2 cobre **seleção e especificação de agregados** para pavimentaç�
 
 O arquivo `02-agregados.md` está integrado ao Supabase via:
 
-```
+```text
 Prefixo RAG: rod:pavimento:agregados
 Sub-prefixos:
   - rod:pav:agg:tipos          (classificação)
@@ -124,7 +125,7 @@ Ao fazer uma query, o agente-infraestrutura recuperará chunks relevantes de `02
 |--------|----------|-----------|
 | Conteúdo técnico T2 | [DNIT Specialist] | technical-review@manta |
 | Integração RAG | [Manta 16 Arquiteto IA] | escalate:manta-arq |
-| Casos reais de obra | Maurício Neves (PM) | MN@manta.br |
+| Casos reais de obra | Maurício Neves (PM) | <MN@manta.br> |
 
 ---
 

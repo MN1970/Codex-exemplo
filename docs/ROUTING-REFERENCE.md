@@ -10,6 +10,7 @@ The Maestro is the canonical router that receives every user prompt, applies rou
 rules (R1), and delegates to the appropriate agent with configuration injection.
 
 **Three-stage pipeline:**
+
 1. Keyword matching + embedding similarity
 2. Context injection (phase, files, window allocation)
 3. Tiering decision (R7) + fallback setup (R8)
@@ -35,6 +36,7 @@ rules (R1), and delegates to the appropriate agent with configuration injection.
 ### Keyword Extraction
 
 Extract key terms from prompt:
+
 - Exact matches: "ETA", "São Paulo"
 - Fuzzy matches: "saneamento" (topic area)
 - Acronyms: expand "ETA" → "Estação de Tratamento de Água"
@@ -43,7 +45,7 @@ Extract key terms from prompt:
 
 For each RAG collection, compute BM25 relevance:
 
-```
+```text
 collections = {
   "san:v5.0": 0.95,   ← Highest relevance (keywords match)
   "ene:v5.0": 0.05,
@@ -59,7 +61,7 @@ collections = {
 
 Embed prompt using e5-large-instruct, compare to agent profile embeddings:
 
-```
+```text
 agent_similarity = {
   "agente-saneamento": 0.92,
   "agente-energia": 0.15,
@@ -82,6 +84,7 @@ If gap < 0.15, return ambiguity (request clarification).
 ### Phase Inference
 
 Check if prompt contains phase hints:
+
 - "básico" / "conceitual" → **projeto-basico**
 - "executivo" / "detalhado" → **projeto-executivo**
 - "obra" / "construção" / "execução" → **obra-em-execucao**
@@ -94,6 +97,7 @@ Check if prompt contains phase hints:
 ### File Processing
 
 If files detected:
+
 - Set `file_processing=true`
 - Allocate additional tokens: `window_tokens += files.count * 1000`
 - Pass file metadata to agent skill
@@ -101,6 +105,7 @@ If files detected:
 ### RAG Collection Pin
 
 Based on routing decision, pin RAG collection:
+
 - agente-saneamento → san:v5.0:chunks
 - agente-energia → ene:v5.0:chunks
 - agente-portos → por:v5.0:chunks
@@ -109,7 +114,7 @@ Based on routing decision, pin RAG collection:
 
 ### Context Window Allocation
 
-```
+```text
 base_window = 4000 tokens
 
 IF file_processing:
@@ -129,7 +134,7 @@ IF cross_agent_references:
 
 ### Complexity Score (R7)
 
-```
+```text
 complexity = compute_complexity_score(
   input_tokens=prompt.token_count(),
   keywords_matched=len(keywords),
@@ -144,7 +149,7 @@ See `CLAUDE.md apêndice` for formula.
 
 ### Tier Decision
 
-```
+```text
 IF input_tokens < 2000 AND complexity < 3.0:
   model_tier = "haiku-4-5"
   fallback_tier = "sonnet-5"
@@ -214,7 +219,8 @@ This output is injected into the skill execution context.
 ### S8 — SANEAMENTO
 
 **Keywords (partial list):**
-```
+
+```text
 saneamento, ETA, ETE, adutora, esgoto, água tratada, AySA, drenagem,
 macrodrenagem, SNIS, PMSB, Lei 14.026, subsídio cruzado, elevatória,
 reservatório, RAP, EEE, EEAB, reúso, lodo, digestor, UASB, MBR,
@@ -224,7 +230,8 @@ ETAR, flotação, decantação, lagoa, biofiltro
 ```
 
 **Multi-keyword boost:**
-```
+
+```text
 IF keywords.count >= 2 AND "ETA|ETE|AySA" in keywords:
   relevance += 0.2  # High confidence
 ```
@@ -234,7 +241,8 @@ IF keywords.count >= 2 AND "ETA|ETE|AySA" in keywords:
 ### S9 — ENERGIA
 
 **Keywords (partial list):**
-```
+
+```text
 transmissão, LT, subestação, ANEEL, RAP, leilão, ONS, EPE, PDE, R1-R5,
 torre, cabo, ACSR, CAA, ATSR, MRE, ACR, ACL, WEG, State Grid,
 ISA CTEEP, Alupar, Taesa, geração, eólica, PV, hidráulica, PCH, UHE,
@@ -243,7 +251,8 @@ ambiente livre, carga, perfil de consumo, fator de carga, demanda
 ```
 
 **Regulatory boosters:**
-```
+
+```text
 IF "ANEEL" in keywords:
   relevance += 0.3
 IF "leilão" AND "transmissão" in keywords:
@@ -255,7 +264,8 @@ IF "leilão" AND "transmissão" in keywords:
 ### S6 — PORTOS
 
 **Keywords (partial list):**
-```
+
+```text
 porto, terminal, ANTAQ, dragagem, molhe, quebra-mar, berço, calado,
 contêiner, granel, cais, píer, retroárea, pátio, TUP, TPS, PIANC,
 arrendamento, hidrovia, navios, cabotagem, longo-curso, fluvial,
@@ -268,7 +278,8 @@ operador portuário, bunkering, cabotagem, cabos submarinos
 ### S7 — AEROPORTOS
 
 **Keywords (partial list):**
-```
+
+```text
 aeroporto, pista, RWY, taxiway, TWY, pátio, TPS, TECA, ANAC, RBAC,
 ICAO, Annex 14, FAA, balizamento, PAPI, ILS, PCN, gate, jetway,
 ponte, embarque, desembarque, aviação, regional, geral, concessão,
@@ -280,7 +291,8 @@ corredor, aproximação, decolagem, sinalização, radar, beacon, DME
 ### S10 — BARRAGENS
 
 **Keywords (partial list):**
-```
+
+```text
 barragem, vertedouro, CFRD, CCR, RCC, rejeitos, TSF, PNSB, ICOLD,
 CBDB, dique, SIGBM, ANM, ANA, Lei 12.334, Fundão, Brumadinho,
 descomissionamento, alteamento, montante, jusante, linha-centro,
@@ -329,7 +341,7 @@ User selects agent, routing re-executes with explicit hint.
 
 Recent queries (< 7 days) cached with top-5 reranked RAG results:
 
-```
+```text
 cache_key = hash(prompt, agent_id)
 IF cache_key in rag_cache AND ttl_valid:
   return cached_results  # ~1ms vs 20ms
@@ -338,7 +350,8 @@ IF cache_key in rag_cache AND ttl_valid:
 ### Agent Profile Embeddings
 
 Stored offline in Qdrant:
-```
+
+```yaml
 collection: "agent-profiles"
 documents: 20 agent descriptions
 updated: weekly (after feedback loop R9)

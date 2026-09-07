@@ -21,7 +21,8 @@ Localização em repo: `/sharepoint/01-agentes-fundamentais/agente-{x}/SKILL.md`
 | **agente-aeroportos** | 5 | `04_IA/01-agentes-fundamentais/agente-aeroportos/` | ✅ Pronto |
 
 **Ação:** Fazer upload via SharePoint UI ou `sp.web.folders` API (via Microsoft Graph):
-```
+
+```text
 PUT /sites/Engenharia/04_IA/01-agentes-fundamentais/agente-saneamento/SKILL.md
 Content: <file content>
 ```
@@ -147,4 +148,3 @@ for file_info in files:
 
 **Status:** Prontos para upload imediato  
 **Data limite recomendada:** 2026-08-05 (dentro de 2 dias)
-

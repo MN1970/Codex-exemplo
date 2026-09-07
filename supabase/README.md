@@ -17,7 +17,8 @@ cp .env.example .env
 ```
 
 Variáveis obrigatórias:
-```
+
+```text
 SUPABASE_DB_URL=postgresql://...
 SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
@@ -39,6 +40,7 @@ psql $SUPABASE_DB_URL < migrations/001_sicro_similaridade_tables.sql
 ```
 
 Isso criará:
+
 - `sicro_insumos` (índice principal com embeddings)
 - `sicro_price_history` (série temporal)
 - `sicro_migration_map` (obsolescência)
@@ -63,6 +65,7 @@ psql $SUPABASE_DB_URL < seed/001_sicro_seed.sql
 ```
 
 Isso carrega:
+
 - 25 itens SICRO de exemplo
 - Histórico de preços (últimos 3 meses)
 - Itens obsoletos e mapeamento de migração
@@ -92,6 +95,7 @@ python scripts/generate_embeddings.py
 ```
 
 Isso irá:
+
 1. Carregar modelo BAAI/bge-small-en-v1.5
 2. Gerar embeddings (384-dim) para cada item SICRO
 3. Armazenar em Supabase (coluna `embedding`)
@@ -150,24 +154,31 @@ Executar auditoria:
 ## Troubleshooting
 
 ### "pgvector extension not found"
+
 ```bash
 psql $SUPABASE_DB_URL -c "CREATE EXTENSION IF NOT EXISTS vector;"
 ```
 
 ### "Connection refused"
+
 Verificar `SUPABASE_DB_URL` e conectividade:
+
 ```bash
 psql $SUPABASE_DB_URL -c "SELECT VERSION();"
 ```
 
 ### "Embeddings took too long"
+
 Aumentar `BATCH_SIZE` em `generate_embeddings.py`:
+
 ```python
 BATCH_SIZE = 100  # aumentar de 50 para 100
 ```
 
 ### "Índice IVFFlat lento"
+
 Recriar com parâmetro `lists`:
+
 ```sql
 DROP INDEX idx_sicro_embedding;
 CREATE INDEX idx_sicro_embedding ON sicro_insumos 
@@ -176,7 +187,7 @@ CREATE INDEX idx_sicro_embedding ON sicro_insumos
 
 ## Estrutura de Arquivos
 
-```
+```text
 supabase/
 ├── migrations/
 │   └── 001_sicro_similaridade_tables.sql  (DDL + índices)

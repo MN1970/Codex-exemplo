@@ -13,9 +13,11 @@
 ### 1. Core Implementation
 
 #### `expert-finder.ts` (1,100+ lines)
+
 **Location:** `/home/user/Codex-exemplo/infra/agent-registry/lib/expert-finder.ts`
 
 **Features:**
+
 - ✅ ExpertRanker class: Multi-signal scoring engine
 - ✅ Score computation: 40% semantic + 30% historical + 15% capability + 10% cost + 5% latency
 - ✅ Tie-breaking logic: If top 2 agents within 2% → pick lower-cost
@@ -26,12 +28,14 @@
 - ✅ Backward compatible with maestro-v2-routing.ts
 
 **Key Classes:**
+
 - `ExpertRanker` — Main orchestrator
 - `HistoryProvider` & `CapabilityProvider` — Data source interfaces
 - `SyntheticHistoryProvider` — Fallback (synthetic but realistic metrics)
 - `LocalCapabilityProvider` — Fallback (token-based matching)
 
 **Key Types:**
+
 - `ExpertRankedAgent` — Full ranking per agent with scores & explanation
 - `ScoreBreakdown` — Component breakdown (semantic, historical, capability, cost, latency)
 - `ExpertRankingResult` — End-to-end result (primaryChoice, alternatives, escalation)
@@ -39,9 +43,11 @@
 ### 2. Comprehensive Tests
 
 #### `expert-finder.test.ts` (400+ lines)
+
 **Location:** `/home/user/Codex-exemplo/infra/agent-registry/lib/expert-finder.test.ts`
 
 **Test Coverage:**
+
 - ✅ Score computation unit tests
 - ✅ Weight validation
 - ✅ 10 sample queries covering all 5 new segments (S6-S10)
@@ -71,9 +77,11 @@
 ### 3. Live Demonstration
 
 #### `expert-finder-demo.js` (300+ lines)
+
 **Location:** `/home/user/Codex-exemplo/infra/agent-registry/expert-finder-demo.js`
 
 **Features:**
+
 - ✅ JavaScript implementation (Node.js, no compilation needed)
 - ✅ Runnable demo with all 10 sample queries
 - ✅ Live scoring output showing breakdown (semantic, historical, capability, cost, latency)
@@ -81,6 +89,7 @@
 - ✅ Explainability output per agent
 
 **Command:**
+
 ```bash
 node infra/agent-registry/expert-finder-demo.js
 ```
@@ -90,9 +99,11 @@ node infra/agent-registry/expert-finder-demo.js
 ### 4. Documentation
 
 #### `EXPERT-FINDER-v5.0.md` (400+ lines)
+
 **Location:** `/home/user/Codex-exemplo/docs/EXPERT-FINDER-v5.0.md`
 
 **Contents:**
+
 - Overview of multi-signal scoring
 - Architecture & interfaces
 - Scoring formula (weighted blend)
@@ -105,9 +116,11 @@ node infra/agent-registry/expert-finder-demo.js
 - Known limitations & future work
 
 #### `EXPERT-FINDER-ARCHITECTURE.md` (500+ lines)
+
 **Location:** `/home/user/Codex-exemplo/docs/EXPERT-FINDER-ARCHITECTURE.md`
 
 **Contents:**
+
 - System architecture diagram
 - Detailed score computation flow
 - Data flow with Supabase integration
@@ -125,7 +138,7 @@ node infra/agent-registry/expert-finder-demo.js
 
 ### Weighted Multi-Signal Formula
 
-```
+```text
 finalScore = 0.40 × semantic +
              0.30 × historical +
              0.15 × capability +
@@ -145,7 +158,7 @@ finalScore = 0.40 × semantic +
 
 ### Example Scoring: "ETA para 200k hab"
 
-```
+```yaml
 Agent: agente-saneamento
 ├─ Semantic: 0.70 × 40% = 0.280
 ├─ Historical: 0.85 × 30% = 0.255
@@ -160,16 +173,19 @@ Agent: agente-saneamento
 ## Integration Points
 
 ### With maestro-v2-routing.ts
+
 - Reuses: `AgentRecord`, `tokenize()`, `Bm25Index`, `cosineSimilarity()`
 - Enhances: `rankAgents()` with richer signals
 - Compatible: Same circuit breaker thresholds
 
 ### With Supabase Database
+
 - Reads: `routing_events`, `routing_feedback`, `agent_health`, `agent_capabilities`, `agents`
 - Via: Dependency-injected HistoryProvider & CapabilityProvider
 - Fallback: Synthetic data if DB unavailable
 
 ### With Feedback Loop
+
 - Input: `routing_events.chosen_confidence`, `routing_feedback.reward`
 - Output: Feeds into Thompson Sampling (Beta-binomial posteriors)
 - Next Phase: Real-time weight adaptation
@@ -179,31 +195,40 @@ Agent: agente-saneamento
 ## Key Features
 
 ### ✅ Tie-Breaking Logic
+
 If top 2 agents' finalScore differ by < 2%:
+
 1. Compare costs via `tokens_per_query × cost_per_tier[model]`
 2. Swap if runner-up is cheaper
 3. Escalate to Opus if still ambiguous
 
 ### ✅ Circuit Breaker
+
 **Escalation triggers:**
+
 - Confidence < 0.6 (configurable threshold)
 - Ambiguous top-two (margin < 2%)
 - No candidates in registry
 
 **Escalation action:**
+
 - `primaryChoice` = null
 - `alternatives` = full ranked list for human review
 - `recommendedTier` = Opus for higher reasoning
 
 ### ✅ Explainability
+
 Each ranked agent includes human-readable explanation:
-```
+
+```text
 "Semantic match (85%); High success rate; Has required tools; 
 Efficient tier (sonnet); Fast SLA (800ms p99). Confidence: 87.0%."
 ```
 
 ### ✅ Dependency Injection
+
 Custom providers for any backend:
+
 ```typescript
 const ranker = new ExpertRanker({
   historyProvider: new SupabaseHistoryProvider(client),
@@ -212,7 +237,9 @@ const ranker = new ExpertRanker({
 ```
 
 ### ✅ Fallback Strategy
+
 Synthetic providers enable operation even without DB:
+
 - Default success rate: 0.75 (conservative)
 - Default latency: 250ms average, 800ms p99
 - Default tool coverage: based on agent.tools array
@@ -222,6 +249,7 @@ Synthetic providers enable operation even without DB:
 ## Test Results
 
 ### Run Demo
+
 ```bash
 $ node infra/agent-registry/expert-finder-demo.js
 
@@ -231,6 +259,7 @@ Failed: 0/10
 ```
 
 ### Run Unit Tests (TypeScript)
+
 ```bash
 $ npm test --prefix infra/agent-registry
 
@@ -249,19 +278,22 @@ $ npm test --prefix infra/agent-registry
 ## Performance Characteristics
 
 ### Time Complexity
-```
+
+```text
 rankAgents(N agents) = O(N × (Q + D))
 where Q = query tokens (~10), D = embedding dimensions (1536)
 For N=20: ~32-100ms (serial), ~50-150ms (with async DB calls)
 ```
 
 ### Space Complexity
-```
+
+```text
 O(N × (embedding_dims + metadata)) ≈ O(20 × 1600) = 32KB
 → Negligible for agent pool
 ```
 
 ### Scalability
+
 - ✅ Optimal for 20-50 agents (current use case)
 - ⚠️ Beyond 100 agents: consider HNSW indexing
 - 🔄 Parallel async providers mitigate I/O cost
@@ -270,7 +302,7 @@ O(N × (embedding_dims + metadata)) ≈ O(20 × 1600) = 32KB
 
 ## Files Created
 
-```
+```text
 /home/user/Codex-exemplo/
 ├── infra/agent-registry/lib/
 │   ├── expert-finder.ts              (1,100+ lines) ✅ TypeScript implementation
@@ -290,6 +322,7 @@ O(N × (embedding_dims + metadata)) ≈ O(20 × 1600) = 32KB
 ## Configuration Examples
 
 ### Conservative (Trust History)
+
 ```typescript
 const ranker = new ExpertRanker({
   weights: {
@@ -304,6 +337,7 @@ const ranker = new ExpertRanker({
 ```
 
 ### Aggressive (Trust Semantic)
+
 ```typescript
 const ranker = new ExpertRanker({
   weights: {
@@ -318,6 +352,7 @@ const ranker = new ExpertRanker({
 ```
 
 ### Cost-Conscious
+
 ```typescript
 const ranker = new ExpertRanker({
   weights: {
@@ -335,18 +370,21 @@ const ranker = new ExpertRanker({
 ## Next Steps (Phases 2-4)
 
 ### Phase 2: Data Integration (Recommended)
+
 - [ ] Implement real Supabase history provider
 - [ ] Implement real capability matcher (embeddings-based)
 - [ ] Backfill routing_feedback from past 3 months of logs
 - [ ] Deploy to staging environment
 
 ### Phase 3: Optimization
+
 - [ ] A/B test vs. v2.0 (50/50 traffic split)
 - [ ] Gather user feedback (thumbs up/down)
 - [ ] Tune weights based on KPIs
 - [ ] Monitor latency + cost per query
 
 ### Phase 4: Feedback Loop
+
 - [ ] Integrate Thompson Sampling (Beta-binomial)
 - [ ] Enable real-time weight adaptation
 - [ ] Implement quarterly KPI reviews
@@ -388,16 +426,19 @@ const ranker = new ExpertRanker({
 ## Success Metrics (KPIs)
 
 ### Immediate (Validation)
+
 - ✅ All 10 sample queries route correctly (100%)
 - ✅ No regressions vs. v2.0 routing
 - ✅ Confidence score is informative (correlates with success)
 
 ### Medium-term (Phase 3)
+
 - [ ] Accuracy vs. user feedback > 85%
 - [ ] P99 latency < 500ms
 - [ ] Cost per query trending down (better agent selection)
 
 ### Long-term (Phase 4)
+
 - [ ] Auto-learn weights via feedback loop
 - [ ] Quarterly KPI reviews show improvement
 - [ ] Ready for multi-agent composition

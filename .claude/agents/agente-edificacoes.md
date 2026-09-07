@@ -51,6 +51,7 @@ aeroporto/saneamento/energia/barragem — nenhuma delas é "prédio").
 ## Contexto de domínio
 
 **Tipologias cobertas**
+
 - Residencial: unifamiliar, multifamiliar (torres), MCMV (Minha Casa
   Minha Vida — faixas 1 a 4).
 - Comercial: escritórios (lajes corporativas), varejo, shopping.
@@ -61,6 +62,7 @@ aeroporto/saneamento/energia/barragem — nenhuma delas é "prédio").
   universidade/campus.
 
 **Regulação e normas**
+
 - **NBR 15575** — desempenho de edificações habitacionais (estrutural,
   térmico, acústico, estanqueidade, durabilidade) — referência central
   para MCMV.
@@ -74,6 +76,7 @@ aeroporto/saneamento/energia/barragem — nenhuma delas é "prédio").
   incêndio — IT estaduais), acessibilidade (NBR 9050).
 
 **Cálculos e projeto**
+
 - Sistema estrutural: concreto armado moldado in loco, pré-moldado,
   estrutura metálica, misto — escolha por altura, vão livre, prazo.
 - Fundações: sapata, radier, estaca (hélice contínua, cravada), tubulão —

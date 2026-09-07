@@ -73,6 +73,7 @@ técnica 25% · indicação de risco 20% · qualidade de apresentação
 (`padrao-manta`) 15% · viabilidade de prazo/equipe 10%.
 
 **Critérios de aceitação.**
+
 - [ ] Objeto citado literalmente, sem paráfrase que mude o sentido.
 - [ ] Escopo delimitado por fase do ciclo de vida (Eixo 3: 1–8).
 - [ ] Segmento(s) vertical(is) corretos, com handoff explícito se >1.
@@ -120,6 +121,7 @@ JSON estruturado para consumo por A3; lista de pendências/premissas
 assumidas.
 
 **Critérios de aceitação.**
+
 - [ ] Todo item rastreável ao desenho/folha de origem.
 - [ ] Unidades consistentes com a disciplina.
 - [ ] Volumes conferem com método declarado e diagrama de massa.
@@ -171,6 +173,7 @@ memória de cálculo de BDI/encargos; relatório de itens sem
 correspondência oficial.
 
 **Critérios de aceitação.**
+
 - [ ] Toda linha rastreável a um item de A2 — nenhum valor solto.
 - [ ] Código SICRO/SINAPI citado existe na base vigente (`aluci-guard`
   audita especificamente códigos SICRO fabricados).
@@ -212,6 +215,7 @@ estrutura de receita do segmento.
 cenários); memorando executivo; tornado chart.
 
 **Critérios de aceitação.**
+
 - [ ] Toda premissa macro/regulatória datada e com fonte.
 - [ ] Taxa de desconto justificada, não arbitrária.
 - [ ] Ao menos 3 cenários presentes.
@@ -255,6 +259,7 @@ recursos e baseline; Gantt visual; relatório de caminho crítico;
 curva S física e financeira.
 
 **Critérios de aceitação.**
+
 - [ ] Duração de toda atividade justificada (produtividade ×
   quantidade), não estimada arbitrariamente.
 - [ ] Dependências logicamente consistentes (sem loops).
@@ -298,6 +303,7 @@ referenciadas ao regime legal; parecer de enquadramento do
 instrumento; matriz de risco contratual (insumo direto de A10).
 
 **Critérios de aceitação.**
+
 - [ ] Toda cláusula referenciada a dispositivo legal real
   (`aluci-guard` obrigatório).
 - [ ] Limite legal de aditivo verificado explicitamente quando
@@ -335,6 +341,7 @@ grupo de serviço (três eixos: improdutividade como consequência,
 cascata de disrupção, quebra de premissas).
 
 **Variantes.**
+
 - **Extra/adicional** — comparação contratado (A3) × executado (A2),
   com memória de cálculo do adicional.
 - **Atraso** — linha de base (A5) × realizado, caminho crítico
@@ -351,6 +358,7 @@ contratado × executado (A2/A3); cronograma linha de base × realizado
 cronologia, conclusão por grupo de serviço) + anexos técnicos.
 
 **Critérios de aceitação.**
+
 - [ ] Nexo causal explícito entre evento e impacto — não apenas
   correlação temporal.
 - [ ] Quantum sustentado por memória de cálculo rastreável a A2/A3.
@@ -391,6 +399,7 @@ recomendação rastreável às fontes); análise estratégica (memorando
 executivo com opções, trade-offs, recomendação).
 
 **Critérios de aceitação.**
+
 - [ ] Pergunta/decisão explicitada no início — nunca implícita.
 - [ ] Toda conclusão rastreável a uma fonte (dado, cálculo, norma).
 - [ ] Trade-offs das opções alternativas explicitados.
@@ -451,6 +460,7 @@ status; parecer de enquadramento; cronograma de obtenção de licenças
 (interface direta com A5).
 
 **Critérios de aceitação (rascunho, sujeitos a revisão).**
+
 - [ ] Toda licença/norma citada existe de fato (`aluci-guard`).
 - [ ] Órgão/agência competente corretamente identificado por
   jurisdição.
@@ -520,6 +530,7 @@ mitigação, contingência); risk register vivo; resumo executivo dos
 riscos Alto/Crítico.
 
 **Critérios de aceitação.**
+
 - [ ] Todo risco tem probabilidade E impacto justificados.
 - [ ] Risco Alto/Crítico tem mitigação **e** contingência
   documentadas.

@@ -327,6 +327,7 @@ WHERE agent_id = 'manta-03-s8';
 ### Change LRU Threshold
 
 In `agent_memory_cleanup.py`, line ~350:
+
 ```python
 # Current: evict if quota > 80%
 if quota_pct > 80.0:
@@ -407,7 +408,7 @@ python scripts/agent_memory_cleanup.py \
 
 ### Create New Dashboard
 
-1. Go to Grafana (https://grafana.manta-internal.com)
+1. Go to Grafana (<https://grafana.manta-internal.com>)
 2. **Create** → **Dashboard**
 3. Add panels:
 
@@ -468,7 +469,7 @@ python scripts/agent_memory_cleanup.py \
 - **Full Documentation:** `/home/user/Codex-exemplo/docs/AGENT_MEMORY_TIERING.md`
 - **Troubleshooting:** See docs → Troubleshooting section
 - **Slack:** #agent-ops
-- **Owner:** mneves@mantaassociados.com
+- **Owner:** <mneves@mantaassociados.com>
 
 ---
 

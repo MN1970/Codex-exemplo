@@ -10,6 +10,7 @@
 ## EXECUTIVE SUMMARY
 
 **Target improvements (v4.2 → v5.0):**
+
 - Latency p95: **2500ms → 1500ms (40% improvement)**
 - Cost per run: **$0.10 → $0.06 (40% savings)**
 - Throughput: **10 req/s → 15 req/s (50% increase)**
@@ -33,13 +34,14 @@
 | Stdev | 450 ms | 300 ms | **33% more consistent** |
 
 **Analysis:**
+
 - v5.0 achieves target p95 latency of <1500ms ✅
 - Standard deviation reduction indicates more predictable performance
 - Benefits from: R7 tiering (Haiku faster paths), R6 reranking (better early termination)
 
 ### 1.2 Latency Breakdown (v5.0 average)
 
-```
+```text
 Maestro Routing (R1):     80 ms  (6.4%)
   └─ Keyword matching:    15 ms
   └─ Embedding similarity: 50 ms
@@ -88,11 +90,13 @@ workload distribution. Low-complexity queries (Haiku) achieve ~450ms end-to-end.
 ### 2.2 Resource Utilization
 
 Assumptions:
+
 - 10,000 runs/month (estimated S6-S10)
 - Average latency: 1250ms
 - Concurrent users: 100 peak
 
 **v5.0 capacity:**
+
 - Peak load: 15 req/s × 100 users = 1500 req/s concurrent capacity
 - Monthly throughput: ~26M requests possible (vs 10k target)
 - Headroom: **2600x capacity cushion**
@@ -104,6 +108,7 @@ Assumptions:
 ### 3.1 Cost per Run
 
 **Assumptions:**
+
 - Input tokens: 2000 average
 - Output tokens: 1200 average
 - Pricing: Haiku $0.08/1M, Sonnet $3/1M, Opus $15/1M
@@ -151,7 +156,7 @@ Assumptions:
 
 ### 4.1 Test Configuration
 
-```
+```text
 - 100 concurrent users
 - 30-minute test duration (1800s)
 - Ramp-up: 60 seconds
@@ -172,7 +177,7 @@ Assumptions:
 
 **Requests by component (from 100 concurrent users, 30 min test):**
 
-```
+```text
 Total requests: 27,000
 Successful: 26,946 (99.8%)
 Failed: 54 (0.2%)
@@ -195,6 +200,7 @@ Breakdown:
 | **Total** | **1100ms** | **1500ms** | **1900ms** |
 
 **Error analysis (54 failures):**
+
 - 30 timeouts (1.2s threshold) → Fallback to Opus triggered
 - 20 RAG failures (connection) → Cached results used
 - 4 validation errors → Malformed prompts
@@ -228,6 +234,7 @@ Breakdown:
 | **Total** | **330 MB** | **470 MB** | **+140 MB (+42%)** |
 
 **Analysis:**
+
 - Reranker cache (120 MB) is new in v5.0, provides significant speedup
 - Cache hit rate: 30% of queries (estimated)
 - Memory growth is acceptable (<500 MB peak)
@@ -237,7 +244,7 @@ Breakdown:
 
 **Test:** 24-hour continuous operation with rotating test prompts
 
-```
+```text
 Start memory:   100 MB
 After 1h:       102 MB (+2%)
 After 4h:       103 MB (+3%)
@@ -255,7 +262,7 @@ Conclusion: ✅ No leaks (growth < 5%)
 
 **Test set: 1000 prompts (S6-S10 mix)**
 
-```
+```text
 Complexity score range: 2.1 to 8.5
 Distribution:
   Low (< 3.0):      300 prompts (30%)  → Haiku selected
@@ -292,16 +299,16 @@ Distribution:
 
 | Dimension | v4.2 | v5.0 | Change |
 |-----------|------|------|--------|
-| **Latency** |
+| **Latency** | | | |
 | p95 | 2500 ms | 1500 ms | -40% ✅ |
-| **Cost** |
+| **Cost** | | | |
 | Per run | $0.10 | $0.00883 | -91% ✅ |
 | Monthly (10k runs) | $1,400 | $488.30 | -65% ✅ |
-| **Throughput** |
+| **Throughput** | | | |
 | Req/s (100 users) | 10 | 15 | +50% ✅ |
-| **Memory** |
+| **Memory** | | | |
 | Peak | 330 MB | 470 MB | +42% (acceptable) |
-| **Error rate** |
+| **Error rate** | | | |
 | — | 0.5% | 0.2% | -60% ✅ |
 
 ### 7.2 Key Drivers of Improvement
@@ -364,16 +371,19 @@ Distribution:
 ## 10. ROLLOUT PLAN
 
 ### Phase 1: Canary (Week 1)
+
 - Deploy to 10% of traffic (S6 only)
 - Monitor: latency, cost, error rate
 - Gate: p95 < 1500ms for 24h
 
 ### Phase 2: Ramp (Week 2-3)
+
 - 50% traffic (S6, S8, partial S9)
 - Performance gate: cost savings validated
 - Monitor for R8 fallbacks (should be < 0.1%)
 
 ### Phase 3: GA (Week 4)
+
 - 100% traffic (S1-S10)
 - Final validation against SLA
 - Announce to stakeholders
@@ -385,20 +395,24 @@ Distribution:
 ### A. Test Prompts Used (Samples)
 
 **S6-Portos:**
+
 - "Preciso analisar terminal portuário ANTAQ em Santos com dragagem"
 - "Quebra-mar em cais com área de retroárea - projeto executivo"
 
 **S8-Saneamento:**
+
 - "ETA para 500k habitantes em São Paulo - RAP com subsídio cruzado"
 - "ETE com UASB e MBR para reúso industrial"
 
 **S9-Energia:**
+
 - "Linha de transmissão 500kV com torre estaiada - leilão ANEEL"
 - "UHE com geração eólica complementar - PDE 2030"
 
 ### B. Benchmark Configuration Files
 
 **benchmark_maestro.py:**
+
 ```bash
 python scripts/benchmark_maestro.py \
   --num-runs 1000 \
@@ -407,6 +421,7 @@ python scripts/benchmark_maestro.py \
 ```
 
 **cost_analyzer.py:**
+
 ```bash
 python scripts/cost_analyzer.py \
   --baseline-cost 0.10 \
@@ -415,6 +430,7 @@ python scripts/cost_analyzer.py \
 ```
 
 **profile_maestro.py:**
+
 ```bash
 python scripts/profile_maestro.py \
   --duration 300 \
@@ -432,6 +448,7 @@ python scripts/profile_maestro.py \
 ## 12. CONCLUSION
 
 v5.0 **achieves or exceeds all target KPIs:**
+
 - ✅ Latency: 40% improvement (p95 1500ms vs 2500ms target)
 - ✅ Cost: 91% reduction ($0.00883 vs $0.10/run)
 - ✅ Reliability: 99.8% success rate, <0.2% errors
@@ -443,4 +460,4 @@ v5.0 **achieves or exceeds all target KPIs:**
 
 **Report generated:** 2026-07-25  
 **Next review:** 2026-08-25 (30-day post-deployment validation)  
-**Owner:** mneves@mantaassociados.com
+**Owner:** <mneves@mantaassociados.com>

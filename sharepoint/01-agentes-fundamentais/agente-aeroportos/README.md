@@ -6,7 +6,7 @@ sistemas (balizamento CAT I/II/III, ILS, torre, SCI).
 
 ## Estrutura desta pasta
 
-```
+```text
 agente-aeroportos/
 ├── SKILL.md         # definição canônica
 ├── README.md        # este arquivo

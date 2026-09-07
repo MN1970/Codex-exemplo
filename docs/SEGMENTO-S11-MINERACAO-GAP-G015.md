@@ -94,7 +94,7 @@ Baseado em regras de negócio similares a S12/S13 (ver `docs/SEGMENTOS-S12-S13-D
   - JORC Code (quando CoIG relevante)
   - Referências regionais (DNPM, secretarias estaduais de minas)
 
-- [ ] Criar rota SharePoint: `03_Projetos/Mineracao/*` (*.pdf, *.dwg, *.xlsx)
+- [ ] Criar rota SharePoint: `03_Projetos/Mineracao/*` (*.pdf,*.dwg, *.xlsx)
   e registrar em `sp_agent_routing`
 
 - [ ] Adicionar routing keywords a `maestro_routing_keywords` no Supabase
@@ -103,7 +103,7 @@ Baseado em regras de negócio similares a S12/S13 (ver `docs/SEGMENTOS-S12-S13-D
 - [ ] Adicionar smoke tests em `tests/routing/prompts.md`:
   - "cliente quer avaliar viabilidade de nova cava de ferro" → agente-mineracao
   - "planejamento de TSF para pilha de estéril" → agente-mineracao
-    + handoff agente-barragens
+    - handoff agente-barragens
   - "mina subterrânea em zona urbana, resgate e ventilação críticos"
     → agente-mineracao
 

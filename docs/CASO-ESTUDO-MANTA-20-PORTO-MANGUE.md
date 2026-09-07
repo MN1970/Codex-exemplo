@@ -23,7 +23,7 @@
 
 ### Localização Ambiental Crítica
 
-```
+```text
 ╔════════════════════════════════════════════════════════╗
 ║ BAÍA DE PARANAGUÁ — Mapa de contexto ambiental         ║
 ╠════════════════════════════════════════════════════════╣
@@ -56,7 +56,7 @@
 
 ### Prompt de Intake
 
-```
+```text
 Operador TECON: "Vamos expandir nosso terminal em Paranaguá. 
 Preciso de uma avaliação completa para apresentar ao conselho.
 A gente tem interesse em ambiental também — esse mangue adjacente 
@@ -66,7 +66,7 @@ Quais são os requisitos ambientais?"
 
 ### Detecção Maestro
 
-```
+```text
 Q1 (Intake):
   • Keyword: "porto" → segmento = S6 (Portos)
   • Keyword: "terminal" + "dragagem" → confirma S6
@@ -95,7 +95,7 @@ Routing decision:
 
 **Consulta INPE/IBAMA**:
 
-```
+```text
 INPE MapBiomas:
   • Vegetação nativa (mangue): 98% cobertura em 50m buffer
   • Não há desflorestamento histórico (série temporal 2000–2023)
@@ -127,7 +127,7 @@ IBAMA Geoportal:
 
 **Legislação aplicável**: Lei 11.428/2006 (Mata Atlântica + Mangue)
 
-```
+```text
 Lei 11.428 Art. 17:
   "Não é permitida a supressão de vegetação primária ou em 
   estágio avançado de regeneração do Bioma Mata Atlântica, 
@@ -139,7 +139,7 @@ Exceção (Art. 17 §5°): Atividade de utilidade pública (portos),
 
 **Cálculo de Offset**:
 
-```
+```text
 Footprint direto (dragagem + cais):
   • Área de mangue impactado: 50 ha
 
@@ -162,7 +162,7 @@ Custo estimado:
 
 **Escopo 1 (Emissões Diretas — Construção)**:
 
-```
+```yaml
 Atividades:
   • Dragagem: 2M m³ solo/rocha × 15 tCO₂e/1.000 m³ = 30.000 tCO₂e
   • Combustível (dragas, equipamento): 500.000 litro diesel × 2.68 kgCO₂/L = 1.340 tCO₂e
@@ -174,7 +174,7 @@ Atividades:
 
 **Escopo 2 (Energia Elétrica)**:
 
-```
+```text
 Terminal em operação: 
   • Consumo anual: 2.500 MWh (bombas, iluminação, guinchos)
   • Grid Brasil: ~80 gCO₂/kWh (mix 70% hídrica, 30% térmica)
@@ -186,7 +186,7 @@ Terminal em operação:
 
 **Escopo 3 (Cadeia de Suprimentos)**:
 
-```
+```text
 Transporte de materiais (concreto, aço):
   • Origem Sudeste: 500 km × 20.000 t materiais = 10.000 tCO₂e
   • Barcaça: 3.000 tCO₂e
@@ -205,7 +205,7 @@ Transporte de materiais (concreto, aço):
 
 **Roadmap de Redução (10 anos)**:
 
-```
+```text
 Ano 1–3 (Obra): 51.340 tCO₂e baseline
 Ano 4–10 (Operação):
   • Solar no terminal: -50 tCO₂e/ano (500 kWp)
@@ -260,7 +260,7 @@ Ano 4–10 (Operação):
 
 **Framework de scoring**: 0–100 (0 = veto comunitário, 100 = consenso)
 
-```
+```text
 Critérios | Score | Peso | Contribuição | Observações
 ──────────┼───────┼──────┼──────────────┼────────────────────────
 Percepção | 35    | 30%  | 10.5         | Comunidade historicamente 
@@ -275,14 +275,16 @@ local     |       |      |              | trabalhadores de porto
 SOCIAL LICENSE SCORE: 35/100 (CRÍTICO — risco de contestação)
 ```
 
-**Intepretação**: 
-- Score < 50 = **high conflict risk** 
+**Intepretação**:
+
+- Score < 50 = **high conflict risk**
 - Recomendação: co-design obrigatório antes de projeto executivo
 
 #### 3.2.3 Cenários de Engajamento
 
 **Cenário A: Top-Down (Status Quo)**
-```
+
+```yaml
 Abordagem: Consulta pública (Lei 9.985/CONAMA)
   • 1 audiência pública (IBAMA obrigatório)
   • Duração: 6–9 meses
@@ -292,7 +294,8 @@ Risco: Ação judicial (MPT, Defensoria) com 60% prob.
 ```
 
 **Cenário B: Bottom-Up (Co-Design Recomendado)**
-```
+
+```yaml
 Abordagem: Diálogo co-design 18-mês
   • 6 workshops participativos (bimestral)
   • Comitê gestor: TECON + comunidade + órgãos + ONG
@@ -320,7 +323,7 @@ Timeline: +18 meses (paralelo a projeto básico/executivo)
 
 **Cronograma esperado de licenciamento**:
 
-```
+```text
 Mês 1–3:    LI (Licença de Instalação)
 Mês 3–12:   LP (Licença Prévia) + EIA-RIMA + audiência pública
 Mês 12–24:  LO (Licença de Operação) + condicionantes finais
@@ -333,7 +336,7 @@ Total: 24 meses mínimo (precedência: EIA-RIMA que é bottleneck)
 
 **Matriz S.G.E (Sociedade × Governança × Economia)**:
 
-```
+```text
                 AMBIENTAL (E)
            ╔═══════════════════════════════╗
            ║ ISA = 88/100 (CRÍTICO)        ║
@@ -469,7 +472,7 @@ RECOMENDAÇÃO: Cenário B
 
 **Input Manta 20 → Output Orçamento**:
 
-```
+```text
 Manta 20 ESG deliverables:
   • Linha de offset: R$ 5.760.000 (36 meses)
   • Diálogo comunitário: R$ 1.500.000 (18 meses)
@@ -491,7 +494,7 @@ Manta 20 ESG deliverables:
 
 **Novo caminho crítico**:
 
-```
+```yaml
 Original:
   Design → Licença → Obra
   
@@ -515,7 +518,7 @@ Slack adicional: 18 meses (absorvido por social engagement)
 
 **Templates gerados por Manta 20 → Manta 02 refina**:
 
-```
+```text
 Cláusula 1: Offset Ambiental
   "Contratante se obriga a implementar 180 hectares de preservação
    (ou restauração) de mangue conforme Protocolo de Offset aprovado
@@ -541,11 +544,13 @@ Cláusula 4: Compliance ESG Monitorável
 **Co-agente executivo**:
 
 Manta 20 fornece:
+
 - Mapa de stakeholders (80 pescadores + 3 ONGs + 4 órgãos)
 - Social license score (35/100 baseline)
 - Cenários de engajamento (Cenário B co-design)
 
 Manta 15 desenha:
+
 - 6 workshops participativos (temas: dragagem, monitoramento, benefícios)
 - Estrutura de comitê gestor (governance)
 - Protocolo de monitoramento social (satisfação, queixas, impacto real)
@@ -566,7 +571,7 @@ Manta 15 desenha:
 
 ### Aprovação Operador (TECON Board)
 
-```
+```text
 Decisão: APROVADO sob Cenário B (Co-Design)
 
 Condições:

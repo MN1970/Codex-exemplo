@@ -6,7 +6,7 @@ térmica) e distribuição.
 
 ## Estrutura desta pasta
 
-```
+```text
 agente-energia/
 ├── SKILL.md         # definição canônica (7 segmentos: T/D/Gh/Ge/Gs/Gt/M)
 ├── README.md        # este arquivo

@@ -1,4 +1,5 @@
 # Drenagem — Tópico 2: Método Racional
+
 ## Cálculo de Vazão para Dimensionamento de Sistemas de Drenagem Rodoviária
 
 **Versão:** 1.0  
@@ -24,6 +25,7 @@ O **Método Racional** é um procedimento determinístico para estimativa da vaz
 $$Q = \frac{C \cdot I \cdot A}{360}$$
 
 **Onde:**
+
 - **Q** = Vazão de pico (m³/s)
 - **C** = Coeficiente de escoamento ou deflúvio (adimensional, 0 ≤ C ≤ 1)
 - **I** = Intensidade de precipitação (mm/h)
@@ -31,6 +33,7 @@ $$Q = \frac{C \cdot I \cdot A}{360}$$
 - **360** = Fator de conversão de unidades (mm/h × ha = m³/s quando dividido por 360)
 
 **Nota:** A constante 360 resulta de:
+
 - 1 mm/h × 1 ha = 0,001 m × 10.000 m² = 10 m³/h = 10/3600 m³/s ≈ 1/360 m³/s
 
 ### 1.3 Hipóteses e Limitações
@@ -44,6 +47,7 @@ $$Q = \frac{C \cdot I \cdot A}{360}$$
 | Tempo de concentração (Tc) determinístico | Válida para projeto | Requer calibração local |
 
 **Recomendação DNIT ES 131/86:**
+
 - Use Método Racional para A ≤ 2 km²
 - Para A > 2 km² e < 10 km², combine com método da curva-número (SCS)
 - Para A > 10 km², use modelos chuva-vazão (HEC-HMS) ou dados hidrológicos observados
@@ -75,6 +79,7 @@ Quando a bacia drenante é composta por múltiplas superfícies:
 $$C_{\text{médio}} = \frac{\sum (C_i \cdot A_i)}{\sum A_i}$$
 
 **Exemplo de aplicação:** Para uma bacia com:
+
 - 60% pavimento asfáltico (C = 0,85)
 - 25% solo com grama (C = 0,35)
 - 15% floresta (C = 0,20)
@@ -105,6 +110,7 @@ A intensidade de precipitação é expressa em mm/h e obtida através de **curva
 #### 2.2.1 Curva IDF — Definição e Obtenção
 
 Uma curva IDF relaciona:
+
 - **I** = intensidade da chuva (mm/h)
 - **D** = duração da chuva (min ou h)
 - **TR** = período de retorno ou frequência (anos)
@@ -118,6 +124,7 @@ $$I = \frac{a}{(D + b)^c}$$
 $$I = \frac{K \cdot T_R^m}{(D + c)^n}$$
 
 **Onde:**
+
 - **K, m, n, a, b, c** = parâmetros calibrados para cada localidade
 - **TR** = período de retorno (anos)
 
@@ -168,12 +175,14 @@ $$D = T_c$$
 | **Ven Te Chow** | $T_c = 0,123 \cdot (L/S^{0,5})^{0,64}$ | Bacias médias (A < 50 km²) | L em km; S em m/m; Tc em h. Ajuste regional necessário. |
 
 **Recomendação prática DNIT para rodovias:**
+
 - Use **Kirpich** ou **FAA/DNIT** para pequenas bacias (< 2 km²)
 - Valide com observação in loco: compare Tc calculado com tempo de percurso da água em vala/terreno
 
 #### 2.2.5 Exemplo Numérico — Cálculo de Tc
 
 **Dado:** Bacia lateral para bueiro em rodovia BR:
+
 - Comprimento hidráulico: L = 450 m
 - Declividade média: S = 5,5% = 0,055 m/m
 
@@ -191,6 +200,7 @@ A área de contribuição é a área da bacia hidrográfica drenada até o ponto
 #### 2.3.1 Determinação da Área
 
 **Métodos:**
+
 1. **Cartas topográficas** (IBGE 1:50.000 ou 1:100.000): medir com planímetro ou dividers
 2. **Imagens de satélite/Google Earth**: demarcar limite de bacia; medir digitalmente
 3. **Levantamento topográfico/aerofotogrametria**: mais preciso para projetos críticos
@@ -224,6 +234,7 @@ Para análises mais rigorosas, é comum incluir fatores de segurança e ajuste:
 $$Q = \frac{C_{\text{médio}} \cdot f_c \cdot I(D, T_R) \cdot A}{360}$$
 
 **Onde:**
+
 - **Cmédio** = coeficiente ponderado (seção 2.1.2)
 - **fc** = fator de correção (Tabela 2)
 - **I(D, TR)** = intensidade retirada da curva IDF em função de D e TR
@@ -236,6 +247,7 @@ Para comparações entre bacias ou análises paramétricas:
 $$q = \frac{Q}{A} = \frac{C \cdot I}{360} \text{ (m³/s/ha)}$$
 
 A vazão específica é útil para:
+
 - Verificar consistência entre projetos similares
 - Detectar anomalias em estimativas
 - Comparar com dados históricos regionais
@@ -249,10 +261,12 @@ Após estimar Q, calcula-se a velocidade necessária em canais/canaletas:
 $$V = \frac{Q}{A_{\text{seção}}}$$
 
 **Onde:**
+
 - **V** = velocidade média (m/s)
 - **Aseção** = área da seção transversal do canal/bueiro (m²)
 
 Verificar se V atende limites DNIT:
+
 - **Vmín** ≈ 0,60 m/s (risco de assoreamento)
 - **Vmáx** ≈ 2,5–3,0 m/s para argila/macadame; até 4 m/s para concreto (risco de erosão)
 
@@ -263,6 +277,7 @@ Verificar se V atende limites DNIT:
 ### Exemplo 1: Boquete Lateral — Pequena Bacia (Vd = 100 km/h)
 
 **Dados de projeto:**
+
 - Localização: Rodovia BR-XXX, planalto central (similar Brasília)
 - Vd (velocidade de projeto) = 100 km/h
 - Comprimento de boquete até bueiro = 300 m
@@ -302,6 +317,7 @@ Comparar com padrão regional (0,10–0,20 m³/s/ha para planalto): ✓ Consiste
 ### Exemplo 2: Drenagem Urbana — Bacia Heterogênea Mista
 
 **Dados:**
+
 - Zona urbana em região metropolitana
 - Área total = 0,35 km² = 35 hectares
 - Composição:
@@ -385,6 +401,7 @@ $$Q = \frac{0,68 \times 110 \times 35}{360} = \frac{2.618}{360} = 7,27 \text{ m�
 **Contexto:** Via de elevado padrão; tráfego 15.000 veículos/dia; Vd = 100 km/h.
 
 **Levantamento de campo:**
+
 - Bacia lateral medida em ortofotos IBGE: A = 2,8 km² = 280 ha
 - Superfícies: 45% pasto (C = 0,30); 35% solo com cultivo (C = 0,40); 20% floresta ciliar (C = 0,15)
 - Declividade média estimada: S = 4,2%
@@ -412,6 +429,7 @@ $$Q = \frac{0,31 \times 112 \times 280}{360} = \frac{9.705,6}{360} = 27,0 \text{
 **Contexto:** Rodovia em zona urbana densa (RMSP); canteiro com áreas verdes; Vd = 80 km/h.
 
 **Dados:**
+
 - Setor drenado: 450 m de canteiro; largura efetiva = 6 m
 - Área de contribuição = 450 × 6 = 2.700 m² = 0,27 ha
 - Superfícies: 60% asfalto/concreto (C = 0,85); 40% áreas verdes (C = 0,30)
@@ -430,6 +448,7 @@ $$C = 0,60 \times 0,85 + 0,40 \times 0,30 = 0,51 + 0,12 = 0,63$$
 $$Q = \frac{0,63 \times 160 \times 0,27}{360} = \frac{27,216}{360} = 0,076 \text{ m³/s} = 76 \text{ L/s}$$
 
 **Projeto:** Canaleta triangular de concreto com:
+
 - Profundidade h = 0,30 m; base b = 0,50 m
 - Seção = 0,5 × 0,30/2 = 0,075 m² ≈ Q/V = 0,076/1,5 ✓ OK
 - Declividade = 1,2% garante V = 1,5 m/s (ideal, entre 0,6–2,5 m/s)
@@ -443,6 +462,7 @@ $$Q = \frac{0,63 \times 160 \times 0,27}{360} = \frac{27,216}{360} = 0,076 \text
 **Objetivo:** Reduzir vazão de pico por infiltração no solo.
 
 **Dados:**
+
 - Área impermeável (asfalto): 0,08 ha; C = 0,90
 - Solo subjacente: areia fina com cascalho; infiltração k = 25 mm/h
 - Periodo de retorno: TR = 10 anos; Brasília
@@ -456,6 +476,7 @@ $$Q = \frac{0,90 \times 150 \times 0,08}{360} = \frac{10,8}{360} = 0,030 \text{ 
 **Análise com LID (bacia de infiltração):**
 
 A bacia de infiltração reduz efetivamente C devido à retenção:
+
 - Profundidade da bacia: h = 0,50 m
 - Volume armazenado: V_arm = 0,08 ha × 0,50 m = 400 m³ (muito grande; escala 1:200 = 2 m³)
 - Capacidade de infiltração durante chuva: q_inf = 25 mm/h × 0,08 ha = 0,020 m³/s = 20 L/s
@@ -483,6 +504,7 @@ Antes de adotar Q calculado, validar:
 ### 7.2 Comparação com Dados Históricos Regionais
 
 Quando disponíveis:
+
 - Comparar Q estimado com vazões máximas observadas em estações fluviométricas próximas
 - Ajustar C iterativamente até consonância com dados
 - Documentar diferenças e justificar (mudanças de uso de solo, urbanização, etc.)
@@ -522,7 +544,7 @@ $$\Delta Q = Q \cdot \left( \frac{\Delta C}{C} + \frac{\Delta I}{I} \right)$$
 
 7. **Marcuzzo, F. F. N.; Andrade, L. R.; Melo, D. C. R. (2011).** "Índices de precipitação máxima em 24 horas e relação com o comportamento do relevo no Brasil." *Revista Brasileira de Climatologia*, 8, 17–36.
 
-8. **INMET (2023).** *Banco de Dados Meteorológicos para Pesquisa e Ensino (BDMEP)*. Instituto Nacional de Meteorologia. http://www.inmet.gov.br
+8. **INMET (2023).** *Banco de Dados Meteorológicos para Pesquisa e Ensino (BDMEP)*. Instituto Nacional de Meteorologia. <http://www.inmet.gov.br>
 
 ### Drenagem Rodoviária Específica
 
@@ -542,7 +564,7 @@ $$\Delta Q = Q \cdot \left( \frac{\Delta C}{C} + \frac{\Delta I}{I} \right)$$
 
 ## 9. RESUMO EXECUTIVO — FLUXOGRAMA DE CÁLCULO
 
-```
+```text
 PROJETO DE DRENAGEM — MÉTODO RACIONAL
 
 ┌─ Levantamento topográfico e de solos
@@ -603,4 +625,3 @@ PROJETO DE DRENAGEM — MÉTODO RACIONAL
 **FIM DO DOCUMENTO**  
 Preparado para: Manta Associados  
 Versão de trabalho: 1.0 — disponível para revisão técnica e feedback
-

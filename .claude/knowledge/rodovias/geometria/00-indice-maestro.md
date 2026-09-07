@@ -11,6 +11,7 @@
 ## 🎯 Objetivo
 
 Aprofundar e expandir o conhecimento do agente-infraestrutura S1 em **geometria de rodovias**, cobrindo:
+
 - ✅ Normas fundamentais (DNIT, NBR, ABNT)
 - ✅ Elementos geométricos (H, V, transversal)
 - ✅ Cálculos práticos e exemplos reais
@@ -62,7 +63,7 @@ Aprofundar e expandir o conhecimento do agente-infraestrutura S1 em **geometria 
 
 ### Por Fase de Projeto
 
-```
+```text
 Estudo Prévio
   ├─ Reconhecimento topográfico (Drone Mapping) ✅ #12
   ├─ Análise de classe/velocidade (Normas DNIT) ✅ #1
@@ -94,7 +95,7 @@ O&M
 
 ### Por Especialidade Técnica
 
-```
+```text
 Cálculo & Fórmulas
   • R_mín, superelevação, clotóide ✅ #2, #3
   • Visibilidade, frenagem ✅ #4, #5
@@ -132,7 +133,7 @@ Integração Agente-infraestrutura
 
 Após consolidação, migrar para Supabase com estrutura:
 
-```
+```text
 Coleção: rodovias (prefixo: rod:)
 
 Sub-prefixos:
@@ -166,56 +167,66 @@ Sub-prefixos:
 Após consolidação, testar agente com:
 
 ### Teste 1: Geometria Básica
-```
+
+```text
 "Preciso projetar uma curva horizontal em uma BR federal (Vd=100 km/h). 
 O raio disponível é 400m. Qual deve ser a superelevação? 
 Qual o comprimento da clotóide? Preciso de recuo de banqueta?"
 ```
 
 **Saída esperada**:
+
 - e ≈ 4.7%
 - L_c ≈ 110m
 - Flecha ≈ 4.7m
 
 ### Teste 2: Visibilidade
-```
+
+```text
 "Tenho uma curva de 500m de raio. A distância de parada é 137m. 
 Qual flecha de recuo preciso abrir na banqueta de corte?"
 ```
 
 **Saída esperada**:
+
 - f ≈ 4.7m (conforme cálculo 02-calculos-praticos.md)
 
 ### Teste 3: Orçamento
-```
+
+```text
 "Preciso orçar 1km de rodovia federal, pista dupla, Vd=100 km/h, 
 pavimento CBUQ 5cm. Qual quantitativo e custo SICRO estimado?"
 ```
 
 **Saída esperada**:
+
 - Pavimento: 7,200 m²
 - SICRO: ~R$ 5.2M (conforme 02-calculos-praticos.md)
 
 ### Teste 4: Integração Agente
-```
+
+```text
 "Tenho uma rodovia estadual, topografia montanhosa, volume 400k veículos/ano. 
 Qual deve ser minha velocidade de projeto e padrões geométricos?"
 ```
 
 **Saída esperada**:
+
 - Vd = 80 km/h
 - R_mín = 220m
 - e = 7.0%
 - Faixa = 3.30m
 
 ### Teste 5: Análise de Risco
-```
+
+```text
 "Identifiquei um trecho da BR com 4 acidentes em 2 anos. 
 As curvas têm R=250m (Vd=100km/h). 
 Qual é o risco geométrico e como mitigá-lo?"
 ```
 
 **Saída esperada**:
+
 - Risco alto (R < R_mín)
 - Mitigação: reduzir Vd ou reconstruir curva
 
@@ -224,24 +235,28 @@ Qual é o risco geométrico e como mitigá-lo?"
 ## 🚀 Próximos Passos (Roadmap)
 
 ### Semana 1 (Consolidação)
+
 - [ ] Consolidar output dos 20 agentes
 - [ ] Revisar consistência técnica
 - [ ] Integrar em documentos mestres
 - [ ] Criar migração SQL para Supabase
 
 ### Semana 2 (Implementação RAG)
+
 - [ ] Aplicar migração Supabase
 - [ ] Indexar 20 coleções de conhecimento
 - [ ] Testar retrieval (busca de chunks)
 - [ ] Validar respostas agente
 
 ### Semana 3 (Testes & Validação)
+
 - [ ] Rodar 5 prompts de teste
 - [ ] Comparar com respostas esperadas
 - [ ] Ajustar prompts do agente se necessário
 - [ ] Documentar lições aprendidas
 
 ### Semana 4 (Deploy)
+
 - [ ] Merge na branch main
 - [ ] Deploy em produção
 - [ ] Monitoramento de uso
@@ -253,7 +268,7 @@ Qual é o risco geométrico e como mitigá-lo?"
 
 | Papel | Responsável | Escalação |
 |-------|-------------|-----------|
-| PM (Agente-infraestrutura) | Maurício Neves | MN@manta.br |
+| PM (Agente-infraestrutura) | Maurício Neves | <MN@manta.br> |
 | Arquiteto IA (Manta 16) | [Manta 15-ARQ] | escalate:manta-arq |
 | Revisor Técnico | DNIT/NBR specialist | technical-review |
 | Testes QA | [QA Team] | qa-rodovias |
@@ -271,7 +286,7 @@ Qual é o risco geométrico e como mitigá-lo?"
 
 ## 📊 Status Workflow Paralelo
 
-```
+```yaml
 Iniciado: 2026-08-03
 Agentes: 20 × Claude Sonnet 5
 Execução: Paralela (max concorrência ~10)
@@ -293,16 +308,19 @@ Resultado será consolidado aqui quando completo.
 Este material é organizado em **3 níveis de profundidade**:
 
 ### Nível 1 — Fundação (Iniciante)
+
 📄 Documentos: `01-elementos-geometricos.md`  
 🎯 Objetivo: Entender conceitos básicos (raio, superelevação, visibilidade)  
 ⏱️ Tempo: 30 min
 
 ### Nível 2 — Aplicação (Intermediário)
+
 📄 Documentos: `02-calculos-praticos.md`, `03-softwares-referencias.md`  
 🎯 Objetivo: Resolver problemas reais, dimensionar projetos  
 ⏱️ Tempo: 2h
 
 ### Nível 3 — Especialização (Avançado)
+
 📄 Documentos: Output dos 20 agentes Sonnet  
 🎯 Objetivo: Profundidade em cada subdisciplina  
 ⏱️ Tempo: 4h+

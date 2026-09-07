@@ -45,15 +45,18 @@ Uma plataforma escalável de **20 agentes IA** (11 horizontais + 9 verticais S1�
 ## Começar
 
 ### 1. Ler (15 min)
+
 - Cabeçalho + 8 pilares em **CLAUDE.md**
 - **docs/ARQUITETURA-v5.0.md**
 
 ### 2. Validar (5 min)
+
 ```bash
 python3 scripts/healthcheck.py
 ```
 
 ### 3. Deploy (4–6h)
+
 Siga **DEPLOY-CHECKLIST.md** (8 fases)
 
 ---

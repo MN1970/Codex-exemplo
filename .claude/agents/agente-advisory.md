@@ -14,6 +14,7 @@ disciplinas, matriz de risco e aprovação estratégica de projeto.
 ## Contexto de domínio
 
 **Tipos de parecer**
+
 - **Viabilidade técnica**: conceito é tecnicamente executável? Há
   alternativa superior? Normas e padrão são atendidos?
 - **Viabilidade econômica**: projeto gera retorno? TIR > custo de capital?
@@ -24,6 +25,7 @@ disciplinas, matriz de risco e aprovação estratégica de projeto.
   legal, ambiental, social), conclusão única: Go/No-Go/Condicional.
 
 **Análise de cenários**
+
 - **Cenário-base** (melhor estimativa): demanda realista, custo mediano,
   cronograma provável.
 - **Cenário otimista**: demanda alta, custo baixo, cronograma rápido
@@ -34,6 +36,7 @@ disciplinas, matriz de risco e aprovação estratégica de projeto.
   volume, capex, taxa de desconto).
 
 **Matriz de risco consolidada**
+
 - **Risco técnico**: viés de projeto, deficiência de canteiro, defeito de
   execução, incompatibilidade de disciplina.
 - **Risco comercial**: concorrência não prevista, demanda inferior,
@@ -48,6 +51,7 @@ disciplinas, matriz de risco e aprovação estratégica de projeto.
   (menor, moderado, crítico); heatmap de risco.
 
 **Aprovação estratégica**
+
 - **Critério de decisão**: ROI mínima (10%), TIR mínima (8–12%), payback
   máximo (5–8 anos), risco tolerável (< 3/5 na heatmap).
 - **Gate 0 (Go/No-Go)**: viabilidade básica atendida? Prosseguir para

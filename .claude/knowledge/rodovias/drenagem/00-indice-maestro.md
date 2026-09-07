@@ -43,7 +43,7 @@ Este índice organiza os tópicos técnicos de **drenagem em projetos rodoviári
 
 Este índice **drenagem** integra-se aos tópicos irmãos:
 
-```
+```text
 ├── GEOMETRIA
 │   ├── Elementos Geométricos
 │   ├── Cálculos Práticos
@@ -311,7 +311,8 @@ Esta série de documentos **drenagem** alimenta os seguintes **skills** Manta:
 - **skill:manta-maestro** — Roteamento de queries de drenagem para Agente S1
 
 **Modelo de integração**:
-```
+
+```text
 Usuário: "Qual é a vazão que deve ser drenada em uma bacia de 12 ha?"
          ↓
 Maestro: "Roteando para agente-infraestrutura S1 (rodovias)..."

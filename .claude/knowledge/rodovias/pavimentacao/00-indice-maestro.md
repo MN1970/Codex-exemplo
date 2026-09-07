@@ -11,6 +11,7 @@
 ## 🎯 Objetivo
 
 Aprofundar e expandir o conhecimento do agente-infraestrutura S1 em **pavimentação rodoviária**, cobrindo:
+
 - ✅ Agregados (seleção, composição, origem regional, DNIT/ABNT)
 - ✅ Ligantes asfálticos (CAP, modificados, viscoelasticidade)
 - ✅ Misturas asfálticas (CBUQ, SMA, BINDER, bases, dosagem Marshall/Superpave)
@@ -59,7 +60,7 @@ Aprofundar e expandir o conhecimento do agente-infraestrutura S1 em **pavimenta�
 
 ## 📁 Arquivos deste Tópico
 
-```
+```text
 pavimentacao/
 ├── 00-indice-maestro.md        (este arquivo)
 ├── 01-fundamentos.md           (planejado)
@@ -79,7 +80,7 @@ pavimentacao/
 
 Estrutura planejada após consolidação:
 
-```
+```text
 Coleção: rodovias (prefixo: rod:)
 
 Subprefixos Rod:pavimento:
@@ -139,36 +140,42 @@ Após consolidação de cada tópico, testar agente com:
 ### Série Agregados (Tópico 2)
 
 #### Teste 1: Seleção de Agregado
-```
+
+```text
 "Estou projetando uma rodovia federal (Vd=100 km/h) em SP e tenho duas 
 opções de jazida: Basalto (R$ 42/t, 5 km) e Granito (R$ 35/t, 50 km). 
 Qual devo usar para CBUQ? Qual é o diferencial de custo?"
 ```
 
 **Saída esperada**:
+
 - Basalto recomendado (IRC 98%, CPA 62)
 - Granito marginal (IRC 87%, CPA 48)
 - Diferencial: +R$ 7/t mas reduz custo transporte por proximidade
 - Resultado: Basalto economicamente melhor
 
 #### Teste 2: Granulometria
-```
+
+```text
 "Tenho uma areia natural com 28% passando 0.59 mm. Preciso atingir 
 faixa A do DNIT (17-20% em 0.59 mm). Como ajustar?"
 ```
 
 **Saída esperada**:
+
 - Reduzir 8% areia fina
 - Compensar com pedrisco (9.5-4.75 mm)
 - Calcular proporções da mistura
 
 #### Teste 3: Orçamento
-```
+
+```text
 "Preciso de agregados para 15 km de pavimento (CBUQ 5 cm + Binder 10 cm + 
 BGS 15 cm). Usando basalto a R$ 42/t, qual será o custo total?"
 ```
 
 **Saída esperada**:
+
 - Volume total: ~40 kt
 - Custo: 40 × 42 = R$ 1.68 M (aprox.)
 
@@ -177,6 +184,7 @@ BGS 15 cm). Usando basalto a R$ 42/t, qual será o custo total?"
 ## 🚀 Próximos Passos (Roadmap)
 
 ### Fase 1: Tópico 2 (Agregados) — ATUAL
+
 - [x] Estrutura de conhecimento definida
 - [x] Arquivo 02-agregados.md criado e consolidado
 - [ ] Revisão técnica interna (DNIT specialist)
@@ -185,17 +193,20 @@ BGS 15 cm). Usando basalto a R$ 42/t, qual será o custo total?"
 - [ ] Integração RAG Supabase
 
 ### Fase 2: Tópicos 3-4 (Ligantes & Misturas)
+
 - [ ] Planejamento conteúdo T3 (Ligantes)
 - [ ] Planejamento conteúdo T4 (Misturas)
 - [ ] Criação arquivos T3, T4
 - [ ] Testes validação
 
 ### Fase 3: Tópicos 5-8 (Dimensionamento, Patologias, Rígidos, QC)
+
 - [ ] Planejamento T5-T8
 - [ ] Criação arquivos
 - [ ] Testes integrados
 
 ### Fase 4: Consolidação & Deploy
+
 - [ ] Integração RAG Supabase (todos os tópicos)
 - [ ] Testes integrados agente-infraestrutura
 - [ ] Review DNIT/NBR specialist
@@ -208,7 +219,7 @@ BGS 15 cm). Usando basalto a R$ 42/t, qual será o custo total?"
 
 | Papel | Responsável | Escalação | Contato |
 |-------|-------------|-----------|---------|
-| PM Agente-infraestrutura | Maurício Neves | MN@manta.br | +55-11-xxxx |
+| PM Agente-infraestrutura | Maurício Neves | <MN@manta.br> | +55-11-xxxx |
 | Especialista DNIT (Pavimentação) | [TBD] | technical-review | — |
 | Tester (QA Rodovias) | [TBD] | qa-rodovias | — |
 | Arquiteto IA (Manta 16) | [Manta 15-ARQ] | escalate:manta-arq | — |
@@ -227,7 +238,7 @@ BGS 15 cm). Usando basalto a R$ 42/t, qual será o custo total?"
 
 ## 📊 Status Workflow
 
-```
+```yaml
 Iniciado: 2026-08-04
 Tópico 2 (Agregados): ✅ CRIADO
 Próximo: Tópico 3 (Ligantes) — início 2026-08-15

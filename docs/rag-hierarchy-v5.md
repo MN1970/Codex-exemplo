@@ -12,6 +12,7 @@
 The RAG (Retrieval-Augmented Generation) Hierarchy for Manta Maestro v5.0 implements a **5-collection knowledge base** supporting the new vertical agents (S6–S10: Portos, Aeroportos, Saneamento, Energia, Barragens) plus a cross-segmento Editais (tender templates & public bids).
 
 **Key Features:**
+
 - **Multi-factor relevance ranking:** BM25 (lexical) + semantic similarity (pgvector) + confidence boost + freshness
 - **Collection registry** with handoff hints for cross-domain queries
 - **Supabase pgvector** backend (BAAI/bge-small-en-v1.5, 384 dimensions)
@@ -40,38 +41,45 @@ Each collection is independently queryable but may reference others via **handof
 Every chunk stored in `rag_chunks` table includes:
 
 #### Identifiers
+
 - `chunk_id` (UUID): Unique identifier
 - `document_id` (TEXT): Source document reference
 - `source_collection` (ENUM): One of 5 collections
 
 #### Content & Embeddings
+
 - `text` (TEXT): Raw chunk content (typically 200–500 tokens)
 - `embedding` (vector(384)): BAAI/bge-small-en-v1.5 semantic embedding
 - `embedding_model` (TEXT): Model used (default: BAAI/bge-small-en-v1.5)
 
 #### Provenance
+
 - `source_document_title` (TEXT): Document name
 - `source_document_type` (ENUM): regulation | tender | edital | standard | guide | case_study
 - `source_url` (TEXT): PDF link, SharePoint path, etc.
 - `source_organization` (TEXT): SNIS, ANEEL, ANTAQ, ICOLD, BNDES, etc.
 
 #### Domain Tagging
+
 - `domain_tags` (TEXT[]): Keywords for topic filtering (e.g., `['adução', 'dimensionamento', 'NBR-12211']`)
 - `segment_codes` (TEXT[]): Infrastructure segments (S6, S7, S8, S9, S10)
 - `lifecycle_phases` (SMALLINT[]): Project phases 1–8 where chunk applies
 
 #### Recency & Freshness
+
 - `published_date` (DATE): Original publication date
 - `ingested_at` (TIMESTAMPTZ): When added to RAG
 - `last_updated_at` (TIMESTAMPTZ): When chunk last refreshed
 - `currency_status` (ENUM): current | draft | superseded | historical
 
 #### Reliability Signals
+
 - `confidence` (NUMERIC 0–1): Model confidence in chunk quality (default 0.5)
 - `citation_count` (INTEGER): How many internal docs reference this chunk
 - `relevance_feedback_score` (NUMERIC –1–1): Bayesian feedback from user ratings
 
 #### Operational
+
 - `chunk_order` (INTEGER): Position in original document
 - `window_size` (INTEGER): Context window size used during chunking
 
@@ -82,13 +90,15 @@ Every chunk stored in `rag_chunks` table includes:
 ### Overview: Four Scoring Factors
 
 The final score combines:
+
 1. **BM25** (lexical matching, Okapi algorithm)
 2. **Semantic similarity** (cosine distance on embeddings)
 3. **Confidence boost** (source reliability signals)
 4. **Freshness** (recency decay)
 
 **Formula:**
-```
+
+```text
 final_score = (
   BM25 × w_bm25 +
   semantic × w_semantic +
@@ -104,10 +114,12 @@ where `w_bm25 + w_semantic + w_confidence + w_freshness = 1.0`
 **Algorithm:** Okapi BM25 (industry standard for keyword relevance)
 
 **Parameters:**
+
 - `k1 = 1.4–1.8` (term saturation; higher = more weight to term frequency)
 - `b = 0.65–0.80` (length normalization; 0 = no normalization, 1 = full)
 
 **Per Collection** (tuned for domain characteristics):
+
 - `saneamento`: k1=1.5, b=0.75 (balanced)
 - `energia`: k1=1.5, b=0.75 (balanced)
 - `portos`: k1=1.6, b=0.70 (slightly favor rare terms)
@@ -115,6 +127,7 @@ where `w_bm25 + w_semantic + w_confidence + w_freshness = 1.0`
 - `editais`: k1=1.8, b=0.65 (aggressively favor keywords like "prazos", "licitação")
 
 **Example:** Query "adução 100 km" on saneamento chunk:
+
 - BM25 score = 0.72 (both "adução" and "100" are high-weight terms in NBR context)
 
 ### 2. Semantic Similarity (Vector)
@@ -122,11 +135,13 @@ where `w_bm25 + w_semantic + w_confidence + w_freshness = 1.0`
 **Algorithm:** Cosine similarity on 384-dimensional embeddings
 
 **Pipeline:**
+
 1. Query text embedded via BAAI/bge-small-en-v1.5
 2. Cosine similarity computed: `cos(query_embedding, chunk_embedding)`
 3. Normalized from [–1, 1] → [0, 1]: `(cosine + 1) / 2`
 
 **Per Collection (default):**
+
 - `saneamento`: 0.45 weight (semantic slightly favored)
 - `energia`: 0.47 weight (semantic dominant)
 - `portos`: 0.50 weight (semantic dominant for multi-modal content)
@@ -134,17 +149,20 @@ where `w_bm25 + w_semantic + w_confidence + w_freshness = 1.0`
 - `editais`: 0.40 weight (lexical more important for dates & tender names)
 
 **Example:** Query "barragem hidroelétrica" on ICOLD chunk about concrete dams:
+
 - Cosine = 0.82 → normalized = 0.91 (semantic match strong)
 
 ### 3. Confidence Boost
 
 **Factors:**
+
 - Chunk's own `confidence` (0–1): model-assigned quality (default 0.5)
 - `citation_count`: how many docs cite this chunk (proxy for importance)
 - `currency_status`: is it current, draft, superseded, or historical?
 
 **Formula:**
-```
+
+```text
 confidence_boost = (
   confidence × 0.5 +
   min(citation_count / 10, 1.0) × 0.3 +
@@ -155,7 +173,8 @@ confidence_boost = (
 where `currency_factor = 1.0` (current) | 0.7 (draft) | 0.3 (superseded) | 0.5 (historical)
 
 **Example:** ABNT NBR standard (confidence=0.95, citations=12, current):
-```
+
+```text
 boost = 0.95 × 0.5 + min(12/10, 1.0) × 0.3 + 1.0 × 0.2 = 0.475 + 0.30 + 0.20 = 0.975
 ```
 
@@ -171,12 +190,14 @@ boost = 0.95 × 0.5 + min(12/10, 1.0) × 0.3 + 1.0 × 0.2 = 0.475 + 0.30 + 0.20 
 | > 90 days | 0.4 |
 
 **Example:** Chunk ingested 3 days ago:
-```
+
+```text
 freshness = 1.0 (recent)
 ```
 
 Chunk ingested 150 days ago (still useful, but older):
-```
+
+```text
 freshness = 0.4
 ```
 
@@ -189,11 +210,13 @@ freshness = 0.4
 When a query returns low-confidence results from primary collection, the system checks **handoff hints** to identify complementary collections.
 
 **Trigger Conditions:**
+
 - `score < 0.5`: Primary collection score below threshold
 - `score < 0.6 AND contains("keyword")`: Conditional, keyword-based trigger
 - `no_results`: No chunks found in primary collection
 
 **Example:** Query "BNDES saneamento: prazos para licititar?"
+
 1. Query `saneamento` collection → top result score = 0.48 (below 0.5)
 2. Check handoff hints in saneamento registry
 3. Find: `target=editais, trigger="score < 0.6 AND contains('licitação')"`
@@ -203,7 +226,7 @@ When a query returns low-confidence results from primary collection, the system 
 
 ### Handoff Matrix
 
-```
+```text
 saneamento
 ├─ → editais (score < 0.6 AND contains("licitação"))
 │   └─ "SNIS may not cover tender timing; check editais for recent public bids"
@@ -297,11 +320,13 @@ CREATE TABLE rag_chunks (
 **TTL:** 1 hour (3600 seconds)
 
 **Cache Key Format:**
-```
+
+```yaml
 rag:{sha256(query_text + collection + top_k)}
 ```
 
 **Cached Data:**
+
 ```json
 {
   "chunks": [
@@ -320,12 +345,14 @@ rag:{sha256(query_text + collection + top_k)}
 ```
 
 **Cache Invalidation:**
+
 - Automatic: 1-hour TTL
 - Manual: When chunks updated (trigger on `rag_chunks` UPDATE)
 - Explicit: API endpoint to clear cache by query/collection
 
 **Example Flow:**
-```
+
+```text
 1. User query: "NBR adução 100 km"
 2. Cache miss → query Supabase + rank → 280ms
 3. Result cached for 1 hour
@@ -491,101 +518,131 @@ async function routeQuery(userQuery: string) {
 ### S8 — Saneamento (3 queries)
 
 1. **Basic design question (Projeto Básico, Phase 2)**
-   ```
+
+   ```text
    "ETA com adução de 500 km: qual é a norma NBR para dimensionamento de adutoras?"
    ```
+
    Expected: NBR 12211-12218 chunks with sizing formulas
 
 2. **Regulatory structure (Licitação, Phase 6)**
-   ```
+
+   ```text
    "Lei 14.026: como estruturar concessão para prestador de saneamento integrado (água + esgoto)?"
    ```
+
    Expected: Lei 14.026 text + concession structure templates
 
 3. **Tender timing (Licitação, Phase 6)**
-   ```
+
+   ```text
    "BNDES edital saneamento 2024: quais são os prazos para submissão de projetos?"
    ```
+
    Expected: BNDES edital + handoff to editais for timeline
 
 ### S9 — Energia (3 queries)
 
 4. **Transmission authorization (Licitação, Phase 6)**
-   ```
+
+   ```text
    "Licitação transmissão ANEEL: qual é o processo para autorização de linha de transmissão (LT) em 765 kV?"
    ```
+
    Expected: ANEEL regulatory process + EPE reference
 
 5. **Planning (Estudo Prévio, Phase 1)**
-   ```
+
+   ```text
    "EPE Plano Decenal 2024: expansão prevista de geração renovável nos próximos 5 anos?"
    ```
+
    Expected: EPE 10-year plan + renewable targets
 
 6. **Grid procedures (Projeto Executivo, Phase 3)**
-   ```
+
+   ```text
    "ONS Procedimentos de Rede: qual é a distância mínima de afastamento de subestação em zona urbana?"
    ```
+
    Expected: ONS grid codes + urban setback distances
 
 ### S6 — Portos (3 queries)
 
 7. **Capacity design (Projeto Básico, Phase 2)**
-   ```
+
+   ```text
    "ANTAQ regulação: quais são os critérios de capacidade de berço para terminal de contêineres?"
    ```
+
    Expected: ANTAQ capacity formulas + berth sizing
 
 8. **Dredging tender (Licitação, Phase 6)**
-   ```
+
+   ```text
    "BNDES porto: edital de concessão para dragagem de bacia portuária; prazos 2024?"
    ```
+
    Expected: BNDES edital + dredging specs + handoff to editais
 
 9. **International standards (Projeto Básico, Phase 2)**
-   ```
+
+   ```text
    "PIANC Guidelines: qual é a profundidade mínima de calado para porta-contêineres Panamax?"
    ```
+
    Expected: PIANC guidelines + Panamax drafts
 
 ### S10 — Barragens (3 queries)
 
 10. **Tailings dam (Projeto Executivo, Phase 3)**
-    ```
+
+    ```text
     "Lei 12.334 segurança barragens: quais são as exigências para barragem de rejeitos em zona urbana?"
     ```
+
     Expected: Lei 12.334 + tailings dam safety requirements
 
 11. **Concrete height (Projeto Básico, Phase 2)**
-    ```
+
+    ```text
     "ICOLD guidelines: qual é a altura máxima de barragem de concreto com drenagem interna?"
     ```
+
     Expected: ICOLD design tables + height limits
 
 12. **Inspection data (Operação, Phase 5)**
-    ```
+
+    ```text
     "CBDB/PNSB: dados de inspeção de barragens existentes para reavaliação de segurança?"
     ```
+
     Expected: PNSB inspection database + risk assessment
 
 ### Cross-Collection (3 queries)
 
 13. **Tender templates (Licitação, Phase 6)**
-    ```
+
+    ```text
     "Licitação pública: template de cronograma para concessão de saneamento ou geração de energia?"
     ```
+
     Expected: editais templates + segment-specific timelines
 
 14. **Portfolio view (Licitação, Phase 6)**
-    ```
+
+    ```text
     "Portal Transparência / BNDES: qual é o status de editais abertos em portos/energia para 2024?"
     ```
+
     Expected: editais cross-collection summary
 
 15. **Hydroelectric integration (Projeto Básico, Phase 2)**
-    ```
+
+    ```text
     "Barragem de geração hidroelétrica: como integrar requisitos ICOLD (barragens) + EPE (energia)?"
     ```
+
     Expected: barragens + energia handoff + integration checklist
 
 ---
@@ -673,7 +730,7 @@ LIMIT 20;
 ## References
 
 - **Manta Maestro CLAUDE.md:** Agent registry & routing rules
-- **Supabase pgvector:** https://supabase.com/docs/guides/ai/vector
+- **Supabase pgvector:** <https://supabase.com/docs/guides/ai/vector>
 - **BM25 Algorithm:** Okapi BM25 (Robertson et al., 2009)
 - **BAAI/bge-small-en-v1.5:** BGE embedding model, 384 dimensions
 - **HNSW Index:** Approximate nearest neighbor search (Malkov & Yashunin, 2018)

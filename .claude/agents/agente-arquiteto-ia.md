@@ -15,6 +15,7 @@ com MCP e RAG.
 ## Contexto de domínio
 
 **Plataformas Claude e trade-offs**
+
 - **Claude Chat** (claude.ai): interação natural, sem código, ideal para
   consultoria ad-hoc, prototipagem rápida; sem integração MCP.
 - **Claude Code** (editor + agentes): agentes autônomos, subagentes,
@@ -27,6 +28,7 @@ com MCP e RAG.
   autonomia (interativa vs. fire-and-forget), integração (MCP, BD).
 
 **Model tiering e custo-benefício**
+
 - **Claude Haiku** (4.5): rápido (1M tokens/min), barato (50% Sonnet),
   ideal para roteamento, sanitização, inferência simples.
 - **Claude Sonnet** (4): balance de velocidade e custo, ideal para maioria
@@ -37,6 +39,7 @@ com MCP e RAG.
   decisão final; cache de tokens para RAG.
 
 **Skills (função da Manta v5.0.1)**
+
 - **Definição**: função encapsulada (instrução + tools + modelo), invocável
   por `/skill-name` ou como subagente.
 - **Estrutura**: frontmatter (name, description, tools, model) + markdown
@@ -47,6 +50,7 @@ com MCP e RAG.
   dinamicamente.
 
 **Padrões de orquestração multi-agente**
+
 - **Hub-and-spoke**: maestro (Haiku roteador) → agente especializado
   (Sonnet/Opus); maestro usa RAG para decisão de routing.
 - **Cascata**: agente 1 → agente 2 → agente 3 sequencial; cada um refina
@@ -54,11 +58,12 @@ com MCP e RAG.
 - **Branching**: decisão de condição (se técnica-ok then orçamento else
   redesenho); evita processamento desnecessário.
 - **Paralelo**: agentes independentes em paralelo (orçamento + cronograma
-  + bd), consolidação final por advisory.
+  - bd), consolidação final por advisory.
 - **Feedback loop**: agente-A gera recomendação → usuário valida →
   agente-B refina; iteração humano-IA.
 
 **RAG e integração Supabase**
+
 - **Coleção RAG**: pgvector (384d BAAI/bge-small-en-v1.5), prefixo storage
   (ex: `san:`, `cla:`, `cnt:`), chunk embedding automático.
 - **Ciclo de vida**: ingest (PDF → markdown → embed), query (user input
@@ -69,6 +74,7 @@ com MCP e RAG.
   graceful degradation.
 
 **Padrão PK_06/PK_07/PK_08 (revisão de workflow)**
+
 - **PK_06**: verificação de conformidade (sanitização R1, valuta R5, não
   inventar R2).
 - **PK_07**: revisão de risco (aluci-guard R4, consist-guard R3, risco

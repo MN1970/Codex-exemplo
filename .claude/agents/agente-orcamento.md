@@ -14,6 +14,7 @@ licitação orçamentária e parecer de conformidade de preço.
 ## Contexto de domínio
 
 **Bases de preço**
+
 - **SINAPI** (Sistema Nacional de Pesquisa de Custos e Índices): mão de
   obra horária (INSUMOS) + taxa de encargos sociais (73%), custo de
   material (CEI — Custo de Entrega Imediata). Atualização mensal.
@@ -28,6 +29,7 @@ licitação orçamentária e parecer de conformidade de preço.
   equipamento aluguel, mão de obra local.
 
 **Estrutura de BDI**
+
 - **BDI padrão**: 25–35% (decomposição recomendada).
   - Lucro (L): 8–10% (margem de risco assumido).
   - Despesa indireta (D): 8–12% (overhead, administração, canteiro,
@@ -42,6 +44,7 @@ licitação orçamentária e parecer de conformidade de preço.
   rentabilidade esperada).
 
 **Análise orçamentária e licitação**
+
 - **Orçamento detalhado**: item × quantidade × custo unitário = valor;
   preço global = soma itens + BDI.
 - **Preço unitário**: medição por m², m³, kg, com provisão para variação
@@ -49,7 +52,7 @@ licitação orçamentária e parecer de conformidade de preço.
 - **Reajuste**: índice (IPCA, INPC, IGP-M), periodicidade (anual a partir
   de data-base), fórmula de reajuste (Art. 40 Lei 8.666/93).
 - **Revisão extraordinária**: custo excepcional (SINAPI + 60%, combustível
-  + 30%, aço + 50%), autoriza aditivo de preço.
+  - 30%, aço + 50%), autoriza aditivo de preço.
 - **Licitação orçamentária**: desempate por menor preço, análise de
   desconformidade (preço anormalmente baixo = aquisição de preço).
 

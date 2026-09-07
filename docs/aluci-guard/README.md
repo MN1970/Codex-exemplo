@@ -35,6 +35,7 @@ ICAO, FAA, DECEA, USACE/FEMA, IWA, e as argentinas ERAS/PIRHA/AySA).
 | **Total** | **15** | **42** |
 
 Duas ressalvas que os agentes sinalizaram e que valem revisão humana:
+
 - As faixas `NBR 12211-12218` e `NBR 9648-9651` (saneamento) estão
   citadas como intervalo no SKILL.md, não número a número — para
   popular `normas_abnt.py` linha a linha é preciso decompor contra o

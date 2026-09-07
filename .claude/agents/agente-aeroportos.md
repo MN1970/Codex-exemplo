@@ -15,6 +15,7 @@ descomissionamento.
 ## Contexto de domínio
 
 **Componentes**
+
 - **Lado ar (airside)**: pista de pouso e decolagem (RWY), taxiways
   (TWY), pátios de aeronaves (apron), RESA (áreas de segurança de fim
   de pista), stopway, clearway.
@@ -28,6 +29,7 @@ descomissionamento.
   combustível (hidrantes), catering, GSE, deicing, GPU/PCA.
 
 **Regulação e normas**
+
 - ANAC (Agência Nacional de Aviação Civil) — RBAC 154 (aeródromos),
   RBAC 139 (certificação), RBAC 137 (aviação agrícola).
 - ICAO Annex 14 (Aerodromes), Volume I (aerodrome design and
@@ -42,6 +44,7 @@ descomissionamento.
   Number).
 
 **Cálculos e projeto**
+
 - Categoria de código aeródromo (1A a 4F) baseado em envergadura, bitola
   de trem de pouso e comprimento de referência da aeronave crítica.
 - Dimensionamento de pista: comprimento, largura, LDA/TODA/ASDA,
@@ -54,6 +57,7 @@ descomissionamento.
 - Sistema de drenagem de pista (sub-superficial + superficial).
 
 **Disciplinas técnicas envolvidas**
+
 - **Estrutural**: dimensionamento de pavimento rígido (PCC) e flexível
   (asfáltico) de pista/taxiway/pátio (método FAA FAARFIELD ou ICAO
   ACN-PCN), fundações e superestrutura de TPS/TECA, torre de controle,

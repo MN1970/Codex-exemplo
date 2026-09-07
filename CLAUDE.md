@@ -69,6 +69,7 @@ assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
 
 Consolida v5.0.1 operacional (2026-07-31):
+
 - **v5.0.0 operacional** (aprovado 2026-07-22): 20 agentes em produção,
   infraestrutura Maestro-OS v6.0 completa (APScheduler, ML, observability)
 - **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
@@ -80,11 +81,12 @@ padrão de output por cliente).
 
 > **Nota de proveniência**: este arquivo **reconcilia** dois work streams
 > paralelos na mesma data:
+>
 > 1. **v5.0.0 (main, 22/07)** — implementação operacional aprovada com
 >    todos os agentes em produção
 > 2. **v5.0 (branch, 31/07)** — formalização de arquitetura com gaps
 >    investigados e decisões explicitadas
-> 
+>
 > Diferenças encontradas durante merge (numeração segmentos, status de
 > produção) estão documentadas neste arquivo. Decisões divergentes foram
 > preservadas em notas explícitas (ver "Eixo S", "Gaps abertos") em vez
@@ -94,14 +96,14 @@ padrão de output por cliente).
 
 ## Sumário
 
-1. [Modelo de 4 eixos (S×A×F×D)](#modelo-de-4-eixos-saf%C3%97d)
+1. [Modelo de 4 eixos (S×A×F×D)](#modelo-de-4-eixos-safd)
 2. [Eixo S — Segmentos](#eixo-s--segmentos)
 3. [Eixo A — Atividades](#eixo-a--atividades)
 4. [Eixo F — Funcionais](#eixo-f--funcionais)
 5. [Eixo D — Disciplinas](#eixo-d--disciplinas)
 6. [Eixo temporal — Ciclo de vida](#eixo-temporal--ciclo-de-vida-8-fases)
 7. [Modelo de composição S.A.D](#modelo-de-composição-sad)
-8. [Mapa completo de agentes — 20 operacionais + 2 propostos](#mapa-completo-de-agentes--20-operacionais--2-propostos)
+8. [Mapa completo de agentes — 21 operacionais + 2 sem segmento confirmado](#mapa-completo-de-agentes--21-operacionais--2-sem-segmento-confirmado)
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
@@ -285,7 +287,7 @@ do SharePoint — ver "Eixo S — Segmentos"; os códigos S originais destes
 exemplos, de `ARQUITETURA-AGENTES-IA.md` v3.0.0 §2.6, usavam a
 numeração antiga já corrigida):
 
-```
+```text
 S9.A3.D07  = Saneamento + Orçamento + Econômica
             → Manta 05 (agente-orcamento) com contexto de saneamento
               (RAG san:*, handoff de agente-saneamento)
@@ -380,7 +382,7 @@ agente** (não por número de segmento) — por isso a numeração dos
 segmentos (corrigida em 2026-09-07, ver "Eixo S") é apenas rótulo
 informativo, sem efeito sobre esta lógica:
 
-```
+```text
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
    → agente-saneamento (S9)
 
@@ -432,6 +434,7 @@ que o usuário use as palavras-chave descritas em seus frontmatters.
 
 **Casos ambíguos** (documentados em `tests/routing/prompts.md`, mantidos
 sem alteração):
+
 - UHE (barragem + LT + SE) → dispatch primário `agente-barragens` +
   handoff `agente-energia`.
 - ETE + subestação → dispatch primário `agente-saneamento` + handoff
@@ -468,6 +471,7 @@ linhas e `manta_rag_documents` com 111 linhas.
 | edificações | edi: *(sugerido)* | NBR 15575, LEED, BIM | 🔲 Não criada — segmento renumerado para S6, depende do gate MN |
 
 Sub-prefixos de contexto (mantidos do v4.2):
+
 - `san:br:` / `san:ar:` — saneamento por país (Brasil × Argentina AySA).
 - `ene:t:` / `ene:d:` / `ene:g:` — energia por transmissão/distribuição/geração.
 - `bar:c:` / `bar:t:` / `bar:e:` / `bar:r:` — barragens por tipologia.
@@ -493,13 +497,13 @@ em produção (ver seção RAG acima).
 
 | Agente | Pasta SP sugerida | Pattern |
 |--------|-------------------|---------|
-| agente-saneamento | 03_Projetos/Saneamento/* | *.pdf, *.dwg, *.xlsx |
-| agente-energia | 03_Projetos/Energia/* | *.pdf, *.dwg, *.xlsx |
-| agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
-| agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
-| agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
-| agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento sem numeração real confirmada |
-| agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento renumerado para S6, pendente gate MN |
+| agente-saneamento | 03_Projetos/Saneamento/* | *.pdf,*.dwg, *.xlsx |
+| agente-energia | 03_Projetos/Energia/* | *.pdf,*.dwg, *.xlsx |
+| agente-portos | 03_Projetos/Portos/* | *.pdf,*.dwg, *.xlsx |
+| agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf,*.dwg, *.xlsx |
+| agente-barragens | 03_Projetos/Barragens/* | *.pdf,*.dwg, *.xlsx |
+| agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf,*.dwg, *.xlsx — 🔲 planejado, segmento sem numeração real confirmada |
+| agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf,*.dwg, *.xlsx — 🔲 planejado, segmento renumerado para S6, pendente gate MN |
 
 ---
 
@@ -742,7 +746,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ## Arquivos deste repositório
 
-```
+```text
 Codex-exemplo/
 ├── CLAUDE.md                              # este arquivo (master registry, v5.2)
 ├── README.md
@@ -892,10 +896,10 @@ Codex-exemplo/
   confirmada em duas varreduras do SharePoint (geral e pastas
   "Material Recebido" de 10 projetos) — nenhum brandbook localizado.
   Ticket `MNT-2026-MOTIVA-258-PATTERN`.
-- **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
-  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
-  (ambiental, social, governança, integração), integração co-agente com 
-  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap. 
+- **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo
+  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões
+  (ambiental, social, governança, integração), integração co-agente com
+  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap.
   Tier: Sonnet. Status: v1.0 operacional. Agentes totais: 21 (12 h + 9 v).
   Ticket `MNT-2026-P3-04-ESG-AGENT`.
 - **v5.0.1** (2026-07-31) — **UNIFICADA**: merge de v5.0.0 operacional

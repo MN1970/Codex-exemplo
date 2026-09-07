@@ -32,7 +32,7 @@
 
 ### Por Disciplina Vertical (Fase I–II Roadmap)
 
-```
+```text
 GEOMETRIA (Fase I — ✅ COMPLETO)
 ├─ 7 documentos base (01–07)
 ├─ 08 especializações paralelas (20 agentes)
@@ -61,28 +61,34 @@ DRENAGEM (Fase II — EM ANDAMENTO)
 ## Roadmap de Leitura
 
 ### Nível 1 (Executivo — 20 min)
+
 1. Seção "Mapas de Cobertura" acima
 2. 09-terraplenagem-especializacoes.md — Seções 1–2 (conceitos, geometria)
 
 ### Nível 2 (Operacional — 3h)
+
 1. Seção 1 (Classificação solos, propriedades)
 2. Seção 2 (Geometria taludes, FS)
 3. Seção 3 (Compactação Proctor, GC%)
 4. Seção 4 (Brückner conceito, FHD)
 
 ### Nível 3 (Técnico Especializado — 8h)
+
 Ler 09-terraplenagem-especializacoes.md completo:
+
 1. Seção 2 (Estabilidade taludes, método Bishop)
 2. Seção 3 (Execução, equipamentos, umidade)
 3. Seção 4 (Brückner avançado, otimização)
 4. Seção 5 (Especialidades 1–15, detalhes)
 
 ### Nível 4 (Planejamento & Projeto — 10h)
+
 1. Seção 2.3 (Fundação aterro, procedimentos)
 2. Seção 4 (Brückner multi-seção, borrow areas)
 3. Referências: DNIT Manual, Slope/W tutorial, AASHTO
 
 ### Nível 5 (Pesquisa & Software)
+
 1. Modelagem com Slope/W (tutorial: 4h)
 2. Sensibilidade FS: variação φ, c, γ, poropressão
 3. Otimização linear: Solver Excel, Matlab
@@ -156,6 +162,7 @@ Ler 09-terraplenagem-especializacoes.md completo:
 ## Status Final — Terraplenagem
 
 ✅ **Consolidação Completa**
+
 - 09-terraplenagem-especializacoes.md pronto
 - 15 especialidades cobertas
 - 974.577 tokens integrados
@@ -164,6 +171,7 @@ Ler 09-terraplenagem-especializacoes.md completo:
 - Software (Slope/W, Brückner Pro) referenciado
 
 🔄 **Aguardando**
+
 - Consolidação dos 2 workflows restantes (Pav, Dren)
 - Integração RAG em Supabase
 

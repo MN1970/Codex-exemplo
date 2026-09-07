@@ -27,7 +27,7 @@
 
 ### Por Disciplina Vertical (Fase I–II Roadmap)
 
-```
+```text
 GEOMETRIA (Fase I — ✅ COMPLETO)
 ├─ 7 documentos base (01–07)
 ├─ 08 especializações paralelas (20 agentes)
@@ -60,16 +60,19 @@ DRENAGEM (Fase II — EM ANDAMENTO)
 ## Estrutura de Documentação
 
 ### 00 — Índice O&M (Este Arquivo)
+
 - Mapa de cobertura por tópico
 - Roadmap de leitura (nível 1, 2, 3)
 - Referências normativas integradas
 - Status de consolidação
 
 ### 01–03 — Tópicos Base (Não criados — agregados em 11)
+
 - Substitui 3 documentos separados
 - Consolidado em 11-om-especializacoes.md
 
 ### 11 — Especializações Paralelas (10 Agentes)
+
 - **Tópico 1**: Manutenção Rotina & Preventiva (10 atividades SICRO)
 - **Tópico 2**: Avaliação de Condição (PCI/ICP DNIT)
 - **Tópico 3**: Inspeção Estrutural & Geoposicionamento
@@ -82,6 +85,7 @@ DRENAGEM (Fase II — EM ANDAMENTO)
 - **Tópico 10**: Extensão da Vida Útil (técnicas, custos, viabilidade)
 
 ### README.md (NOVO — próxima ação)
+
 - Índice navegável (6 níveis de aprofundamento)
 - Instruções de leitura por perfil (operacional, engenheiro, planejador)
 - Mapa de referências normativas DNIT/ABNT
@@ -91,29 +95,35 @@ DRENAGEM (Fase II — EM ANDAMENTO)
 ## Roadmap de Leitura
 
 ### Nível 1 (Executivo — 15 min)
+
 1. Leia seção "Mapas de Cobertura" acima
 2. Seção "Estrutura de Documentação"
 3. Resumo de tópicos em 11-om-especializacoes.md
 
 ### Nível 2 (Operacional — 2h)
+
 1. 11 — Seção 1 (Manutenção Rotina)
 2. 11 — Seção 2 (Avaliação PCI/ICP)
 3. 11 — Seção 4 (VDM monitoramento)
 4. 11 — Seção 7 (Reparos Localizados)
 
 ### Nível 3 (Técnico Especializado — 6h)
+
 Ler 11-om-especializacoes.md completo:
+
 1. Seção 3 (Inspeção + GPS RTK)
 2. Seção 5 (Qualidade água, CONAMA)
 3. Seção 6 (Deterioração, curvas)
 4. Seção 8 (Reabilitação drenagem, custos)
 
 ### Nível 4 (Planejamento & Investimento — 8h)
+
 1. Seção 9 (LCC, VPL, B/C)
 2. Seção 10 (Extensão vida útil, técnicas, AASHTO/M-E)
 3. Referências: DNIT Manual, SICRO 2024, HDM-4
 
 ### Nível 5 (Pesquisa & Inovação)
+
 1. Estudar casos reais: BR-116, BR-101, BR-277, BR-381
 2. Modelos de deterioração (HDM-4 vs. COST 334)
 3. Integração com SIG e dados de sensores (futuro)
@@ -219,6 +229,7 @@ Ler 11-om-especializacoes.md completo:
 ## Status Final — O&M
 
 ✅ **Consolidação Completa**
+
 - 11-om-especializacoes.md pronto
 - 10 especialidades cobertas
 - 546.734 tokens integrados
@@ -226,6 +237,7 @@ Ler 11-om-especializacoes.md completo:
 - 15+ casos reais brasileiros referenciados
 
 🔄 **Aguardando**
+
 - Consolidação dos 3 workflows restantes (Pav, Terra, Dren)
 - Integração RAG em Supabase
 

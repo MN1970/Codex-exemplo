@@ -19,7 +19,7 @@
 
 ##### Conteúdo Principal
 
-```
+```text
 Capítulo 1: Conceitos e Definições
   1.1 Classificação funcional
   1.2 Velocidade de projeto (Vd)
@@ -64,7 +64,7 @@ Capítulo 6: Interseções
 
 **Tabela 2.1 — Raio Mínimo por Velocidade de Projeto (com superelevação máx 8%)**
 
-```
+```text
 Vd (km/h) | R_mín (m) | Superelevação (%) | Coef. Atrito (f) |
 ----------|-----------|-------------------|-----------------|
 40        | 42        | 8                 | 0.20            |
@@ -79,7 +79,7 @@ Fórmula: R_mín = V² / (127 × (e_máx + f))
 
 **Tabela 3.1 — Comprimento Mínimo de Curva Vertical (método K)**
 
-```
+```text
 Vd (km/h) | K Convexa (m) | K Côncava (m) | Fórmula        |
 ----------|---------------|---------------|----------------|
 40        | 8             | 6             | L = K × |Δi|   |
@@ -93,7 +93,7 @@ Fonte: DNIT ES 101/97, Tabela 3.1
 
 **Tabela 4.1 — Largura de Faixa de Rolamento (m)**
 
-```
+```text
 Classe de Rodovia    | Vd (km/h) | Largura Faixa |
 ---------------------|-----------|---------------|
 BR (Federal Pista Dupla) | 100-120 | 3.60          |
@@ -107,7 +107,7 @@ Fonte: DNIT ES 101/97, Tabela 4.1
 
 **Tabela 4.2 — Largura de Acostamento (m)**
 
-```
+```text
 Classe de Rodovia    | Acostamento Pav. | Acostamento Não Pav. |
 ---------------------|------------------|----------------------|
 BR (Federal)         | 2.50-3.00        | 3.00-4.00            |
@@ -125,7 +125,7 @@ Fonte: DNIT ES 101/97, Tabela 4.2
 
 ##### Parâmetros Críticos para Geometria
 
-```
+```text
 2.3 Declividade de Banquetas
 ─────────────────────────────
 Mínima: 0.5% (para escoamento)
@@ -158,7 +158,7 @@ Revestimento: grama ou concreto
 
 ##### Método de Cálculo
 
-```
+```yaml
 Dado:
 - Raio da curva (R)
 - Distância de visibilidade necessária (d)
@@ -196,7 +196,7 @@ d (m) | θ (°) | f (m)
 
 ##### Relação com Geometria
 
-```
+```text
 IRI (International Roughness Index):
 - Correlaciona-se com alinhamento vertical
 - Defeitos em curvas verticais → aumento de IRI
@@ -218,7 +218,7 @@ Macrotextura:
 
 **Aplicável a**: Taludes, estruturas de contenção em rodovias
 
-```
+```text
 Seções 3.1-3.5: Geotecnia
 - Ângulos de atrito (φ) por tipo de solo
 - Capacidade de suporte (γ = 1.5-2.0)
@@ -229,7 +229,7 @@ Seções 3.1-3.5: Geotecnia
 
 **Aplicável a**: Interseções com outras infraestruturas (viadutos, passarelas)
 
-```
+```text
 Seção 4.2: Ações e Combinações
 - Cargas móveis (classe de via)
 - Envoltória de esforços
@@ -240,7 +240,7 @@ Seção 4.2: Ações e Combinações
 
 **Aplicável a**: Taludes de corte e aterro
 
-```
+```text
 Método de cálculo:
 - Fator de Segurança (FS) = Resistência / Solicitação
 - FS ≥ 1.3 (permanente), FS ≥ 1.2 (temporário)
@@ -259,7 +259,7 @@ Análise por tipo de movimento:
 
 **Escopo**: Faixas contínuas/tracejadas em função de geometria
 
-```
+```text
 Seção 5.1: Linhas Divisórias
 - Contínua: proibida ultrapassagem (em curvas, próximo a PI)
 - Tracejada: permitida ultrapassagem (tangentes, retas longas)
@@ -274,7 +274,7 @@ Exemplo:
 
 **Escopo**: Defensas, defensores, bancos de pneu
 
-```
+```text
 Seção 6: Defensas Metálicas
 - Colocação em curvas de risco
 - Altura mínima: 0.60m
@@ -300,7 +300,7 @@ Seção 6: Defensas Metálicas
 
 ### 3.1 Velocidade de Projeto por Classe
 
-```
+```text
 ┌─────────────────┬──────────┬────────────┬─────────────────┐
 │ Classe Rodovia  │ Vd (km/h)│ Topografia │ Exemplo         │
 ├─────────────────┼──────────┼────────────┼─────────────────┤
@@ -314,7 +314,7 @@ Seção 6: Defensas Metálicas
 
 ### 3.2 Parâmetros Críticos por Vd
 
-```
+```text
 Vd (km/h) │ R_mín (m) │ e_máx (%) │ i_máx (%) │ d_parada (m)
 ───────────┼───────────┼───────────┼───────────┼──────────────
 40         │ 42        │ 8         │ 7-8       │ 28
@@ -334,7 +334,7 @@ Nota: e_máx pode ser até 10% em casos montanhosos (DNIT ES 101/97 Allow)
 
 #### **Resolução ANTT 1623/2008 — Instruções de Projeto Geométrico**
 
-```
+```text
 Artigo 2º: Estabelece conformidade obrigatória com:
 - DNIT ES 101/97
 - DNIT ES 131/86
@@ -353,7 +353,7 @@ Artigo 3º: Inspeção obrigatória antes de liberação
 
 ### 5.1 Raio Mínimo
 
-```
+```text
 DNIT ES 101/97, Item 2.2.2.1:
 R_mín = V² / (127 × (e + f))
 
@@ -365,7 +365,7 @@ Onde:
 
 ### 5.2 Superelevação
 
-```
+```text
 DNIT ES 101/97, Item 2.3.3.1:
 e = (V² / (127 × R)) - f
 
@@ -376,7 +376,7 @@ Se resultar em e > e_máx (0.08 ou 0.10):
 
 ### 5.3 Comprimento de Clotóide
 
-```
+```text
 DNIT ES 101/97, Item 2.2.2.3:
 L_mín = 0.036 × V³ / R
 
@@ -386,7 +386,7 @@ A² = R × L
 
 ### 5.4 Curva Vertical
 
-```
+```text
 DNIT ES 101/97, Item 3.2.1:
 L = K × |Δi|
 
@@ -395,7 +395,7 @@ K = f(Vd) conforme Tabela 3.1
 
 ### 5.5 Visibilidade de Parada
 
-```
+```text
 DNIT ES 101/97, Item 3.2.1 + IPR 726:
 d_parada = d_reação + d_frenagem
 
@@ -413,9 +413,9 @@ d_parada ≈ V × 0.7 + V² / (254 × f)
 ### 6.1 Aplicação SICRO
 
 **Sistema de Custos de Obras (SICRO DNIT)**  
-Acesso: https://sicro.dnit.gov.br
+Acesso: <https://sicro.dnit.gov.br>
 
-```
+```yaml
 Estrutura:
 01 — Mobilização e Desmobilização
 02 — Serviços Geotécnicos
@@ -433,7 +433,7 @@ Exemplo - Pavimentação (05):
 
 ### 6.2 Composição Típica SICRO
 
-```
+```yaml
 Item: CBUQ 5cm (Rodovia Classe BR)
 ─────────────────────────────────
 
@@ -457,7 +457,7 @@ Fonte: SICRO 2026 (vigente)
 
 ### 7.1 Requisitos de Projeto
 
-```
+```text
 Edital de Concessão Típico (ANTT):
 ──────────────────────────────────
 Cláusula 3.2 — Padrões Técnicos
@@ -480,7 +480,7 @@ Verificação: survey topográfico com GPS (precisão ±0.05m)"
 
 ## 8. Checklist Conformidade Normativa
 
-```
+```text
 VALIDAÇÃO DE PROJETO GEOMÉTRICO CONFORME NORMAS DNIT
 
 □ ES 101/97
@@ -537,7 +537,7 @@ VALIDAÇÃO DE PROJETO GEOMÉTRICO CONFORME NORMAS DNIT
 
 ### 10.1 Aprovações Especiais DNIT
 
-```
+```text
 Situação: R < R_mín
 Solução permitida:
   1. Reduzir Vd (sinalizar redução de velocidade)
@@ -549,7 +549,7 @@ Requer: Aprovação formal DNIT (processo DNIT-DIPLAN)
 
 ### 10.2 Conformidade Parcial
 
-```
+```text
 Estradas em operação com não-conformidades:
   • BR-116 (alguns trechos): R < R_mín (histórico pré-1997)
   • Planos de reabilitação com faseamento permitido

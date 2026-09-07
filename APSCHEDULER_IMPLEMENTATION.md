@@ -9,6 +9,7 @@
 Implementação completa do sistema APScheduler para orquestração em background (P7) conforme CLAUDE.md v5.0.
 
 **4 Jobs críticos:**
+
 1. **RAG Reindex (R6)** — Daily @ 02:00 UTC
 2. **Agent Memory Purge (R10)** — Daily @ 03:00 UTC
 3. **Feedback Loop & Retraining (R9)** — Weekly @ Sunday 03:00 UTC
@@ -18,7 +19,7 @@ Implementação completa do sistema APScheduler para orquestração em backgroun
 
 ## Files Structure
 
-```
+```text
 Codex-exemplo/
 ├── scripts/
 │   ├── apscheduler_setup.py          # Main scheduler setup & manager
@@ -65,7 +66,8 @@ python scripts/apscheduler_setup.py --list-jobs
 ```
 
 Output:
-```
+
+```text
 ======================================================================
 REGISTERED JOBS
 ======================================================================
@@ -97,7 +99,8 @@ python scripts/apscheduler_setup.py --run-scheduler
 ```
 
 Expected output:
-```
+
+```text
 ======================================================================
 STARTING APScheduler (P7 — Background Orchestration)
 Timezone: UTC
@@ -127,6 +130,7 @@ Scheduler running. Press Ctrl+C to stop.
 **Implementation:** `scripts/rag_reindex_job.py` → wraps `rag-reindex.py`
 
 **Actions:**
+
 1. Iterate all RAG collections (san:v5.0, ene:v5.0, etc.)
 2. Validate embedding vectors (dimension = 1024 for e5-large)
 3. Update `metadata.json` with reindex timestamp
@@ -134,6 +138,7 @@ Scheduler running. Press Ctrl+C to stop.
 5. Email alert if divergence > 5%
 
 **Config:**
+
 ```json
 {
   "id": "rag-reindex",
@@ -153,6 +158,7 @@ Scheduler running. Press Ctrl+C to stop.
 **Implementation:** `scripts/agent_memory_purge_job.py` → wraps `agent_memory_purge.py`
 
 **Actions:**
+
 1. Execute SQL: `purge_expired_agent_memory()`
 2. Delete rows with:
    - `expires_at <= NOW()` (TTL 480 min)
@@ -163,6 +169,7 @@ Scheduler running. Press Ctrl+C to stop.
 6. Slack alert if > 10GB freed
 
 **Config:**
+
 ```json
 {
   "id": "agent-memory-purge",
@@ -172,7 +179,8 @@ Scheduler running. Press Ctrl+C to stop.
 ```
 
 **Policy (R10):**
-```
+
+```text
 IF agent_memory_size_mb > 100
    OR last_purge > 30 days ago
    THEN:
@@ -191,6 +199,7 @@ IF agent_memory_size_mb > 100
 **Implementation:** `scripts/feedback_loop_job.py`
 
 **Actions:**
+
 1. Fetch `feedback_score >= 4` from past 7 days
 2. Extract embedding vectors (user_intent_vector)
 3. Fine-tune cross-encoder reranker with queries
@@ -201,7 +210,8 @@ IF agent_memory_size_mb > 100
 **New file:** `scripts/feedback_loop_job.py`
 
 **Workflow:**
-```
+
+```text
 1. Query: SELECT * FROM agent_feedback WHERE rating >= 4 AND created_at > NOW() - 7 days
 2. Extract: embedding for each query (e5-large model)
 3. Retrain: fine-tune `reranker-cross-encoder` with positive examples
@@ -210,6 +220,7 @@ IF agent_memory_size_mb > 100
 ```
 
 **Config:**
+
 ```json
 {
   "id": "feedback-loop",
@@ -227,6 +238,7 @@ IF agent_memory_size_mb > 100
 **Implementation:** `scripts/health_check_job.py`
 
 **Actions:**
+
 1. Validate maestro_runs schema, indexes, RLS
 2. Check agent_memory size (alert if > 100MB)
 3. Verify skill checksums vs VERSIONS.json
@@ -237,6 +249,7 @@ IF agent_memory_size_mb > 100
 **New file:** `scripts/health_check_job.py`
 
 **Checks:**
+
 - ✓ maestro_runs table exists + has indexes
 - ✓ RLS policies enabled
 - ✓ agent_memory total size < 100MB
@@ -245,6 +258,7 @@ IF agent_memory_size_mb > 100
 - ✓ Error rate < 5%
 
 **Config:**
+
 ```json
 {
   "id": "health-check",
@@ -285,6 +299,7 @@ python scripts/apscheduler_setup.py --status
 ```
 
 Output:
+
 ```json
 {
   "running": true,
@@ -445,6 +460,7 @@ grep "Health Check" /tmp/apscheduler.log
 ### Slack Notifications
 
 Each job can send Slack alerts on:
+
 - Completion with summary
 - Critical errors (with logs)
 - Threshold breaches (e.g., > 10GB freed, > 5% error rate)
@@ -469,7 +485,7 @@ Add to `.claude/settings.json`:
 
 When session starts, will print:
 
-```
+```text
 ======================================================================
 APScheduler Status Check (P7 Background Orchestration)
 ======================================================================
@@ -490,21 +506,25 @@ Scheduled jobs (4 enabled):
 ### Job not executing
 
 1. **Check if scheduler is running:**
+
    ```bash
    ps aux | grep apscheduler_setup.py
    ```
 
 2. **Check job registration:**
+
    ```bash
    python scripts/apscheduler_setup.py --list-jobs
    ```
 
 3. **Test job directly:**
+
    ```bash
    python scripts/apscheduler_setup.py --test-job rag-reindex
    ```
 
 4. **Check logs:**
+
    ```bash
    tail -f /tmp/apscheduler.log
    ```
@@ -521,10 +541,13 @@ If scheduler consuming too much memory:
 
 1. **Validate credentials in .env**
 2. **Check network connectivity:**
+
    ```bash
    curl -I https://your-project.supabase.co
    ```
+
 3. **Test connection:**
+
    ```bash
    python -c "from supabase import create_client; c = create_client('$SUPABASE_URL', '$SUPABASE_KEY'); print(c.table('maestro_runs').select('count(*)').execute())"
    ```
@@ -560,6 +583,7 @@ Expected execution times:
 Edit `.claude/apscheduler_config.json` to:
 
 1. **Enable/disable jobs:**
+
    ```json
    {
      "id": "rag-reindex",
@@ -568,6 +592,7 @@ Edit `.claude/apscheduler_config.json` to:
    ```
 
 2. **Change cron schedule:**
+
    ```json
    {
      "cron": "0 4 * * *"  // Changed to 04:00 UTC
@@ -575,6 +600,7 @@ Edit `.claude/apscheduler_config.json` to:
    ```
 
 3. **Add new job:**
+
    ```json
    {
      "id": "my-custom-job",
@@ -608,6 +634,7 @@ This implementation follows:
 - **P6 — Observabilidade:** Health checks and run tracking
 
 Related files:
+
 - CLAUDE.md (main specification)
 - VERSIONS.json (skill/RAG collection versioning)
 - .claude/apscheduler_config.json (job config)
@@ -631,6 +658,7 @@ pkill -f "apscheduler_setup.py"
 ```
 
 Revert to v4.2:
+
 ```bash
 git checkout v4.2 -- scripts/apscheduler_setup.py .claude/apscheduler_config.json
 ```

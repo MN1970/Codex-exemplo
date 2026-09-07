@@ -11,17 +11,23 @@
 - [ ] Review ROUTING-REFERENCE.md (R1 specification)
 - [ ] Review ARQUITETURA-v5.0.md (8 pillars)
 - [ ] Run `scripts/healthcheck.py` locally
-  ```
+
+  ```yaml
   Expected: 0 critical issues, <5 warnings
   ```
+
 - [ ] Validate VERSIONS.json syntax
-  ```
+
+  ```bash
   python3 -c "import json; json.load(open('VERSIONS.json'))"
   ```
+
 - [ ] Backup existing RAG (v4.9) to S3
-  ```
+
+  ```bash
   aws s3 sync .claude/rag/ s3://manta-backup/rag-v4.9/ --exclude "*v5.0*"
   ```
+
 - [ ] Create incident communication plan
   - Email template (T-24h, T-6h, T+0, T+24h)
   - Slack #agent-ops channel ready
@@ -36,6 +42,7 @@
 - [ ] Confirm 20-agent mapa with checksums in VERSIONS.json
 - [ ] Validate tiering formula in tiering-audit.py matches CLAUDE.md apêndice
 - [ ] Run architecture test
+
   ```bash
   python3 scripts/healthcheck.py
   # Verify: "Section found: OS 8 PILARES", "R1 — MAESTRO", etc.
@@ -46,6 +53,7 @@
 ## Phase 2 — RAG Collections (36h before)
 
 - [ ] Create RAG directories
+
   ```bash
   mkdir -p .claude/rag/{san_v5.0,ene_v5.0,por_v5.0,aer_v5.0,bar_v5.0}
   ```
@@ -85,6 +93,7 @@
   - [ ] Validate: reranker score > 0.5
 
 - [ ] Run RAG reindex validation
+
   ```bash
   python3 scripts/rag-reindex.py
   # Expected output:
@@ -95,6 +104,7 @@
   ```
 
 - [ ] Backup RAG v4.9 to S3 (if exists)
+
   ```bash
   aws s3 sync .claude/rag/ s3://manta-backup/rag-v4.9/ --exclude "*v5.0*"
   ```
@@ -104,6 +114,7 @@
 ## Phase 3 — Skill Versioning (24h before)
 
 - [ ] Copy all skills to v5.0 (20 total)
+
   ```bash
   # S6–S10 (new)
   cp .claude/agents/agente-{saneamento,energia,portos,aeroportos,barragens}.md \
@@ -114,6 +125,7 @@
   ```
 
 - [ ] Generate checksums
+
   ```bash
   for file in .claude/agents/*.v5.0.md; do
     echo "$file: $(md5sum "$file")"
@@ -126,6 +138,7 @@
   - [ ] v4.9/v4.2 entries marked deprecated_at
 
 - [ ] Create `.claude/settings.json` with skill pins
+
   ```json
   {
     "skill_version_pin": {
@@ -137,6 +150,7 @@
   ```
 
 - [ ] Validate settings.json syntax
+
   ```bash
   python3 -c "import json; json.load(open('.claude/settings.json'))"
   ```
@@ -146,6 +160,7 @@
 ## Phase 4 — Observability (12h before)
 
 - [ ] Create Supabase tables
+
   ```sql
   -- See DEPLOYMENT-GUIDE.md Phase 4 for exact schema
   CREATE TABLE agent_runs (...)
@@ -154,6 +169,7 @@
   ```
 
 - [ ] Validate table creation
+
   ```bash
   psql -c "SELECT * FROM agent_runs LIMIT 0;"
   ```
@@ -176,6 +192,7 @@
 ## Phase 5 — Tiering & Fallback (6h before)
 
 - [ ] Run tiering audit
+
   ```bash
   python3 scripts/tiering-audit.py
   # Expected: accuracy > 95%
@@ -198,7 +215,8 @@
 ## Phase 6 — Integration Tests (2h before)
 
 - [ ] Test 1: Saneamento (S8) routing
-  ```
+
+  ```yaml
   Input: "Estudamos uma ETA para AySA em Buenos Aires"
   Expected agent: agente-saneamento
   Expected phase: estudo-previo
@@ -208,7 +226,8 @@
   ```
 
 - [ ] Test 2: Cross-agent (S9 + 05)
-  ```
+
+  ```yaml
   Input: "Qual o custo de uma subestação 138kV?"
   Expected agent: agente-energia (primary)
   Expected refs: agente-orcamento (secondary)
@@ -217,7 +236,8 @@
   ```
 
 - [ ] Test 3: File processing
-  ```
+
+  ```yaml
   Input: [projeto.dwg (2.5MB)] + "Análise estrutural"
   Expected: file_processing=true, window_tokens=5000+
   Expected tier: sonnet-5 (file handling)
@@ -225,7 +245,8 @@
   ```
 
 - [ ] Test 4: Fallback cascade
-  ```
+
+  ```yaml
   Input: Large query (15k tokens)
   Expected: Initial tier Opus
   Simulate timeout after 60s
@@ -235,7 +256,8 @@
   ```
 
 - [ ] Test 5: Feedback loop
-  ```
+
+  ```yaml
   Input: Rate 5 previous runs (scores 4–5)
   Expected: Entries logged in agent_feedback
   Weekly trigger enabled for embedding retraining
@@ -243,6 +265,7 @@
   ```
 
 - [ ] Run integration test suite
+
   ```bash
   pytest tests/integration/ -v
   # Expected: 5/5 tests pass
@@ -255,6 +278,7 @@
 **DO NOT PROCEED IF ANY PREVIOUS PHASE INCOMPLETE**
 
 - [ ] Merge to main
+
   ```bash
   git add CLAUDE.md VERSIONS.json .claude/ scripts/ docs/ DEPLOY-CHECKLIST.md
   git commit -m "Deploy v5.0: 8 pillars, 5 new agents (S6-S10), R6-R10 loops"
@@ -262,6 +286,7 @@
   ```
 
 - [ ] Activate RAG collections (Supabase)
+
   ```sql
   UPDATE rag_collections SET active = TRUE WHERE version = 'v5.0';
   ```
@@ -270,7 +295,8 @@
   - [ ] Deploy maestro.v5.0.md
   - [ ] Update routing keywords for S6–S10
   - [ ] Test with 10 sample prompts (1 per segment)
-  ```
+
+  ```text
   ✓ S1 (rodovias)
   ✓ S2 (OAE)
   ✓ S3 (ferrovia)
@@ -291,6 +317,7 @@
   - [ ] R10 memory purge (APScheduler)
 
 - [ ] Activate APScheduler triggers
+
   ```python
   create_trigger("rag-reindex-daily", "0 2 * * *", "Reindex RAG v5.0")
   create_trigger("embedding-retraining", "0 3 * * 0", "Fine-tune embedding")
@@ -304,7 +331,8 @@
   - [ ] Sample 5 requests from each agent (success)
 
 - [ ] Send announcement
-  ```
+
+  ```text
   Email subject: "Manta Maestro v5.0 — Live"
   Slack: Post to #agent-ops with summary
   Include: Support contact, rollback instructions, runbook link
@@ -337,6 +365,7 @@
 ### Validation (first 24h)
 
 - [ ] Cost comparison
+
   ```bash
   SELECT 
     agent_id,
@@ -350,6 +379,7 @@
   ```
 
 - [ ] Latency comparison
+
   ```bash
   SELECT 
     PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY latency_ms) as p95,
@@ -360,6 +390,7 @@
   ```
 
 - [ ] Error analysis
+
   ```bash
   SELECT status, COUNT(*) as count
   FROM agent_runs
@@ -369,6 +400,7 @@
   ```
 
 - [ ] RAG validation
+
   ```bash
   SELECT 
     agent_id,
@@ -405,7 +437,8 @@
 
 - [ ] Compile Grafana metrics screenshot
 - [ ] Request approval from @mneves
-  ```
+
+  ```yaml
   Ticket: MNT-2026-UPGRADE-AGENTS-V5
   Status: ✓ Production (stable 24h+)
   Metrics attached
@@ -424,6 +457,7 @@
 **Only if critical issues: > 10% error rate, < 2.0 feedback, cost > 3x baseline**
 
 - [ ] Revert CLAUDE.md
+
   ```bash
   git revert HEAD
   git checkout v4.2 -- CLAUDE.md
@@ -438,11 +472,13 @@
   - [ ] Comment out R10 purge
 
 - [ ] Restore RAG v4.9
+
   ```bash
   aws s3 sync s3://manta-backup/rag-v4.9/ .claude/rag/
   ```
 
 - [ ] Revert skill pins
+
   ```json
   {
     "skill_version_pin": {
@@ -453,6 +489,7 @@
   ```
 
 - [ ] Log post-mortem
+
   ```bash
   cat > ROLLBACK_LOG.md << EOF
   ## Rollback — v5.0 → v4.2
@@ -465,7 +502,8 @@
   ```
 
 - [ ] Notify team
-  ```
+
+  ```yaml
   Slack: "Rolled back to v4.2 due to [reason]. RTO: X min."
   Email: mneves + full team with post-mortem
   ```
@@ -478,7 +516,7 @@
 **Deployed by:** _________________ (name)
 **Phase 7 completed:** ☐ Yes (time: ______)
 **Phase 8 gate approved:** ☐ Yes (date: ______) | ☐ No (reason: ______)
-**Support contact:** mneves@mantaassociados.com
+**Support contact:** <mneves@mantaassociados.com>
 **Slack channel:** #agent-ops
 
 ---

@@ -1,4 +1,5 @@
 # Geometria de Rodovias — Curvas Horizontais: Cálculos Avançados
+
 ## Clotóides, Raios Variáveis e Espirais Duplas
 
 **Versão**: 1.0
@@ -30,7 +31,7 @@ permite acoplar a rotação da superelevação de forma proporcional.
 
 **Definição fundamental**:
 
-```
+```text
 R(l) × l = A²     (constante ao longo de toda a espiral)
 
 Onde:
@@ -41,7 +42,7 @@ Onde:
 
 No ponto onde a espiral encontra a curva circular (l = Ls, R = R):
 
-```
+```text
 A² = R × Ls
 A = √(R × Ls)
 ```
@@ -52,7 +53,7 @@ não apenas como resultado de R e Ls fixos.
 
 ### 1.2 Nomenclatura dos pontos notáveis
 
-```
+```text
 TS  — Tangent to Spiral   (início da espiral, saindo da tangente)
 SC  — Spiral to Curve     (fim da espiral / início do arco circular)
 CS  — Curve to Spiral     (fim do arco circular / início da 2ª espiral)
@@ -67,7 +68,7 @@ Sequência padrão de uma curva com transição simétrica:
 
 ### 1.3 Ângulo de espiral (θs)
 
-```
+```text
 θs = Ls / (2R)                    [radianos]
 ```
 
@@ -80,7 +81,7 @@ circular entre as duas espirais (ver §1.6).
 Para qualquer ponto a uma distância `l` da origem da espiral (0 ≤ l ≤ Ls),
 em relação ao sistema de eixos local (X = tangente, Y = perpendicular):
 
-```
+```text
 X(l) = l × [ 1 − θ²/10 + θ⁴/216 − θ⁶/9360 + ... ]
 Y(l) = l × [ θ/3 − θ³/42 + θ⁵/1320 − ... ]
 
@@ -103,7 +104,7 @@ termos ou integração numérica direta das integrais de Fresnel.
 A introdução da espiral "empurra" o arco circular para dentro em
 relação à tangente. Esse deslocamento é quantificado por:
 
-```
+```text
 p = Y(Ls) − R × (1 − cos θs)     (afastamento radial / "shift")
 k = X(Ls) − R × sen θs           (abscissa do centro deslocado)
 ```
@@ -111,7 +112,7 @@ k = X(Ls) − R × sen θs           (abscissa do centro deslocado)
 `p` e `k` são usados para calcular a geometria completa da curva
 composta espiral-círculo-espiral:
 
-```
+```text
 T (tangente total, do PI ao TS/ST) = (R + p) × tan(Δ/2) + k
 E (distância externa, do PI ao ponto médio do arco) = (R + p) / cos(Δ/2) − R
 Lc (comprimento do arco circular restante) = R × (Δ − 2θs)
@@ -123,7 +124,7 @@ usado nos exemplos de `02-calculos-praticos.md`).
 
 ### 1.6 Condição de existência do arco circular
 
-```
+```text
 SE  Δ > 2 × θs   →  existe arco circular (curva S-C-S clássica)
 SE  Δ = 2 × θs   →  as duas espirais se encontram exatamente no ponto
                      de raio R — não há arco circular (curva "espiral-
@@ -151,7 +152,7 @@ curvatura perceptível ao condutor.
 Geometric Design of Highways and Streets* — "Green Book"; não há
 norma DNIT específica sobre razão entre raios de curva composta):
 
-```
+```text
 Rodovia principal (pista aberta):  R1 / R2 ≤ 1.5
 Ramais / alças de interseção:      R1 / R2 ≤ 2.0  (até 3.0 em casos extremos)
 
@@ -205,7 +206,8 @@ Continuação do Caso 1 de `02-calculos-praticos.md` (R = 350 m, Ls =
 para fechar a geometria completa da curva.
 
 **Dados de entrada**:
-```
+
+```text
 R  = 350 m
 Ls = 110 m   (> L_mín = 102.9 m calculado em 02-calculos-praticos.md ✓)
 Δ  = 42.5°
@@ -213,29 +215,34 @@ A  = √(350 × 110) = 196.2 m
 ```
 
 **Passo 1 — Ângulo de espiral**:
-```
+
+```text
 θs = Ls / (2R) = 110 / 700 = 0.15714 rad = 9.004°
 ```
 
 **Passo 2 — Condição de existência do arco circular**:
-```
+
+```text
 2θs = 18.007° < Δ = 42.5°  →  existe arco circular (S-C-S válida)
 ```
 
 **Passo 3 — Coordenadas do ponto SC (fim da 1ª espiral)**:
-```
+
+```text
 X = 109.73 m
 Y = 5.752 m
 ```
 
 **Passo 4 — Deslocamento do arco (p, k)**:
-```
+
+```text
 p = 1.439 m
 k = 54.955 m
 ```
 
 **Passo 5 — Geometria completa**:
-```
+
+```text
 Lc (arco circular)     = 350 × (0.74176 − 0.31429) = 149.62 m
 T (tangente total)     = (350 + 1.439) × tan(21.25°) + 54.955 = 191.62 m
 E (distância externa)  = (350 + 1.439) / cos(21.25°) − 350 = 27.08 m
@@ -243,7 +250,8 @@ L_total (curva completa) = 2×110 + 149.62 = 369.62 m
 ```
 
 **Passo 6 — Estaqueamento** (adotando PI na estaca 10+000, Vd=100 km/h):
-```
+
+```text
 TS = PI − T          = 10+000 − 191.62 = 9+808.38
 SC = TS + Ls          = 9+808.38 + 110  = 9+918.38
 CS = SC + Lc           = 9+918.38 + 149.62 = 10+068.00
@@ -260,23 +268,27 @@ Interseção com deflexão pequena, Vd = 60 km/h (ramal de acesso),
 R = 220 m, Δ = 15°.
 
 **Passo 1 — Testar Ls mínima padrão contra a condição de existência**:
-```
+
+```text
 L_mín (fórmula padrão) = 0.036 × 60³ / 220 = 35.3 m
 θs para Ls=90m (como no Caso 2 de 02-calculos-praticos.md) = 11.72°
 2θs = 23.44° > Δ = 15°  →  NÃO existe arco circular com esse Ls
 ```
+
 A espiral de 90 m "não cabe" nos 15° de deflexão disponíveis — é
 preciso redimensionar como espiral-espiral.
 
 **Passo 2 — Redimensionar como S-S**:
-```
+
+```text
 θs_max = Δ/2 = 7.5° = 0.13090 rad
 Ls (necessária) = 2 × R × θs_max = 2 × 220 × 0.13090 = 57.60 m
 A = √(220 × 57.60) = 112.57 m
 ```
 
 **Passo 3 — Geometria resultante (Lc = 0 por definição)**:
-```
+
+```text
 T = 57.83 m
 E = 2.53 m
 L_total = 2 × 57.60 = 115.19 m
@@ -293,7 +305,7 @@ acesso normalmente opera com Vd de 40-60 km/h, não 100 km/h.
 Alça de retorno trevo, três arcos sucessivos R1 > R2 > R3, mesma
 mão de direção, ligados por clotóides:
 
-```
+```text
 R1 = 180 m  (entrada, vindo da rodovia principal)
 R2 = 100 m  (arco intermediário)
 R3 = 45 m   (arco de raio mínimo, seção mais fechada do laço)
@@ -301,13 +313,15 @@ R3 = 45 m   (arco de raio mínimo, seção mais fechada do laço)
 
 **Verificação de proporção entre arcos sucessivos** (limite AASHTO
 para ramais, R1/R2 ≤ 2.0):
-```
+
+```text
 R1/R2 = 180/100 = 1.80  → dentro do limite (≤ 2.0) ✓
 R2/R3 = 100/45  = 2.22  → FORA do limite (> 2.0) ✗
 ```
 
 **Ação corretiva**: a transição R2→R3 excede a razão recomendada.
 Duas soluções típicas:
+
 1. Inserir um raio intermediário R2b ≈ 65-70 m entre R2 e R3
    (R2/R2b ≈ 1.5, R2b/R3 ≈ 1.5), ou
 2. Alongar a clotóide de transição entre R2 e R3 para compensar
@@ -321,7 +335,7 @@ A opção (1) é preferível sempre que o espaço físico da alça permitir.
 Retorno em desnível, Vd = 50 km/h, arco 1 à direita (R1 = 130 m),
 arco 2 à esquerda (R2 = 150 m), sem tangente entre eles.
 
-```
+```text
 Arco 1 (direita):
   e1_máx = 8%  (padrão DNIT para R baixo)
   Ls1 (mín, V=50) = 0.036 × 50³/130 = 34.6 m → adotar Ls1 = 40 m
@@ -336,7 +350,8 @@ Arco 2 (esquerda):
 ```
 
 **Verificação crítica no PRC** — transição de superelevação:
-```
+
+```text
 No arco 1, a seção termina com e1 = +8% (inclinada para dentro do
 arco 1). No arco 2, a seção começa com e2 = −8% (inclinada para o
 lado oposto). A variação total no PRC é:
@@ -382,7 +397,7 @@ Não há tabela DNIT específica para o intervalo recomendado de A; a
 prática consolidada em manuais internacionais (AASHTO Green Book,
 literatura de projeto geométrico) recomenda:
 
-```
+```text
 R/3  ≤  A  ≤  R
 ```
 
@@ -481,6 +496,7 @@ de espiral dimensionado apenas pelo critério dinâmico L_mín
 frequentemente **não é suficiente** para acomodar a transição de
 superelevação completa (que precisa passar de +e para −e sem trecho
 de alívio). Subdimensionar essa transição resulta em:
+
 - Seção com drenagem inadequada perto do PRC (declividade transversal
   próxima de zero em trecho sem declividade longitudinal suficiente
   → empoçamento);
@@ -688,7 +704,7 @@ if __name__ == "__main__":
 
 ### 5.1 Pseudocódigo de decisão (fluxo resumido para intake do agente)
 
-```
+```yaml
 ENTRADA: R, Ls (ou V para calcular Ls mínimo), Δ, tipo_de_curva
 
 1. Calcular θs = Ls / (2R)

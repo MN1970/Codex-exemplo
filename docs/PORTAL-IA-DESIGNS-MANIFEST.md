@@ -10,10 +10,12 @@
 ## 📦 Entrega — 6 Designs
 
 ### 1. Brand Guidelines
+
 **Arquivo:** `portal-ia-brand-guidelines.html`  
 **Caminho SP:** `04_IA/Manta-Maestro/06-portal-ia/01-brand-guidelines/`
 
 Documentação completa do sistema de design:
+
 - Paleta corporativa (#1a3a52 primary + #E07B3D Manta laranja)
 - Tipografia (system fonts: serif, sans, mono)
 - Componentes base (botões, cards, forms)
@@ -26,10 +28,12 @@ Documentação completa do sistema de design:
 ---
 
 ### 2. Portal UI Mockups
-**Artifact:** https://claude.ai/code/artifact/85fc332f-0cda-4f43-acd4-9222828d4ade  
+
+**Artifact:** <https://claude.ai/code/artifact/85fc332f-0cda-4f43-acd4-9222828d4ade>  
 **Caminho SP:** `04_IA/Manta-Maestro/06-portal-ia/02-ui-mockups/`
 
 **8 Módulos do Portal:**
+
 1. **Dashboard** — KPIs, gráficos de progresso, alertas
 2. **Contratos** — tabela com filtros, painel de detalhes (roteado para agentes S6-S11)
 3. **Cronograma** — Gantt SVG com WBS, barras planejado/realizado, marcos
@@ -46,7 +50,8 @@ Documentação completa do sistema de design:
 ---
 
 ### 3. Arquitetura Diagramas
-**Artifact:** https://claude.ai/code/artifact/827e7af7-1987-45f4-90c5-f7738e3ed3de  
+
+**Artifact:** <https://claude.ai/code/artifact/827e7af7-1987-45f4-90c5-f7738e3ed3de>  
 **Caminho SP:** `04_IA/Manta-Maestro/06-portal-ia/03-arquitetura-diagramas/`
 
 **4 Diagramas SVG Interativos:**
@@ -78,10 +83,12 @@ Documentação completa do sistema de design:
 ---
 
 ### 4. Dashboard Interativo SICRO
-**Artifact:** https://claude.ai/code/artifact/8940c598-69cc-4a27-b174-0d4922b9ddec  
+
+**Artifact:** <https://claude.ai/code/artifact/8940c598-69cc-4a27-b174-0d4922b9ddec>  
 **Caminho SP:** `04_IA/Manta-Maestro/06-portal-ia/04-dashboard-sicro/`
 
 **Componentes:**
+
 - **KPIs:** Total de itens, Confiança média, % Auto-aceitos, Divergências
 - **Histograma** (SVG): distribuição de scores com bins de 10 pontos
 - **Tabela de Itens:** código, descrição, unidade, score, M/MO/EQ, banda (com ícone + cor + rótulo)
@@ -95,15 +102,17 @@ Documentação completa do sistema de design:
 ---
 
 ### 5. Skill Protótipo Visual
+
 **Arquivo:** `sicro-skill-prototype.html`  
 **Caminho SP:** `04_IA/Manta-Maestro/06-portal-ia/05-skill-prototype/`
 
 **Interface do Skill `/sicro-similaridade`:**
+
 - **Input:** upload de planilha (drag-drop + file picker)
 - **Controls:** seletor UF (dropdown), período (mes/ano), threshold confiança (slider)
 - **Status:** progress bar com % de conclusão, tempo restante estimado
 - **Output:** tabela de resultados (código SICRO, score, banda, M/MO/EQ)
-- **Actions:** 
+- **Actions:**
   - Download Excel final
   - Validar com aluci-guard
   - Exportar JSON para RAG
@@ -114,6 +123,7 @@ Documentação completa do sistema de design:
 ---
 
 ### 6. Component Library
+
 **Arquivo:** `component-library.html`  
 **Caminho SP:** `04_IA/Manta-Maestro/06-portal-ia/06-component-library/`
 
@@ -136,7 +146,8 @@ Documentação completa do sistema de design:
 ## 🎨 Design System Canônico
 
 ### Paleta
-```
+
+```yaml
 Primary:        #1a3a52 (Portal IA corporate blue)
 Primary Light:  #2a4f72
 Primary Dark:   #0a2032
@@ -152,7 +163,8 @@ Semantic:
 ```
 
 ### Tipografia
-```
+
+```yaml
 Display:  system-ui (serif) — títulos institucionais
 Body:     system-ui (sans) — textos corridos, UI
 Utility:  ui-monospace — códigos, IDs, dados tabulares
@@ -168,7 +180,8 @@ Scale (4px base):
 ```
 
 ### Layout
-```
+
+```yaml
 Grid:         12-col
 Max-width:    1400px
 Spacing:      4px | 8px | 16px | 24px | 32px (modular)
@@ -195,6 +208,7 @@ Mobile:       nav colapsa → abas horizontais < 760px
 ## 🚀 Próximos Passos
 
 ### Para Desenvolvimento
+
 1. [ ] Clonar components do Component Library
 2. [ ] Setup do projeto React (create-react-app ou Next.js)
 3. [ ] Integrar com Manta Maestro API (roteamento A5 + S1, RAG)
@@ -203,12 +217,14 @@ Mobile:       nav colapsa → abas horizontais < 760px
 6. [ ] Performance audit (Lighthouse)
 
 ### Para Design
+
 1. [ ] Refinamento de microcopy (Tone of Voice)
 2. [ ] Motion design (transições entre módulos)
 3. [ ] Iconografia customizada (se necessário)
 4. [ ] Design tokens em CSS (extrair para arquivo)
 
 ### Para Deployment
+
 1. [ ] Netlify/Vercel setup
 2. [ ] CI/CD pipeline (GitHub Actions)
 3. [ ] Staging environment

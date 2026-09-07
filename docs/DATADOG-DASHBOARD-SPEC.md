@@ -217,13 +217,13 @@ Grupo compacto tipo "scoreboard", 3 SLOs formais (Datadog SLO objects) + 1 resum
 - **Tipo**: `group` contendo 3 `check_status` widgets lado a lado, replicando o
   mockup §6.2 do upgrade doc:
 
-```
+```text
 P99 latency:    [valor ao vivo]  (target: <2s)   [✅/❌]
 Uptime:         [valor ao vivo]  (target: >99%)  [✅/❌]
 Success rate:   [valor ao vivo]  (target: >95%)  [✅/❌]
 ```
 
-  - Cada `check_status` referencia o monitor correspondente (M1/M3/M2 — §6)
+- Cada `check_status` referencia o monitor correspondente (M1/M3/M2 — §6)
     via `check` = nome do monitor, de forma que o ícone reflita o estado real
     do monitor (OK/Alert/Warn/No Data), não apenas o valor pontual da métrica
 

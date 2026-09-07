@@ -2,7 +2,7 @@
 
 **Status:** Staging  
 **Target Go-Live:** 2026-07-28  
-**Owner:** mneves@mantaassociados.com  
+**Owner:** <mneves@mantaassociados.com>  
 **Support:** #agent-ops (Slack)
 
 ---
@@ -10,6 +10,7 @@
 ## Overview
 
 This guide walks through deploying Manta Maestro v5.0, which introduces:
+
 - 8 architectural pillars (deterministic routing, RAG hybrid, automatic tiering, observability)
 - 5 new vertical agents (S6–S10: Portos, Aeroportos, Saneamento, Energia, Barragens)
 - 6 new routing rules (R6–R10: reranking, tiering, fallback, feedback, memory purge)
@@ -69,6 +70,7 @@ python3 scripts/healthcheck.py
 ### Tasks
 
 1. **Create collection directories** (`.claude/rag/`):
+
    ```bash
    mkdir -p .claude/rag/{san_v5.0,ene_v5.0,por_v5.0,aer_v5.0,bar_v5.0}
    ```
@@ -81,7 +83,8 @@ python3 scripts/healthcheck.py
    - **bar:v5.0** — ICOLD, CBDB, Lei 12.334 (target: 2200 chunks)
 
    **Per-collection ingestión process:**
-   ```
+
+   ```text
    1. Upload .pdf/.txt to .claude/rag/{prefix}_v5.0/
    2. OCR + chunk (512 tokens, 50% overlap)
    3. Embed via Infinity (intfloat/multilingual-e5-large-instruct)
@@ -92,12 +95,14 @@ python3 scripts/healthcheck.py
    **SLA:** Each collection ready ≤ 24h from approval.
 
 3. **Validate RAG** — Run reindex:
+
    ```bash
    python3 scripts/rag-reindex.py
    # Output: collections_processed=9, chunks_indexed=20500+
    ```
 
 4. **Backup RAG v4.9** (if exists):
+
    ```bash
    aws s3 sync .claude/rag/ s3://manta-backup/rag-v4.9/ --exclude "*v5.0*"
    ```
@@ -111,6 +116,7 @@ python3 scripts/healthcheck.py
 ### Tasks
 
 1. **Copy skills to v5.0**:
+
    ```bash
    # New agents (S6–S10)
    cp .claude/agents/agente-saneamento.md .claude/agents/agente-saneamento.v5.0.md
@@ -126,6 +132,7 @@ python3 scripts/healthcheck.py
    ```
 
 2. **Generate checksums**:
+
    ```bash
    for file in .claude/agents/*.v5.0.md; do
      echo "$file: $(md5sum "$file")"
@@ -133,6 +140,7 @@ python3 scripts/healthcheck.py
    ```
 
 3. **Update VERSIONS.json** with checksums:
+
    ```json
    {
      "agent_skills": {
@@ -147,6 +155,7 @@ python3 scripts/healthcheck.py
    ```
 
 4. **Pin skills in `.claude/settings.json`**:
+
    ```json
    {
      "skill_version_pin": {
@@ -158,6 +167,7 @@ python3 scripts/healthcheck.py
    ```
 
 5. **Mark v4.9 as deprecated**:
+
    ```json
    {
      "v4.9": {
@@ -176,6 +186,7 @@ python3 scripts/healthcheck.py
 ### Tasks
 
 1. **Create Supabase tables**:
+
    ```sql
    -- agent_runs: immutable log of all executions
    CREATE TABLE agent_runs (
@@ -234,6 +245,7 @@ python3 scripts/healthcheck.py
 ### Tasks
 
 1. **Validate tiering formula**:
+
    ```bash
    python3 scripts/tiering-audit.py
    # Expected output: accuracy > 95%
@@ -247,6 +259,7 @@ python3 scripts/healthcheck.py
    - Validate cost logging
 
    **Mock test (in maestro.v5.0.md):**
+
    ```python
    # Simulate timeout
    if latency_ms > 60000:
@@ -270,7 +283,8 @@ python3 scripts/healthcheck.py
 ### Test Cases
 
 **Test 1: Saneamento (S8) prompt**
-```
+
+```yaml
 Input: "Estudamos uma ETA para AySA em Buenos Aires, precisamos do básico"
 Expected:
   - Agent: agente-saneamento (S8)
@@ -281,7 +295,8 @@ Expected:
 ```
 
 **Test 2: Cross-agent (Energia + Orçamento)**
-```
+
+```yaml
 Input: "Qual o custo de uma subestação 138kV para State Grid?"
 Expected:
   - Primary agent: agente-energia (S9)
@@ -291,7 +306,8 @@ Expected:
 ```
 
 **Test 3: File processing (multi-file)**
-```
+
+```yaml
 Input: [projeto.dwg (2.5MB), edital.pdf (1.8MB)] + "Análise estrutural"
 Expected:
   - File processing flag: true
@@ -300,7 +316,8 @@ Expected:
 ```
 
 **Test 4: Fallback cascade (R8)**
-```
+
+```yaml
 Input: Large query (15k tokens) to agente-energia
 Expected:
   - Initial tier: Opus 5
@@ -311,7 +328,8 @@ Expected:
 ```
 
 **Test 5: Feedback loop (R9)**
-```
+
+```yaml
 Input: Rate 5 previous runs with scores 4–5
 Expected:
   - Entries logged in agent_feedback
@@ -321,6 +339,7 @@ Expected:
 ```
 
 ### Run Tests
+
 ```bash
 # Unit tests (Python)
 python3 -m pytest tests/ -v
@@ -338,6 +357,7 @@ done
 **Checklist (execute in order):**
 
 1. **Merge to main**:
+
    ```bash
    git add CLAUDE.md VERSIONS.json .claude/ scripts/ docs/
    git commit -m "Deploy v5.0: 8 pillars, 5 new agents (S6-S10), R6-R10 loops"
@@ -345,6 +365,7 @@ done
    ```
 
 2. **Activate RAG collections** (in Supabase):
+
    ```sql
    UPDATE rag_collections SET active = TRUE WHERE version = 'v5.0';
    ```
@@ -362,6 +383,7 @@ done
    - Enable R10 memory purge (APScheduler)
 
 5. **Activate APScheduler triggers**:
+
    ```python
    # rag-reindex: daily 02:00 UTC
    create_trigger("rag-reindex-daily", "0 2 * * *", "Reindex RAG v5.0")
@@ -380,7 +402,8 @@ done
    - Sample 5 requests from each agent
 
 7. **Announce** (email + Slack):
-   ```
+
+   ```yaml
    Subject: Manta Maestro v5.0 — Live
 
    v5.0 is now in production. Key changes:
@@ -426,7 +449,8 @@ done
 ### Gate (48h after go-live)
 
 Request approval from @mneves via:
-```
+
+```text
 Ticket MNT-2026-UPGRADE-AGENTS-V5
 Status: ✓ Production (stable)
 Metrics: [attach Grafana screenshot]
@@ -444,23 +468,27 @@ Once approved, remove rollback window (Phase 8 end).
 ### Steps (< 1 hour RTO)
 
 1. **Revert CLAUDE.md**:
+
    ```bash
    git revert HEAD
    git checkout v4.2 -- CLAUDE.md
    ```
 
 2. **Disable R6–R10**:
+
    ```bash
    # In maestro.v5.0.md: comment out R6–R10 hooks
    # Keep R1–R5 active (backward compatible)
    ```
 
 3. **Restore RAG v4.9**:
+
    ```bash
    aws s3 sync s3://manta-backup/rag-v4.9/ .claude/rag/ --exclude "*v5.0*"
    ```
 
 4. **Revert skill pins**:
+
    ```json
    {
      "skill_version_pin": {
@@ -471,12 +499,14 @@ Once approved, remove rollback window (Phase 8 end).
    ```
 
 5. **Deactivate new agents** (S6–S10):
+
    ```bash
    # Remove S6–S10 from maestro routing rules
    # Keep S1–S4 + horizontals
    ```
 
 6. **Log post-mortem**:
+
    ```bash
    cat > ROLLBACK_LOG.md << EOF
    ## Rollback — v5.0 → v4.2
@@ -489,7 +519,8 @@ Once approved, remove rollback window (Phase 8 end).
    ```
 
 7. **Notify team**:
-   ```
+
+   ```text
    Slack #agent-ops: "Rolled back to v4.2 due to [reason]. RTO: 47min."
    Email: mneves + team with post-mortem
    ```
@@ -542,7 +573,7 @@ python3 scripts/rag-reindex.py
 ## Support & Contact
 
 - **Slack:** #agent-ops
-- **Email:** mneves@mantaassociados.com
+- **Email:** <mneves@mantaassociados.com>
 - **Documentation:** `/home/user/Codex-exemplo/docs/`
 - **Issues:** Create ticket in MNT-2026 epic
 - **Escalation:** MN (final approval)

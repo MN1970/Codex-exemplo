@@ -37,6 +37,7 @@
 ## 1️⃣ NORMAS DNIT ES 101/97 — Fundamentação Normativa Completa
 
 ### Cobertura
+
 - ✅ Estrutura completa da norma (todas as seções)
 - ✅ Tabelas de raio mínimo por velocidade
 - ✅ Fórmulas de superelevação máxima
@@ -45,11 +46,13 @@
 - ✅ Checklist de conformidade
 
 ### Referências Cruzadas
+
 - Documento 01: Elementos Geométricos (resumo)
 - Documento 05: Normas DNIT (detalhado)
 - Documento 02: Cálculos Práticos (aplicação)
 
 ### Aplicação Prática
+
 Toda decisão geométrica deve ser validada contra ES 101/97 antes de aprovação executiva.
 
 ---
@@ -57,6 +60,7 @@ Toda decisão geométrica deve ser validada contra ES 101/97 antes de aprovaçã
 ## 2️⃣ CURVAS HORIZONTAIS AVANÇADAS — Clotóides, Radii Variáveis, Espirais Duplas
 
 ### Tópicos Cobertos
+
 - Clotóide simples: fórmula, comprimento mínimo, transição
 - Clotóide dupla: compensação assimétrica
 - Espiral logarítmica: aplicação em terreno complexo
@@ -64,6 +68,7 @@ Toda decisão geométrica deve ser validada contra ES 101/97 antes de aprovaçã
 - Validação de visibilidade em espiral
 
 ### Exemplos Numéricos
+
 - **Caso 1**: Clotóide simples em BR federal (Vd=100, R=500m)
   - L_c = 2×√(R×A²) → L_c ≈ 110m
   - Δ = L_c²/(6R) → Δ ≈ 4.1m (deslocamento)
@@ -74,6 +79,7 @@ Toda decisão geométrica deve ser validada contra ES 101/97 antes de aprovaçã
   - Espiral 2: R=800m, L_c=80m
 
 ### Validação
+
 - Compatibilidade com superelevação
 - Verificação de flecha vs recuo banqueta
 - Confirmar visibilidade nos pontos críticos
@@ -85,24 +91,28 @@ Toda decisão geométrica deve ser validada contra ES 101/97 antes de aprovaçã
 ### Três Métodos Principais
 
 **Método 1: Rotação de Eixo**
+
 - Eixo permanece em cota constante
 - Bordos externos/internos giram simetricamente
 - Aplicação: curvas de grandes raios (R > 800m)
 - Vantagem: nivelação balanceada
 
 **Método 2: Rotação de Bordo Externo**
+
 - Eixo sobe junto com bordo externo
 - Bordo interno fica constante ou baixa pouco
 - Aplicação: áreas urbanas com restrições de altura
 - Vantagem: menos escavação no lado interno
 
 **Método 3: Rotação Simétrica**
+
 - Ambos bordos giram simetricamente ao redor do eixo
 - Aplicação: curvas pequenas em terreno plano
 - Vantagem: simplifica execução
 
 ### Cálculo de Superelevação Máxima
-```
+
+```text
 e_máx (%) = V² / (127 × R) - f
 
 Tabela por Vd (conforme ES 101/97):
@@ -112,6 +122,7 @@ Vd=120: e_máx = 6.0%, R_mín = 370m
 ```
 
 ### Comprimento de Transição
+
 - Mínimo: L_t = e_máx × L_via / i_máx
 - i_máx típico: 0.67% (relação talude/comprimento)
 - Exemplo: e=7%, L_via=7.2m → L_t ≈ 75m
@@ -121,12 +132,14 @@ Vd=120: e_máx = 6.0%, R_mín = 370m
 ## 4️⃣ VISIBILIDADE EM CURVA 3D — Flecha, Banquetas, Análise Risco
 
 ### Conceitos Fundamentais
+
 - **Flecha de visibilidade**: altura do observador = 1.1m, objeto = 0.6m
 - **Banqueta de corte**: recuo necessário para garantir visibilidade
 - **Análise 3D**: considerar tanto alinhamento H quanto V
 
 ### Cálculo de Flecha Mínima
-```
+
+```text
 f = D² / (8×R) - 0.6
 
 Onde:
@@ -136,12 +149,14 @@ R = raio da curva (m)
 ```
 
 ### Exemplo Prático
+
 - Rodovia federal, Vd=100, R=500m
 - Distância de parada: D ≈ 137m
 - f = 137² / (8×500) - 0.6 ≈ 4.7m
 - → Banqueta deve recuar mínimo 4.7m no corte
 
 ### Risco Geométrico
+
 - Curvas com R < R_mín e e > 7%: RISCO ALTO
 - Curvas com visibilidade f < mínimo: RISCO CRÍTICO
 - Ação: sinalização de curva perigosa ou reengenharia
@@ -151,11 +166,13 @@ R = raio da curva (m)
 ## 5️⃣ ALINHAMENTO VERTICAL — Parábolas, Frenagem, Distância Parada
 
 ### Tipos de Curvas Verticais
+
 - **Côncava**: vale (Kv positivo) — crítica para conforto
 - **Convexa**: crista (Kv negativo) — crítica para visibilidade
 
 ### Fórmula de Distância de Parada
-```
+
+```text
 D = V²/(254×(f+i))
 
 Onde:
@@ -171,7 +188,8 @@ Vd=120 → D ≈ 177m
 ```
 
 ### Cálculo de Raio Vertical Mínimo
-```
+
+```text
 Kv = D² / (2×(h1+h2))
 
 Padrão ES 101/97:
@@ -181,6 +199,7 @@ Vd=120 → Kv_mín = 120m
 ```
 
 ### Inclinações Máximas por Vd
+
 - Vd ≤ 60: i_máx = 10%
 - Vd = 80: i_máx = 8%
 - Vd = 100: i_máx = 6%
@@ -191,7 +210,8 @@ Vd=120 → Kv_mín = 120m
 ## 6️⃣ SEÇÃO TRANSVERSAL AVANÇADA — Taludes, Estabilidade, Drenagem
 
 ### Componentes da Seção
-```
+
+```text
 Corte (direita) | Eixo | Pavimento | Eixo | Aterro (esquerda)
   [Talude]      | 2%  |  7.2m    | 2%   | [Talude]
    [Banqueta]   |     |          |      | [Drenagem]
@@ -201,21 +221,25 @@ Corte (direita) | Eixo | Pavimento | Eixo | Aterro (esquerda)
 ### Altura e Inclinação de Taludes
 
 **Em Corte**:
+
 - H < 5m: i = 1:1 (45°) típico
 - H = 5-10m: i = 1:1.5 (34°) recomendado
 - H > 10m: análise de estabilidade obrigatória (pode ser 1:2 ou menor)
 
 **Em Aterro**:
+
 - Material granular: i = 1:1.5 típico (34°)
 - Material coesivo: i = 1:2 (27°) mínimo
 - Aterro sobre areia: i = 1:3 (19°) recomendado
 
 ### Banqueta de Corte
+
 - Altura: 5m a cada banqueta
 - Largura: 2-4m (para acesso, drenagem, segurança)
 - Declividade: 2-3% para interior (drenar)
 
 ### Drenagem Integrada
+
 - Valetas de crista (topo do corte)
 - Drenos longitudinais (pé do corte)
 - Tubulações transversais (saída)
@@ -225,14 +249,16 @@ Corte (direita) | Eixo | Pavimento | Eixo | Aterro (esquerda)
 ## 7️⃣ PAVIMENTAÇÃO — CBUQ/BGS, Espessuras, Vida Útil
 
 ### Estrutura Típica do Pavimento
-```
+
+```text
 CBUQ 5cm (rolamento) — resistência, atrito
 BGS 15cm (base) — distribuição carga
 Subleito preparado — capacidade suporte
 ```
 
 ### Cálculo de Espessura (Método AASHTO)
-```
+
+```text
 N = (VDM × 365 × n) × Fv × Fc
 
 Onde:
@@ -251,11 +277,13 @@ N = (3000 × 365 × 10) × 0.8 × 1.3 ≈ 11.4M
 ```
 
 ### Vida Útil Esperada
+
 - CBUQ: 7-10 anos (sob tráfego normal)
 - BGS: 15-20 anos (se bem drenado)
 - Subleito: indefinido (se estável)
 
 ### Reforço vs Recapeamento
+
 - Reforço: adiciona camadas sobre pavimento existente
 - Recapeamento: remove topo desgastado, adiciona nova camada
 - Reconstrução: remove tudo, reconstrói base/subleito
@@ -267,18 +295,21 @@ N = (3000 × 365 × 10) × 0.8 × 1.3 ≈ 11.4M
 ### BR-116 SP-MG — Duplicação Pista Paulista
 
 **Características**:
+
 - Extensão: 140 km (Jundiaí até Divisa MG)
 - Vd = 100 km/h (federal)
 - Topografia: montanhosa (Serra da Mantiqueira)
 - Tráfego: ~4.500 veículos/dia
 
 **Soluções Geométricas**:
+
 - Raios mínimos: 340m (alguns 500m em seções críticas)
 - Superelevação: 7% em curvas acentuadas
 - Banquetas: 3-4m em cortes profundos (até 20m)
 - Curvas compostas em terreno complexo
 
 **Custos SICRO** (2026):
+
 - Pavimento CBUQ 5cm: ~R$95/m² = R$685k/km × 140km = R$95.9M
 - Terraplenagem e drenagem: ~30-40% do total
 - **Orçamento estimado**: R$200-250M
@@ -288,11 +319,13 @@ N = (3000 × 365 × 10) × 0.8 × 1.3 ≈ 11.4M
 ### BR-101 RJ-SP — Segurança em Serras
 
 **Desafios**:
+
 - Curvas acentuadas em serra (R < 300m frequente)
 - Declividades até 8%
 - Pontos críticos de risco: Serra Geral, Serra da Bocaina
 
 **Intervenções Implementadas**:
+
 - PARCLO em interseções principais (não há cruzamento em nível)
 - Banquetas de 5m+ em cortes
 - Sinalização complementar em curvas perigosas
@@ -305,11 +338,13 @@ N = (3000 × 365 × 10) × 0.8 × 1.3 ≈ 11.4M
 ### BR-163 MT — Rodovia de Planalto
 
 **Características**:
+
 - Topografia plana a suave ondulado
 - Vd = 100 km/h
 - Tráfego alto (grãos, minérios): ~2.500 veículos/dia
 
 **Projeto**:
+
 - Raios largos: 600-1000m (geometria simples)
 - Superelevação: 4-5% (não é crítica)
 - Longas seções retas (economia de custos)
@@ -322,6 +357,7 @@ N = (3000 × 365 × 10) × 0.8 × 1.3 ≈ 11.4M
 ## 9️⃣ MX ROAD — Automação, Macros, Saída DNIT Nativa
 
 ### Fluxo de Trabalho
+
 1. Importar topografia (LAS, DXF)
 2. Definir alinhamento H (eixo via)
 3. Definir alinhamento V (greide)
@@ -329,17 +365,20 @@ N = (3000 × 365 × 10) × 0.8 × 1.3 ≈ 11.4M
 5. Extrair volumes, relatórios DNIT
 
 ### Macros Essenciais
+
 - **Macro 1**: Superelevação automática (conforme ES 101/97)
 - **Macro 2**: Banquetas de corte (altura × inclinação)
 - **Macro 3**: Geração de relatórios (perfis, volumes)
 
 ### Saída DNIT Nativa
+
 - Planta de situação conforme padrão
 - Perfil longitudinal com cotas
 - Seções transversais tipo
 - Memorial descritivo automático (partes)
 
 ### Tempo de Projeto
+
 - Topografia → Projeto Básico: ~2-3 semanas
 - Projeto Básico → Executivo: ~4-6 semanas
 - Total com revisões: ~8-10 semanas
@@ -351,25 +390,30 @@ N = (3000 × 365 × 10) × 0.8 × 1.3 ≈ 11.4M
 ### Componentes Principais
 
 **Alignment** (Alinhamento H):
+
 - Polilinhas com arcos e retas
 - Stationings automáticos
 
 **Profile** (Alinhamento V):
+
 - Greide com curvas parabólicas
 - Cotas de projeto vs cotas de terreno
 
 **Assembly** (Seção Transversal):
+
 - Componentes: pavimento, taludes, drenagem
 - Propriedades: largura, inclinação, material
 - Dinâmico: muda conforme greide
 
 **Corridor** (Via Completa):
+
 - Combina Alignment + Profile + Assembly
 - Gera volumes automáticos
 - Produz seções dinâmicas
 
 ### Volumes Dinâmicos
-```
+
+```text
 Volume de Corte = Σ (área de corte × distância)
 Volume de Aterro = Σ (área de aterro × distância)
 
@@ -380,6 +424,7 @@ Volume parcial = (85+95)/2 × 20 = 1.800 m³
 ```
 
 ### Relatórios Gerados
+
 - Perfis de projeto vs terreno
 - Volumes acumulados (Brückner)
 - Quantitativos de material
@@ -399,12 +444,14 @@ Volume parcial = (85+95)/2 × 20 = 1.800 m³
 | 71010 | BCS cimento 10cm | R$25 | m² |
 
 ### Automação de Custos
+
 1. Importar quantitativos (Civil 3D → Excel)
 2. Multiplicar por composição SICRO
 3. Somar contingência (5-10%)
 4. Validar contra orçamento prévio
 
 ### Índice de Atualização
+
 - Base: Junho 2026
 - Atualização mensal via DNIT
 - Fator de correção: IPC-FIPE
@@ -414,22 +461,26 @@ Volume parcial = (85+95)/2 × 20 = 1.800 m³
 ## 1️⃣2️⃣ DRONE MAPPING — Captura, Densidade, Processamento
 
 ### Equipamentos Recomendados
+
 - **Drone**: DJI Phantom 4 Pro ou Matrice 300
 - **Câmera**: 5MP ou superior
 - **Altura de voo**: 100-150m (densidade ~2cm/pixel)
 
 ### Processamento
+
 1. Captura: 1.500-2.000 fotos (área 5km²)
 2. Alinhamento: software Agisoft Metashape (~2h)
 3. Nuvem de pontos: ~500M pontos
 4. MDE (Modelo Digital Elevação): ~0.5m resolução
 
 ### Acurácia
+
 - Horizontal: ±10-15cm (com GCP)
 - Vertical: ±5-10cm (com GCP)
 - GCP = Ground Control Points (5-8 pontos de referência)
 
 ### Tempo Total
+
 - Planejamento + Voo: 1 dia
 - Processamento: 2-3 dias
 - Relatório: 1 dia
@@ -440,13 +491,15 @@ Volume parcial = (85+95)/2 × 20 = 1.800 m³
 ## 1️⃣3️⃣ INTERSEÇÕES — Rotatórias, Triângulo Visibilidade
 
 ### Rotatória — Dimensionamento
-```
+
+```text
 R_ext (raio externo): 25-30m (urbano), 30-40m (rodovia)
 R_int (raio interno): 12-15m
 Largura de faixa: 3.5-4.5m (2-3 faixas)
 ```
 
 ### Triângulo de Visibilidade
+
 - Vértices: observador em veículo, ponto de conflito, aproximação
 - Altura observador: 1.1m
 - Altura objeto: 0.6m
@@ -457,17 +510,20 @@ Largura de faixa: 3.5-4.5m (2-3 faixas)
 ## 1️⃣4️⃣ DRENAGEM SUPERFICIAL — Banquetas, Declividades, Proteção
 
 ### Sarjeta Típica
+
 - Profundidade: 0.4-0.6m
 - Largura: 1.0-1.5m
 - Declividade: 2-3% (para interior)
 - Material: concreto ou solo estabilizado
 
 ### Declividades Mínimas
+
 - Pavimento: 2% (transversal)
 - Banqueta: 2-3% (para sarjeta)
 - Talude: 3-5% (conforme material)
 
 ### Proteção Contra Erosão
+
 - Gabiões em pés de talude
 - Grama/vegetação em taludes moderados
 - Concreto projetado em cortes rochosos
@@ -477,17 +533,20 @@ Largura de faixa: 3.5-4.5m (2-3 faixas)
 ## 1️⃣5️⃣ SEGURANÇA & RISCO — Curvas Perigosas, Acidentes, Mitigação
 
 ### Identificação de Curva Perigosa
+
 - **Critério 1**: R < R_mín para Vd
 - **Critério 2**: Número de acidentes ≥ 2 em 2 anos
 - **Critério 3**: Visibilidade < distância de parada
 
 ### Mitigação de Risco
+
 1. Sinalização reforçada (placas, pinturas)
 2. Redutor de velocidade (lombada tática)
 3. Reengenharia geométrica (se viável)
 4. Melhor drenagem (diminui aquaplaning)
 
 ### Exemplos Históricos (BR-116, BR-101)
+
 - Curvas com R=250m em terreno montanhoso = RISCO CRÍTICO
 - Redução de Vd ou reconstrução necessária
 - Histórico: 4+ acidentes em 2 anos = ação obrigatória
@@ -497,6 +556,7 @@ Largura de faixa: 3.5-4.5m (2-3 faixas)
 ## 1️⃣6️⃣ TESTES UNITÁRIOS — Python Scripts, Validação Geométrica
 
 ### Script 1: Verificar Raio Mínimo
+
 ```python
 def check_radius(Vd, e_max, f=0.4):
     R_min = (Vd**2) / (127 * (e_max/100 + f))
@@ -506,6 +566,7 @@ R = check_radius(100, 7.0)  # → R_min ≈ 340m
 ```
 
 ### Script 2: Calcular Superelevação
+
 ```python
 def calc_superelevation(Vd, R, f=0.4):
     e = ((Vd**2) / (127 * R)) - f
@@ -515,6 +576,7 @@ e = calc_superelevation(100, 500)  # → e ≈ 4.7%
 ```
 
 ### Script 3: Validar Visibilidade
+
 ```python
 def check_visibility(Vd, R):
     D = (Vd**2) / (254 * 0.4)  # distância de parada
@@ -525,6 +587,7 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 ```
 
 ### Testes Unitários
+
 - ✅ Teste: Vd=100, R=340 (raio mín) → e=7%
 - ✅ Teste: Vd=100, R=500 → e≈4.7%
 - ✅ Teste: Visibilidade em R=500 → f≈4.7m
@@ -535,16 +598,19 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 ## 1️⃣7️⃣ PROJETO VS REABILITAÇÃO — Novo Traçado vs Ajustes, Custos
 
 ### Projeto Novo
+
 - **Custo**: R$200-500/km (geométrico + terraplenagem)
 - **Tempo**: 12-18 meses (projeto + licitação)
 - **Vantagem**: geometria otimizada
 
 ### Reabilitação Geométrica
+
 - **Custo**: R$50-150/km (melhorias seletivas)
 - **Tempo**: 6-12 meses
 - **Risco**: limitações de terreno existente
 
 ### Comparação: BR Federal, Vd=100, 100km
+
 | Aspecto | Novo Traçado | Reabilitação |
 |---------|-------------|--------------|
 | Custo Geom | R$300M | R$75M |
@@ -558,6 +624,7 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 ## 1️⃣8️⃣ INTEGRAÇÃO AGENTE-INFRAESTRUTURA — Prompts, Intake, Outputs
 
 ### Fluxo de Intake (Q1-Q4)
+
 **Q1**: Qual segmento (rodovia)?  
 → Agente-infraestrutura S1 ativado
 
@@ -571,6 +638,7 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 → Nível de detalhe ajustado
 
 ### Outputs Estruturados
+
 1. **Recomendação de Vd**: baseado em topografia + tráfego
 2. **Parâmetros geométricos**: R_mín, e_máx, K_v
 3. **Quantitativos preliminares**: volumes, áreas
@@ -582,6 +650,7 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 ## 1️⃣9️⃣ TEMPLATES & CHECKLISTS — Estruturas, Validação Final
 
 ### Template 1: Memorial Descritivo (ES 101/97)
+
 ```markdown
 ## 1. CARACTERÍSTICAS DO PROJETO
 - Classe: Federal, Vd = 100 km/h
@@ -616,6 +685,7 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 ```
 
 ### Checklist de Validação Final
+
 - [ ] Todos os raios ≥ R_mín conforme Vd
 - [ ] Superelevação ≤ e_máx (7% federal)
 - [ ] Visibilidade garantida em todas as curvas
@@ -630,23 +700,27 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 ## 2️⃣0️⃣ ROADMAP FUTURO — ML, Otimização, Big Data
 
 ### Machine Learning — Previsão de Falhas
+
 - **Input**: histórico de acidentes + geometria
 - **Output**: previsão de risco em curva nova
 - **Treinamento**: dados de 100+ rodovias (DNIT)
 
 ### Otimização de Traçado
+
 - **Problema**: minimizar comprimento + custo terraplenagem
 - **Restrições**: normas geométricas + topografia
 - **Solução**: algoritmo genético ou programação dinâmica
 - **Ganho**: até 15% redução de custos
 
 ### Big Data — Análise Integrada
+
 - **Fonte 1**: SICRO histórico (composições, custos)
 - **Fonte 2**: Tráfego (VDM, composição, crescimento)
 - **Fonte 3**: Clima (precipitação, temperatura, alagamentos)
 - **Insight**: prever falhas 2-3 anos antes
 
 ### Integração com Supabase (RAG)
+
 - ✅ Coleção `rodovias` com prefixo `rod:geom:*`
 - ✅ Chunks: documentos 01-08 + casos reais
 - ✅ Busca semântica: "qual raio mínimo?" → resposta automática
@@ -670,18 +744,21 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 ## 📌 Próximas Ações
 
 ### Fase I — Finalização (HOJE)
+
 1. ✅ Consolidação desta especializações (doc 08)
 2. ⏳ Criar testes de validação (5 prompts)
 3. ⏳ Criar migração RAG Supabase
 4. ⏳ Commit final + PR #55 ready for review
 
 ### Fase II — Planejado (APÓS APROVAÇÃO MN)
+
 1. Lançar 60 agentes paralelos (Pav + Terra + Dren + O&M)
 2. Consolidar 18 novos documentos
 3. Criar 4 migrações RAG adicionais
 4. Abrir PR #56 para revisão
 
 ### Roadmap v4.5+
+
 - ML para previsão de falhas
 - Otimizador de traçado
 - Integração Dashboard Supabase

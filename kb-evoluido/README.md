@@ -7,6 +7,7 @@ Sistema de Knowledge Base evolutivo com **aprendizado contínuo**, machine learn
 ## 🎯 Objetivo
 
 Transformar o KB do Manta Maestro de **estático** (v4.2) para **evolutivo** — atualizando constantes técnicas, templates e padrões automaticamente diariamente a partir de:
+
 - Projetos finalizados
 - Validação de agentes especializados
 - Machine learning (clustering, pattern matching, anomaly detection)
@@ -23,7 +24,7 @@ Em paralelo, 4 agentes estão criando:
 
 ## 📊 Estrutura do Repositório
 
-```
+```text
 kb-evoluido/
 ├── README.md                    # este arquivo
 ├── PRIORITY_MAP.md             # segmentos prioritários (S8, S9, S6)
@@ -56,7 +57,7 @@ kb-evoluido/
 
 ## 🚀 Fluxo de Evolução
 
-```
+```text
 Projeto Finalizado
        ↓
 Extração de Features (diário)
@@ -77,11 +78,13 @@ Novo projeto já usa constantes atualizadas ✅
 ## 📋 Segmentos Prioritários
 
 ### Tier 1 (Máxima Prioridade)
+
 - **Saneamento (S8)** — AySA, ETA/ETE, constantes K1/K2
 - **Energia (S9)** — ANEEL, transmissão, subestações
 - **Portos (S6)** — ANTAQ, tarifas dinâmicas, PIANC
 
 ### Tier 2
+
 - **Aeroportos (S7)**, **Barragens (S10)**
 
 Ver [PRIORITY_MAP.md](./PRIORITY_MAP.md) para detalhes.

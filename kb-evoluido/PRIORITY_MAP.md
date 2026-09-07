@@ -21,7 +21,7 @@
 
 ## Dados Disponíveis por Segmento
 
-```
+```text
 sharepoint/01-agentes-fundamentais/
 ├── agente-saneamento/
 │   ├── README.md           # Contexto de domínio
@@ -39,6 +39,7 @@ sharepoint/01-agentes-fundamentais/
 ## Constantes Técnicas Iniciais a Rastrear
 
 ### Saneamento (agente-saneamento)
+
 - K1 (coef. dia máximo): 1.2–1.5 BR, variável por região
 - K2 (coef. hora máxima): 1.5–2.0 BR
 - Per capita: 150–250 L/hab.dia BR, 200–350 AR
@@ -47,6 +48,7 @@ sharepoint/01-agentes-fundamentais/
 - Índices SNIS (perda %, atendimento %)
 
 ### Energia (agente-energia)
+
 - Parâmetros de transmissão (R, X por km)
 - Capacidade de subestações (VA)
 - Resolução ANEEL vigente (taxa, fator X/R)
@@ -54,6 +56,7 @@ sharepoint/01-agentes-fundamentais/
 - Critérios de seleção de rota (faixa, segurança)
 
 ### Portos (agente-portos)
+
 - Calado operacional por berço
 - Padrões PIANC (forças de atracação)
 - Dragagem (produtividade, profundidade)

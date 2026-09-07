@@ -1,4 +1,5 @@
 # MAESTRO — Router Canônico (Manta 00)
+
 **Versão: v5.0** | **Checksum: d3a2f1c8e4b7**
 
 Maestro é o router central que recebe prompts do usuário, executa as 3 fases de roteamento determinístico (keyword + embedding + context inference), e injeta configuração no agente alvo (model override, skill_version_pin, context window allocation).
@@ -22,6 +23,7 @@ Maestro é o router central que recebe prompts do usuário, executa as 3 fases d
 ### Stage 1 — Keyword Matching + Embedding Similarity
 
 **Pseudocode:**
+
 ```python
 def stage1_candidate_selection(prompt, context_hints):
     # Extract keywords
@@ -46,7 +48,8 @@ def stage1_candidate_selection(prompt, context_hints):
 ```
 
 **Exemplo:**
-```
+
+```yaml
 Keywords: ["ETA", "São Paulo", "custo", "500 mil habitante"]
 BM25 matching:
   san:v5.0:chunks → score 0.95 (ETA + "500 mil" + "saneamento")
@@ -67,6 +70,7 @@ Candidates:
 ### Stage 2 — Context Inference + Phase Detection
 
 **Pseudocode:**
+
 ```python
 def stage2_context_inference(prompt, candidates, file_context):
     # Phase inference via embedding + BM25
@@ -100,7 +104,8 @@ def stage2_context_inference(prompt, candidates, file_context):
 ```
 
 **Exemplo:**
-```
+
+```text
 Phase inference:
   "memorial-descritivo.pdf" + "projeto-executivo" mention
   → phase = "projeto-executivo"
@@ -111,6 +116,7 @@ Phase inference:
 ### Stage 3 — Model Tiering (R7) + Config Injection
 
 **Pseudocode:**
+
 ```python
 def stage3_tiering_and_config(prompt, candidate_agent, phase, file_context):
     # Compute complexity score
@@ -211,6 +217,7 @@ def compute_complexity(keywords_matched, rag_reranker_score, files_to_process, p
 **Entrada:** Lista de 20 chunks do RAG (BM25 + embedding)
 
 **Processamento:**
+
 - Cross-encoder fine-tuned em queries de eng. + contexto Manta
 - Score: relevância relativa ao prompt original
 - Threshold: score > 0.5 ou top-5 (o que for maior)
@@ -222,7 +229,8 @@ def compute_complexity(keywords_matched, rag_reranker_score, files_to_process, p
 ## R7 — TIERING AUTOMÁTICO (Complexity-Based)
 
 **Decision Tree:**
-```
+
+```text
 IF input_tokens < 2000 AND complexity < 3.0
    → Haiku 4.5 (cheap, fast)
 ELSE IF input_tokens < 10000 AND complexity < 6.0
@@ -232,6 +240,7 @@ ELSE
 ```
 
 **Custo esperado:**
+
 - Haiku: ~$0.08 / 1M tokens
 - Sonnet: ~$3 / 1M tokens
 - Opus: ~$15 / 1M tokens
@@ -241,6 +250,7 @@ ELSE
 **Trigger:** Agent timeout após 60s em modelo inicial
 
 **Cascade:**
+
 1. Log timeout (run_id, agent_id, model_tier, latency_ms)
 2. Resubmit com fallback_tier (próximo nível)
 3. Reinjetar estado (context, RAG results, partial output)
@@ -250,7 +260,8 @@ ELSE
 ## Ambiguidade e Clarification
 
 Se score_top1 - score_top2 < 0.1:
-```
+
+```text
 → Maestro retorna ambiguidade
 → Solicita clarification user
 → Exemplos: "Refira-se a Saneamento ou Energia?"
@@ -259,30 +270,39 @@ Se score_top1 - score_top2 < 0.1:
 ## Keywords por Segmento (Routing Lookup Table)
 
 ### S8 — SANEAMENTO
+
 `saneamento|ETA|ETE|adutora|esgoto|água|AySA|drenagem|SNIS|PMSB|Lei 14.026|RAP|reúso|lodo|UASB|MBR`
 
 ### S9 — ENERGIA
+
 `transmissão|LT|subestação|ANEEL|RAP|leilão|ONS|EPE|PDE|torre|cabo|ACSR|CAA|geração|eólica|solar|hidráulica|PCH|UHE`
 
 ### S6 — PORTOS
+
 `porto|terminal|ANTAQ|dragagem|molhe|quebra-mar|berço|calado|contêiner|granel|cais|píer|TUP|TPS|PIANC|arrendamento|hidrovia`
 
 ### S7 — AEROPORTOS
+
 `aeroporto|pista|RWY|taxiway|TWY|TPS|TECA|ANAC|RBAC|ICAO|Annex 14|FAA|balizamento|PAPI|ILS|PCN|gate|jetway|concessão`
 
 ### S10 — BARRAGENS
+
 `barragem|vertedouro|CFRD|CCR|RCC|rejeitos|TSF|PNSB|ICOLD|CBDB|SIGBM|ANM|ANA|Lei 12.334|Fundão|Brumadinho|alteamento|PAE|PAEBM`
 
 ### S1 — RODOVIAS
+
 `rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT|asfalto|concreto|base|sub-base|corte|aterro|drenagem`
 
 ### S2 — OAE
+
 `ponte|viaduto|OAE|NBR 7187|túnel|fundação|pilares|aparelhos-apoio|junta|elastômero|expansão|laje|concreto-protendido`
 
 ### S3 — FERROVIA
+
 `ferrovia|trilho|AMV|dormente|via-permanente|bitola|pantógrafo|catenária|tráfego-ferroviário|estação|ptv|ramal`
 
 ### S4 — METRÔ
+
 `metrô|estação|NATM|PSD|linha|VLT|veículo-leve|subterrâneo|elevado|superficial|portal|trem|automático|ATO`
 
 ## Ciclo de Vida — 8 Fases

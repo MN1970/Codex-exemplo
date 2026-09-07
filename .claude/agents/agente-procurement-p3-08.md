@@ -25,6 +25,7 @@
 ## 2. Core Capabilities
 
 ### 2.1 RFQ Generation
+
 - **Input:** Project scope, WBS, budget, technical specs
 - **Output:** Formatted RFQ documents (PDF/DOCX), item lists (BOM), delivery requirements
 - **Standards Applied:** ABNT NBR 12721, NBR 14653, ISO 13031 (if applicable)
@@ -32,6 +33,7 @@
 - **Automation:** Auto-numbering, revision control, signature blocks
 
 ### 2.2 Vendor Evaluation & Scoring
+
 - **Dimensions:** Quality (40%), Cost (30%), Delivery (20%), Risk (10%)
 - **Input:** RFQ responses, supplier databases, historical performance
 - **Output:** Vendor scorecard, ranked supplier list, recommendation letter
@@ -39,12 +41,14 @@
 - **Weighting:** Project-customizable (e.g., cost-sensitive for commodity items)
 
 ### 2.3 Supply Chain Risk Mapping
+
 - **Risk Categories:** Geographic (port closure, logistics), Regulatory (tariffs, ABNT changes), Vendor (financial health, lead time), Quality (certification gaps)
 - **Output:** Risk heat map, mitigation plan, alternative supplier suggestions
 - **Tools:** Monte Carlo simulation (delivery timeline), supply chain graph visualization
 - **Integration:** News feeds (ANTAQ alerts, ANEEL notices), supplier credit scoring
 
 ### 2.4 Contract Management Support
+
 - **Input:** Vendor selection, commercial terms, payment schedule
 - **Output:** Contract templates (supply agreement, SLA, warranty), key performance indicators (KPIs)
 - **Guardrails:** Compliance with ABNT, INMETRO certifications, Brazilian tax law
@@ -55,6 +59,7 @@
 ## 3. Data Architecture
 
 ### 3.1 Input Sources
+
 | Source | Type | Frequency | Authority |
 |--------|------|-----------|-----------|
 | Project scope (BMS/Gantt) | Structured | Per project | Client |
@@ -65,6 +70,7 @@
 | Logistics networks | API | Daily | ANTAQ/ANP |
 
 ### 3.2 Output Destinations
+
 | Artifact | Format | Destination | Audience |
 |----------|--------|-------------|----------|
 | RFQ document | DOCX + PDF | SharePoint `/03-Procurement/` | Procurement team |
@@ -74,6 +80,7 @@
 | Delivery schedule | Gantt + CSV | Project portal | Supply chain |
 
 ### 3.3 Supabase Collections (New in v1.0)
+
 | Collection | Prefix | Chunk Type | Volume |
 |------------|--------|-----------|--------|
 | `proc_suppliers` | proc-sup: | Vendor profiles, certifications | ~5K records |
@@ -85,7 +92,7 @@
 
 ## 4. Workflow (Intake Q2 Integration)
 
-```
+```yaml
 Trigger: "Ativar agente procurement" OR "Preciso fazer RFQ"
 
 ↓ [DISCOVERY]
@@ -182,6 +189,7 @@ Trigger: "Ativar agente procurement" OR "Preciso fazer RFQ"
 ## 7. Use Cases & Scenarios
 
 ### 7.1 Use Case: Transmission Tower Procurement (S9)
+
 - **Trigger:** "Preciso fazer RFQ de estruturas de transmissão para LT 345kV"
 - **Scope:** 200 towers, CFRD design, ABNT NBR 8850
 - **Agent Flow:** Extract tower specs → Auto-generate RFQ (steel BOM, galvanizing, transport) → Post to transmission equipment vendors (EATON, PAEG, etc.) → Evaluate 5+ responses → Recommend supplier with lowest total cost of ownership
@@ -189,6 +197,7 @@ Trigger: "Ativar agente procurement" OR "Preciso fazer RFQ"
 - **Timeline:** 5 business days (RFQ generation + vendor post + response window)
 
 ### 7.2 Use Case: Porto Dredge Equipment Sourcing (S6)
+
 - **Trigger:** "Vamos fazer dragagem do berço. Qual equipamento preciso?"
 - **Scope:** Cutter-suction dredge, 500 m³/hr capacity, PIANC compliance
 - **Agent Flow:** Retrieve dredge equipment specs → Query ANTAQ approved suppliers → Generate RFQ (equipment rental vs. purchase, insurance, crew) → Evaluate 3+ quotes → Flag geographic risk (import lead time 90+ days) → Suggest alternative local supplier with higher cost but faster delivery
@@ -196,6 +205,7 @@ Trigger: "Ativar agente procurement" OR "Preciso fazer RFQ"
 - **Timeline:** 7 business days
 
 ### 7.3 Use Case: Saneamento SCADA Vendor Selection (S8)
+
 - **Trigger:** "Preciso de um fornecedor de SCADA para ETA. Temos R$1.2M de budget."
 - **Scope:** Supervisory control (50+ sensors), cloud integration, ABNT compliance, SLA 99.5% uptime
 - **Agent Flow:** Extract ETA specs → Filter vendors by INMETRO certification + cloud security (ISO 27001) → Generate RFQ (hardware, software license, 5-year maintenance) → Score 4 vendors (Himatsingka, ABB, Siemens, local integrators) → Recommend based on weighted criteria (quality 40%, cost 30%, local support 20%, risk 10%)
@@ -203,6 +213,7 @@ Trigger: "Ativar agente procurement" OR "Preciso fazer RFQ"
 - **Timeline:** 10 business days
 
 ### 7.4 Use Case: General Commodity Procurement (Multi-segment)
+
 - **Trigger:** "Realizar pregão para fornecimento de cimento (ABNT C40)" / "RFQ para fios de cobre"
 - **Scope:** Commodity item, multiple suppliers, price-sensitive
 - **Agent Flow:** Auto-populate commodity template → Post to B2B marketplace (Agora Brasil) → Receive 10+ quotes → Parse and rank by cost + delivery → Flag any supplier below credit threshold (Serasa/SPC) → Recommend lowest-cost qualified supplier
@@ -250,12 +261,14 @@ Trigger: "Ativar agente procurement" OR "Preciso fazer RFQ"
 ## 11. Known Limitations & Roadmap
 
 ### Current (v1.0)
+
 - ✅ RFQ template library (12 templates)
 - ✅ Vendor scoring (5-point criteria)
 - ✅ Risk mapping (geographic + financial)
 - ✅ Contract template generation
 
 ### Planned (v2.0, Q4 2026)
+
 - 🔜 AI-assisted negotiation (price benchmarking vs. market)
 - 🔜 Supplier credit scoring (Serasa/SPC API integration)
 - 🔜 Predictive delivery risk (ML model on lead time overruns)
@@ -263,6 +276,7 @@ Trigger: "Ativar agente procurement" OR "Preciso fazer RFQ"
 - 🔜 e-procurement portal integration (TOTVS, SAP)
 
 ### Known Issues
+
 - 📌 International suppliers: Lead time data limited for non-MERCOSUR countries
 - 📌 Commodity pricing: SICRO/SINAPI delays (updated monthly, not real-time)
 - 📌 Small suppliers: Limited credit data on companies <R$10M revenue

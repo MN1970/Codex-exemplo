@@ -412,7 +412,7 @@
 
 ## Assinatura de Aprovação
 
-```
+```text
 _________________________________     ____/____/______
 Engenheiro Responsável               Data
 CREA nº ___________

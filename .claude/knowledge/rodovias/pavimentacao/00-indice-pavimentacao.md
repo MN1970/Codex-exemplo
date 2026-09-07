@@ -37,7 +37,7 @@
 
 ### Por Disciplina Vertical (Fase I–II Roadmap)
 
-```
+```text
 GEOMETRIA (Fase I — ✅ COMPLETO)
 ├─ 7 documentos base (01–07)
 ├─ 08 especializações paralelas (20 agentes)
@@ -66,29 +66,35 @@ DRENAGEM (Fase II — ✅ CONSOLIDADO)
 ## Roadmap de Leitura
 
 ### Nível 1 (Executivo — 20 min)
+
 1. Seção "Mapas de Cobertura" acima
 2. 08-pav-especializacoes.md — Seções 1–2 (materiais, dimensionamento)
 
 ### Nível 2 (Operacional — 3h)
+
 1. Seção 1 (Materiais CBUQ, BGS, ligantes)
 2. Seção 2 (Método AASHTO 1993, SN)
 3. Seção 3 (Equipamentos, compactação)
 4. Seção 4 (Reforço, recapeamento)
 
 ### Nível 3 (Técnico Especializado — 8h)
+
 Ler 08-pav-especializacoes.md completo:
+
 1. Seção 2 (AASHTO vs M-E, fadiga, deformação)
 2. Seção 3 (Controle, sequência obra, SICRO)
 3. Seção 4 (GPR/FWD, reabilitação, casos reais)
 4. Seção 5 (Especialidades 1–20, detalhes)
 
 ### Nível 4 (Planejamento & Projeto — 10h)
+
 1. Seção 2.2 (Dimensionamento AASHTO passo-a-passo)
 2. Seção 3.3 (Cronograma, custos SICRO 2024)
 3. Seção 4 (Seleção técnica: reforço vs recapeamento vs reabilitação)
 4. Referências: AASHTO 1993, DNIT Manual, SICRO 2024
 
 ### Nível 5 (Pesquisa & Software)
+
 1. Modelagem com PavementME (tutorial: 4h)
 2. Sensibilidade M-E: variação temperatura, MR, tráfego
 3. Otimização linear: Solver Excel, matlab
@@ -196,6 +202,7 @@ Ler 08-pav-especializacoes.md completo:
 ## Status Final — Pavimentação
 
 ✅ **Consolidação Quase Completa (23/24)**
+
 - 08-pav-especializacoes.md pronto
 - 20 especialidades cobertas
 - 1.166.174 tokens integrados
@@ -204,9 +211,11 @@ Ler 08-pav-especializacoes.md completo:
 - Software (PavementME, GPR, FWD) referenciado
 
 ⚠️ **1 Agente em Retentativa**
+
 - pav:materiais falhou (será relançado)
 
 🔄 **Aguardando**
+
 - Consolidação do índice de pavimentação
 - Integração RAG em Supabase
 - PR #56 (Fase II completa)

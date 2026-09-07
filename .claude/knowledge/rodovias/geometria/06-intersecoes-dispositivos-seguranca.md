@@ -11,7 +11,7 @@
 
 ### 1.1 Em Nível (At-Grade)
 
-```
+```text
 Tipo              | Descrição                | Vd Máx | Fluxo Crítico
 ────────────────────────────────────────────────────────
 Rotatória         | Circular, 1+ faixas     | 40 km/h | Moderado
@@ -23,7 +23,7 @@ Y/Estrela         | Múltiplos ramos         | Variável| Variável
 
 ### 1.2 Desniveladas (Grade-Separated)
 
-```
+```text
 Tipo              | Nomenclatura   | Uso Típico       | Custo
 ─────────────────────────────────────────────────────
 Trevo Completo    | Full Cloverleaf| BR × BR          | Muito Alto
@@ -47,7 +47,7 @@ PARCLO Tipos:
 
 **Norma Principal**: DNIT ES 101/97, Item 6.1
 
-```
+```text
              ┌─────────────────┐
              │   Entrada       │
              │   (Rampa 1:20)  │
@@ -65,7 +65,8 @@ PARCLO Tipos:
 ### 2.2 Dimensionamento
 
 **Raio Externo (R_ext)**:
-```
+
+```text
 Vd (km/h) | R_ext (m) | Categoria          |
 -----------|-----------|-------------------|
 20-30      | 15-20     | Rotatória Compacta |
@@ -77,7 +78,8 @@ Recomendação DNIT: R_ext ≥ 20m (segurança mínima)
 ```
 
 **Raio Interno (R_int)**:
-```
+
+```text
 R_int = R_ext - Largura da Pista - Banqueta Interna
 
 Exemplo:
@@ -88,7 +90,8 @@ R_int = 30 - 8 - 2 = 20m ✓
 ```
 
 **Triângulo de Visibilidade**:
-```
+
+```yaml
 Entrada:
 ├─ d_parada para Vd = 30 km/h ≈ 25m
 ├─ d_parada para Vd = 40 km/h ≈ 35m
@@ -104,7 +107,7 @@ f = 20 - √(400 - 306) = 20 - √94 = 20 - 9.7 ≈ 10.3m
 
 ### 2.3 Movimentos Críticos
 
-```
+```text
 Movimento de Conflito    | Tipo            | Severidade
 ────────────────────────────────────────────────────
 Entrada × Circulação     | Cruzamento      | Alta
@@ -127,7 +130,7 @@ Recomendação:
 
 **Norma**: DNIT ES 101/97, Item 6.2 + AASHTO Green Book
 
-```
+```yaml
 Geometria:
 └─ 4 quadrantes com rampas helicoidais
 └─ Raio mínimo de rampa: 100-150m
@@ -149,7 +152,8 @@ Aplicação:
 ```
 
 **Seção Transversal Típica**:
-```
+
+```text
 Pista Principal: 7.20m (2 × 3.60m faixas)
 Rampa: 6.00m (1 × 6m, 1 sentido)
 Acostamento: 2.50m (ambos)
@@ -163,7 +167,8 @@ Altura livre mínima: 4.50m (por DNIT)
 **Melhor relação custo-benefício para BR × Estadual**
 
 #### PARCLO A (Típico)
-```
+
+```text
 Quadrante Esquerdo:
 ├─ Rampa direta (LT turnoff)
 └─ Fluxo contínuo
@@ -177,7 +182,8 @@ Aplicação: BR-116, BR-101 (duplicação)
 ```
 
 **Dimensionamento**:
-```
+
+```text
 Rampa Direta:
 - Raio mínimo: 150-200m
 - Superelevação: 4-5%
@@ -190,7 +196,8 @@ Rampa Semi-Direta:
 ```
 
 #### PARCLO B (Terreno Montanhoso)
-```
+
+```text
 Ambas as rampas semi-diretas
 └─ Melhor adaptação a topografia acidentada
 └─ Rampas menores (~300m cada)
@@ -198,7 +205,8 @@ Ambas as rampas semi-diretas
 ```
 
 #### PARCLO AB & D
-```
+
+```text
 PARCLO AB:
 ├─ 1 rampa direta
 └─ 1 rampa semi-direta
@@ -214,7 +222,7 @@ PARCLO D (Meia Trombeta):
 
 **Melhor para Via × Via (não BR × BR)**
 
-```
+```yaml
 Geometria:
 └─ Aproximação vertical (V ou Y)
 └─ Rotatória ou semaforização na transversal
@@ -231,13 +239,15 @@ Geometria:
 ```
 
 **Vantagens**:
+
 - Custo: R$ 15-25M (43% de Trevo Completo)
 - Espaço: ~250m × 250m
 - Fácil de expandir para PARCLO depois
 - Aplicação: BR × Estadual (volume moderado)
 
 **Dimensionamento**:
-```
+
+```yaml
 Rampa:
 ├─ Comprimento: 300-400m
 ├─ Raio curva: 150-200m
@@ -254,7 +264,7 @@ Transversal (via local):
 
 **Para extremidades de via ou "Y" em terreno montanhoso**
 
-```
+```yaml
 Geometria:
 └─ 1 rampa helicoidada (260-300m)
 └─ Curvatura contínua (não muda de sentido)
@@ -275,7 +285,7 @@ Aplicação:
 
 #### Tipos de Defensa
 
-```
+```text
 Tipo              | Material    | Uso                | Altura | Espaçamento
 ──────────────────────────────────────────────────────────────────
 Defensa Metálica  | Aço galv.   | Curvas de alto      | 0.65m  | 0.30m
@@ -296,7 +306,7 @@ Defensa Rígida    | Concreto    | Separador central   | 0.80m  | Contínuo
 
 #### Critérios de Instalação
 
-```
+```text
 DNIT ES 101/97 + NBR 14644:
 
 1. Curvas Horizontais:
@@ -322,7 +332,7 @@ R = 200m, e = 5%, altura talude = 8m
 
 **Norma Principal**: ABNT NBR 15895 — Sinalização Horizontal
 
-```
+```text
 Tipo de Linha            | Código | Significado
 ──────────────────────────────────────────────────
 Contínua Simples         | ───    | Proibida ultrapassagem
@@ -349,7 +359,7 @@ Exemplo BR-116:
 
 ### 4.3 Sinalização Vertical (Placas)
 
-```
+```text
 Tipo                    | Distância Prévia | Vd
 ────────────────────────────────────────────
 Curva à esquerda        | 150m             | 80 km/h
@@ -371,7 +381,7 @@ Além disso:
 
 **Metodologia DNIT para identificar pontos críticos**
 
-```
+```text
 Índice de Risco Geométrico = f(V_operada, R_atual, e_atual, visibilidade)
 
 Classificação:
@@ -402,7 +412,7 @@ Exemplo BR-116 SP (Vd=100 km/h):
 
 ### 5.1 NBR 11682 — Estabilidade de Encostas
 
-```
+```text
 Fator de Segurança (FS):
 
 Para taludes em corte/aterro:
@@ -424,7 +434,7 @@ Se FS < limite:
 
 ### 5.2 ABNT NBR 6123 — Ações do Vento
 
-```
+```text
 Aplicável a Viadutos e Estruturas:
 
 Vento de projeto:
@@ -447,7 +457,7 @@ P = 0.613 × 150² × 1.3 = 17.9 kPa ≈ 1.8 t/m²
 
 ### 5.3 Iluminação (Pontos Críticos)
 
-```
+```yaml
 Norma: ABNT NBR 5101 (Iluminação Pública)
 
 Pontos obrigatórios:
@@ -479,7 +489,7 @@ Tipo de lâmpada:
 
 ### 6.1 Exemplo 1: Curva Perigosa (BR-116 SP)
 
-```
+```text
 Dados de Acidentes:
 ├─ 12 acidentes/ano em 2km
 ├─ 3 com vítima fatal
@@ -517,7 +527,7 @@ Plano de Mitigação:
 
 ### 6.2 Exemplo 2: Interseção Crítica (BR-101 RJ)
 
-```
+```yaml
 Dados:
 ├─ Interseção BR × Estadual (acesso a Angra)
 ├─ 8 acidentes/ano
@@ -551,7 +561,7 @@ Ação imediata:
 
 ## 7. Checklist de Segurança Geométrica
 
-```
+```text
 AUDITORIA DE SEGURANÇA GEOMÉTRICA
 
 Alinhamento Horizontal:
@@ -625,7 +635,7 @@ Documentação:
 
 ### Prompts de Teste
 
-```
+```text
 1. "Qual tipo de interseção devo usar para BR × Estadual em tereno 
    ondulado, com volume 500k veículos/ano?"
    → Resposta: PARCLO A ou B (diamante não, volume alto)

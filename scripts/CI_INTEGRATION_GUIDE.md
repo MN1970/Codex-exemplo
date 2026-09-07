@@ -38,6 +38,7 @@ python scripts/audit_agents.py \
 ```
 
 **Output files:**
+
 - `rag_evals/audit_agents.json` — Full audit results
 - `rag_evals/divergence_report.json` — Drift details + remediation commands
 - `audit.log` — Execution log
@@ -379,6 +380,7 @@ exit 0
 ```
 
 Install:
+
 ```bash
 chmod +x .git/hooks/pre-commit
 ```
@@ -515,6 +517,7 @@ Create a Grafana dashboard from `rag_evals/audit_agents.json`:
 ### Issue: `FileNotFoundError: VERSIONS.json`
 
 **Solution:**
+
 ```bash
 # Ensure VERSIONS.json exists in repo root
 ls -la VERSIONS.json
@@ -526,6 +529,7 @@ git checkout HEAD -- VERSIONS.json
 ### Issue: `Divergence detected but script shows passing`
 
 **Solution:** Check divergence threshold:
+
 ```bash
 python scripts/audit_agents.py --divergence-threshold 0 --verbose
 ```
@@ -533,6 +537,7 @@ python scripts/audit_agents.py --divergence-threshold 0 --verbose
 ### Issue: `regenerate_skill.py fails with write permission error`
 
 **Solution:** Check directory permissions:
+
 ```bash
 chmod -R 755 .claude/agents/
 chmod 755 VERSIONS.json .claude/settings.json
@@ -541,6 +546,7 @@ chmod 755 VERSIONS.json .claude/settings.json
 ### Issue: Checksum mismatch after fix
 
 **Solution:** Regenerate and re-check:
+
 ```bash
 python scripts/regenerate_skill.py --agent agente-saneamento
 python scripts/audit_agents.py --verbose
@@ -568,5 +574,5 @@ python scripts/audit_agents.py --verbose
 
 ---
 
-**Contact:** mneves@mantaassociados.com  
+**Contact:** <mneves@mantaassociados.com>  
 **Last Updated:** 2026-07-25

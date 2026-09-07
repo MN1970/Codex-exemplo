@@ -7,6 +7,7 @@ This document provides real-world examples of how to integrate the RAG hierarchy
 ## Example 1: agente-saneamento (S8) — Answering User Questions
 
 ### Scenario
+
 User asks: *"Estamos estruturando uma concessão de saneamento integrado com AySA. Qual é o framework da Lei 14.026 e quais são os prazos do BNDES 2024?"*
 
 ### Agent Flow
@@ -179,6 +180,7 @@ seguir o marco da Lei 14.026, que estabelece os seguintes pontos-chave:
 ## Example 2: Cross-Domain Query — Hydroelectric Integration (S10 + S9)
 
 ### Scenario
+
 User asks: *"Estamos avaliando uma barragem de geração hidroelétrica. Como integrar os requisitos ICOLD para segurança com o plano EPE?"*
 
 ### Agent Flow (agente-barragens with energia handoff)
@@ -272,6 +274,7 @@ Integration Checklist:
 ## Example 3: Maestro Router — Segment Inference & RAG Validation
 
 ### Scenario
+
 Maestro (Manta 00) receives ambiguous query: *"How do we design the infrastructure for a sludge drying unit?"*
 
 ### Router Logic
@@ -342,6 +345,7 @@ async function maestroRouteWithRagValidation(userQuery: string) {
 ## Example 4: Feedback Loop — Learning from User Ratings
 
 ### Scenario
+
 After agent answers a question, user rates the answer. This feedback updates chunk relevance scores.
 
 ```typescript
@@ -430,6 +434,7 @@ When user clicks a chunk → recordUserFeedback(chunkId, rating)
 ## Example 5: Bulk Document Ingestion
 
 ### Scenario
+
 Quarterly ingestion of new regulations, editais, and standards into RAG.
 
 ```typescript
@@ -596,6 +601,7 @@ ORDER BY queries DESC;
 ## Summary
 
 These examples demonstrate:
+
 1. **Single-agent query:** agente-saneamento answering user questions with RAG
 2. **Cross-domain:** Handling queries that span multiple collections (S10 + S9)
 3. **Maestro routing:** Using RAG to validate semantic routing decisions

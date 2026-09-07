@@ -10,7 +10,7 @@
 
 ## EXECUTIVE SUMMARY
 
-O Manta Maestro v4.2 é uma arquitetura **sólida mas rígida** — um hub-and-spoke funcional com 20 agentes estáticos e roteamento por keywords. 
+O Manta Maestro v4.2 é uma arquitetura **sólida mas rígida** — um hub-and-spoke funcional com 20 agentes estáticos e roteamento por keywords.
 
 **O upgrade v5.0 transforma isso em um ECOSSISTEMA INTELIGENTE**:
 
@@ -40,8 +40,8 @@ O Manta Maestro v4.2 é uma arquitetura **sólida mas rígida** — um hub-and-s
 
 ### 1.2 Gaps críticos
 
-| Gap | Impacto | Solução v5 |
-|-----|--------|-----------|
+| Gap | Impacto | Descrição | Solução v5 |
+|-----|--------|-----------|-----------|
 | **Maestro cego** | Alto | Maestro não sabe quem são os agentes, apenas keywords | Registry dinâmico + heartbeat |
 | **Roteamento estático** | Alto | Se 2 agentes cabem, escolhe primeira regra sempre | ML ranking + confidence scores |
 | **Sem observabilidade** | Alto | Não há trace de qual agente resolveu o quê | Distributed tracing (OpenTelemetry) |
@@ -64,7 +64,7 @@ O Manta Maestro v4.2 é uma arquitetura **sólida mas rígida** — um hub-and-s
 
 ### 2.1 Pirâmide de capacidades (5 camadas)
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │ L5 — INTELLIGENCE LAYER                             │
 │ Observabilidade, aprendizado, recomendações, SLA    │
@@ -209,6 +209,7 @@ def route_query(query: str) -> str:
 ```
 
 **Datadog dashboard** mostrará:
+
 - Agents: uptime, latência p50/p99, taxa erro
 - Routing: top 10 regras aplicadas, % ambiguous, feedback loops
 - SLA: throughput target, queue depth, escalação necessária
@@ -246,6 +247,7 @@ def route_query(query: str) -> str:
 #### 1.3 Explainability module
 
 - [ ] `maestro.explain_routing(query, ranked_agents)` retorna JSON:
+
   ```json
   {
     "query": "...",
@@ -261,6 +263,7 @@ def route_query(query: str) -> str:
     "reasoning_summary": "Primary match on domain expertise (rodovias)."
   }
   ```
+
 - [ ] Retornar ao usuário em interface: "Roteando para Agente Rodovias (92% confiança)".
 
 **Custo**: ~20 tokens (explain + format).  
@@ -279,6 +282,7 @@ def route_query(query: str) -> str:
 #### 1.5 Agent heartbeat
 
 - [ ] Cada agente envia heartbeat a cada 5 min:
+
   ```json
   {
     "agent_id": "manta-03-s8",
@@ -288,6 +292,7 @@ def route_query(query: str) -> str:
     "timestamp": "ISO8601"
   }
   ```
+
 - [ ] Registry atualiza `agent_health` table.
 - [ ] Maestro nunca roteia para agents "down".
 
@@ -301,6 +306,7 @@ def route_query(query: str) -> str:
 #### 2.1 Feedback loop
 
 - [ ] User feedback protocol:
+
   ```json
   {
     "routing_id": "uuid",
@@ -308,6 +314,7 @@ def route_query(query: str) -> str:
     "comment": "optional detail"
   }
   ```
+
 - [ ] Feedback table in Supabase + analytics.
 - [ ] Maestro usa feedback para reranking (Thompson Sampling ou Lineare UCB).
 
@@ -317,10 +324,12 @@ def route_query(query: str) -> str:
 #### 2.2 Multi-agent composition
 
 - [ ] Detectar queries que precisam 2+ agentes:
-  ```
+
+  ```text
   IF (barragem AND transmissão) THEN compose(barragens, energia)
   IF (ETE AND subestação) THEN compose(saneamento, energia)
   ```
+
 - [ ] Orquestrador: serial (dependências) ou paralelo (independentes).
 - [ ] Merge resultados: "Barragens resolveu Q1, Energia resolveu Q2, combine:"
 - [ ] Fallback: se falha composição, pergunte ao usuário qual priorizar.
@@ -341,7 +350,8 @@ def route_query(query: str) -> str:
 #### 2.4 RAG hierarchy & expert finding
 
 - [ ] Indexar RAG chunks com agent metadata:
-  ```
+
+  ```text
   chunk = {
     text: "SNIS formula...",
     collection: "san:",
@@ -349,6 +359,7 @@ def route_query(query: str) -> str:
     tags: ["SNIS", "indicadores", "perda-água"]
   }
   ```
+
 - [ ] Query type: "qual agente estuda indicadores SNIS?" → busca index.
 - [ ] Retorna: "manta-03-s8 é expert" + links to relevant RAG.
 
@@ -749,7 +760,7 @@ def route(query: str, agent):
 
 ### 6.1 Maestro Explanation (Chat UI)
 
-```
+```yaml
 User: "Estou estudando a viabilidade de ampliação de uma ETE em São Paulo"
 
 Maestro:
@@ -774,7 +785,7 @@ Maestro:
 
 ### 6.2 Analytics Dashboard (Datadog)
 
-```
+```text
 Manta Maestro Health Dashboard
 ═══════════════════════════════════════════════════════════
 
@@ -841,7 +852,7 @@ Manta Maestro Health Dashboard
 
 ### 7.2 Timeline macro
 
-```
+```text
 Dia 1 (Jul 29)     ► Aprovação arquitetura + kick-off Fase 1
 Dia 15 (Aug 12)    ► Registry + Maestro search ready (beta)
 Dia 29 (Aug 26)    ► Tracing + heartbeat completo (Fase 1 done)
@@ -897,7 +908,7 @@ v5.0 **é totalmente compatível** com v4.2:
 
 ### 9.2 Migração de dados
 
-```
+```text
 CLAUDE.md (v4.2)
     ↓
     └─→ parse + embed descriptions

@@ -24,6 +24,7 @@ básico → executivo → obra → O&M → competitivo → DD → descomissionam
 ## Contexto de domínio
 
 **Cadeia coberta (downstream + midstream)**
+
 - Refino: unidades de processo (destilação, craqueamento, HDT), tancagem,
   utilidades, flare, infraestrutura civil de refinaria.
 - Dutovias: oleodutos, gasodutos, polidutos — traçado, faixa de servidão,
@@ -35,12 +36,14 @@ básico → executivo → obra → O&M → competitivo → DD → descomissionam
   pontos de entrega a granéis.
 
 **Fora de escopo (encaminhar a especialista de petróleo/reservatório)**
+
 - Exploração sísmica, perfuração, completação e produção de poço.
 - Engenharia de reservatório, FPSO/plataforma offshore (estrutura naval).
 - Processos químicos de refino (engenharia de processo) — este agente cobre
   a envoltória civil/estrutural, não o PFD/P&ID de processo.
 
 **Regulação e normas**
+
 - **ANP** (Agência Nacional do Petróleo, Gás Natural e Biocombustíveis) —
   outorgas de distribuição, autorizações de dutovias, RTQ.
 - **API 650 / API 653** — tanques atmosféricos de armazenamento (projeto e
@@ -57,6 +60,7 @@ básico → executivo → obra → O&M → competitivo → DD → descomissionam
   terminais (impacto de faixa de servidão).
 
 **Cálculos e projeto**
+
 - Dimensionamento de tanques atmosféricos (API 650): casco, fundo, teto
   flutuante/fixo, diques de contenção (bacia de contenção NFPA 30).
 - Dutovias: espessura de parede (Barlow/ASME B31.4/8), proteção catódica,

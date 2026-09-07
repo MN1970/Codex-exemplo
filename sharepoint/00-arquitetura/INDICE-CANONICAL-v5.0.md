@@ -90,7 +90,7 @@ Modelo de composição (exemplo de leitura S.A.D, com F como capacidade
 interna usada pelo agente despachado, não parte do endereçamento
 primário):
 
-```
+```text
 S8.A3.D07  = Saneamento + Orçamento + Financeiro
            → Manta 05 (orçamento) com contexto de saneamento
              (RAG san:*, handoff de agente-saneamento)
@@ -242,7 +242,7 @@ como eixo com routing determinístico testado.
 Regra de dispatch Q1 (segmento), **numeração de produção S1–S10, sem
 alteração em relação à v4.2**:
 
-```
+```text
 IF menção a rodovia|pavimento|CBUQ|BGS|terraplenagem|SICRO|DNIT
    → agente-infraestrutura S1
 
@@ -281,6 +281,7 @@ IF menção a edificação|galpão|warehouse|data center|MCMV|NBR 15575|LEED|BIM
 
 **Casos ambíguos** (documentados em `tests/routing/prompts.md`, política
 ainda não formalizada para todos):
+
 - UHE (barragem + LT + SE) → dispatch primário `agente-barragens` +
   handoff `agente-energia`.
 - ETE + subestação → dispatch primário `agente-saneamento` + handoff
@@ -312,8 +313,8 @@ suite de teste — ação pendente (Seção 7).
 O Maestro escala dinamicamente de tier **dentro de uma mesma sessão**:
 começa em Haiku para triagem (Q1–Q4 do intake), escala para Sonnet ao
 entrar no agente vertical/horizontal designado, e escala novamente para
-Opus se detectar complexidade composta (ex.: claim + jurídico + técnico
-+ financeiro no mesmo pleito, ou M&A/due diligence de alto valor).
+Opus se detectar complexidade composta (ex.: claim + jurídico +
+técnico-financeiro no mesmo pleito, ou M&A/due diligence de alto valor).
 
 Tiers default por agente (consistentes com o frontmatter `model:` dos
 `.claude/agents/*.md` e a tabela de agentes horizontais):
@@ -342,7 +343,7 @@ Maestro já decidiu **quem** atende (Seção 2). Este pipeline descreve
 sobre os Funcionais (Eixo F) já existentes — não introduz sistemas
 novos, apenas nomeia e ordena o que já acontece hoje de forma implícita.
 
-```
+```text
 ┌─────────┐   ┌──────┐   ┌──────┐   ┌─────────┐   ┌─────────┐
 │ INTAKE  │──▶│ READ │──▶│ PLAN │──▶│ EXECUTE │──▶│ DELIVER │
 └─────────┘   └──────┘   └──────┘   └─────────┘   └─────────┘
@@ -392,6 +393,7 @@ novos, apenas nomeia e ordena o que já acontece hoje de forma implícita.
 Se **READ** ou **EXECUTE** revelam um fato novo que invalida premissas
 do PLAN em curso — exemplos reais já observados nesta própria rodada de
 consolidação:
+
 - um extrator encontra um valor que contradiz o briefing inicial (ex.:
   edital revisado depois do briefing);
 - `aluci-guard`/`consist-guard` (F7) rejeita uma referência ou uma
@@ -447,7 +449,7 @@ falha do agente, mas como comportamento esperado diante de fato novo.
 
 ### Exemplo de dispatch paralelo dentro do teto
 
-```
+```yaml
 Consulta: "Preciso do pacote completo de due diligence do ativo de
 saneamento X — quantitativo, orçamento, cronograma e situação
 regulatória, antes da reunião de amanhã."
@@ -667,6 +669,7 @@ verificado — mas isso **não é decisão final**, é o critério usado para
 não travar esta consolidação; a decisão formal cabe a MN.
 
 **Questionário de decisão para MN**:
+
 1. Confirmar a numeração de produção: manter S1–S10 (inalterado) +
    S12 (Óleo & Gás) + S13 (Edificações), como adotado aqui — ou migrar
    para o esquema S1–S11 com Edificações em S6? Se migrar, todos os
@@ -720,6 +723,7 @@ reais `list_organizations`/`list_projects`/`get_project`/`list_tables`/
   acesso legítimo do próprio Maestro.
 
 **Decisão pendente para MN**:
+
 1. Confirmar/descartar `xgluoaaymbdzbbudnwrh` (AI-1, AI-5) e atualizar o
    `SKILL.md` do SharePoint que ainda o referencia (AI-3).
 2. Aprovar a aplicação de RLS + policies nas 3 tabelas expostas — este
@@ -751,7 +755,7 @@ reais `list_organizations`/`list_projects`/`get_project`/`list_tables`/
 
 ## 10. Apêndice — mapa de arquivos fonte
 
-```
+```text
 Codex-exemplo/
 ├── CLAUDE.md                                    # registro operacional; contém revisão v5.0
 │                                                 # paralela e divergente desta (ver Seção 8.2)
@@ -799,7 +803,7 @@ continuam existindo como material de apoio detalhado por eixo.
 
 ---
 
-_Documento vivo. Alterações via pull request neste repositório,
+*Documento vivo. Alterações via pull request neste repositório,
 validação `aluci-guard` + `consist-guard`, e aprovação MN (gate humano)
 antes de qualquer merge — mesmo padrão de governança já em uso em
-`docs/DEPLOY-v4.2.md` e `docs/DEPLOY-CHECKLIST-v5.0.md`._
+`docs/DEPLOY-v4.2.md` e `docs/DEPLOY-CHECKLIST-v5.0.md`.*

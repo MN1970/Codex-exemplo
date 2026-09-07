@@ -13,12 +13,14 @@
 Validação completa de integração M365 com:
 
 **✅ Azure AD Token (OAuth2 Client Credentials)**
+
 - Endpoint: `https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token`
 - Scope: `https://graph.microsoft.com/.default`
 - Retorna token + dias até expiração
 - Decorado com `@retry_with_backoff(max_attempts=3)`
 
 **✅ SharePoint REST API Write Test**
+
 - Lista API: `/_api/web/lists/getbytitle()`
 - Folder API: `/_api/web/getfolderbyserverrelativeurl()`
 - File Add: `/_api/.../files/add(url='{file}',overwrite=true)`
@@ -27,6 +29,7 @@ Validação completa de integração M365 com:
 - Decorado com `@retry_with_backoff(max_attempts=3)`
 
 **✅ Azure Key Vault REST API**
+
 - Endpoint: `https://{vault_name}.vault.azure.net/secrets/{secret_name}?api-version=7.4`
 - Extrai `attributes.expires` (Unix timestamp)
 - Calcula dias até expiração
@@ -34,6 +37,7 @@ Validação completa de integração M365 com:
 - Decorado com `@retry_with_backoff(max_attempts=3)`
 
 **✅ Retry Logic com Backoff Exponencial**
+
 ```python
 @retry_with_backoff(
     max_attempts=3,
@@ -41,11 +45,13 @@ Validação completa de integração M365 com:
     backoff_factor=2.0     # 1s → 2s → 4s
 )
 ```
+
 - Trata transient failures (timeouts, rate limits)
 - Timeout per request: 10 segundos
 - Total timeout: 30 segundos máximo
 
 **✅ Logging Estruturado**
+
 - INFO: steps principais, sucesso
 - WARNING: tentativas, secrets expirando
 - ERROR: falhas críticas
@@ -53,6 +59,7 @@ Validação completa de integração M365 com:
 - Formato: `timestamp [LEVEL] logger: message`
 
 **✅ JSON Output Estruturado**
+
 ```json
 {
   "status": "ok|error|warning",
@@ -74,12 +81,14 @@ Validação completa de integração M365 com:
 ```
 
 **✅ Exit Codes**
+
 - 0: `status == "ok"`
 - 1: `status == "error"` ou `status == "warning"`
 
 ### 2. Setup Documentation: `HEALTHCHECK-SETUP.md`
 
 Guia completo incluindo:
+
 - Instalação de dependências (`pip install requests`)
 - Configuração de variáveis de ambiente (7 vars)
 - Exemplos de uso (normal, dry-run, custom args)
@@ -92,6 +101,7 @@ Guia completo incluindo:
 ### 3. Configuração de Hook: `.claude/settings-healthcheck.example.json`
 
 Exemplo pronto de integração SessionStart:
+
 ```json
 {
   "hooks": {
@@ -113,25 +123,30 @@ Exemplo pronto de integração SessionStart:
 **11 testes passando 100%:**
 
 ✅ TestRetryWithBackoff (3 testes)
+
 - test_retry_succeeds_first_attempt
 - test_retry_succeeds_after_failures
 - test_retry_exhaustion
 
 ✅ TestAzureADToken (2 testes)
+
 - test_get_azure_ad_token_success
 - test_get_azure_ad_token_missing_token
 
 ✅ TestHealthcheckStatus (3 testes)
+
 - test_missing_credentials
 - test_healthcheck_with_dry_run
 - test_healthcheck_token_failure
 
 ✅ TestOutputFormat (3 testes)
+
 - test_output_structure (required fields)
 - test_error_structure (component, message, timestamp)
 - test_json_serializable (JSON dumps works)
 
 Rodar testes:
+
 ```bash
 python3 scripts/test_healthcheck.py
 ```
@@ -140,7 +155,7 @@ python3 scripts/test_healthcheck.py
 
 ## Arquivos Criados/Modificados
 
-```
+```text
 Codex-exemplo/
 ├── scripts/
 │   ├── sp_healthcheck.py              [MODIFIED] v2 - Implementação completa
@@ -156,11 +171,13 @@ Codex-exemplo/
 ## Como Usar
 
 ### 1. Instalar dependências
+
 ```bash
 pip install requests
 ```
 
 ### 2. Configurar variáveis de ambiente
+
 ```bash
 export AZURE_CLIENT_ID="<app-registration-id>"
 export AZURE_CLIENT_SECRET="<app-registration-secret>"
@@ -172,6 +189,7 @@ export AZURE_SECRET_NAME="manta-maestro-credentials"
 ```
 
 ### 3. Executar healthcheck
+
 ```bash
 # Modo normal (com escrita SP)
 python scripts/sp_healthcheck.py --verbose
@@ -185,6 +203,7 @@ cat .healthcheck.json | jq .status
 ```
 
 ### 4. Integrar com SessionStart hook
+
 Copiar configuração de `.claude/settings-healthcheck.example.json` para `.claude/settings.json`:
 
 ```json
@@ -208,6 +227,7 @@ Copiar configuração de `.claude/settings-healthcheck.example.json` para `.clau
 ## Recursos Implementados (Checklist)
 
 ### Core Requirements
+
 - ✅ **Token M365**: OAuth2 client credentials flow com Azure AD
 - ✅ **SharePoint**: Write test em `04_IA/Manta-Maestro/_healthcheck/test.txt`
 - ✅ **Key Vault**: Calcular dias até expiração do secret
@@ -215,6 +235,7 @@ Copiar configuração de `.claude/settings-healthcheck.example.json` para `.clau
 - ✅ **Exit Codes**: 0 (ok), 1 (error/warning)
 
 ### Advanced Features
+
 - ✅ **Retry Logic**: 3 tentativas com backoff exponencial (1s → 2s → 4s)
 - ✅ **Logging**: INFO/WARNING/ERROR + DEBUG verbose
 - ✅ **Timeouts**: 10s per request, 30s total
@@ -226,6 +247,7 @@ Copiar configuração de `.claude/settings-healthcheck.example.json` para `.clau
 - ✅ **Unit Tests**: 11 testes com 100% de cobertura
 
 ### Documentation
+
 - ✅ **Setup Guide**: HEALTHCHECK-SETUP.md (7 seções)
 - ✅ **Example Config**: settings-healthcheck.example.json
 - ✅ **Troubleshooting**: 7 problemas comuns + soluções
@@ -248,16 +270,19 @@ Copiar configuração de `.claude/settings-healthcheck.example.json` para `.clau
 ## Segurança
 
 **Credenciais:**
+
 - ✅ Lidas de env vars (nunca hardcoded)
 - ✅ Validação de presença antes de usar
 - ✅ Timeout para prevenir hang
 
 **Permissões:**
+
 - ✅ App registration requer: Graph API + SharePoint Contributor + Key Vault Reader
 - ✅ Token scope: `https://graph.microsoft.com/.default`
 - ✅ Sem acesso a dados além da escrita de teste
 
 **Network:**
+
 - ✅ HTTPS obrigatório
 - ✅ Respeita proxy CA bundle (`.ccr/ca-bundle.crt`)
 - ✅ Validação de hosts (não ignora certificados SSL)
@@ -279,6 +304,7 @@ Copiar configuração de `.claude/settings-healthcheck.example.json` para `.clau
 ## Contacto & Suporte
 
 **Para problemas:**
+
 1. Verifique HEALTHCHECK-SETUP.md seção "Troubleshooting"
 2. Execute em modo `--verbose` para logs detalhados
 3. Consulte `.healthcheck.json` para JSON estruturado

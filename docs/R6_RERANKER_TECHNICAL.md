@@ -12,6 +12,7 @@
 O **R6 Reranker** é um cross-encoder baseado em Sonnet 5 que melhora a qualidade dos chunks recuperados pelo RAG do Manta Maestro v5.0.
 
 **Impacto esperado**:
+
 - Routing accuracy: +10-15%
 - Latência adicional: ~200-300ms
 - Cache hit rate (TTL 7d): ~20-40%
@@ -22,7 +23,7 @@ O **R6 Reranker** é um cross-encoder baseado em Sonnet 5 que melhora a qualidad
 
 ### Pipeline RAG com R6
 
-```
+```text
 Query → [BM25 search] → top-20 chunks (score 0.3-1.0)
                        ↓
                     [R6 Reranker]
@@ -58,6 +59,7 @@ Query → [BM25 search] → top-20 chunks (score 0.3-1.0)
 ### Prompt Engineering (Sonnet 5)
 
 **Estratégia**:
+
 1. **Contexto claro**: Explica tarefa de reranking para especialista em eng. civil
 2. **Query original**: Inclusa como string entre aspas
 3. **Chunks estruturados**: ID, fonte, score BM25, texto
@@ -66,7 +68,8 @@ Query → [BM25 search] → top-20 chunks (score 0.3-1.0)
 6. **Formato saída**: JSON estruturado, sem markdown
 
 **Template**:
-```
+
+```text
 ## Tarefa: Reranking de Chunks RAG
 
 Você é um especialista em engenharia civil que avalia relevância de documentos técnicos.
@@ -107,6 +110,7 @@ Você é um especialista em engenharia civil que avalia relevância de documento
 ```
 
 **Por que funciona**:
+
 - Sonnet 5 é excelente em tarefas de ranking/relevância
 - Prompt explícito reduz alucinações
 - Solicitar JSON estruturado melhora taxa de parsing
@@ -119,21 +123,25 @@ Você é um especialista em engenharia civil que avalia relevância de documento
 ### Latência
 
 **Esperado**:
+
 - Sonnet 5 callout: ~150-250ms
 - Parse JSON: ~5ms
 - Total: **200-300ms por reranking**
 
 **Com cache**:
+
 - Cache hit: <50ms (lookup + desserialização)
 - Hit rate típico: 20-40% em workload repetitivo
 
 **Throughput**:
+
 - Single-threaded: ~3-5 queries/segundo
 - Batch mode: ~10 queries/segundo (pipelined)
 
 ### Score Distribution
 
 **Validação** (cada reranking):
+
 ```json
 {
   "score_distribution": {
@@ -146,6 +154,7 @@ Você é um especialista em engenharia civil que avalia relevância de documento
 ```
 
 **Critério de qualidade**:
+
 - Max - Min > 0.2 (spread útil)
 - Mean > 0.6 (chunks relevantes)
 - Stdev > 0.1 (discriminação entre chunks)
@@ -157,16 +166,19 @@ Você é um especialista em engenharia civil que avalia relevância de documento
 ### A/B Testing
 
 **Baseline** (sem reranker):
-```
+
+```text
 30 prompts → Maestro router → accuracy_top1 = 80%
 ```
 
 **Com R6 Reranker**:
-```
+
+```text
 30 prompts → BM25 top-20 → [R6] → top-5 → Maestro → accuracy_top1 = 90%
 ```
 
 **Impact**:
+
 - Accuracy improvement: +10%
 - Latency overhead: +235ms (300ms reranker - 65ms avoided by better retrieval)
 
@@ -177,6 +189,7 @@ python scripts/eval_reranker_impact.py --verbose
 ```
 
 **Output**:
+
 ```json
 {
   "baseline": {
@@ -210,6 +223,7 @@ python scripts/eval_reranker_impact.py --verbose
 ### Monitoramento
 
 **Métricas chave**:
+
 1. Latência (p50, p95, p99)
 2. Cache hit rate
 3. Score distribution (stdev, spread)
@@ -217,6 +231,7 @@ python scripts/eval_reranker_impact.py --verbose
 5. Taxa de erro Sonnet API
 
 **Alertas**:
+
 - Latência p95 > 500ms → Otimizar prompt ou reduzir chunk size
 - Cache hit < 10% → Revisar TTL ou padrão de queries
 - Mean score < 0.5 → Chunks baixa qualidade ou prompt ineficaz
@@ -244,13 +259,15 @@ git revert <commit>
 ### Quando ajustar o prompt
 
 **Problema**: Scores muito baixos (mean < 0.5)
-**Solução**: 
+**Solução**:
+
 1. Verificar qualidade chunks BM25
 2. Simplificar prompt (remover exemplos)
 3. Aumentar contexto da query no prompt
 
 **Problema**: Scores muito altos (all > 0.85)
 **Solução**:
+
 1. Aumentar criterios de rigor (top-1% chunks devem ser < 0.95)
 2. Adicionar exemplos negativos (irrelevant chunks com score baixo)
 3. Revisar chunk size (chunks muito pequenos são menos relevantes)
@@ -279,10 +296,12 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 ### Cross-Encoder Alternatives
 
 **Sonnet 5** (atual):
+
 - Pros: Excelente em ranking, reasoning complexo, suporta português
 - Cons: Mais lento (~250ms), mais caro (~$3/1M tokens)
 
 **Outras opções**:
+
 1. **OpenAI GPT-4o** (~200ms, ~$15/1M) — faster, mais caro
 2. **Infinity (Hugging Face)** (~50ms, grátis) — mais rápido, menos flex
 3. **Claude 3 Haiku** (~100ms, $0.08/1M) — mais barato, menos acurado
@@ -298,6 +317,7 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 **Causa**: Sonnet retorna markdown ou texto extra (não JSON puro)
 
 **Solução**:
+
 1. Revisar log: `logger.error()` mostra resposta parcial
 2. Simplificar prompt (remover instruções de markdown)
 3. Usar regex para extrair JSON: `re.search(r'\{.*\}', response, re.DOTALL)`
@@ -307,6 +327,7 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 **Causa**: Rate limit ou chamada lenta
 
 **Solução**:
+
 1. Aumentar `max_tokens` se estiver muito baixo (target: 1000-2000)
 2. Reduzir tamanho chunks (concatenar em summários)
 3. Ativar cache (hit rate > 30% em batch)
@@ -316,6 +337,7 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 **Causa**: Queries muito variadas ou TTL curto
 
 **Solução**:
+
 1. Aumentar TTL: `RerankerCache(ttl_days=14)`
 2. Normalizar queries: remover stopwords, padronizar tokens
 3. Usar semantic hashing: embed query e usar similarity ao invés de exact match
@@ -324,12 +346,14 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 
 **Sintoma**: Scores clustered (todos > 0.9 ou todos < 0.3)
 
-**Causa**: 
+**Causa**:
+
 - Chunks muito curtos (< 50 tokens)
 - BM25 scores já muito altos/baixos
 - Prompt criteria pouco discriminador
 
 **Solução**:
+
 1. Aumentar chunk size (256-512 tokens)
 2. Normalizar BM25 scores antes de passar para Sonnet (percentile rank)
 3. Adicionar critérios mais rigorosos (ex: "deve conter número ou fórmula")
@@ -341,11 +365,13 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 ### Análise de ROI
 
 **Custo**:
+
 - API Sonnet 5: ~$0.0015 por 1k tokens input
 - Típico: ~1200 tokens input por reranking
 - Custo: ~$0.0018 por reranking
 
 **Benefício**:
+
 - Routing accuracy: +10% (~3 prompts extras corretos por 30)
 - Evita roteamento ineficiente: economia ~$5-10 por prompt mal roteado (time debugging)
 - Impacto: ~$15-30 economia por 30 prompts processados
@@ -355,11 +381,13 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 ### Quando usar R6
 
 ✅ **Ativar R6**:
+
 - Queries críticas (due diligence, claims)
 - Batch processing (amortizar latência)
 - Queries ambíguas (múltiplos segmentos potenciais)
 
 ❌ **Desativar R6**:
+
 - Low-latency endpoints (< 500ms SLA)
 - Queries muito específicas (BM25 já > 0.9)
 - Teste/debug (use mock mode)
@@ -368,10 +396,10 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 
 ## Referências
 
-- **Prompt engineering**: https://anthropic.com/prompt-engineering
-- **Cross-encoding**: https://www.sbert.net/examples/applications/cross-encoders/
-- **Sonnet 5 docs**: https://docs.anthropic.com/claude/reference/models
-- **RAG best practices**: https://arxiv.org/abs/2312.10997
+- **Prompt engineering**: <https://anthropic.com/prompt-engineering>
+- **Cross-encoding**: <https://www.sbert.net/examples/applications/cross-encoders/>
+- **Sonnet 5 docs**: <https://docs.anthropic.com/claude/reference/models>
+- **RAG best practices**: <https://arxiv.org/abs/2312.10997>
 
 ---
 

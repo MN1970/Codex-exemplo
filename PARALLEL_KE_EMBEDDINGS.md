@@ -9,7 +9,7 @@
 
 ## Arquitetura
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │ Step 1: Discovery (sequencial, Supabase MCP)        │
 │ → SQL: LEFT JOIN ke_embeddings para achar NULL      │
@@ -59,7 +59,8 @@ python3 scripts/parallel_ke_embeddings_indexer.py
 ```
 
 Output:
-```
+
+```text
 ╔════════════════════════════════════════════╗
 ║ Parallel KE Embeddings Indexer Summary     ║
 ╠════════════════════════════════════════════╣
@@ -75,7 +76,7 @@ Copie os prompts de subagent gerados.
 
 **Em uma MESMA mensagem**, faça múltiplas chamadas de Task (ou Agent):
 
-```
+```json
 [Você envia para Claude Code]
 
 Aqui estão os 2 shards para indexação paralela de KEs. Rode ambos em paralelo:
@@ -88,6 +89,7 @@ SHARD 2:
 ```
 
 Claude Code dispara ambos em paralelo. Cada subagent:
+
 1. Instala `sentence-transformers`
 2. Carrega `BAAI/bge-small-en-v1.5`
 3. Gera embeddings com `normalize_embeddings=True`
@@ -116,9 +118,11 @@ Esperado: `sem_embedding = 0`.
    A coluna `embedding` em `ke_embeddings` é 384-dimensional.
 
 2. **Normalização obrigatória:**  
+
    ```python
    embeddings = model.encode(texts, normalize_embeddings=True)
    ```
+
    A coluna usa `cosine` similarity (via `<=>` operator), que assume vetores normalizados.
 
 3. **ON CONFLICT DO NOTHING:**  
@@ -160,6 +164,7 @@ WHERE array_length(embedding, 1) != 384;
 ```
 
 Se encontrar, deletar e re-embedar:
+
 ```sql
 DELETE FROM public.ke_embeddings WHERE array_length(embedding, 1) != 384;
 ```
@@ -175,7 +180,7 @@ Se timeout → rodar em máquina com conexão melhor ou usar cache local pré-aq
 
 ## Arquivos
 
-```
+```text
 /home/user/Codex-exemplo/
 ├── PARALLEL_KE_EMBEDDINGS.md          # este arquivo
 └── scripts/
