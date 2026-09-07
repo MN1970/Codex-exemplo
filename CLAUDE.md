@@ -472,18 +472,14 @@ Sub-prefixos de contexto (mantidos do v4.2):
 - `ene:t:` / `ene:d:` / `ene:g:` — energia por transmissão/distribuição/geração.
 - `bar:c:` / `bar:t:` / `bar:e:` / `bar:r:` — barragens por tipologia.
 
-> ⚠️ **Divergência de embedder não resolvida** — ver
-> `docs/EMBEDDER-DECISION.md` (Sonnet 11) vs. achado em
-> `docs/SUPABASE-PROJECT-AUDIT.md` §2.1 (Sonnet 13): o primeiro afirma
-> que produção roda `bge-small-en-v1.5` (384-d) com 0% dos 204 chunks
-> migrados para `bge-m3`; o segundo, lendo o comentário real da coluna
-> em `manta_rag_chunks` via `list_tables`, encontrou o texto "Chunks
-> com embeddings 1024d (bge-m3, canonical Maestro 2026-07-03)". Os dois
-> documentos **não foram reconciliados entre si** nesta consolidação —
-> ambos vêm de sessões diferentes no mesmo dia. Antes de agir sobre
-> qualquer um dos dois, confirmar a dimensão real da coluna de vetor
-> (`\d manta_rag_chunks` ou equivalente), não apenas o texto do
-> comentário nem a descrição da skill. Ver Gaps abertos.
+> ✅ **Divergência de embedder resolvida em 2026-09-07** — a arquitetura
+> real (`09-base-conhecimento/RAG_ARQUITETURA_CANONICA.md`, lida via
+> `SharePoint_Manta` MCP) confirma `bge-small-en-v1.5` (384-d) como
+> canônico (decisão de 26/07/2026); `bge-m3` foi avaliado em 24/07/2026
+> e **rejeitado**. O comentário "1024d bge-m3" na coluna de
+> `manta_rag_chunks` citado em `docs/SUPABASE-PROJECT-AUDIT.md` é de
+> 03/07/2026 — anterior à decisão real, ficou desatualizado. Ver
+> `docs/EMBEDDER-DECISION.md` e `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
 Migração candidata das 5 coleções v4.2:
 `supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql`.
@@ -572,22 +568,28 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ## GAPS ABERTOS / PENDÊNCIAS
 
-- **🔴 Este repositório diverge do Manta Maestro real no SharePoint
-  (crítico, encontrado em 2026-09-07 — numeração já corrigida, resto
-  aberto)**: com acesso real de leitura/escrita ao `SharePoint_Manta`
-  MCP nesta sessão, confirmamos que a arquitetura real em produção
-  (`09-base-conhecimento/INDICE-CANONICAL.md`) é **diferente** da
-  descrita neste `CLAUDE.md` em pontos centrais — a skill
-  `proposta-comercial` (ver "Modelo Mestre de Proposta", já corrigida),
-  a numeração de segmentos (já corrigida — ver "Eixo S — Segmentos"), e
-  ainda em aberto: os "20+ agentes"/RAG Supabase/APScheduler/ML
-  descritos neste repositório não têm correspondência confirmada na
-  estrutura real (`SKILL.md` por segmento/atividade/disciplina/
-  funcional/sub-skill). Análise e roadmap completo em
+- **🟡 Este repositório diverge do Manta Maestro real no SharePoint
+  (encontrado em 2026-09-07 — numeração e embedder já corrigidos,
+  resto aberto)**: com acesso real de leitura/escrita ao
+  `SharePoint_Manta` MCP nesta sessão, confirmamos que a arquitetura
+  real em produção (`09-base-conhecimento/INDICE-CANONICAL.md` +
+  `00-arquitetura/manta-maestro-arquitetura-v3.0.md`/`v3.2.md` +
+  `09-base-conhecimento/RAG_ARQUITETURA_CANONICA.md`) é **diferente**
+  da descrita neste `CLAUDE.md` em vários pontos — já corrigidos: skill
+  `proposta-comercial` (ver "Modelo Mestre de Proposta"), numeração de
+  segmentos (ver "Eixo S — Segmentos"), embedder G010 (ver Gaps
+  abertos). **Investigação mais funda revelou que o núcleo
+  Supabase/RAG é real** (projeto `ogxxgvgtulrbbppshjie`, confirmado por
+  chamadas reais de API), só com especificações diferentes das
+  assumidas aqui (agendamento real é `cron` Linux, não APScheduler;
+  nomes de tabela diferem em partes) — mas **sem evidência real
+  encontrada** para ML routing/XGBoost, consensus voting, disaster
+  recovery, Docker/K8s, "Maestro OS v6.0" e a numeração "20+ agentes
+  Manta NN". Análise completa e o que falta investigar em
   `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`. Ação: decisão MN sobre
-  as próximas fases dessa reconciliação (fase 1 — numeração de
-  segmento — concluída a pedido do usuário; fases seguintes ainda não
-  escopadas).
+  as próximas fases (numeração — concluída; embedder — concluído;
+  renumerar frontmatter dos agentes, corrigir specs de Supabase/RAG, e
+  decidir o destino do que não tem lastro real — ainda não escopadas).
 - **S5 (Imobiliário) sem vertical dedicado**: o índice canônico real
   trata Imobiliário como segmento vertical S5; este repositório só tem
   "imobiliário" como horizontal de negócio (Manta 04). Decisão MN
@@ -606,14 +608,22 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   raciocínio anterior. Ação: decisão MN sobre formalizar essas
   capacidades no SharePoint real (se de fato existirem) ou
   descontinuar esse conteúdo do repositório.
-- **Embedder (G010)**: `docs/EMBEDDER-DECISION.md` recomenda migrar
-  para `bge-m3`, partindo da premissa de que produção roda
-  `bge-small-en-v1.5` com 0% migrado. `docs/SUPABASE-PROJECT-AUDIT.md`
-  encontrou evidência (comentário de coluna via `list_tables`) sugerindo
-  que o schema já é `bge-m3`/1024-d desde 2026-07-03. **Os dois
-  documentos se contradizem e nenhum foi reconciliado com o outro**.
-  Ação: verificar a dimensão real da coluna de embeddings antes de
-  qualquer decisão ou migração.
+- ~~**Embedder (G010)**~~ — **✅ resolvido em 2026-09-07** com decisão
+  real: `09-base-conhecimento/RAG_ARQUITETURA_CANONICA.md` (SharePoint
+  real, lido via `SharePoint_Manta` MCP) confirma que `bge-m3` foi
+  avaliado em 24/07/2026 e **explicitamente rejeitado**, e
+  `bge-small-en-v1.5` (384-d) foi **confirmado canônico em 26/07/2026**.
+  O comentário de coluna que `docs/SUPABASE-PROJECT-AUDIT.md` citou
+  como evidência de "schema já é bge-m3" é de 03/07/2026 — **anterior**
+  à decisão real e ficou desatualizado, não reflete o estado atual.
+  `docs/EMBEDDER-DECISION.md` (que recomendava migrar para bge-m3) e
+  `docs/SUPABASE-PROJECT-AUDIT.md` foram corrigidos com essa
+  informação. Achado relevante: **o projeto Supabase
+  `ogxxgvgtulrbbppshjie` é real** (mesma conta `mneves@
+  mantaassociados.com`, confirmado por chamadas reais de API na
+  auditoria G012) — a infraestrutura RAG básica existe de verdade,
+  ainda que com specs diferentes das assumidas em partes deste
+  repositório. Ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 - **Supabase — projeto `xgluoaaymbdzbbudnwrh` (G012)**: auditoria real
   (`docs/SUPABASE-PROJECT-AUDIT.md`) concluiu, com evidência de API,
   que é provavelmente referência morta (projeto não pertence à

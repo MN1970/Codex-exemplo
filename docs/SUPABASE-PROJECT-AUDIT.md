@@ -137,10 +137,23 @@ sessão) descreve o RAG do Maestro como
 dimensões**, modelo diferente. Ou seja, o próprio projeto ativo já
 passou por pelo menos uma migração de embedding (384d → 1024d,
 datada de 2026-07-03) sem que a descrição da skill tenha sido
-atualizada. Isso é evidência indireta de que o time já tem histórico
-de trocar de schema/modelo de embedding e não voltar para atualizar a
-documentação — o mesmo padrão que provavelmente explica a referência
-morta ao `xgluoaa...`.
+atualizada.
+
+> ✅ **Correção 2026-09-07**: com acesso real ao SharePoint
+> (`SharePoint_Manta` MCP), lemos `09-base-conhecimento/
+> RAG_ARQUITETURA_CANONICA.md` — o documento real de arquitetura, mais
+> recente que este comentário de coluna. Ele confirma que, em
+> 24/07/2026, `bge-m3` foi **avaliado e explicitamente rejeitado**, e
+> em 26/07/2026 `bge-small-en-v1.5` (384-d) foi **confirmado como
+> canônico**. O comentário `"1024d (bge-m3, canonical Maestro
+> 2026-07-03)"` citado acima é de **antes** dessa decisão (03/07 <
+> 24-26/07) e ficou desatualizado — não é evidência de que bge-m3 está
+> em uso hoje, é uma sobra de um estado intermediário já revertido.
+> "O time troca de schema e não atualiza a doc" segue válido como
+> padrão geral (mesmo raciocínio do achado sobre `xgluoaa...`), mas
+> neste caso específico a direção da migração foi 1024d→384d (de volta
+> pro bge-small), não o contrário. Detalhe em
+> `docs/EMBEDDER-DECISION.md` e `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
 ---
 
