@@ -1,9 +1,39 @@
 # Decisão de Embedder — bge-m3 vs. bge-small-en-v1.5
 
+> ✅ **RESOLVIDO em 2026-09-07 — decisão real já existe, contrária a
+> esta recomendação.** Lendo `09-base-conhecimento/RAG_ARQUITETURA_CANONICA.md`
+> real no SharePoint (via `SharePoint_Manta` MCP), confirmamos que:
+> - `bge-m3` (1024-d) **foi avaliado em 24/07/2026 e explicitamente
+>   NÃO APROVADO** — "reprocessamento de 66 embeddings + reindexação
+>   completa sem ganho comprovado de qualidade de retrieval".
+> - `bge-small-en-v1.5` (384-d) **é o canônico confirmado em
+>   26/07/2026** (`RAG_ARQUITETURA_CANONICA.md`, versão 1.0.1,
+>   atualizado 2026-07-26), via Supabase pgvector local, tabela
+>   `rag_chunks`, RPC `match_rag_chunks`.
+> - O comentário `"1024d (bge-m3, canonical Maestro 2026-07-03)"` na
+>   coluna de `manta_rag_chunks`, citado abaixo e em
+>   `docs/SUPABASE-PROJECT-AUDIT.md` como evidência de que "o schema já
+>   é bge-m3", está **desatualizado** — reflete um estado anterior a
+>   26/07/2026, quando bge-m3 ainda não tinha sido formalmente
+>   rejeitado. Não é evidência de que bge-m3 está em uso hoje.
+>
+> **A recomendação deste documento (migrar para bge-m3) é o oposto da
+> decisão real já tomada** (manter bge-small-en-v1.5, rejeitar bge-m3).
+> Isso não significa que a análise técnica abaixo esteja errada em
+> abstrato (o argumento de cobertura multilíngue é razoável) — significa
+> que a Manta já pesou esse argumento contra o custo de reindexação e
+> decidiu na direção oposta, com autoridade real (não apenas inércia de
+> execução, como este documento presumia na seção 4, item 3). Manter
+> este documento como histórico da análise; não usar como base para
+> nenhuma migração futura sem antes reconfirmar com MN se a decisão de
+> 26/07 ainda vale.
+>
+> Detalhe completo em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
+
 **Gap:** G010
 **Autor:** Sonnet 11
 **Data:** 2026-07-31
-**Status:** 🟡 Aguardando aprovação MN (gate humano obrigatório)
+**Status:** ✅ Resolvido em 2026-09-07 com decisão real (ver nota acima) — não era mais "aguardando aprovação MN", a aprovação já tinha acontecido em 26/07/2026, só não constava neste repositório
 **Ticket relacionado:** MNT-2026-UPGRADE-AGENTS-S6S10 (RAG das 5 novas coleções S6–S10 depende desta decisão)
 
 ---

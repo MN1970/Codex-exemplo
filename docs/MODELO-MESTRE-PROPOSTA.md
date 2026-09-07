@@ -1,155 +1,97 @@
-# Modelo Mestre de Proposta — Validação contra MNT-2026-COM-1183_D
+# Modelo Mestre de Proposta — correção de premissa + segregação Tarifa×Success Fee
 
-Este documento registra a análise solicitada pela Diretoria (MN) sobre se a
-proposta técnico-comercial **MNT-2026-COM-1183_D** (Concessão Rota 2 de
-Julho — BR-116/324/BA, cliente Nova Infra Invest) pode servir de **modelo
-básico/mestre de proposta** do Manta Maestro.
+> ⚠️ **Correção (2026-09-07)**: a versão original deste documento (ver
+> histórico no fim do arquivo) validava a skill `proposta-comercial`
+> contra uma proposta **"MNT-2026-COM-1183_D"** e descrevia a skill como
+> tendo **18 seções + Anexo I**, tabela de 13 perfis e um "agente A7-bd",
+> com o caminho da skill em `02-sub-skills/`. **Nada disso foi checado
+> contra o SharePoint real antes de ser escrito** — foi uma premissa
+> fabricada em sessão anterior que se consolidou como "fato" ao longo de
+> várias versões do `CLAUDE.md`. Nesta sessão, com acesso real de leitura
+> e escrita ao SharePoint (`SharePoint_Manta`), verificamos a fonte
+> primária e encontramos uma realidade diferente — documentada abaixo.
+> A reconciliação arquitetural mais ampla (numeração de segmentos S1–S13
+> deste repositório vs. S1–S11 real, "20+ agentes"/Supabase/RAG fictícios
+> vs. a estrutura real de `SKILL.md` por segmento) **não está coberta
+> aqui** — ver gap dedicado em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
-A validação foi feita contra a skill operacional que hoje gera as propostas
-comerciais da Manta — `proposta-comercial` (consumida pelo agente
-**A7-bd**, ver `CLAUDE.md`) — e não apenas por leitura isolada do PDF.
+## 1. O que é real, confirmado via SharePoint (`SharePoint_Manta` MCP)
 
----
+- **Caminho real**: `Documentos Compartilhados/04_IA/Manta-Maestro/
+  05-sub-skills/skill-proposta-comercial-SKILL.md` (não
+  `02-sub-skills/` — essa pasta existe mas contém outro item, sem
+  relação com esta skill).
+- **Formato real do arquivo**: um resumo denso de uma linha (não um
+  documento markdown com seções detalhadas), com limite de **1024
+  caracteres** — confirmado em `05-sub-skills/manta-maestro/
+  _sync_pending.json`, que registra esse limite (`description_chars` /
+  `limite: 1024`) como validação do processo de sync
+  (`Sync-MantaMaestro.ps1`, PowerShell + MS Graph delegado, rodando na
+  máquina local do usuário). Ou seja: o conteúdo completo/executável da
+  skill provavelmente vive localmente (`C:\Users\...\Claude\...\SKILL.md`)
+  e só um resumo compacto é sincronizado para o SharePoint como
+  índice/ponteiro de busca — não uma cópia integral.
+- **Conteúdo real (antes da correção desta sessão)**: *"Template
+  MNT-YYYY-COM-NNNN, **14 seções** (Introducao, Objeto, Qualificacao,
+  Escopo, Matriz, Planejamento, Prazo, Preco, Medicao, Validade,
+  Omissos, Contato, Dados, Anexo). Tabela tarifária **12 níveis** (Sócio
+  R$1000/h a Estagiário R$28/h). **5 modos** (M1 completa, M2 edital, M3
+  adaptar, M4 precificação, M5 matriz). Referência **Hope PPP
+  MNT-2025-COM-1104** R$1.080.000."* — nada de 18 seções, nada de M6,
+  nada de MNT-2026-COM-1183_D.
+- **A proposta MNT-2026-COM-1183 existe de verdade** (Concessão Rota 2
+  de Julho, Nova Infra Invest, `02_CLIENTE/48_Nova_Infra_Invest/`), mas
+  a revisão mais recente encontrada no SharePoint é **`_C_3`**, não
+  `_D` — não localizamos nenhuma revisão D. O documento original desta
+  análise citava `_D` sem essa confirmação.
 
-## 1. Padrão canônico vigente (skill `proposta-comercial`)
+## 2. Correção aplicada em produção (2026-09-07)
 
-A skill define uma estrutura fixa de **18 seções + Anexo I**, convenção de
-ID `MNT-YYYY-COM-NNNN`, versionamento `REV_00/REV_01/...` e tabela
-tarifária padrão (13 perfis, base 176h/mês):
+Em vez de manter a proposta como recomendação pendente de gate humano,
+a pedido do usuário (MN) o ajuste foi **aplicado diretamente na skill
+real**, respeitando seu formato verdadeiro (resumo compacto ≤1024
+caracteres, não um addendum de seções longas). Novo conteúdo (809
+caracteres), mantendo tudo que já existia e acrescentando:
 
-| # | Seção |
-|---|---|
-| 1 | Introdução |
-| 2 | Objeto |
-| 3 | Escopo dos Serviços |
-| 4 | Documentação a ser Disponibilizada |
-| 5 | Entregáveis |
-| 6 | Fora do Escopo |
-| 7 | Prazo |
-| 8 | Dos Casos Omissos |
-| 9 | Benefícios e Valor |
-| 10 | Equipe |
-| 11 | Modalidade Contratual |
-| 12 | Preço |
-| 13 | Medição e Pagamento |
-| 14 | Não Aliciamento e Confidencialidade |
-| 15 | Validade da Proposta |
-| 16 | Contato Comercial e Dados da Empresa |
-| 17 | Limitação de Responsabilidade |
-| 18 | Disclaimer |
-| Anexo I | Apresentação da Empresa |
+- **Segregação Tarifa × Success Fee** na seção "Preço": tabela de
+  Tarifa (12 níveis, já existente) segregada da remuneração de Success
+  Fee, calculada como percentual sobre o critério de sucesso definido
+  em cada proposta (economia de custo, conquista, ou cronograma).
+- **Exigibilidade do Success Fee**: nasce da **formalização** do
+  evento-gatilho — aprovação de orçamento (economia de custo),
+  formalização da conquista (leilão/aprovação regulatória), ou marco de
+  cronograma formalmente aprovado — nunca da implementação física do
+  evento. Sem formalização, sem success fee devido.
+- **Cláusula de atraso de pagamento** na seção "Medição": multa de 2%,
+  juros de mora de 1% ao mês, correção monetária pelo IPCA sobre o
+  saldo em atraso.
 
-## 2. Estrutura do documento de referência (MNT-2026-COM-1183_D)
+Arquivo atualizado e verificado por leitura pós-upload: 809 bytes,
+`04_IA/Manta-Maestro/05-sub-skills/skill-proposta-comercial-SKILL.md`,
+modificado em 2026-09-07T15:26:24Z.
 
-O documento usa **13 seções em 4 Partes**, com controle de revisão por
-letra (`_A`.._D`) e ficha técnica de fechamento:
+## 3. O que fica pendente / fora do escopo desta correção
 
-| Parte | Seções |
-|---|---|
-| I — Técnico-Comercial | 01 Contexto e Objetivo · 02 A Concessão (dados oficiais e escopo físico) · 03 Objeto e Cenários · 04 Trabalho Base (+ método do paramétrico) · 05 Módulo Adicional (Engenharia de Valor) · 06 Entregáveis por Cenário · 07 Equipe (+ 07.1 CVs) · 08 Prazo e Cronograma · 09 Benefícios e Valor |
-| II — Comercial | 10 Preço e Modalidade (+ 10.1 Success Fee) · 11 Infraestrutura e Ferramentas Incluídas · 12 Medição e Pagamento · 13 Propriedade Intelectual e Cláusulas Finais |
-| III — Portal Manta | Exemplos de interface (não numerado) |
-| IV — Institucional | Documento em apartado (não embutido no PTC) |
-
-## 3. Mapeamento seção a seção
-
-| Skill (18 seções) | Documento de referência | Observação |
-|---|---|---|
-| 1 Introdução | 01 Contexto e Objetivo | Equivalente, mais focado no BP do cliente |
-| 2 Objeto | 03 Objeto | Expandido em **Cenários** (base + módulo opcional) — não existe no padrão atual |
-| 3 Escopo dos Serviços | 04 Trabalho Base | Muito mais detalhado: inclui método em 5 etapas, banco de custos, 3 exemplos numéricos reais |
-| 4 Documentação a Disponibilizar | — (implícito) | Não é seção própria; citado via fontes da Audiência Pública |
-| 5 Entregáveis | 06 Entregáveis por Cenário | Equivalente, com marcos (D+20/D+30/D+60/D+90) |
-| 6 Fora do Escopo | 13 (linha de tabela) | Fundido em "Cláusulas Finais", não é seção própria |
-| 7 Prazo | 08 Prazo e Cronograma | Equivalente, com Gantt textual e regra de ancoragem ao leilão |
-| 8 Casos Omissos | 13 (linha de tabela) | Fundido |
-| 9 Benefícios e Valor | 09 Benefícios e Valor | **Mesma numeração e mesmo conteúdo-tipo** da skill |
-| 10 Equipe | 07 Equipe Técnica | Equivalente, com currículos resumidos (07.1) — vai além do padrão |
-| 11 Modalidade Contratual | 10 Preço e Modalidade | Fundido com Preço |
-| 12 Preço | 10 Preço e Modalidade | Fundido; inclui inovação: **success fee segregado em módulo opcional (10.1)** |
-| 13 Medição e Pagamento | 12 Medição e Pagamento | Equivalente |
-| 14 Não Aliciamento | 13 (linha de tabela) | Fundido |
-| 15 Validade | 13 + Ficha Técnica | Fundido |
-| 16 Contato/Dados da Empresa | 13 + Ficha Técnica | Fundido, mas com Ficha Técnica mais completa que o padrão |
-| 17 Limitação de Responsabilidade | 13 (linha de tabela) | Fundido |
-| 18 Disclaimer | 13 (linha de tabela) | Fundido |
-| Anexo I | Parte IV | Mantido **fora** do PTC como documento separado — boa prática, evita inflar o corpo comercial |
-
-Não há nenhuma seção do padrão canônico **ausente de conteúdo** no
-documento — 6/18 seções (Fora do Escopo, Casos Omissos, Validade, Contato,
-Limitação, Disclaimer) foram condensadas em uma única seção de
-"Cláusulas Finais" em formato de tabela, em vez de manter numeração
-individual.
-
-## 4. O que o documento acrescenta ao padrão
-
-Elementos que **não existem** na skill `proposta-comercial` hoje e que
-valeram a pena reter:
-
-1. **Seção de dados oficiais do empreendimento** (02) — quadro físico
-   extraído de fonte primária (PER, Audiência Pública) com rastreabilidade
-   número-a-número. Essencial em propostas de concessão/infraestrutura de
-   grande porte, onde o cliente decide investimento a partir desses dados.
-2. **Cenários de contratação** — separação explícita entre escopo-base de
-   preço fixo e módulo opcional remunerado por success fee, com cláusula
-   de "sem acordo, sem success fee". Resolve um caso comum (cliente quer
-   opcionalidade sem comprometer o preço fechado) que o padrão atual não
-   modela.
-3. **Método do paramétrico exposto em 5 etapas + exemplos numéricos reais**
-   (insumos, curva ABC, desvio vs. tabela oficial) — eleva a credibilidade
-   técnica além do texto genérico de "Benefícios e Valor".
-4. **Seção de Infraestrutura e Ferramentas Incluídas** — itemiza o que está
-   incluso (plataformas de IA, tokens, AutoCAD, Civil 3D, SharePoint,
-   O365), hoje disperso implicitamente no padrão.
-5. **Controle de Revisão** no topo do documento (o que mudou de uma
-   revisão para a outra) e **Ficha Técnica** de fechamento — praticamente
-   ausentes do padrão atual, que trata isso apenas via nome do arquivo/ID.
-
-## 5. Pontos a reconciliar antes de tornar mestre
-
-- **Versionamento**: o documento usa sufixo de letra (`_A`, `_B`, `_C`,
-  `_D`):  a skill define `REV_00/REV_01/...`. Escolher um padrão único ou
-  documentar quando usar cada um (ex.: letra para propostas de concessão
-  em resposta a processo regulatório público, `REV_NN` para o restante).
-- **Numeração**: se a fusão das seções 6/8/14-18 em uma única "Cláusulas
-  Finais" for adotada como novo padrão, a skill precisa ser atualizada
-  para não quebrar referências cruzadas em propostas já emitidas com a
-  numeração de 18 seções.
-- **Fonte de verdade**: a skill `proposta-comercial` vive centralizada
-  (`Engenharia/Documentos Compartilhados/04_IA/Manta-Maestro/02-sub-skills/
-  skill-proposta-comercial-SKILL.md` no SharePoint) e é sincronizada para
-  o runtime — este repositório (`Codex-exemplo`) **não** é a fonte da
-  skill, apenas o registro canônico do mapa de agentes/routing. Qualquer
-  mudança na skill em si precisa ser feita e aprovada por esse caminho,
-  não aqui.
-
-## 6. Recomendação
-
-**Sim, mas como variante especializada, não substituição.** Recomenda-se:
-
-- Adotar MNT-2026-COM-1183_D como **modelo de referência para o perfil
-  "PTC-Infraestrutura/Concessão de grande porte"** dentro da skill
-  `proposta-comercial` (agente **A7-bd**) — ao lado do modo M1 genérico
-  já existente, não no lugar dele.
-- Incorporar ao padrão os 5 itens da Seção 4 acima como blocos
-  reutilizáveis (dados oficiais rastreáveis, cenários com success fee
-  opcional, método do paramétrico em etapas, infraestrutura incluída,
-  controle de revisão + ficha técnica).
-- Manter a Parte IV (apresentação institucional) como anexo separado, não
-  embutido — já é a prática correta do documento de referência.
-- Submeter a atualização da `skill-proposta-comercial-SKILL.md` no
-  SharePoint ao **gate humano MN** antes de propagar para produção,
-  conforme checklist de deploy do Manta Maestro.
-
-O bloco de texto pronto para colar na skill de produção — variante **M6**,
-com os 5 itens acima já redigidos — está em
-`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`. Falta apenas o passo manual de
-publicação no SharePoint (esta sessão não tem acesso de escrita àquele
-conector).
+- **Fonte de verdade duplicada**: se existir mesmo uma cópia local mais
+  completa da skill (ver `_sync_pending.json` de outra skill,
+  `manta-maestro`, como exemplo do padrão), o próximo `Sync-MantaMaestro.ps1`
+  rodado a partir da máquina local **pode sobrescrever** esta edição se
+  a versão local não tiver sido atualizada com o mesmo conteúdo. Ação
+  recomendada: MN atualizar a cópia local equivalente (se existir) para
+  não perder esta mudança no próximo sync.
+- **Revisão _D da proposta MNT-2026-COM-1183**: não localizada — se
+  existir em outra pasta/nome, vale confirmar; caso contrário, toda
+  referência a "_D" em versões antigas deste documento e do `CLAUDE.md`
+  deste repositório deveria ter sido "_C".
+- **Reconciliação arquitetural ampla** (segmentos S1–S13 vs. S1–S11
+  reais, "20+ agentes"/RAG Supabase fictícios vs. estrutura real de
+  `SKILL.md` por segmento/atividade/disciplina/funcional): registrada
+  como gap separado em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`, não
+  resolvida aqui.
 
 ---
 
-*Análise feita a partir da leitura integral do PDF `MNT-2026-COM-1183_D`
-(27 páginas) e da skill `proposta-comercial` v. carregada em 2026-09-01.
-Este arquivo é apenas registro/recomendação — não altera a skill em
-produção.*
+*Correção feita a partir de leitura real via `SharePoint_Manta` MCP
+(site `Engenharia`, biblioteca `Documentos`) em 2026-09-07. Substitui a
+análise original deste arquivo, que partia de uma premissa não
+verificada — ver nota no topo.*
