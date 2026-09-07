@@ -4,9 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
+Versão: **v4.2.2** (2026-09-04) — v4.2 expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+proposta técnico-comercial + catálogo de artefatos-modelo de portal.
 
 ---
 
@@ -137,6 +137,30 @@ SharePoint nesta sessão).
 
 ---
 
+## CATÁLOGO DE ARTEFATOS-MODELO — Portais Manta
+
+Registro dos artefatos reais de portal (React/HTML) já produzidos pela
+Manta, mapeados a partir do OneDrive/SharePoint de MN, e o protocolo de
+reuso a seguir antes de construir qualquer novo portal. Ver
+`docs/CATALOGO-ARTEFATOS-PORTAL-MANTA.md`.
+
+**Protocolo obrigatório:** antes de criar um novo artefato de portal,
+consultar o catálogo, classificar o pedido em um dos padrões conhecidos
+(Orçamentação Paramétrica / Dashboard Executivo multi-módulo / Unificado
+multi-domínio) e levantar as 7 perguntas de triagem da Seção 3 do
+catálogo com o usuário — nunca partir direto para a construção sem esse
+passo.
+
+**Modelo funcional publicado:** `templates/portal-manta-modelo-padrao/index.html`
+— molde de referência do padrão "Orçamentação Paramétrica" (capa + KPIs +
+comparação por frente + curva ABC + ficha técnica), com guia de duplicação
+embutido. Ainda não existe modelo funcional equivalente para os padrões
+"Dashboard Executivo" e "Unificado" — sinalizar essa lacuna ao usuário
+antes de forçar o padrão de Orçamentação Paramétrica em um pedido que não
+seja desse tipo.
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -175,6 +199,11 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.2** (2026-09-04) — catálogo de artefatos-modelo de portal (Portal
+  Manta), protocolo de reuso com perguntas de triagem, e primeiro modelo
+  funcional publicado (padrão Orçamentação Paramétrica). Ver
+  `docs/CATALOGO-ARTEFATOS-PORTAL-MANTA.md` e
+  `templates/portal-manta-modelo-padrao/`.
 - **v4.2.1** (2026-09-01) — análise e recomendação de modelo mestre de
   proposta técnico-comercial, validada contra a proposta MNT-2026-COM-1183_D
   e a skill `proposta-comercial` (A7-bd). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.

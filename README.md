@@ -9,6 +9,10 @@ Manta Associados. Versiona:
   novos (S6–S10 adicionados na v4.2).
 - `docs/MODELO-MESTRE-PROPOSTA.md` — análise e recomendação sobre modelo
   mestre de proposta técnico-comercial (v4.2.1).
+- `docs/CATALOGO-ARTEFATOS-PORTAL-MANTA.md` — catálogo de artefatos-modelo
+  de portal e protocolo de reuso (v4.2.2).
+- `templates/portal-manta-modelo-padrao/` — modelo funcional (HTML)
+  do padrão "Orçamentação Paramétrica".
 
 ## Estrutura
 
@@ -26,7 +30,7 @@ Manta Associados. Versiona:
 
 ## Versão atual
 
-**v4.2.1** — 2026-09-01 — expansão S6–S10 (v4.2) + modelo mestre de proposta.
+**v4.2.2** — 2026-09-04 — expansão S6–S10 (v4.2) + modelo mestre de proposta + catálogo de artefatos-modelo de portal.
 
 ## Como usar
 

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Modelo de Portal Manta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0B1B33;
+    --navy-800:#132A4D;
+    --navy-700:#1B3766;
+    --navy-line:#2A4472;
+    --ink-on-navy:#E7ECF5;
+    --ink-on-navy-muted:#9FB0CC;
+    --accent:#E8792C;
+    --accent-lt:#F5A05C;
+    --accent-dk:#C25E17;
+    --ok:#2BA672;
+    --warn:#D9A441;
+    --crit:#D9583F;
+    --bg:#F4F6F9;
+    --surface:#FFFFFF;
+    --border:#E3E7EE;
+    --text:#1B2433;
+    --text-muted:#5B6678;
+    --font-display:'Sora',system-ui,sans-serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1420;
+      --surface:#161E2E;
+      --border:#28324A;
+      --text:#E7ECF5;
+      --text-muted:#93A0BA;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1420;
+    --surface:#161E2E;
+    --border:#28324A;
+    --text:#E7ECF5;
+    --text-muted:#93A0BA;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
+  .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+  ::selection{background:var(--accent);color:#fff}
+
+  .app{display:flex;min-height:100vh}
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    width:264px;flex-shrink:0;background:var(--navy-900);color:var(--ink-on-navy);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .brand{display:flex;align-items:center;gap:10px;padding:20px 18px 16px 18px;border-bottom:1px solid var(--navy-line)}
+  .brand .logo{width:34px;height:34px;border-radius:8px;flex-shrink:0;
+    background:linear-gradient(135deg,var(--accent-lt),var(--accent-dk));
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-family:var(--font-display);font-size:16px}
+  .brand .name{font-family:var(--font-display);font-weight:700;font-size:14.5px;letter-spacing:.02em;color:#fff;line-height:1.15}
+  .brand .sub{font-size:11px;color:var(--ink-on-navy-muted);margin-top:1px}
+
+  .navgroup{padding:16px 10px 4px 10px}
+  .navgroup .label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-on-navy-muted);padding:0 10px;margin-bottom:6px;font-weight:600}
+  .navitem{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    color:var(--ink-on-navy-muted);padding:9px 10px;border-radius:8px;cursor:pointer;font:inherit;font-size:13.5px;margin-bottom:2px}
+  .navitem .num{width:20px;height:20px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--ink-on-navy-muted);
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;font-family:var(--font-mono)}
+  .navitem:hover{background:rgba(255,255,255,.06);color:#fff}
+  .navitem.active{background:rgba(232,121,44,.16);color:#fff}
+  .navitem.active .num{background:var(--accent);color:#fff}
+
+  .sidebar-footer{margin-top:auto;padding:16px 18px;border-top:1px solid var(--navy-line);font-size:11px;color:var(--ink-on-navy-muted)}
+  .sidebar-footer b{color:#fff;display:block;font-size:12.5px;margin-bottom:2px;font-family:var(--font-display)}
+
+  /* ---------- MAIN ---------- */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+  .topbar .ctx{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted)}
+  .badge-ver{font-family:var(--font-mono);font-size:11px;background:var(--bg);border:1px solid var(--border);
+    padding:2px 8px;border-radius:20px;color:var(--text-muted)}
+  .actions{display:flex;gap:8px}
+  .btn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;font-weight:600;
+    padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
+  .btn:hover{border-color:var(--accent);color:var(--accent-dk)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent-dk);border-color:var(--accent-dk);color:#fff}
+
+  .content{padding:32px 40px 64px 40px;max-width:1080px}
+  .view{display:none}
+  .view.active{display:block}
+
+  .placeholder{color:var(--accent-dk);background:rgba(232,121,44,.10);padding:1px 6px;border-radius:5px;font-weight:600}
+
+  /* cover */
+  .cover-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:6px}
+  .cover-head .logo-lg{width:46px;height:46px;border-radius:11px;flex-shrink:0;
+    background:linear-gradient(135deg,var(--accent-lt),var(--accent-dk));display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-family:var(--font-display);font-size:21px}
+  .eyebrow{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:600;margin-bottom:4px}
+  h1.title{font-size:28px;font-weight:700;color:var(--text)}
+  .subtitle{font-size:15px;color:var(--text-muted);margin-top:6px;max-width:60ch;line-height:1.5}
+
+  .lede{margin-top:20px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    font-size:13.5px;color:var(--text-muted);line-height:1.6;max-width:68ch}
+
+  .field-row{display:flex;align-items:center;gap:10px;margin-top:18px;font-size:13px;color:var(--text-muted)}
+  .field-row label{font-weight:600;color:var(--text)}
+  .field-row input{font:inherit;font-size:13px;padding:7px 10px;border:1px dashed var(--border);border-radius:7px;
+    background:var(--bg);color:var(--text-muted);min-width:260px}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);
+    border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:26px}
+  .kpi{background:var(--surface);padding:16px 18px}
+  .kpi .k-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600}
+  .kpi .k-value{font-family:var(--font-mono);font-size:22px;font-weight:600;color:var(--text);margin-top:6px}
+  .kpi .k-value.accent{color:var(--accent-dk)}
+
+  .section-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);
+    font-weight:700;margin:34px 0 12px 0}
+
+  .frentes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .frente-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--accent);
+    border-radius:11px;padding:16px 17px}
+  .frente-card .f-tag{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent-dk);font-weight:700}
+  .frente-card h3{font-size:16px;margin-top:5px;color:var(--text)}
+  .frente-card .f-metrics{display:flex;flex-direction:column;gap:7px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+  .f-metric{display:flex;justify-content:space-between;font-size:12.5px}
+  .f-metric .m-label{color:var(--text-muted)}
+  .f-metric .m-value{font-family:var(--font-mono);font-weight:600;color:var(--text)}
+
+  /* guide */
+  .guide-grid{display:grid;gap:16px;margin-top:18px}
+  .guide-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:18px 20px}
+  .guide-card h3{font-size:14.5px;margin-bottom:8px;color:var(--text)}
+  .guide-card p, .guide-card li{font-size:13px;color:var(--text-muted);line-height:1.65}
+  .guide-card ol,.guide-card ul{margin:0;padding-left:18px}
+  .token-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12.5px}
+  .token-table td{padding:6px 8px;border-bottom:1px solid var(--border)}
+  .token-table td:first-child{font-family:var(--font-mono);color:var(--accent-dk);width:34%}
+  .swatch{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid rgba(0,0,0,.08)}
+
+  /* modulo (table + chart) */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:11px;margin-top:18px}
+  table.data{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+  table.data thead th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--text-muted);font-weight:700;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
+  table.data td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text)}
+  table.data td.num{font-family:var(--font-mono);text-align:right}
+  table.data tr:last-child td{border-bottom:none}
+  .classe-A{color:var(--crit);font-weight:700}
+  .classe-B{color:var(--warn);font-weight:700}
+  .classe-C{color:var(--text-muted);font-weight:700}
+
+  .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:20px 22px;margin-top:18px}
+  .chart-card h3{font-size:14px;margin-bottom:14px}
+  .bar-row{display:grid;grid-template-columns:120px 1fr 78px;align-items:center;gap:10px;margin-bottom:10px;font-size:12.5px}
+  .bar-row .b-label{color:var(--text-muted)}
+  .bar-track{height:16px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid var(--border)}
+  .bar-fill{height:100%;border-radius:5px 0 0 5px}
+  .bar-row .b-value{font-family:var(--font-mono);text-align:right;font-weight:600}
+
+  /* indicadores */
+  .status-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);
+    border-radius:11px;overflow:hidden;margin-top:18px}
+  .status-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);font-size:13px}
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.crit{background:var(--crit)}
+  .status-row .s-name{flex:1;color:var(--text)}
+  .status-row .s-note{color:var(--text-muted);font-size:12px}
+
+  /* ficha */
+  .ficha-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+  .ficha-table td{padding:9px 4px;border-bottom:1px solid var(--border)}
+  .ficha-table td:first-child{color:var(--text-muted);width:30%;font-weight:600}
+  .ficha-table td:last-child{font-family:var(--font-mono);font-size:12.5px}
+
+  @media (max-width:860px){
+    .app{flex-direction:column}
+    .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap}
+    .content{padding:24px 18px 48px}
+    .kpi-row,.frentes{grid-template-columns:1fr 1fr}
+  }
+  @media print{
+    .sidebar,.topbar{display:none}
+    .view{display:block !important}
+    .content{padding:0}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <nav class="sidebar" aria-label="Navegação do portal">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <div class="name">PORTAL MANTA</div>
+        <div class="sub">Modelo padrão · Orçamentação</div>
+      </div>
+    </div>
+
+    <div class="navgroup">
+      <div class="label">Introdução</div>
+      <button class="navitem active" data-view="capa"><span class="num">1</span> Capa</button>
+      <button class="navitem" data-view="guia"><span class="num">2</span> Como duplicar</button>
+    </div>
+
+    <div class="navgroup">
+      <div class="label">Análise por frente</div>
+      <button class="navitem" data-view="frente-a"><span class="num">3</span> <span class="placeholder">Frente A</span></button>
+      <button class="navitem" data-view="frente-b"><span class="num">4</span> <span class="placeholder">Frente B</span></button>
+      <button class="navitem" data-view="frente-c"><span class="num">5</span> <span class="placeholder">Frente C</span></button>
+    </div>
+
+    <div class="navgroup">
+      <div class="label">Ferramentas</div>
+      <button class="navitem" data-view="indicadores"><span class="num">6</span> Indicadores globais</button>
+      <button class="navitem" data-view="ficha"><span class="num">7</span> Ficha técnica</button>
+    </div>
+
+    <div class="sidebar-footer">
+      <b>Manta Associados</b>
+      Registro canônico · Codex-exemplo
+    </div>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="ctx">
+        <span class="placeholder">[Projeto / Cliente]</span>
+        <span class="badge-ver mono">modelo v1.0</span>
+      </div>
+      <div class="actions">
+        <button class="btn" id="btn-json">Dados (JSON)</button>
+        <button class="btn" id="btn-full">Tela cheia</button>
+        <button class="btn primary" id="btn-print">Imprimir / PDF</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===== 1. CAPA ===== -->
+      <section class="view active" id="view-capa">
+        <div class="cover-head">
+          <div class="logo-lg">M</div>
+          <div>
+            <div class="eyebrow">Modelo padrão de artefato · Manta Maestro</div>
+            <h1 class="title">Portal de Orçamentação Paramétrica</h1>
+            <p class="subtitle"><span class="placeholder">[Nome do projeto]</span> · <span class="placeholder">[Cliente / instituição]</span> — análise comparativa entre frentes de trabalho, com KPIs consolidados e curva ABC por insumo.</p>
+          </div>
+        </div>
+
+        <div class="lede">
+          Este é o <b>molde de referência</b> da família de portais de orçamentação da Manta (observada em produção em mais de 20 revisões, v8 a v28.9). Ele reproduz a estrutura, os módulos e o nível de complexidade dos portais reais — capa com KPIs e comparação por frente, módulos de detalhe por frente, indicadores globais e ficha técnica — com dados fictícios no lugar dos dados do cliente. Veja a aba <b>“Como duplicar”</b> antes de adaptar para um novo projeto.
+        </div>
+
+        <div class="field-row">
+          <label>Preparado para:</label>
+          <input type="text" value="[cliente / instituição]" readonly>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi"><div class="k-label">Versão do modelo</div><div class="k-value mono">v1.0</div></div>
+          <div class="kpi"><div class="k-label">Gerado em</div><div class="k-value mono">2026-09-04</div></div>
+          <div class="kpi"><div class="k-label">Data-base</div><div class="k-value mono">[dd/mm/aaaa]</div></div>
+          <div class="kpi"><div class="k-label">Σ Valor 3 frentes</div><div class="k-value accent mono">R$ [xx,x] mi</div></div>
+        </div>
+
+        <div class="section-label">Comparação entre frentes</div>
+        <div class="frentes">
+          <div class="frente-card">
+            <div class="f-tag">Frente A</div>
+            <h3>[Nome / trecho A]</h3>
+            <div class="f-metrics">
+              <div class="f-metric"><span class="m-label">Valor total</span><span class="m-value">R$ [x,xx] mi</span></div>
+              <div class="f-metric"><span class="m-label">Prazo</span><span class="m-value">[N] meses</span></div>
+              <div class="f-metric"><span class="m-label">Escopo</span><span class="m-value">[km / m² / un.]</span></div>
+            </div>
+          </div>
+          <div class="frente-card">
+            <div class="f-tag">Frente B</div>
+            <h3>[Nome / trecho B]</h3>
+            <div class="f-metrics">
+              <div class="f-metric"><span class="m-label">Valor total</span><span class="m-value">R$ [x,xx] mi</span></div>
+              <div class="f-metric"><span class="m-label">Prazo</span><span class="m-value">[N] meses</span></div>
+              <div class="f-metric"><span class="m-label">Escopo</span><span class="m-value">[km / m² / un.]</span></div>
+            </div>
+          </div>
+          <div class="frente-card">
+            <div class="f-tag">Frente C</div>
+            <h3>[Nome / trecho C]</h3>
+            <div class="f-metrics">
+              <div class="f-metric"><span class="m-label">Valor total</span><span class="m-value">R$ [x,xx] mi</span></div>
+              <div class="f-metric"><span class="m-label">Prazo</span><span class="m-value">[N] meses</span></div>
+              <div class="f-metric"><span class="m-label">Escopo</span><span class="m-value">[km / m² / un.]</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 2. GUIA ===== -->
+      <section class="view" id="view-guia">
+        <div class="eyebrow">Documentação embutida</div>
+        <h1 class="title">Como duplicar este modelo</h1>
+        <p class="subtitle">Passo a passo para transformar este molde em um portal real de projeto, mantendo o padrão Manta.</p>
+
+        <div class="guide-grid">
+          <div class="guide-card">
+            <h3>1 — Substituir os placeholders</h3>
+            <p>Toda ocorrência em <span class="placeholder">laranja entre colchetes</span> é um dado a preencher: nome do projeto, cliente, frentes/lotes, valores e datas. Nunca deixe um placeholder visível na entrega final ao cliente.</p>
+          </div>
+          <div class="guide-card">
+            <h3>2 — Ajustar o número de frentes</h3>
+            <p>A grade de comparação (Capa) e o menu lateral esperam de 2 a 4 frentes/lotes/cenários. Menos que isso, remova colunas do grid; mais que isso, mude <code class="mono">grid-template-columns</code> na classe <code class="mono">.frentes</code> ou passe para rolagem horizontal.</p>
+          </div>
+          <div class="guide-card">
+            <h3>3 — Tokens de cor (não usar valores soltos)</h3>
+            <table class="token-table">
+              <tr><td>--navy-900</td><td><span class="swatch" style="background:#0B1B33"></span>fundo da barra lateral</td></tr>
+              <tr><td>--accent</td><td><span class="swatch" style="background:#E8792C"></span>destaque principal (Manta laranja)</td></tr>
+              <tr><td>--ok / --warn / --crit</td><td><span class="swatch" style="background:#2BA672"></span><span class="swatch" style="background:#D9A441"></span><span class="swatch" style="background:#D9583F"></span>status semântico — nunca reaproveitar o laranja de destaque para status</td></tr>
+            </table>
+          </div>
+          <div class="guide-card">
+            <h3>4 — Módulos por frente</h3>
+            <p>Cada frente (A/B/C) tem sua própria aba com tabela de composição e um gráfico de barras da curva ABC — copie o padrão de <code class="mono">#view-frente-a</code> para cada frente real, ajustando os dados da tabela.</p>
+          </div>
+          <div class="guide-card">
+            <h3>5 — Antes de entregar ao cliente</h3>
+            <ul>
+              <li>Confirme que <b>nenhum nome de outro cliente ou projeto</b> ficou no código (regra R1 da skill <code class="mono">proposta-comercial</code>).</li>
+              <li>Preencha a Ficha Técnica (aba 7) com ID único <code class="mono">MANTA-PORTAL-AAAAMMDD-NN</code>.</li>
+              <li>Teste os botões “Imprimir/PDF”, “Tela cheia” e “Dados (JSON)”.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 3-5. FRENTES (mesma estrutura, dados de exemplo) ===== -->
+      <section class="view" id="view-frente-a">
+        <div class="eyebrow placeholder">Frente A</div>
+        <h1 class="title">[Nome / trecho A] — composição de custo</h1>
+        <p class="subtitle">Exemplo de detalhamento por insumo, no padrão de curva ABC usado nos portais reais de orçamentação paramétrica.</p>
+
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th>Classe</th><th>Insumo</th><th>Participação</th><th>Acumulado</th></tr></thead>
+            <tbody>
+              <tr><td class="classe-A">A</td><td>[Insumo 1 — ex.: aço CA-50]</td><td class="num">15,6%</td><td class="num">15,6%</td></tr>
+              <tr><td class="classe-A">A</td><td>[Insumo 2 — ex.: concreto FCK 40]</td><td class="num">13,7%</td><td class="num">29,3%</td></tr>
+              <tr><td class="classe-B">B</td><td>[Insumo 3]</td><td class="num">8,9%</td><td class="num">38,2%</td></tr>
+              <tr><td class="classe-B">B</td><td>[Insumo 4]</td><td class="num">5,8%</td><td class="num">44,0%</td></tr>
+              <tr><td class="classe-C">C</td><td>[Demais insumos]</td><td class="num">56,0%</td><td class="num">100,0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="chart-card">
+          <h3>Valor por etapa construtiva — [Frente A]</h3>
+          <div class="bar-row"><span class="b-label">[Etapa 1]</span><div class="bar-track"><div class="bar-fill" style="width:78%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+          <div class="bar-row"><span class="b-label">[Etapa 2]</span><div class="bar-track"><div class="bar-fill" style="width:56%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+          <div class="bar-row"><span class="b-label">[Etapa 3]</span><div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+          <div class="bar-row"><span class="b-label">[Etapa 4]</span><div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-frente-b">
+        <div class="eyebrow placeholder">Frente B</div>
+        <h1 class="title">[Nome / trecho B] — composição de custo</h1>
+        <p class="subtitle">Mesma estrutura da Frente A — duplique e ajuste os valores para o trecho/lote real.</p>
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th>Classe</th><th>Insumo</th><th>Participação</th><th>Acumulado</th></tr></thead>
+            <tbody>
+              <tr><td class="classe-A">A</td><td>[Insumo 1]</td><td class="num">18,1%</td><td class="num">18,1%</td></tr>
+              <tr><td class="classe-A">A</td><td>[Insumo 2]</td><td class="num">11,4%</td><td class="num">29,5%</td></tr>
+              <tr><td class="classe-B">B</td><td>[Insumo 3]</td><td class="num">7,2%</td><td class="num">36,7%</td></tr>
+              <tr><td class="classe-C">C</td><td>[Demais insumos]</td><td class="num">63,3%</td><td class="num">100,0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="chart-card">
+          <h3>Valor por etapa construtiva — [Frente B]</h3>
+          <div class="bar-row"><span class="b-label">[Etapa 1]</span><div class="bar-track"><div class="bar-fill" style="width:62%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+          <div class="bar-row"><span class="b-label">[Etapa 2]</span><div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+          <div class="bar-row"><span class="b-label">[Etapa 3]</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-frente-c">
+        <div class="eyebrow placeholder">Frente C</div>
+        <h1 class="title">[Nome / trecho C] — composição de custo</h1>
+        <p class="subtitle">Mesma estrutura das anteriores — o número de frentes é o que muda por projeto, não o padrão.</p>
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th>Classe</th><th>Insumo</th><th>Participação</th><th>Acumulado</th></tr></thead>
+            <tbody>
+              <tr><td class="classe-A">A</td><td>[Insumo 1]</td><td class="num">21,0%</td><td class="num">21,0%</td></tr>
+              <tr><td class="classe-B">B</td><td>[Insumo 2]</td><td class="num">9,6%</td><td class="num">30,6%</td></tr>
+              <tr><td class="classe-C">C</td><td>[Demais insumos]</td><td class="num">69,4%</td><td class="num">100,0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="chart-card">
+          <h3>Valor por etapa construtiva — [Frente C]</h3>
+          <div class="bar-row"><span class="b-label">[Etapa 1]</span><div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+          <div class="bar-row"><span class="b-label">[Etapa 2]</span><div class="bar-track"><div class="bar-fill" style="width:83%;background:var(--accent)"></div></div><span class="b-value mono">R$ [x,x] mi</span></div>
+        </div>
+      </section>
+
+      <!-- ===== 6. INDICADORES ===== -->
+      <section class="view" id="view-indicadores">
+        <div class="eyebrow">Visão consolidada</div>
+        <h1 class="title">Indicadores globais</h1>
+        <p class="subtitle">Status agregado das três frentes — use cor semântica (verde/âmbar/vermelho), nunca o laranja de destaque, para não confundir marca com alerta.</p>
+        <div class="status-list">
+          <div class="status-row"><span class="dot ok"></span><span class="s-name">[Frente A] — dentro do orçamento paramétrico</span><span class="s-note">Δ +2,1% vs. referência</span></div>
+          <div class="status-row"><span class="dot warn"></span><span class="s-name">[Frente B] — desvio a monitorar</span><span class="s-note">Δ +14,8% vs. referência</span></div>
+          <div class="status-row"><span class="dot crit"></span><span class="s-name">[Frente C] — desvio crítico, revisar composição</span><span class="s-note">Δ +31,4% vs. referência</span></div>
+        </div>
+      </section>
+
+      <!-- ===== 7. FICHA TÉCNICA ===== -->
+      <section class="view" id="view-ficha">
+        <div class="eyebrow">Rastreabilidade</div>
+        <h1 class="title">Ficha técnica do documento</h1>
+        <table class="ficha-table">
+          <tr><td>Cliente</td><td class="placeholder">[cliente / interno]</td></tr>
+          <tr><td>Projeto</td><td class="placeholder">[nome do projeto]</td></tr>
+          <tr><td>Documento</td><td>Portal de Orçamentação Paramétrica — Modelo Padrão</td></tr>
+          <tr><td>Versão</td><td>v1.0 — molde de referência (dados fictícios)</td></tr>
+          <tr><td>Gerado em</td><td>2026-09-04</td></tr>
+          <tr><td>Gerador</td><td>Claude AI — Manta Associados</td></tr>
+          <tr><td>Classificação</td><td class="placeholder">[Interno / Confidencial]</td></tr>
+          <tr><td>ID</td><td class="placeholder">MANTA-PORTAL-AAAAMMDD-NN</td></tr>
+          <tr><td>Fonte do padrão</td><td>Catálogo de artefatos Portal Manta (família "orçamentação paramétrica", v8–v28.9)</td></tr>
+        </table>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const items = document.querySelectorAll('.navitem');
+  const views = document.querySelectorAll('.view');
+  items.forEach(btn => btn.addEventListener('click', () => {
+    items.forEach(b => b.classList.remove('active'));
+    views.forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-' + btn.dataset.view).classList.add('active');
+  }));
+
+  document.getElementById('btn-print').addEventListener('click', () => window.print());
+
+  document.getElementById('btn-full').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  });
+
+  document.getElementById('btn-json').addEventListener('click', () => {
+    const sample = {
+      projeto: "[nome do projeto]",
+      cliente: "[cliente / instituição]",
+      frentes: [
+        { id: "A", valor_total_mi: "[x,xx]", prazo_meses: "[N]" },
+        { id: "B", valor_total_mi: "[x,xx]", prazo_meses: "[N]" },
+        { id: "C", valor_total_mi: "[x,xx]", prazo_meses: "[N]" }
+      ],
+      versao_modelo: "1.0"
+    };
+    alert("Exemplo de export JSON deste modelo:\n\n" + JSON.stringify(sample, null, 2));
+  });
+</script>
+
+</body>
+</html>
