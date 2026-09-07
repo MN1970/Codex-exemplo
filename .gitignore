@@ -1,0 +1,3 @@
+# Scratch space used by background agents during SharePoint migration tasks —
+# not part of the canonical registry.
+.sp_migration_tmp/
