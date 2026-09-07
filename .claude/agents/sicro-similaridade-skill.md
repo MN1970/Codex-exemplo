@@ -1,4 +1,5 @@
 # SKILL: sicro-similaridade
+
 **Versão:** v1.0 | **Status:** Production-Ready | **Tipo:** Integração Orçamentária
 
 ---
@@ -31,6 +32,7 @@ Skill de busca e completação automática de itens SICRO com matching híbrido 
 ### Excel Final (padrão Manta)
 
 Colunas:
+
 - `codigo_sicro` — código vigente (ex: 73.456.001)
 - `descricao` — descrição SICRO oficial
 - `unidade` — UN, M, M², M³, etc. (validada)
@@ -100,27 +102,32 @@ Colunas:
 ## Arquitetura (5 Camadas)
 
 ### L1: Pré-processamento
+
 - Validação de entrada (UF, período)
 - Normalização de unidades (conversão M³ → M, etc)
 - Classificação: item básico vs composto
 
 ### L2: Indexação Híbrida
+
 - BM25 (léxico) + TF-IDF (vetorial)
 - Índice SICRO segmentado por UF e mês
 - Fallback em clusters técnicos
 
 ### L3: Enriquecimento
+
 - Prior histórico Manta (80 mil projetos)
 - Benchmark SINAPI
 - Normas técnicas (NBR, DNIT, ICAO, etc)
 - Detecção de obsolescência + de-para
 
 ### L4: Composição & Score
+
 - M/MO/EQ por UF/período
 - RelevanceRanker: calibra BM25 + TF-IDF + priors em 0-100%
 - 3 bandas de decisão
 
 ### L5: Orquestração
+
 - Pipeline determinístico end-to-end
 - Geração Excel + JSON
 - Integração com aluci-guard (auditoria)

@@ -255,6 +255,7 @@ export SHAREPOINT_TENANT_ID="..."
 ### "No access_token in response"
 
 Verifique:
+
 - `AZURE_CLIENT_ID` e `AZURE_CLIENT_SECRET` estão corretos
 - App registration tem permissões Graph API
 - Tenant ID está correto
@@ -314,6 +315,7 @@ jobs:
 ### SystemD Timer (Linux)
 
 `/etc/systemd/system/manta-healthcheck.service`:
+
 ```ini
 [Unit]
 Description=Manta M365 Healthcheck
@@ -331,6 +333,7 @@ StandardError=journal
 ```
 
 `/etc/systemd/system/manta-healthcheck.timer`:
+
 ```ini
 [Unit]
 Description=Run Manta M365 Healthcheck hourly

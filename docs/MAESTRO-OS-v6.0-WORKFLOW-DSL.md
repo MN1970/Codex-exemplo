@@ -10,7 +10,7 @@
 
 ### 1.1 Primitivas
 
-```
+```text
 project        → objeto raiz; contém metadados (tipo, sítio, escopo)
 agents         → array de {name, tier, tools, rag_prefix}
 parallel()     → fan-out: invoca N agentes simultaneamente
@@ -401,6 +401,7 @@ execution_time:
 ## 4. Implementação: Parser + Executor
 
 O Workflow DSL será:
+
 1. **Parsed** em TypeScript/Python → AST
 2. **Validado** contra schema (tipos, agentes válidos, etc.)
 3. **Executado** por orchestrator (spawns agentes, aguarda, consenso, agrega)

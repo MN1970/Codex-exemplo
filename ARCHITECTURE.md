@@ -2,7 +2,7 @@
 
 ## System Architecture Diagram
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                   Claude Code SessionStart Hook                 │
 │                                                                 │
@@ -106,7 +106,7 @@
 
 ## Retry Logic with Exponential Backoff
 
-```
+```text
 Attempt 1                  Attempt 2                  Attempt 3
 ┌────────────┐  [FAIL]     ┌────────────┐  [FAIL]     ┌────────────┐
 │ HTTP POST  │ ─────────►  │ HTTP POST  │ ─────────►  │ HTTP POST  │
@@ -123,7 +123,7 @@ Max wait before giving up: ~15 seconds (with timeouts)
 
 ## HTTP Request Flow
 
-```
+```text
 CLIENT (sp_healthcheck.py)
     │
     ├─ HTTP Request to Azure AD ───────────────────────────────────────┐
@@ -175,7 +175,7 @@ CLIENT (sp_healthcheck.py)
 
 ## Data Flow - JSON Output Structure
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ Input: Environment + CLI Args                               │
 ├─────────────────────────────────────────────────────────────┤
@@ -228,7 +228,7 @@ CLIENT (sp_healthcheck.py)
 
 ## Component Dependencies
 
-```
+```text
 sp_healthcheck.py
 ├── Python Standard Library
 │   ├── sys
@@ -275,7 +275,7 @@ Internal Functions:
 
 ## Error Handling Strategy
 
-```
+```text
 Exception Type          │ Handler              │ Retry?  │ Exit Code
 ────────────────────────┼──────────────────────┼─────────┼──────────
 HTTP Timeout            │ retry_with_backoff   │ Yes (3) │ 1
@@ -299,7 +299,7 @@ Legend:
 
 ## Logging Levels
 
-```
+```text
 DEBUG Level (-v flag)
 ├── Function entry/exit with parameters
 ├── HTTP request details (URL, method, headers)
@@ -331,7 +331,7 @@ ERROR Level
 
 ## Performance Timeline
 
-```
+```text
 Time    Component           Action                    Duration
 ────────────────────────────────────────────────────────────────
 0ms     Client              Spawn process
@@ -354,7 +354,7 @@ Max: ~15s (with 3x retries + timeouts)
 
 ## Environment & Credentials
 
-```
+```text
 Required Environment Variables:
 ├── AZURE_CLIENT_ID              → Azure AD App Registration Client ID
 ├── AZURE_CLIENT_SECRET          → Azure AD App Registration Secret
@@ -379,7 +379,7 @@ Scope Requirements (for Azure AD App Registration):
 
 ## Session Hook Integration
 
-```
+```text
 Claude Code Runner
     │
     ├─ SessionStart Event ─────────────────────────────┐

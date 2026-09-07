@@ -14,6 +14,7 @@ faseamento de obra e impacto de interferências urbanas.
 ## Contexto de domínio
 
 **Estrutura de cronograma**
+
 - **Macro-fases**: estudo prévio, projeto básico, projeto executivo,
   licitação, mobilização, obra, encerramento.
 - **Atividades**: fundação (escavação, forma, concretagem), estrutura
@@ -27,6 +28,7 @@ faseamento de obra e impacto de interferências urbanas.
   dias até próxima atividade dependente).
 
 **Análise de caminho crítico**
+
 - **Definição**: sequência de atividade com folga zero, determina duração
   mínima do projeto.
 - **Identificação**: atividade com folga total FT = 0, impacta data final
@@ -37,6 +39,7 @@ faseamento de obra e impacto de interferências urbanas.
   duração em atividades não-críticas (folga > slack).
 
 **Interferências urbanas e restrições**
+
 - **Semáforo/desvio viário**: redução de hora produtiva, impacto em
   logística (concreto, aço), custo de aceleração.
 - **Horários restritos**: noturno (22–6h), redução de velocidade (20%),
@@ -49,6 +52,7 @@ faseamento de obra e impacto de interferências urbanas.
   vibração/ruído (HT ou operativo).
 
 **Curva de desembolso**
+
 - **Forma**: típica em "S" (início lento, aceleração, desaceleração),
   correlação com avanço físico.
 - **Estrutura**: mobilização (5–10%), obra em progresso (60–80%),

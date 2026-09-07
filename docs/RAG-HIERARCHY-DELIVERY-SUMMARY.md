@@ -19,6 +19,7 @@ Complete RAG (Retrieval-Augmented Generation) hierarchy implementation for Manta
 - **editais** (cross-segment): Tender templates, public bid tracking, licitação timelines
 
 **Key Innovation:** Multi-factor relevance ranking combining:
+
 - **BM25** lexical matching (keyword relevance)
 - **Semantic similarity** via pgvector embeddings (BAAI/bge-small-en-v1.5, 384d)
 - **Confidence boost** from metadata signals (citations, source quality)
@@ -35,6 +36,7 @@ Complete RAG (Retrieval-Augmented Generation) hierarchy implementation for Manta
 **What's included:**
 
 #### A. Type System & Metadata Schema
+
 - `ChunkMetadata`: Complete metadata for RAG chunks with provenance, domain tags, confidence signals
 - `CollectionMetadata`: Registry entry for each collection (sources, weights, handoff hints)
 - `QueryContext`: User query parameters (segment, lifecycle phase, embedding)
@@ -46,7 +48,7 @@ Complete RAG (Retrieval-Augmented Generation) hierarchy implementation for Manta
 
 Implements four-factor relevance scoring:
 
-```
+```text
 final_score = (
   BM25 × w_bm25 +
   semantic × w_semantic +
@@ -56,6 +58,7 @@ final_score = (
 ```
 
 **Methods:**
+
 - `scoreChunk()`: Score single chunk vs. query
 - `bm25Score()`: Okapi BM25 implementation (tuned per collection)
 - `cosineSimilarity()`: Embedding vector matching
@@ -64,6 +67,7 @@ final_score = (
 - `generateReasoning()`: Transparency layer (why was this chunk ranked #1?)
 
 **Key tuning parameters per collection:**
+
 - `saneamento`: k1=1.5, b=0.75, w_semantic=0.45, w_bm25=0.30
 - `energia`: k1=1.5, b=0.75, w_semantic=0.47, w_bm25=0.28
 - `portos`: k1=1.6, b=0.70, w_semantic=0.50, w_bm25=0.25
@@ -75,6 +79,7 @@ final_score = (
 Orchestrates RAG queries with intelligent handoff:
 
 **Methods:**
+
 - `queryCollection()`: Primary method — query single collection, apply handoff hints if score < 0.5
 - `queryMultiCollection()`: Query multiple collections, ensemble re-ranking
 - `fetchVectorSearch()`: pgvector semantic search via Supabase
@@ -82,6 +87,7 @@ Orchestrates RAG queries with intelligent handoff:
 - `getCachedResult()` / `cacheResult()`: Redis integration (TTL 3600s)
 
 **Handoff Logic:**
+
 1. Query primary collection (e.g., saneamento)
 2. Score results via ChunkScorer
 3. If max_score < 0.5, check collection.handoff_hints
@@ -102,6 +108,7 @@ Pre-configured registry for all 5 collections:
 | editais | manta-05 | S6–S10 | BNDES, Portal Transparência | saneamento, energia |
 
 **Each registry includes:**
+
 - Display name, storage prefix, description
 - Primary & fallback agents
 - Source specifications (SharePoint paths, API feeds)
@@ -114,6 +121,7 @@ Pre-configured registry for all 5 collections:
 Realistic queries for all 5 collections covering lifecycle phases 1–8:
 
 **Saneamento (S8):**
+
 1. "ETA com adução de 500 km: qual é a norma NBR?"
 2. "Lei 14.026: como estruturar concessão integrada (água + esgoto)?"
 3. "BNDES edital 2024: quais são os prazos para submissão?"
@@ -139,6 +147,7 @@ Realistic queries for all 5 collections covering lifecycle phases 1–8:
 15. "Barragem hidroelétrica: integrar ICOLD (barragens) + EPE (energia)?"
 
 **Code:**
+
 ```typescript
 export const TEST_QUERIES: QueryContext[] = [
   // 15 pre-configured QueryContext objects
@@ -204,6 +213,7 @@ CREATE TABLE rag_chunks (
 ```
 
 **Constraints:**
+
 - `source_collection` IN ('saneamento', 'energia', 'portos', 'barragens', 'editais')
 - `currency_status` IN ('current', 'draft', 'superseded', 'historical')
 - `confidence` BETWEEN 0 AND 1
@@ -224,6 +234,7 @@ CREATE TABLE rag_chunks (
 | `idx_rag_chunks_collection_currency` | BTree composite | Summary queries | ~200x for collection + currency filter |
 
 **HNSW Parameters:**
+
 - `m = 16` (connections per node, balance between speed/memory)
 - `ef_construction = 64` (construction parameter)
 - Uses `vector_cosine_ops` (cosine distance)
@@ -255,6 +266,7 @@ GROUP BY source_collection;
 #### E. Seed Data (Optional)
 
 5 example chunks (commented out, for testing):
+
 - SNIS NBR-12211 excerpt (saneamento)
 - ANEEL 2024 LT 765kV edital (energia)
 - ANTAQ port capacity guide (portos)
@@ -262,6 +274,7 @@ GROUP BY source_collection;
 - BNDES saneamento edital (editais)
 
 **Execution:**
+
 ```bash
 supabase db push  # Deploy migration
 # or
@@ -330,6 +343,7 @@ psql "$SUPABASE_DB_URL" -f supabase/migrations/2026_08_02_rag_hierarchy_v5.sql
 - ✅ Unknown collection code rejection
 
 **Run tests:**
+
 ```bash
 npm test -- tests/rag-hierarchy.test.ts
 # or
@@ -344,7 +358,7 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 
 **Comprehensive technical reference:**
 
-#### Sections:
+#### Sections
 
 1. **Overview** (features, architecture)
 2. **Five Collections** (table of collections, sources, weights)
@@ -380,26 +394,31 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 **Real-world usage examples:**
 
 #### Example 1: agente-saneamento Query
+
 - User asks about Lei 14.026 + BNDES edital timing
 - Demonstrates: RAG initialization, query context, Claude integration, result formatting
 - Expected output sample
 
 #### Example 2: Cross-Domain (S10 + S9)
+
 - Hydroelectric barragem + EPE integration question
 - Shows: Handoff triggering, combining multiple collections, synthesis
 
 #### Example 3: Maestro Router
+
 - Ambiguous query → segment inference via RAG
 - Decision logic: RAG confidence vs. semantic routing confidence
 - Escalation to manta-15 if low confidence
 
 #### Example 4: Feedback Loop
+
 - User rates agent answer
 - Feedback updates chunk relevance scores (exponential moving average)
 - Cache invalidation
 - Bayesian learning for monthly retraining
 
 #### Example 5: Bulk Document Ingestion
+
 - Quarterly refresh of documents (SNIS, ANEEL, ANTAQ, ICOLD, BNDES)
 - Chunking strategy (sliding window)
 - Embedding pipeline
@@ -407,6 +426,7 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 - Cache flush
 
 #### Example 6: Observability Dashboard
+
 - Schema for `rag_query_metrics`
 - Dashboard queries:
   - Cache effectiveness (last 24h)
@@ -422,12 +442,14 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 ### 1. Four-Factor Ranking Over Single-Signal
 
 **Why not just semantic similarity?**
+
 - Semantic embeddings excel at capturing meaning but may miss specific dates, regulations, acronyms
 - BM25 captures keyword relevance (e.g., "Lei 14.026", "BNDES", "prazos")
 - Confidence & citation signals reduce noise from low-quality documents
 - Freshness keeps superseded documents ranked lower
 
 **Weighting per collection:**
+
 - `saneamento`: Balanced (semantic 0.45, BM25 0.30) — need both concepts and regulations
 - `editais`: BM25-heavy (0.35) — tender names, dates, acronyms matter most
 - `portos`: Semantic-heavy (0.50) — many technical concepts (PIANC, draft, capacity)
@@ -435,6 +457,7 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 ### 2. Handoff Hints Over Hard Routing
 
 **Why handoff instead of hardcoding cross-collection searches?**
+
 - Some queries need **primary collection only** (e.g., "NBR standard text")
 - Some queries need **two collections** (e.g., "hydroelectric" → barragens + energia)
 - Handoff is triggered by **score + keyword**, not all queries
@@ -444,12 +467,14 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 ### 3. Redis Caching with 1-Hour TTL
 
 **Why cache?**
+
 - Supabase query (vector + BM25 + ranking) = 280ms average
 - Redis cache = 5ms average
 - 60–70% hit rate expected (many repeated queries across users)
 - ROI: ~99% latency reduction for cache hits
 
 **Why 1 hour?**
+
 - Fresh documents indexed daily (editais)
 - User feedback updates chunks (backoff 70/30 EMA)
 - 1 hour balances freshness vs. cache benefit
@@ -458,6 +483,7 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 ### 4. Segment Codes (S6–S10) vs. Agent IDs
 
 **Why include segment_codes in chunks?**
+
 - One agent may cover multiple segments (e.g., agente-infraestrutura covers S1–S5)
 - New agents for S6–S10 cover single segment each (for now)
 - Chunk can apply to multiple segments or lifecycle phases
@@ -466,6 +492,7 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 ### 5. Lifecycle Phases (1–8)
 
 **Why not just "project stage"?**
+
 - 8-phase model covers full infrastructure lifecycle (CLAUDE.md Eixo 3)
 - Chunk relevance varies by phase: "Estudo prévio" vs. "Licitação" vs. "Operação"
 - Allows filtering: "I'm in Phase 3 (project exec) — show me only relevant chunks"
@@ -594,11 +621,13 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 ### Future Enhancements
 
 **Q3 2026 (Medium Priority):**
+
 - Cross-encoder reranking (Jina-based, 2nd stage)
 - Multi-language embeddings (mBERT or mT5)
 - Dashboard for feedback loop visualization
 
 **Q4 2026 (Lower Priority):**
+
 - Knowledge graph (Neo4j or property graph)
 - Automatic weight optimization (via feedback loop)
 - Document clustering for "related documents" recommendations

@@ -7,6 +7,7 @@
 ## 30-second Overview
 
 **Scripts:**
+
 ```bash
 # Option 1: Mock (instant, for validation) — 30 segundos
 python scripts/eval_embeddings_ab_mock.py
@@ -46,7 +47,8 @@ python scripts/eval_embeddings_ab_mock.py \
 ```
 
 **Output esperado:**
-```
+
+```text
 2026-07-25 02:18:24,554 [INFO] MOCK EVALUATION SUMMARY
 ======================================================================
 WINNER: intfloat/multilingual-e5-large-instruct
@@ -79,7 +81,8 @@ python scripts/eval_embeddings_ab.py \
 ```
 
 **Output esperado:**
-```
+
+```text
 ================================================================================
 EVALUATION SUMMARY
 ================================================================================
@@ -244,15 +247,19 @@ python scripts/init_rag_golden_set.py --num-pairs 50
 ## Métricas Explicadas (1-minute)
 
 **Recall@5:** Quantas questões têm resposta correta em top-5 chunks?
+
 - 94% = excelente (target: >= 85%)
 
 **MRR (Mean Reciprocal Rank):** Posição média do melhor chunk?
+
 - 0.823 ≈ posição 1.2 em média (ótimo)
 
 **NDCG@5:** Ranking quality (0 = pior, 1 = perfeito)?
+
 - 0.78 = bom (78% da qualidade ideal)
 
 **Latency:** Tempo para embeddar 1 questão + 10 chunks?
+
 - 24.5ms = aceitável (4.7x mais lento que bge-small)
 
 ---
@@ -260,6 +267,7 @@ python scripts/init_rag_golden_set.py --num-pairs 50
 ## Documentação Completa
 
 Veja `docs/RAG-EMBEDDING-AB-TEST.md` para:
+
 - Metodologia detalhada
 - Análise de sensibilidade
 - Fine-tuning roadmap
@@ -270,11 +278,13 @@ Veja `docs/RAG-EMBEDDING-AB-TEST.md` para:
 ## Contato & Escalação
 
 **Dúvidas:**
+
 - Técnicas: Veja `docs/RAG-EMBEDDING-AB-TEST.md` seção "Troubleshooting"
-- Decisão final: mneves@mantaassociados.com
+- Decisão final: <mneves@mantaassociados.com>
 - PR/Deployment: Tag `@manta-team` no GitHub
 
 **Próximas iterações:**
+
 - A/B test v2 (6 meses): Dataset expandido, fine-tuning
 - Reranker optimization (12 meses): Cross-encoder training
 

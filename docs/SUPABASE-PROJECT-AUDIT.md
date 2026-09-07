@@ -19,7 +19,7 @@ projeto **não aparece** na lista de projetos acessíveis pela conta
 `mneves@mantaassociados.com`, e uma chamada direta
 `get_project(xgluoaaymbdzbbudnwrh)` retorna:
 
-```
+```text
 MCP error -32600: You do not have permission to perform this action
 ```
 
@@ -83,7 +83,7 @@ ponta).
 
 ## 2. Auditoria dos 4 projetos Supabase da organização
 
-Organização: **`umlmzpmdgffaiwpxyflb`** ("mneves@mantaassociados.com's
+Organização: **`umlmzpmdgffaiwpxyflb`** ("<mneves@mantaassociados.com>'s
 Org"), plano **free**, canais de release permitidos: `ga`, `preview`.
 
 | Projeto | ID (ref) | Região | Status | Criado em | Postgres |
@@ -357,7 +357,7 @@ Isso resolve o problema de raiz: sem essa política, o próximo
 Para reprodutibilidade, os resultados brutos (não editados) das
 chamadas de auditoria:
 
-```
+```text
 list_organizations() →
   [{"id":"umlmzpmdgffaiwpxyflb","slug":"umlmzpmdgffaiwpxyflb",
     "name":"mneves@mantaassociados.com's Org"}]

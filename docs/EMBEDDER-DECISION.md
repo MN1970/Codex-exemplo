@@ -3,6 +3,7 @@
 > ✅ **RESOLVIDO em 2026-09-07 — decisão real já existe, contrária a
 > esta recomendação.** Lendo `09-base-conhecimento/RAG_ARQUITETURA_CANONICA.md`
 > real no SharePoint (via `SharePoint_Manta` MCP), confirmamos que:
+>
 > - `bge-m3` (1024-d) **foi avaliado em 24/07/2026 e explicitamente
 >   NÃO APROVADO** — "reprocessamento de 66 embeddings + reindexação
 >   completa sem ganho comprovado de qualidade de retrieval".
@@ -59,6 +60,7 @@ PRs (gate humano MN)").
 **Recomendação desta análise: Opção B — migrar para bge-m3**, mantendo
 a decisão de 22/07, por três motivos que pesam mais que o custo de
 migração:
+
 1. o corpus é multilíngue (PT/ES/EN) e `bge-small-en-v1.5` é
    monolíngue-inglês;
 2. o volume a migrar é pequeno (204 chunks — trivial em custo de
@@ -112,6 +114,7 @@ lançando erro de dimensão no `<=>`/`<->` do pgvector.
 | Alinhamento com o corpus real da Manta | **Alto** — as fontes documentadas no `CLAUDE.md` e na migração v4.2 incluem NBR (PT), SNIS (PT), Lei 14.026 (PT), fontes AySA (ES/Argentina), ANEEL/EPE/ONS (PT), e só uma fração é inglês (ICOLD, PIANC, ICAO, IEEE, FAA) |
 
 **Pros:**
+
 - Único embedder do stack capaz de tratar corretamente PT + ES + EN no
   mesmo espaço vetorial sem gambiarra de "traduzir antes de indexar".
 - Já foi objeto de uma decisão formal (22/07) — adotá-lo não é uma
@@ -121,6 +124,7 @@ lançando erro de dimensão no `<=>`/`<->` do pgvector.
   chunking agressivo em memoriais e editais extensos.
 
 **Contras:**
+
 - Maior custo computacional por embedding (latência de indexação e de
   query) — relevante se o volume crescer rápido (edital novo com
   centenas de páginas).
@@ -141,12 +145,14 @@ lançando erro de dimensão no `<=>`/`<->` do pgvector.
 | Alinhamento com o corpus real da Manta | **Baixo** — a maior parte das fontes documentadas (NBR, SNIS, Lei 14.026, ANEEL, AySA/Argentina) não é inglês |
 
 **Pros:**
+
 - Já está rodando — zero esforço de migração, zero risco de quebra.
 - Mais barato e mais rápido por embedding gerado.
 - "Funciona" no sentido de que o Maestro responde e a busca retorna
   resultados hoje.
 
 **Contras:**
+
 - É um modelo **inglês** aplicado a um corpus majoritariamente em
   **português e espanhol**. Isso não é um detalhe — é uma
   incompatibilidade estrutural entre a ferramenta e o dado.
@@ -267,6 +273,7 @@ aprovação MN e a janela de observação pós-corte antes de descomissionar
 bge-small).
 
 **Riscos e mitigação:**
+
 - *Regressão de qualidade não detectada* → mitigado pela etapa 5
   (validação lado a lado antes do corte) e pela manutenção da coluna
   antiga durante a janela de observação.

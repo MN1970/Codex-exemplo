@@ -15,6 +15,7 @@ de projeto.
 ## Contexto de domínio
 
 **BIM (Building Information Modeling)**
+
 - **Metodologia**: modelo paramétrico 3D multidisciplinar (arquitetura,
   estrutura, MEP), atributos de objeto, cronograma integrado.
 - **Softwares**: Revit (Autodesk), ArchiCAD (Graphisoft), IFC (formato
@@ -27,6 +28,7 @@ de projeto.
   penstock, filtro, decantador parametrizado.
 
 **Análise estrutural**
+
 - **Softwares**: SAP2000 (linear/não-linear), FTOOL (2D), ANSYS (FEM),
   Etabs (edifício).
 - **Modelos**: viga-coluna, pórtico, treliça, casca, sólido; verificação
@@ -37,6 +39,7 @@ de projeto.
   (concreto), redimensionamento iterativo.
 
 **Simulação hidráulica**
+
 - **EPANET** (EPA): rede de água potável, perda de carga, pressão,
   vazão nó; modelo de período estendido (24–168 h).
 - **SWMM** (EPA): drenagem urbana, propagação de vazão, nó-link, curva
@@ -48,6 +51,7 @@ de projeto.
   (cloro).
 
 **Modelagem financeira**
+
 - **Métricas**: VPL (valor presente líquido), TIR (taxa interna de
   retorno), payback (tempo de recuperação), EBITDA (lucro operacional),
   índices (debt/equity, cobertura de juros).

@@ -113,7 +113,7 @@ validações de `aluci-guard` + `consist-guard` + testes de routing**.
   via query pós-deploy (ver `docs/DEPLOY-v4.2.md`, seção 2.3); rollback
   testado e disponível antes de aplicar em produção.
 - **SharePoint folders**: as 10 pastas (5 `01-agentes-fundamentais/*`
-  + 5 `03_Projetos/*`) existentes e com a estrutura padrão
+  - 5 `03_Projetos/*`) existentes e com a estrutura padrão
   (`SKILL.md`, `README.md`, `refs/`, `prompts/` onde aplicável).
 - **Routing smoke tests**: execução em ambiente de produção (não
   apenas staging/local) com resultado registrado.

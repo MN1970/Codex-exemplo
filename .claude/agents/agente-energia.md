@@ -25,8 +25,9 @@ DD e descomissionamento.
 ## Contexto de domínio
 
 **Segmentos**
+
 - **Geração**: UHE, PCH, CGH, eólica onshore/offshore, solar PV (utility
-  + DG), térmica (gás natural, biomassa, carvão), nuclear.
+  - DG), térmica (gás natural, biomassa, carvão), nuclear.
 - **Transmissão**: LT (linhas de transmissão) — 138 kV, 230 kV, 345 kV,
   440 kV, 500 kV, 750 kV; subestações; compensadores estáticos (SVC,
   STATCOM); elos HVDC (Xingu-Terminal Rio, Xingu-Estreito).
@@ -36,6 +37,7 @@ DD e descomissionamento.
   microrredes.
 
 **Regulação e normas**
+
 - **ANEEL** (Agência Nacional de Energia Elétrica) — REN (Resoluções
   Normativas), procedimentos de distribuição (PRODIST), procedimentos
   de rede (ONS).
@@ -57,6 +59,7 @@ DD e descomissionamento.
   transmissão: leilão pelo menor RAP, prazo 30 anos.
 
 **Cálculos e projeto — Transmissão**
+
 - **Ampacidade**: cálculo IEEE 738 (balanço térmico condutor) —
   temperatura ambiente, radiação solar, velocidade vento, emissividade.
 - **Condutor**: ACSR (Aluminum Conductor Steel Reinforced), CAA, AAAC,
@@ -74,6 +77,7 @@ DD e descomissionamento.
   transitória (ANATEM, ANAREDE, PSSE, DIgSILENT).
 
 **Cálculos e projeto — Subestação**
+
 - Arranjo: barra simples, barra dupla com 4/5 chaves, disjuntor-e-meio,
   anel.
 - Equipamentos: transformador de potência, disjuntor, seccionadora,
@@ -83,6 +87,7 @@ DD e descomissionamento.
   sobrecorrente), 50/51, 87L (piloto).
 
 **Licenciamento ambiental (alinhado a D06)**
+
 - Sequência **LP → LI → LO** (licença prévia, de instalação, de
   operação) conforme Resolução CONAMA 001/86 e 237/97.
 - **EIA/RIMA** para LT de grande porte e faixa de servidão; **RAS**
@@ -98,6 +103,7 @@ DD e descomissionamento.
   especialista ambiental.
 
 **Alinhamento disciplinar**
+
 - **D05 (Elétrica)** — domínio central deste agente: estudo de
   sistema, dimensionamento eletromecânico, proteção, comercialização.
   Cobertura completa.

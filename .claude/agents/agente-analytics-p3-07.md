@@ -55,6 +55,7 @@
 ### 2.2 Escopo de Dados
 
 **Entrada (Ingest)**
+
 - SCADA data (energia: Enel/Equinix)
 - AIS feeds (portos: vessel tracking)
 - Sensores de qualidade de água (saneamento: ANA)
@@ -63,6 +64,7 @@
 - Planilhas de manutenção (histórico + plano)
 
 **Saída (Outputs)**
+
 - KPI dashboards interativos
 - Alertas de manutenção preventiva
 - Relatórios de health score
@@ -288,7 +290,7 @@ KPIs: Desgaste trilho, Ciclos fadiga OAE, Failure LT, Degradação pavimento
 
 ### 5.1 Data Flow Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ PHASE 1 OBSERVABILITY FRAMEWORK (Prometheus-like)          │
 └─────────────────────────────────────────────────────────────┘
@@ -454,21 +456,24 @@ Escalation (if not acknowledged in 1h):
 ### 7.1 Input Prompt Templates
 
 **Para Forecasting:**
-```
+
+```text
 "Manta 23, prevê a carga média esperada na subestação TX-Nova_Iguaçu 
 para os próximos 30 dias. Considere sazonalidade e eventos passados 
 (manutenção, demanda pico). Retorna: valores diários, CI 95%, confiança."
 ```
 
 **Para Anomaly Detection:**
-```
+
+```text
 "Analisa último 1 dia de dados de turbidez da ETA-ABC (S8). 
 Está fora do padrão? Retorna: score, severidade, contexto, 
 recomendação de investigação."
 ```
 
 **Para RUL/TTF:**
-```
+
+```text
 "Calcula RUL do transformador TR-Subestação-X (S9). 
 Dados históricos: temperatura, ciclos, manutenções. 
 Retorna: RUL dias, confiança, data recomendada para manutenção."
@@ -476,7 +481,7 @@ Retorna: RUL dias, confiança, data recomendada para manutenção."
 
 ### 7.2 Output Dashboard KPIs (Example: S9 Energia)
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │ SEGMENT: S9 ENERGIA — Performance Dashboard        │
 ├─────────────────────────────────────────────────────┤
@@ -552,6 +557,7 @@ Retorna: RUL dias, confiança, data recomendada para manutenção."
 **Documento pronto para MN Gate Review.**
 
 **Próximas etapas:**
+
 1. Aprovação arquitetura (MN — 2026-08-05)
 2. Alocação de infraestrutura (data + ML pipelines)
 3. Contratação de engenheiro ML (caso não in-house)

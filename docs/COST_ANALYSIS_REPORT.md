@@ -50,7 +50,8 @@
 | Opus | $15.00 | $75.00 | 5:1 output ratio |
 
 **Effective cost calculation:**
-```
+
+```text
 Cost = (input_tokens × rate/3) + (output_tokens × rate)
        (input 3x cheaper in Claude pricing)
 
@@ -154,6 +155,7 @@ Example (Haiku, 2000 input, 800 output):
 | **Cost per run** | $0.14 | $0.0661 | **$0.0739 (53%)** |
 
 **Important:** Cost per run improves from $0.14 to $0.0661 due to:
+
 1. Operational fixed costs (only $400/mo for 10k runs) amortize better
 2. R7 tiering delivers 91% model cost reduction
 3. Net effect: 53% total cost reduction per run
@@ -212,7 +214,7 @@ Example (Haiku, 2000 input, 800 output):
 
 **Scenario: 10,000 runs/month (conservative)**
 
-```
+```text
 Monthly savings = (v4.2 monthly cost) - (v5.0 monthly cost)
                = $1,400 - $661
                = $739/month
@@ -238,6 +240,7 @@ Most likely (15k runs/month):
 **Conservative estimate: 51 months to full break-even**
 
 **However, include engineering opportunity cost savings:**
+
 - Developers freed from v4.2 support: ~500 hours/year
 - Value at $150/hr: $75,000/year
 - **Adjusted break-even: 3-4 months** ✅
@@ -366,6 +369,7 @@ improves to ~22 months.
 ### 9.1 5-year Cost Forecast
 
 **Assumptions:**
+
 - Inflation: 3%/year on operational costs
 - Volume growth: 20%/year
 - Model cost reductions: 10%/year (Anthropic price decreases)
@@ -379,6 +383,7 @@ improves to ~22 months.
 | 2030 (Y5) | 20,736 | $268 | $451 | $8,635 |
 
 **Key insight:** Even with inflation and growth, costs remain flat due to:
+
 1. R7 tiering handles volume naturally (more queries shift to Haiku)
 2. Model cost reductions offset inflation
 3. Operational costs are ~$400/month fixed (amortizes over volume)
@@ -408,12 +413,12 @@ improves to ~22 months.
 
 | Category | Actual | Projected | Notes |
 |----------|--------|-----------|-------|
-| **Development** |
+| **Development** | | | |
 | R1-R7 core | $18,000 | $20,000 | +10% for QA |
 | R8-R10 advanced | $12,000 | $10,000 | Faster than expected |
 | Testing & validation | $3,000 | $4,800 | Load testing |
 | Documentation | $2,000 | $3,000 | Runbooks |
-| **Deployment** |
+| **Deployment** | | | |
 | Infrastructure (1 month) | $2,000 | $2,000 | Supabase, Qdrant |
 | Training (40 hours) | $6,000 | $3,000 | Reduced scope |
 | **Total Investment** | **$43,000** | **$42,800** | — |
@@ -427,25 +432,29 @@ improves to ~22 months.
 ### 12.1 Scenario Analysis
 
 **Optimistic (80% probability):**
+
 - Volume: 15k runs/month
 - Monthly savings: $1,108
 - Break-even: Month 34
 - ROI at Month 48: +$26,672
 
 **Base case (50% probability):**
+
 - Volume: 10k runs/month
 - Monthly savings: $739
 - Break-even: Month 51
 - ROI at Month 48: +$7,572
 
 **Pessimistic (10% probability):**
+
 - Volume: 5k runs/month
 - Monthly savings: $350
 - Break-even: Month 108 (not achieved in 4 years)
 - ROI at Month 48: -$21,000
 
 **Probability-weighted 48-month ROI:**
-```
+
+```text
 = 0.80 × $26,672 + 0.50 × $7,572 + 0.10 × (-$21,000)
 = $21,338 + $3,786 + (-$2,100)
 = $23,024 (54% expected ROI)
@@ -460,13 +469,15 @@ improves to ~22 months.
 ### 13.1 Monthly Cost Tracking
 
 **Setup:**
-```
+
+```yaml
 Supabase: agent_runs table tracks:
   - run_id, model_tier, input_tokens, output_tokens, cost_usd
   - Aggregated by day/agent/segment in dashboard
 ```
 
 **Target metrics (to monitor):**
+
 - [ ] Monthly model cost < $500 (for 10k runs)
 - [ ] Cost per run < $0.01 (target: $0.00883)
 - [ ] Operational cost stable at $400/mo
@@ -494,6 +505,7 @@ Supabase: agent_runs table tracks:
 **Summary for leadership:**
 
 > v5.0 Maestro delivers:
+>
 > - 53% reduction in monthly OpEx ($739/mo savings)
 > - $8,868 annual savings at 10k run/month volume
 > - 51-month break-even (acceptable for infrastructure investment)
@@ -502,7 +514,7 @@ Supabase: agent_runs table tracks:
 
 **Decision:** ✅ Approved for production deployment
 
-**Approval:** mneves@mantaassociados.com (Finance)  
+**Approval:** <mneves@mantaassociados.com> (Finance)  
 **Date:** 2026-07-25
 
 ---
@@ -514,6 +526,7 @@ Supabase: agent_runs table tracks:
 **Available:** `rag_evals/cost_model.xlsx`
 
 Interactive model with sliders:
+
 - Monthly run volume
 - Tier distribution (%)
 - Model pricing (per M tokens)
@@ -526,7 +539,7 @@ Outputs: Break-even, ROI, sensitivity charts
 
 **From load test (27,000 requests, 30 min):**
 
-```
+```yaml
 Haiku:  8,100 runs × $0.000341 = $2.76
 Sonnet: 14,850 runs × $0.020000 = $297.00
 Opus:   4,050 runs × $0.100000 = $405.00
@@ -535,7 +548,7 @@ Total:  $704.76 ÷ 27,000 runs = $0.0261/run (matches model) ✓
 
 ### C. References
 
-- Claude pricing: https://www.anthropic.com/pricing
+- Claude pricing: <https://www.anthropic.com/pricing>
 - CLAUDE.md v5.0: `/home/user/Codex-exemplo/CLAUDE.md`
 - Benchmark data: `rag_evals/benchmark_maestro.json`
 - Load test results: `tests/jmeter/maestro_results_aggregate.csv`
@@ -545,7 +558,7 @@ Total:  $704.76 ÷ 27,000 runs = $0.0261/run (matches model) ✓
 **Report prepared:** 2026-07-25  
 **Valid until:** 2026-08-25  
 **Next review:** Post-deployment (1 month)  
-**Owner:** mneves@mantaassociados.com
+**Owner:** <mneves@mantaassociados.com>
 
 ---
 
@@ -554,6 +567,7 @@ Total:  $704.76 ÷ 27,000 runs = $0.0261/run (matches model) ✓
 **✅ APPROVE DEPLOYMENT**
 
 **Justification:**
+
 1. Cost savings of $8,868/year at baseline volume (53% reduction)
 2. Break-even in 51 months (acceptable for infrastructure)
 3. Engineering productivity gains reduce effective break-even to 3-4 months

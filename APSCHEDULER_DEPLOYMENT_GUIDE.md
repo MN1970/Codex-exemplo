@@ -248,6 +248,7 @@ grep "RAG Reindex" /tmp/apscheduler.log
 ### Slack Notifications
 
 Jobs send alerts when:
+
 - **rag-reindex:** Divergence > 5% or embedding validation fails
 - **agent-memory-purge:** > 10GB freed or > 10000 rows deleted
 - **feedback-loop:** Training completed with improvement metrics
@@ -267,6 +268,7 @@ python scripts/apscheduler_setup.py --status
 ### Alerts
 
 Subscribe to job failures:
+
 1. Check `/tmp/apscheduler.log` for errors
 2. Configure Slack webhook for notifications
 3. Setup CloudWatch/Grafana for metrics

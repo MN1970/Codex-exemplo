@@ -512,11 +512,13 @@ print(f"\nResult: {result.status.value}")
 **Symptom:** >15% of decisions escalated (target <15%)
 
 **Causes:**
+
 - Voters have divergent opinions
 - Threshold too high for number of voters
 - Candidate proposals too different
 
 **Solutions:**
+
 ```python
 # Option 1: Lower threshold
 result = engine.execute_vote(votes, threshold=2)  # Majority instead of 3/5
@@ -534,11 +536,13 @@ result = engine.execute_vote(votes, threshold=3)
 **Symptom:** `token_utilization > 100%`
 
 **Causes:**
+
 - Too many agents (8-16)
 - Long-running agents (verbose outputs)
 - Repeated API calls
 
 **Solutions:**
+
 ```python
 # Option 1: Reduce agent count
 detection = detector.detect_from_description(description)
@@ -556,11 +560,13 @@ result.output = summarize(result.output, max_tokens=1000)
 **Symptom:** Some agents fail with `TimeoutError`
 
 **Causes:**
+
 - Agent overloaded
 - Network latency
 - Large output size
 
 **Solutions:**
+
 ```python
 # Option 1: Increase timeout
 executor = QueueExecutor(max_workers=8, max_queue=16)
@@ -579,11 +585,13 @@ service = InferenceService(..., cache_size=5000)  # Larger cache
 **Symptom:** Tasks rejected with `QueueFullError`
 
 **Causes:**
+
 - Queue buffer too small
 - Worker pool too small (max 8)
 - High arrival rate
 
 **Solutions:**
+
 ```python
 # Option 1: Increase queue size (limited by API concurrency)
 executor = QueueExecutor(max_workers=8, max_queue=32)  # But max 8 concurrent
@@ -602,11 +610,13 @@ executor.execute_batch(tasks, batch_size=4)
 **Symptom:** `routing_accuracy < 70%` or `risk_auc < 0.75`
 
 **Causes:**
+
 - Insufficient training data
 - Imbalanced classes
 - Poor features
 
 **Solutions:**
+
 ```python
 # Option 1: Collect more training data
 # Expand historical project database
@@ -633,6 +643,7 @@ trainer = MLTrainer(TrainingConfig(
 ## Best Practices
 
 ### Do's ✓
+
 - ✓ Use dataclasses for structured data
 - ✓ Log all state transitions
 - ✓ Validate YAML workflows before execution
@@ -642,6 +653,7 @@ trainer = MLTrainer(TrainingConfig(
 - ✓ Rotate agents in consensus voting
 
 ### Don'ts ✗
+
 - ✗ Don't modify agent pool during execution
 - ✗ Don't exceed 16 agents (architectural limit)
 - ✗ Don't skip consensus validation (always verify 3/5)
@@ -655,12 +667,14 @@ trainer = MLTrainer(TrainingConfig(
 ## Support
 
 **Issues?** Check:
+
 1. This guide (troubleshooting section)
 2. API docs (`MAESTRO-OS-v6-API.md`)
 3. Code comments in `src/maestro/*.py`
 4. Execution logs in `maestro_debug.log`
 
 **Contributing?** Follow:
+
 - PEP 8 style guide
 - Type hints on all functions
 - Docstrings on public methods

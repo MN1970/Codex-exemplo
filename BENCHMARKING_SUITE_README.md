@@ -3,19 +3,21 @@
 **Created:** 2026-07-25  
 **Version:** 1.0  
 **Status:** Ready for deployment validation  
-**Owner:** mneves@mantaassociados.com
+**Owner:** <mneves@mantaassociados.com>
 
 ---
 
 ## Overview
 
 This benchmarking suite validates v5.0 Maestro (R1–R10) against production targets:
+
 - **Latency:** p95 < 1500ms (40% improvement)
 - **Cost:** $0.00883/run (91% savings)
 - **Throughput:** 15+ req/s (50% increase)
 - **Reliability:** 99.8% success rate
 
 **Artifacts:** 6 production-ready components
+
 - 3 Python benchmarking scripts (400+ lines each)
 - 1 Apache JMeter load test (1000+ lines)
 - 2 comprehensive reports (25KB each)
@@ -60,7 +62,7 @@ python3 scripts/profile_maestro.py \
 
 ### Expected Output
 
-```
+```text
 rag_evals/
 ├── benchmark_maestro.json       (1.2 MB, 1000 runs data)
 ├── benchmark_summary.txt        (2 KB, human-readable)
@@ -79,6 +81,7 @@ rag_evals/
 **Purpose:** Validate R1 routing, R7 tiering, R6 reranking performance.
 
 **Metrics:**
+
 - Latency: p50, p95, p99 (ms)
 - Throughput: req/s (single & concurrent)
 - Memory: peak/average (MB)
@@ -86,12 +89,14 @@ rag_evals/
 - Comparison: v4.2 baseline
 
 **Key classes:**
+
 - `MaestroSimulator`: R1 routing + R7 complexity score
 - `RAGSimulator`: BM25 + embedding latency
 - `AgentSimulator`: Tier-specific inference time
 - `BenchmarkSuite`: Main orchestrator
 
 **Usage:**
+
 ```bash
 python3 scripts/benchmark_maestro.py \
   --num-runs 1000 \           # Total requests to simulate
@@ -102,6 +107,7 @@ python3 scripts/benchmark_maestro.py \
 ```
 
 **Output:**
+
 - `rag_evals/benchmark_maestro.json` — Raw metrics (JSON)
 - `rag_evals/benchmark_summary.txt` — Summary (human-readable)
 
@@ -112,6 +118,7 @@ python3 scripts/benchmark_maestro.py \
 **Purpose:** Model OpEx, calculate ROI, break-even timeline.
 
 **Metrics:**
+
 - Cost per tier (Haiku/Sonnet/Opus)
 - Monthly projections (10k–50k runs)
 - Segment analysis (S1–S10)
@@ -119,11 +126,13 @@ python3 scripts/benchmark_maestro.py \
 - Break-even sensitivity analysis
 
 **Key classes:**
+
 - `CostAnalyzer`: Cost modeling engine
 - Tier pricing (Haiku $0.08/1M, Sonnet $3/1M, Opus $15/1M)
 - Segment cost breakdown (S6–S10 + horizontal)
 
 **Usage:**
+
 ```bash
 python3 scripts/cost_analyzer.py \
   --baseline-cost 0.10 \               # v4.2 cost per run
@@ -133,10 +142,12 @@ python3 scripts/cost_analyzer.py \
 ```
 
 **Output:**
+
 - `rag_evals/cost_analysis.json` — Full model (JSON)
 - `rag_evals/cost_roi_summary.txt` — ROI + break-even (human)
 
 **Key insights:**
+
 - v5.0: $0.0661/run (vs $0.14 v4.2)
 - Annual savings: $8,868 (53% reduction)
 - Break-even: 51 months (conservative) or 3–4 months (with productivity gains)
@@ -149,16 +160,19 @@ python3 scripts/cost_analyzer.py \
 **Purpose:** Identify CPU hotspots & memory leaks.
 
 **Metrics:**
+
 - CPU profiling via cProfile (top functions)
 - Memory profiling via tracemalloc (peaks/snapshots)
 - Component throughput (ops/sec)
 - Optimization recommendations
 
 **Key classes:**
+
 - `MaestroProfiler`: cProfile + memory_profiler orchestrator
 - Methods for each component: R1 routing, RAG, R6, agents
 
 **Usage:**
+
 ```bash
 python3 scripts/profile_maestro.py \
   --duration 300 \              # Profiling duration (seconds)
@@ -167,12 +181,14 @@ python3 scripts/profile_maestro.py \
 ```
 
 **Output:**
+
 - `rag_evals/profile_maestro.txt` — cProfile output (top 20 functions)
 - `rag_evals/profile_summary.txt` — Summary (human-readable)
 - `rag_evals/profile_report.json` — Full stats (JSON)
 
 **Example findings:**
-```
+
+```text
 Maestro routing (R1):      ~5000 ops/sec, 55 MB peak
 RAG retrieval:             ~2000 ops/sec, 95 MB peak
 Reranking (R6):           ~500 ops/sec, 120 MB peak
@@ -186,6 +202,7 @@ Agent execution:          Variable by tier
 **Purpose:** Apache JMeter script for 30-minute load test (100 concurrent users).
 
 **Test configuration:**
+
 - 100 concurrent users
 - 60-second ramp-up
 - 1800-second duration (30 min)
@@ -197,11 +214,13 @@ Agent execution:          Variable by tier
   4. Agent execution (S6 Portos as example)
 
 **SLA validation:**
+
 - p95 latency < 5000ms ✅
 - Error rate < 1% ✅
 - Throughput > 10 req/s ✅
 
 **Usage:**
+
 ```bash
 # GUI mode (interactive)
 jmeter -t tests/jmeter/maestro_load_test.jmx
@@ -219,11 +238,13 @@ jmeter -g maestro_results.csv -o maestro_report/
 ```
 
 **Assertions:**
+
 - HTTP 200 responses for all requests
 - No timeout errors
 - Memory stable (no growth > 10%)
 
 **Output:**
+
 - `maestro_results_summary.txt` — Summary statistics
 - `maestro_results_table.csv` — Individual request data
 - `maestro_results_aggregate.csv` — Aggregated by request type
@@ -235,6 +256,7 @@ jmeter -g maestro_results.csv -o maestro_report/
 **Purpose:** Comprehensive performance validation report.
 
 **Sections:**
+
 1. Executive summary (targets vs achieved)
 2. Latency metrics (p50/p95/p99, breakdown by component)
 3. Throughput & scaling (single vs concurrent)
@@ -248,6 +270,7 @@ jmeter -g maestro_results.csv -o maestro_report/
 11. Rollout plan (canary, ramp, GA)
 
 **Key findings:**
+
 - ✅ Latency: 1500ms p95 (40% improvement)
 - ✅ Cost: $0.00883/run (91% savings)
 - ✅ Throughput: 15 req/s (50% increase)
@@ -261,6 +284,7 @@ jmeter -g maestro_results.csv -o maestro_report/
 **Purpose:** Financial analysis & ROI justification.
 
 **Sections:**
+
 1. Executive summary (financial impact, ROI)
 2. Cost model & assumptions (pricing, OpEx, workload)
 3. Tier-by-tier breakdown (Haiku/Sonnet/Opus)
@@ -276,6 +300,7 @@ jmeter -g maestro_results.csv -o maestro_report/
 13. Cost governance & monitoring (monthly tracking)
 
 **Key findings:**
+
 - ✅ Annual savings: $8,868 (53% reduction)
 - ✅ Break-even: 51 months (conservative) or 3–4 months (with productivity)
 - ✅ 12-month ROI: +264% (with engineering gains)
@@ -287,6 +312,7 @@ jmeter -g maestro_results.csv -o maestro_report/
 ## Execution Plan
 
 ### Phase 1: Local Validation (Developer)
+
 1. Run benchmark suite on laptop
 2. Verify metrics match targets (latency, cost)
 3. Review profiling output for optimization tips
@@ -299,6 +325,7 @@ time python3 scripts/profile_maestro.py --duration 60
 ```
 
 ### Phase 2: Staging Validation (QA)
+
 1. Deploy v5.0 to staging environment
 2. Run JMeter load test (30 min, 100 concurrent users)
 3. Monitor Grafana dashboard for SLA compliance
@@ -314,11 +341,13 @@ jmeter -n -t tests/jmeter/maestro_load_test.jmx \
 ```
 
 ### Phase 3: Production Rollout (Ops)
+
 1. **Canary (Week 1):** 10% traffic, S6 only
 2. **Ramp (Week 2–3):** 50% traffic, S6/S8/partial S9
 3. **GA (Week 4):** 100% traffic, S1–S10
 
 **Gates:**
+
 - ✅ p95 latency < 1500ms for 24h
 - ✅ Cost per run < $0.01 confirmed
 - ✅ Error rate < 1%
@@ -448,7 +477,7 @@ jobs:
 
 ## File Structure
 
-```
+```text
 Codex-exemplo/
 ├── scripts/
 │   ├── benchmark_maestro.py          (400 lines) ⭐
@@ -492,7 +521,7 @@ Codex-exemplo/
 
 ## Contact & Support
 
-- **Owner:** mneves@mantaassociados.com
+- **Owner:** <mneves@mantaassociados.com>
 - **Questions:** Contact via Slack #manta-engineering
 - **Issues:** Create GitHub issue with `[benchmarking]` tag
 - **Next review:** 2026-08-25 (post-deployment validation)

@@ -33,6 +33,7 @@ domínio de outros agentes verticais (cada vertical numera D01-D09
 para o seu próprio recorte de disciplinas).
 
 **Eixos do saneamento (Lei 11.445/2007 + Lei 14.026/2020)**
+
 - **Água**: captação (superficial/subterrânea), adução, ETA (Estação de
   Tratamento de Água), reservação, distribuição.
 - **Esgoto**: coleta, transporte, EEE (Estação Elevatória de Esgoto),
@@ -46,6 +47,7 @@ para o seu próprio recorte de disciplinas).
   perigosos (Classe I/II).
 
 **Regulação e normas**
+
 - **Lei 14.026/2020** (novo marco do saneamento) — universalização 99%
   água / 90% esgoto até 2033, regionalização, subsídio cruzado.
 - **ANA** (Agência Nacional de Águas e Saneamento) — normas de
@@ -68,6 +70,7 @@ para o seu próprio recorte de disciplinas).
   Norte), Sistema Sur.
 
 **Cálculos e projeto**
+
 - **Demanda**: per capita (150–250 L/hab.dia BR, 200–350 AR), coeficientes
   K1 (dia máx.) 1.2–1.5, K2 (hora máx.) 1.5–2.0.
 - **Adutora**: dimensionamento por Hazen-Williams ou Darcy-Weisbach,

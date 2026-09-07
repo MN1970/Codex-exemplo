@@ -15,6 +15,7 @@ jurídica.
 ## Contexto de domínio
 
 **Tipologia de sinistros e reclamações**
+
 - **Defeito de projeto**: viés técnico, falta de estudo prévio, datum
   incorreto, norma desatualizada, não conformidade NBR.
 - **Defeito de execução**: desvio de especificação, material não conforme,
@@ -32,6 +33,7 @@ jurídica.
   500 anos, guerra, pandemia) com excludente de responsabilidade.
 
 **Marcos regulatórios e jurisprudência**
+
 - **Código Civil (CC)**: art. 389 (inadimplemento), art. 411 (mora),
   art. 944 (dano moral), art. 927 (culpa extracontratual).
 - **Lei 8.666/93 e Lei 14.133/21**: direitos e obrigações do contratante e
@@ -44,6 +46,7 @@ jurídica.
   31000 (gestão de risco), ABNT TS ISO 23601 (investigação).
 
 **Custos adicionais e BDI**
+
 - **BDI padrão**: 27–35% (lucro 8%, despesas indiretas 8–12%, tributos
   6–12%, risco 2–5%).
 - **BDI ampliado (TA)**: inclui custo-hora paralizado, aceleração,

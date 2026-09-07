@@ -12,6 +12,7 @@
 Escolher melhor embedding model para P4 (RAG Híbrido: BM25 + Embedding + Reranker) da arquitetura Manta v5.0.
 
 Dois candidatos:
+
 1. **bge-small-en-v1.5** (384d, rápido, English-focused)
 2. **intfloat/multilingual-e5-large-instruct** (1024d, multilíngue, Portuguese-native)
 
@@ -26,6 +27,7 @@ Dois candidatos:
 **Golden Set:** 50 QA pairs (rag_evals/golden_set_v1.csv)
 
 Distribuição por segmento:
+
 - **Saneamento (S8):** 10 QAs (AySA focus) — PRIORIDADE
 - **Energia (S9):** 10 QAs (ANEEL focus)
 - **Portos (S6):** 10 QAs
@@ -33,6 +35,7 @@ Distribuição por segmento:
 - **Barragens (S10):** 10 QAs
 
 Dificuldades:
+
 - Easy (7 pairs): Conceitos básicos, regulação
 - Medium (25 pairs): Cálculos, design, dimensionamento
 - Hard (18 pairs): Técnicas avançadas, análise complexa
@@ -59,17 +62,20 @@ Para cada QA pair (questão + resposta esperada):
 4. **Métricas por QA**
 
    **Recall@5:** Binária (1 se golden em top-5, 0 caso contrário)
-   ```
+
+   ```text
    Recall@5(qa) = 1 if rank(golden_chunk) <= 5 else 0
    ```
 
    **RRR (Reciprocal Rank):** Posição do golden chunk
-   ```
+
+   ```text
    RRR(qa) = 1 / rank if rank <= 5 else 0
    ```
 
    **NDCG@5 (Normalized Discounted Cumulative Gain)**
-   ```
+
+   ```text
    DCG@5 = Σ(i=1 to 5) [1 / log₂(i+1)] × rel(i)
    rel(i) = 1 if rank_i == golden_chunk else 0
    IDCG = 1 / log₂(2) = 1.0 (ideal: golden em posição 1)
@@ -81,25 +87,29 @@ Para cada QA pair (questão + resposta esperada):
 Para ambos os modelos:
 
 1. **Recall@5 (macro)**
-   ```
+
+   ```text
    Recall@5 = (n_qa_with_golden_in_top5) / n_total_qa
    Escala: 0.0 — 1.0
    ```
 
 2. **MRR (Mean Reciprocal Rank)**
-   ```
+
+   ```text
    MRR = avg([RRR(qa_1), RRR(qa_2), ..., RRR(qa_50)])
    Escala: 0.0 — 1.0
    ```
 
 3. **NDCG@5 (macro)**
-   ```
+
+   ```text
    NDCG@5 = avg([NDCG@5(qa_1), ..., NDCG@5(qa_50)])
    Escala: 0.0 — 1.0
    ```
 
 4. **Latência (ms)**
-   ```
+
+   ```text
    latency_ms = avg([embedding_time(q_i + chunks_i) for all QAs])
    Captura tempo real de embedding
    ```
@@ -107,7 +117,8 @@ Para ambos os modelos:
 ### Decisão de Vitória
 
 **Condição primária:** Recall@5 improvement > 10%
-```
+
+```text
 improvement_recall = (Recall@5_winner - Recall@5_loser) / Recall@5_loser × 100%
 
 IF improvement_recall > 10%:
@@ -119,7 +130,8 @@ ELSE:
 ```
 
 **Confidence Score:**
-```
+
+```text
 IF improvement_recall > 10%:
    confidence = min(0.95, 0.50 + improvement_recall / 100)
 ELIF improvement_recall > 5%:
@@ -135,6 +147,7 @@ ELSE:
 ### Ambiente
 
 **Requisitos:**
+
 - Python 3.10+
 - PyTorch (`torch >= 2.0`)
 - Transformers (`transformers >= 4.30`)
@@ -143,6 +156,7 @@ ELSE:
 - CUDA (opcional, mas recomendado para latência)
 
 **Instalação:**
+
 ```bash
 pip install torch transformers numpy scipy
 ```
@@ -170,6 +184,7 @@ python scripts/eval_embeddings_ab.py \
 ```
 
 **Output:**
+
 - `rag_evals/eval_embeddings_ab_results.json` — Resultados completos (métricas + detalhes QA)
 
 ### Opção 2: Mock Test (Simulado)
@@ -183,6 +198,7 @@ python scripts/eval_embeddings_ab_mock.py \
 ```
 
 **Output:**
+
 - `rag_evals/eval_embeddings_ab_results_mock.json` — Métricas simuladas (30s)
 
 ---
@@ -243,22 +259,27 @@ python scripts/eval_embeddings_ab_mock.py \
 ### Interpretação por Métrica
 
 **Recall@5 = 0.94**
+
 - 94% das 50 questões têm resposta correta em top-5 chunks
 - ✅ Excelente (target >= 85%)
 
 **MRR = 0.82**
+
 - Posição média do melhor chunk: 1 / 0.82 ≈ 1.22
 - ✅ Muito bom (golden chunk está em ~1.2ª posição em média)
 
 **NDCG@5 = 0.78**
+
 - 78% da relevância ideal (máximo 1.0 é golden em posição 1)
 - ✅ Bom ranking
 
 **Latency = 24.5ms**
+
 - Tempo para embeddar 1 questão + 10 chunks
 - ⚠ Aceitável mas 4.7x mais lento que bge-small
 
 **Confidence = 0.92**
+
 - 92% certeza de que e5-large é melhor
 - ✅ Alta confiança (threshold >= 0.70)
 
@@ -269,12 +290,15 @@ python scripts/eval_embeddings_ab_mock.py \
 ### Se multilingual-e5-large-instruct Vencer
 
 **Razões:**
+
 - Recall@5 11-15% melhor
 - Suporta multilingual (português, espanhol)
 - Melhor para queries em português natural
 
 **Ações:**
+
 1. ✅ Atualizar VERSIONS.json:
+
    ```json
    "rag_collections": {
      "san_v5.0": {
@@ -285,6 +309,7 @@ python scripts/eval_embeddings_ab_mock.py \
    ```
 
 2. ✅ Atualizar .claude/settings.json:
+
    ```json
    {
      "embedding_strategy": "intfloat/multilingual-e5-large-instruct",
@@ -293,6 +318,7 @@ python scripts/eval_embeddings_ab_mock.py \
    ```
 
 3. ✅ Re-index RAG collections (24-48h):
+
    ```bash
    python scripts/rag-reindex.py \
      --embedding-model intfloat/multilingual-e5-large-instruct \
@@ -310,11 +336,13 @@ python scripts/eval_embeddings_ab_mock.py \
 ### Se bge-small-en-v1.5 Vencer ou Empatar
 
 **Razões:**
+
 - 4.7x mais rápido
 - Custo computacional 7x menor
 - Suficiente para queries em inglês puro
 
 **Ações:**
+
 1. ✅ Manter bge-small como padrão
 2. ✅ Considerar bge-small se latência crítica
 3. ⚠ Reavaliar em 6 meses com dataset multilíngue expandido
@@ -344,6 +372,7 @@ for difficulty in ['easy', 'medium', 'hard']:
 ```
 
 **Interpretação:**
+
 - Se improvement maior em "hard", multilingual-e5 é melhor para problemas complexos
 - Se improvement concentrado em "easy", pode ser artefato de dataset
 
@@ -356,6 +385,7 @@ grep -A 5 '"agent_id"' rag_evals/eval_embeddings_ab_results.json | head -50
 ```
 
 **Interpretação:**
+
 - Se e5-large muito melhor em S8 (saneamento/AySA), recomenda-se usar nela
 - Se performance uniforme, usar globalmente
 
@@ -365,11 +395,12 @@ grep -A 5 '"agent_id"' rag_evals/eval_embeddings_ab_results.json | head -50
 
 ### GPU Out of Memory
 
-```
+```yaml
 RuntimeError: CUDA out of memory
 ```
 
 **Solução:**
+
 ```bash
 # Rodar em CPU
 python scripts/eval_embeddings_ab.py --device cpu
@@ -380,11 +411,12 @@ python scripts/eval_embeddings_ab.py --device cpu
 
 ### Models Não Baixam
 
-```
+```yaml
 EnvironmentError: [Errno 2] No such file or directory
 ```
 
 **Solução:**
+
 ```bash
 # Download manual
 huggingface-cli download BAAI/bge-small-en-v1.5
@@ -399,6 +431,7 @@ export HF_HOME=/path/to/huggingface_cache
 > Latency 50ms+ em CPU é esperado
 
 **Se > 100ms:**
+
 - Verificar sistema (CPU load, memória disponível)
 - Usar GPU
 - Verificar versão PyTorch (update para 2.0+)
@@ -430,12 +463,12 @@ export HF_HOME=/path/to/huggingface_cache
 ## Referências
 
 - CLAUDE.md v5.0 — P4 RAG Híbrido
-- BGE-small documentation: https://github.com/FlagOpen/FlagEmbedding
-- Multilingual-e5: https://github.com/microsoft/unilm/tree/master/e5
-- Evaluation metrics: https://en.wikipedia.org/wiki/Evaluation_measures_(information_retrieval)
+- BGE-small documentation: <https://github.com/FlagOpen/FlagEmbedding>
+- Multilingual-e5: <https://github.com/microsoft/unilm/tree/master/e5>
+- Evaluation metrics: <https://en.wikipedia.org/wiki/Evaluation_measures_(information_retrieval)>
 
 ---
 
-**Manutenedor:** mneves@mantaassociados.com  
+**Manutenedor:** <mneves@mantaassociados.com>  
 **Versão:** v5.0  
 **Última atualização:** 2026-07-25

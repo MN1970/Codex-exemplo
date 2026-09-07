@@ -15,11 +15,11 @@
 - [0. Visão geral do Eixo F](#0-visão-geral-do-eixo-f)
 - [F1 — IA](#f1--ia-routing-model-tiering-scaling-prompting)
 - [F2 — SharePoint](#f2--sharepoint-indexação-sync-storage-por-agente-permissões-versioning)
-- [F3 — Portal](#f3--portal-interface-web-sso-autenticação-rbac)
+- [F3 — Portal](#f3--portal-interface-web-sso-autenticação-rbac-permissões-granulares)
 - [F4 — Extração](#f4--extração-parser-pdfdwg-ocr-nlp-entity-extraction-validation)
 - [F5 — Notificação](#f5--notificação-email-slack-webhook-subscriptions-templates)
 - [F6 — Trace](#f6--trace-audit-log-approval-gates-workflow-versioning-history)
-- [F7 — Guardrails](#f7--guardrails-aluci-guard-consist-guard-context-guardian)
+- [F7 — Guardrails](#f7--guardrails-validação-de-referências-consistência-coesão-semântica)
 - [F8 — Padronização](#f8--padronização-style-guide-templates-nomenclatura-conventions-checkpoints)
 - [Matriz de status consolidada](#matriz-de-status-consolidada)
 - [Interdependências entre Funcionais](#interdependências-entre-funcionais)
@@ -41,7 +41,7 @@ F2, ambos acessíveis via F3, ambos extraem dados via F4, ambos
 notificam via F5, ambos deixam rastro em F6, ambos são auditados por
 F7 antes de virar entregável, e ambos seguem o style guide de F8.
 
-```
+```text
    Eixo 1 (Horizontais) × Eixo 2 (Verticais) × Eixo 3 (Fases de vida)
                              │
                              ▼
@@ -63,6 +63,7 @@ mantém o roteamento estável na sessão, incluindo handoffs
 declarativos entre agentes.
 
 **Componentes**
+
 - Router por keyword/regex sobre Q1 (bloco `IF menção a... → agente-X`
   no `CLAUDE.md`), com fallback semântico.
 - Model tiering:
@@ -84,7 +85,8 @@ por prefixo após decidir o segmento; aciona F7 antes de fechar output;
 dispara handoffs para outros agentes sem retornar ao cliente.
 
 **Exemplo de uso**
-```
+
+```text
 "ETE do sistema Riachuelo com problema de subestação"
 → Q1 = saneamento + energia → dispatch primário agente-saneamento (S8),
   handoff declarado agente-energia (S9)
@@ -109,6 +111,7 @@ vertical tem pasta canônica de projetos e pasta de definição
 acessadas via MCP.
 
 **Componentes**
+
 - Tabela `sp_agent_routing`: `agent_slug → sp_folder → file_patterns[]
   → priority` (ver `CLAUDE.md`, seção SharePoint routing).
 - Árvore canônica: `03_Projetos/<Segmento>/*` (projetos) e
@@ -131,7 +134,8 @@ F6 registra cada upload/update como evento de auditoria; F8 define
 nomenclatura antes do `upload_file`.
 
 **Exemplo de uso**
-```
+
+```text
 find_item("edital Suape ANTAQ") → read_document(item_id)
 → get_file_metadata(item_id)  # confirma versão vigente
 → upload_file(folder="03_Projetos/Portos/Suape/", name="Memorial-v2.docx")
@@ -156,6 +160,7 @@ projeto/contrato que consomem os agentes (F1) e os dados (F2/F4) por
 trás de autenticação corporativa, com controle por papel e por objeto.
 
 **Componentes**
+
 - Portais de referência (skills que materializam F3):
   `portal-gestao-manta`, `portal-megaprojeto-builder`,
   `portal-metro-l4` — cada um cobre um recorte (gestão geral,
@@ -174,7 +179,8 @@ dashboards lêem/gravam via F2 (nunca storage paralelo); ações que
 alteram estado geram evento em F6; aplica o design system de F8.
 
 **Exemplo de uso**
-```
+
+```text
 gestor autentica via SSO (Entra ID) → RBAC libera contrato "Nova Ponte
 Tocantins" → dashboard do GR-04 → aprovação registra timestamp e
 identidade do aprovador em F6
@@ -200,6 +206,7 @@ verticais — quantitativos, entidades técnicas (normas, SICRO,
 parâmetros), texto pesquisável.
 
 **Componentes**
+
 - Parsers de documento: skill `pdf` (texto/tabelas, OCR, merge/split,
   formulários).
 - Parsers CAD/BIM: `autodesk-toolkit` (DXF/DWG/IFC/RVT sem software
@@ -218,7 +225,8 @@ aciona `aluci-guard` (F7) quando preenche norma/código citado; publica
 resultado de volta em F2 como nova versão.
 
 **Exemplo de uso**
-```
+
+```text
 Edital ANEEL (PDF + anexos) → ler-edital-aneel extrai RAP/lotes/prazos
 → campos sem match no texto ficam "a_confirmar" → JSON segue para
 agente-energia (S9) via F1
@@ -243,6 +251,7 @@ acontece: documento aprovado, PR aberto, gate humano pendente, routine
 agendado disparando.
 
 **Componentes**
+
 - Agendamento: `create_trigger`/`update_trigger`/`delete_trigger`/
   `fire_trigger`/`list_triggers` (cron ou one-shot); `send_later` para
   lembrete pontual na mesma sessão.
@@ -261,7 +270,8 @@ upload em F2 é candidato a gatilho (não implementado — depende de
 webhook nativo do SharePoint, fora do MCP atual).
 
 **Exemplo de uso**
-```
+
+```text
 subscribe_pr_activity(owner="MN1970", repo="Codex-exemplo", pullNumber=1)
 → comentários/CI chegam como evento na sessão do gate humano MN
 → unsubscribe_pr_activity após merge
@@ -286,6 +296,7 @@ migração aplicada, documento publicado, claim aprovado — seja
 rastreável: quem, quando, com base em quê, qual gate validou.
 
 **Componentes**
+
 - Gate humano MN: nenhuma mudança de agente/routing/RAG vai a produção
   sem aprovação do sócio responsável (item explícito no checklist de
   deploy v4.2).
@@ -306,7 +317,8 @@ guardrails); F2 é o repositório físico, F6 é a camada de significado
 sobre esse histórico.
 
 **Exemplo de uso**
-```
+
+```text
 PR aberto em Codex-exemplo + manta-hub → gate humano MN (approve+merge)
 → só após merge de ambos: aplicar migração Supabase → checklist
 versionado marca cada etapa
@@ -332,6 +344,7 @@ qualquer saída virar laudo, claim, parecer, orçamento ou documento
 oficial. Três guardrails complementares.
 
 **Componentes**
+
 - **`aluci-guard`** (referência factual): detecta normas ABNT/leis
   fabricadas, URLs/DOIs inventados, códigos SICRO inexistentes via
   regex + lookup em registry local. Gatilho: "rodar aluci-guard",
@@ -355,7 +368,8 @@ F7 rodam juntos ao fechar documento (forma + conteúdo confiável);
 agentes verticais delegam validação final a F7 em vez de auto-validar.
 
 **Exemplo de uso**
-```
+
+```text
 Laudo cita NBR 7187, SICRO 2S07 100 00, 3 URLs
 → aluci-guard confirma normas/SICRO no registry, sinaliza 1 URL
   não verificável ("a confirmar")
@@ -384,6 +398,7 @@ como Manta: identidade visual, estrutura, nomenclatura, independente
 do agente/skill que o gerou.
 
 **Componentes**
+
 - **`padrao-manta`**: aplica logo, cores, marca d'água e
   rastreabilidade completa em apresentações, relatórios, dashboards,
   aplicativos e documentos.
@@ -407,7 +422,8 @@ tickets; F2 organiza pastas segundo a árvore que F8 define; agentes
 de F1 outsourcing a materialização visual para `padrao-manta`.
 
 **Exemplo de uso**
-```
+
+```text
 Dashboard React pronto → padrao-manta aplica logo/paleta/marca d'água,
 abas verticais, tabelas > cards, numeração, rodapé com fonte/data/
 versão/ticket → nome de arquivo segue convenção
@@ -442,7 +458,7 @@ depende do agente autor aplicar a skill corretamente.
 
 ## Interdependências entre Funcionais
 
-```
+```text
 F1 (IA) ──decide agente──► F2 (SharePoint) ──doc fonte──► F4 (Extração)
    │                                                            │
    │                                                     JSON canônico

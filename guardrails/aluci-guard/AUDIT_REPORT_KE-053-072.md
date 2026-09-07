@@ -7,12 +7,14 @@
 ## Resumo Executivo
 
 Todas as 20 KEs (Knowledge Extractions) foram auditadas para detecção de aluci fabricadas (Pacote A):
+
 - Normas ABNT inexistentes
 - Leis federais fabricadas
 - Códigos SICRO inválidos
 - URLs/DOIs malformados
 
 **Resultado final**:
+
 - ✓ **19 PASS** (95%)
 - ⚠ **1 WARN** (5%)
 - ✗ **0 FAIL** (0%)
@@ -54,16 +56,19 @@ O gate G1 da migração RAG (bge-m3) está **liberado**.
 > "Série NBR 12211-12218 abastecimento água (concepção a rede). NBR 9648-9651 esgotamento sanitário. NBR 12209 ETE. NBR 15645 emissário submarino."
 
 **Problema detectado**:
+
 - Referências a **ranges de normas** (ex.: "NBR 12211-12218") que não são tratadas como séries individuais pelo auditor v0.1
 - O padrão regex `NBR\s+12211-12218` é detectado como um código único, mas o registry busca por `NBR 12211` (individual)
 - Idem para `NBR 9648-9651`
 
 **Veredito**: WARN (não FAIL) porque:
+
 1. As normas individuais da série (12211, 12212, ..., 12218) estão todas validadas ✓
 2. As séries 9648-9651 também estão validadas ✓
 3. A imprecisão é de **forma, não de conteúdo** — nenhuma aluci factual
 
 **Ação recomendada**:
+
 - Em v0.2 do auditor, melhorar parser para reconhecer ranges como "NBR XXXX-YYYY" e expandir para séries
 - Ou: desambiguar no texto original para citar as normas individuais explicitamente
 
@@ -74,6 +79,7 @@ O gate G1 da migração RAG (bge-m3) está **liberado**.
 Utilizadas pela auditoria (registry expandido):
 
 ### ABNT (35 normas)
+
 - **Água**: NBR 12211-12218, 5422
 - **Esgoto**: NBR 9648-9651, 12209
 - **Qualidade**: NBR 10004, 15645
@@ -82,12 +88,14 @@ Utilizadas pela auditoria (registry expandido):
 - **Outras**: NBR 60076
 
 ### Leis Federais (16 leis)
+
 - Lei 14.026/2020 (Saneamento)
 - Lei 14.273/2021 (Ferrovias)
 - Lei 12.334/2010 + Lei 14.066/2020 (Barragens)
 - Lei 11.445/2007, 12.305, 14.133/2021, 8.987/1995, 11.079/2004, etc.
 
 ### SICRO (12 códigos amostra)
+
 - Movimentação de terra, pavimentação, estruturas, fundações, saneamento
 
 ---
@@ -106,6 +114,7 @@ Utilizadas pela auditoria (registry expandido):
 Este relatório fecha o ticket **MNT-2026-ALUCI-GUARD-KE-053-072**.
 
 Banco de dados atualizado:
+
 ```sql
 UPDATE knowledge_extractions SET aluci_status = 'pass' 
 WHERE ke_codigo IN ('KE-053','KE-054','KE-055','KE-056','KE-057',
@@ -117,6 +126,7 @@ UPDATE knowledge_extractions SET aluci_status = 'warn' WHERE ke_codigo = 'KE-059
 ```
 
 Implementação do auditor armazenada em:
+
 - `guardrails/aluci-guard/auditor.py`
 - `guardrails/aluci-guard/registry/normas_abnt.py`
 - `guardrails/aluci-guard/registry/leis_federais.py`

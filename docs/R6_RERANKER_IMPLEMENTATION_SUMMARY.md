@@ -57,7 +57,7 @@
 
 ### Pipeline Completo
 
-```
+```text
 User Query
     ↓
 [Maestro Router (R1)]
@@ -135,6 +135,7 @@ return {
 ### Resultados Esperados
 
 **Score Distribution** (valores reais do exemplo):
+
 ```json
 {
   "min": 0.90,      // Mínimo top-5
@@ -145,6 +146,7 @@ return {
 ```
 
 **Critério de qualidade**:
+
 - ✅ Max - Min > 0.2 (spread útil)
 - ✅ Mean > 0.6 (chunks relevantes)
 - ✅ Stdev > 0.1 (discriminação)
@@ -285,6 +287,7 @@ python scripts/rag_reranker.py \
 
 **Causa**: API Sonnet 5 lenta ou chunk size grande  
 **Solução**:
+
 1. Aumentar `top_k` (menos chunks a reranking)
 2. Reduzir tamanho chunks (256 tokens ideal)
 3. Ativar batch mode (paralelizar)
@@ -294,6 +297,7 @@ python scripts/rag_reranker.py \
 
 **Causa**: Chunks BM25 já muito relevantes ou prompt pouco discriminador  
 **Solução**:
+
 1. Adicionar critérios mais rigorosos ao prompt
 2. Incluir exemplos negativos (irrelevant chunks)
 3. Aumentar chunk size (remove falsos positivos)
@@ -302,6 +306,7 @@ python scripts/rag_reranker.py \
 
 **Causa**: Queries muito variadas ou TTL curto  
 **Solução**:
+
 1. Aumentar TTL: `RerankerCache(ttl_days=14)`
 2. Normalizar queries (remove stopwords)
 3. Usar semantic hashing (embed + similarity)
@@ -336,17 +341,21 @@ python scripts/rag_reranker.py \
 ## Referências
 
 **Documentação Criada**:
+
 - `docs/R6_RERANKER_TECHNICAL.md` — Detalhe técnico completo
 - `scripts/README.md` — Instruções de uso
 
 **Exemplos**:
+
 - `examples/reranker_input_example.json` — Dataset de teste real
 
 **Código**:
+
 - `scripts/rag_reranker.py` — Implementação completa
 - `scripts/eval_reranker_impact.py` — A/B testing
 
 **Testes**:
+
 - `tests/routing/prompts.md` — 32 prompts para eval
 
 ---
@@ -354,10 +363,11 @@ python scripts/rag_reranker.py \
 ## Contato e Suporte
 
 **Responsável**: IA & RAG Team  
-**Email**: ia-team@mantaassociados.com  
+**Email**: <ia-team@mantaassociados.com>  
 **SharePoint**: `/01-agentes-fundamentais/RAG-Reranking/`  
 
 Para issues:
+
 1. Verificar logs: `python scripts/rag_reranker.py --verbose`
 2. Verificar documentação técnica: `docs/R6_RERANKER_TECHNICAL.md`
 3. Abrir issue em GitHub: `manta-maestro/issues`

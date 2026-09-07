@@ -10,18 +10,21 @@
 ## THE OPPORTUNITY
 
 **Situação atual (v4.2):**
+
 - 20 agentes especializados, excelente domínio técnico
 - Roteamento estático por keywords (88% sucesso)
 - Sem visibilidade do próprio ecossistema
 - Rompe em ~50 agentes (nunca escala para 100+)
 
 **O que a indústria provou (2024-2026):**
+
 - Orquestração inteligente = **3-10x throughput**
 - Observabilidade integrada = **60% menos tempo debugging**
 - Hierarchical scaling = **100+ agentes sem redesign**
 - Feedback loops = **roteamento melhora continuamente**
 
 **Manta está posicionado para vencer porque:**
+
 1. ✅ Já tem 20 agentes operacionais + skills reutilizáveis
 2. ✅ Supabase+RAG = 80% do work de memória feito
 3. ✅ Claude embeddings = semantic search pronto
@@ -33,7 +36,7 @@
 
 ### Hoje: Maestro é cego
 
-```
+```text
 Usuário: "Quero ampliação ETE"
 Maestro: (olha CLAUDE.md) → "saneamento" match → S8
 Resultado: ✅ 88% toma decisão certa
@@ -44,7 +47,7 @@ Resultado: ✅ 88% toma decisão certa
 
 ### Amanhã: Maestro vê seu ecossistema
 
-```
+```text
 Usuário: "Quero ampliação ETE"
 Maestro: 
   1. Busca 5 agentes por relevância (semantic + keywords)
@@ -81,12 +84,14 @@ Resultado: ✅ 96%+ acertos
 ## THE PLAN — 5 Fases em 6 meses
 
 ### Phase 1: Foundation (3-4 semanas)
+
 - Agent Registry: catálogo dinâmico em Supabase
 - Maestro search: semantic + keyword ranking
 - OpenTelemetry tracing básico
 - **Custo**: 130 token-hours | **Output**: Maestro v2.0 alpha, observabilidade live
 
 ### Phase 2: Intelligence (4-5 semanas)
+
 - Feedback loop (user thumbs up/down)
 - Multi-agent composition (UHE = barragens + energia em paralelo)
 - Fallback strategy (Markov chain)
@@ -94,12 +99,14 @@ Resultado: ✅ 96%+ acertos
 - **Custo**: 155 token-hours | **Output**: Roteamento dinâmico, composição funcional
 
 ### Phase 3: Scaling (5-6 semanas)
+
 - Agent auto-registration (novo agente = automático no registry)
 - Dynamic tier routing (Haiku→Sonnet→Opus automático)
 - CICD for agents (test matriz)
 - **Custo**: 75 token-hours | **Output**: Pronto para 100+ agentes
 
 ### Phase 4: Analytics (ongoing)
+
 - Dashboard Datadog (métricas, SLA, trending)
 - Quarterly reviews (detectar gaps, novos segmentos)
 - **Custo**: 25 token-hours | **Output**: Ciclo de melhoria contínua
@@ -163,7 +170,7 @@ Resultado: ✅ 96%+ acertos
 
 ### A. Arquitetura em 1 página
 
-```
+```text
 ┌─ Usuário ─────────────────────────────────┐
 │                                            │
 ├─ C5: Artefatos (React, DOCX, dashboards)  │

@@ -15,6 +15,7 @@ DD e descomissionamento / descaracterização.
 ## Contexto de domínio
 
 **Tipologias**
+
 - **Concreto**: gravidade (CVC — concreto convencional; CCR — concreto
   compactado com rolo; RCC — roller compacted concrete), gravidade
   aliviada, arco, contrafortes.
@@ -30,6 +31,7 @@ DD e descomissionamento / descaracterização.
   dique-vertedor.
 
 **Órgãos vertedores**
+
 - Vertedor de superfície: soleira livre, comportas radiais/segmento,
   labirinto, tulipa.
 - Descarregador de fundo: aliviador de fundo, tomada d'água baixa.
@@ -37,6 +39,7 @@ DD e descomissionamento / descaracterização.
   submersa.
 
 **Regulação e normas — Brasil**
+
 - **Lei 12.334/2010** (PNSB — Política Nacional de Segurança de
   Barragens) modificada pela **Lei 14.066/2020** (pós-Brumadinho).
 - **ANM** (Agência Nacional de Mineração) — Resolução 95/2022,
@@ -59,6 +62,7 @@ DD e descomissionamento / descaracterização.
   internacional.
 
 **Cálculos e projeto**
+
 - **Estudo hidrológico**: PMP (precipitação máxima provável),
   hidrograma de projeto (TR 100 → 10.000 anos + PMF); regularização
   (Rippl, sequências mensais/diárias).
@@ -70,7 +74,7 @@ DD e descomissionamento / descaracterização.
   liquefação (rejeitos saturados fofos — método state parameter,
   SPT/CPT).
 - **Estabilidade — concreto**: deslizamento, tombamento, tensões (base
-  + jusante), fadiga sísmica.
+  - jusante), fadiga sísmica.
 - **Sísmica**: OBE (Operating Basis Earthquake) e MDE (Maximum Design
   Earthquake); análise pseudo-estática vs. deformação (Newmark) vs.
   dinâmica (elementos finitos).
@@ -81,6 +85,7 @@ DD e descomissionamento / descaracterização.
   drenos.
 
 **Ambiental**
+
 - **Licenciamento**: LP (licença prévia — viabilidade locacional e
   ambiental) → LI (licença de instalação — projeto executivo +
   programas ambientais) → LO (licença de operação — enchimento e

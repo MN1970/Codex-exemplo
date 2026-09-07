@@ -10,7 +10,7 @@
 
 ### 1.1 Scoring Model Overview
 
-```
+```text
 Final Score (100 points) = 
     Quality (40 points)
   + Cost (30 points)
@@ -19,6 +19,7 @@ Final Score (100 points) =
 ```
 
 **Selection Rule:**
+
 - Highest total score → RECOMMENDED supplier
 - If tied: Apply price tiebreaker (lowest price wins)
 - If still tied: Evaluate delivery flexibility (shortest lead time)
@@ -39,6 +40,7 @@ Final Score (100 points) =
 | **ABNT Standards** (commodity-specific) | 1 pt | 1 | e.g., ABNT NBR 8850 for towers; NBR 12211 for pipes |
 
 **Scoring Rules:**
+
 - All 4 certifications = 10 points
 - 3 of 4 = 7 points
 - 2 of 4 = 5 points
@@ -70,6 +72,7 @@ Final Score (100 points) =
 | >10% defects | <80% | 2 | Poor quality; high rework risk |
 
 **Data Collection:**
+
 - Ask vendor: "3 similar projects in past 3 years — defect rate by project"
 - Cross-reference with client references (phone call)
 - Query supplier database (if repeat vendor): historical performance
@@ -86,6 +89,7 @@ Final Score (100 points) =
 | 0 projects | N/A | 0 | No reference; high risk |
 
 **Quality of Reference:**
+
 - Tier-1 client (Fortune 500, major contractor): +2 bonus points
 - Government/BNDES project: +1 bonus point
 - Negative reference (complaints, disputes): –5 points (may auto-reject)
@@ -103,14 +107,15 @@ Final Score (100 points) =
 3. **Benchmark = median of remaining quotes**
 
 **Example:**
-```
+
+```yaml
 Quotes: R$24,000, R$25,500, R$26,200, R$27,000, R$35,000 (outlier)
 Median: R$25,850 (benchmark)
 ```
 
 #### Price Scoring Formula
 
-```
+```text
 Price Score = 30 × (1 - |Quoted Price - Benchmark| / Benchmark)
 
 Capped at 30 (no negative scores)
@@ -131,6 +136,7 @@ Capped at 30 (no negative scores)
 | Below benchmark | 30 (tied win) |
 
 **Scoring Rules:**
+
 - Lowest price = 30 points (ties allowed)
 - Price beyond +100% of benchmark = 0 points (likely rejected earlier for cost reasonableness)
 - Include all costs: unit price + freight + insurance + taxes
@@ -150,6 +156,7 @@ Capped at 30 (no negative scores)
 #### A. Lead Time (12 points max)
 
 **Step 1: Set Baseline**
+
 - Project critical path: E.g., "LT tower delivery required by 2027-02-28"
 - Safety buffer: Default 30 days before critical date
 - **Baseline deadline = 2027-01-29**
@@ -215,6 +222,7 @@ Does vendor offer phased delivery (e.g., 50% on date X, 50% on date Y)?
 | Serasa score <50 (poor) | –2 | High credit risk; require prepayment or letter of credit |
 
 **Red Flags:**
+
 - Negative equity (liabilities > assets)
 - Revenue decline >30% YoY
 - Pending lawsuits (pesquisar ORCA)
@@ -245,7 +253,7 @@ Does vendor quote include contingency for delays?
 
 ## 3. Master Vendor Scorecard (Example)
 
-```
+```text
 ═════════════════════════════════════════════════════════════════════════════
 RFQ-2026-08-LT345-TOWERS-001 — VENDOR EVALUATION RESULTS
 ═════════════════════════════════════════════════════════════════════════════
@@ -454,6 +462,7 @@ NEXT STEPS:
 ## 4. Scoring Rubric Quick Reference
 
 ### Scoring Scale
+
 - **90–100:** Excellent (recommend approval)
 - **80–89:** Good (acceptable with minor risk)
 - **70–79:** Fair (conditions apply; consider alternatives)
@@ -461,12 +470,14 @@ NEXT STEPS:
 - **<60:** Reject (fails technical or business criteria)
 
 ### Auto-Reject Criteria (Phase 1)
+
 - Missing mandatory INMETRO or ABNT certifications (commodity-dependent)
 - No references for similar projects
 - Delivery date breaks critical path (>40 days late)
 - Serasa score <40 + Serasa negative listing + pending legal disputes
 
 ### Escalation Rules
+
 - Score 90–100: Approve (procurement authority)
 - Score 80–89: Approve with conditions (CFO review if cost >10% above budget)
 - Score 60–79: Require VP approval
@@ -481,10 +492,10 @@ Some commodities may require different weights:
 | Commodity | Quality | Cost | Delivery | Risk |
 |---|---|---|---|---|
 | **Transmission Tower** (our example) | 40% | 30% | 20% | 10% |
-| **SCADA System** (S8) | 50% | 25% | 15% | 10% | (quality > cost) |
-| **Dredge Equipment** (S6) | 35% | 35% | 20% | 10% | (cost-sensitive) |
-| **Concrete (commodity)** | 20% | 60% | 15% | 5% | (price-driven) |
-| **Pipe Network** (critical infrastructure) | 45% | 20% | 25% | 10% | (quality + delivery) |
+| **SCADA System** (S8) | 50% | 25% | 15% | 10% (quality > cost) |
+| **Dredge Equipment** (S6) | 35% | 35% | 20% | 10% (cost-sensitive) |
+| **Concrete (commodity)** | 20% | 60% | 15% | 5% (price-driven) |
+| **Pipe Network** (critical infrastructure) | 45% | 20% | 25% | 10% (quality + delivery) |
 
 ---
 

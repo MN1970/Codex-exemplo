@@ -14,6 +14,7 @@
 Build and query a domain-aware knowledge graph across all Manta infrastructure projects, enabling semantic reasoning, cross-project insights, entity linking, and anomaly detection.
 
 **Core Capabilities:**
+
 1. **Entity Extraction** — Auto-detect projects, contractors, locations, regulations, materials, risks from project documents
 2. **Relationship Inference** — Link entities based on shared attributes (geography, contractor, phase, material)
 3. **Knowledge Base Auto-Construction** — Ingest agent outputs, project databases, historical records; auto-index into graph
@@ -42,12 +43,14 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 ### 3.1 Entity Types (30+ types)
 
 #### **Core Project Entities (Type: PROJECT_*)**
+
 1. **PROJECT** — Infrastructure project (id, name, location, segment, phase, status, owner)
 2. **SEGMENT** — Vertical category (S1:Rodovia, S2:OAE, S3:Ferrovia, S4:Metrô, S5:Túnel, S6:Porto, S7:Aeroporto, S8:Saneamento, S9:Energia, S10:Barragem)
 3. **PHASE** — Lifecycle stage (Estudo Prévio, Projeto Básico, Projeto Executivo, Obra, Operação, Licitação, Due Diligence, Encerramento)
 4. **PROJECT_LOCATION** — Geographic scope (region, state, city, coordinates, basin, transmission zone)
 
 #### **Organization & Commercial Entities (Type: ORG_*)**
+
 5. **CONTRACTOR** — Construction/engineering firm (name, registration, specialties, past projects, risk_score)
 6. **OWNER** — Project sponsor (government, utility, private company)
 7. **LENDER** — Financial institution (BNDES, World Bank, CAF, etc.)
@@ -55,6 +58,7 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 9. **CONSULTANT** — Design, environmental, social impact firm
 
 #### **Infrastructure Entities (Type: INFRA_*)**
+
 10. **STRUCTURE** — Primary infrastructure object (bridge, dam, tunnel, substation, port terminal, runway, etc.)
 11. **COMPONENT** — Sub-component (concrete, steel, electrical, mechanical, software)
 12. **MATERIAL** — Construction material (concrete class, steel grade, earth type, etc.)
@@ -62,6 +66,7 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 14. **UTILITY_LINE** — Power transmission, water pipeline, railway, road, fiber optic, etc.
 
 #### **Technical & Regulatory Entities (Type: TECH_*)**
+
 15. **STANDARD** — Engineering norm (NBR, ABNT, IEEE, ANEEL R1–R5, ICAO Annex 14, ICOLD guidelines, etc.)
 16. **SPECIFICATION** — Design parameter (voltage, discharge, load capacity, frequency, etc.)
 17. **CODE** — Safety, environmental, structural code
@@ -69,6 +74,7 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 19. **RISK_INSTANCE** — Specific risk occurrence (cost overrun $XX, schedule slip +NN days, regulatory delay, etc.)
 
 #### **Financial & Commercial Entities (Type: COMM_*)**
+
 20. **BID** — Procurement bid (bidder, amount, selected, technical score, commercial score)
 21. **CONTRACT** — Signed agreement (value, duration, terms, penalties, payment schedule)
 22. **COST_OVERRUN** — Documented cost increase (trigger, amount, approval status, recovery plan)
@@ -76,6 +82,7 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 24. **FINANCIAL_INSTRUMENT** — Loan, grant, guarantee, bond, insurance
 
 #### **Knowledge & Expertise Entities (Type: KNOW_*)**
+
 25. **LESSON_LEARNED** — Documented insight (project, phase, domain, impact, replication potential)
 26. **BEST_PRACTICE** — Validated methodology (segment, phase, cost impact, timeline impact)
 27. **FAILURE_MODE** — Documented failure (project, cause, consequence, prevention)
@@ -83,6 +90,7 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 29. **DOMAIN_CONCEPT** — Domain-specific term (geotechnical stratification, tidal regime, load balancing, etc.)
 
 #### **Reference Entities (Type: REF_*)**
+
 30. **REGULATION** — Governing rule (ANEEL Resolutions, ANTAQ Portarias, ANAC RBAC, Lei 14.026, etc.)
 31. **ACRONYM_DEFINITION** — Term expansion (LT=transmission line, CFRD=concrete face rockfill dam, etc.)
 32. **DATA_SOURCE** — Reference document or database (edital, public database, academic paper, filing)
@@ -119,7 +127,8 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 ### 3.3 Relationship Inference Rules (Auto-linking)
 
 **Rule 1: Contractor Co-Workers**
-```
+
+```text
 IF Contractor_A CONTRACTED_TO Project_1 
    AND Contractor_B CONTRACTED_TO Project_1 
    AND Project_1.phase = same_phase
@@ -127,7 +136,8 @@ THEN create WORKED_TOGETHER_ON(Contractor_A, Contractor_B, Project_1, phase)
 ```
 
 **Rule 2: Geologic Similarity**
-```
+
+```text
 IF Project_A HAS COMPONENT WITH geological_stratum = X
    AND Project_B HAS COMPONENT WITH geological_stratum = X
    AND Project_A.LOCATED_IN.region ~ Project_B.LOCATED_IN.region
@@ -135,7 +145,8 @@ THEN create SIMILAR_GEOLOGY(Project_A, Project_B, stratum=X)
 ```
 
 **Rule 3: Risk Pattern Propagation**
-```
+
+```text
 IF Project_A ENCOUNTERS_RISK(type=T) in phase=P
    AND Project_B SIMILAR_TO Project_A
    AND Project_B.current_phase = P
@@ -143,7 +154,8 @@ THEN infer risk_probability(Project_B, type=T) += 15%
 ```
 
 **Rule 4: Contractor Capability Profile**
-```
+
+```text
 FOR EACH Contractor_C:
   expertise = {segment: count(projects_in_segment), 
                avg_success_rate, 
@@ -153,7 +165,8 @@ THEN create EXPERTISE_PROFILE(Contractor_C)
 ```
 
 **Rule 5: Regulation-Standard Binding**
-```
+
+```text
 IF Regulation_R mentions Standard_S
    AND Project_P HAS Phase_Ph that must follow R
 THEN create MUST_IMPLEMENT(Project_P, Phase_Ph, Standard_S)
@@ -164,7 +177,8 @@ THEN create MUST_IMPLEMENT(Project_P, Phase_Ph, Standard_S)
 ## 4. QUERY EXAMPLES (5 scenarios)
 
 ### Query 1: Contractor Risk Analysis
-```
+
+```yaml
 QUERY: List all contractors who have worked on energy projects (S9) in the last 2 years,
        and identify which ones have cost overrun patterns > 15%.
 
@@ -182,7 +196,8 @@ EXPECTED RESULT:
 ```
 
 ### Query 2: Cross-Segment Knowledge Transfer
-```
+
+```yaml
 QUERY: What lessons learned from ports projects (S6) could apply to our new saneamento (S8) 
        project if we use the same contractor?
 
@@ -203,7 +218,8 @@ EXPECTED RESULT:
 ```
 
 ### Query 3: Regulation Compliance Across Portfolio
-```
+
+```yaml
 QUERY: Which of our active projects are at risk of ANEEL regulation change? 
        What is the projected impact?
 
@@ -226,7 +242,8 @@ EXPECTED RESULT:
 ```
 
 ### Query 4: Material Similarity & Supply Chain Risk
-```
+
+```yaml
 QUERY: We're sourcing C50 concrete for 5 concurrent projects. 
        Which other projects have supply chain lessons (delays, quality issues, cost jumps)?
 
@@ -247,7 +264,8 @@ EXPECTED RESULT:
 ```
 
 ### Query 5: Expertise Matching for New Phase
-```
+
+```yaml
 QUERY: We're entering the construction phase of our largest saneamento project (S8).
        Recommend contractors and consultants with proven expertise in this phase + segment combo.
 
@@ -278,7 +296,7 @@ EXPECTED RESULT:
 
 ### 5.1 Technical Stack
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                   QUERY LAYER (Opus)                    │
 │  Semantic reasoning, multi-hop traversal, inference     │
@@ -317,7 +335,7 @@ EXPECTED RESULT:
 
 ### 5.2 Data Flow
 
-```
+```text
 PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
       ↓                              ↓                           ↓
     NER Pipeline                JSON Parser              API Fetch & Parse
@@ -336,28 +354,33 @@ PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
 ### 5.3 Entity Storage & Indexing
 
 **Primary Storage:** Neo4j (cloud or on-prem)
+
 - Node store: ~100K-500K nodes (scales with projects × agents)
 - Edge store: ~500K-2M edges (including inferred relationships)
 - Property store: metadata (confidence, source, timestamp, audit trail)
 
 **Secondary Indexing:** Supabase + pgvector
+
 - Semantic embeddings (BAAI/bge-small-en-v1.5 384d) for similarity search
 - Prefix indexes: `kg:entity_id:segment:phase:location` for fast lookup
 - Search table: full-text search on entity names, descriptions, acronyms
 
 **Cache Layer:** Redis
+
 - Hot entity lookup (contractors, standards, risks by segment)
 - Query result caching (5-15 min TTL for high-volume queries)
 
 ### 5.4 Inference Engine
 
 **Reasoning Framework:**
+
 1. **Rule-Based Inference** — Apply relationship rules 1-5 on every graph update
 2. **Statistical Inference** — Aggregate historical data (contractor success rates, risk probabilities)
 3. **Semantic Similarity** — Use embeddings to find analogous projects, materials, expertise profiles
 4. **Constraint Propagation** — Propagate regulatory requirements down to phases, projects, contractors
 
 **Execution:**
+
 - Real-time: Rules 1-5 fire on write; results cached for 24h
 - Nightly batch: Statistical aggregations, anomaly detection, profile updates
 - On-demand: Semantic similarity queries (latency ~2-5s for 100K-node graph)
@@ -393,6 +416,7 @@ PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
 ## 7. IMPLEMENTATION ROADMAP
 
 ### Phase 1 — Foundation (Weeks 1-4)
+
 - [ ] Set up Neo4j instance (cloud: AuraDB or on-prem)
 - [ ] Define core entity types (PROJECT, CONTRACTOR, PHASE, STANDARD) in JSON schema
 - [ ] Implement NER pipeline for document ingestion (entity extraction from PDFs)
@@ -401,6 +425,7 @@ PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
 - [ ] Implement queries 1 & 2 (contractor risk, knowledge transfer)
 
 ### Phase 2 — Enrichment (Weeks 5-8)
+
 - [ ] Add all 30+ entity types to schema
 - [ ] Implement relationship inference rules 1-5
 - [ ] Integrate Supabase semantic embeddings (similarity search)
@@ -409,6 +434,7 @@ PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
 - [ ] Launch internal MVP (read-only access for selected agents)
 
 ### Phase 3 — Operationalization (Weeks 9-12)
+
 - [ ] Implement real-time graph update pipeline (from Manta 00 intake queue)
 - [ ] Add web UI for semantic search (Portal integration)
 - [ ] Build anomaly detection dashboards (cost/schedule variance alerts)
@@ -417,6 +443,7 @@ PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
 - [ ] Training & documentation for agent teams
 
 ### Phase 4 — Scale & Monitoring (Weeks 13+)
+
 - [ ] Performance tuning (graph query optimization, cache warm-up strategies)
 - [ ] Add versioning & temporal reasoning (how did contractor X's risk profile evolve?)
 - [ ] Expand RAG integration: knowledge graph + vector embeddings for hybrid search
@@ -460,7 +487,7 @@ PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
 
 ### 10.1 Core Entity Graph (Simplified)
 
-```
+```text
                     ┌─────────┐
                     │ PROJECT │
                     └────┬────┘
@@ -530,10 +557,10 @@ PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
 
 | Role | Owner | Contact |
 |------|-------|---------|
-| **Agent Owner** | Manta IA Architecture | arquiteto-ia@mantaassociados.com |
-| **Knowledge Curator** | Manta 00 (Maestro) | maestro@mantaassociados.com |
-| **Query SLA Responsible** | Operations | ops@mantaassociados.com |
-| **Data Governance** | Compliance | compliance@mantaassociados.com |
+| **Agent Owner** | Manta IA Architecture | <arquiteto-ia@mantaassociados.com> |
+| **Knowledge Curator** | Manta 00 (Maestro) | <maestro@mantaassociados.com> |
+| **Query SLA Responsible** | Operations | <ops@mantaassociados.com> |
+| **Data Governance** | Compliance | <compliance@mantaassociados.com> |
 
 ---
 

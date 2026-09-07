@@ -11,11 +11,13 @@
 ### 1. Status da Indústria
 
 **Frameworks dominantes:**
+
 - **LangGraph** (Rakuten, GitLab, Elastic) — observabilidade integrada, supervisão híbrida
 - **CrewAI** — 450M agentes/mês, performance em larga escala
 - **Microsoft AutoGen** — Hierárquico, multi-nível, escalável
 
 **Taxa de sucesso por design:**
+
 - Sem padrão deliberado: **41–86.7% de taxa de falha**
 - Com padrões corretos: **<5% de taxa de falha**
 - Diferença de custo: **50-99% desperdício de tokens** em workflows não otimizados
@@ -24,7 +26,7 @@
 
 **Padrão Híbrido (Supervisor-Worker)**:
 
-```
+```text
 Maestro (L1, Haiku→Sonnet) — Roteador master
     │
     ├─ Supervisor S1-S4 (L2, Sonnet) — Infra
@@ -41,6 +43,7 @@ Maestro (L1, Haiku→Sonnet) — Roteador master
 ```
 
 **Benefícios:**
+
 - ✅ Escala de 20 agentes (flat) → 100+ (hierárquico)
 - ✅ Overhead de observabilidade reduzido
 - ✅ Resiliência: supervisor falha → ativa fallback
@@ -56,6 +59,7 @@ Maestro (L1, Haiku→Sonnet) — Roteador master
 | **Multi-Agent** | Cross-agent comm | OpenTelemetry → Jaeger/Tempo |
 
 **Implementação Manta (Fase 1):**
+
 - ✅ LangSmith: custo + latência automáticos
 - ➕ LangSmith + Langfuse: agent dashboards
 - ➕ OpenTelemetry: traces (veja seção 4.3 do v5.0)
@@ -63,12 +67,14 @@ Maestro (L1, Haiku→Sonnet) — Roteador master
 ### 4. Roteamento Inteligente: Transição v4→v5
 
 **Problema v4.2:**
+
 ```python
 IF "saneamento" in query → S8  # Regex simples, sem confiança
 ```
 
 **Solução v5.0 — CASTER Pattern (Ranking dinâmico):**
-```
+
+```yaml
 Entrada: query_text
     ↓
 1. Semantic embedding (Claude API)
@@ -92,11 +98,13 @@ Entrada: query_text
 **Tomorrow (v5.0):** Workers colaboram com MCP + natural language.
 
 **Topologia recomendada:**
+
 - **Orchestrated** (default): Maestro controla fluxo ← mantenha isso
 - **Limited A2A**: Workers podem chamar outros workers em paralelo (cooperação E&M)
 - **Fallback A2A**: Se Maestro falha, workers comunicam direto
 
 **Protocol:**
+
 - Primary: **MCP** (já em uso Manta)
 - Fallback: Natural language entre agentes
 - Transport: HTTP direto (v4.2) → RabbitMQ (v4.3+)
@@ -104,7 +112,8 @@ Entrada: query_text
 ### 6. Memória Compartilhada: Hybrid Graph + Embeddings
 
 **Escopo múltiplo (não monolítico):**
-```
+
+```text
 Write (content, scopes):
   - app: "manta-maestro"
   - domain: "saneamento"
@@ -118,11 +127,13 @@ Read (retrieval):
 ```
 
 **Stack recomendado:**
+
 1. **Curto prazo (now)**: Supabase pgvector (RAG)
 2. **Médio prazo (Q3)**: Neo4j knowledge graph (relações)
 3. **Unificador**: MCP Memory service (autenticação por role)
 
 **Para Manta v4.2:**
+
 - ✅ 5 RAG collections (SNIS, ANEEL, ANTAQ, ICOLD, editais) → Supabase
 - ➕ Fase 2: Neo4j (relações projeto ↔ agente ↔ tarefa ↔ artefato)
 - ➕ Fase 3: MCP unified memory
@@ -130,7 +141,8 @@ Read (retrieval):
 ### 7. Escalabilidade Demonstrada
 
 **Crescimento não-linear:**
-```
+
+```text
 20 agents    → flat dispatcher (v4.2)
 50 agents    → 1 L1 + 5 L2 supervisores (v5.0)
 100+ agents  → L1 + 5×L2 + 4×L3 = tree (v5.1)
@@ -138,6 +150,7 @@ Read (retrieval):
 ```
 
 **Cost optimizations (documentado 87% redução):**
+
 - Semantic caching: cache query embedding + resultado (Redis)
 - Model routing: 80% Haiku, 15% Sonnet, 5% Opus
 - Token collapse: 2500+ endpoints → 2 tools (~1K tokens vs 1.17M)
@@ -280,12 +293,14 @@ Cost Optimization:
 ## CONCLUSÃO
 
 **A indústria provou (2024-2026):**
+
 - ✅ Orquestração inteligente = 3-10x throughput
 - ✅ Observabilidade = 60% redução de debuging time
 - ✅ Hierarchical scaling = viável até 100+ agentes sem redesign
 - ✅ Feedback loops = roteamento melhora continuamente
 
 **Manta está posicionado para v5.0 porque:**
+
 1. Já tem fundação sólida (20 agentes, skills reutilizáveis)
 2. Supabase+RAG = 80% do work de memória já feito
 3. Claude API embeddings = semantic search pronto

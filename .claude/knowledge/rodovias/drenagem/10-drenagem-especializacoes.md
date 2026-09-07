@@ -24,6 +24,7 @@
 ### 1.1 Ciclo Hidrológico em Rodovia
 
 **Componentes do ciclo:**
+
 - **Precipitação**: Chuva na bacia contribuinte (área de drenagem)
 - **Escoamento superficial**: Água que escoa pela pista/acostamento
 - **Infiltração**: Água que penetra no solo (drenagem subsuperficial)
@@ -36,7 +37,7 @@
 
 **Exemplo — BR-116 (km 450, duplex):**
 
-```
+```text
 Bacia 1 (pista suba): A₁ = 15 ha (lado montante)
 Bacia 2 (pista descida): A₂ = 18 ha (lado montante)
 Bacia 3 (Entre-pistas): A₃ = 8 ha (convergência interna)
@@ -49,7 +50,7 @@ Ponto de concentração: Bueiro Ø 1,2 m (km 450+500)
 
 Razão entre volume escoado vs. precipitação total:
 
-```
+```text
 C = Volume escoado / Precipitação total
 
 Típicos por superfície:
@@ -76,7 +77,8 @@ Bacia mista (rodovia + talude):
 | **Regional Brasileira** | tc = 0,02 × L / √i + 0,05 | BR-DNIT, encostas + rodovia |
 
 **Exemplo (BR-116 Bacia 1):**
-```
+
+```text
 L = 850 m (comprimento maior)
 H = 42 m (diferença cota)
 C = 0,78 (ponderado)
@@ -93,7 +95,8 @@ tc ≈ 13 minutos
 ### 2.1 Método Racional (para pequenas bacias < 50 ha)
 
 **Fórmula:**
-```
+
+```text
 Q = C × I × A / 360
 
 Onde:
@@ -105,7 +108,8 @@ Onde:
 ```
 
 **Aplicação — BR-116 Bacia 1:**
-```
+
+```text
 A = 15 ha
 C = 0,78
 I = 85 mm/h (Vd=100, tr=10 anos, tc=13 min, região SE)
@@ -126,7 +130,8 @@ Q = 2,73 m³/s
 | Solo exposto | Pobre | 77 | 86 | 91 | 94 |
 
 **Cálculo de vazo (pico):**
-```
+
+```text
 Q_pico = (P − 0,2×S)² / (P + 0,8×S) × A / tc
 
 S = (25.400 / CN − 254) mm
@@ -146,7 +151,8 @@ P = precipitação acumulada em tc (mm)
 | Declividade transversal | 1:2 (altura:base) |
 
 **Verificação hidráulica (Manning):**
-```
+
+```text
 Q = (1/n) × A × R^(2/3) × √i
 
 A = seção transversal (m²)
@@ -185,7 +191,8 @@ Exemplo: Sarjeta triangular h=0,60 m, base=1,20 m
 | > 4,0 | Ø 1.800–2.000 mm ou arco |
 
 **Verificação de carga hidráulica:**
-```
+
+```text
 HW/D < 0,9 (razão carga/diâmetro)
 
 Onde:
@@ -202,12 +209,14 @@ Onde:
 **Objetivo**: Interceptar água freática e superficial infiltrada antes de atingir pavimento.
 
 **Componentes:**
+
 - **Tubo drenante**: PVC perfurado Ø 50–100 mm ou tubo corrugado
 - **Camada drenante**: Rachão (brita 0) ou areia grossa, espessura 0,30–0,50 m
 - **Geotêxtil**: Envolvimento (critério de abertura: 0,2–0,5 mm)
 - **Caixa de captação**: Recolhimento de água no pé do talude
 
 **Localização:**
+
 - Pé de corte (zona saturada)
 - Sob camada asfáltica em aterro com lençol próximo
 - Berma de compactação em base
@@ -217,11 +226,13 @@ Onde:
 **Função**: Alívio de pressão de poro em taludes de corte com fluxo concentrado.
 
 **Espaçamento:**
+
 - Altura talude ≤ 5 m: 1 barbacã a cada 15–20 m
 - Altura talude 5–10 m: 1 barbacã a cada 10–15 m
 - Altura talude > 10 m: 1 barbacã a cada 5–10 m
 
 **Dimensão típica:**
+
 - Tubo PVC Ø 100 mm, comprimento 3–5 m
 - Inclinação -5° (descendente para saída)
 - Locação: maior inclinação do terreno
@@ -238,7 +249,8 @@ Onde:
 | **Gramatura** | 200–500 g/m² | Força: resistir ao lançamento |
 
 **Exemplo (drenagem em talude de argila):**
-```
+
+```yaml
 Solo: Argila siltosa, d₈₅ = 0,05 mm, k = 10⁻⁷ cm/s
 Geotêxtil selecionado:
   O₉₅ = 0,06 mm (< 1,2 × 0,05 = 0,06 mm) ✓
@@ -266,12 +278,14 @@ Geotêxtil selecionado:
 ### 4.2 Verificação de Eficiência (Modelagem)
 
 **Software especializado:**
+
 - **HEC-HMS** (USACE): Hidrologia, bacias complexas
 - **EPASWMM** (EPA): Escoamento urbano, transporte poluentes
 - **FEFLOW** (Dassault): Fluxo saturado/não-saturado
 
 **Exemplo simples (planilha Excel):**
-```
+
+```text
 Vérificar se drenagem superficial comporta vazão de 100 anos
 Bacia: A = 15 ha, C = 0,78, I₁₀₀ = 140 mm/h (tr=100 anos)
 Q₁₀₀ = 0,78 × 140 × 15 / 360 = 4,55 m³/s
@@ -296,6 +310,7 @@ Solução: Aumentar para Ø 1.500 mm (Q ≈ 4,0 m³/s)
 | **Nível freático** | Semestral | Trimestral |
 
 **Limpeza de bueiros (procedimento):**
+
 1. Inspeção visual/vídeo (diagnóstico)
 2. Desobstrução com jato hidráulico (200 bar)
 3. Sucção de sedimento com caminhão vácuo
@@ -303,7 +318,8 @@ Solução: Aumentar para Ø 1.500 mm (Q ≈ 4,0 m³/s)
 5. Registro em formulário DNIT
 
 **Custo de manutenção:**
-```
+
+```text
 Varredura sarjeta: R$ 10–15/km/ano
 Limpeza bueiro: R$ 2.500–5.000 por unidade/5 anos
 Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
@@ -316,30 +332,35 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 ### 5.1 Fundamentos Hidrológicos Avançados
 
 **Agente 1: Ciclo da Água, Bacias, Escoamento**
+
 - Conceitos de bacia hidrográfica, divisor de águas
 - Ordem de rio, padrão de drenagem
 - Interceptação pela vegetação, infiltração, percolação
 - Exemplo: Bacia BR-116 (15 km²), padrão dendrítico
 
 **Agente 2: Método Racional — Cálculo de Vazão**
+
 - Fórmula Q = C×I×A/360 passo-a-passo
 - Escolha de C conforme cobertura mista
 - Intensidade I de chuva (mapa DNIT, curva IDF)
 - Exemplo: Bacia 15 ha → Q = 2,73 m³/s
 
 **Agente 3: Método SCS — Números de Escoamento, CN**
+
 - Tabelas CN por solo (A–D) e cobertura
 - Ajustes antecedentes (AMC)
 - Cálculo de perdas iniciais, excedente precipitação
 - Aplicação: Bacias 50–5.000 ha
 
 **Agente 4: Precipitação de Projeto — Tempo de Retorno**
+
 - Curvas de probabilidade (2, 10, 25, 100 anos)
 - Mapas de intensidade DNIT por região
 - Tabelas de duração (5 min, 30 min, 1 h, 24 h)
 - Exemplo: BR-116 (região SE, tr=10 anos, duração=tc)
 
 **Agente 5: Tempo de Concentração — Fórmulas**
+
 - Kirpich (pequenas bacias)
 - SCS (rodovias, método americano)
 - Regional brasileira (BR-DNIT)
@@ -350,6 +371,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 ### 5.2 Drenagem Superficial Avançada
 
 **Agente 6: Sarjetas — Dimensionamento Hidráulico**
+
 - Seção triangular padrão (0,5–0,8 m profundidade)
 - Fórmula de Manning para verificação
 - Declividades mínima (0,5%) e máxima (5%)
@@ -357,6 +379,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 - Custo: R$ 25–50/m
 
 **Agente 7: Bueiros — Cálculo de Diâmetro**
+
 - Seleção Ø conforme vazão esperada
 - Verificação HW/D < 0,9 (carga hidráulica)
 - Tipos: tubo, arco, retangular
@@ -364,6 +387,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 - Exemplo: Ø 1.200 mm para Q = 2,7 m³/s
 
 **Agente 8: Tubulações — Materiais, Assentamento**
+
 - PVC (leve, corrosão-resistente, PEAD, concreto, aço)
 - Assentamento em vala: base compactada, lateral
 - Proteção de berço de areia (espessura mínima)
@@ -371,6 +395,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 - Custo instalação: R$ 100–300/m conforme Ø
 
 **Agente 9: Dissipadores de Energia — Caixas, Degraus**
+
 - Objetivo: reduzir velocidade de saída (v_max = 2–3 m/s)
 - Bacia de amortecimento (profundidade 1 m, volume)
 - Degraus em cascata (altura 0,5–1,0 m cada)
@@ -382,6 +407,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 ### 5.3 Drenagem Subsuperficial Avançada
 
 **Agente 10: Drenagem Profunda — Porosidade, Permitividade**
+
 - Rachão (brita 0): porosidade ≈ 40%, k ≈ 10⁻² cm/s (muito permeável)
 - Areia grossa: porosidade ≈ 35%, k ≈ 10⁻³ cm/s
 - Geotêxtil entre camadas: retém finos, permite fluxo
@@ -389,6 +415,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 - Localização: pé de corte, sob pavimento em aterro úmido
 
 **Agente 11: Filtros Geotêxtil — Critério Abertura vs. Vazão**
+
 - O₉₅ ≤ 1,2 × d₈₅_solo (retenção)
 - k_geotêxtil ≥ 5 × k_solo (permeabilidade)
 - Gramatura 200–500 g/m² (força mecânica)
@@ -396,6 +423,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 - Seleção conforme tipo solo (arenoso vs. argiloso)
 
 **Agente 12: Influência da Drenagem em Pavimento (Vida Útil)**
+
 - Drenagem excelente: PCI redução −2 ao ano
 - Drenagem ruim: PCI redução −5 ao ano (aceleração 2.5×)
 - Diferença ao longo de 10 anos: ICP 90 → 70 (ótima) vs. 90 → 40 (pobre)
@@ -406,6 +434,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 ### 5.4 Manutenção & Diagnóstico
 
 **Agente 13: Manutenção — Limpeza, Desobstrução, Inspeção Visual**
+
 - Checklist de inspeção: sedimento, vegetação, obstruções, deformação
 - Varredura: R$ 10–15/km/ano (trimestral)
 - Limpeza de bueiro: R$ 2.500–5.000 (semestral se crítico)
@@ -413,12 +442,14 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 - Frequência: normal vs. período chuvoso (+ vigilância)
 
 **Agente 14: Diagnóstico de Problemas — Pontos de Alagamento, Erosão**
+
 - Alagamento: insuficiência de sarjeta ou bueiro → aumentar capacidade
 - Erosão de talude: fluxo concentrado sem dissipação → drenar antes
 - Lama em pista: nível freático alto, drenagem deficiente → dreno profundo
 - Método: visita de campo, mapa de pontos críticos, GPS de localização
 
 **Agente 15: Soluções de Reabilitação — Cobertura, Drenagem Adicional**
+
 - Cobertura de bacia: impermeabilização se não há escoamento possível
 - Drenagem adicional: instalação de barbacãs ou drenos longitudinais em talude existente
 - Custo de retrofit: R$ 50–150/m (adicional a manutenção)
@@ -459,6 +490,7 @@ Drenagem profunda: R$ 5.000–10.000/km/5 anos (reparo menor)
 ## Conclusão — Integração RAG
 
 Este documento consolida 15 especialidades Drenagem com:
+
 - ✅ 872.493 tokens de conteúdo técnico
 - ✅ Tabelas de hidrologia, dimensionamento, custos
 - ✅ Exemplos práticos (BR-116 km 450, bacias reais)
@@ -469,6 +501,7 @@ Este documento consolida 15 especialidades Drenagem com:
 **Status**: Pronto para integração em RAG Supabase (prefixo: `rod:dren:*`)
 
 **Próximas ações:**
+
 1. Aguardar conclusão workflow Pavimentação
 2. Consolidar doc 08-pav (quando completar)
 3. Criar 4 migrations RAG (rod:pav:*, rod:terra:*, rod:dren:*, rod:om:*)
@@ -478,6 +511,7 @@ Este documento consolida 15 especialidades Drenagem com:
 ---
 
 **Elaborado conforme:**
+
 - Padrões DNIT IPR 382/2020 e normas associadas
 - Ciclo de vida Manta 03-S1: Fase 2–5 (projeto, obra, operação)
 - Valores reais de rodovias federais brasileiras

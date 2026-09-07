@@ -5,7 +5,7 @@
 **Status:** READY FOR DEPLOYMENT  
 **Date:** 2026-07-25  
 **Version:** v5.0  
-**Owner:** mneves@mantaassociados.com  
+**Owner:** <mneves@mantaassociados.com>  
 **Ticket:** MNT-2026-AGENT-MEMORY-TIERING
 
 Complete implementation of R10 (Purga de Agent_Memory) from CLAUDE.md v5.0 with enhanced 3-tier cache lifecycle management, automatic cleanup policies, graceful LRU eviction, and R9 feedback loop integration.
@@ -16,7 +16,7 @@ Complete implementation of R10 (Purga de Agent_Memory) from CLAUDE.md v5.0 with 
 
 ### 3-Tier Memory Lifecycle
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    Agent Memory Tiering (R10)                       │
 └─────────────────────────────────────────────────────────────────────┘
@@ -71,6 +71,7 @@ Complete implementation of R10 (Purga de Agent_Memory) from CLAUDE.md v5.0 with 
 #### New Tables
 
 **agent_memory_archive** (Cold tier)
+
 ```sql
 CREATE TABLE agent_memory_archive (
     id UUID PRIMARY KEY,
@@ -98,6 +99,7 @@ CREATE INDEX idx_agent_memory_archive_reason
 ```
 
 **agent_memory_tier_log** (Audit trail - append-only)
+
 ```sql
 CREATE TABLE agent_memory_tier_log (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -118,6 +120,7 @@ CREATE INDEX idx_agent_memory_tier_log_agent
 ```
 
 **agent_memory_quota** (Quota tracking)
+
 ```sql
 CREATE TABLE agent_memory_quota (
     agent_id TEXT PRIMARY KEY,
@@ -170,12 +173,14 @@ ALTER TABLE agent_memory
 **Purpose:** Orchestrate 3-tier lifecycle transitions
 
 **Classes:**
+
 - `MemoryEntry` — Data model for cache entries
 - `TieringMetrics` — Metrics for each transition
 - `MemoryTieringDB` — DB operations
 - `MemoryTieringOrchestrator` — Lifecycle orchestration
 
 **Key Methods:**
+
 ```python
 # Execute full tiering cycle
 orchestrator.execute_tiering_cycle(agent_id=None)
@@ -186,6 +191,7 @@ orchestrator.execute_tiering_cycle(agent_id=None)
 ```
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_tiering.py \
   --supabase-url=$SUPABASE_URL \
@@ -196,6 +202,7 @@ python scripts/agent_memory_tiering.py \
 ```
 
 **Output Example:**
+
 ```json
 {
   "status": "success",
@@ -222,6 +229,7 @@ python scripts/agent_memory_tiering.py \
 **Purpose:** Automatic cleanup with LRU eviction + R9 integration
 
 **Classes:**
+
 - `CleanupRule` — Rule definition
 - `CleanupResult` — Cleanup operation result
 - `R9FeedbackEntry` — High-rating entry for embedding retraining
@@ -229,11 +237,13 @@ python scripts/agent_memory_tiering.py \
 - `MemoryCleanupOrchestrator` — Cleanup orchestration
 
 **Cleanup Rules (priority order):**
+
 1. **Priority 1:** Delete expired entries (expires_at < NOW())
 2. **Priority 2:** Archive low-rating old (user_rating < 2, age > 7 days)
 3. **Priority 3:** LRU eviction if quota > 80%
 
 **Key Methods:**
+
 ```python
 # Analyze what would be cleaned
 orchestrator.analyze_cleanup_rules(agent_id)
@@ -249,6 +259,7 @@ orchestrator.get_high_rating_for_r9(agent_id, threshold=4.0)
 ```
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_cleanup.py \
   --supabase-url=$SUPABASE_URL \
@@ -260,7 +271,8 @@ python scripts/agent_memory_cleanup.py \
 ```
 
 **Output Example:**
-```
+
+```text
 CLEANUP OPERATIONS:
   manta-03-s1 - Expired entries
     Deleted: 234 entries
@@ -285,6 +297,7 @@ R9 FEEDBACK LOOP:
 **Purpose:** Real-time quota tracking, anomaly detection, alerting
 
 **Classes:**
+
 - `QuotaAlert` — Quota threshold violation
 - `MemoryStats` — Per-agent memory statistics
 - `AnomalyDetection` — Detected anomaly
@@ -293,6 +306,7 @@ R9 FEEDBACK LOOP:
 - `MemoryMonitoringOrchestrator` — Monitoring orchestration
 
 **Key Features:**
+
 - **Quota Thresholds:** 60% (INFO), 80% (WARNING), 90% (CRITICAL), 100% (CRITICAL)
 - **Anomaly Detection:**
   - Rapid growth (> 50% in 1 hour)
@@ -301,6 +315,7 @@ R9 FEEDBACK LOOP:
 - **Metrics Export:** Grafana-compatible JSON
 
 **Key Methods:**
+
 ```python
 # Execute monitoring cycle
 report = orchestrator.execute_monitoring_cycle()
@@ -319,6 +334,7 @@ anomalies = db.detect_anomalies(agent_id, history_hours=24)
 ```
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_monitoring.py \
   --supabase-url=$SUPABASE_URL \
@@ -329,7 +345,8 @@ python scripts/agent_memory_monitoring.py \
 ```
 
 **Output Example:**
-```
+
+```text
 MEMORY STATISTICS:
   manta-03-s1
     Total: 45.62 MB (45.6% quota)
@@ -364,6 +381,7 @@ result = orch.execute_tiering_cycle(agent_id=None)  # All agents
 ```
 
 **Timeline:**
+
 1. **00:00 UTC** — Cleanup (cleanup script)
 2. **02:00 UTC** — Tiering cycle (this script)
    - HOT → WARM (30 min inactivity)
@@ -411,7 +429,8 @@ The tiering system integrates with R9 (Feedback Loop) for embedding model retrai
 4. **Feedback Score:** Embeddings receive feedback_score (0.0-1.0) for ranking
 
 **Workflow:**
-```
+
+```text
 agent_memory (high rating) 
   ↓ (daily)
 cleanup script extraction → [source_prompt, embedding, feedback_score]
@@ -520,6 +539,7 @@ create_trigger(
 **Root Cause:** access_count/last_access_at not being tracked accurately
 
 **Solution:**
+
 ```sql
 -- Verify triggers are active
 SELECT * FROM pg_trigger WHERE tgname LIKE 'trg_%';
@@ -541,6 +561,7 @@ GROUP BY agent_id;
 **Root Cause:** agent_memory_quota not being updated by triggers
 
 **Solution:**
+
 ```sql
 -- Force recalculation
 SELECT refresh_agent_memory_metrics(agent_id) 
@@ -560,6 +581,7 @@ python scripts/agent_memory_monitoring.py \
 **Root Cause:** purge_cold_tier() not being scheduled or failing silently
 
 **Solution:**
+
 ```bash
 # Manual purge (dry-run first)
 python scripts/agent_memory_tiering.py \
@@ -581,15 +603,18 @@ FROM agent_memory_archive;
 ### Index Strategy
 
 **Hot Indexes** (used every cycle):
+
 - `idx_agent_memory_tier_hot` — HOT → WARM promotion
 - `idx_agent_memory_tier_warm_archive` — WARM → COLD archival
 - `idx_agent_memory_quota_exceeded` — Quota monitoring
 
 **Warm Indexes** (used in cleanup):
+
 - `idx_agent_memory_lru` — LRU eviction
 - `idx_agent_memory_high_rating` — R9 extraction
 
 **Analysis:**
+
 ```sql
 -- Check index usage
 SELECT schemaname, tablename, indexname, idx_scan
@@ -637,6 +662,7 @@ WHERE agent_id = 'manta-03-s8';  -- AySA project (high-volume)
 ### Quota Scaling by Agent Tier
 
 **Recommended:**
+
 - **S1–S4 (existing):** 100 MB (default)
 - **S6–S10 (new):** 100 MB (default)
 - **Special:** S8 (AySA) → 150 MB, S9 (ANEEL) → 120 MB
@@ -688,7 +714,7 @@ WHERE agent_id = 'manta-03-s8';  -- AySA project (high-volume)
 
 ## Support
 
-- **Owner:** mneves@mantaassociados.com
+- **Owner:** <mneves@mantaassociados.com>
 - **Slack:** #agent-ops (monitoring alerts)
 - **Ticket:** MNT-2026-AGENT-MEMORY-TIERING
 - **Emergency Runbook:** See Troubleshooting section above

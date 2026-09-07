@@ -29,7 +29,7 @@ em todas as verticais (S1–S13, focus S6–S10).
 
 ### Artefatos entregues
 
-```
+```text
 Codex-exemplo/
 ├── .claude/agents/
 │   └── agente-esg.md                          # Agent spec v1.0 (600 linhas)
@@ -51,6 +51,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 **Propósito**: Especificação técnica completa do agente Manta 20
 
 **Conteúdo**:
+
 - ✅ Propósito e capacidades (seção 1–2)
 - ✅ 4 dimensões ESG com indicadores (seção 3)
 - ✅ Integração com S6–S10 (seção 4, 5 casos uso detalhados)
@@ -70,6 +71,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 **Propósito**: Guia técnico e operacional de integração com Maestro e verticais
 
 **Conteúdo**:
+
 - ✅ Visão geral (seção 1)
 - ✅ Arquitetura de roteamento com diagrama (seção 2)
 - ✅ Integrações funcionais (7 agentes) com fluxos JSON (seção 3)
@@ -87,6 +89,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 **Propósito**: Validação operacional via caso real — Terminal Portuário em mangue (Paranaguá)
 
 **Conteúdo**:
+
 - ✅ Contexto do projeto (seção 1)
 - ✅ Entrada no Maestro (intake) (seção 2)
 - ✅ Análise Manta 20 completa (seção 3):
@@ -102,6 +105,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 **Caso estudo escolhido**: Porto (mangue adjacente) — máxima complexidade ESG
 
 **Validações obtidas**:
+
 - ISA calculation ✅
 - Offset mapping ✅
 - Social license framework ✅
@@ -112,6 +116,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 ### 2.4 CLAUDE.md Update: `/home/user/Codex-exemplo/CLAUDE.md`
 
 **Mudanças**:
+
 - ✅ Seção "Horizontais": +1 linha (Manta 20, agente-esg, v1.0)
 - ✅ Seção "Routing": +5 linhas (keywords ESG completas)
 - ✅ Contagem de agentes: 20 → 21 (11 h + 9 v + Manta 20)
@@ -128,6 +133,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 ### 3.1 Dimensão Ambiental (E)
 
 **Indicadores principais**:
+
 - ISA (Índice de Sensibilidade Ambiental): 0–100 (INPE/IBAMA)
 - Offset obrigatório: hectares × multiplicador de risco × custo/ha
 - Carbon footprint: Escopo 1–3 (EPA/GHG Protocol)
@@ -135,6 +141,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 - Resíduos: classificação + destinação final
 
 **Saídas**:
+
 - Relatório Ambiental (EIA-RIMA template)
 - Roadmap de Mitigação (offset site, carbono net-zero timeline)
 - Compliance checklist (Lei 12.651, Lei 9.985, resoluções CONAMA)
@@ -142,6 +149,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 ### 3.2 Dimensão Social (S)
 
 **Indicadores principais**:
+
 - Social License Score: 0–100 (percepção comunitária)
 - Mapa de stakeholders: comunidades, ONGs, órgãos, setor privado
 - Grau de influência: BAIXO/MODERADO/ALTO/CRÍTICO
@@ -149,6 +157,7 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 - Benefício local: empregos, impostos, investimento comunitário
 
 **Saídas**:
+
 - Mapa Social + análise de poder
 - Plano de Engajamento (bottom-up vs. top-down)
 - SLA de benefício comunitário (5–10% de receita típico)
@@ -156,12 +165,14 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 ### 3.3 Dimensão Governança (G)
 
 **Indicadores principais**:
+
 - Compliance legislativo: % de requisitos cobertos
 - Timeline de licenciamento: LI → LP → LO (18–36 meses típico)
 - Transparência: auditoria, reporte, aprovação gates
 - Rastreabilidade: audit log de decisões ESG
 
 **Saídas**:
+
 - ESG Governance Plan (aprovações, responsáveis, SLAs)
 - Compliance checklist dinâmico (por legislação e fase)
 - Cláusulas contratuais ESG (offset, monitoramento, penalidades)
@@ -169,12 +180,14 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 ### 3.4 Dimensão Integração (I)
 
 **Indicadores principais**:
+
 - Matriz de trade-offs: E × S × G (cenários)
 - Score integrado: (E × 35%) + (S × 35%) + (G × 30%)
 - VPL impact: custo ESG como % do capex total
 - Risco residual: após mitigação
 
 **Saídas**:
+
 - Executive Summary (1 página)
 - Matriz de Decisão (3+ cenários com trade-offs explícitos)
 - Recomendação: VIÁVEL / VIÁVEL (condicionantes) / NÃO VIÁVEL
@@ -194,7 +207,8 @@ CLAUDE.md                                       # Atualizado (v5.1): +1 agente, 
 | **S10 Barragens** | Barragem com assentamento | 65–80 | 30–50 | Reservatório + rejeitos (se TSF) |
 
 **Fluxo padrão S{N} + Manta 20**:
-```
+
+```text
 User → Maestro (routing)
   ├─→ Vertical S{N}: footprint, specs, capex, schedule
   └─→ Manta 20 (ESG): ISA, offset, social license, carbon
@@ -228,7 +242,7 @@ User → Maestro (routing)
 
 ### 8 Coleções ESG (Supabase v1.0)
 
-```
+```yaml
 esg:inpe-mapbiomas        (40 chunks) — cobertura solo 1985–2023
 esg:ibama-uc              (25 chunks) — unidades conservação
 esg:lei-florestal          (15 chunks) — Lei 12.651, resoluções
@@ -271,6 +285,7 @@ TOTAL: ~160 chunks ESG
 **Contexto**: 32–64K tokens (bem dentro do window 200K)
 
 **Fallbacks**:
+
 - Haiku: scoring simples, não-crítico
 - Opus: disputes legais complexos, second opinion
 
@@ -279,17 +294,20 @@ TOTAL: ~160 chunks ESG
 ## 8. CHECKLIST DE DEPLOYMENT (5 Fases)
 
 ### Fase 1: RAG Collections (Week 1–2)
+
 - [ ] Criar `esg_collections` em Supabase
 - [ ] Carregar 160 chunks (8 subcoleções)
 - [ ] Testar busca semântica
 - [ ] Auditoria: `docs/ESG-RAG-AUDIT.md`
 
 ### Fase 2: Integração Maestro (Week 2–3)
+
 - [ ] Adicionar keywords ESG ao routing
 - [ ] Testar co-agente dispatch (5 prompts)
 - [ ] Verificar contexto passado (footprint, timeline, budget)
 
 ### Fase 3: Testes com Verticais (Week 3)
+
 - [ ] S9 (LT Mata Atlântica)
 - [ ] S6 (Porto mangue)
 - [ ] S8 (ETA zona indígena)
@@ -297,12 +315,14 @@ TOTAL: ~160 chunks ESG
 - [ ] S7 (Aeroporto Cerrado)
 
 ### Fase 4: Gate Humano (Week 4)
+
 - [ ] Revisão ESG Lead
 - [ ] Revisão Legal (Manta 02)
 - [ ] Revisão Compliance
 - [ ] Aprovação MN (VP)
 
 ### Fase 5: Go-Live (Week 5+)
+
 - [ ] Deploy produção
 - [ ] Monitoria 2 semanas (5 sessões)
 - [ ] Feedback loop & RAG ajuste
@@ -313,6 +333,7 @@ TOTAL: ~160 chunks ESG
 ## 9. CASOS DE USO VALIDADOS
 
 ### Caso 1: Energia — LT 138 kV em Cerrado
+
 - **ISA**: 72 (alto)
 - **Offset**: 3.600 ha
 - **Social License**: 65/100
@@ -321,6 +342,7 @@ TOTAL: ~160 chunks ESG
 - **Impacto CAPEX**: +R$ 12M, +6 meses
 
 ### Caso 2: Portos — Terminal em Mangue
+
 - **ISA**: 88 (crítico)
 - **Offset**: 180 ha + R$ 5.76M
 - **Social License**: 35/100 → 70/100 (co-design)
@@ -329,6 +351,7 @@ TOTAL: ~160 chunks ESG
 - **Impacto CAPEX**: +R$ 8.16M, +18 meses
 
 ### Caso 3: Saneamento — ETA em Bacia Paraná (AySA)
+
 - **Água**: 120.000 m³/dia
 - **Social License**: 55/100 (comunidade indígena)
 - **Carbon**: 3.500 tCO₂e/ano → -50% via solar

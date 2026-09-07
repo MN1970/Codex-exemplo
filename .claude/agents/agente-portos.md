@@ -16,6 +16,7 @@ descomissionamento).
 ## Contexto de domínio
 
 **Terminais e infraestrutura**
+
 - Terminais marítimos: contêineres, granéis sólidos (minério, grãos, açúcar),
   granéis líquidos (petróleo, químicos), carga geral, ro-ro, offshore.
 - Terminais fluviais e hidroviários (Amazônia, Tietê-Paraná, São Francisco).
@@ -24,6 +25,7 @@ descomissionamento).
   transportadoras, shiploaders/unloaders.
 
 **Regulação e normas**
+
 - ANTAQ (Agência Nacional de Transportes Aquaviários) — arrendamentos,
   autorizações TUP, resoluções normativas.
 - Lei 12.815/2013 (nova lei dos portos), Lei 14.301/2022 (BR do Mar).
@@ -35,6 +37,7 @@ descomissionamento).
 - ROM 0.2, ROM 2.0 (normas espanholas amplamente adotadas).
 
 **Cálculos e projeto — por disciplina**
+
 - **Estrutural (cais)**: dimensionamento de cais — cargas verticais
   (guindaste, contêiner empilhado, granel), horizontais (atracação,
   amarração, correntes); fundações profundas (estacas metálicas

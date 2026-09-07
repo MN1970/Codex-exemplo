@@ -4,7 +4,7 @@
 
 **Version:** 5.0  
 **Updated:** 2026-07-25  
-**Maintainer:** mneves@mantaassociados.com  
+**Maintainer:** <mneves@mantaassociados.com>  
 **Status:** Production-ready
 
 ---
@@ -15,9 +15,9 @@
 2. [Architecture](#architecture)
 3. [Pre-Deployment](#pre-deployment)
 4. [Installation](#installation)
-   - [Linux Systemd](#linux-systemd)
-   - [Docker Compose](#docker-compose)
-   - [Kubernetes (Advanced)](#kubernetes-advanced)
+   - [Linux Systemd](#option-1-linux-systemd-single-server)
+   - [Docker Compose](#option-2-docker-compose-devstaging)
+   - [Kubernetes (Advanced)](#option-3-kubernetes-advanced)
 5. [Configuration](#configuration)
 6. [Monitoring & Alerts](#monitoring--alerts)
 7. [Testing & Validation](#testing--validation)
@@ -38,6 +38,7 @@
 | **Tiering Audit** | Daily 04:00 UTC | Validate model selection rules | 5 min |
 
 **Key Features:**
+
 - Prometheus metrics export (port 8080)
 - Slack alerts on job failures
 - Automatic retry logic (configurable)
@@ -52,7 +53,7 @@
 
 ### Components
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ Maestro APScheduler (Python 3.11)                           │
 ├─────────────────────────────────────────────────────────────┤
@@ -103,6 +104,7 @@
 ### Requirements
 
 **System:**
+
 - Linux (Ubuntu 20.04+, RHEL 8+, or equivalent)
 - Python 3.11+
 - 512 MB RAM minimum, 1 GB recommended
@@ -110,6 +112,7 @@
 - Network access to: PostgreSQL, Slack, Docker Hub (if containerized)
 
 **Credentials Required:**
+
 ```bash
 # .env file (do NOT commit)
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
@@ -119,7 +122,8 @@ DOCKER_PASSWORD=your_docker_access_token
 ```
 
 **Repository Structure:**
-```
+
+```text
 Codex-exemplo/
 ├── scripts/
 │   ├── apscheduler_setup.py          # Main orchestrator
@@ -199,7 +203,8 @@ pip3 install --user -r requirements.txt
 ```
 
 **requirements.txt:**
-```
+
+```text
 schedule==1.2.0
 requests==2.31.0
 prometheus-client==0.19.0
@@ -307,10 +312,10 @@ curl http://localhost:8080/health | jq .
 
 | Service | URL | Credentials |
 |---------|-----|-------------|
-| Maestro Health | http://localhost:8080/health | — |
-| Prometheus | http://localhost:9090 | — |
-| Grafana | http://localhost:3000 | admin / (from .env) |
-| AlertManager | http://localhost:9093 | — |
+| Maestro Health | <http://localhost:8080/health> | — |
+| Prometheus | <http://localhost:9090> | — |
+| Grafana | <http://localhost:3000> | admin / (from .env) |
+| AlertManager | <http://localhost:9093> | — |
 
 ---
 
@@ -619,7 +624,8 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 ```
 
 Example alert:
-```
+
+```json
 [CRITICAL] Job Failure: rag-reindex
 Collection: san:v5.0:chunks
 Error: Database connection timeout
@@ -716,6 +722,7 @@ echo "✓ All smoke tests passed"
 **Symptom:** `systemctl start maestro-apscheduler` fails
 
 **Solution:**
+
 ```bash
 # 1. Check logs
 journalctl -u maestro-apscheduler -n 100
@@ -736,6 +743,7 @@ python3 scripts/apscheduler_setup.py --test-config
 **Symptom:** Jobs marked "success" but no actual work done
 
 **Solution:**
+
 ```bash
 # 1. Check scheduler is actually running
 ps aux | grep apscheduler_setup
@@ -762,6 +770,7 @@ python3 scripts/rag-reindex.py --dry-run
 **Symptom:** `maestro-scheduler` using > 512 MB RAM
 
 **Solution:**
+
 ```bash
 # 1. Check memory metrics
 curl http://localhost:8080/metrics | grep maestro_agent_memory_mb
@@ -784,6 +793,7 @@ systemctl restart maestro-apscheduler
 **Symptom:** `ERROR: could not connect to server` in logs
 
 **Solution:**
+
 ```bash
 # 1. Check DATABASE_URL
 echo $DATABASE_URL
@@ -803,6 +813,7 @@ systemctl status postgresql
 **Symptom:** AlertManager not receiving alerts
 
 **Solution:**
+
 ```bash
 # 1. Verify Prometheus config
 curl http://localhost:9090/api/v1/rules | jq .
@@ -874,10 +885,10 @@ kubectl rollout status statefulset/maestro-scheduler -n maestro
 
 ## Support & Contact
 
-**Issues:** mneves@mantaassociados.com  
+**Issues:** <mneves@mantaassociados.com>  
 **Slack:** #maestro-ops  
-**Documentation:** https://manta.wiki/maestro-v5  
-**Source:** https://github.com/mantaassociados/Codex-exemplo
+**Documentation:** <https://manta.wiki/maestro-v5>  
+**Source:** <https://github.com/mantaassociados/Codex-exemplo>
 
 ---
 

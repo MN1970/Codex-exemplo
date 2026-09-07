@@ -1,4 +1,5 @@
 # Deployment Approvals — S6 Go-Live v5.0
+
 **Version: v5.0 | Date: 2026-07-25 | Agent: Manta 03-S6 (Portos)**
 
 Sign-off record for deployment phases. **All phases must be approved before proceeding to next phase.**
@@ -8,16 +9,18 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ## PRE-LAUNCH APPROVALS
 
 ### Phase 0 — Pre-Flight (24h before launch)
-**Approval Required:** MN (mneves@mantaassociados.com)
+
+**Approval Required:** MN (<mneves@mantaassociados.com>)
 
 - [ ] **APPROVED** by _____________________ (name)
   - **Timestamp:** _____________________
   - **Channel:** (Slack / Email / Phone)
-  - **Notes:** 
+  - **Notes:**
 
 ---
 
 ### Phase 1 — Pre-Deployment Validation (T-6h)
+
 **Approval Required:** Tech Lead
 
 - [ ] **Code validation:** CLAUDE.md, VERSIONS.json, settings.json syntax OK
@@ -43,17 +46,19 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ---
 
 ### Phase 2 — Pre-Deployment Sign-Off (T-5h)
+
 **Approval Required:** MN
 
 - [ ] **All Phase 1 items complete**
   - [ ] Approved by: _____________________ (name — MN)
   - [ ] Timestamp: _____________________
   - [ ] Approval method: (Email / Slack / Phone)
-  - [ ] Email subject or Slack thread link: 
+  - [ ] Email subject or Slack thread link:
 
 ---
 
 ### Phase 3 — Database Migrations (T-4h)
+
 **Approval Required:** DBA / Database Ops
 
 - [ ] **Migrations executed successfully**
@@ -73,6 +78,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ---
 
 ### Phase 4 — Background Tasks Setup (T-3h)
+
 **Approval Required:** DevOps / SRE
 
 - [ ] **APScheduler configured & running**
@@ -91,6 +97,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ---
 
 ### Phase 5 — Skill Deployment (T-2h)
+
 **Approval Required:** Tech Lead
 
 - [ ] **Skill file verified**
@@ -113,6 +120,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ---
 
 ### Phase 6 — Maestro Routing (T-1h 30m)
+
 **Approval Required:** Tech Lead (AI/ML)
 
 - [ ] **Keyword rules in place**
@@ -135,6 +143,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ---
 
 ### Phase 7 — Tiering & Fallback (T-1h)
+
 **Approval Required:** Tech Lead (Infra)
 
 - [ ] **Complexity score formula validated**
@@ -152,6 +161,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ---
 
 ### Phase 8 — Pre-Launch Testing (T-30m)
+
 **Approval Required:** QA Lead / Tech Lead
 
 - [ ] **All 11 E2E tests passing**
@@ -184,6 +194,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ---
 
 ### Phase 9 — Final Approval Gate (T-15m)
+
 **Approval Required:** MN (Final Sign-Off)
 
 - [ ] **ALL PHASES 1–8 COMPLETE & APPROVED**
@@ -204,6 +215,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ## LAUNCH & POST-LAUNCH APPROVALS
 
 ### Phase 10 — Go-Live (T+0)
+
 **Decision Maker:** On-Call Engineer + MN
 
 - [ ] **Pre-Flight Checks (5 min before)**
@@ -263,6 +275,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 ## CONTINGENCY APPROVALS
 
 ### Rollback Decision (If Triggered)
+
 **Approval Required:** MN (Immediate)
 
 - [ ] **Rollback Initiated** (see S6-ROLLBACK-PLAN.md)
@@ -298,6 +311,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 **MN (Final):** _____________________  
 
 **Overall Status:**
+
 - ✅ **APPROVED FOR PRODUCTION**
 - 🔄 **PENDING APPROVALS** (phases: _______________)
 - ❌ **BLOCKED** (reason: ______________)

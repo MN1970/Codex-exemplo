@@ -6,6 +6,7 @@ Cowork pode consumir o mesmo endpoint sem código novo — só configuração
 por usuário/workspace.
 
 Este documento cobre:
+
 1. O que já está implementado (Fase A).
 2. Como configurar Cowork para acessar.
 3. Cobertura resultante e gaps.
@@ -19,6 +20,7 @@ Este documento cobre:
 `claude/manta-agents-s6-s10-7qklcw`).
 
 **Arquivos**:
+
 - `backends/mcp/app/maestro.py` — módulo com registro estático (20
   agentes v4.2), routing engine (keyword match ponderado) e 4 tools.
 - `backends/mcp/app/server.py` — chama `register_maestro_tools(mcp)` no
@@ -36,6 +38,7 @@ Este documento cobre:
 | `get_maestro_agent_details(agent_slug)` | Metadados canônicos de 1 agente |
 
 **Características**:
+
 - Read-only, estáticas (não chamam backend, não requerem Bearer).
 - Deterministas (routing é keyword match puro).
 - Testadas (21 unit tests passando).
@@ -80,7 +83,7 @@ MCP é auto-configurado (o fluxo OAuth ainda roda uma vez por usuário).
 
 Depois de logar, testar no chat do Cowork:
 
-```
+```text
 Use route_maestro_prompt with "AySA reabilitação da Planta Norte"
 ```
 
@@ -104,6 +107,7 @@ Após ativar, Cowork ganha em cobertura do Maestro:
 **Cobertura efetiva: ~70%** (subiu de 30% para 70% com só a Fase A).
 
 Gaps remanescentes para chegar em 100%:
+
 - Vetor semântico no RAG (precisa MCP do Supabase configurado com
   credencial).
 - Sync automático `.claude/agents/*.md` ↔ SharePoint SKILL.md (hoje
@@ -139,6 +143,7 @@ Se depois de rodar a Fase A em produção surgir demanda por Fase B
 dedicada:
 
 **Fase B.1** — Extensões operacionais no mesmo MCP:
+
 - `start_agent_conversation(agent_slug, message)` — cria persona no
   AskCAD com system prompt = SKILL.md do agente + inicia chat.
 - `search_agent_rag(agent_slug, query, top_k)` — proxy ao Supabase
@@ -147,11 +152,13 @@ dedicada:
   agente.
 
 **Fase B.2** — MCP separado só se justificado:
+
 - Novo backend `backends/cowork-mcp/` com tools específicas de
   colaboração + auth próprio.
 - Deploy separado (`cowork.mantaassociados.com/mcp`).
 
 **Fase B.3** — Sync automático `.claude/agents/` ↔ SharePoint:
+
 - CI/CD que quando um PR no `Codex-exemplo` é mergeado, dispara Graph
   API para atualizar `SKILL.md` no SP.
 - Requer Graph API write scope (M365 admin approval).

@@ -31,7 +31,7 @@
 
 Every RFQ follows this structure:
 
-```
+```json
 [RFQ DOCUMENT HEADER]
 ├─ Document ID & Revision
 ├─ Project info & contact
@@ -89,7 +89,7 @@ Every RFQ follows this structure:
 
 ### Sample Generated RFQ (Minimal)
 
-```
+```text
 ═══════════════════════════════════════════════════════════════════════════════
 REQUEST FOR QUOTATION (RFQ)
 ═══════════════════════════════════════════════════════════════════════════════
@@ -300,7 +300,7 @@ End of RFQ-2026-08-LT345-TOWERS-001
 
 ### Key Fields (Auto-Populated by Agent)
 
-```
+```yaml
 Commodity:        SCADA System (supervisory control + cloud)
 Segment:          S8 — Saneamento
 Project Context:  Estação de Tratamento de Água (ETA) — 5,000 m³/day
@@ -398,7 +398,7 @@ def generate_rfq(
 
 ## Usage Example (Agent Interaction)
 
-```
+```yaml
 User: "Preciso fazer RFQ de estruturas de transmissão para LT 345kV. 200 torres, 
        CFRD design, prazo de entrega 90 dias máximo. Budget: R$5.2M."
 

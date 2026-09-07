@@ -29,7 +29,7 @@
 
 #### Workflow Típico
 
-```
+```text
 1. Importar topografia
    └─ Entrada: levantamento topográfico (nuvem de pontos ou raster)
    
@@ -60,7 +60,7 @@
 
 #### Comandos Essenciais
 
-```
+```yaml
 Horizontal:
 - Horizontal > New Project > Import Alignment
 - Spiral Design (Clotóide automática)
@@ -83,7 +83,7 @@ Export:
 
 #### Exemplo de Saída
 
-```
+```text
 RELATÓRIO DE GEOMETRIA — MX Road
 ================================
 
@@ -126,7 +126,7 @@ Volumes (1 km):
 
 #### Funcionalidades Principais
 
-```
+```yaml
 Alignment:
 - Desenho de alinhamento H em 2D
 - Conversão automática para parâmetros (raio, ângulo, tangente)
@@ -151,7 +151,7 @@ Drawing Tools:
 
 #### Workflow
 
-```
+```text
 Civil 3D Workflow:
 
 1. Importar topografia
@@ -196,12 +196,12 @@ Civil 3D Workflow:
 
 ### 2.1 SICRO DNIT (Sistema Integrado de Custos de Obras)
 
-**Acesso**: https://sicro.dnit.gov.br  
+**Acesso**: <https://sicro.dnit.gov.br>  
 **Atualização**: Mensal (com defasagem ~1 mês)
 
 #### Estrutura de Codificação
 
-```
+```text
 Código SICRO: XX.YY.ZZ
 
 Exemplo: 01.05.02
@@ -225,7 +225,7 @@ Exemplo Real:
 
 #### Composições Típicas Rodovia
 
-```
+```text
 COMPOSIÇÃO SICRO — Pavimento CBUQ 5cm
 
 Insumos:
@@ -265,7 +265,7 @@ print(f"Pavimento: {pavimento_m2}m² × R${preco_cbuq_5cm:.2f}/m² = R${custo_to
 
 ### 3.1 Drone Mapping + Processamento
 
-```
+```yaml
 Fluxo:
 1. Captura DJI Phantom/M300 (voo 50m, sobreposição 80%)
 2. Processamento:
@@ -282,7 +282,7 @@ Fluxo:
 
 ### 3.2 Google Earth Pro + Fusion
 
-```
+```text
 Levantamento inicial (sem drone):
 1. Google Earth Pro > Ferramentas > Régua
 2. Medir distâncias / áreas
@@ -300,7 +300,7 @@ Limitações:
 
 ### 4.1 AutoCAD + Plugins Rodovia
 
-```
+```text
 Plugins úteis:
 - Infraworks (análise 3D terrain)
 - Revit (BIM, coordenação)
@@ -320,7 +320,7 @@ Fluxo CAD:
 
 ### 5.1 Simulação de Tráfego
 
-```
+```text
 PTV Vissim / Microsimulation:
 - Modelar comportamento de veículos
 - Testar capacidade em curvas
@@ -329,7 +329,7 @@ PTV Vissim / Microsimulation:
 
 ### 5.2 Análise de Acidentes
 
-```
+```text
 Analítica de Risco (Curvatura × Velocidade):
 - Correlacionar R_atual com d_parada teórica
 - Identificar pontos críticos
@@ -360,7 +360,7 @@ Analítica de Risco (Curvatura × Velocidade):
 
 ### 6.3 Guias ABNT & ICCC
 
-```
+```text
 - ABNT EB-1046: Projeto de Drenagem
 - ICCC (Instituto Cent. Conc.): Manutenção
 - EPE (Empresa Pesq. Energética): Classificação Estradas
@@ -372,7 +372,7 @@ Analítica de Risco (Curvatura × Velocidade):
 
 ### 7.1 Template de Projeto Geométrico (MX Road)
 
-```
+```text
 Estrutura de Projeto:
 
 projeto_br116_sp_mg/
@@ -400,7 +400,7 @@ projeto_br116_sp_mg/
 
 ### 7.2 Checklist Geométrico Final
 
-```
+```text
 VALIDAÇÃO GEOMÉTRICA
 
 □ Velocidade de projeto (Vd) definida e documentada
@@ -431,7 +431,7 @@ Data: _____  Responsável: _________________
 
 Quando usuário menciona "geometria de rodovia", o agente faz:
 
-```
+```text
 Q1. Velocidade de projeto? (40-120 km/h)
 Q2. Classe? (BR, BR-e, estadual, municipal)
 Q3. Topografia? (plana, ondulada, montanhosa)
@@ -448,7 +448,7 @@ Q5. Objetivo?
 
 ### 8.2 Outputs Padrão
 
-```
+```text
 1. Relatório Geométrico
    - Alinhamento H (raios, tangentes, estacas)
    - Perfil V (rampas, parábolas, cotas)
@@ -474,7 +474,7 @@ Q5. Objetivo?
 
 ## 9. Referências Externas (URLs Confiáveis)
 
-```
+```yaml
 DNIT:
 - https://www.dnit.gov.br/
 - SICRO: https://sicro.dnit.gov.br
@@ -507,4 +507,3 @@ Bentley (MX Road):
 | CBUQ | Concreto Betuminoso Usinado Quente | — |
 | BGS | Brita Graduada Simples | — |
 | SICRO | Sistema de Custos DNIT | — |
-

@@ -1,4 +1,5 @@
 # Drenagem — Tópico 7: Bueiros
+
 ## Cálculo de Diâmetro, Velocidade, Entrada/Saída
 
 **Data:** 2026-08-04  
@@ -13,18 +14,20 @@
 ### 1.1 Definição e Papel do Bueiro
 
 Um **bueiro** é uma estrutura de drenagem transversal que permite:
+
 - Cruzamento de talvegues (pequenos cursos d'água) sob a rodovia
 - Continuidade do escoamento natural
 - Proteção da estrutura viária contra erosão
 
 **Classificação:**
+
 - **Simples:** seção circular ou retangular
 - **Múltiplo:** vários tubos em paralelo (crescimento de bacia)
 - **Especial:** estruturas em grelha, áreas sensíveis
 
 ### 1.2 Componentes Estruturais
 
-```
+```text
           ENTRADA (cabeceira)
                  ↓
     ┌──────────────────────────┐
@@ -38,6 +41,7 @@ Um **bueiro** é uma estrutura de drenagem transversal que permite:
 ```
 
 **Parâmetros principais:**
+
 - **D** = diâmetro (ou altura) [m]
 - **L** = comprimento do bueiro [m]
 - **Q** = vazão de projeto [m³/s]
@@ -51,11 +55,12 @@ Um **bueiro** é uma estrutura de drenagem transversal que permite:
 
 ### 2.1 Equação de Manning (regime de escoamento livre)
 
-```
+```text
 Q = (A/n) × R²/³ × i^(1/2)
 ```
 
 Onde:
+
 - **Q** = vazão [m³/s]
 - **A** = área da seção transversal [m²]
 - **n** = coeficiente de Manning
@@ -80,7 +85,7 @@ Onde:
 
 Para garantir que não ocorra sedimentação:
 
-```
+```text
 v_min = 0,6 m/s  (tubagens com sedimento fino)
 v_min = 0,9 m/s  (tubagens com areia)
 v_min = 1,2 m/s  (tubagens com cascalho)
@@ -90,7 +95,7 @@ v_min = 1,2 m/s  (tubagens com cascalho)
 
 Para evitar erosão na saída:
 
-```
+```text
 v_máx = 2,0 a 3,0 m/s  (tubo de concreto simples)
 v_máx = 3,0 a 4,0 m/s  (tubo de concreto armado)
 v_máx = 1,5 a 2,5 m/s  (seção de terra estabilizada)
@@ -101,10 +106,12 @@ v_máx = 1,5 a 2,5 m/s  (seção de terra estabilizada)
 ### 2.3 Dimensionamento Prático (Fluxo Livre)
 
 **Passo 1:** Estimar vazão de projeto (Q)
+
 - Usar método racional ou hidrológico (bacia contribuinte)
 - Coef. escorrimento (C) depende de uso do solo
 
 **Passo 2:** Escolher material e diâmetro tentativo
+
 - Concreto (D = 0,50 m, 0,75 m, 1,00 m, 1,25 m...)
 - Calcular A (seção):
   - Circular: A = π·D²/4
@@ -112,7 +119,7 @@ v_máx = 1,5 a 2,5 m/s  (seção de terra estabilizada)
 
 **Passo 3:** Calcular velocidade
 
-```
+```text
 v = Q / A
 ```
 
@@ -128,11 +135,12 @@ v = Q / A
 
 Em regime submerso (entrada afogada):
 
-```
+```text
 h_f = (f × L × v²) / (2 × g × D)
 ```
 
 Onde:
+
 - **h_f** = perda por fricção [m]
 - **f** = fator de Darcy-Weisbach ≈ 0,02-0,03 (concreto)
 - **L** = comprimento do bueiro [m]
@@ -142,7 +150,7 @@ Onde:
 
 **Perdas de entrada/saída:**
 
-```
+```text
 h_entrada = K_e × (v²/2g)    [K_e ≈ 0,5 para entrada normal]
 h_saída = K_s × (v²/2g)      [K_s ≈ 1,0 para saída livre]
 ```
@@ -166,7 +174,7 @@ h_saída = K_s × (v²/2g)      [K_s ≈ 1,0 para saída livre]
 
 ### 3.2 Critérios de Declividade Mínima
 
-```
+```text
 i_min = 0,005 (0,5%)    — para tubos com D ≥ 1,0 m
 i_min = 0,010 (1,0%)    — para tubos com D = 0,75 m
 i_min = 0,015 (1,5%)    — para tubos com D ≤ 0,50 m
@@ -187,7 +195,7 @@ Estas declividades garantem v_min ≥ 0,6 m/s
 
 ### 4.2 Cálculo da Vazão (Método Racional)
 
-```
+```text
 Q = C × I × A / 360
 
 Onde:
@@ -216,11 +224,13 @@ Q = 0,1823 m³/s  →  Q_projeto = 0,20 m³/s
 ### 4.4 Redesign com Dois Tubos (D = 750 mm) e Declividade i = 2%
 
 **Para cada tubo:**
+
 - A_unit = 0,442 m²
 - Q_unit = 0,10 m³/s
 
 **Verificação com Manning:**
-```
+
+```text
 v = (1/n) × R^(2/3) × i^(1/2)
 
 R = A / P = 0,442 / (π × 0,75) = 0,187 m
@@ -231,12 +241,14 @@ v = 0,69 m/s  ✓  (0,6 < 0,69 < 2,0)
 ```
 
 **Vazão verificada:**
-```
+
+```text
 Q = A × v = 0,442 × 0,69 = 0,305 m³/s/tubo
 Q_total = 2 × 0,305 = 0,61 m³/s  ✓  (margem de segurança)
 ```
 
 **SOLUÇÃO FINAL:**
+
 - **2 tubos de concreto Ø 1.000 mm**
 - **Declividade: 2,0%**
 - **Comprimento: 15 m (atravessando talude)**
@@ -311,7 +323,7 @@ Q_total = 2 × 0,305 = 0,61 m³/s  ✓  (margem de segurança)
 
 ### 5.3 Critério de Proteção de Saída (Recomendação DNIT)
 
-```
+```text
 SE v > 2,0 m/s:
   → Obrigatório dissipador ou bacia
 
@@ -336,6 +348,7 @@ Projeto com v = 0,65 m/s → Proteção simples (cobertura vegetal)
 **Contexto:** Travessia de córrego em zona de serras
 
 **Dados de projeto:**
+
 - Bacia: 45 ha
 - Vazão de projeto: Q = 0,85 m³/s (Tr = 50 anos)
 - Diâmetro adotado: 2 tubos Ø 1.250 mm
@@ -343,7 +356,8 @@ Projeto com v = 0,65 m/s → Proteção simples (cobertura vegetal)
 - Comprimento: 18 m
 
 **Verificação:**
-```
+
+```text
 A_total = 2 × π × 1,25² / 4 = 2,454 m²
 v = 0,85 / 2,454 = 0,346 m/s
 ```
@@ -351,7 +365,8 @@ v = 0,85 / 2,454 = 0,346 m/s
 **Problema detectado:** velocidade muito baixa (risco de sedimentação)
 
 **Solução adotada:** Aumentar declividade para 3,0%
-```
+
+```text
 v = (1/0,012) × R^(2/3) × 0,03^(1/2) ≈ 1,1 m/s  ✓
 ```
 
@@ -368,6 +383,7 @@ v = (1/0,012) × R^(2/3) × 0,03^(1/2) ≈ 1,1 m/s  ✓
 **Desafio:** Controle de maré alta (remanso em saída)
 
 **Solução:**
+
 - Bueiro em regime misto (entrada livre, saída submersa)
 - Cálculo com curva remanso (backwater)
 - Diâmetro: 3 tubos Ø 1.000 mm
@@ -387,6 +403,7 @@ v = (1/0,012) × R^(2/3) × 0,03^(1/2) ≈ 1,1 m/s  ✓
 **Vazão nova:** Q = 0,64 m³/s
 
 **Solução:**
+
 - Adicionar segundo tubo paralelo D = 1,0 m
 - Reconstituir cabeceira em ala (wingwall)
 - Aplicar dissipador de energia novo
@@ -400,7 +417,7 @@ v = (1/0,012) × R^(2/3) × 0,03^(1/2) ≈ 1,1 m/s  ✓
 
 ### 7.1 Tabela de Velocidades por Diâmetro e Declividade
 
-```
+```text
 Vazão Q = 0,20 m³/s | Coef. Manning n = 0,012
 
 Diâmetro | i = 0,5% | i = 1,0% | i = 2,0% | i = 3,0%
@@ -447,16 +464,19 @@ Diâmetro | i = 0,5% | i = 1,0% | i = 2,0% | i = 3,0%
 ## 9. REFERÊNCIAS TÉCNICAS
 
 **Normas Brasileiras:**
+
 - DNIT ES 131/86 — Instrução para Drenagem de Rodovias
 - NBR 5643 — Tubo de Concreto Armado para Águas Pluviais e Esgotos Sanitários
 - NBR 12657 — Tubo de Concreto Simples Para Drenagem
 
 **Referências Internacionais:**
+
 - AASHTO HEC-22 (Highway Drainage Design Manual)
 - FHWA HEC-12 (Hydraulic Design of Culverts)
 - Chow, V.T. — Open Channel Hydraulics (McGraw-Hill, 1959)
 
 **Docentes/Especialistas:**
+
 - DNIT (Departamento Nacional de Infraestrutura de Transportes)
 - IPR (Instituto de Pesquisas Rodoviárias)
 
@@ -465,6 +485,7 @@ Diâmetro | i = 0,5% | i = 1,0% | i = 2,0% | i = 3,0%
 ## 10. CONTATOS E SUPORTE
 
 **Para dúvidas técnicas sobre bueiros em projetos Manta Associados:**
+
 - Agente-infraestrutura (S1 — Rodovias)
 - Contato: Gerência de Drenagem Rodoviária
 

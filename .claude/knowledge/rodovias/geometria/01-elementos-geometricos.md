@@ -30,35 +30,45 @@
 
 ### 2.1 Elementos Componentes
 
-```
+```json
 [Tangente] → [Curva de Transição] → [Curva Circular] → [Curva de Transição] → [Tangente]
 ```
 
 #### 2.1.1 Tangentes
+
 - **Comprimento mínimo**: `Lmin = 0.28 × Vd` (Vd em km/h)
   - Exemplo: Vd = 80 km/h → Lmin = 22.4 m
 - **Comprimento máximo**: `Lmax = 20 × Vd` (evita monotonia, reduz acidentes)
 
 #### 2.1.2 Curvas Circulares
+
 **Raio mínimo (sem superelevação)**:
-```
+
+```text
 R_mín = V² / (127 × f)
 ```
+
 Onde:
+
 - V = velocidade de projeto (km/h)
 - f = coeficiente de atrito (0.15-0.20)
 
 **Exemplos (Vd = 100 km/h, f = 0.15)**:
+
 - Rmin = 100² / (127 × 0.15) = 426 m
 
 **Raio mínimo com superelevação**:
-```
+
+```text
 R_mín = V² / (127 × (e_máx + f))
 ```
+
 Onde:
+
 - e_máx = superelevação máxima (0.08-0.10)
 
 **Exemplos (Vd = 100 km/h, e_máx = 0.08, f = 0.15)**:
+
 - Rmin = 100² / (127 × 0.23) = 343 m
 
 #### 2.1.3 Curvas de Transição (Clotóide)
@@ -66,7 +76,8 @@ Onde:
 **Função**: Transição suave entre tangente (R=∞) e curva circular (R=cte)
 
 **Parâmetro A (raio de transição)**:
-```
+
+```text
 A² = R × L_c
 
 Onde:
@@ -75,7 +86,8 @@ Onde:
 ```
 
 **Comprimento mínimo da clotóide**:
-```
+
+```text
 L_mín = 0.036 × V³ / R
 
 Exemplo: V=100 km/h, R=500m
@@ -83,18 +95,21 @@ L_mín = 0.036 × 100³ / 500 = 72 m
 ```
 
 **Variação máxima de superelevação por metro**:
-```
+
+```text
 Δe/ΔL ≤ 1/150  (rodovia)
 ```
 
 ### 2.2 Superelevação (Inclinação Transversal em Curvas)
 
 **Fórmula de projeto**:
-```
+
+```text
 e = (V² - 127 × R × f) / (127 × R)
 ```
 
 **Valores Típicos** (DNIT):
+
 | V (km/h) | f | e (%) |
 |----------|---|-------|
 | 40 | 0.20 | 2-4 |
@@ -104,7 +119,8 @@ e = (V² - 127 × R × f) / (127 × R)
 | 120 | 0.14 | 6-9 |
 
 **Comprimento de transição de superelevação**:
-```
+
+```text
 L_trans = (e_máx × a) / (Δe/ΔL)
 
 Onde:
@@ -118,26 +134,30 @@ Onde:
 
 ### 3.1 Elementos Componentes
 
-```
+```json
 [Tangente Vertical] → [Parábola Vertical] → [Tangente Vertical]
 ```
 
 #### 3.1.1 Rampas
+
 - **Rampa máxima**: 5-7% (depende de Vd e terreno)
 - **Rampa mínima**: 0.5% (drenagem)
 
 **Exemplo (Vd = 100 km/h, terreno montanhoso)**:
+
 - i_máx = 6%
 - Comprimento máximo rampa contínua: 1000m
 
 #### 3.1.2 Curvas Verticais
 
 **Tipos**:
+
 - **Convexa** (topo): PIV acima dos PCs
 - **Côncava** (vale): PIV abaixo dos PCs
 
 **Comprimento mínimo da parábola**:
-```
+
+```text
 L = (|Δi| × V²) / (395 + 2.6 × V)
 
 Onde:
@@ -146,10 +166,12 @@ Onde:
 ```
 
 **Exemplos**:
+
 - V = 100 km/h, Δi = 5%: L = (5 × 100²) / (395 + 260) = 137 m
 - V = 80 km/h, Δi = 8%: L = (8 × 80²) / (395 + 208) = 100 m
 
 **Distância de visibilidade mínima**:
+
 - **Frenagem**: `d_f = V² / (254 × f)` → V=100 km/h, f=0.4 → d_f = 98 m
 - **Ultrapassagem**: `d_u ≈ 6 × V` → V=100 km/h → d_u = 600 m
 
@@ -159,7 +181,7 @@ Onde:
 
 ### 4.1 Componentes Básicos
 
-```
+```text
     Acostamento         Pavimento          Acostamento
     |------|  Faixa  |---------|  Faixa  |--------|
            ↑ 2-3m  |           |           |         ↑ 2-3m
@@ -171,6 +193,7 @@ Onde:
 ### 4.2 Faixa de Rolamento
 
 **Largura de faixa** (DNIT):
+
 | Classe | Velocidade | Largura Faixa |
 |--------|-----------|---------------|
 | BR (Federal) | 100 km/h | 3.60 m |
@@ -179,17 +202,20 @@ Onde:
 | Municipal | 40-60 km/h | 3.00-3.30 m |
 
 **Número de faixas**:
+
 - Pista simples: 2 faixas (1 por sentido)
 - Pista dupla: 2-3 faixas por sentido (com linha tracejada/contínua)
 
 ### 4.3 Acostamento
 
 **Funções**:
+
 - Parada de emergência
 - Drenagem lateral
 - Suporte estrutural (efeito de borda)
 
 **Largura** (DNIT):
+
 | Classe | Acostamento |
 |--------|-----------|
 | BR | 2.5-3.0 m |
@@ -198,6 +224,7 @@ Onde:
 | Municipal | 0.5-1.5 m |
 
 **Tipo de revestimento**:
+
 - Pavimento (CBUQ/PB): "acostamento pavimentado"
 - Brita/Asfalto Diluído: "acostamento parcialmente pavimentado"
 - Solo/Brita: "acostamento não pavimentado"
@@ -205,16 +232,19 @@ Onde:
 ### 4.4 Inclinação Transversal
 
 **Normal (tangente horizontal)**:
+
 - Pista única: 2-3% (para centro)
 - Pista dupla com divisor: 2% cada lado (para bordas externas)
 
 **Em curva horizontal**:
+
 - Superelevação: até 8-10% (conforme raio)
 
 ### 4.5 Banquetas de Corte e Aterro
 
 **Inclinação de talude (corte)**:
-```
+
+```yaml
 1:m (altura 1m, afastamento m metros)
 
 Exemplos:
@@ -223,7 +253,8 @@ Exemplos:
 ```
 
 **Inclinação de aterro**:
-```
+
+```yaml
 Exemplos:
 - Material comum: 1:1.5 a 1:2 (33-27°)
 - Argila: 1:2 a 1:3 (27-18°)
@@ -235,7 +266,7 @@ Exemplos:
 
 ### 5.1 Visibilidade de Parada
 
-```
+```text
 d_parada = d_reação + d_frenagem
 
 d_reação = V × t_r  (t_r ≈ 2.5s)
@@ -245,6 +276,7 @@ Total: d_parada = V × 0.7 + V² / (254 × f)
 ```
 
 **Exemplos**:
+
 | V (km/h) | d_parada (m) |
 |----------|--------------|
 | 40 | 28 |
@@ -255,7 +287,7 @@ Total: d_parada = V × 0.7 + V² / (254 × f)
 
 ### 5.2 Visibilidade de Ultrapassagem
 
-```
+```text
 d_ultrapassagem ≈ 6 × V (aproximado)
                 ≈ 9 × V (conservador)
 ```
@@ -265,7 +297,8 @@ d_ultrapassagem ≈ 6 × V (aproximado)
 ### 5.3 Visibilidade em Curva Horizontal
 
 **Corda de visibilidade** (D):
-```
+
+```text
 D = 2 × R × sen(Θ/2)
 
 Onde Θ = ângulo central para distância de parada d:
@@ -273,7 +306,8 @@ Onde Θ = ângulo central para distância de parada d:
 ```
 
 **Flecha de recuo** (necessária para corte):
-```
+
+```text
 f = R - √(R² - (d/2)²)
 
 Exemplo: R=500m, d=137m
@@ -287,24 +321,29 @@ f = 500 - √(500² - 68.5²) = 500 - 499.5 ≈ 0.5m
 ### 6.1 Rotatórias
 
 **Raio externo mínimo**:
+
 - R_ext ≥ 15-20m (dependendo de Vd)
 
 **Raio da ilha central**:
+
 - R_int = 6-8m (rodovia simples)
 - R_int = 10-15m (rodovia dupla)
 
 **Ângulo de entrada (deflexão)**:
+
 - Mínimo 20° para segurança
 
 ### 6.2 Interseções em Nível (T, Cruz)
 
 **Triângulo de Visibilidade**:
-```
+
+```text
 d_parada = largura do triângulo seguro
 d_parada = profundidade do triângulo seguro
 ```
 
 **Rampas de acesso**:
+
 - Máximo 8-10% (curta)
 - Tangente mínima: 30m
 
@@ -321,7 +360,7 @@ d_parada = profundidade do triângulo seguro
 
 ### 7.2 Parâmetros de Entrada Típicos
 
-```
+```text
 Intake do agente-infraestrutura S1:
 
 1. Velocidade de projeto (Vd): 40-120 km/h
@@ -352,7 +391,8 @@ Intake do agente-infraestrutura S1:
 ## 9. Anexos — Fórmulas Rápidas
 
 ### 9.1 Cálculo de Raio Mínimo
-```
+
+```text
 R_mín = V² / (127 × (e + f))
 
 Atalho para f=0.15:
@@ -365,7 +405,8 @@ V (km/h) | e=0.04 | e=0.06 | e=0.08 |
 ```
 
 ### 9.2 Comprimento de Curva Vertical
-```
+
+```text
 L = |Δi| × K
 
 K (tabela DNIT):
@@ -378,7 +419,8 @@ V (km/h) | Convexa | Côncava |
 ```
 
 ### 9.3 Superelevação
-```
+
+```text
 e(%) = 100 × (V² / (127 × R) - 0.15)
 
 Exemplo: V=100, R=400m

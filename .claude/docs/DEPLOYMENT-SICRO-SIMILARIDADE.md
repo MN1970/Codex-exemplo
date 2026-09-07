@@ -9,17 +9,20 @@
 ## Pre-requisitos
 
 ### Infraestrutura
+
 - [ ] Supabase project (`ogxxgvgtulrbbppshjie` ou similar)
 - [ ] PostgreSQL pgvector extension habilitado
 - [ ] Embedding model: BAAI/bge-small-en-v1.5 (384-dim)
 - [ ] SharePoint Online (leitura de planilhas de origem)
 
 ### Permissões
+
 - [ ] Acesso `SICRO_DB_URL` (conn string Postgres)
 - [ ] MCP: Supabase (read + write em `rag_chunks`, `sicro_price_history`, etc)
 - [ ] MCP: SharePoint_Manta (read em `03_Projetos/*`)
 
 ### Skills
+
 - [ ] `sicro-completo` (catálogo base SICRO)
 - [ ] `sicro-composicoes` (breakdown M/MO/EQ)
 - [ ] `aluci-guard` (auditoria de fabricação de referências)
@@ -248,19 +251,23 @@ git push origin v1.0.0-sicro-similaridade
 ## Troubleshooting
 
 ### "Confidence score é baixo (< 60%)"
+
 → Revisar entrada (descrição muito curta? unidade inválida?)  
 → Verificar se período SICRO está disponível (UF+período existe?)  
 → Aumentar paralelismo em `SICRO_BATCH_SIZE` (esperar mais)
 
 ### "Conexão com Supabase falha"
+
 → Validar `SICRO_DB_URL`  
 → Verificar pgvector extension: `SELECT * FROM pg_extension WHERE extname='vector';`
 
 ### "Obsolescência não detectada"
+
 → Validar tabela `sicro_migration_map` (registros atualizados?)  
 → Verificar flag `SICRO_ENABLE_OBSOLESCENCIA_CHECKER=true`
 
 ### "Latência > 200ms"
+
 → Aumentar `SICRO_PARALLELISM` (até 16)  
 → Verificar índices PostgreSQL (EXPLAIN ANALYZE)  
 → Considerar cache de embeddings (Redis)

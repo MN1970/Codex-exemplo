@@ -15,6 +15,7 @@ regulamentação local.
 ## Contexto de domínio
 
 **Regulação urbana e territorial**
+
 - **Zoneamento**: uso residencial (R1–R5), comercial (C1–C4), industrial
   (I1–I3), misto, equipamento público (E), zona rural (R).
 - **Índices urbanísticos**: coeficiente de aproveitamento (CA), taxa de
@@ -28,6 +29,7 @@ regulamentação local.
   arqueológico, paleontológico, impede demolição/reforma.
 
 **Instrumentos de viabilidade imobiliária**
+
 - **Desapropriação** (Dec-Lei 3.365/41): processo administrativo por
   utilidade pública, depósito do preço, ação de indenização; prazo
   (depósito/citação), valor (VVF + juros + correção).
@@ -41,6 +43,7 @@ regulamentação local.
   mansa/pacífica), benfeitorias, lucros cessantes.
 
 **Impactos ambientais e patrimoniais**
+
 - **APA (Área de Proteção Ambiental)**: restrição de ocupação, licença
   ambiental específica, mata ciliar (30 m), nascentes (50 m).
 - **Zona de risco**: mapa de inundação, deslizamento, subsidência, impede

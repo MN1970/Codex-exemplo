@@ -24,6 +24,7 @@
 ### 1.1 Classificação de Solos
 
 **Sistemas de Classificação:**
+
 - **SUCS** (Sistema Unificado de Classificação de Solos): Baseado em granulometria e plasticidade
 - **AASHTO**: Sistema americano, comum em rodovias
 
@@ -54,13 +55,15 @@
 **Objetivo**: Determinar teor ótimo de umidade (ω_ótima) e densidade máxima (ρ_dmáx)
 
 **Procedimento (Proctor Normal — DNER-ME 129/94):**
+
 - Cilindro: 944 cm³
 - Soquete: 2,5 kg, queda 30 cm
 - 3 camadas × 25 golpes
 - 5–7 pontos de umidade (0% → saturação)
 
 **Resultado típico (solo areno-siltoso):**
-```
+
+```text
 ω_ótima = 11,5%
 ρ_dmáx = 1,85 g/cm³ (solo seco)
 ρ_seco = ρ_dmáx × (1 − 0,06) = 1,74 g/cm³ para ω = 6%
@@ -68,6 +71,7 @@
 ```
 
 **Proctor Modificado** (para tráfego pesado > 5 × 10⁶ eixos):
+
 - Soquete 4,5 kg, queda 45 cm
 - 5 camadas × 25 golpes
 - ρ_dmáx típico: +3–5% vs. Proctor Normal
@@ -102,7 +106,7 @@
 
 **Método de Fatias (Bishop Simplificado):**
 
-```
+```text
 Fator de Segurança (FS) = Σ(resistência) / Σ(ação)
 
 FS = Σ[c + γ×h×cos²β×tanφ] / Σ[γ×h×sinβ×cosβ]
@@ -116,6 +120,7 @@ Onde:
 ```
 
 **Critério de Aceitação:**
+
 - **FS ≥ 1,5**: Estável (operacional)
 - **1,3 ≤ FS < 1,5**: Monitorar (executar apenas com drenagem)
 - **FS < 1,3**: Instável (reduzir inclinação ou drenar)
@@ -140,7 +145,8 @@ Onde:
 ### 3.1 Grau de Compactação (GC)
 
 **Definição:**
-```
+
+```text
 GC% = (ρ_campo / ρ_dmáx) × 100%
 
 Exemplo:
@@ -170,6 +176,7 @@ Exemplo:
 | **Placa Vibratória** | 0,5–1 t | Manual | Pequenas áreas, trincheiras | 150–300 m²/h |
 
 **Sequência típica (camada 30 cm):**
+
 1. Pé de carneiro: 6–8 passadas (mobilizar, compactar inicial)
 2. Rolo tandem: 4–6 passadas (compactação até 90% GC)
 3. Rolo pneu: 2–3 passadas (refinamento, até 95–98% GC)
@@ -210,7 +217,7 @@ Exemplo:
 
 **Passo 2: Calcular volumes acumulados (Ordenadas de Brückner)**
 
-```
+```text
 Volume acumulado = Σ balanço anterior
 
 Estaca 0+0:   V_acum = 0
@@ -221,6 +228,7 @@ Estaca 0+80:  V_acum = −400 + (−600) = −1.000 m³
 ```
 
 **Passo 3: Plotar Diagrama**
+
 - Eixo X: Estaqueamento (km)
 - Eixo Y: Volume acumulado (m³)
 - Linha diagonal: Taxa de compensação desejada
@@ -230,11 +238,13 @@ Estaca 0+80:  V_acum = −400 + (−600) = −1.000 m³
 **Definição**: Distância máxima para transportar solo sem custo extra (incluída no preço de escavação).
 
 **Valores típicos DNIT:**
+
 - Escavação em solo: FHD = 300–500 m
 - Escavação em rocha: FHD = 100–200 m
 
 **Custo de transporte além de FHD:**
-```
+
+```text
 Custo_transporte = (distância − FHD) × volume × taxa_unit
 
 Exemplo:
@@ -250,6 +260,7 @@ Exemplo:
 ### 4.4 Exemplo Prático — BR-116 (Trecho 10 km)
 
 **Dados:**
+
 - Comprimento: 10 km
 - Volume total escavado: 450.000 m³
 - Volume total aterro: 420.000 m³
@@ -257,12 +268,14 @@ Exemplo:
 - FHD: 300 m
 
 **Análise Brückner:**
+
 1. Plotar 50 seções (0+0 até 10+0)
 2. Identificar máximos (rejeito local) e mínimos (deficiência local)
 3. Traçar linha compensação de FHD = 300 m
 4. Calcular distâncias acumuladas para cada volume
 
 **Resultado:**
+
 - Compensa 390.000 m³ dentro de 300 m FHD: R$ 0 transporte
 - Deficiência 30.000 m³ em setor seco: Necessário borrow area (empréstimo)
 - Rejeito 30.000 m³ em setor oposto: Bota-fora ou reciclagem
@@ -277,12 +290,14 @@ Exemplo:
 **Agente 1: Classificação de Solos e Origem Geológica**
 
 Cobertura:
+
 - Sistemas SUCS, AASHTO, classificação regional
 - Origem de solos brasileiros (granito, basalto, quartzito, arenito)
 - Características por estado/região
 - Seleção de borrow areas (empréstimos) regionais
 
 **Aplicação prática:**
+
 - Projeto em MG (granito): Esperar areia com mica, LL 35–45%
 - Projeto em RS (basalto): Argila vermelha, LL 50–65%, requer drenagem
 - Projeto em BA (quartzito): Areia fina, permeabilidade alta, ideal para aterro
@@ -294,6 +309,7 @@ Cobertura:
 **Agente 2: Resistência ao Cisalhamento (Triaxial & Direto)**
 
 Cobertura:
+
 - Ensaio triaxial: CD (consolidado drenado), CU (não-drenado)
 - Ensaio de cisalhamento direto: Envoltória de falha
 - Ângulo de fricção (φ), coesão (c)
@@ -301,7 +317,8 @@ Cobertura:
 - Correlação com compactação e umidade
 
 **Fórmula:**
-```
+
+```text
 τ_f = c + σ_n × tan(φ)
 
 Exemplo (solo arenoso):
@@ -319,6 +336,7 @@ Exemplo (solo arenoso):
 **Agente 3: Compressibilidade e Recalques em Obra**
 
 Cobertura:
+
 - Índice de compressão (Cc)
 - Ensaio oedométrico (adensamento)
 - Cálculo de recalques: imediato, primário, secundário
@@ -326,7 +344,8 @@ Cobertura:
 - Monitoramento com marcos topográficos
 
 **Exemplo de cálculo:**
-```
+
+```text
 Recalque primário = Cc × log(σ_final / σ_inicial) × H_camada / (1 + e₀)
 
 Dados:
@@ -347,6 +366,7 @@ Dados:
 **Agente 4: Índices de Plasticidade e Expansividade**
 
 Cobertura:
+
 - Limite de liquidez (LL), plasticidade (LP), índice (IP)
 - Solo potencialmente expansivo: IP > 15% ou LL > 50%
 - Classificação de expansão (baixa/média/alta)
@@ -368,6 +388,7 @@ Cobertura:
 **Agente 5: Permeabilidade e Fluxo em Taludes**
 
 Cobertura:
+
 - Coeficiente de permeabilidade (k): areia vs. argila
 - Fluxo laminar (Lei de Darcy)
 - Fluxo não-saturado (solo parcialmente úmido)
@@ -376,7 +397,8 @@ Cobertura:
 - Drenagem como estabilização (redução de poropressão)
 
 **Exemplo:**
-```
+
+```text
 Velocidade de fluxo = k × i
 Onde: k = coef. permeabilidade (cm/s)
       i = gradiente hidráulico (adimensional)
@@ -393,6 +415,7 @@ Argila: k = 10⁻⁷ cm/s, praticamente impermeável
 **Agente 6: Análise de Estabilidade de Taludes (Método de Fatias, Software)**
 
 Cobertura:
+
 - Método de Bishop simplificado, Janbu, Spencer
 - Software: Slope/W (Geo-Slope), Talren, Xstabl
 - Círculo crítico: otimização iterativa
@@ -400,6 +423,7 @@ Cobertura:
 - Casos com filtro geotêxtil: redução de poropressão simulada
 
 **Passo-a-passo (software):**
+
 1. Modelar seção transversal (estratificação)
 2. Inserir parâmetros de solo (φ, c, γ, poropressão)
 3. Desenhar superfície de falha (ou otimizar automaticamente)
@@ -413,6 +437,7 @@ Cobertura:
 **Agente 7: Taludes em Corte — Geometria Ótima vs. Estabilidade**
 
 Cobertura:
+
 - Inclinação mínima segura por tipo de rocha/solo
 - Influência de fraturas em rocha (análise de blocos)
 - Proteção superficial: shotcrete, tela, cortina de solo-cimento
@@ -422,6 +447,7 @@ Cobertura:
 **Agente 8: Taludes em Aterro — Inclinação, Proteção, Vegetação**
 
 Cobertura:
+
 - Inclinação vs. tráfego (aterro-suporte vs. aterro-estrutura)
 - Proteção contra erosão: grass armado, enrocamento, gavião
 - Revegetação: semeadura hidrossemeada, manta biodegradável
@@ -435,6 +461,7 @@ Cobertura:
 **Agente 9: Fundação de Aterro — Preparação, Geotêxtil, Drenagem**
 
 Cobertura:
+
 - Procedimento de limpeza e escarificação (15 cm mínimo)
 - Ensaio CBR in situ: critério para geotêxtil
 - Seleção de geotêxtil: separação vs. filtro vs. reforço
@@ -449,6 +476,7 @@ Cobertura:
 **Agente 10: Compactação — Curva Proctor, Teor Ótimo, Grau de Compactação**
 
 Cobertura:
+
 - Determinação de ω_ótima e ρ_dmáx em laboratório
 - Efeito da energia de compactação (Normal vs. Modificado)
 - GC% especificado por camada (95%, 97%, 100%)
@@ -463,6 +491,7 @@ Cobertura:
 **Agente 11: Escavação — Equipamentos (Escavadeira, Motoniveladora), Produção**
 
 Cobertura:
+
 - Tipos de escavação: mecânica (solo), explosiva (rocha)
 - Escavadeira: capacidade 0,8–2,5 m³, produção 200–400 m³/h
 - Motoniveladora: espalhamento e regularização
@@ -470,7 +499,8 @@ Cobertura:
 - Equipamentos auxiliares: trator esteira, compressor (rocha)
 
 **Produção típica (solo):**
-```
+
+```text
 Escavação em areia: 250–400 m³/h
 Escavação em silte: 200–250 m³/h
 Escavação em argila: 150–200 m³/h
@@ -484,6 +514,7 @@ Escavação em rocha: 50–100 m³/h (com explosivos)
 **Agente 12: Transporte — Caminhão Basculante vs. Bota-Fora, Custos**
 
 Cobertura:
+
 - Distância economicamente viável para cada equipamento
 - Caminhão basculante 12 m³: custo transporte R$ 0,50–1,50/km×m³
 - Bota-fora (rejeito): opção se distância > 1.500 m
@@ -491,7 +522,8 @@ Cobertura:
 - Pista de estoque: provisória, compactação mínima
 
 **Análise de decisão:**
-```
+
+```text
 Se distância ≤ 500 m: transportar para aterro
 Se 500 m < distância ≤ 1.500 m: transportar com custo adicional
 Se distância > 1.500 m: considerar bota-fora (custo ≈ R$ 750–1.000 por viagem)
@@ -504,6 +536,7 @@ Se distância > 1.500 m: considerar bota-fora (custo ≈ R$ 750–1.000 por viag
 **Agente 13: Banqueta de Corte — Dimensionamento, Drenagem, Proteção**
 
 Cobertura:
+
 - Altura máxima entre banquetas: 5–10 m (conforme solo)
 - Largura mínima: 3 m (espaço de trabalho, estoque)
 - Drenagem: canaleta triangular ou tubo PVC perfurado
@@ -517,6 +550,7 @@ Cobertura:
 **Agente 14: Brückner Avançado — Multi-Seção, Borrow Areas, Rejeitos**
 
 Cobertura:
+
 - Brückner com múltiplas borrow areas (empréstimos) e rejeitos
 - Otimização: deslocamentos horizontais de eixo para transferência de volumes
 - Análise de sensibilidade: variação de FHD, custos de transporte
@@ -529,6 +563,7 @@ Cobertura:
 **Agente 15: Otimização Multi-Seção com Borrow Areas & Rejeitos**
 
 Cobertura:
+
 - Programação linear: minimizar custo de transporte + empréstimo + rejeito
 - Restrições: volume conservado por seção, distância máxima
 - Ferramentas: Excel Solver, Matlab, SIG
@@ -573,6 +608,7 @@ Cobertura:
 ## Conclusão — Integração RAG
 
 Este documento consolida 15 especialidades Terraplenagem com:
+
 - ✅ 974.577 tokens de conteúdo técnico
 - ✅ Tabelas de solo, compactação, estabilidade
 - ✅ 5+ exemplos práticos (BR-116, BR-381, multi-seção)
@@ -583,6 +619,7 @@ Este documento consolida 15 especialidades Terraplenagem com:
 **Status**: Pronto para integração em RAG Supabase (prefixo: `rod:terra:*`)
 
 **Próximas ações:**
+
 1. Aguardar conclusão workflows Pavimentação e Drenagem
 2. Consolidar docs 08-pav, 10-dren (quando completarem)
 3. Criar 4 migrations RAG para Supabase
@@ -592,6 +629,7 @@ Este documento consolida 15 especialidades Terraplenagem com:
 ---
 
 **Elaborado conforme:**
+
 - Padrões DNIT e NBR (2024)
 - Ciclo de vida Manta 03-S1: Fase 3 (Projeto) & Fase 4 (Obra)
 - Valores reais de rodovias federais brasileiras

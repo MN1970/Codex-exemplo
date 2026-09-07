@@ -14,6 +14,7 @@ de artefatos visuais para apresentação ao cliente, regulador ou investor.
 ## Contexto de domínio
 
 **Estrutura de narrativa (storytelling)**
+
 - **Arco narrativo**: contexto (onde estamos?), conflito (qual é o
   problema?), solução (como resolvemos?), resultado (qual é o benefício?).
 - **Mensagem central**: 1–3 frases que captura essência da proposta;
@@ -24,6 +25,7 @@ de artefatos visuais para apresentação ao cliente, regulador ou investor.
   acadêmico (gráfico, tabela).
 
 **Design de apresentação**
+
 - **Visual hierarchy**: título (44–54pt), subtítulo (32–40pt), corpo
   (18–24pt), nota (12–14pt).
 - **Layout**: slide master (padrão), uso de branco (espaçamento),
@@ -36,6 +38,7 @@ de artefatos visuais para apresentação ao cliente, regulador ou investor.
   resolução (300dpi para print, 96dpi web).
 
 **Escolha de gráfico**
+
 - **Gráfico de coluna**: comparação de categoria (rodovia vs. ferrovia),
   série temporal (receita 2020–2025).
 - **Gráfico de linha**: tendência (custo ao longo do tempo), comparação de
@@ -48,6 +51,7 @@ de artefatos visuais para apresentação ao cliente, regulador ou investor.
   variação rápida).
 
 **Artefatos visuais**
+
 - **PPTX** (PowerPoint): formato padrão, compatível com escritório,
   apresentação ao vivo.
 - **React artifact**: interativo (filtros, zoom), dashboards, atualização

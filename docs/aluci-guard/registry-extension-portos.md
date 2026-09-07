@@ -9,6 +9,7 @@ Fonte extraída: `sharepoint/01-agentes-fundamentais/agente-portos/SKILL.md`
   - Descrição curta (conforme SKILL.md, seção V2/axes/01-normas.md): "ações portuárias"
   - Status: a confirmar (não verificado contra base oficial ABNT)
   - Entrada sugerida para `normas_abnt.py`:
+
     ```python
     {
         "codigo": "NBR 9782",
@@ -22,6 +23,7 @@ Fonte extraída: `sharepoint/01-agentes-fundamentais/agente-portos/SKILL.md`
   - Descrição curta: citada no SKILL.md junto de NBR 9782, na mesma linha de `axes/01-normas.md`, sem título explícito associado no texto (contexto geral: fundações — inferido apenas pelo agrupamento com o eixo de normas do agente-portos, já que o próprio agente cobre "fundações profundas em água" como disciplina D05)
   - Status: a confirmar (não verificado contra base oficial ABNT)
   - Entrada sugerida para `normas_abnt.py`:
+
     ```python
     {
         "codigo": "NBR 6122",

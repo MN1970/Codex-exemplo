@@ -11,11 +11,11 @@
 **Project:** Linha de Transmissão 345 kV (LT-MG-SP-001)  
 **Segment:** S9 — Energia (ANEEL regulated)  
 **Sponsor:** State Grid Brasil  
-**Procurement Officer:** Maria da Silva (msilva@stategrid.com.br)
+**Procurement Officer:** Maria da Silva (<msilva@stategrid.com.br>)
 
 ### 1.1 Project Context
 
-```
+```text
 Project Scope:
   • 200 transmission towers (CFRD design)
   • 345 kV, double-circuit
@@ -38,7 +38,7 @@ Budget:
 
 #### Phase 1: RFQ Generation (Agent Auto-Execution)
 
-```
+```yaml
 Trigger: "Ativa agente procurement para RFQ de 200 torres 345kV, 
           prazo máximo 90 dias, budget R$5.2M"
 
@@ -94,7 +94,7 @@ Step 5 — Publication
 
 #### Phase 2: Vendor Evaluation (Agent Auto-Analysis)
 
-```
+```json
 [VENDOR RESPONSES RECEIVED — 2026-08-13]
 
 Compliant Submissions: 5 vendors
@@ -140,7 +140,7 @@ REJECTION: RFA
 
 #### Phase 3: Contract Management (Agent Support)
 
-```
+```json
 [CONTRACT GENERATION & EXECUTION]
 
 Input: EMN vendor selection + commercial terms
@@ -168,7 +168,7 @@ Expected first delivery: 2027-01-15
 
 #### Phase 4: Monitoring & Risk Management
 
-```
+```json
 [ONGOING SUPPLY CHAIN OVERSIGHT]
 
 Agent Responsibilities (automated):
@@ -200,7 +200,7 @@ Mid-Project Review (2027-02-01):
 
 ### 1.3 Results & Lessons
 
-```
+```text
 Project Outcome:
   • RFQ published: 2026-08-02
   • Vendor selected: 2026-08-22 (3 weeks faster than manual process)
@@ -225,11 +225,11 @@ Agent Value-Add:
 **Project:** Dragagem do Porto de Santos — Berço 7 (MODERNIZAÇÃO-2026)  
 **Segment:** S6 — Portos (ANTAQ regulated)  
 **Sponsor:** Porto Autoridade de Santos  
-**Procurement Officer:** Carlos Mendes (cmendes@portodesantos.gov.br)
+**Procurement Officer:** Carlos Mendes (<cmendes@portodesantos.gov.br>)
 
 ### 2.1 Project Context
 
-```
+```text
 Project Scope:
   • Cutter-suction dredge (CSD) for berth maintenance
   • Capacity: 500 m³/hr
@@ -251,7 +251,7 @@ Regulatory:
 
 #### Phase 1: RFQ Generation
 
-```
+```yaml
 Trigger: "Vamos fazer dragagem no Porto Santos. Berço 7. 
           Necessitamos CSD 500 m³/hr. Prazo: 6 meses de lease.
           Budget: R$14M incluindo tailing."
@@ -301,7 +301,7 @@ BOM Generated:
 
 #### Phase 2: Vendor Evaluation (Dredging-Specific Scoring)
 
-```
+```json
 [ADJUSTED SCORING FOR DREDGING]
 
 Weight Adjustment (vs. standard 40/30/20/10):
@@ -390,7 +390,7 @@ REJECT: ENGEBAUM + IDC
 
 #### Phase 3: Contract & SLA
 
-```
+```text
 Selected Vendor: SOESCAL
 Contract value: R$ 13,800,000 (6 months)
 
@@ -411,7 +411,7 @@ Expected Outcome:
 
 ### 2.3 Results
 
-```
+```text
 Project Outcome:
   • RFQ published: 2026-09-01
   • Vendor evaluated: 2026-09-15
@@ -436,11 +436,11 @@ Agent Value:
 **Project:** ETA Guarapiranga — Upgrade SCADA (SÃO PAULO SANEAMENTO)  
 **Segment:** S8 — Saneamento (water treatment, SNIS regulated)  
 **Sponsor:** SABESP (Companhia de Saneamento Básico do Estado de São Paulo)  
-**Procurement Officer:** Ana Costa (acosta@sabesp.sp.gov.br)
+**Procurement Officer:** Ana Costa (<acosta@sabesp.sp.gov.br>)
 
 ### 3.1 Project Context
 
-```
+```text
 Project Scope:
   • Existing ETA Guarapiranga: 5,000 m³/day capacity
   • Upgrade: IoT sensors + cloud SCADA (currently manual + spreadsheet)
@@ -467,7 +467,7 @@ Regulatory:
 
 #### Phase 1: RFQ & Vendor Matching
 
-```
+```yaml
 Trigger: "Precisamos atualizar SCADA na ETA Guarapiranga. 
           50 sensores, integração com Oracle LIMS, Azure cloud.
           Budget: R$1.2M, warranty 5 anos."
@@ -523,7 +523,7 @@ Cost Allocation (agent estimate):
 
 #### Phase 2: Evaluation (Quality-Weighted)
 
-```
+```json
 [ADJUSTED SCORING FOR SCADA]
 
 Weights (SCADA is quality-critical):
@@ -652,7 +652,7 @@ REJECT: SMS + RIA
 
 #### Phase 3: Implementation & SLA
 
-```
+```text
 Selected Vendor: HIMATSINGKA BRASIL
 Contract Value: R$ 1,180,000
 SLA Terms:
@@ -680,7 +680,7 @@ Monitoring (Agent):
 
 ### 3.3 Results
 
-```
+```text
 Project Outcome:
   • RFQ to vendor selection: 15 days (vs. 30 days manual process)
   • System go-live: 2026-11-15 (on-time)
@@ -705,11 +705,11 @@ Agent Value:
 **Project:** Rodovia BR-116 — Trecho São Paulo–Sorocaba (Pavimentação)  
 **Segment:** S1 — Rodovias (DNIT standard)  
 **Sponsor:** DNIT (Departamento Nacional de Infraestrutura de Transportes)  
-**Procurement Officer:** João Silva (jsilva@dnit.gov.br)
+**Procurement Officer:** João Silva (<jsilva@dnit.gov.br>)
 
 ### 4.1 Project Context
 
-```
+```text
 Project Scope:
   • 85 km highway resurfacing
   • Concrete base course: 1,200 m³ total
@@ -729,7 +729,7 @@ Regulatory:
 
 ### 4.2 Agent Workflow (Fast-Track Commodity)
 
-```
+```yaml
 Trigger: "RFQ para concreto Fck 30 MPa. 1,200 m³ total. 
           Entrega: 6 semanas. Budget: R$600K. DNIT BR-116."
 
@@ -839,7 +839,7 @@ Timeline:
 
 ### 4.3 Results
 
-```
+```text
 Project Outcome:
   • RFQ to purchase order: 6 days (vs. 14 days manual procurement)
   • Concrete delivery: On-schedule, zero quality issues

@@ -30,6 +30,7 @@ Não seguir para os próximos passos até ambos merges estarem no `main`.
 ### 2.1. Pré-checagem
 
 Antes de rodar, confirmar que o schema tem:
+
 - Tabela `rag_collections` (ou equivalente) com colunas `slug`, `name`,
   `storage_prefix`, `initial_sources JSONB`.
 - Tabela `sp_agent_routing` com colunas `agent_slug`, `sp_folder`,
@@ -46,6 +47,7 @@ reverter.
 Duas opções:
 
 **A) Via CLI Supabase** (recomendado):
+
 ```bash
 cd <repo-operacional-manta-maestro>
 cp .../supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql \
@@ -55,6 +57,7 @@ supabase db push                # aplicar
 ```
 
 **B) Direto via psql**:
+
 ```bash
 psql "$SUPABASE_DB_URL" \
   -f supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql
@@ -141,6 +144,7 @@ Criar em `Documentos Compartilhados/04_IA/Manta-Maestro/01-agentes-fundamentais/
 
 Padrão inicial de cada pasta (copiar de qualquer agente existente,
 p. ex. `agente-modelagem/`):
+
 - `SKILL.md`
 - `README.md`
 - `refs/` (documentos técnicos de referência)

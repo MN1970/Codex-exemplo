@@ -1,4 +1,5 @@
 # S6 Post-Launch Monitoring — Alerts, Metrics & Daily Reports
+
 **Version: v5.0 | Agent: Manta 03-S6 (Portos) | Timeline: T+1h through T+30d**
 
 Production monitoring framework with Grafana dashboards, Slack alerts, and daily report template.
@@ -22,7 +23,8 @@ Production monitoring framework with Grafana dashboards, Slack alerts, and daily
 **URL:** `http://grafana.manta.local/d/s6-portos-overview`
 
 ### Panel 1: Routing Accuracy (Real-time)
-```
+
+```yaml
 Query: agent_runs WHERE agent_id = 'manta-03-s6' AND created_at > now()-15m
 Metric: (count of correct route) / (total queries) × 100%
 Target: >= 75%
@@ -32,7 +34,8 @@ Alert: RED if < 70% for 5 min
 **Visual:** Bar chart, color-coded (green 75+%, yellow 60-75%, red <60%)
 
 ### Panel 2: Error Rate (Real-time)
-```
+
+```yaml
 Query: agent_runs WHERE status = 'error' AND created_at > now()-15m
 Metric: error_count / total_count × 100%
 Target: <= 1%
@@ -42,7 +45,8 @@ Alert: YELLOW if 1-5%, RED if > 5% for 10 min
 **Visual:** Line chart with warning band
 
 ### Panel 3: Latency Percentiles (Real-time)
-```
+
+```yaml
 Query: PERCENTILE_CONT(0.50, 0.95, 0.99) OF latency_ms
       WHERE agent_id = 'manta-03-s6' AND created_at > now()-15m
 Target: p50 < 5s, p95 < 8s, p99 < 12s
@@ -52,7 +56,8 @@ Alert: YELLOW if p95 > 10s, RED if > 15s for 5 min
 **Visual:** Multi-series line chart (3 lines: p50, p95, p99)
 
 ### Panel 4: Model Tier Distribution (Last 1h)
-```
+
+```yaml
 Query: SELECT model_tier, COUNT(*) FROM agent_runs
        WHERE agent_id = 'manta-03-s6' AND created_at > now()-60m
        GROUP BY model_tier
@@ -62,7 +67,8 @@ Expected: Haiku 40%, Sonnet 50%, Opus 10%
 **Visual:** Pie chart or stacked bar chart
 
 ### Panel 5: Cost Trend (Last 24h)
-```
+
+```yaml
 Query: SELECT DATE_TRUNC('hour', created_at) AS hour,
               SUM(cost_usd) FROM agent_runs
        WHERE agent_id = 'manta-03-s6'
@@ -73,7 +79,8 @@ Target: Trend stable, no sudden spikes > 2x baseline
 **Visual:** Area chart with baseline band
 
 ### Panel 6: Feedback Score Distribution
-```
+
+```yaml
 Query: agent_feedback WHERE run_id IN (agent_runs for S6)
        COUNT() by score (0–5 stars)
 Target: Avg score >= 3.5
@@ -83,7 +90,8 @@ Alert: YELLOW if avg < 3.0, RED if avg < 2.5
 **Visual:** Histogram (score 0-5, count on Y-axis)
 
 ### Panel 7: System Health
-```
+
+```yaml
 Panels: Scheduler status (up/down), DB connectivity (ok/err),
         Elasticsearch status, Slack alert status
 ```
@@ -133,6 +141,7 @@ export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXXX/YYYY/ZZZZ"
 #### Custom Alert Message Templates
 
 **Low Routing Accuracy:**
+
 ```json
 {
   "blocks": [
@@ -170,6 +179,7 @@ export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXXX/YYYY/ZZZZ"
 ```
 
 **High Error Rate:**
+
 ```json
 {
   "blocks": [
@@ -455,7 +465,7 @@ curl -X POST $SLACK_WEBHOOK_URL -H 'Content-Type: application/json' \
 
 ### Cost Model
 
-```
+```text
 Total Cost = Σ (input_tokens × $input_rate + output_tokens × $output_rate) per run
 
 Model Rates (as of 2026-07-25):
@@ -471,7 +481,7 @@ Example:
 
 ### Cost Alerts
 
-```
+```text
 Daily threshold: > $600 → YELLOW alert (22% over baseline $489)
 Daily threshold: > $800 → RED alert (63% over baseline)
 
@@ -483,15 +493,18 @@ Weekly average > $550/day → Escalate to MN, review tiering
 ## GO/NO-GO DECISION GATES
 
 ### T+24h Gate (Daily Report)
+
 **Decision:** Continue in production or rollback?
 
 **Go if:** All metrics within 10% of target (routing >= 68%, error <= 2%, latency p95 < 10s)  
 **No-Go if:** Any metric fails 2 consecutive hours
 
 ### T+7d Gate (Weekly Report)
+
 **Decision:** Keep S6 in prod, continue optimization, or promote to GA?
 
 **Metrics for GA promotion:**
+
 - Routing accuracy > 85% for 7 days ✅
 - Feedback score > 3.8 for 7 days ✅
 - No 🔴 CRITICAL incidents ✅

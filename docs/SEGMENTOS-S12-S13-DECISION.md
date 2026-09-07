@@ -90,6 +90,7 @@ conforme cada agente era formalizado.
 | **03-S13** | **especialista-edificacoes** | **Edificações — vertical residencial/comercial + galpão + hospital/universidade. NBR 15575 (MCMV), LEED, BIM.** | **true** |
 
 Tags registradas:
+
 - `03-S12`: `petróleo`, `óleo e gás`, `ANP`, `gasoduto`, `refinaria`,
   `API 650`, `ANSI B31`, `NFPA 30`, `HAZOP`, `vertical`.
 - `03-S13`: `edificação`, `torre`, `galpão`, `warehouse`, `data

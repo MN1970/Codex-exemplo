@@ -34,7 +34,7 @@ O **Pilar P6 (Observabilidade)** implementa logging imutável, append-only, de t
 
 ## Arquitetura de Retenção
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │ maestro_runs (HOT — Postgres SSD)                        │
 │ 90 dias | 365k runs/ano ≈ 730 MB | < 10ms latência     │
@@ -167,6 +167,7 @@ cost_usd = calculate_run_cost('sonnet-5', 1200, 450)
 **Handler:** `.claude/hooks/subagentstop_maestro_observability.py`
 
 **Config:** `.claude/settings.json`:
+
 ```json
 {
   "hooks": {
@@ -185,20 +186,23 @@ cost_usd = calculate_run_cost('sonnet-5', 1200, 450)
 ## APScheduler Jobs (Background)
 
 ### Job 1: Archive Diário (02:00 UTC)
-```
+
+```text
 Move runs 90d+ para maestro_runs_archive (soft delete)
 Executa: SELECT archive_old_maestro_runs()
 SLA: < 100ms para ~100 runs
 ```
 
 ### Job 2: Health Check Horário (a cada 6h)
-```
+
+```text
 Valida schema, indexes, RLS, mock inserts
 Alerta Slack se falhas
 ```
 
 ### Job 3: Feedback Loop Semanal (domingo 03:00 UTC) — R9
-```
+
+```text
 Processa feedback_score >= 4
 Fine-tunes embedding model (opcional)
 Atualiza VERSIONS.json checksums
@@ -304,6 +308,7 @@ psql $SUPABASE_DB_URL -c "SELECT * FROM pg_proc WHERE proname = 'archive_old_mae
 ## Queries Úteis
 
 ### Custo total por agente hoje
+
 ```sql
 SELECT agent_id, COUNT(*) as run_count, SUM(cost_usd) as total_cost
 FROM maestro_runs
@@ -313,6 +318,7 @@ ORDER BY total_cost DESC;
 ```
 
 ### Erros da última hora
+
 ```sql
 SELECT run_id, agent_id, status, error_message, latency_ms
 FROM maestro_runs
@@ -322,16 +328,19 @@ ORDER BY created_at DESC;
 ```
 
 ### Taxa de erro por agente
+
 ```sql
 SELECT * FROM vw_error_rate_by_agent ORDER BY error_rate_pct DESC;
 ```
 
 ### Latência p50/p95/p99
+
 ```sql
 SELECT * FROM vw_latency_by_agent ORDER BY p99_ms DESC;
 ```
 
 ### Runs mais caras
+
 ```sql
 SELECT * FROM vw_top_cost_runs LIMIT 20;
 ```
@@ -362,11 +371,12 @@ SELECT * FROM vw_top_cost_runs LIMIT 20;
 
 ## Suporte & Contato
 
-**Proprietário:** mneves@mantaassociados.com  
+**Proprietário:** <mneves@mantaassociados.com>  
 **Ticket:** MNT-2026-MAESTRO-OBSERVABILITY-P6  
 **Slack:** #agent-ops
 
 **Documentação:**
+
 - [P6 Guide](./OBSERVABILITY_P6_GUIDE.md) — Especificação técnica completa
 - [Deployment](./DEPLOYMENT_P6_CHECKLIST.md) — Checklist passo-a-passo
 - [Schema SQL](../supabase/migrations/2026_07_25_observability_maestro_runs.sql) — DDL

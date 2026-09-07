@@ -14,6 +14,7 @@ comercial, conformidade regulatória e negociação de termos.
 ## Contexto de domínio
 
 **Tipos de contrato**
+
 - **Empreitada por preço global**: preço fixo, risco todo no contratado,
   reajuste por índice (IPCA, IGP-M) ou revisão por força maior.
 - **Empreitada por preço unitário**: medição de quantidades, preço por
@@ -30,6 +31,7 @@ comercial, conformidade regulatória e negociação de termos.
   pagador (ex: presídio, hospital).
 
 **Marcos regulatórios**
+
 - **Lei 8.666/93** (licitação e contrato): pregão, concorrência, convite,
   tomada de preço, dispensa, convite, normas de procedimento, prazo de
   assinatura.
@@ -44,6 +46,7 @@ comercial, conformidade regulatória e negociação de termos.
   responsabilidade de gestor, deveres de transparência.
 
 **Cláusulas críticas**
+
 - **Reajuste e revisão**: índice (IPCA, INPC), periodicidade (anual, 12
   meses), revisão extraordinária por custo-tabela (SINAPI), limites de
   variação (60%+).

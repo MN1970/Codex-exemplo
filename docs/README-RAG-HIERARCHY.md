@@ -7,6 +7,7 @@ This directory contains the complete RAG (Retrieval-Augmented Generation) hierar
 ## Quick Navigation
 
 ### Core Implementation
+
 - **`/src/rag-hierarchy.ts`** — Main TypeScript implementation
   - `ChunkScorer`: Multi-factor relevance ranking algorithm
   - `RagQueryService`: Supabase + Redis integration
@@ -14,12 +15,14 @@ This directory contains the complete RAG (Retrieval-Augmented Generation) hierar
   - `TEST_QUERIES`: 15 realistic domain queries
 
 ### Database
+
 - **`/supabase/migrations/2026_08_02_rag_hierarchy_v5.sql`** — Production schema
   - `rag_chunks` table with 15 metadata fields
   - 8 optimized indexes (HNSW, BRIN, GIN)
   - Views, functions, triggers for observability
 
 ### Tests
+
 - **`/tests/rag-hierarchy.test.ts`** — Test suite (40+ cases)
   - ChunkScorer tests (BM25, semantic, confidence, freshness)
   - CollectionRegistry validation
@@ -28,6 +31,7 @@ This directory contains the complete RAG (Retrieval-Augmented Generation) hierar
   - Edge cases (empty input, missing data, overflow)
 
 ### Documentation
+
 - **`/docs/RAG-HIERARCHY-DELIVERY-SUMMARY.md`** — Comprehensive delivery report
   - Executive summary
   - Architectural decisions
@@ -60,7 +64,7 @@ This directory contains the complete RAG (Retrieval-Augmented Generation) hierar
 
 ### 5 Knowledge Collections (S6–S10)
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │ RAG Hierarchy: 5 Collections                             │
 ├─────────────────────────────────────────────────────────┤
@@ -83,7 +87,7 @@ This directory contains the complete RAG (Retrieval-Augmented Generation) hierar
 
 ### Multi-Factor Ranking Formula
 
-```
+```text
 final_score = (
   BM25            × w_bm25         [lexical: keywords]         +
   semantic        × w_semantic     [embeddings: meaning]       +
@@ -108,7 +112,7 @@ where: w_bm25 + w_semantic + w_confidence + w_freshness = 1.0
 
 When primary collection score < 0.5 + keyword match:
 
-```
+```text
 saneamento → editais    [score < 0.6 AND contains("licitação")]
 energia    → editais    [score < 0.6 AND contains("leilão")]
 barragens  → energia    [contains("hidrelétrica")]
@@ -309,7 +313,7 @@ async function answerUserQuestion(userQuery: string) {
 
 ## File Structure
 
-```
+```text
 /home/user/Codex-exemplo/
 ├── src/
 │   └── rag-hierarchy.ts                         [39 KB]
@@ -351,7 +355,7 @@ async function answerUserQuestion(userQuery: string) {
 ## References
 
 - **CLAUDE.md:** Manta Maestro agent registry & routing rules
-- **Supabase pgvector:** https://supabase.com/docs/guides/ai/vector
+- **Supabase pgvector:** <https://supabase.com/docs/guides/ai/vector>
 - **BM25 Algorithm:** Okapi BM25 (Robertson et al., 2009)
 - **BAAI/bge-small-en-v1.5:** BGE embedding model (384 dimensions)
 - **HNSW Index:** Approximate nearest neighbor search (Malkov & Yashunin, 2018)

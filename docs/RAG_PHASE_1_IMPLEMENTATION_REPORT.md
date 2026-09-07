@@ -12,11 +12,13 @@
 Implementada **Phase 1** da estratégia de fix de contaminação cross-domain RAG. Problema: Domínio S10 (Barragens) capturava queries de outros domínios (S1 Rodovias, S2 OAE, S4 Metrô, S6 Portos) com termos ambíguos (terraplenagem, drenagem, estrutura, aterro).
 
 **Baseline (benchmark anterior):**
+
 - Recall@1: **69.23%** (< 70% threshold)
 - Recall@3: 84.62%
 - Contaminação: 20.51%
 
 **Target (Phase 1):**
+
 - Recall@1: **74-77%** (delta +4-8 pontos percentuais)
 - Recall@3: **87-88%** (delta +2-3 pontos)
 - Contaminação: **12-14%** (redução 30-40%)
@@ -30,6 +32,7 @@ Implementada **Phase 1** da estratégia de fix de contaminação cross-domain RA
 **Arquivo:** `supabase/migrations/2026_07_26_rag_phase_1_contamination_fix.sql` (seção 3)
 
 **Modificação:**
+
 ```sql
 UPDATE rag_chunks
 SET embedding_weight = 0.85
@@ -40,6 +43,7 @@ WHERE prefix = 'bar:' OR domain = 'S10'
 **Efeito:** Reduz peso de embeddings do domínio Barragens de 1.0 → 0.85, permitindo que outros domínios compitam melhor em buscas ambíguas.
 
 **Impacto esperado:**
+
 - Reduz ranking de S10 em queries que contêm termos ambíguos
 - Beneficia S1, S2, S4, S6 em buscas específicas
 - Mantém S10 ranking alto em queries genuinamente de barragens (ex: "CFRD", "vertedouro", "rejeito TSF")
@@ -49,6 +53,7 @@ WHERE prefix = 'bar:' OR domain = 'S10'
 ### 2. Criação de Tabela `domain_anti_terms`
 
 **Schema:**
+
 ```sql
 CREATE TABLE domain_anti_terms (
   id SERIAL PRIMARY KEY,
@@ -65,6 +70,7 @@ CREATE TABLE domain_anti_terms (
 **Objetivo:** Mapear **anti-vocabulário** por domínio — termos que indicam "outro domínio".
 
 **Exemplo:**
+
 - S1 (Rodovias) → anti-termo "barragem" (score: 0.40)
 - S2 (OAE) → anti-termo "CFRD" (score: 0.40)
 - S10 (Barragens) → anti-termo "via permanente ferroviária" (score: 0.40)
@@ -88,6 +94,7 @@ CREATE TABLE domain_anti_terms (
 | **S10 (Barragens)** | 11 | trilho (0.40), via perm. ferr. (0.40), dormente (0.35), pista pouso (0.40), ANAC (0.35), dragagem (0.38), berço (0.38), ANTAQ (0.35), pavimento CBUQ (0.40), terraplenagem rodo. (0.38), ETA ETE (0.35) | 0.38 |
 
 **Lógica de penalização:**
+
 - Se chunk contém anti-termo do source_domain → acumula penalty
 - Penalty cap: 0.95 (nunca eliminar resultado completamente)
 - Aplicado multiplicativamente: `final_score = embedding_score × (1 - penalty)`
@@ -99,6 +106,7 @@ CREATE TABLE domain_anti_terms (
 **Propósito:** Calcular penalty multiplicativo baseado em anti-termos.
 
 **Pseudocódigo:**
+
 ```sql
 CREATE OR REPLACE FUNCTION calculate_anti_term_penalty(
   chunk_content TEXT,
@@ -123,6 +131,7 @@ END;
 ### 5. Tabela `contamination_test_queries`
 
 **Schema:**
+
 ```sql
 CREATE TABLE contamination_test_queries (
   id SERIAL PRIMARY KEY,
@@ -172,7 +181,8 @@ GROUP BY expected_domain;
 ```
 
 **Saída esperada (Phase 1 completa):**
-```
+
+```text
 domain | total | pending | passed | failed | pass_rate
 -------|-------|---------|--------|--------|----------
 S1     | 3     | 0       | 3      | 0      | 100%
@@ -235,6 +245,7 @@ CREATE TABLE rag_penalty_audit (
 **Improvement:** +4-8 pontos percentuais
 
 **Rationale:**
+
 - 8 queries históricas de contaminação: +8 pontos se 100% fixadas
 - Conservativo: assumir 50-75% de fixação bem-sucedida = +4-8 pontos
 - Outras queries não afetadas negativamente (anti-termos são específicos)
@@ -246,6 +257,7 @@ CREATE TABLE rag_penalty_audit (
 **Improvement:** +2-3 pontos percentuais
 
 **Rationale:**
+
 - Top-3 ranking melhora com mudanças de top-1
 - Anti-termos afetam principalmente posições #1-2, menos #3+
 
@@ -256,6 +268,7 @@ CREATE TABLE rag_penalty_audit (
 **Reduction:** -30 a -40%
 
 **Rationale:**
+
 - 8 queries de teste representam ~15-20% das contaminações observadas
 - Penalização de anti-termos reduz captura cruzada de S10 em outras queries
 
@@ -290,6 +303,7 @@ CREATE TABLE rag_penalty_audit (
 2. Aprovação de MN (Manta Network) requerida
 
 3. Executar migration:
+
    ```bash
    supabase db push --remote
    # ou manual:
@@ -349,11 +363,13 @@ Phase 1 é **SUCESSO** se:
 ## Phase 2 & Beyond
 
 ### Phase 2 (Embedding Retraining)
+
 - Fine-tune embeddings com corpus de domínios específicos
 - Aumentar dimensionalidade de embeddings (1536 → 2048)
 - Target: Recall@1 80-85%
 
 ### Phase 3 (Query Expansion)
+
 - Adicionar synonyms por domínio (ex: "barragem" → "dique", "açude")
 - Implement query rewriting para termos ambíguos
 - Target: Recall@1 85-90%

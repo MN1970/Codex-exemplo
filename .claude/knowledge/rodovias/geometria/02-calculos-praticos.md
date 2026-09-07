@@ -12,6 +12,7 @@
 ### Caso 1: Rodovia Federal (BR) — Classe I
 
 **Entrada do Projeto**:
+
 - Velocidade de projeto: **Vd = 100 km/h**
 - Classe: **BR (Federal)**
 - Topografia: **Ondulada**
@@ -31,7 +32,7 @@
 
 **Passo 2: Calcular Raio Mínimo para Curva Horizontal**
 
-```
+```text
 R_mín = V² / (127 × (e_máx + f))
 R_mín = 100² / (127 × (0.08 + 0.15))
 R_mín = 10000 / (127 × 0.23)
@@ -43,7 +44,7 @@ Adotar: R = 350 m (arredonda para multiplo de 50m)
 
 **Passo 3: Superelevação Efetiva para R = 350m**
 
-```
+```text
 e = V² / (127 × R) - f
 e = 10000 / (127 × 350) - 0.15
 e = 10000 / 44450 - 0.15
@@ -55,7 +56,7 @@ Usar: e = 7.5% (dentro do máximo 8%)
 
 **Passo 4: Comprimento de Transição (Clotóide)**
 
-```
+```text
 Parâmetro mínimo da clotóide:
 A² = R × L_c
 
@@ -75,7 +76,7 @@ A = 196.2 m
 
 **Passo 5: Verificar Tangente Mínima Entre Curvas**
 
-```
+```text
 Comprimento mínimo tangente:
 L_t = 0.28 × Vd
 L_t = 0.28 × 100
@@ -86,7 +87,7 @@ Se existir tangente com 50m, está OK.
 
 **Passo 6: Distância de Visibilidade de Parada**
 
-```
+```text
 d_parada = V × 0.7 + V² / (254 × f)
 d_parada = 100 × 0.7 + 10000 / (254 × 0.40)
 d_parada = 70 + 10000 / 101.6
@@ -98,7 +99,7 @@ d_parada = 168.4 m
 
 Exemplo: PI (ponto de interseção vertical) em elevação 450m, com rampa ascendente de 5%, seguida de rampa descendente de 4%.
 
-```
+```text
 Δi = |5% - (-4%)| = 9%
 
 Comprimento mínimo de curva vertical:
@@ -113,7 +114,7 @@ Adotar: L = 140 m (múltiplo de 20m)
 
 **Passo 8: Seção Transversal Padrão**
 
-```
+```text
 Estrutura no trecho:
 
                   3.60m          2.50m
@@ -135,6 +136,7 @@ Estrutura no trecho:
 ### Caso 2: Rodovia Estadual — Classe II
 
 **Entrada do Projeto**:
+
 - Velocidade de projeto: **Vd = 80 km/h**
 - Classe: **Estadual**
 - Topografia: **Montanhosa**
@@ -150,7 +152,7 @@ Estrutura no trecho:
 | e_máx | 0.08 |
 | f | 0.16 |
 
-```
+```text
 R_mín = 80² / (127 × (0.08 + 0.16))
 R_mín = 6400 / (127 × 0.24)
 R_mín = 6400 / 30.48
@@ -161,7 +163,7 @@ Adotar: R = 220 m
 
 **Passo 3: Superelevação**
 
-```
+```text
 e = 80² / (127 × 220) - 0.16
 e = 6400 / 27940 - 0.16
 e = 0.229 - 0.16
@@ -172,7 +174,7 @@ Usar: e = 7.0%
 
 **Passo 4: Clotóide**
 
-```
+```text
 L_mín = 0.036 × 80³ / 220
 L_mín = 0.036 × 512000 / 220
 L_mín = 18432 / 220
@@ -184,7 +186,7 @@ A = √(220 × 90) = √19800 = 140.7 m
 
 **Passo 5: Distância de Visibilidade**
 
-```
+```text
 d_parada = 80 × 0.7 + 80² / (254 × 0.40)
 d_parada = 56 + 6400 / 101.6
 d_parada = 56 + 63
@@ -193,7 +195,7 @@ d_parada = 119 m
 
 **Passo 6: Rampa Máxima (Montanhosa)**
 
-```
+```text
 Rampa máxima permitida: 7% (topografia montanhosa)
 
 Se rampa sobe 7% e desce 5%:
@@ -214,7 +216,7 @@ Adotar: L = 130 m
 
 **Solução**:
 
-```
+```text
 Ângulo central θ para visibilidade:
 θ = 2 × arcsen(d / 2R)
 θ = 2 × arcsen(137 / 1000)
@@ -242,7 +244,7 @@ para garantir visibilidade.
 
 **Passo 1: Superelevação Global**
 
-```
+```text
 e = 100² / (127 × 400) - 0.15
 e = 10000 / 50800 - 0.15
 e = 0.197 - 0.15
@@ -252,7 +254,8 @@ e = 0.047 = 4.7%
 **Passo 2: Transição de Superelevação**
 
 Comprimento de transição (clotóide e tangente):
-```
+
+```text
 L_trans = (e × a) / (Δe/ΔL)
 
 Onde:
@@ -271,7 +274,7 @@ Adotar: L_trans = 60 m (tangente + parte de clotóide)
 
 No meio da curva (seção transversal):
 
-```
+```text
 Seção de entrada (com superelevação):
 
 Eixo (centro): elevação 0
@@ -293,7 +296,7 @@ Na prática, usa-se rotação de seção transversal:
 
 ### 4.1 Pavimento e Acostamento
 
-```
+```text
 Largura de pavimento (2 faixas): 7.20 m
 Acostamento por lado: 2.50 m × 2 = 5.00 m
 Total faixa de rolamento: 7.20 + 5.00 = 12.20 m
@@ -309,7 +312,7 @@ Quantitativos:
 
 ### 4.2 Terraplenagem
 
-```
+```text
 Seção média de corte: 150 m² (varia por topografia)
 Seção média de aterro: 100 m²
 
@@ -321,7 +324,7 @@ Quantitativos:
 
 ### 4.3 Bananquetas e Taludes
 
-```
+```text
 Talude médio: 1:1.5 (corte), 1:2 (aterro)
 
 Comprimento de talude:
@@ -336,7 +339,7 @@ Hidrossemeadura/proteção:
 
 ### 4.4 Serviços Geométricos (Auxiliares)
 
-```
+```text
 - Limpeza e desmatamento: 1000 m × 50m faixa = 50,000 m²
 - Compactação de subleito: 12.20 × 1000 = 12,200 m²
 - Drenagem superficial (banquetas): 1000 m × 2 = 2000 m
@@ -380,6 +383,7 @@ Tabela simplificada de custos unitários SICRO:
 | Status | Duplicação 80% (2024) |
 
 **Lições**:
+
 - Rodovias federais duplas usam R ≥ 350m
 - Superelevação varia conforme micro-topografia
 - Aderência ao DNIT ES 101 é obrigatória
@@ -391,7 +395,7 @@ Tabela simplificada de custos unitários SICRO:
 
 ### 6.1 MX Road (Bentley)
 
-```
+```yaml
 Entrada:
 - Alinhamento horizontal (dwg/xml)
 - Perfil vertical
@@ -407,7 +411,7 @@ Saída:
 
 ### 6.2 Civil 3D (Autodesk)
 
-```
+```yaml
 Fluxo:
 1. Importar topografia (survey/drone)
 2. Criar alinhamento horizontal
@@ -463,4 +467,3 @@ for vd in [40, 60, 80, 100, 120]:
 - [ ] Taludes (inclinações por tipo de solo)
 - [ ] SICRO aplicado (quantitativos/custos)
 - [ ] Memoriais e desenhos per DNIT
-

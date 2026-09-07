@@ -23,7 +23,7 @@
 
 Maestro OS v6.0 is a 5-layer orchestration system for parallel multi-agent analysis:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                        Layer 5: ML Intelligence                         │
 │  (Routing Adapter, Duration Predictor, Risk Classifier)                 │
@@ -74,6 +74,7 @@ print(detection.token_budget)        # 450_000
 ```
 
 **Output:** `DetectionResult` with:
+
 - `num_segments`: int (1-5+)
 - `complexity_level`: str ("simple", "medium", "complex")
 - `agents_selected`: List[Dict] with agent names and tiers
@@ -100,6 +101,7 @@ workflow = parser.parse(yaml_string)
 ```
 
 **YAML Structure:**
+
 ```yaml
 project:
   id: "proj-001"
@@ -145,6 +147,7 @@ print(execution.metrics)
 ```
 
 **Execution Flow:**
+
 1. Detect complexity (Detector)
 2. Parse workflow (Parser)
 3. Fan-out agents (QueueExecutor, max 8 concurrent)
@@ -455,6 +458,7 @@ def compare_scenarios(
 ### Agent Pool (20 total)
 
 **Vertical Agents (S1–S11):**
+
 - S1: agente-infraestrutura (rodovia)
 - S2: agente-infraestrutura (OAE)
 - S3: agente-infraestrutura (ferrovia)
@@ -467,6 +471,7 @@ def compare_scenarios(
 - S11: agente-barragens
 
 **Horizontal Agents (A1–A15):**
+
 - A1: manta-01 (claims)
 - A2: manta-02 (contratual)
 - A4: manta-04 (imobiliário)
@@ -498,7 +503,7 @@ def compare_scenarios(
 
 ### Exception Hierarchy
 
-```
+```text
 MaestroException (base)
 ├─ DetectionError (complexity detection failed)
 ├─ WorkflowValidationError (invalid YAML/agents)
@@ -512,16 +517,19 @@ MaestroException (base)
 ### Recovery Strategies
 
 **Rate Limiting (429):**
+
 - Automatic exponential backoff: 2s → 4s → 8s → 16s
 - Max 3 retries per task
 - Queue buffering up to 16 tasks
 
 **Consensus Escalation (<3/5):**
+
 - Automatic escalation to human review
 - Logged in audit trail
 - Retry with expanded voter set
 
 **Agent Timeout (>30s):**
+
 - Automatic timeout and mark as "failed"
 - Continue with remaining agents
 - Log in execution metrics
@@ -551,11 +559,13 @@ MaestroException (base)
 ### Scaling Strategy
 
 **If execution slow (<1 task/min):**
+
 1. Check queue executor worker count (should be 8)
 2. Review agent response times (log long-running agents)
 3. Profile consensus voting (may need faster voters)
 
 **If tokens exceed budget:**
+
 1. Reduce consensus round complexity (fewer aspects)
 2. Parallelize more (fan-out larger subset)
 3. Cache ML inference results
@@ -694,6 +704,7 @@ phases:
 ### Debugging
 
 **Enable metrics logging:**
+
 ```python
 metrics = MetricsCollector(workflow_id, project_id, num_agents, complexity)
 # ... execute workflow ...
@@ -702,12 +713,14 @@ json_metrics = metrics.to_json()
 ```
 
 **Check agent logs:**
+
 ```bash
 grep "agente-portos" execution.log
 grep "status: failed" execution.log
 ```
 
 **Validate workflow YAML:**
+
 ```python
 parser = WorkflowParser()
 parsed = parser.parse(yaml_string)

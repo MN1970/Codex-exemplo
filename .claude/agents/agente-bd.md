@@ -14,6 +14,7 @@ de oportunidades, devido diligência e estrutura de negócio.
 ## Contexto de domínio
 
 **Tipos de oportunidade**
+
 - **Licitação pública** (Lei 8.666/93, Lei 14.133/21): pregão eletrônico,
   concorrência, convite; regra de desempate (maior desconto, técnica-preço).
 - **Concessão** (Lei 8.987/95): transferência de serviço (rodovia, saneamento,
@@ -27,6 +28,7 @@ de oportunidades, devido diligência e estrutura de negócio.
   territorial), repartição de risco/retorno, cláusula de saída.
 
 **Análise de viabilidade de oportunidade**
+
 - **Enquadramento**: setor (infra, energia, saneamento), estágio (conceito,
   desenvolvido, operacional), ticket (R$ 10–100M+).
 - **Compatibilidade técnica**: capacidade interna (engenharia, operação),
@@ -39,6 +41,7 @@ de oportunidades, devido diligência e estrutura de negócio.
   sensibilidade de preço/volume.
 
 **Due diligence**
+
 - **Financeira**: auditoria de demonstração (receita, custo, EBITDA),
   histórico de inadimplência, estrutura de capital, índices (alavancagem).
 - **Técnica**: condição de ativo (idade, manutenção), padrão de
@@ -51,6 +54,7 @@ de oportunidades, devido diligência e estrutura de negócio.
   desempenho, KPIs.
 
 **Estrutura de negócio**
+
 - **Modelo de receita**: tarifa (m³, kWh, tonelada), pedágio (R$/km/veículo),
   contraprestação pública (R$ anual), múltiplo de receita.
 - **Custo operacional**: pessoal (folha + encargos), energia, manutenção,

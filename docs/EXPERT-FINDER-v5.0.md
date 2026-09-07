@@ -18,6 +18,7 @@
 - **5% Latency/SLA** — From `agent_health` track record
 
 **Key features:**
+
 - Tie-breaking: If top 2 agents within 2% confidence → pick lower-cost
 - Circuit breaker: If top confidence < 0.6 → escalate to Opus or human review
 - Explainability: JSON reasoning per agent (why this agent won)
@@ -30,7 +31,7 @@
 
 ### Files
 
-```
+```text
 infra/agent-registry/
 ├── lib/
 │   ├── expert-finder.ts              # Main ExpertRanker class (TypeScript)
@@ -80,7 +81,8 @@ interface ExpertRankingResult {
 ### Scoring Formula
 
 For each agent:
-```
+
+```text
 score = (
   0.40 * semanticScore +
   0.30 * historicalScore +
@@ -91,6 +93,7 @@ score = (
 ```
 
 Each component is independently normalized to [0, 1] with fallback values:
+
 - **Semantic:** BM25 + cosine similarity (query vs. agent text/embedding)
 - **Historical:** success_count / total_queries (or 0.5 if no data)
 - **Capability:** 1.0 if has primary skill, else coverage_ratio * 0.7
@@ -100,6 +103,7 @@ Each component is independently normalized to [0, 1] with fallback values:
 ### Tie-Breaking
 
 If top 2 agents' finalScore differ by < 2% (configurable `ambiguityMargin`):
+
 1. Compare costs via `costEstimate = tokens_per_query * cost_per_tier[model]`
 2. Swap if runner-up is cheaper
 3. Escalate to Opus for disambiguation if margin still tight
@@ -107,11 +111,13 @@ If top 2 agents' finalScore differ by < 2% (configurable `ambiguityMargin`):
 ### Circuit Breaker
 
 **Escalation triggers:**
+
 1. **Low confidence:** top.confidence < 0.6 (configurable `confidenceThreshold`)
 2. **Ambiguous top-two:** margin < 2% after tie-breaking
 3. **No candidates:** agent registry empty
 
 When escalated:
+
 - `primaryChoice` = null
 - `alternatives` = full ranked list for human review
 - Recommended tier = Opus for higher reasoning capability
@@ -236,6 +242,7 @@ const v2Compat = adaptToMaestroV2(result);
 ```
 
 **Backward compatibility:**
+
 - `ExpertRankedAgent` extends the concept of `RankedAgent` with cost/history
 - Existing `routeQuery()` and circuit breaker remain compatible
 - Fallback to synthetic data if DB/embeddings unavailable
@@ -247,6 +254,7 @@ const v2Compat = adaptToMaestroV2(result);
 ExpertRanker queries these tables (via dependency injection):
 
 ### routing_events (optional, for historical accuracy)
+
 ```sql
 SELECT
   chosen_agent_id,
@@ -260,6 +268,7 @@ ORDER BY created_at DESC LIMIT 100
 ```
 
 ### routing_feedback (optional, for success rate)
+
 ```sql
 SELECT
   agent_id,
@@ -272,6 +281,7 @@ ORDER BY created_at DESC LIMIT 100
 ```
 
 ### agent_health (optional, for latency SLA)
+
 ```sql
 SELECT
   agent_id,
@@ -285,6 +295,7 @@ ORDER BY recorded_at DESC LIMIT 1
 ```
 
 ### agents (required)
+
 - `id, name, description, expertise_primary, expertise_secondary, keywords`
 - `model, skills, tools, rag_collections`
 - `description_embedding` (optional, for semantic search)
@@ -302,6 +313,7 @@ Token budgeting per model tier:
 | Opus | 15.00 USD | 800 (relative) |
 
 Cost score: `1.0 - (tier_cost / max_cost)`
+
 - Haiku: 1.0 - (100/800) = 0.875 ✨ Cheap
 - Sonnet: 1.0 - (300/800) = 0.625
 - Opus: 1.0 - (800/800) = 0.0 💎 Expensive
@@ -398,7 +410,8 @@ node infra/agent-registry/expert-finder-demo.js
 ```
 
 Expected output:
-```
+
+```text
 🎉 All sample queries routed correctly to their expert agents!
 Passed: 10/10 (100%)
 ```

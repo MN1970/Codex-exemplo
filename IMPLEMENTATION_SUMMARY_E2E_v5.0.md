@@ -2,7 +2,7 @@
 
 **Data:** 2026-07-25  
 **Status:** ✅ Completo e testável  
-**Proprietário:** mneves@mantaassociados.com  
+**Proprietário:** <mneves@mantaassociados.com>  
 **Versão:** v5.0 final
 
 ---
@@ -43,6 +43,7 @@
 ### 2.1 Cobertura por Agente (20 agentes, 100%)
 
 **Verticais (S1–S10):**
+
 - ✅ S1 — Rodovias (2 testes)
 - ✅ S2 — OAE/Pontes (2 testes)
 - ✅ S3 — Ferrovia (2 testes)
@@ -54,6 +55,7 @@
 - ✅ S10 — Barragens (2 testes)
 
 **Horizontais (Manta 00–16):**
+
 - ✅ Manta 01 — Claims (1 teste)
 - ✅ Manta 02 — Contratual (1 teste)
 - ✅ Manta 04 — Imobiliário (1 teste)
@@ -86,7 +88,7 @@
 
 ### 3.1 Performance Baselines
 
-```
+```text
 Latência (P95):
   - Routing:        < 500ms  (keyword + embedding)
   - RAG BM25:      < 50ms   (elasticsearch)
@@ -105,7 +107,7 @@ Memória:
 
 ### 3.2 Regression Thresholds (CI Gate)
 
-```
+```text
 ✅ PASS if:
   - Routing accuracy ≥ 81%
   - Latency p95 < 5s (allow 5% regression)
@@ -268,6 +270,7 @@ class RoutingResult:
 Arquivo: `.github/workflows/test-maestro-e2e.yml` (4.5 KB)
 
 **Jobs:**
+
 1. **regression-gate** (5 min) — CI gate, blocking
 2. **router-e2e** (2 min) — 40 routing cases
 3. **cross-agent-flows** (2 min) — 10 scenarios
@@ -300,7 +303,7 @@ Arquivo: `.github/workflows/test-maestro-e2e.yml` (4.5 KB)
 
 ### 8.1 Full Suite Run
 
-```
+```bash
 $ pytest tests/ -v --tb=short
 
 tests/test_maestro_router_e2e.py::TestMaestroRouterS8::test_s8_eta_buenos_aires PASSED
@@ -320,7 +323,7 @@ Coverage: 85.3%
 
 ### 8.2 Regression Gate Only (CI)
 
-```
+```bash
 $ pytest tests/test_regression_suite.py -m ci -v
 
 tests/test_regression_suite.py::TestRegressionRoutingAccuracy::test_accuracy_baseline PASSED
@@ -350,6 +353,7 @@ tests/test_regression_suite.py::TestRegressionLatency::test_latency_p95_baseline
 ## 10. Roadmap & Próximos Passos
 
 ### Imediato (v5.0 final)
+
 - ✅ Suite completa implementada
 - ✅ 40 golden cases definidos
 - ✅ 10 cross-agent cenários
@@ -358,6 +362,7 @@ tests/test_regression_suite.py::TestRegressionLatency::test_latency_p95_baseline
 - 🔄 Feedback loops (R9) validados
 
 ### Curto prazo (v5.1, +1-2 semanas)
+
 - 📋 Integrar real Supabase (vs mock)
 - 📋 Real Elasticsearch queries
 - 📋 Real vector DB (Qdrant/Pinecone)
@@ -365,6 +370,7 @@ tests/test_regression_suite.py::TestRegressionLatency::test_latency_p95_baseline
 - 📋 Live APScheduler jobs
 
 ### Médio prazo (v5.2, +1 mês)
+
 - 📋 A/B testing framework
 - 📋 Embedding model fine-tuning (R9)
 - 📋 Observability dashboard (Grafana)
@@ -374,7 +380,7 @@ tests/test_regression_suite.py::TestRegressionLatency::test_latency_p95_baseline
 
 ## 11. Contato & Suporte
 
-**Propriétário:** mneves@mantaassociados.com  
+**Propriétário:** <mneves@mantaassociados.com>  
 **Versão:** v5.0 (2026-07-25)  
 **Issues:** GitHub Issues com label `maestro-e2e-tests`  
 **Documentation:** `TESTING_E2E_GUIDE.md` (detalhado)  

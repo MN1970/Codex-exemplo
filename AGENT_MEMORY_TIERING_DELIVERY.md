@@ -4,7 +4,7 @@
 **Date:** 2026-07-25  
 **Version:** v5.0  
 **Ticket:** MNT-2026-AGENT-MEMORY-TIERING  
-**Owner:** mneves@mantaassociados.com
+**Owner:** <mneves@mantaassociados.com>
 
 ---
 
@@ -30,6 +30,7 @@ Complete implementation of R10 (Purga de Agent_Memory) from CLAUDE.md v5.0 with 
 **Lines of Code:** 550+
 
 **Components:**
+
 - 3 new tables: `agent_memory_archive`, `agent_memory_tier_log`, `agent_memory_quota`
 - 4 column additions to `agent_memory`: `tier`, `last_access_at`, `access_count`, `feedback_score`
 - 11 new indexes (for tiering, LRU, quota, high-rating)
@@ -39,6 +40,7 @@ Complete implementation of R10 (Purga de Agent_Memory) from CLAUDE.md v5.0 with 
 - Grants: AUTHENTICATED + SERVICE_ROLE permissions
 
 **How to deploy:**
+
 ```bash
 supabase db push
 # OR
@@ -58,6 +60,7 @@ psql "$SUPABASE_DB_URL" -f supabase/migrations/2026_07_25_v5_0_agent_memory_tier
 **Purpose:** Orchestrate 3-tier lifecycle transitions (HOT→WARM→COLD→DELETE)
 
 **Key Classes:**
+
 - `MemoryEntry` — Cache entry data model
 - `TieringMetrics` — Metrics for transitions
 - `QuotaStatus` — Agent quota info
@@ -65,6 +68,7 @@ psql "$SUPABASE_DB_URL" -f supabase/migrations/2026_07_25_v5_0_agent_memory_tier
 - `MemoryTieringOrchestrator` — Lifecycle orchestration
 
 **Key Methods:**
+
 ```python
 # Full tiering cycle: HOT→WARM (30 min) → WARM→COLD (480 min) → COLD→DELETE (90d)
 result = orchestrator.execute_tiering_cycle(agent_id=None)
@@ -77,6 +81,7 @@ lru_evict = db.lru_evict_quota_exceeded(agent_id)
 ```
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_tiering.py \
   --supabase-url=$SUPABASE_URL \
@@ -100,6 +105,7 @@ python scripts/agent_memory_tiering.py \
 **Purpose:** Automatic cleanup with LRU eviction + R9 feedback integration
 
 **Key Classes:**
+
 - `CleanupRule` — Rule definition
 - `CleanupResult` — Cleanup operation result
 - `R9FeedbackEntry` — High-rating entry for embedding retraining
@@ -107,11 +113,13 @@ python scripts/agent_memory_tiering.py \
 - `MemoryCleanupOrchestrator` — Cleanup orchestration
 
 **Cleanup Rules (priority-ordered):**
+
 1. Delete expired entries (expires_at < NOW())
 2. Archive low-rating old (user_rating < 2, age > 7 days)
 3. LRU eviction (quota > 80%, oldest entries with access_count < 2)
 
 **Key Methods:**
+
 ```python
 # Analyze what would be cleaned (without executing)
 rules = db.analyze_cleanup_rules(agent_id)
@@ -124,6 +132,7 @@ r9_entries = db.get_high_rating_for_r9(agent_id, threshold=4.0)
 ```
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_cleanup.py \
   --supabase-url=$SUPABASE_URL \
@@ -138,6 +147,7 @@ python scripts/agent_memory_cleanup.py \
 **Recommended Schedule:** Daily at 00:00 UTC (before tiering cycle)
 
 **R9 Integration:**
+
 - Extracts entries with user_rating >= 4 and feedback_score >= 0.8
 - Sends to external R9 retraining job
 - New embeddings available for next tiering cycle
@@ -153,6 +163,7 @@ python scripts/agent_memory_cleanup.py \
 **Purpose:** Real-time quota tracking, anomaly detection, alerting
 
 **Key Classes:**
+
 - `QuotaAlert` — Quota threshold violation
 - `MemoryStats` — Per-agent memory statistics
 - `AnomalyDetection` — Detected anomaly
@@ -161,17 +172,20 @@ python scripts/agent_memory_cleanup.py \
 - `MemoryMonitoringOrchestrator` — Monitoring orchestration
 
 **Quota Thresholds:**
+
 - 60%: INFO
 - 80%: WARNING
 - 90%: CRITICAL
 - 100%: CRITICAL
 
 **Anomaly Detection:**
+
 - Rapid growth (> 50% in 1 hour)
 - Abnormal access patterns (> 1000 accesses/hour)
 - Low-rating saturation (> 20% entries with rating < 2)
 
 **Key Methods:**
+
 ```python
 # Full monitoring cycle
 report = orchestrator.execute_monitoring_cycle()
@@ -190,6 +204,7 @@ metrics = orchestrator.export_grafana_metrics(report)
 ```
 
 **Usage:**
+
 ```bash
 python scripts/agent_memory_monitoring.py \
   --supabase-url=$SUPABASE_URL \
@@ -202,6 +217,7 @@ python scripts/agent_memory_monitoring.py \
 **Recommended Schedule:** Hourly or every 15 min (via APScheduler)
 
 **Slack Integration:**
+
 - Alerts for quota > 80%
 - Anomaly notifications
 - Threshold-based triggers (> 10 GB freed, > 10k rows in single operation)
@@ -215,6 +231,7 @@ python scripts/agent_memory_monitoring.py \
 **File:** `/home/user/Codex-exemplo/docs/AGENT_MEMORY_TIERING.md`  
 **Size:** ~15 KB  
 **Sections:**
+
 - Architecture overview (3-tier lifecycle diagram)
 - Component details (DB schema, stored procedures, triggers)
 - Script documentation (classes, methods, usage)
@@ -240,6 +257,7 @@ python scripts/agent_memory_monitoring.py \
 5. **Use Phase:** Tiering cycle uses updated embeddings
 
 **Entry Selection Criteria:**
+
 - user_rating >= 4 out of 5
 - feedback_score >= 0.8
 - source_prompt captured
@@ -347,23 +365,27 @@ create_trigger(
 ## Key Features Summary
 
 ### ✅ 3-Tier Lifecycle
+
 - HOT (in-process, 30 min)
 - WARM (Supabase, 480 min)
 - COLD (archive, 90 days)
 
 ### ✅ Automatic Transitions
+
 - Promotion: HOT → WARM (inactivity)
 - Archival: WARM → COLD (TTL + low rating)
 - Purge: COLD → DELETE (GDPR 90 days)
 - Eviction: LRU when quota > 80%
 
 ### ✅ Quota Management
+
 - Per-agent quota (default 100 MB)
 - Thresholds: 60%, 80%, 90%, 100%
 - Graceful LRU eviction
 - quota_exceeded_at timestamp
 
 ### ✅ Monitoring & Alerting
+
 - Real-time quota tracking
 - Anomaly detection (3 types)
 - Slack alerts (threshold-based)
@@ -371,12 +393,14 @@ create_trigger(
 - Audit trail (tier_log append-only)
 
 ### ✅ R9 Integration
+
 - Extract high-rating entries (rating >= 4)
 - Send to embedding retraining
 - Update feedback_score
 - Iterative model improvement
 
 ### ✅ Compliance
+
 - GDPR-compliant 90-day retention
 - Audit trail for all transitions
 - RLS isolation (per agent_id)
@@ -386,7 +410,7 @@ create_trigger(
 
 ## Files Summary
 
-```
+```text
 /home/user/Codex-exemplo/
 ├── supabase/
 │   └── migrations/
@@ -437,7 +461,7 @@ create_trigger(
 
 ## Support & Escalation
 
-- **Owner:** mneves@mantaassociados.com
+- **Owner:** <mneves@mantaassociados.com>
 - **Slack Channel:** #agent-ops (for monitoring alerts)
 - **Ticket:** MNT-2026-AGENT-MEMORY-TIERING
 - **Emergency Contact:** On-call from agent-ops rotation

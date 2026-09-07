@@ -104,19 +104,21 @@ SELECT archived_count FROM archive_old_maestro_runs();
 ```
 
 **O que faz:**
+
 1. Copia runs com `created_at < NOW() - INTERVAL '90 days'` para `maestro_runs_archive`
 2. Marca `is_archived = TRUE` na tabela hot (soft delete, não remove dados)
 3. Valida via ON CONFLICT para idempotência (seguro re-executar)
 4. Log: `{archived_count, error_count}` para APScheduler
 
 **Segurança:**
+
 - Dados nunca são deletados (auditoria)
 - Soft delete permite rollback se necessário
 - Archive table tem dados imutáveis (constraint NOT NULL em todas as colunas)
 
 ### 2.3 Cálculo de Retenção
 
-```
+```text
 Supabase Postgres: ~$0.07 / GB / mês
 Estimativa:
   - 1000 runs/dia × 365 dias = 365k runs/ano
@@ -182,7 +184,7 @@ psql $SUPABASE_DB_URL -c "
 
 ### 4.2 Tamanho Estimado
 
-```
+```text
 1000 runs/dia × 90 dias hot = 90k runs
 Per-run: 200 bytes de dados + 100 bytes por index (média 4 indexes)
 Total: 90k × 200 = 18 MB hot + ~36 MB indexes = ~54 MB hot
@@ -281,6 +283,7 @@ O hook `SubagentStop` (disparado quando um subagente termina) deve:
    - error_message (se aplicável)
 
 2. **Calcular custo:**
+
    ```python
    cost_usd = calculate_run_cost(model_tier, input_tokens, output_tokens)
    ```
@@ -291,6 +294,7 @@ O hook `SubagentStop` (disparado quando um subagente termina) deve:
    - rag_collection, rag_reranker_score (do RAG context)
 
 4. **Gravar em maestro_runs:**
+
    ```python
    supabase.table('maestro_runs').insert({
        'run_id': run_id,
@@ -437,6 +441,7 @@ scheduler.add_job(
 ```
 
 **O que faz:**
+
 - Move runs com idade > 90 dias para `maestro_runs_archive`
 - Marca `is_archived = TRUE` na tabela hot
 - Log: `{archived_count, error_count}`
@@ -453,6 +458,7 @@ scheduler.add_job(
 ```
 
 **O que faz:**
+
 - Valida índices e vistas
 - Verifica RLS policies
 - Executa teste de insert mock
@@ -470,6 +476,7 @@ scheduler.add_job(
 ```
 
 **O que faz (R9 feedback loop):**
+
 - Coleta feedback_score ≥ 4
 - Extrai embeddings de prompts relacionados
 - Fine-tunes reranker cross-encoder (opcional)
@@ -523,7 +530,7 @@ python scripts/setup_maestro_runs.py --schedule-jobs
 | Taxa de Erro | error_rate_pct, timeout_rate_pct | Por agente | Último período completo |
 | Latência (p50/p95/p99) | Percentis | Por agente | Último período |
 | Feedback Distribution | 0-5 stars | Agregado | Último período |
-| Model Tier Distribution | haiku|sonnet|opus | Diário | Últimos 30 dias |
+| Model Tier Distribution | haiku\|sonnet\|opus | Diário | Últimos 30 dias |
 | Top 10 Runs por Custo | cost_usd | Run-level | Último período |
 
 ### 8.3 Alertas Sugeridos
@@ -597,6 +604,7 @@ GRANT INSERT, SELECT ON maestro_runs TO service_role;
 ### Q: Como fazer queries manuais em maestro_runs?
 
 **R:**
+
 ```sql
 -- Custo de um agente hoje
 SELECT agent_id, SUM(cost_usd) as total_cost
@@ -621,6 +629,7 @@ LIMIT 10;
 ### Q: Como integrar com Slack alerts?
 
 **R:**
+
 ```python
 # scripts/slack_maestro_alerts.py
 from slack_sdk import WebClient
@@ -662,4 +671,4 @@ scheduler.add_job(alert_error_rate, 'interval', minutes=5)
 
 ---
 
-**Fim do documento. Para suporte, contate: mneves@mantaassociados.com**
+**Fim do documento. Para suporte, contate: <mneves@mantaassociados.com>**

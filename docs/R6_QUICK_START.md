@@ -9,7 +9,7 @@
 
 R6 é um **cross-encoder baseado em Sonnet 5** que melhora a qualidade dos chunks recuperados pelo RAG.
 
-```
+```text
 Query → BM25 (top-20) → [R6 Reranker] → Top-5 chunks (reranked)
 ```
 
@@ -188,7 +188,7 @@ python scripts/eval_reranker_impact.py \
 
 ### Cache Performance
 
-```
+```text
 Hit rate: 20-40% (TTL 7 dias)
 TTL: 7 dias (customizável)
 Chave: hash(query + chunk_ids)
@@ -203,6 +203,7 @@ Chave: hash(query + chunk_ids)
 **Causa**: anthropic package não instalado
 
 **Solução**:
+
 ```bash
 pip install anthropic
 export ANTHROPIC_API_KEY=sk-ant-...
@@ -215,6 +216,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 **Causa**: Sonnet 5 lento ou chunk size grande
 
 **Solução**:
+
 1. Reduzir `--top-k` (menos chunks)
 2. Aumentar cache TTL
 3. Usar batch mode (paralelizar)
@@ -224,6 +226,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 **Causa**: Chunks BM25 já muito relevantes ou prompt inadequado
 
 **Solução**:
+
 1. Revisar qualidade chunks BM25
 2. Ajustar prompt em `SonnetCrossEncoder.build_prompt()`
 3. Aumentar chunk size (256+ tokens)
@@ -275,6 +278,7 @@ cat rag_evals/reranker_impact.json | jq '.impact'
 ```
 
 **Output**:
+
 ```json
 {
   "accuracy_improvement": 10.0,      // % melhoria
@@ -333,9 +337,9 @@ watch -n 60 'python scripts/eval_reranker_impact.py | grep "Improvement"'
 
 ## Support
 
-**Email**: ia-team@mantaassociados.com  
+**Email**: <ia-team@mantaassociados.com>  
 **Slack**: #rag-reranking  
-**GitHub**: https://github.com/manta-associados/manta-maestro
+**GitHub**: <https://github.com/manta-associados/manta-maestro>
 
 ---
 

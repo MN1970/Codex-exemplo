@@ -10,6 +10,7 @@
 ## PHASE 1 — Preparação (sem alteração em produção)
 
 - [ ] **Validar dependências:**
+
   ```bash
   pip install supabase-py python-dotenv APScheduler pytz psycopg2-binary
   ```
@@ -28,6 +29,7 @@
   - [ ] Supabase account acessível
 
 - [ ] **Clonar repo para staging:**
+
   ```bash
   git clone <repo> /tmp/maestro-p6-staging
   cd /tmp/maestro-p6-staging
@@ -38,6 +40,7 @@
 ## PHASE 2 — Schema & Migrations (T-2h)
 
 - [ ] **Aplicar migration SQL:**
+
   ```bash
   supabase db push
   # ou manualmente:
@@ -45,6 +48,7 @@
   ```
 
   **Validar:**
+
   ```sql
   SELECT table_name FROM information_schema.tables 
   WHERE table_schema = 'public' 
@@ -53,12 +57,14 @@
   ```
 
 - [ ] **Validar indexes:**
+
   ```bash
   python scripts/setup_maestro_runs.py --init
   # Deve retornar: ✓ Schema validado com sucesso
   ```
 
 - [ ] **Validar RLS policies:**
+
   ```bash
   psql "$SUPABASE_DB_URL" -c "
     SELECT policyname, tablename 
@@ -68,6 +74,7 @@
   ```
 
 - [ ] **Validar views analíticas:**
+
   ```bash
   psql "$SUPABASE_DB_URL" -c "
     SELECT viewname FROM pg_views 
@@ -81,12 +88,14 @@
 ## PHASE 3 — Testes (T-1h)
 
 - [ ] **Health check completo:**
+
   ```bash
   python scripts/setup_maestro_runs.py --health-check
   ```
 
   **Esperado output:**
-  ```
+
+  ```text
   ======================================================
   MAESTRO RUNS — HEALTH CHECK
   ======================================================
@@ -100,17 +109,20 @@
   ```
 
 - [ ] **Teste mock de run:**
+
   ```bash
   python .claude/hooks/subagentstop_maestro_observability.py
   ```
 
   **Esperado:**
-  ```
+
+  ```text
   ✓ Run gravada com sucesso: [UUID]
   (agent=manta-03-s8, status=success, cost=$0.000150)
   ```
 
 - [ ] **Query de validação:**
+
   ```bash
   psql "$SUPABASE_DB_URL" << 'EOF'
   SELECT COUNT(*) as total_runs, 
@@ -122,6 +134,7 @@
   ```
 
 - [ ] **Testar archive (simulação):**
+
   ```bash
   # Inserir run "antiga" com created_at = 91 dias atrás
   psql "$SUPABASE_DB_URL" << 'EOF'
@@ -175,6 +188,7 @@
   ```
 
 - [ ] **Testar hook com mock event:**
+
   ```bash
   python -c "
   import sys
@@ -257,11 +271,13 @@
 ## PHASE 6 — APScheduler Jobs (T-15min)
 
 - [ ] **Instalar APScheduler:**
+
   ```bash
   pip install APScheduler pytz
   ```
 
 - [ ] **Testar job de archive:**
+
   ```bash
   python scripts/setup_maestro_runs.py --archive --days-threshold 90
   # Esperado: ✓ X runs arquivadas com sucesso
@@ -270,12 +286,14 @@
 - [ ] **Iniciar scheduler em background (ou systemd):**
 
   **Opção 1: Background direto**
+
   ```bash
   nohup python scripts/setup_maestro_runs.py --schedule-jobs > /tmp/maestro_scheduler.log 2>&1 &
   echo $! > /tmp/maestro_scheduler.pid
   ```
 
   **Opção 2: Systemd (produção)**
+
   ```bash
   sudo tee /etc/systemd/system/maestro-scheduler.service > /dev/null << 'EOF'
   [Unit]
@@ -303,6 +321,7 @@
   ```
 
 - [ ] **Validar scheduler está rodando:**
+
   ```bash
   # Verificar log
   tail -f /tmp/maestro_scheduler.log
@@ -350,6 +369,7 @@
 ## PHASE 8 — Documentação & Runbook (T-10min)
 
 - [ ] **Atualizar README com link para P6:**
+
   ```markdown
   ## Observabilidade (P6)
   - Dashboard: [Grafana Maestro](http://grafana/d/maestro-observability-p6)
@@ -358,6 +378,7 @@
   ```
 
 - [ ] **Criar runbook de troubleshooting:**
+
   ```markdown
   # Troubleshooting P6
 
@@ -380,6 +401,7 @@
   ```
 
 - [ ] **Commit changes:**
+
   ```bash
   git add supabase/migrations/ scripts/ .claude/hooks/ docs/
   git commit -m "feat(P6): Observabilidade maestro_runs — append-only logging + Grafana dashboard"
@@ -391,6 +413,7 @@
 ## PHASE 9 — Go-Live (T+0)
 
 - [ ] **Último health check:**
+
   ```bash
   python scripts/setup_maestro_runs.py --health-check
   # Esperado: ✓ All checks passed
@@ -402,7 +425,8 @@
   - [ ] Runs sendo gravadas corretamente
 
 - [ ] **Notificar team:**
-  ```
+
+  ```text
   Slack #agent-ops:
   ✅ P6 Observabilidade (maestro_runs) ativado
   - Log imutável append-only
