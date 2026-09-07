@@ -31,7 +31,7 @@ description: >
 
 Antes de qualquer ação:
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │  AGENTE BARRAGENS — INTAKE                       │
 │                                                  │
@@ -74,7 +74,7 @@ Antes de qualquer ação:
 
 ## 2. ARQUITETURA — 5 VERTENTES
 
-```
+```text
    ┌────────────────────────────────────────────────────┐
    │  V1 Análise Técnica & Risco                        │
    │  V2 Inteligência Setorial (ANM, ANA, ICOLD, CBDB)  │
@@ -87,11 +87,13 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
+
 - `bar-scanner.md` — premissas: altura, volume, DPA, categoria risco
 - `bar-risk.md` — matriz 5×5 (sísmica, liquefação, PAE, PAEBM)
 - `bar-thesis.md` — tese técnica + score 0-100 (segurança + custo)
 
 ### V2 — Inteligência Setorial
+
 - `bar-int-orchestrator.md`
 - `axes/01-normas.md` — NBR 13028 (rejeitos), 8681 (ações), ABNT 6122
 - `axes/02-regulatorio.md` — ANM Res. 95/2022, ANA (SNISB), ANEEL (UHE)
@@ -101,12 +103,14 @@ Antes de qualquer ação:
 - `axes/06-academia.md` — ICOLD bulletins (194 rejeitos, 164 CFRD, 194 seg.)
 
 ### V3 — Gestão de Obra + Instrumentação
+
 - `bar-cronograma.md` — sazonalidade (janela seca), desvio de rio
 - `bar-medicao-fisica.md` — m³ escavação, m³ concreto lançado, m² face
 - `bar-instrumentacao.md` — piezômetro, medidor de vazão, extensômetro, célula
 - `bar-monitoramento.md` — níveis de controle × emergência, frequência
 
 ### V4 — Document Intelligence
+
 - `bar-doc-orchestrator.md`
 - `bar-doc-projeto.md` — memorial + plantas
 - `bar-doc-cad.md` — DWG/DXF (cad-quantifier)
@@ -117,6 +121,7 @@ Antes de qualquer ação:
 - `bar-doc-pae.md` — PAE/PAEBM + mapa inundação
 
 ### V5 — 12 Disciplinas de Barragens
+
 - `disciplines/D01-hidrologia.md` (PMP, PMF, TR)
 - `disciplines/D02-hidraulica-vertedor.md` (routing + dimensionamento)
 - `disciplines/D03-geotecnia-geral.md` (caracterização, ensaios)
@@ -135,12 +140,14 @@ Antes de qualquer ação:
 ## 4. KNOWLEDGE ENGINE (RAG)
 
 ### Armazenamento
+
 - Casos: `bar:cases:CASE-BAR-XXX`
 - Índice: `bar:cases:index`
 - Config: `bar:config:*`
 - Dados ativos: `bar:active:*`
 
 ### Fontes iniciais
+
 - ICOLD bulletins (194 rejeitos filtrados, 164 CFRD, 72 seleção materiais)
 - CBDB cadernos técnicos + guias
 - ANM Res. 95/2022 (descaracterização, inspeções)
@@ -224,7 +231,7 @@ Antes de qualquer ação:
 
 ## 10. METADADOS
 
-```
+```yaml
 Skill: agente-barragens
 Versão: 1.0.0
 Criada: 2026-07-05

@@ -14,7 +14,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 
 ## 1. FLUXO PRINCIPAL — Intake Q1
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │ Entrada: Pergunta do usuário                        │
 └──────────────────┬──────────────────────────────────┘
@@ -47,6 +47,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### 🏗️ S1 — Rodovias (agente-infraestrutura S1)
 
 **Palavras-chave:**
+
 - rodovia, rodovia federal, rodovia estadual, estrada
 - pavimento, pavimentação, asfalto, CBUQ, BGS, macadame
 - base, sub-base, terraplenagem, aterro
@@ -62,6 +63,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### 🌉 S2 — OAE (agente-infraestrutura S2) + S5 (Túneis)
 
 **Palavras-chave:**
+
 - ponte, viaduto, passarela, OAE (Obra de Arte Especial)
 - fundação, estaca, tubulão, sapata
 - estrutura de concreto, estrutura metálica, estrutura mista
@@ -73,6 +75,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 **Exemplo:** "Como dimensionar uma ponte em CFRD?" → **agente-infraestrutura S2** (estrutura do tabuleiro)
 
 **Túneis** (S5):
+
 - túnel, galeria, sistema de ventilação, iluminação
 - NATM (New Austrian Tunnelling Method), suporte provisório
 - revestimento definitivo, impermeabilização
@@ -84,6 +87,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### 🚂 S3 — Ferrovia (agente-infraestrutura S3)
 
 **Palavras-chave:**
+
 - ferrovia, via permanente, trilho, dormente, lastro, pátio ferroviário
 - AMV (aparelho de mudança de via), agulha
 - estação ferroviária, pátio de classificação
@@ -99,6 +103,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### 🚇 S4 — Metrô (agente-infraestrutura S4) + S5 (Túneis em metrô)
 
 **Palavras-chave:**
+
 - metrô, metrô de superficie, VLT (Veículo Leve sobre Trilhos)
 - estação (metrô), plataforma, linhas
 - NATM (metrô em NATM), STBPP, tuneladora, TBM
@@ -116,6 +121,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### 🚢 S6 — Portos (agente-portos)
 
 **Palavras-chave:**
+
 - porto, terminal, berço, cais, píer, molhe, quebra-mar
 - dragagem, derrocamento, dessilagem
 - contêiner, granel sólido (minério), granel líquido (petróleo)
@@ -135,6 +141,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### ✈️ S7 — Aeroportos (agente-aeroportos)
 
 **Palavras-chave:**
+
 - aeroporto, aeródromo, base aérea
 - pista, runway (RWY), taxiway (TWY), via de saída rápida
 - TPS (Terminal de Passageiros), TECA (Terminal de Cargas), garagem
@@ -154,6 +161,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### 💧 S8 — Saneamento (agente-saneamento) ⭐ PRIORIDADE AYSÁ
 
 **Palavras-chave:**
+
 - saneamento, saneamento básico, infraestrutura de água/esgoto
 - ETA (Estação de Tratamento de Água), água potável, captação
 - adutora, adução, vazão, pressão, golpe de aríete
@@ -183,6 +191,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### ⚡ S9 — Energia (agente-energia) ⭐ PRIORIDADE ANEEL
 
 **Palavras-chave:**
+
 - energia, eletricidade, setor elétrico, sistema elétrico
 - transmissão, LT (linha de transmissão), tronco, subestação
 - geração, usina hidrelétrica (UHE), usina eólica, usina solar, PCH, CGH
@@ -208,6 +217,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 ### 🏰 S10 — Barragens (agente-barragens)
 
 **Palavras-chave:**
+
 - barragem, vertedouro, tomada de água
 - CFRD (Concrete Face Rockfill Dam), CCR (Roller Compacted Concrete), RCC
 - terra, enrocamento, alteamento (montante, jusante, linha de centro)
@@ -232,7 +242,7 @@ Quando um usuário entra com uma pergunta, o **Maestro** (Manta 00) faz triagem 
 
 ### Quando Usar Agentes Horizontais (Sem dispatch primário S1-S10)
 
-```
+```text
 PERGUNTA DO USUÁRIO
         │
         ▼
@@ -288,7 +298,7 @@ Depois que Maestro roteia para o agente primário, este agente faz triagem adici
 
 ### Intake Q2: Qual fase do projeto?
 
-```
+```text
 (A) Estudo prévio / EVTE / Conceitual
 (B) Projeto básico
 (C) Projeto executivo
@@ -301,7 +311,7 @@ Depois que Maestro roteia para o agente primário, este agente faz triagem adici
 
 ### Intake Q3: País / Jurisdição?
 
-```
+```text
 (BR) Brasil — Lei 14.026 (saneamento), ANEEL (energia), ANTAQ (portos)
 (AR) Argentina — AySA (saneamento), ERAS (Santa Fe, Córdoba)
 (OT) Outro — Latam, África, Ásia
@@ -309,7 +319,7 @@ Depois que Maestro roteia para o agente primário, este agente faz triagem adici
 
 ### Intake Q4: Como chegam os dados?
 
-```
+```text
 (a) DWG/DXF (CAD drawings)
 (b) PMSB / estudo prévio / relatório
 (c) Resultados analíticos (água/esgoto, qualidade)
@@ -350,26 +360,31 @@ Estes 5 agentes **trabalham em background**, suportando S1-S10:
 **Entrada:** "Preciso dimensionar uma ETE com MBR para tratamento terciário pós-Lei 14.026. Como estruturar a concessão?"
 
 **Passo 1 — Maestro Intake Q1:**
+
 - Detecta: "ETE", "Lei 14.026", "concessão"
 - Keywords: S8 (saneamento) + atividade A6 (contratual)
 - **Decision:** Dispatch primário = `agente-saneamento` (S8)
 
 **Passo 2 — Agente Saneamento (Q2-Q4):**
+
 - Q2: Projeto executivo + concessão integrada → Fase C + F
 - Q3: Brasil (Lei 14.026)
 - Q4: Múltiplos formatos (PMSB + estudos de viabilidade)
 
 **Passo 3 — Carga de Contexto (RAG):**
+
 - RAG Hierarchy seleciona coleção `saneamento`
 - Busca por: "Lei 14.026 + concessão + MBR + terciário"
 - Retorna: 3-5 chunks com máxima relevância
 
 **Passo 4 — Execução com Handoff:**
+
 - Agente-saneamento analisa ETE (estrutura, normas NBR, tratamento)
 - Detecta concessão → **Oferece handoff a `agente-contratual` (Manta 02)**
 - Agente-contratual revisa cláusulas pós-Lei 14.026
 
 **Passo 5 — Deliverable:**
+
 - 1️⃣ Tese técnica (MBR vs. lodo ativado, área, custo operacional)
 - 2️⃣ Estrutura de concessão (PPP, subsídio cruzado, WACC)
 - 3️⃣ Cronograma (obra + concessão + operação)
@@ -389,7 +404,7 @@ Estes 5 agentes **trabalham em background**, suportando S1-S10:
 
 ## 9. KEYWORDS COMPLETOS — CHEAT SHEET
 
-```
+```text
 S1 rodovia|pavimento|CBUQ|BGS|SICRO|DNIT
 S2 ponte|viaduto|OAE|NBR 7187|estrutura|fundação
 S3 ferrovia|trilho|via permanente|dormente|AMV
@@ -407,4 +422,3 @@ ESG (co-agent) biodiversidade|ESG|carbono|offset|ambiental|compliance|GHG|TCFD|S
 **Documento canônico:** `/sharepoint/00-arquitetura/INDICE-CANONICO-v5.0.1.md`  
 **Deployment status:** `DEPLOYMENT-REPORT-v5-0-PRODUCTION.md`  
 **Perguntas?** Contatar MN ou slack `#manta-maestro-v5`
-

@@ -7,7 +7,7 @@
 
 ## 📊 Visão Geral
 
-```
+```text
 v4.3 Parallel KE Embeddings:  ✅ 11/11 completo (100%) — PRONTO PARA PRODUÇÃO
 v4.2 S6–S10:                 ⏳ 2/10 completo (20%)
 v4.4 Roadmap:                📅 0/3 planejado (0%)
@@ -174,14 +174,16 @@ TOTAL:                       22/29 (76%)
 ## 🎯 Prioridades & Roadmap
 
 ### AGORA (Esta semana)
-```
+
+```yaml
 v4.3: ✅ Completo
 └─ [ ] Merge para main (gate MN)
 └─ [ ] Publicar docs para time operacional
 ```
 
 ### PRÓXIMAS 2 SEMANAS (Antes do launch v4.2+v4.3)
-```
+
+```yaml
 v4.2: Admin tasks (bloqueadas por acesso SharePoint/Supabase)
 ├─ [ ] Criar 5 coleções RAG (Supabase admin)
 ├─ [ ] Inserir routing rules (SharePoint admin)
@@ -191,7 +193,8 @@ v4.2: Admin tasks (bloqueadas por acesso SharePoint/Supabase)
 ```
 
 ### PRÓXIMAS 4 SEMANAS (Operacionalização v4.3)
-```
+
+```yaml
 v4.3: Operacional + Observabilidade
 ├─ [ ] Cron/webhook discovery automático
 ├─ [ ] Dashboard de status
@@ -199,7 +202,8 @@ v4.3: Operacional + Observabilidade
 ```
 
 ### PRÓXIMOS 2 MESES (v4.4 Planejado)
-```
+
+```yaml
 v4.4: Expansão de capacidades
 ├─ [ ] Autodesk MCP integration
 ├─ [ ] Migração de modelo (bge-m3)
@@ -221,7 +225,7 @@ v4.4: Expansão de capacidades
 
 ## 📈 Progresso Visual
 
-```
+```text
 v4.1 (Baseline)
 └─ ✅ 11 agentes horizontais + 4 verticais (S1–S4)
 
@@ -253,6 +257,7 @@ CURRENT: v4.3 funcional, v4.2 aguardando admin, v4.4 no roadmap
 ## 📊 Summary by Status
 
 ### ✅ COMPLETO & PRONTO PARA PRODUÇÃO (11 itens)
+
 - Infraestrutura KE embeddings (código + tests + docs)
 - CLAUDE.md evoluído (v4.3)
 - 86 KEs 100% indexadas
@@ -262,12 +267,14 @@ CURRENT: v4.3 funcional, v4.2 aguardando admin, v4.4 no roadmap
 - Integração aluci-guard audit
 
 ### 🚫 BLOQUEADO POR ADMIN (8 itens)
+
 - RAG coleções (Supabase)
 - SharePoint setup (pastas, routing, docs)
 - Skill registry
 *→ Requerem acesso de admin (fora do escopo desta sessão)*
 
 ### 📅 PLANEJADO PARA v4.4 (3 itens)
+
 - Autodesk MCP
 - Migração bge-m3
 - Bulk re-indexing
@@ -302,14 +309,16 @@ CURRENT: v4.3 funcional, v4.2 aguardando admin, v4.4 no roadmap
 ## 🎯 Recomendação: Próximos 3 Passos
 
 ### 1️⃣ **Hoje/Amanhã: Merge v4.3 + Notificação**
-```
+
+```bash
 git push origin claude/parallel-ke-embeddings-index-xdu98y
 → Merge PR #37 para main
 → Notificar: "v4.3 is live: parallel KE embeddings, CLAUDE.md evolved, 86 KEs 100% indexed"
 ```
 
 ### 2️⃣ **Esta semana: Solicitar Admin + Setup Cron**
-```
+
+```yaml
 Email: MN + Supabase admin
 "v4.2 pronto para RAG setup. 5 coleções prontas para popular."
 
@@ -317,7 +326,8 @@ Paralelo: Setup cron discovery 1x/dia (você pode fazer agora)
 ```
 
 ### 3️⃣ **Próximas 2 semanas: Completar v4.2 + Planejar v4.4**
-```
+
+```text
 Quando admin setup disponível:
 └─ Criar RAG coleções
 └─ Testar routing Maestro

@@ -14,6 +14,7 @@ O **KB Evoluído** é um sistema de aprendizado contínuo que transforma projeto
 Diferentemente de um KB estático, o sistema **coleta**, **processa**, **valida** e **realimenta** constantes, templates, padrões de custo, cronogramas e regras de negócio diretamente dos projetos reais, mantendo histórico completo e permitindo rollback.
 
 **Pilares**:
+
 1. **Ingestion em Tempo Real**: dados de projetos finalizados entram na Ingestion Layer
 2. **Processamento Inteligente**: análise + clustering + outlier detection
 3. **Feedback Loop**: aprendizado → atualização do RAG em Supabase → versioning
@@ -23,7 +24,7 @@ Diferentemente de um KB estático, o sistema **coleta**, **processa**, **valida*
 
 ## 1. Visão Geral Arquitetural — 3 Camadas
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    KNOWLEDGE LAYER                              │
 │  (Supabase RAG + Templates + Constantes + Regras de Negócio)    │
@@ -72,7 +73,9 @@ Diferentemente de um KB estático, o sistema **coleta**, **processa**, **valida*
 ### 1.2 Processing Layer — 4 Sub-pipelines
 
 #### a) **Feature Extraction**
+
 Converte documentos brutos em features estruturadas:
+
 - Custo por unidade ($/m de rodovia, $/km de LT, $/m³ de ETA)
 - Duração por fase (meses de projeto básico, duração obra)
 - Taxa de deflação/escalonamento (IPC, índice específico)
@@ -82,7 +85,9 @@ Converte documentos brutos em features estruturadas:
 **Tecnologia**: spaCy + regex + LLM extraction (para docs não-estruturados)
 
 #### b) **Clustering & Categorização**
+
 Agrupa projetos similares para derivar **constantes** do Maestro:
+
 - Clustering por tipologia (rodovia urbana vs rural, ETA vs ETE)
 - Subtipologia (ex: rodovia duplicada em solo mole)
 - Geografia (bioma, clima, região de custo)
@@ -91,7 +96,9 @@ Agrupa projetos similares para derivar **constantes** do Maestro:
 **Output**: centróides que alimentam templates padrão dos agentes
 
 #### c) **Outlier Detection**
+
 Identifica anomalias que precisam revisão humana:
+
 - Projeto com custo 3σ acima da média (possível erro ou novidade)
 - Cronograma muito fora da curva (atraso significativo)
 - Taxa de incidência acima do usual
@@ -99,7 +106,9 @@ Identifica anomalias que precisam revisão humana:
 **Output**: flags + notify Maestro S1-S10 relevante para investigação
 
 #### d) **Pattern Matching & Rule Extraction**
+
 Descobre padrões recorrentes em dados estruturados:
+
 - Regra: "se solo mole + drenagem deficiente → atraso de X meses"
 - Regra: "se deflação acumulada > Y% → revisar tarifa"
 - Regra: "se classe de risco Z → executar monitoramento D"
@@ -109,7 +118,9 @@ Descobre padrões recorrentes em dados estruturados:
 ### 1.3 Knowledge Layer — 3 Dimensões
 
 #### Dimensão A: **KB Chunks (RAG)**
+
 Fragmentos de conhecimento versionados em `kb_chunks`:
+
 ```sql
 table: kb_chunks
 columns:
@@ -128,7 +139,9 @@ columns:
 ```
 
 #### Dimensão B: **Metadata & Auditoria**
+
 Trilha de quem mudou o quê em `kb_metadata`:
+
 ```sql
 table: kb_metadata
 columns:
@@ -144,7 +157,9 @@ columns:
 ```
 
 #### Dimensão C: **KB Snapshots & Rollback**
+
 Histórico completo para rollback em `kb_snapshots`:
+
 ```sql
 table: kb_snapshots
 columns:
@@ -163,7 +178,7 @@ columns:
 
 ## 2. Fluxo de Dados — Feedback Loop
 
-```
+```text
                     ┌──────────────────────────────┐
                     │   PROJETO FINALIZADO         │
                     │  (Saneamento ETA, Rodovia,   │
@@ -252,7 +267,7 @@ columns:
 
 ### 2.2 Estados de Validação
 
-```
+```text
 pending → approved → live (em kb_chunks)
   ↓
   └→ rejected → (log + voltar ao source)
@@ -277,16 +292,19 @@ live → rolled_back (se anomalia detectada pós-deploy)
 **Estrutura de versões**: `{SEGMENT}-v{MAJOR}.{MINOR}.{PATCH}`
 
 Exemplos:
+
 - `S1-v2.3.1` (Rodovias: v2 com breaking change em índice de custo SICRO)
 - `S8-v1.0.0` (Saneamento: versão inicial baseada em 5 projetos AySA)
 - `S9-v1.1.0` (Energia: novo chunk sobre leilão de transmissão)
 
 **Regras**:
+
 1. **MAJOR** sobe quando breaking change (ex: novo índice de custo)
 2. **MINOR** sobe quando novo feature (ex: novo tipo de ETA)
 3. **PATCH** sobe quando bugfix ou refinamento
 
 **Arquivo**: `kb_versions.json` no repositório
+
 ```json
 {
   "S1": {
@@ -309,26 +327,32 @@ Exemplos:
 **Componentes**:
 
 #### a) **Project-to-KB Extractor**
+
 Aplicação (Python + FastAPI) que:
+
 1. Lê projeto finalizado (SharePoint + ERP)
 2. Extrai features via spaCy + regex + LLM
 3. Classifica por segment (S1-S10)
 4. Submete ao Processing Layer
 
 #### b) **Confidence Scoring**
+
 Cada novo chunk recebe score baseado em:
+
 - Número de projetos que corroboram (n ≥ 3 para passar)
 - Variância estatística (se σ < threshold)
 - Agreement de agentes especialistas (≥ 2/3)
 
 Fórmula:
-```
+
+```text
 confidence = (n_projects / 5) * 0.4 + 
              (1 - normalized_variance) * 0.4 +
              (expert_agreement / 1.0) * 0.2
 ```
 
 #### c) **Human-in-the-Loop Gates**
+
 1. **Outlier review**: human valida anomalias antes de entrar no KB
 2. **Expert approval**: agente S1-S10 assina cada novo chunk
 3. **Quarterly audit**: revisão de todas as entradas do trimestre
@@ -336,19 +360,22 @@ confidence = (n_projects / 5) * 0.4 +
 ### 3.3 ML Pipeline
 
 **Tecnologias**:
+
 - **Feature extraction**: spaCy, Hugging Face NER, regex
 - **Clustering**: scikit-learn (KMeans, DBSCAN, hierarchical)
 - **Outlier detection**: Isolation Forest, Local Outlier Factor (LOF)
 - **Pattern matching**: MLflow + custom Prolog engine
 
 **Métricas trackadas**:
+
 - Silhouette score (qualidade de clustering)
 - Outlier percentage (anomalias por segment)
 - Precision / Recall (validação de padrões extraídos)
 - Adoption rate by agents (quantas vezes usaram novo chunk)
 
 **Output**:
-```
+
+```text
 ml_results.json
 ├── clusters
 │   ├── S1
@@ -371,13 +398,15 @@ ml_results.json
 **Tabela**: `kb_metadata` (vide seção 1.3)
 
 **Eventos logados**:
+
 1. Criação de novo chunk (origem: projeto + data)
 2. Atualização de chunk (versão anterior, razão, aprovador)
 3. Depreciação (quando supersedido por versão nova)
 4. Rollback (motivo: anomalia detectada ou rejeição)
 
 **Dashboard de auditoria** (future: Superset/Metabase):
-```
+
+```text
 Timeline de todas as mudanças:
 2026-07-30 14:30 agente-saneamento criou "ETA custo médio AySA 2025" (confidence: 0.95)
 2026-07-28 09:15 human-reviewer rejeitou "LT custo novo" (reason: "outlier não investigado")
@@ -395,12 +424,14 @@ Timeline de todas as mudanças:
 **Prioridade**: 🔴 **CRÍTICA** — parceria AySA 2026
 
 **Fontes de dados**:
+
 - AySA: arquivos de projetos finalizados (4 ETA já entregues em 2024-2025)
 - SNIS: Banco de custos nacional
 - Lei 14.026 (Marco Legal do Saneamento)
 - Editais BNDES: histórico de investimentos
 
 **Features-chave**:
+
 - Volume tratado (m³/dia)
 - Topografia + solo (impacto em adutoras)
 - Taxa de tratamento (primário/secundário/terciário)
@@ -408,6 +439,7 @@ Timeline de todas as mudanças:
 - Duração de projeto básico vs executivo
 
 **Templates iniciais**:
+
 - "ETA fluvial de 50 m³/dia em solo mole"
 - "ETE compacta para município < 10k hab"
 - "Adutora > 5 km com cruzamentos"
@@ -421,12 +453,14 @@ Timeline de todas as mudanças:
 **Prioridade**: 🟠 **ALTA** — demanda ANEEL crescente
 
 **Fontes de dados**:
+
 - ANEEL: Editais de leilão de transmissão
 - EPE: Plano Decenal de Energia
 - ONS: Operador Nacional do Sistema
 - IEEE: Padrões de engenharia
 
 **Features-chave**:
+
 - Tensão (69 kV, 138 kV, 230 kV, 500 kV, 600 kV)
 - Comprimento da LT
 - Topografia (plana vs montanha)
@@ -435,6 +469,7 @@ Timeline de todas as mudanças:
 - Duração de autorização ambiental vs construção
 
 **Templates iniciais**:
+
 - "LT 230 kV em topografia plana, 50 km"
 - "Subestação em área urbana, 138/69 kV"
 - "RAP (Relatório Ambiental Prévio): 8-10 meses"
@@ -448,12 +483,14 @@ Timeline de todas as mudanças:
 **Prioridade**: 🟡 **MÉDIA** — mercado em retomada
 
 **Fontes de dados**:
+
 - ANTAQ: Concessões e editais
 - PIANC (Permanent International Association of Navigation Congresses): Guidelines
 - Editais BNDES: financiamentos históricos
 - Relatórios de dragagem
 
 **Features-chave**:
+
 - Calado (profundidade de acesso)
 - Capacidade de carga (toneladas/ano)
 - Tipo de carga (contêiner, granel, carga geral)
@@ -462,6 +499,7 @@ Timeline de todas as mudanças:
 - Duração de projeto + pré-operação
 
 **Templates iniciais**:
+
 - "Terminal contêinerista: 50k TEU/ano, calado 12m"
 - "Dragaria de 2M m³ em baía protegida"
 - "Molhe de proteção, 500m, em costa rochosa"
@@ -495,7 +533,8 @@ Timeline de todas as mudanças:
 | 7. Broadcast to agents | < 5 min | Webhook RAG refresh |
 
 **Exemplo timeline real**:
-```
+
+```text
 2026-07-30 08:00 — Projeto ETA finalizado no ERP
 2026-07-30 08:45 — Extraction completa, features extraídas
 2026-07-30 10:30 — Clustering + outlier detection (custo 4σ acima)
@@ -510,6 +549,7 @@ Timeline de todas as mudanças:
 ### 5.3 Knowledge Evolution Roadmap
 
 #### Q3 2026 (agora)
+
 - [ ] Deploy inicial: S8 (Saneamento), S9 (Energia), S6 (Portos)
 - [ ] Create 3 RAG collections em Supabase
 - [ ] Setup ML pipeline (KMeans, Isolation Forest)
@@ -518,6 +558,7 @@ Timeline de todas as mudanças:
 - [ ] Deploy de audit trail dashboard
 
 #### Q4 2026
+
 - [ ] Expand S8 com 10+ projetos AySA
 - [ ] S9: integração de 5 leilões ANEEL 2026
 - [ ] S6: 3 terminais de pesquisa
@@ -525,6 +566,7 @@ Timeline de todas as mudanças:
 - [ ] Métricas: adoção por agentes (quantas vezes consultaram novo chunk)
 
 #### Q1 2027
+
 - [ ] S7 (Aeroportos) beta launch
 - [ ] S10 (Barragens) beta launch
 - [ ] Expert validation automation (SVM classifier: agente ou humano?)
@@ -532,6 +574,7 @@ Timeline de todas as mudanças:
 - [ ] Integration: Maestro routing usa KB versão live
 
 #### Q2 2027+
+
 - [ ] Todos os 10 segments em operação
 - [ ] ML model serving (real-time outlier detection)
 - [ ] Feedback loop: agentes sugerem padrões novos automaticamente
@@ -589,7 +632,7 @@ Quando projeto chega ao estado "Encerrado" no ERP, gateway emite:
 
 ### 6.2 Document Ingestion
 
-```
+```text
 /03_Projetos/Saneamento/ETA_Alto_Lapa_2026/
 ├── 01-EVTE_Alto_Lapa.pdf
 ├── 02-Projeto_Basico_completo.dwg
@@ -600,6 +643,7 @@ Quando projeto chega ao estado "Encerrado" no ERP, gateway emite:
 ```
 
 Ingestion layer:
+
 1. Detecta novo PDF → OCR + text extraction
 2. Estruturado (.xlsx) → SQL insert direto
 3. CAD (.dwg) → metadata extraction (área, volumes)
@@ -728,7 +772,7 @@ def restore_snapshot(segment: str, kb_version: str):
 
 ### 9.1 Key Metrics (Dashboard)
 
-```
+```text
 Saneamento (S8)
 ├── KB Version: S8-v1.0.0
 ├── Total Chunks: 42
@@ -781,6 +825,7 @@ Energia (S9)
 ## 11. Próximas Fases — Roadmap Técnico
 
 ### Phase 1 (agora): Foundation
+
 - [x] ARCHITECTURE.md (este documento)
 - [ ] Implement Ingestion Layer + ETL
 - [ ] Setup Supabase tables (kb_chunks, kb_metadata, kb_snapshots)
@@ -788,18 +833,21 @@ Energia (S9)
 - [ ] Expert validation gate (manual)
 
 ### Phase 2 (Q4 2026): Scale
+
 - [ ] Automation de outlier detection
 - [ ] Feedback loop closure (agentes sugerem padrões)
 - [ ] Dashboard de auditoria
 - [ ] Integração S8, S9, S6 com 20+ projetos
 
 ### Phase 3 (Q1 2027): Intelligence
+
 - [ ] SVM para predizer se chunk é "expert-approvable"
 - [ ] Auto-generation de chunks via LLM
 - [ ] Pattern discovery automática
 - [ ] S7, S10 launch
 
 ### Phase 4 (Q2 2027+): Ecosystem
+
 - [ ] Knowledge marketplace (agentes trocam chunks)
 - [ ] Multi-tenant (Manta + partners)
 - [ ] Real-time RAG serving (sub-ms latency)
@@ -840,4 +888,3 @@ Energia (S9)
 **Documento finalizado**: 2026-07-30  
 **Próxima revisão**: 2026-10-30 (final de Q3)  
 **Responsável**: Manta Maestro Knowledge Systems
-

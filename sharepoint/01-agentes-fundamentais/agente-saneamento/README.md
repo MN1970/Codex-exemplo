@@ -6,7 +6,7 @@ marco brasileiro pós-Lei 14.026/2020.
 
 ## Estrutura desta pasta
 
-```
+```text
 agente-saneamento/
 ├── SKILL.md         # definição canônica (intake com Q3 país BR/AR)
 ├── README.md        # este arquivo

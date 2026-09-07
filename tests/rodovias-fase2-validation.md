@@ -11,6 +11,7 @@
 ## Metodologia
 
 Para cada prompt:
+
 1. **Execute** contra agente-infraestrutura S1 com contexto RAG carregado
 2. **Coleta** resposta completa (resumir em ≤200 palavras aceitável)
 3. **Compara** contra esperado em seção "Resposta Esperada"
@@ -28,6 +29,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Uma rodovia federalBR com Vd=100 km/h deseja implantar curva horizontal. Qual raio mínimo DNIT para garantir segurança lateral (não-escorregamento) com fricção transversal máxima f=0.15? Usar fórmula DNIT-ES 101/97."
 
 **Resposta Esperada**:
+
 - Fórmula: Rm_mín = V²/(127×(e+f)) onde V=100 km/h, e=0.10 (superelevação máxima), f=0.15
 - Cálculo: Rm = 10.000/(127×0.25) = 315 m (arredonda 320 m)
 - Norma: DNIT-ES 101/97 tabela raios-superelevação
@@ -43,6 +45,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Rodovia com raio crista Rv=800m, altura olho motorista h1=1.5m, altura obstáculo h2=1.0m. Qual distância visibilidade parada Dvp? Usar norma DNIT-ES 101/97."
 
 **Resposta Esperada**:
+
 - Fórmula: Dvp = 2×√(2×Rv×(h1+h2-2×√(h1×h2)))
 - Simplificado (h1≠h2): Dvp ≈ 2×√(Rv×h1) quando h2 pequeno
 - Cálculo aproximado: Dvp = 2×√(800×1.5) ≈ 2×√1200 ≈ 70 m
@@ -60,6 +63,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Rodovia federal BR-116 com AADT=1000 veículos/dia (30% pesados), período projeto 20 anos, crescimento tráfego 3% a.a., CBR subleito 8%, superestrutura CBUQ+BGS+SBS. Calcular: (1) N número eixos padrão, (2) MR módulo resiliente, (3) SN requerido AASHTO 1993 com PSI inicial 4.2 e final 1.5. Usar DNIT Manual 2006."
 
 **Resposta Esperada**:
+
 - Passo 1 — Cálculo N: N = AAD×365×[(1+i)^A-1]/i×FC×FD = 1000×365×[(1.03)^20-1]/0.03×0.8×0.45 ≈ 1.8×10^6
 - Passo 2 — Cálculo MR: MR = 2555×CBR^0.64 = 2555×8^0.64 ≈ 21.000 psi ≈ 145 MPa
 - Passo 3 — Cálculo SN AASHTO: log(1.8×10^6) = 9.36×log(SN+1) - 0.20 + ... → SN ≈ 3.8
@@ -76,6 +80,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Uma empreiteira propõe usar 30% RAP (Reclaimed Asphalt Pavement) em mistura CBUQ para pavimentação rodovia federal. A proposta está conforme DNIT? Quais são limitações técnicas? Cite norma reguladora."
 
 **Resposta Esperada**:
+
 - Taxa máxima DNIT: 20-30% em massa total (depende ligante novo compatibilidade)
 - Limitação técnica: ligante residual RAP é rígido (viscosidade alta) → usar CAP-modificado novo (SBS) compatibilidade
 - Verificação: para 30% RAP, ensaio Marshall/dinâmico validar módulo resistência CBUQ resultante
@@ -92,6 +97,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Pavimento BR-101 tem ICP=52 e afundamento médio 12mm medido FWD. Técnico propõe recapeamento CBUQ 4cm. Resposta é adequada? Qual seria intervenção recomendada DNIT? Justifique conforme critério ICP-afundamento."
 
 **Resposta Esperada**:
+
 - Critério DNIT: ICP 40-60 + afundamento 10-20mm → reforço indicado (não simples recapeamento)
 - Justificativa: afundamento 12mm sugere problema estrutural base (não apenas desgaste superficial)
 - Recapeamento apenas mascara problema (risco reaparição trincas 2-3 anos)
@@ -110,6 +116,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Aterro rodoviário 5m altura, inclinação 1:2.5, solo com φ=28°, c=15 kPa, γ=19 kN/m³, presença piezômetro indicando lençol freático 1.5m profundidade (reduz peso efetivo). Calcular aproximado fator segurança Bishop. Qual é limite DNIT?"
 
 **Resposta Esperada**:
+
 - Método Bishop círculo: FS = Σ(resistência)/(Σação), aproximação manual ~1.2-1.4 (software Slope/W necessário precisão)
 - Fatores favoráveis: φ=28° (razoável), coesão c=15 kPa (contribui)
 - Fator desfavorável: lençol freático próximo (reduz peso efetivo em ~20%, FS reduz ~0.1-0.2)
@@ -126,6 +133,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Capa asfáltica e base granular (BGS) devem atingir que grau compactação GC% conforme DNIT? Qual equipamento medição e frequência amostragem recomendada? Cite DNER-ME 129."
 
 **Resposta Esperada**:
+
 - Capa asfáltica: GC ≥ 97% Proctor Normal (DNER-ME 129/94)
 - Base granular (BGS): GC ≥ 95% Proctor Normal
 - Subbase granular: GC ≥ 93% Proctor Normal
@@ -143,6 +151,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Seção 100 km rodovia com 2M m³ volume solo escavado, FHD (Free Haul Distance)=300m, custo transporte R$ 2.50/m³/100m. Qual é custo transporte excedente (acima FHD)? Qual é distância média se assume borrow area único 5km distante?"
 
 **Resposta Esperada**:
+
 - FHD 300m = distância sem custo adicional transporte
 - Volume excedente: 2M m³ total, supondo compensação local primeiros 300m × largura × comprimento (~30-40% volume) → excedente ~1.2M m³
 - Custo transporte excedente: 1.2M m³ × R$ 2.50/m³/100m × (5000m / 100) = 1.2M × 2.50 × 50 = R$ 150M (significativo, 30-40% orçamento)
@@ -161,6 +170,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Bacia de drenagem rodovia 15 hectares, coeficiente escoamento C=0.65 (asfalto+grama mista), tempo concentração tc=20 min (Kirpich), região SP com curva IDF frequência 10 anos requer I=80 mm/h para duração 20 min. Calcular vazão pico Q (método racional). Qual diâmetro mínimo bueiro (tubo concreto) assumindo V=1.5 m/s?"
 
 **Resposta Esperada**:
+
 - Fórmula método racional: Q = C×I×A/360 (unidade SI: Q m³/s)
 - Cálculo: Q = 0.65×80×15/360 = 2.17 m³/s
 - Diâmetro bueiro: A = Q/V = 2.17/1.5 = 1.45 m² (área necessária)
@@ -178,6 +188,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Aterro rodoviário com lençol freático em zona crítica satação. Projetar dreno longitudinal (PEAD perfurado) conforme DNIT: qual diâmetro tubo, profundidade, espaçamento longitudinal, especificação geotêxtil filtro?"
 
 **Resposta Esperada**:
+
 - Diâmetro tubo PEAD: 100-150 mm (típico 100 mm para vazão esperada)
 - Profundidade: linha máxima saturação esperada (piezômetro identifica), tipicamente 1-3 m abaixo aterro
 - Espaçamento longitudinal: 20-50 m (depende gradiente hidráulico, solo permeabilidade)
@@ -197,6 +208,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Efluente drenagem rodovia em monitoramento CONAMA 357/430 classe 2 apresenta: SST=180 mg/L, turbidez=35 UNT, óleos=0.5 mg/L, DBO₅=3 mg/L. Qual parâmetro está não-conforme? Propor solução."
 
 **Resposta Esperada**:
+
 - Limite CONAMA 357/430 classe 2: SST ≤100 mg/L, turbidez ≤40 UNT, óleos ≤0.3 mg/L, DBO₅ ≤5 mg/L
 - Análise: SST 180 > 100 (não-conforme), turbidez 35 OK, óleos 0.5 > 0.3 (não-conforme), DBO₅ 3 OK
 - Parâmetros não-conformes: SST (80 mg/L excesso), óleos (0.2 mg/L excesso)
@@ -217,6 +229,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Inspeção pavimento BR-116 resulta ICP=58 com afundamento 8mm, trincas alligator <20% área. Qual é recomendação DNIT? Qual é vida útil remanescente estimada? Quando intervir?"
 
 **Resposta Esperada**:
+
 - ICP 58 = Regular (escala 0-100, onde 70+ ótimo, 40-70 regular, <40 crítico)
 - Diagnóstico: condição ainda aceitável, mas deterioração em curso
 - Afundamento 8 mm (moderado) + trincas alligator <20% (leve) = combinação sugere fadiga inicial
@@ -234,6 +247,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Pavimento em operação 5 anos com ICP atual 75. Sem intervenção, modelo HDM-4 projeta: ICP 75 (ano 5) → 65 (ano 10) → 45 (ano 15) → 25 (ano 20). Calcular taxa deterioração média. Quando é urgência intervenção? Qual seria impacto reforço no ano 12?"
 
 **Resposta Esperada**:
+
 - Taxa deterioração média: (75-25)/15 anos = 3.3 pontos ICP/ano
 - Fases: (1) anos 5-10: redução 10 pontos = 2 pts/ano (lenta); (2) anos 10-15: redução 20 = 4 pts/ano (acelerada); (3) anos 15-20: redução 20 = 4 pts/ano (colapso iminente)
 - Critério urgência: ICP <40 = reabilitação necessária, ICP 40-60 = reforço recomendado
@@ -251,6 +265,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 **Prompt**: "Rodovia federal opção entre CBUQ e CCP para 30 anos. Custo inicial: CBUQ R$ 2M, CCP R$ 2.8M. Manutenção anual: CBUQ R$ 100k, CCP R$ 20k. Reforço ano 15: CBUQ R$ 800k, CCP nenhum. Taxa desconto 6%. Qual opção economicamente superior? Usar análise VPL (Valor Presente Líquido)."
 
 **Resposta Esperada**:
+
 - VPL CBUQ: 2M + 100k×∑(1/1.06^n, n=1-30) + 800k/(1.06^15) ≈ 2M + 100k×13.76 + 800k×0.417 ≈ 2M + 1.376M + 0.334M = **3.71M**
 - VPL CCP: 2.8M + 20k×13.76 + 0 ≈ 2.8M + 0.275M = **3.08M**
 - Análise: CCP VPL menor (3.08M < 3.71M) → economicamente superior
@@ -286,7 +301,7 @@ Aceito tolerância ±5% em cálculos (ex: SN requerido 4.5 ±0.2), ±2 km/h em g
 
 ## Resumo Execução
 
-**Resultado**: ___ de 14 testes ✅ PASS | ___ de 14 testes ⚠️ FAIL  
+**Resultado**: _**de 14 testes ✅ PASS |**_ de 14 testes ⚠️ FAIL  
 **Taxa sucesso**: ___% (Meta ≥90% para aprovação Fase II)
 
 **Observações**:  

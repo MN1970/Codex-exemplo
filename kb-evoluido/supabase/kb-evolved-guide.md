@@ -21,7 +21,7 @@
 
 O KB Evoluído é estruturado em 4 camadas:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │         CAMADA DE AUDITORIA & CONFORMIDADE              │
 │  kb_audit_log | agent_decisions | constant_validation   │
@@ -40,6 +40,7 @@ O KB Evoluído é estruturado em 4 camadas:
 ```
 
 **Fluxo de dados:**
+
 1. **Conhecimento** entra via `kb_constants`, `kb_templates`, `kb_patterns`
 2. **Agentes** consomem constantes para tomar decisões → `agent_decisions`
 3. **Projetos reais** geram insights → `project_insights`
@@ -64,6 +65,7 @@ O KB Evoluído é estruturado em 4 camadas:
 ### Seção 2: Tabelas de Conhecimento
 
 #### `kb_constants`
+
 - **Propósito:** Armazena constantes técnicas (K1/K2, normas, coeficientes, fórmulas)
 - **Versionamento:** `version` + `is_current` + `superseded_by`
 - **Validação:** `validation_status` + `confidence_score` (0-1)
@@ -71,6 +73,7 @@ O KB Evoluído é estruturado em 4 camadas:
 - **Índices:** segment+phase, name, status, source
 
 **Exemplos:**
+
 ```sql
 -- Coeficiente de calibração K1 para pavimento CBUQ em S1 (Rodovia)
 INSERT INTO kb_constants (
@@ -99,12 +102,14 @@ INSERT INTO kb_constants (
 ```
 
 #### `kb_templates`
+
 - **Propósito:** Templates reutilizáveis (estrutura de relatórios, checklists, estimativas)
 - **Estrutura flexível:** JSONB armazena seções, campos, validações
 - **Rastreamento:** `usage_count` conta quantas vezes foi usado
 - **Índices:** segment+phase+type, active status
 
 **Exemplo:**
+
 ```sql
 INSERT INTO kb_templates (
   template_name, segment, lifecycle_phase, template_type, content,
@@ -139,12 +144,14 @@ INSERT INTO kb_templates (
 ```
 
 #### `kb_patterns`
+
 - **Propósito:** Padrões identificados em projetos (custos, cronogramas, riscos)
 - **Baseado em evidência:** `sample_count` + `evidence_projects`
 - **Confiança:** `confidence_score` baseada em frequência
 - **Recomendações:** `recommended_mitigation` com ações sugeridas
 
 **Exemplo:**
+
 ```sql
 INSERT INTO kb_patterns (
   pattern_name, segment, lifecycle_phase, pattern_category,
@@ -173,12 +180,14 @@ INSERT INTO kb_patterns (
 ### Seção 3: Tabelas de Feedback
 
 #### `project_insights`
+
 - **Propósito:** Retroalimentação de projetos finalizados (custo real vs. previsto)
 - **Comparação:** `predicted_value` vs `actual_value` + `variance_percent`
 - **Generalização:** `is_applicable_broader` marca insights transferíveis
 - **Validação:** Expert valida antes de aplicar
 
 **Exemplo:**
+
 ```sql
 INSERT INTO project_insights (
   project_id, project_name, segment, lifecycle_phase,
@@ -195,33 +204,39 @@ INSERT INTO project_insights (
 ```
 
 #### `model_feedback`
+
 - **Propósito:** Feedback sobre qualidade das recomendações dos agentes
 - **Rating:** Excelente → Incorreto
 - **Outcome:** Se foi aplicado e qual foi o resultado
 
 #### `constant_validation`
+
 - **Propósito:** Quando um expert valida, contesta ou aperfeiçoa uma constante
 - **Rastreamento:** Todas as validações ficarão nesta tabela
 
 ### Seção 4: Tabelas de ML
 
 #### `ml_training_data`
+
 - **Propósito:** Dataset curado para treino (features + target)
 - **Qualidade:** `data_quality_score` (0-1)
 - **Origem:** Projeto real, simulação ou literatura
 - **Split:** TRAIN, VALIDATION, TEST
 
 #### `ml_model_metrics`
+
 - **Propósito:** Performance dos modelos (RMSE, R², precision, recall, F1)
 - **Feature importance:** Quais features mais importam
 - **Production:** Rastreia modelos em produção com `production_since`
 
 #### `ml_predictions`
+
 - **Propósito:** Cada predição é registrada para validação posterior
 - **Outcome:** `actual_value` preenchido quando realidade fica conhecida
 - **Intervalo:** `prediction_interval_lower/upper` para incerteza
 
 **Exemplo de análise:**
+
 ```sql
 -- Predição foi feita em 2026-01-15
 INSERT INTO ml_predictions (
@@ -255,12 +270,14 @@ WHERE prediction_id = 'PRED-2026-001';
 ### Seção 5: Tabelas de Auditoria
 
 #### `kb_audit_log`
+
 - **Imutável:** Append-only, ninguém deleta
 - **Rastreia:** Ação (INSERT/UPDATE/DELETE), entidade, antes/depois, quem, quando, por quê
 - **Aprovação:** Mudanças sensíveis requerem aprovação
 - **Reversibilidade:** `reversed_by_audit_id` permite rastrear rollbacks
 
 **Exemplo de query:**
+
 ```sql
 -- Quem mudou a constante K1 nos últimos 30 dias?
 SELECT
@@ -275,12 +292,14 @@ ORDER BY performed_at DESC;
 ```
 
 #### `agent_decisions`
+
 - **Rastreamento:** Cada decisão do agente é registrada
 - **Justificativa:** `reasoning_steps` documenta passo a passo
 - **Outcome:** `outcome_observed` preenchido quando realidade confirma/contradiz
 - **Flags:** `is_outlier`, `needs_review`
 
 **Exemplo:**
+
 ```sql
 INSERT INTO agent_decisions (
   decision_id, agent_id, segment, lifecycle_phase,
@@ -307,7 +326,7 @@ INSERT INTO agent_decisions (
 
 ### Fluxo 1: Agente Toma Decisão Usando Conhecimento
 
-```
+```text
 1. Agente (ex: manta-05) recebe request de projeto
    → Query: SELECT * FROM v_current_constants
       WHERE segment = 'S1_RODOVIA'
@@ -323,7 +342,7 @@ INSERT INTO agent_decisions (
 
 ### Fluxo 2: Projeto Real Termina, Gera Insight
 
-```
+```text
 1. Usuario relata resultado real do projeto
    → INSERT INTO project_insights (...)
       com predicted_value vs actual_value
@@ -343,7 +362,7 @@ INSERT INTO agent_decisions (
 
 ### Fluxo 3: ML Treina Novo Modelo Baseado em Feedback
 
-```
+```text
 1. Coletar feedback
    → SELECT * FROM model_feedback
       WHERE agent_id = 'manta-05'
@@ -369,7 +388,7 @@ INSERT INTO agent_decisions (
 
 ### Fluxo 4: Auditoria e Compliance
 
-```
+```text
 1. Buscar todas as mudanças em constantes críticas
    → SELECT * FROM kb_audit_log
       WHERE entity_type = 'CONSTANT'
@@ -757,12 +776,14 @@ SELECT COUNT(*) FROM kb_constants WHERE validation_status = 'VALIDADO';
 ## Próximas Fases (Roadmap)
 
 ### Fase 1 (Agora): Schema + Views Básicas
+
 - ✅ Criar 12 tabelas
 - ✅ Criar 10 índices críticos
 - ✅ Criar 6 views para queries comuns
 - ✅ Criar 8 triggers de auditoria
 
 ### Fase 2 (Jul-Ago): Seed Data + Integração Agentes
+
 - [ ] Carregar 300+ constantes técnicas (S1-S10)
 - [ ] Carregar 50+ templates por segmento
 - [ ] Carregar 200+ padrões históricos
@@ -770,12 +791,14 @@ SELECT COUNT(*) FROM kb_constants WHERE validation_status = 'VALIDADO';
 - [ ] Integrar agentes (manta-05, agente-infraestrutura-s1, etc.)
 
 ### Fase 3 (Set-Out): Feedback Loop
+
 - [ ] Implementar coleta de project_insights
 - [ ] Dashboard de model_feedback (taxa satisfação agentes)
 - [ ] Validação de constantes pelo time técnico
 - [ ] Primeiros retrainings de modelos
 
 ### Fase 4 (Nov): Otimização
+
 - [ ] Análise de drift em ml_predictions
 - [ ] Audit compliance reports
 - [ ] Performance tuning de índices
@@ -786,7 +809,9 @@ SELECT COUNT(*) FROM kb_constants WHERE validation_status = 'VALIDADO';
 ## Suporte e Troubleshooting
 
 ### Problema: RLS bloqueando reads
+
 **Solução:** Verificar policies. Se agente precisa ler, adicionar:
+
 ```sql
 CREATE POLICY "Agentes podem ler constantes validadas" ON kb_constants
   FOR SELECT
@@ -794,18 +819,23 @@ CREATE POLICY "Agentes podem ler constantes validadas" ON kb_constants
 ```
 
 ### Problema: Audit log cresce muito
+
 **Solução:** Particionar `kb_audit_log` por `performed_at` (mensal).
 Mover dados antigos para archive table.
 
 ### Problema: Queries lentas em grandes datasets
+
 **Solução:** Adicionar índices compostos:
+
 ```sql
 CREATE INDEX idx_ml_predictions_model_segment_outcome
   ON ml_predictions(model_id, segment, outcome_observed);
 ```
 
 ### Problema: Integridade de versionamento quebrada
+
 **Solução:** Trigger força version++:
+
 ```sql
 CREATE TRIGGER trg_increment_version
   BEFORE UPDATE ON kb_constants

@@ -115,6 +115,7 @@ Novos agentes de sistema que trabalham **em background**, suportando S1-S10:
 ## 6. OBSERVABILITY — 13 MÉTRICAS + 5 VIEWS
 
 ### Métricas em Tempo Real
+
 1. Agent routing latency (p50, p99)
 2. RAG query latency (cache vs. uncached)
 3. Expert finder confidence scores
@@ -130,6 +131,7 @@ Novos agentes de sistema que trabalham **em background**, suportando S1-S10:
 13. Anomaly detection rate
 
 ### Analytics Views
+
 - `v_composition_summary` — agregação
 - `v_agent_reliability` — uptime + accuracy
 - `v_pattern_stats` — routing popularity
@@ -172,7 +174,7 @@ agent-test.yml (GitHub Actions)
 
 ### ✅ Prontos para Upload AGORA (5 SKILL.md)
 
-```
+```text
 /sharepoint/01-agentes-fundamentais/
 ├── agente-saneamento/SKILL.md          ⭐ PRIORIDADE 1
 ├── agente-energia/SKILL.md             PRIORIDADE 2
@@ -182,7 +184,8 @@ agent-test.yml (GitHub Actions)
 ```
 
 **Destino SharePoint:**
-```
+
+```text
 mnassociados.sharepoint.com/sites/Engenharia/
   └── Documentos Compartilhados/04_IA/Manta-Maestro/
       └── 01-agentes-fundamentais/
@@ -239,7 +242,7 @@ mnassociados.sharepoint.com/sites/Engenharia/
 
 ## 12. CONTATOS
 
-- **MN (VP):** mneves@mantaassociados.com
+- **MN (VP):** <mneves@mantaassociados.com>
 - **DevOps:** Internal SRE team
 - **Slack:** #manta-maestro-v5
 - **Jira:** MNT-2026-DEPLOYMENT-PHASE1-2
@@ -272,4 +275,3 @@ Ver referências completas em:
 **Status:** ✅ **OPERACIONAL EM PRODUÇÃO**  
 **Última atualização:** 2026-08-02 18:50:26 UTC  
 **Próxima revisão:** 2026-08-31 (pós-decisão MN gates)
-

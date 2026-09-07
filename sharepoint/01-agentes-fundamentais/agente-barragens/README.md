@@ -6,7 +6,7 @@ abastecimento, irrigação, contenção rejeitos, controle de cheias).
 
 ## Estrutura desta pasta
 
-```
+```text
 agente-barragens/
 ├── SKILL.md         # definição canônica (intake por tipologia + propósito)
 ├── README.md        # este arquivo

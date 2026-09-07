@@ -13,7 +13,7 @@ before pointing a real GitHub webhook at it.
 
 ## Pipeline
 
-```
+```text
 .claude/agents/agente-x.md  (git push to main)
         │
         ▼
@@ -65,6 +65,7 @@ New migration:
 [`supabase/migrations/2026_08_02_agent_auto_registration.sql`](../../supabase/migrations/2026_08_02_agent_auto_registration.sql)
 
 Creates (if not already present from the v5.0 design doc):
+
 - `agents` — master catalog (schema per §4.1 of the design doc) plus
   the rollout columns this service needs: `source_path`,
   `source_commit`, `registered_at`, `traffic_percentage`,

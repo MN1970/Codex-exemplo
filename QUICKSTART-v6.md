@@ -31,6 +31,7 @@ Automatically identify project complexity and select 8–16 agents.
 ```
 
 **Output:**
+
 ```json
 {
   "num_segments": 1,
@@ -49,6 +50,7 @@ Predict routing decisions, project duration, and risk scores.
 ```
 
 **Output:**
+
 ```json
 {
   "routing_agents": 12,
@@ -66,6 +68,7 @@ Run a complete workflow with all agents in parallel.
 ```
 
 This executes:
+
 - **Fan-out** (5 min): 12 agents analyze in parallel
 - **Consensus** (1.5 min): Vote on budget, schedule, risk
 - **Aggregate** (0.8 min): Consolidate outputs
@@ -126,6 +129,7 @@ Three example workflows are provided in `examples/`:
 ```
 
 **Scenario:** BR-101 highway project
+
 - Segment: S1 (Rodovia)
 - Budget: $75M
 - Agents: 8 (1 vertical + 7 horizontal)
@@ -138,6 +142,7 @@ Three example workflows are provided in `examples/`:
 ```
 
 **Scenario:** Porto + Energia + Saneamento
+
 - Segments: S7 (Porto), S10 (Energia), S9 (Saneamento)
 - Budget: $1.15B
 - Agents: 12 (3 vertical + 9 horizontal)
@@ -150,6 +155,7 @@ Three example workflows are provided in `examples/`:
 ```
 
 **Scenario:** Complexo Multimodal (Rodovia + OAE + Ferrovia + Metrô)
+
 - Segments: S1–S4 (all infrastructure types)
 - Budget: $2B+
 - Agents: 16 (4 vertical + 12 horizontal)
@@ -159,7 +165,7 @@ Three example workflows are provided in `examples/`:
 
 ### 5-Layer Orchestration
 
-```
+```text
 ┌─────────────────────────────────────┐
 │  Detector (Phase A)                 │
 │  - Analyze project description      │
@@ -191,11 +197,13 @@ Three example workflows are provided in `examples/`:
 ### Agent Pool (20 Total)
 
 **Vertical Agents (9):** Segment specialists
+
 - S1: Highways | S2: Bridges/OAE | S3: Railways | S4: Metro
 - S6: Buildings | S7: Ports | S8: Airports | S9: Sanitation | S10: Energy
 - S11: Dams
 
 **Horizontal Agents (11):** Cross-cutting activities
+
 - Maestro (routing) | Claims | Contracts | Budget | Schedule
 - 3D Modeling | Financial Advisory | Business Dev | Presentations
 - Specialized agents (as needed)
@@ -222,6 +230,7 @@ export MAESTRO_TIMEOUT_MIN=15           # Max execution time
 ### Settings File
 
 Edit `settings.json` to customize:
+
 - Agent tier selection (Haiku/Sonnet/Opus)
 - RAG collections (bge-small-en-v1.5, 384-d)
 - Supabase connection
@@ -234,6 +243,7 @@ Edit `settings.json` to customize:
 **Cause:** ML models (routing, duration, risk) not yet trained.
 
 **Solution:** Phase B will skip gracefully. Train models with:
+
 ```bash
 python3 src/maestro/ml_trainer.py --train-all
 ```
@@ -255,6 +265,7 @@ python3 src/maestro/ml_trainer.py --train-all
 **Cause:** Slow file system or Python import delays.
 
 **Solution:** Run manual check:
+
 ```bash
 ls src/maestro/detector.py src/maestro/consensus.py
 ```
@@ -264,11 +275,13 @@ ls src/maestro/detector.py src/maestro/consensus.py
 ### Create Custom Workflow
 
 1. Copy an example workflow:
+
    ```bash
    cp examples/workflow-simple-rodovia.yaml my-project.yaml
    ```
 
 2. Edit the YAML file with your project details:
+
    ```yaml
    project:
      id: "proj-custom"
@@ -278,6 +291,7 @@ ls src/maestro/detector.py src/maestro/consensus.py
    ```
 
 3. Execute:
+
    ```bash
    ./maestro.sh execute my-project.yaml
    ```

@@ -29,6 +29,7 @@ Esta suite valida o **Maestro Router v5.0** com 100% de cobertura:
 Valida R1 (Maestro Routing Determinístico).
 
 **Classes:**
+
 - `TestMaestroRouterS8` (4 testes) — Saneamento
 - `TestMaestroRouterS9` (3 testes) — Energia
 - `TestMaestroRouterS6` (2 testes) — Portos
@@ -41,6 +42,7 @@ Valida R1 (Maestro Routing Determinístico).
 - `TestMaestroRouterMetrics` (3 testes) — Accuracy, confidence, tiering
 
 **Assertions checadas:**
+
 ```python
 ✓ result.agent_id == expected_agent_id
 ✓ result.skill_id == expected_skill  (v5.0)
@@ -51,6 +53,7 @@ Valida R1 (Maestro Routing Determinístico).
 ```
 
 **Executar:**
+
 ```bash
 # Todos os testes
 pytest tests/test_maestro_router_e2e.py -v
@@ -69,6 +72,7 @@ pytest tests/test_maestro_router_e2e.py --cov=tests/fixtures --cov-report=html
 Valida R9 (orquestração async) + coordenação inter-agentes.
 
 **Classes:**
+
 - `TestCrossAgentETA` — S8 → S5
 - `TestCrossAgentPorto` — S6 → S5 + S7
 - `TestCrossAgentEnergia` — S9 → S6 (PPP)
@@ -78,7 +82,8 @@ Valida R9 (orquestração async) + coordenação inter-agentes.
 - `TestCrossAgentMetrics` — Cobertura, sucesso, latência
 
 **Cenários validados:**
-```
+
+```text
 1. ETA + Orçamento (S8 + S5)
 2. Porto + Cronograma + Orçamento (S6 + S5 + S7)
 3. Energia + Modelagem (S9 + S6)
@@ -92,6 +97,7 @@ Valida R9 (orquestração async) + coordenação inter-agentes.
 ```
 
 **Executar:**
+
 ```bash
 # Todos cross-agent flows
 pytest tests/test_cross_agent_flows.py -v
@@ -110,6 +116,7 @@ pytest tests/test_cross_agent_flows.py::TestCrossAgentIntegration::test_mega_pro
 Valida latência, throughput, memory (P3 e P6).
 
 **Classes:**
+
 - `TestLatency` (5 testes) — routing, RAG, reranker, total
 - `TestThroughput` (2 testes) — 10 req/s, success rate
 - `TestMemory` (3 testes) — baseline, load, leak
@@ -117,7 +124,8 @@ Valida latência, throughput, memory (P3 e P6).
 - `TestRobustness` (2 testes) — timeout, error handling
 
 **Baselines SLA:**
-```
+
+```text
 Routing latency:       < 500ms  (p95)
 RAG BM25:             < 50ms   (p95)
 RAG Embedding:        < 100ms  (p95)
@@ -128,6 +136,7 @@ Memory per agent:     < 100MB  (under load)
 ```
 
 **Executar:**
+
 ```bash
 # Todos performance tests
 pytest tests/test_performance_baseline.py -v
@@ -146,6 +155,7 @@ pytest tests/test_performance_baseline.py --benchmark-json=bench.json
 Testes rápidos para CI/CD gate (< 60s).
 
 **Classes:**
+
 - `TestRegressionRoutingAccuracy` — accuracy ≥ 81%, baseline -5%
 - `TestRegressionLatency` — p95 < 5s, p99 < 5s
 - `TestRegressionAgentRegistry` — 20 agentes presentes
@@ -159,7 +169,8 @@ Testes rápidos para CI/CD gate (< 60s).
 - `TestRegressionSegments` — parametrized per segment
 
 **Gate criteria:**
-```
+
+```text
 ❌ FAIL if: accuracy < 81%
 ❌ FAIL if: latency p95 >= 5s
 ❌ FAIL if: agent missing (< 20)
@@ -168,6 +179,7 @@ Testes rápidos para CI/CD gate (< 60s).
 ```
 
 **Executar (CI):**
+
 ```bash
 # CI gate (rápido)
 pytest tests/test_regression_suite.py -m ci -v --tb=short
@@ -210,6 +222,7 @@ pytest tests/test_regression_suite.py::TestRegressionVersioning -v
 ```
 
 **Cobertura:**
+
 - S8 (Saneamento): 4 casos — AySA priority
 - S9 (Energia): 3 casos — ANEEL
 - S6 (Portos): 2 casos — ANTAQ
@@ -282,7 +295,7 @@ ptw -- tests/test_maestro_router_e2e.py -v
 
 ### 4.1 Sucesso (verde)
 
-```
+```text
 tests/test_maestro_router_e2e.py::TestMaestroRouterS8::test_s8_eta_buenos_aires PASSED
 tests/test_maestro_router_e2e.py::TestMaestroRouterMetrics::test_routing_accuracy_golden_set PASSED
 ...
@@ -293,7 +306,7 @@ tests/test_maestro_router_e2e.py::TestMaestroRouterMetrics::test_routing_accurac
 
 ### 4.2 Falha — Routing Accuracy
 
-```
+```text
 FAILED tests/test_maestro_router_e2e.py::TestMaestroRouterMetrics::test_routing_accuracy_golden_set
 AssertionError: Accuracy 78.5% < 81% minimum
 
@@ -303,13 +316,14 @@ agent_id mismatch:
 ```
 
 **Ação:**
+
 1. Revisar `_build_routing_rules()` em `MockMaestroRouter`
 2. Verificar keyword matching overlap (ex: "energia" vs "transmissão")
 3. Aumentar reranker threshold ou ajustar pesos
 
 ### 4.3 Falha — Performance
 
-```
+```text
 FAILED tests/test_performance_baseline.py::TestLatency::test_total_latency_p95
 AssertionError: Total p95 5234ms > 5000ms
 
@@ -321,13 +335,14 @@ Latency breakdown:
 ```
 
 **Ação:**
+
 1. Otimizar embedding model (Infinity latency check)
 2. Aumentar cache hit rate (rag_cache)
 3. Considerar async embedding em background
 
 ### 4.4 Falha — Regressão CI
 
-```
+```text
 FAILED tests/test_regression_suite.py::TestRegressionRoutingAccuracy::test_accuracy_minimum_threshold
 AssertionError: Accuracy 80.5% < 81% minimum
 
@@ -335,6 +350,7 @@ This is a CI gate failure. Do not merge.
 ```
 
 **Ação:**
+
 1. Revisar último commit em `CLAUDE.md` (mudanças em routing rules?)
 2. Rodar suite E2E completa (`test_maestro_router_e2e.py`)
 3. Se regression confirmada: rollback ou fix routing
@@ -396,6 +412,7 @@ jobs:
 ### 5.2 Merge Criteria
 
 **PR pode merge se:**
+
 - ✅ Regression suite (CI) passa
 - ✅ Router accuracy ≥ 81%
 - ✅ Latency p95 < 5s (allow 5% regression)
@@ -403,6 +420,7 @@ jobs:
 - ✅ Coverage ≥ 80%
 
 **PR bloqueado se:**
+
 - ❌ Regression suite fails
 - ❌ Accuracy < 81%
 - ❌ Latency p95 ≥ 5s
@@ -437,6 +455,7 @@ ls .claude/agents/ | grep saneamento
 ### 6.3 "Latency timeout: p95 > 5s"
 
 Pode ser:
+
 1. Simulação de latência muito alta em `_latency_config`
 2. Não há async dispatch (aguardando jobs sequencialmente)
 3. Cache não habilitado
@@ -506,6 +525,7 @@ python scripts/parse_test_metrics.py test-results.json
 ### 8.2 Grafana Dashboard (em produção)
 
 Conectar ao `maestro_runs` (Supabase) para:
+
 - Routing accuracy trend (7d, 30d)
 - Latency p50/p95/p99 (time-series)
 - Agent coverage heatmap
@@ -528,7 +548,7 @@ Conectar ao `maestro_runs` (Supabase) para:
 
 ## 10. Contato & Suporte
 
-**Proprietário:** mneves@mantaassociados.com  
+**Proprietário:** <mneves@mantaassociados.com>  
 **Versão:** v5.0 (2026-07-25)  
 **Issues:** Abrir issue em GitHub com tag `maestro-e2e-tests`  
 **Roadmap:** Atualmente em fase de validação em staging (Manta 03-S6..S10)

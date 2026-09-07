@@ -1,5 +1,6 @@
 # S6 Go-Live Checklist — Agente-Portos (Manta 03-S6)
-**Version: v5.0 | Target Launch: 2026-07-25 | Owner: mneves@mantaassociados.com**
+
+**Version: v5.0 | Target Launch: 2026-07-25 | Owner: <mneves@mantaassociados.com>**
 
 Checklist executável para lançamento de produção do Agente-Portos com 20 fases em 8–16 horas.
 **Total de items: 127 | Estimated time: 4–6h | RTO: < 1h**
@@ -9,6 +10,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 0 — PRÉ-VÔO (24h antes — responsabilidade MN)
 
 ### Aprovação & Sign-off
+
 - [ ] **MN Review:** CLAUDE.md v5.0 seção "Manta 03-S6 | Portos"
 - [ ] **MN Review:** Routing rules R1 para keywords portuários (ANTAQ, molhe, berço, etc.)
 - [ ] **MN Review:** RAG collection `por:v5.0:chunks` metadata (2000+ chunks ingestados)
@@ -17,6 +19,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 - [ ] **MN Escalation:** Confirmar contato telefônico direto para < 1h RTO
 
 ### Comunicação
+
 - [ ] Enviar email T-24h a time Manta: "S6 Go-Live 2026-07-25 08:00 UTC"
   - Subject: `[GO-LIVE] Manta 03-S6 Agente-Portos v5.0 — 24h antes`
   - Recipients: mneves@, @mantaassociados.com (core team)
@@ -27,7 +30,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 1 — PRÉ-DEPLOYMENT VALIDATION (T-6h, ~30 min)
 
 ### Code & Config
+
 - [ ] **Git Status:** Repo limpo, sem uncommitted changes
+
   ```bash
   cd /home/user/Codex-exemplo
   git status
@@ -35,6 +40,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **CLAUDE.md Syntax:** Valida seções P1–P8, R1–R10
+
   ```bash
   python3 -c "
   import re
@@ -48,24 +54,29 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **VERSIONS.json Syntax:**
+
   ```bash
   python3 -c "import json; json.load(open('VERSIONS.json'))" && echo "✓ JSON valid"
   ```
 
 - [ ] **Skill Checksum Validation:**
+
   ```bash
   md5sum .claude/agents/agente-portos.v5.0.md | awk '{print $1}'
   # Compare with VERSIONS.json: agente-portos.v5.0.checksum
   ```
 
 - [ ] **Settings.json Pinning:**
+
   ```bash
   grep -A 20 "skill_version_pin" .claude/settings.json | grep "agente-portos.*v5.0"
   # Expected: "agente-portos": "v5.0"
   ```
 
 ### Database (Supabase)
+
 - [ ] **Connection Test:** Valida acesso ao Supabase project
+
   ```bash
   # Se local Supabase:
   supabase status
@@ -73,6 +84,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Schema Validation:** Tabelas `rag_chunks`, `rag_metadata`, `agent_runs`, `agent_feedback`
+
   ```bash
   # Usar supabase CLI ou SQL client:
   # SELECT table_name FROM information_schema.tables WHERE table_schema='public'
@@ -80,19 +92,23 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **RLS Policies Check:** Verify Row-Level Security policies existem
+
   ```bash
   # SELECT * FROM pg_policies WHERE tablename IN ('agent_runs', 'rag_chunks')
   # Expected: >= 1 policy per table
   ```
 
 ### RAG Collection (S6 — Portos)
+
 - [ ] **Collection Exists:** `por:v5.0:chunks` criada em Supabase
+
   ```bash
   # SELECT COUNT(*) FROM rag_chunks WHERE collection LIKE 'por:v5.0%'
   # Expected: >= 2000
   ```
 
 - [ ] **Metadata Validation:** `rag_metadata` for `por:v5.0:*`
+
   ```bash
   # SELECT DISTINCT collection, version, checksum FROM rag_metadata
   #   WHERE collection LIKE 'por:v5.0%'
@@ -100,6 +116,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Embedding Status:** Todos chunks com embeddings válidos
+
   ```bash
   # SELECT COUNT(*) FROM rag_chunks
   #   WHERE collection LIKE 'por:v5.0%' AND embedding IS NULL
@@ -107,19 +124,23 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Cache Limpo:** `rag_cache` vazio ou TTL expirado para old queries
+
   ```bash
   # DELETE FROM rag_cache WHERE created_at < NOW() - INTERVAL '7 days'
   # Expected: DELETE successful (or 0 rows if empty)
   ```
 
 ### Dependencies & Environment
+
 - [ ] **Python Dependencies:**
+
   ```bash
   pip install -r requirements.txt --quiet
   # Expected: all packages installed (use venv if available)
   ```
 
 - [ ] **API Keys:** `.env` ou environment vars configurados
+
   ```bash
   # Validar que existem:
   # - SUPABASE_URL
@@ -129,25 +150,30 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Elasticsearch (BM25):** Connection test (se aplicável)
+
   ```bash
   # curl http://localhost:9200/_cat/health
   # Expected: cluster status (green, yellow, red — qualquer um é OK se online)
   ```
 
 ### Tests
+
 - [ ] **Routing Tests:** Valida S6 é routed para portuários
+
   ```bash
   python3 -m pytest tests/routing/test_s6_portos.py -v
   # Expected: >= 8 testes passing (keyword matching, embedding, phase inference)
   ```
 
 - [ ] **RAG Query Tests:**
+
   ```bash
   python3 -m pytest tests/rag/test_s6_portos_rag.py -v
   # Expected: >= 5 testes (BM25, embedding, reranker, cache)
   ```
 
 - [ ] **Tiering Tests:**
+
   ```bash
   python3 -m pytest tests/tiering/test_r7_complexity.py -v
   # Expected: >= 3 testes (Haiku < 2000 tokens, Sonnet 2k–10k, Opus > 10k)
@@ -158,6 +184,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 2 — PRÉ-DEPLOYMENT SIGN-OFF (T-5h, ~15 min)
 
 ### Manual Review Gate
+
 - [ ] **Tech Lead Review:** Todos items Fase 1 completos + evidência de teste
   - Criar comment in `.github/DEPLOYMENT-APPROVALS.md` com timestamp
   - Format: `[PHASE-1-PASS] 2026-07-25T10:00:00Z — <reviewer name>`
@@ -171,7 +198,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 3 — DATABASE MIGRATIONS (T-4h, ~30 min)
 
 ### Schema Changes (Supabase)
+
 - [ ] **Create `agent_runs` table** (se não existe)
+
   ```sql
   CREATE TABLE IF NOT EXISTS agent_runs (
     run_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -190,6 +219,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Create `agent_feedback` table** (se não existe)
+
   ```sql
   CREATE TABLE IF NOT EXISTS agent_feedback (
     feedback_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -202,6 +232,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Create `agent_triggers` table** (APScheduler persist)
+
   ```sql
   CREATE TABLE IF NOT EXISTS agent_triggers (
     trigger_id TEXT PRIMARY KEY,
@@ -215,6 +246,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Create Indexes para Performance**
+
   ```sql
   CREATE INDEX IF NOT EXISTS idx_agent_runs_agent_id ON agent_runs(agent_id);
   CREATE INDEX IF NOT EXISTS idx_agent_runs_created_at ON agent_runs(created_at DESC);
@@ -223,6 +255,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Enable RLS (Row-Level Security)**
+
   ```sql
   ALTER TABLE agent_runs ENABLE ROW LEVEL SECURITY;
   ALTER TABLE agent_feedback ENABLE ROW LEVEL SECURITY;
@@ -232,7 +265,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### Migration Execution
+
 - [ ] **Run Migrations via Supabase CLI** (preferred)
+
   ```bash
   supabase migration new create_agent_tables
   # Edit migration file com SQL acima
@@ -240,18 +275,21 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Or via SQL Client** (if no CLI)
+
   ```bash
   # Import SQL script via pgAdmin ou psql:
   psql -h <SUPABASE_HOST> -U postgres -d postgres -f migrations/s6_go_live.sql
   ```
 
 - [ ] **Validate Migration Success**
+
   ```bash
   # SELECT table_name FROM information_schema.tables WHERE table_schema='public'
   # Expected: agent_runs, agent_feedback, agent_triggers, rag_chunks, rag_metadata, rag_cache
   ```
 
 - [ ] **Backup Post-Migration**
+
   ```bash
   # Backup Supabase usando pg_dump:
   pg_dump -h <HOST> -U postgres postgres > backups/supabase_post_s6_phase3_$(date +%s).sql
@@ -262,12 +300,15 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 4 — BACKGROUND TASKS SETUP (T-3h, ~45 min)
 
 ### APScheduler Configuration
+
 - [ ] **APScheduler Installation**
+
   ```bash
   pip install apscheduler
   ```
 
 - [ ] **Create APScheduler Script**
+
   ```bash
   # scripts/start_scheduler.py
   cat > scripts/start_scheduler.py << 'EOF'
@@ -314,6 +355,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Create Job Functions** (scripts/scheduler_jobs.py)
+
   ```python
   import supabase
   import logging
@@ -340,7 +382,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### Systemd Service (Production)
+
 - [ ] **Create Systemd Unit File** (`/etc/systemd/system/manta-scheduler.service`)
+
   ```ini
   [Unit]
   Description=Manta APScheduler Background Tasks
@@ -359,6 +403,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Enable & Start Service**
+
   ```bash
   sudo systemctl daemon-reload
   sudo systemctl enable manta-scheduler
@@ -368,13 +413,16 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Verify Logs**
+
   ```bash
   sudo journalctl -u manta-scheduler -f
   # Expected: "APScheduler started"
   ```
 
 ### Docker Setup (Alternative)
+
 - [ ] **Create Dockerfile** (se preferred)
+
   ```dockerfile
   FROM python:3.11-slim
   WORKDIR /app
@@ -385,6 +433,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Build & Run**
+
   ```bash
   docker build -t manta-scheduler:v5.0 .
   docker run -d --name manta-scheduler \
@@ -398,13 +447,16 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 5 — SKILL DEPLOYMENT (T-2h, ~30 min)
 
 ### Skill Files
+
 - [ ] **Verify Skill Exists:** `.claude/agents/agente-portos.v5.0.md`
+
   ```bash
   ls -lh .claude/agents/agente-portos.v5.0.md
   # Expected: file exists, size > 10KB
   ```
 
 - [ ] **Checksum Validation:** MD5 match com VERSIONS.json
+
   ```bash
   actual=$(md5sum .claude/agents/agente-portos.v5.0.md | awk '{print $1}')
   expected=$(grep -A 5 '"v5.0"' VERSIONS.json | grep checksum | awk -F'"' '{print $4}')
@@ -412,25 +464,30 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Backup Old Version:** Arquivar v4.9
+
   ```bash
   [ -f .claude/agents/agente-portos.v4.9.md ] && \
     cp .claude/agents/agente-portos.v4.9.md .claude/agents/.backup/agente-portos.v4.9.md.$(date +%s)
   ```
 
 - [ ] **Settings.json Pinning:** Confirm v5.0 pin
+
   ```bash
   jq '.skill_version_pin."agente-portos"' .claude/settings.json
   # Expected: "v5.0"
   ```
 
 ### Linked Documentation
+
 - [ ] **Skill Linked to RAG:** Verify `por:v5.0:chunks` referenciada em agente-portos.v5.0.md
+
   ```bash
   grep -i "por:v5.0" .claude/agents/agente-portos.v5.0.md
   # Expected: >= 1 match (e.g., "rag_collection: por:v5.0:*")
   ```
 
 - [ ] **VERSIONS.json Linked:** Checksum + deprecation noted
+
   ```bash
   jq '.agente-portos' VERSIONS.json | head -20
   # Expected: v5.0 + checksum, v4.9 marked deprecated_at
@@ -441,20 +498,25 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 6 — MAESTRO ROUTING RULES (T-1h 30m, ~30 min)
 
 ### Keyword Rules (R1)
+
 - [ ] **Verify S6 Keywords in maestro.v5.0.md:**
+
   ```bash
   grep -A 10 "# S6 — PORTOS" .claude/agents/maestro.v5.0.md
   # Expected: {porto|terminal|ANTAQ|dragagem|molhe|berço|...}
   ```
 
 - [ ] **Confidence Score Formula Exists:**
+
   ```bash
   grep -A 20 "score = 0.4 × keyword_relevance" CLAUDE.md
   # Expected: confidence score formula
   ```
 
 ### Embedding Model
+
 - [ ] **Embedding Model Available:** Infinity (Hugging Face) ou similar
+
   ```bash
   # Test embedding endpoint:
   curl -s http://localhost:8000/embed \
@@ -465,6 +527,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Test Embedding Similarity (S6 vs Other Segments)**
+
   ```python
   from sentence_transformers import SentenceTransformer
   model = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
@@ -477,7 +540,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### BM25 Index
+
 - [ ] **BM25 Index Built:** `por:v5.0:*` indexed in Elasticsearch/similar
+
   ```bash
   # Elasticsearch query:
   curl -s http://localhost:9200/por_v5.0/_count | jq .count
@@ -485,6 +550,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Test BM25 Query:**
+
   ```bash
   curl -s -X GET "localhost:9200/por_v5.0/_search" \
     -H 'Content-Type: application/json' \
@@ -493,7 +559,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### Reranker (R6)
+
 - [ ] **Reranker Model Available:** Cross-encoder fine-tuned
+
   ```bash
   # Test reranker endpoint:
   curl -s http://localhost:8001/rerank \
@@ -511,7 +579,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 7 — TIERING & FALLBACK SETUP (T-1h, ~30 min)
 
 ### R7: Complexity Score
+
 - [ ] **Validate Complexity Formula:**
+
   ```bash
   python3 << 'EOF'
   def compute_complexity(input_tokens, keywords_matched, rag_score_max, files, cross_refs, phase=None):
@@ -541,6 +611,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Model Tiering Decision Tree:**
+
   ```python
   if input_tokens < 2000 and complexity < 3:
       model = "haiku-4-5"
@@ -551,7 +622,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### R8: Fallback Configuration
+
 - [ ] **Fallback Cascade Defined:** Haiku → Sonnet → Opus
+
   ```bash
   cat > .claude/fallback-config.json << 'EOF'
   {
@@ -574,6 +647,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Fallback Hook Implementation:**
+
   ```python
   # Pseudo-code in maestro.v5.0.md or agent harness
   def run_with_fallback(prompt, initial_model):
@@ -590,7 +664,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 8 — PRÉ-LAUNCH TESTING (T-30m, ~45 min)
 
 ### Functional Tests
+
 - [ ] **Routing Test #1: Basic S6 Match**
+
   ```bash
   python3 << 'EOF'
   from maestro import route
@@ -602,6 +678,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Routing Test #2: Phase Inference**
+
   ```bash
   python3 << 'EOF'
   from maestro import route
@@ -613,6 +690,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Routing Test #3: Fallback Agent (Ambiguity)**
+
   ```bash
   python3 << 'EOF'
   from maestro import route
@@ -624,6 +702,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **RAG Test #1: BM25 Query**
+
   ```bash
   python3 << 'EOF'
   from rag import query_bm25
@@ -635,6 +714,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **RAG Test #2: Embedding Query**
+
   ```bash
   python3 << 'EOF'
   from rag import query_embedding
@@ -645,6 +725,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **RAG Test #3: Reranker**
+
   ```bash
   python3 << 'EOF'
   from rag import query_with_rerank
@@ -656,6 +737,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Tiering Test #1: Haiku Route**
+
   ```bash
   python3 << 'EOF'
   from tiering import compute_tier
@@ -666,6 +748,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Tiering Test #2: Sonnet Route**
+
   ```bash
   python3 << 'EOF'
   from tiering import compute_tier
@@ -676,6 +759,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Tiering Test #3: Opus Route**
+
   ```bash
   python3 << 'EOF'
   from tiering import compute_tier
@@ -686,7 +770,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### Integration Tests
+
 - [ ] **E2E Test #1: Maestro → S6 → LLM**
+
   ```bash
   python3 << 'EOF'
   from maestro import process_prompt
@@ -702,6 +788,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **E2E Test #2: With File Processing**
+
   ```bash
   python3 << 'EOF'
   from maestro import process_prompt
@@ -717,7 +804,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### Performance Tests
+
 - [ ] **Latency Baseline (Sonnet):**
+
   ```bash
   python3 << 'EOF'
   import time
@@ -731,6 +820,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Throughput Test (5 concurrent):**
+
   ```bash
   python3 << 'EOF'
   import concurrent.futures
@@ -744,7 +834,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### Monitoring & Alerts (Dry-run)
+
 - [ ] **Slack Notification Test:**
+
   ```bash
   curl -X POST $SLACK_WEBHOOK_URL \
     -H 'Content-Type: application/json' \
@@ -758,6 +850,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Grafana Dashboard Accessible:**
+
   ```bash
   curl -s http://grafana.manta.local/api/health | jq .
   # Expected: "ok"
@@ -768,6 +861,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 9 — FINAL APPROVAL GATE (T-15m)
 
 ### MN Final Check
+
 - [ ] **MN Sign-off:** Approva all Phases 1–8
   - [ ] Email confirm: "Approved S6 Launch" by mneves@
   - [ ] Or Slack #agent-ops react with ✓ emoji
@@ -782,19 +876,23 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 ## FASE 10 — GO-LIVE (T+0, Launch Window)
 
 ### Pre-Flight (5 min antes)
+
 - [ ] **Stop Active Transactions:**
+
   ```bash
   # Pause any active background jobs
   systemctl pause manta-scheduler  # or docker pause
   ```
 
 - [ ] **Final Health Check:**
+
   ```bash
   python3 scripts/healthcheck.py --quick
   # Expected: all green
   ```
 
 - [ ] **Slack Announcement:**
+
   ```bash
   # Post in #agent-ops:
   # 🚀 **S6 GO-LIVE in 5 minutes**
@@ -804,7 +902,9 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### Deployment (10 min)
+
 - [ ] **Merge CLAUDE.md v5.0:**
+
   ```bash
   git add CLAUDE.md VERSIONS.json .claude/agents/agente-portos.v5.0.md .claude/settings.json
   git commit -m "Deploy S6 v5.0: agente-portos with RAG por:v5.0:*, maestro R1 routing, tiering R7, fallback R8"
@@ -812,6 +912,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Activate Scheduler:**
+
   ```bash
   systemctl resume manta-scheduler  # or docker unpause
   sleep 5
@@ -819,6 +920,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Enable Maestro Routing:**
+
   ```bash
   python3 -c "
   import json
@@ -833,6 +935,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 - [ ] **Warm-up Queries (3 requests):**
+
   ```bash
   for i in 1 2 3; do
     python3 << EOF
@@ -845,6 +948,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   ```
 
 ### Go-Live Confirmation (5 min)
+
 - [ ] **Production Validation:**
   - [ ] S6 responds to portuário keywords
   - [ ] Routing accuracy > 75% (spot check 10 queries)
@@ -852,6 +956,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
   - [ ] No errors in logs: `grep -i error logs/*.log | wc -l`
 
 - [ ] **Slack Announcement (LIVE):**
+
   ```bash
   # Post in #agent-ops:
   # ✅ **S6 IS LIVE**
@@ -872,16 +977,19 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 *(Covered in POST-LAUNCH-MONITORING.md)*
 
 ### Immediate (T+1h)
+
 - [ ] **Grafana Check:** Cost, latency, error rate normal
 - [ ] **Logs Review:** No critical errors
 - [ ] **User Feedback:** Any issues reported in Slack?
 
 ### Short-Term (T+6h)
+
 - [ ] **First RAG Reindex:** Trigger R7 job (if not automatic)
 - [ ] **Cost Analysis:** Early estimate of S6 runs cost
 - [ ] **Latency Histogram:** P50/P95/P99 within SLA
 
 ### Medium-Term (T+24h)
+
 - [ ] **Daily Report:** Cost, runs, errors, feedback (see template)
 - [ ] **Feedback Collection:** Any score < 3? Investigate
 - [ ] **Rollback Decision Point:** Go/No-Go based on metrics
@@ -940,7 +1048,7 @@ Checklist executável para lançamento de produção do Agente-Portos com 20 fas
 **Approval by:** _____________________ (MN name)  
 **Timestamp:** _____________________ (date/time)
 
-**Approver email:** mneves@mantaassociados.com  
+**Approver email:** <mneves@mantaassociados.com>  
 **Incident contact:** [Fill in: phone/mobile for < 1h RTO]
 
 ---

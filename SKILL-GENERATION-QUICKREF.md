@@ -29,14 +29,17 @@ Complete, production-ready documentation generation system for Manta Maestro v5.
 ## What's Inside SKILL.md
 
 ### Header & Navigation
+
 - Overview (version, source, status)
 - 2 index tables (horizontal agents + vertical agents)
 
 ### Horizontal Agents (11)
+
 - Manta 00–02, 04–07, 13–16
 - 11 comprehensive sections per agent
 
 ### Vertical Agents (9)
+
 - Manta 03-S1 (Rodovias)
 - Manta 03-S2 (OAE)
 - Manta 03-S3 (Ferrovia)
@@ -65,18 +68,21 @@ Complete, production-ready documentation generation system for Manta Maestro v5.
 ## How to Use
 
 ### Regenerate (after CLAUDE.md changes)
+
 ```bash
 cd /home/user/Codex-exemplo
 python scripts/generate_skills_registry.py
 ```
 
 ### Add New Agent
+
 1. Edit CLAUDE.md — add row to table
 2. Add checksum (MD5 of skill file)
 3. Run script
 4. Verify in manta-maestro/SKILL.md
 
 ### Customize Template
+
 1. Edit scripts/agent_template.j2
 2. Run script
 3. Verify output
@@ -114,23 +120,26 @@ python scripts/generate_skills_registry.py
 **Immediate:** Review manta-maestro/SKILL.md
 
 **Week 1:**
+
 - Add Git pre-commit hook
 - Set up GitHub Actions validation
 - Integrate with SharePoint
 
 **Month 1:**
+
 - Link to Grafana dashboard
 - Add cost estimation per phase
 - Create deprecation warnings
 
 **Quarter 1:**
+
 - Build RAG status dashboard
 - Implement version tracking
 - Add dynamic tiering
 
 ## Files Location
 
-```
+```text
 /home/user/Codex-exemplo/
 ├── scripts/
 │   ├── generate_skills_registry.py     [SCRIPT]
@@ -142,7 +151,7 @@ python scripts/generate_skills_registry.py
 
 ## Governance
 
-- **Owner:** mneves@mantaassociados.com
+- **Owner:** <mneves@mantaassociados.com>
 - **Version:** v5.0 (2026-07-25)
 - **Ticket:** MNT-2026-UPGRADE-AGENTS-V5
 - **Approval:** Human gate before merge

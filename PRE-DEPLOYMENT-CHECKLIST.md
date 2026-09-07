@@ -144,6 +144,7 @@
 ## Phase 6: Functionality Validation
 
 ### 6.1 Azure AD OAuth2 Flow
+
 - [x] Token endpoint hardcoded correctly
 - [x] Client credentials grant type implemented
 - [x] Scope set to `https://graph.microsoft.com/.default`
@@ -151,6 +152,7 @@
 - [x] Decorated with retry logic
 
 ### 6.2 SharePoint REST API Write
+
 - [x] API paths constructed correctly
   - [x] `/_api/web/lists/getbytitle('{list}')`
   - [x] `/_api/web/getfolderbyserverrelativeurl('{folder}')`
@@ -161,6 +163,7 @@
 - [x] Decorated with retry logic
 
 ### 6.3 Azure Key Vault Query
+
 - [x] Vault URL constructed correctly
 - [x] API version 7.4 specified
 - [x] Secret metadata extracted (attributes.expires)
@@ -170,6 +173,7 @@
 - [x] Decorated with retry logic
 
 ### 6.4 Retry Logic
+
 - [x] Max attempts: 3
 - [x] Initial delay: 1.0 second
 - [x] Backoff factor: 2.0x (1s → 2s → 4s)
@@ -178,6 +182,7 @@
 - [x] Exponential backoff calculated correctly
 
 ### 6.5 Output Format
+
 - [x] JSON serializable
 - [x] Required fields present:
   - [x] status (ok|error|warning)
@@ -191,6 +196,7 @@
   - [x] errors (array of {component, message, timestamp})
 
 ### 6.6 Logging & Debug
+
 - [x] INFO level: main steps
 - [x] WARNING level: retries, non-critical failures
 - [x] ERROR level: critical failures
@@ -278,7 +284,7 @@
 
 ## Phase 10: Pre-Deployment Tasks
 
-### Before deploying to production:
+### Before deploying to production
 
 - [ ] **Credentials Setup**
   - [ ] Create Azure AD App Registration
@@ -318,6 +324,7 @@
 ## Phase 11: Deployment Steps
 
 1. **Code Deployment**
+
    ```bash
    # Copy script to target location
    cp scripts/sp_healthcheck.py /path/to/production/
@@ -326,11 +333,13 @@
    ```
 
 2. **Dependency Installation**
+
    ```bash
    pip install requests
    ```
 
 3. **Environment Configuration**
+
    ```bash
    export AZURE_CLIENT_ID="..."
    export AZURE_CLIENT_SECRET="..."
@@ -344,6 +353,7 @@
    - [ ] Restart Claude Code session
 
 5. **Validation**
+
    ```bash
    # Test dry-run
    python scripts/sp_healthcheck.py --dry-run --verbose
@@ -368,12 +378,14 @@
 If issues occur in production:
 
 1. **Quick Disable**
+
    ```bash
    # Comment out SessionStart hook in .claude/settings.json
    # Restart session
    ```
 
 2. **Revert**
+
    ```bash
    git revert <commit_hash>
    # or manually delete script
@@ -386,6 +398,7 @@ If issues occur in production:
    - Consult HEALTHCHECK-SETUP.md troubleshooting
 
 4. **Full Rollback**
+
    ```bash
    git reset --hard <previous_commit>
    # OR restore from backup
@@ -443,6 +456,7 @@ Monitor these metrics for first 24 hours:
 ---
 
 **Questions or concerns? Consult:**
+
 - HEALTHCHECK-SETUP.md — Setup & troubleshooting
 - IMPLEMENTATION-SUMMARY.md — Features overview
 - ARCHITECTURE.md — Technical deep-dive

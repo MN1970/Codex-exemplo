@@ -7,7 +7,7 @@ dolfins, retroárea).
 
 ## Estrutura desta pasta
 
-```
+```text
 agente-portos/
 ├── SKILL.md         # definição canônica (frontmatter, intake, arquitetura V1-V5)
 ├── README.md        # este arquivo — visão geral e onboarding

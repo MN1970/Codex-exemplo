@@ -28,7 +28,7 @@ description: >
 
 Antes de qualquer ação:
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │  AGENTE AEROPORTOS — INTAKE                      │
 │                                                  │
@@ -69,7 +69,7 @@ Antes de qualquer ação:
 
 ## 2. ARQUITETURA — 5 VERTENTES
 
-```
+```text
    ┌────────────────────────────────────────────────────┐
    │  V1 Análise Técnica & Risco                        │
    │  V2 Inteligência Setorial (ANAC, ICAO, FAA, DECEA) │
@@ -82,11 +82,13 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
+
 - `aer-scanner.md` — premissas: código aeródromo, aeronave crítica, mix
 - `aer-risk.md` — matriz de risco 5×5 (obstáculo, ruído, ambiental, operacional)
 - `aer-thesis.md` — tese técnica + score 0-100
 
 ### V2 — Inteligência Setorial
+
 - `aer-int-orchestrator.md`
 - `axes/01-normas.md` — RBAC 154, ICAO Annex 14 Vol I/II, FAA AC 150/5300-13
 - `axes/02-regulatorio.md` — ANAC, DECEA (ICA 100-12), IBAMA
@@ -96,12 +98,14 @@ Antes de qualquer ação:
 - `axes/06-academia.md` — ITA, USP-EESC, publicações Transportation Research
 
 ### V3 — Gestão de Obra em Aeroporto Operante
+
 - `aer-cronograma.md` — janelas noturnas (obras airside com movimento)
 - `aer-fasing.md` — plano de fases + NOTAM
 - `aer-medicao-fisica.md` — pista por m² pavimento novo, TPS por área bruta
 - `aer-interferencias.md` — controle de tráfego aéreo, PGZ, altura obstáculo
 
 ### V4 — Document Intelligence
+
 - `aer-doc-orchestrator.md`
 - `aer-doc-projeto.md` — memorial de cálculo, plantas
 - `aer-doc-cad.md` — DWG/DXF (cad-quantifier)
@@ -110,6 +114,7 @@ Antes de qualquer ação:
 - `aer-doc-cronograma.md` — XER/MPP (p6-analytics)
 
 ### V5 — 10 Disciplinas Aeroportuárias
+
 - `disciplines/D01-geometria-airside.md` (pista, RESA, TWY, pátio)
 - `disciplines/D02-pavimento-aeroportuario.md` (FAA FAARFIELD, PCN/ACN)
 - `disciplines/D03-drenagem-pista.md` (sub-superficial + superficial)
@@ -127,12 +132,14 @@ Antes de qualquer ação:
 ## 4. KNOWLEDGE ENGINE (RAG)
 
 ### Armazenamento
+
 - Casos: `aer:cases:CASE-AER-XXX`
 - Índice: `aer:cases:index`
 - Config: `aer:config:*`
 - Dados ativos: `aer:active:*`
 
 ### Fontes iniciais
+
 - ANAC RBAC 154 + apostilas
 - ICAO Annex 14 Vol I (aerodrome design) + Vol II (heliports)
 - ICAO Doc 9157 (Aerodrome Design Manual)
@@ -204,7 +211,7 @@ Antes de qualquer ação:
 
 ## 10. METADADOS
 
-```
+```yaml
 Skill: agente-aeroportos
 Versão: 1.0.0
 Criada: 2026-07-05

@@ -29,7 +29,7 @@ description: >
 
 Antes de qualquer ação:
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │  AGENTE ENERGIA — INTAKE                         │
 │                                                  │
@@ -73,7 +73,7 @@ Antes de qualquer ação:
 
 ## 2. ARQUITETURA — 5 VERTENTES
 
-```
+```text
    ┌────────────────────────────────────────────────────┐
    │  V1 Análise Técnica & Risco                        │
    │  V2 Inteligência Setorial (ANEEL, EPE, ONS, IEEE)  │
@@ -86,11 +86,13 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
+
 - `ene-scanner.md` — premissas: MW/MVA, tensão, comprimento LT, RAP referencial
 - `ene-risk.md` — matriz de risco 5×5 (ambiental, servidão, cronograma milestone RAP)
 - `ene-thesis.md` — tese técnica + score 0-100
 
 ### V2 — Inteligência Setorial
+
 - `ene-int-orchestrator.md`
 - `axes/01-normas.md` — NBR 5422 (LT), NBR 6118/6122 (fund.), IEEE 738/80, IEC 60826
 - `axes/02-regulatorio.md` — ANEEL (REN), ONS (Procedimentos de Rede), CCEE (ACR × ACL)
@@ -100,12 +102,14 @@ Antes de qualquer ação:
 - `axes/06-academia.md` — CIGRÉ, CPFL R&D, IEEE PES
 
 ### V3 — Gestão de Obra + Comissionamento
+
 - `ene-cronograma.md` — milestones RAP, prazo comissionamento (energização)
 - `ene-medicao-fisica.md` — km LT lançado, torres cravadas, bay energizado
 - `ene-comissionamento.md` — testes de comissionamento, ART
 - `ene-interferencias.md` — servidão administrativa, licenças ambientais
 
 ### V4 — Document Intelligence
+
 - `ene-doc-orchestrator.md`
 - `ene-doc-projeto.md` — memorial técnico
 - `ene-doc-cad.md` — DWG/DXF (cad-quantifier)
@@ -114,6 +118,7 @@ Antes de qualquer ação:
 - `ene-doc-lidar.md` — LiDAR de traçado (perfil vertical, obstáculos)
 
 ### V5 — 12 Disciplinas Elétricas
+
 - `disciplines/D01-tracado-LT.md` (gabarito, faixa, servidão)
 - `disciplines/D02-condutor.md` (ACSR × CAA × ACAR × AAAC, ampacidade)
 - `disciplines/D03-torre.md` (autoportante × estaiada, TPP × FDS)
@@ -133,12 +138,14 @@ Antes de qualquer ação:
 ## 4. KNOWLEDGE ENGINE (RAG)
 
 ### Armazenamento
+
 - Casos: `ene:cases:CASE-ENE-XXX`
 - Índice: `ene:cases:index`
 - Config: `ene:config:*`
 - Dados ativos: `ene:active:*`
 
 ### Fontes iniciais
+
 - ANEEL editais de leilão (2015-2026) + REN vigentes
 - EPE PDE + estudos R1-R5 públicos
 - ONS Procedimentos de Rede + relatórios de operação
@@ -215,7 +222,7 @@ Antes de qualquer ação:
 
 ## 10. METADADOS
 
-```
+```yaml
 Skill: agente-energia
 Versão: 1.0.0
 Criada: 2026-07-05

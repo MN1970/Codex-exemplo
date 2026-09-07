@@ -24,7 +24,7 @@
 - [6. Routing do Maestro](#6-routing-do-maestro-manta-00)
 - [7. Knowledge Engine (RAG)](#7-knowledge-engine-rag)
 - [8. SharePoint routing](#8-sharepoint-routing)
-- [9. Diagrama de fluxo](#9-diagrama-de-fluxo-agente-vertical)
+- [9. Diagrama de fluxo](#9-diagrama-de-fluxo--agente-vertical)
 - [10. Matriz de composição — casos de uso](#10-matriz-de-composição--casos-de-uso)
 - [11. Changelog v2.0 → v3.0](#11-changelog-v20--v30)
 - [12. Referências](#12-referências)
@@ -72,7 +72,7 @@ trabalho recai. Uma quinta dimensão — o **ciclo de vida** (fase do
 empreendimento) — permanece como atributo complementar de intake (Q2),
 não ortogonal aos outros quatro (ver §2.5).
 
-```
+```text
                     ┌─────────────┐
                     │      D      │  disciplina técnica
                     │ (20 opções) │  (hidráulica, estrutural, ...)
@@ -248,7 +248,7 @@ agente, em qualquer combinação S.A.D, sem alterar o dono da sessão.
 
 ## 3. 5 camadas da arquitetura
 
-```
+```text
 ┌────────────────────────────────────────────────────────────┐
 │ C5 — Apresentação                                          │
 │      artefatos React, memoriais DOCX, dashboards, PPTX     │
@@ -317,7 +317,7 @@ simultâneos costuma indicar necessidade de Opus).
 
 Regra de dispatch Q1 (segmento — eixo S):
 
-```
+```text
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
    → agente-saneamento (S8)
 
@@ -355,8 +355,9 @@ entregar o artefato (ex.: `F7` guardrails sempre antes de publicar
 laudo técnico).
 
 **Casos ambíguos** (múltiplas regras de `S` aplicáveis):
+
 - UHE (barragem + LT + SE) → dispatch primário `agente-barragens`
-  + handoff a `agente-energia`.
+  - handoff a `agente-energia`.
 - ETE + subestação → dispatch primário `agente-saneamento` + handoff
   a `agente-energia`.
 - Porto + pista de carga → dispatch primário `agente-portos` +
@@ -384,6 +385,7 @@ prefixo do eixo **S** (segmento):
 | barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334, PNSB | ✅ Operacional |
 
 Sub-prefixos de contexto:
+
 - `san:br:` / `san:ar:` — saneamento por país (Brasil × Argentina AySA).
 - `ene:t:` / `ene:d:` / `ene:g:` — energia por segmento (transmissão × distribuição × geração).
 - `bar:c:` / `bar:t:` / `bar:e:` / `bar:r:` — barragens por tipologia
@@ -417,6 +419,7 @@ SharePoint** do eixo funcional:
 
 Cada agente vertical também tem sua pasta SKILL em
 `01-agentes-fundamentais/agente-<slug>/` contendo:
+
 - `SKILL.md` — definição canônica (frontmatter + intake + arquitetura).
 - `README.md` — visão geral e onboarding.
 - `refs/` — documentos técnicos de referência.
@@ -424,7 +427,7 @@ Cada agente vertical também tem sua pasta SKILL em
 
 ## 9. Diagrama de fluxo — agente vertical
 
-```
+```text
 Usuário ─────► Maestro (Manta 00)
                    │
                    │ 1. Triagem (Haiku): identifica segmento (S/Q1),
@@ -500,6 +503,7 @@ Exemplos de sessão completa, com as 4 coordenadas explícitas:
 ## 11. Changelog v2.0 → v3.0
 
 ### Adicionado
+
 - **4 eixos ortogonais (S × A × F × D)** substituindo a leitura de
   "3 eixos" da v2.0.0: Segmentos, Atividades, Funcionais, Disciplinas.
 - Tabela completa do **Eixo A** — 10 atividades (proposta, quantidades,
@@ -520,6 +524,7 @@ Exemplos de sessão completa, com as 4 coordenadas explícitas:
 - Tabela de reconciliação "Horizontais (v2.0.0) → A/F (v3.0.0)".
 
 ### Mudado
+
 - Seção 2 renomeada de "3 eixos do sistema" para "4 eixos ortogonais
   do sistema", com subseções 2.1-2.6.
 - Ciclo de vida (8 fases) reclassificado de "Eixo 3" para "dimensão
@@ -530,6 +535,7 @@ Exemplos de sessão completa, com as 4 coordenadas explícitas:
   changelog e referências deslocados para 11 e 12.
 
 ### Mantido (sem alteração)
+
 - Estrutura de 5 camadas (C0-C5).
 - Model tiering (Haiku → Sonnet → Opus).
 - Padrão hub-and-spoke.
@@ -559,5 +565,5 @@ Exemplos de sessão completa, com as 4 coordenadas explícitas:
 
 ---
 
-_Documento vivo. Alterações via pull request no repo `MN1970/Codex-exemplo`,
-aprovação MN, e re-upload aqui no SharePoint como nova versão._
+*Documento vivo. Alterações via pull request no repo `MN1970/Codex-exemplo`,
+aprovação MN, e re-upload aqui no SharePoint como nova versão.*

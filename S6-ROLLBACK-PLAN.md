@@ -1,5 +1,6 @@
 # S6 Rollback Plan — < 1h RTO
-**Version: v5.0 | Agent: Manta 03-S6 (Portos) | Owner: mneves@mantaassociados.com**
+
+**Version: v5.0 | Agent: Manta 03-S6 (Portos) | Owner: <mneves@mantaassociados.com>**
 
 Emergency rollback procedure for production incident. **Target RTO: < 60 minutes.**
 
@@ -8,30 +9,36 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ## PRÉ-REQUISITOS PARA ROLLBACK
 
 ### Before Launch (Checklist before T+0)
+
 - [ ] Backup of v4.9 RAG collection created
+
   ```bash
   pg_dump -h $SUPABASE_HOST -U postgres -d postgres -t "rag_*" \
     | gzip > backups/rag_v4.9_pre_s6_$(date +%s).sql.gz
   ```
 
 - [ ] CLAUDE.md v4.2 backed up
+
   ```bash
   cp CLAUDE.md CLAUDE.md.v5.0.backup
   git show HEAD~1:CLAUDE.md > CLAUDE.md.v4.2.backup
   ```
 
 - [ ] Skills v4.9 backed up
+
   ```bash
   [ -f .claude/agents/agente-portos.v4.9.md ] && \
     cp .claude/agents/agente-portos.v4.9.md .backup/
   ```
 
 - [ ] VERSIONS.json v4.9 metadata preserved
+
   ```bash
   jq '.agente-portos.v4.9' VERSIONS.json > .backup/agente-portos.v4.9.versions.json
   ```
 
 - [ ] Systemd/Docker stop script ready
+
   ```bash
   cat > scripts/emergency_stop.sh << 'EOF'
   #!/bin/bash
@@ -61,7 +68,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 | Recurring timeouts | 🟡 High | Try increase timeout, if no fix → ROLLBACK |
 | RAG completely empty | 🔴 Critical | ROLLBACK |
 
-**Decision maker:** mneves@mantaassociados.com (MN)  
+**Decision maker:** <mneves@mantaassociados.com> (MN)  
 **Approval:** Slack #agent-ops or phone call (document in ROLLBACK_LOG.md)
 
 ---
@@ -75,7 +82,8 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   - Confirm: "Acknowledged, beginning rollback"
 
 - [ ] **Slack #agent-ops Announcement:**
-  ```
+
+  ```text
   🚨 **INCIDENT: S6 Rollback in Progress**
   
   Reason: [e.g., Routing accuracy < 60%, error rate > 10%]
@@ -90,6 +98,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Document in ROLLBACK_LOG.md:**
+
   ```markdown
   ## Rollback Event 001 (2026-07-25T14:30:00Z)
   
@@ -103,6 +112,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ### STEP 2 — STOP PRODUCTION SERVICES (10 min)
 
 - [ ] **Stop Scheduler (APScheduler):**
+
   ```bash
   systemctl stop manta-scheduler
   # or: docker stop manta-scheduler
@@ -112,6 +122,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Disable Maestro Routing (S6):**
+
   ```bash
   python3 << 'EOF'
   import json
@@ -126,6 +137,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Verify No New S6 Runs:**
+
   ```bash
   # Check Supabase for new S6 runs after stop time
   # SELECT COUNT(*) FROM agent_runs WHERE agent_id = 'manta-03-s6' AND created_at > NOW() - INTERVAL '5 min'
@@ -133,6 +145,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Pause Background Tasks (if still running):**
+
   ```bash
   # Kill any running jobs (if needed):
   pkill -f "rag_reindex_job|embedding_retrain_job|memory_purge_job"
@@ -141,6 +154,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ### STEP 3 — REVERT CODE & CONFIGURATION (15 min)
 
 - [ ] **Revert CLAUDE.md to v4.2:**
+
   ```bash
   git checkout HEAD~N CLAUDE.md  # or use backup
   # or: cp CLAUDE.md.v4.2.backup CLAUDE.md
@@ -148,6 +162,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Revert Skills to v4.9:**
+
   ```bash
   # Check if v4.9 exists
   [ -f .backup/agente-portos.v4.9.md ] && \
@@ -158,6 +173,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Revert Settings.json Pinning:**
+
   ```bash
   python3 << 'EOF'
   import json
@@ -173,6 +189,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Revert VERSIONS.json Checksums:**
+
   ```bash
   # Restore v4.9 checksum entry
   python3 << 'EOF'
@@ -189,6 +206,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Git Revert Commit:**
+
   ```bash
   git revert --no-edit HEAD  # creates new commit that undoes S6 deploy
   # or: git reset --soft HEAD~1 (if not yet pushed)
@@ -197,6 +215,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ### STEP 4 — RESTORE DATABASE (15 min)
 
 - [ ] **Backup Current (Broken) State:**
+
   ```bash
   pg_dump -h $SUPABASE_HOST -U postgres -d postgres \
     | gzip > backups/rag_v5.0_failed_$(date +%s).sql.gz
@@ -204,12 +223,14 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Check Backup Availability:**
+
   ```bash
   ls -lh backups/rag_v4.9_pre_s6_*.sql.gz | head -1
   # Expected: file exists and is recent (within 24h)
   ```
 
 - [ ] **Restore v4.9 RAG Collections:**
+
   ```bash
   # Option A: Full restore from backup
   # gunzip < backups/rag_v4.9_pre_s6_XXXXX.sql.gz | psql -h $SUPABASE_HOST -U postgres -d postgres
@@ -228,6 +249,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Verify RAG Collections:**
+
   ```bash
   # Check that v4.9 collections are intact:
   psql -h $SUPABASE_HOST -U postgres -d postgres << 'SQL'
@@ -239,6 +261,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Verify No Orphaned Triggers:**
+
   ```bash
   psql -h $SUPABASE_HOST -U postgres -d postgres << 'SQL'
   SELECT * FROM agent_triggers WHERE trigger_id LIKE '%s6%' OR name LIKE '%portos%';
@@ -249,12 +272,14 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ### STEP 5 — VERIFY ROLLBACK (10 min)
 
 - [ ] **Check Skills Reverted:**
+
   ```bash
   md5sum .claude/agents/agente-portos.v4.9.md
   # Should match v4.9 checksum in VERSIONS.json
   ```
 
 - [ ] **Verify Maestro Routing (S6 Disabled):**
+
   ```bash
   python3 << 'EOF'
   from maestro import route
@@ -267,6 +292,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Test v4.9 RAG:**
+
   ```bash
   python3 << 'EOF'
   from rag import query_bm25
@@ -278,6 +304,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Verify Database Integrity:**
+
   ```bash
   psql -h $SUPABASE_HOST -U postgres -d postgres << 'SQL'
   -- Check for data corruption
@@ -291,6 +318,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ### STEP 6 — RESTART SERVICES (10 min)
 
 - [ ] **Restart Scheduler (with S6 disabled):**
+
   ```bash
   systemctl start manta-scheduler
   sleep 5
@@ -299,6 +327,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Warm-up Requests (non-S6):**
+
   ```bash
   for i in 1 2 3; do
     python3 << EOF
@@ -314,12 +343,14 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ### STEP 7 — VERIFY PRODUCTION STABLE (10 min)
 
 - [ ] **Health Check (Full System):**
+
   ```bash
   python3 scripts/healthcheck.py --full
   # Expected: all green (no critical, <5 warnings)
   ```
 
 - [ ] **Monitor Logs for Errors:**
+
   ```bash
   # Check last 5 min for errors:
   grep -i "error\|fatal\|panic" logs/*.log | tail -20
@@ -327,6 +358,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Grafana Dashboard Check:**
+
   ```bash
   # Manual: Open Grafana and verify:
   # - Error rate back to < 1%
@@ -337,7 +369,8 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ### STEP 8 — POST-ROLLBACK COMMUNICATION (5 min)
 
 - [ ] **Slack #agent-ops Final Status:**
-  ```
+
+  ```text
   ✅ **S6 Rollback Complete**
   
   Timeline:
@@ -366,6 +399,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   - Body: Include timeline, actions, and status
 
 - [ ] **Update ROLLBACK_LOG.md:**
+
   ```markdown
   ## Rollback Event 001 (2026-07-25T14:30:00Z)
   
@@ -398,7 +432,9 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ## POST-ROLLBACK ANALYSIS (Next 24h)
 
 ### Root Cause Analysis
+
 - [ ] **Collect Logs & Metrics:**
+
   ```bash
   # Export agent_runs for S6 (v5.0 deployment):
   psql -h $SUPABASE_HOST -U postgres -d postgres << 'SQL' > s6_v5.0_runs.csv
@@ -411,6 +447,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Analyze Routing Accuracy:**
+
   ```bash
   python3 << 'EOF'
   import pandas as pd
@@ -424,6 +461,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
   ```
 
 - [ ] **Review Error Messages:**
+
   ```bash
   grep "error_message" s6_v5.0_runs.csv | sort | uniq -c | sort -rn | head -5
   # Identify top 5 error categories
@@ -446,11 +484,13 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 ## PREVENT FUTURE INCIDENTS
 
 ### Immediate (before re-launch attempt)
+
 - [ ] Fix root cause (see issue categories above)
 - [ ] Run extended test suite: `pytest tests/ -v --tb=short`
 - [ ] Increase monitoring thresholds: routing accuracy trigger at 75% (not 60%)
 
 ### Longer-term (architectural)
+
 - [ ] Add **canary deployment**: Route 5% of S6 queries to v5.0, 95% to v4.9
 - [ ] Implement **automated rollback**: If routing accuracy drops > 10% in 5 min, auto-rollback
 - [ ] Add **staging environment**: Full v5.0 test in staging before prod launch
@@ -462,7 +502,7 @@ Emergency rollback procedure for production incident. **Target RTO: < 60 minutes
 
 | Role | Name | Email | Phone |
 |------|------|-------|-------|
-| Decision Maker | MN | mneves@mantaassociados.com | [fill in] |
+| Decision Maker | MN | <mneves@mantaassociados.com> | [fill in] |
 | Tech Lead | [Fill in] | [email] | [phone] |
 | DBA | [Fill in] | [email] | [phone] |
 | DevOps | [Fill in] | [email] | [phone] |

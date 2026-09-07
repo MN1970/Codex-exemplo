@@ -1,5 +1,6 @@
 # Slack Channel Setup — S6 Launch & Monitoring
-**Version: v5.0 | Date: 2026-07-25 | Owner: mneves@mantaassociados.com**
+
+**Version: v5.0 | Date: 2026-07-25 | Owner: <mneves@mantaassociados.com>**
 
 Complete guide to configure Slack channels and integrations for S6 go-live launch day and post-launch monitoring.
 
@@ -10,12 +11,14 @@ Complete guide to configure Slack channels and integrations for S6 go-live launc
 ### Main Channels
 
 #### 1.1 — #agent-ops (Existing or Create)
+
 **Purpose:** Real-time operational alerts, go-live status, incident management  
 **Visibility:** Private (invite core team only)  
 **Members:** MN, Tech Lead, DevOps/SRE, DBA, On-Call Engineer, QA Lead
 
 **Setup:**
-```
+
+```text
 1. Go to Slack Workspace > Channels
 2. Create or select #agent-ops
 3. Set description: "Manta Agent Ops — Real-time alerts, go-live status, incidents"
@@ -25,12 +28,14 @@ Complete guide to configure Slack channels and integrations for S6 go-live launc
 ```
 
 #### 1.2 — #s6-launch (Create)
+
 **Purpose:** S6-specific launch coordination and updates  
 **Visibility:** Private (same members as #agent-ops + stakeholders)  
 **Members:** All above + Product Manager, Solution Architect
 
 **Setup:**
-```
+
+```text
 1. Create new private channel: #s6-launch
 2. Description: "Manta 03-S6 (Portos) Launch Coordination"
 3. Topic: "Go-Live: 2026-07-25 08:00 UTC | Status: PENDING"
@@ -38,12 +43,14 @@ Complete guide to configure Slack channels and integrations for S6 go-live launc
 ```
 
 #### 1.3 — #s6-monitoring (Create, Optional)
+
 **Purpose:** Post-launch metrics, daily reports, long-term health  
 **Visibility:** Private or shared (if want broader visibility)  
 **Members:** DevOps, Tech Lead, MN
 
 **Setup:**
-```
+
+```text
 1. Create: #s6-monitoring
 2. Description: "S6 Metrics, Daily Reports, Grafana Dashboards"
 3. Enable threading to keep messages organized
@@ -56,25 +63,29 @@ Complete guide to configure Slack channels and integrations for S6 go-live launc
 ### In #s6-launch (Pin these)
 
 1. **Checklist Link**
-   ```
+
+   ```text
    📋 S6-GO-LIVE-CHECKLIST.md
    GitHub link or internal wiki link
    ```
 
 2. **Runbook Link**
-   ```
+
+   ```text
    🚀 S6-GO-LIVE-RUNBOOK.md (Decision Tree)
    Quick reference for launch day decisions
    ```
 
 3. **Rollback Plan Link**
-   ```
+
+   ```text
    🔄 S6-ROLLBACK-PLAN.md (< 1h RTO)
    Only use if incident triggered
    ```
 
 4. **Timeline**
-   ```
+
+   ```text
    ⏱️ LAUNCH TIMELINE
    T-6h: Pre-deployment validation
    T-5h: MN sign-off
@@ -86,7 +97,8 @@ Complete guide to configure Slack channels and integrations for S6 go-live launc
    ```
 
 5. **Emergency Contacts**
-   ```
+
+   ```text
    🚨 INCIDENT RESPONSE
    MN: @mneves (SMS: +XX-XXXX-XXXX)
    Tech Lead: @[name]
@@ -100,7 +112,8 @@ Complete guide to configure Slack channels and integrations for S6 go-live launc
 ### Slack Webhook Setup
 
 **1. Get Webhook URL from Slack**
-```
+
+```text
 1. Go to Slack Workspace > Settings > App Management
 2. Search "Incoming Webhooks"
 3. Install or configure
@@ -111,6 +124,7 @@ Complete guide to configure Slack channels and integrations for S6 go-live launc
 ```
 
 **2. Configure in System**
+
 ```bash
 # Add to .env file
 export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/TXXX/BXXX/XXXX"
@@ -132,6 +146,7 @@ curl -X POST $SLACK_WEBHOOK_URL \
 ```
 
 **3. Verify in Slack**
+
 - Check #agent-ops for test message: "✅ Slack webhook active"
 - If no message, check Webhook URL is correct
 
@@ -140,7 +155,8 @@ curl -X POST $SLACK_WEBHOOK_URL \
 ## STEP 4 — GRAFANA DASHBOARD LINK (T-8h)
 
 **1. Create/Verify Grafana Dashboard**
-```
+
+```text
 1. Go to Grafana: http://grafana.manta.local
 2. Create new dashboard: "S6 Portos Overview"
 3. Add 7 panels (see POST-LAUNCH-MONITORING.md):
@@ -154,7 +170,8 @@ curl -X POST $SLACK_WEBHOOK_URL \
 ```
 
 **2. Share Dashboard Link in Slack**
-```
+
+```text
 Post in #s6-launch:
 
 📊 **Grafana Dashboard Live**
@@ -171,7 +188,7 @@ Alerts: Configured (see #agent-ops for notifications)
 
 **Launch Day (T+0 to T+6h) — Every 30 min status update**
 
-```
+```text
 1. Create scheduled message template:
 
 📍 **S6 Status Update — [TIME]**
@@ -196,7 +213,7 @@ Next update: [time + 30 min]
 
 **Post-Launch (T+6h through T+24h) — Hourly**
 
-```
+```text
 Post to #s6-monitoring:
   • Metrics summary
   • Any alerts triggered
@@ -210,7 +227,8 @@ Post to #s6-monitoring:
 ### Grafana Alert Rules → Slack
 
 **1. In Grafana, configure notification channel**
-```
+
+```text
 1. Admin > Channels > New Channel
 2. Type: Slack
 3. Name: manta-agent-ops
@@ -224,7 +242,8 @@ Post to #s6-monitoring:
 **2. Create Alert Rule for Each Metric**
 
 **Alert: Routing Accuracy < 70%**
-```
+
+```yaml
 Name: S6 Routing Accuracy Low
 Condition: agent_runs WHERE agent_id='manta-03-s6' 
            AND routing_accuracy < 0.70 for 5 minutes
@@ -236,7 +255,8 @@ Message template:
 ```
 
 **Alert: Error Rate > 5%**
-```
+
+```yaml
 Name: S6 Error Rate High
 Condition: error_count / total_count > 0.05 for 10 min
 Severity: CRITICAL 🔴
@@ -245,7 +265,8 @@ Auto-mention: @mneves at 5 min
 ```
 
 **Alert: Latency p95 > 15s**
-```
+
+```yaml
 Name: S6 Latency Spike
 Condition: PERCENTILE_CONT(0.95) OF latency_ms > 15000 for 5 min
 Severity: HIGH 🟡
@@ -254,7 +275,8 @@ Auto-mention: @tech-lead
 ```
 
 **Alert: Cost Anomaly**
-```
+
+```yaml
 Name: S6 Cost Spike
 Condition: AVG(cost_usd) > 3 × baseline for 1 hour
 Severity: HIGH 🟡
@@ -263,7 +285,8 @@ Async-mention: @mneves (not urgent)
 ```
 
 **Alert: Scheduler Down**
-```
+
+```yaml
 Name: Scheduler Heartbeat Lost
 Condition: Last heartbeat > 5 min ago
 Severity: CRITICAL 🔴
@@ -278,20 +301,23 @@ Auto-call: @mneves
 **If Slack Apps enabled, create custom commands for quick access:**
 
 ### Command: /s6-status
-```
+
+```yaml
 Returns: Last hour metrics
 Output: Routing accuracy, error rate, latency, cost
 ```
 
 ### Command: /s6-rollback
-```
+
+```text
 Initiates rollback approval workflow
 Requires: MN approval
 Triggers: S6-ROLLBACK-PLAN.md
 ```
 
 ### Command: /s6-dashboard
-```
+
+```yaml
 Returns: Link to Grafana + recent alerts
 ```
 
@@ -300,8 +326,10 @@ Returns: Link to Grafana + recent alerts
 ## STEP 8 — LAUNCH DAY SLACK SEQUENCE (T+0)
 
 ### T-30 min (30 min before launch)
+
 **Post in #s6-launch:**
-```
+
+```text
 🚀 **S6 LAUNCH IN 30 MINUTES**
 
 📍 Timeline:
@@ -325,8 +353,10 @@ React with ✓ to confirm readiness
 ```
 
 ### T+0 (Go-Live)
+
 **Post in #s6-launch:**
-```
+
+```text
 🚀 **S6 IS LIVE**
 
 ⏱️ Deployment started: 2026-07-25T08:00:00Z
@@ -336,8 +366,10 @@ Next status update in 5 minutes...
 ```
 
 ### T+5 min
+
 **Post in #s6-launch:**
-```
+
+```text
 ✅ **Warmup queries successful**
 
 Metrics (first 5 min):
@@ -349,8 +381,10 @@ Next check: T+15 min
 ```
 
 ### T+15 min
+
 **Post in #s6-launch:**
-```
+
+```text
 📊 **METRICS CHECK #1 (T+15m)**
 
 ✅ Routing accuracy: 87% (target >= 75%)
@@ -362,8 +396,10 @@ Next check: T+30 min
 ```
 
 ### T+30 min
+
 **Post in #s6-launch:**
-```
+
+```text
 ✅ **S6 LAUNCH CONFIRMED**
 
 Launch window: COMPLETE ✓
@@ -386,7 +422,8 @@ Next phase: Post-launch monitoring (see #s6-monitoring)
 **Schedule:** 09:00 UTC daily (auto-post or manual)
 
 **Post to #s6-monitoring:**
-```
+
+```text
 📈 **S6 Daily Report — [DATE]**
 
 [24-hour metrics summary]
@@ -411,7 +448,8 @@ Recommendations: [if any]
 ## STEP 10 — WEEKLY SUMMARY (T+7d)
 
 **Post to #s6-monitoring:**
-```
+
+```text
 📊 **S6 Weekly Summary — Week 1**
 
 7-Day Metrics:
@@ -440,31 +478,37 @@ Next week actions:
 ## CHECKLIST: SLACK SETUP COMPLETE
 
 **T-24h:**
+
 - [ ] #agent-ops channel exists, members invited
 - [ ] #s6-launch channel created, members invited
 - [ ] Key documents pinned in #s6-launch
 
 **T-12h:**
+
 - [ ] Slack Webhook URL obtained
 - [ ] Webhook tested (message received in #agent-ops)
 - [ ] .env or settings.json updated with webhook URL
 
 **T-8h:**
+
 - [ ] Grafana dashboard created & shared
 - [ ] Alert rules configured in Grafana (5+ rules)
 - [ ] Notification channel linked to #agent-ops
 
 **T-6h:**
+
 - [ ] Slack commands configured (optional but recommended)
 - [ ] Emergency contacts pinned in #s6-launch
 - [ ] Status update templates prepared
 
 **T-4h:**
+
 - [ ] Final Slack test: Post test alert
 - [ ] Verify #agent-ops receives alert
 - [ ] Team confirms Slack notifications working
 
 **T+0:**
+
 - [ ] Launch day message posted to #s6-launch
 - [ ] Monitoring active, alerts firing correctly
 - [ ] Daily report process tested
@@ -474,6 +518,7 @@ Next week actions:
 ## EXAMPLE SLACK ALERT PAYLOADS
 
 ### Example 1: Routing Accuracy Low Alert
+
 ```json
 {
   "blocks": [
@@ -511,6 +556,7 @@ Next week actions:
 ```
 
 ### Example 2: All-Clear Status
+
 ```json
 {
   "blocks": [
@@ -544,6 +590,7 @@ Next week actions:
 4. **Action:** Post to #s6-monitoring
 
 **Or use third-party service (Zapier, IFTTT, Integromat) to:**
+
 - Poll Grafana API every 30 min
 - Post updates to Slack if metric threshold exceeded
 

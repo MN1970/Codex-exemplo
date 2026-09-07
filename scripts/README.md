@@ -43,11 +43,13 @@ pip install azure-identity azure-keyvault-secrets requests
 **Objetivo**: Validar saúde operacional da integração Microsoft 365.
 
 **Execução**:
+
 ```bash
 python scripts/sp_healthcheck.py [--verbose] [--dry-run]
 ```
 
 **Saída**:
+
 ```json
 {
   "status": "ok" | "error" | "warning",
@@ -62,11 +64,13 @@ python scripts/sp_healthcheck.py [--verbose] [--dry-run]
 ```
 
 **Casos de uso**:
+
 - SessionStart hook (valida credenciais ao abrir session)
 - Pré-deploy (assegura que M365 está operacional)
 - Monitoramento em background (alertar se token expira em < 7 dias)
 
 **Vars de ambiente**:
+
 ```bash
 SHAREPOINT_TENANT_ID=<uuid>
 AZURE_CLIENT_ID=<uuid>
@@ -82,6 +86,7 @@ SHAREPOINT_SITE_URL=https://tenant.sharepoint.com/sites/manta-maestro
 **Objetivo**: Validar que agentes em `.claude/agents/*.md` estão sincronizados com canonical registry (`CLAUDE.md` v4.2).
 
 **Execução**:
+
 ```bash
 # HTML report (padrão)
 python scripts/audit_agents.py --verbose
@@ -94,11 +99,13 @@ python scripts/audit_agents.py --output-format json --divergence-threshold 1
 ```
 
 **Outputs**:
+
 - `rag_evals/audit_agents.html` — Tabela formatada para review
 - `rag_evals/audit_agents.csv` — Exportável para Excel
 - `rag_evals/audit_agents.json` — Estruturado para CI/CD
 
 **Colunas do report**:
+
 | Campo | Descrição |
 |-------|-----------|
 | `agent_id` | Nome arquivo (agente-saneamento) |
@@ -110,6 +117,7 @@ python scripts/audit_agents.py --output-format json --divergence-threshold 1
 | `last_sync_at` | Timestamp da auditoria |
 
 **Casos de uso**:
+
 - Pre-commit hook (falha se divergências > 0)
 - Deploy validation (assegura agents estão alinhados)
 - Compliance audit (rastrear mudanças em agent definitions)
@@ -121,6 +129,7 @@ python scripts/audit_agents.py --output-format json --divergence-threshold 1
 **Objetivo**: Validar que Maestro roteia corretamente 30+ prompts-teste para agentes verticais (S1-S10).
 
 **Execução**:
+
 ```bash
 # Avalia roteamento (baseline BM25)
 python scripts/eval_routing.py --verbose
@@ -143,6 +152,7 @@ python scripts/eval_routing.py --output-format csv
 | S10 Barragens | "CFRD de 80m altura" | agente-barragens |
 
 **Métricas de Output**:
+
 ```json
 {
   "accuracy_top1": 0.867,      // % prompts roteados corretamente (rank 1)
@@ -169,10 +179,12 @@ python scripts/eval_routing.py --output-format csv
 ```
 
 **Exit code**:
+
 - 0: Accuracy >= 80%
 - 1: Accuracy < 80% ou erro crítico
 
 **Casos de uso**:
+
 - Validação pós-deploy (assegura routing está funcionando)
 - A/B testing (comparar embeddings v1 vs v2)
 - Performance monitoring (alertar se latência cresce)
@@ -184,6 +196,7 @@ python scripts/eval_routing.py --output-format csv
 **Objetivo**: Criar baseline de 50 QA pairs para avaliação de qualidade RAG (retrieval-augmented generation).
 
 **Execução**:
+
 ```bash
 # Gera 50 QA pairs com seed=42 (reproduzível)
 python scripts/init_rag_golden_set.py
@@ -196,11 +209,13 @@ python scripts/init_rag_golden_set.py --seed 999
 ```
 
 **Outputs**:
+
 - `rag_evals/golden_set_v1.csv` — 50 linhas com QA pairs
 - `rag_evals/golden_set_schema.json` — Schema de validação + metadados
 
 **Formato CSV** (`golden_set_v1.csv`):
-```
+
+```text
 qa_id,question,golden_answer,agent_id,expected_chunks,difficulty_level,source_domain,created_at
 qa_001,"Como dimensionar ETA ciclo completo...","ETA inclui coagulação...",agente-saneamento,"chunk_saneamento_1;chunk_saneamento_2;chunk_saneamento_3",medium,water_treatment,2026-07-25T...
 qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",agente-saneamento,"chunk_saneamento_1;chunk_saneamento_4",hard,hydraulics,2026-07-25T...
@@ -208,6 +223,7 @@ qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",
 ```
 
 **Distribuição de QA Pairs** (por padrão, 10 por segmento):
+
 | Segmento | Questões | Domínios |
 |----------|----------|----------|
 | Saneamento (S8) | 10 | water_treatment, wastewater, regulation, hydraulics, etc. |
@@ -217,6 +233,7 @@ qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",
 | Barragens (S10) | 10 | dam_engineering, tailings_management, hazard_assessment, etc. |
 
 **Métricas de Validação RAG** (schema JSON):
+
 ```json
 {
   "evaluation_metrics": {
@@ -228,6 +245,7 @@ qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",
 ```
 
 **Casos de uso**:
+
 - Baseline para RAG evaluation (BM25 vs embedding v1 vs v2)
 - A/B testing em Supabase retrieval
 - Documentação de domínio (golden answers como referência técnica)
@@ -239,6 +257,7 @@ qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",
 **Objetivo**: Implementar R6 — reranking de top-20 chunks para top-5 usando Sonnet 5 cross-encoding.
 
 **Execução**:
+
 ```bash
 # Rerank single query
 python scripts/rag_reranker.py \
@@ -264,6 +283,7 @@ python scripts/rag_reranker.py \
 ```
 
 **Input Format** (`examples/reranker_input_example.json`):
+
 ```json
 {
   "query": "Como dimensionar ETA completo para 200k habitantes?",
@@ -280,6 +300,7 @@ python scripts/rag_reranker.py \
 ```
 
 **Output Format**:
+
 ```json
 {
   "query": "...",
@@ -318,6 +339,7 @@ python scripts/rag_reranker.py \
 | `RAGReranker` | Orquestrador principal | Batch rerank, métricas, stats |
 
 **Prompt engineering (Sonnet 5)**:
+
 - Contexto: Explica tarefa de reranking
 - Query: Pergunta original do usuário
 - Chunks: Lista de 20 chunks com ID, fonte, score BM25
@@ -325,18 +347,21 @@ python scripts/rag_reranker.py \
 - Output: JSON estruturado {rankings: [{chunk_id, score, reasoning}]}
 
 **Métricas**:
+
 - Latência: ~200-300ms por reranking (Sonnet 5)
 - Cache hit rate: Típico 20-40% em workload repetitivo
 - Score distribution: Min/Max/Mean/Stdev dos scores retornados
 - Throughput: ~3-5 queries/segundo (single-threaded)
 
 **Casos de uso**:
+
 - Melhorar relevância dos chunks entregues ao agente
 - A/B testing: BM25 alone vs BM25+reranker
 - Integração com eval_routing.py (medir impacto em routing accuracy)
 - Fine-tuning de queries RAG críticas
 
 **Environment**:
+
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
@@ -348,6 +373,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 **Objetivo**: Medir impacto do R6 reranker na acurácia de roteamento Maestro.
 
 **Execução**:
+
 ```bash
 # Avalia impacto
 python scripts/eval_reranker_impact.py --verbose
@@ -359,6 +385,7 @@ python scripts/eval_reranker_impact.py \
 ```
 
 **Output**:
+
 ```json
 {
   "evaluation_date": "2026-07-25T...",
@@ -385,11 +412,13 @@ python scripts/eval_reranker_impact.py \
 ```
 
 **Interpretação**:
+
 - `accuracy_improvement`: % de melhoria na routing accuracy
 - `latency_overhead_ms`: Custo adicional em latência
 - Trade-off: Accuracy vs Latency (típico: +10-15% acurácia, +200-300ms latência)
 
 **Casos de uso**:
+
 - Validar efetividade do reranker
 - Justificar custo adicional de Sonnet 5
 - A/B testing de diferentes cross-encoders
@@ -399,7 +428,8 @@ python scripts/eval_reranker_impact.py \
 
 ## Ordem de Execução Recomendada
 
-### Startup (quando novo agente é deployado):
+### Startup (quando novo agente é deployado)
+
 ```bash
 # 1. Healthcheck M365
 python scripts/sp_healthcheck.py > /tmp/health.json
@@ -420,7 +450,8 @@ python scripts/eval_reranker_impact.py
 # Verifica se improvement > 5% antes de ativar em produção
 ```
 
-### RAG + Reranking Pipeline (novo v5.0):
+### RAG + Reranking Pipeline (novo v5.0)
+
 ```bash
 # Teste de reranker com exemplo
 python scripts/rag_reranker.py \
@@ -438,7 +469,8 @@ python scripts/rag_reranker.py \
 python scripts/eval_reranker_impact.py --verbose
 ```
 
-### CI/CD Integration:
+### CI/CD Integration
+
 ```yaml
 # .github/workflows/observability.yml (exemplo)
 name: Observability Checks
@@ -460,7 +492,8 @@ jobs:
         run: python scripts/eval_routing.py --timeout 10
 ```
 
-### SessionStart hook (`.claude/settings.json`):
+### SessionStart hook (`.claude/settings.json`)
+
 ```json
 {
   "hooks": {
@@ -477,7 +510,8 @@ jobs:
 
 ## Help e Troubleshooting
 
-### Cada script tem `--help`:
+### Cada script tem `--help`
+
 ```bash
 python scripts/sp_healthcheck.py --help
 python scripts/audit_agents.py --help
@@ -485,7 +519,8 @@ python scripts/eval_routing.py --help
 python scripts/init_rag_golden_set.py --help
 ```
 
-### Logging:
+### Logging
+
 ```bash
 # Verbose mode (DEBUG level)
 python scripts/audit_agents.py --verbose 2>&1 | tee audit.log
@@ -494,9 +529,10 @@ python scripts/audit_agents.py --verbose 2>&1 | tee audit.log
 python scripts/sp_healthcheck.py 2>&1 | grep "azure_ad"
 ```
 
-### Comuns Issues:
+### Comuns Issues
 
 **`sp_healthcheck.py` falha com "Missing AZURE_CLIENT_ID"**
+
 ```bash
 # Setup vars de ambiente
 export AZURE_CLIENT_ID=<uuid>
@@ -506,6 +542,7 @@ python scripts/sp_healthcheck.py
 ```
 
 **`audit_agents.py` relata divergências**
+
 ```bash
 # Review HTML report
 open rag_evals/audit_agents.html
@@ -515,6 +552,7 @@ git diff --no-pager .claude/agents/agente-saneamento.md
 ```
 
 **`eval_routing.py` com accuracy < 80%**
+
 ```bash
 # Debug confusão matrix
 python scripts/eval_routing.py --output-format csv
@@ -523,6 +561,7 @@ python scripts/eval_routing.py --output-format csv
 ```
 
 **`init_rag_golden_set.py` com seed diferente**
+
 ```bash
 # Reproduzir exatamente mesmos 50 QAs
 python scripts/init_rag_golden_set.py --seed 42
@@ -554,6 +593,7 @@ python scripts/init_rag_golden_set.py --seed 999 --num-pairs 100
 **Últimas adições**: rag_reranker.py, eval_reranker_impact.py (2026-07-25)  
 
 **Histórico**:
+
 - v2.0.0 (2026-07-25): R6 Reranker + eval_reranker_impact
 - v1.0.0 (2026-07-25): Base (4 scripts)
 
@@ -564,5 +604,6 @@ python scripts/init_rag_golden_set.py --seed 999 --num-pairs 100
 Maintained by Manta Associados — IA & Observability Team.
 
 Para reports ou sugestões:
-- Email: ia-team@mantaassociados.com
+
+- Email: <ia-team@mantaassociados.com>
 - SharePoint: `/01-agentes-fundamentais/observability/`

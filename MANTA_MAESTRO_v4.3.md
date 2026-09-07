@@ -10,7 +10,7 @@
 
 Manta Maestro agora inclui **infraestrutura de indexação paralela de embeddings** para Knowledge Extractions, complementando os 20 agentes verticais e horizontais.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │ MANTA MAESTRO v4.3                                           │
 ├──────────────────────────────────────────────────────────────┤
@@ -67,7 +67,7 @@ Manta Maestro agora inclui **infraestrutura de indexação paralela de embedding
 
 **Novo em v4.3: Parallel KE Embeddings Indexer**
 
-```
+```text
 Discovery (SQL)
     ↓
 Sharding (Python)
@@ -85,11 +85,13 @@ Verification (SQL)
 ```
 
 **Componentes:**
+
 - `parallel_ke_embeddings_indexer.py` — Orchestrador (206 linhas)
 - `run_ke_indexing_demo.py` — Demo end-to-end (236 linhas)
 - `test_sql_generation.py` — Test SQL (81 linhas)
 
 **Documentação:**
+
 - `PARALLEL_KE_EMBEDDINGS.md` — Runbook técnico (185 linhas)
 - `README_KE_INDEXING.md` — Quick start (135 linhas)
 
@@ -102,7 +104,8 @@ Verification (SQL)
 **Trigger:** Novos KEs criados em `knowledge_extractions` sem passar por indexador
 
 **Fluxo:**
-```
+
+```text
 Usuário: "Tenho 20 KEs sem embeddings. Dispara indexação?"
     ↓
 Claude Code: Roda discovery + sharding
@@ -121,6 +124,7 @@ Verification: 20 KEs confirmadas indexadas
 **Scenario:** Passar de `bge-small-en-v1.5` (384d) para `bge-m3` (1024d)
 
 **Estratégia:**
+
 1. Criar coluna `embedding_m3` em `ke_embeddings`
 2. Rodar novo indexador com `model='BAAI/bge-m3-base'`
 3. Inserir em `embedding_m3` (nunca sobrescrever `embedding`)
@@ -146,6 +150,7 @@ END
 ## 📋 Status de Deploy v4.3
 
 ### ✅ Completo
+
 - [x] Implementar orchestrador (discovery, sharding, dispatch, verify)
 - [x] Demo end-to-end com dados fictícios
 - [x] Test de geração SQL
@@ -155,12 +160,14 @@ END
 - [x] Documentar modelo imutável + regras críticas
 
 ### ⏳ Em Progresso (v4.2)
+
 - [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
 - [ ] Inserir 5 routing rules em `sp_agent_routing`
 - [ ] Criar pastas SP para S6–S10
 - [ ] Testar routing do Maestro
 
 ### 📅 Roadmap (Próximas semanas)
+
 - [ ] Integração com cron para discovery automático
 - [ ] Dashboard de status (KEs indexados/dia)
 - [ ] Integração com aluci-guard (audit de normas/leis em KEs)
@@ -180,16 +187,19 @@ END
 ## 🔗 Links & Referências
 
 ### Documentação Principal
+
 - **[CLAUDE.md](./CLAUDE.md)** — Master registry (agentes, routing, RAG, histórico)
 - **[PARALLEL_KE_EMBEDDINGS.md](./PARALLEL_KE_EMBEDDINGS.md)** — Runbook técnico profundo
 - **[README_KE_INDEXING.md](./README_KE_INDEXING.md)** — Quick start executivo
 
 ### Scripts
+
 - **[parallel_ke_embeddings_indexer.py](./scripts/parallel_ke_embeddings_indexer.py)** — Orchestrador
 - **[run_ke_indexing_demo.py](./scripts/run_ke_indexing_demo.py)** — Demo (rodar para ver funcionando)
 - **[test_sql_generation.py](./scripts/test_sql_generation.py)** — Test de SQL
 
 ### Agentes S6–S10
+
 - [agente-portos.md](./.claude/agents/agente-portos.md)
 - [agente-aeroportos.md](./.claude/agents/agente-aeroportos.md)
 - [agente-saneamento.md](./.claude/agents/agente-saneamento.md)
@@ -197,6 +207,7 @@ END
 - [agente-barragens.md](./.claude/agents/agente-barragens.md)
 
 ### PR
+
 - **[#37 (draft)](https://github.com/MN1970/Codex-exemplo/pull/37)** — Parallel KE Embeddings Indexer
 
 ---
@@ -204,16 +215,19 @@ END
 ## 🎯 Próximos Passos
 
 ### Imediato (hoje)
+
 - [x] Atualizar CLAUDE.md master (v4.3)
 - [x] Documentar ecossistema completo
 - [x] Commitar tudo na branch designada
 
 ### Esta semana
+
 - [ ] Revisão de PR #37 (aprovação MN)
 - [ ] Merge de v4.3 para main
 - [ ] Notificar time de lançamento v4.3
 
 ### Próximas semanas
+
 - [ ] Cron/webhook para discovery automático
 - [ ] Dashboard de status
 - [ ] Integração com aluci-guard
@@ -232,7 +246,7 @@ END
 
 ## 📋 Changelog Resumido v4.3
 
-```
+```text
 v4.3 (2026-07-27)
 ├─ ✅ Parallel KE Embeddings Indexer (discovery → sharding → dispatch → verify)
 ├─ ✅ KeIndexerOrchestrator class (206 linhas Python)

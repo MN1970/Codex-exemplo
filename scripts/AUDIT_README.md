@@ -52,6 +52,7 @@ echo $?  # 0 = pass, 1 = fail
 ```
 
 **Output:**
+
 - `rag_evals/audit_agents.json` — Full results
 - `rag_evals/divergence_report.json` — Drift details
 - `audit.log` — Execution log
@@ -130,7 +131,7 @@ python scripts/audit_agents.py \
 
 **Fix:** `regenerate_skill.py --agent <id>`
 
-```
+```text
 Audit Output:
   "divergences": ["CHECKSUM_MISMATCH (expected=f1a3d2..., actual=3435f9...)"]
 ```
@@ -223,7 +224,7 @@ See **[CI_INTEGRATION_GUIDE.md](./CI_INTEGRATION_GUIDE.md)** for complete exampl
 
 ### Tier 1: Horizontals (11)
 
-```
+```text
 maestro                (Manta 00)
 agente-claims          (Manta 01)
 agente-contratual      (Manta 02)
@@ -239,7 +240,7 @@ agente-arquiteto-ia    (Manta 16)
 
 ### Tier 2–3: Verticals (9)
 
-```
+```text
 agente-rodovias        (Manta 03-S1) — Roads
 agente-oae             (Manta 03-S2) — Bridges/Viaducts
 agente-ferrovia        (Manta 03-S3) — Railways
@@ -380,7 +381,7 @@ No external dependencies (pure Python standard library).
 
 ## Support & Contact
 
-**Author:** mneves@mantaassociados.com  
+**Author:** <mneves@mantaassociados.com>  
 **Version:** v2.0  
 **Updated:** 2026-07-25  
 **Status:** Production

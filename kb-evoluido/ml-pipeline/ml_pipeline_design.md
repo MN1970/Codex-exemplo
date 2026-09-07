@@ -1,11 +1,12 @@
 # ML Pipeline & Feedback Loop para Evolução Automática Diária
+
 ## Arquitetura Completa para Agentes Manta (Infraestrutura)
 
 ---
 
 ## 1. VISÃO GERAL DO PIPELINE
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    ML EVOLUTION SYSTEM v1.0                     │
 ├─────────────────────────────────────────────────────────────────┤
@@ -2188,7 +2189,7 @@ class RollbackManager:
 
 ### Sequência Diária Ideal
 
-```
+```yaml
 06:00 UTC  ┌─ Ingestion (Raw → Staging)
            │
 07:00 UTC  ├─ Normalization (Staging → Normalized)
@@ -2213,7 +2214,7 @@ Sunday     │
 
 ## 10. IMPLEMENTAÇÃO: STACK RECOMENDADO
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │         ORCHESTRATION LAYER             │
 │  Airflow / Dagster / Prefect            │

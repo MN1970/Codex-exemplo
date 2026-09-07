@@ -5,6 +5,7 @@
 Este diretório contém scripts para gerar automaticamente documentação de agentes (SKILL.md) a partir de CLAUDE.md e VERSIONS.json.
 
 **Output final:**
+
 - `manta-maestro/SKILL.md` — Documentação consolidada de todos os 20 agentes (11 horizontais + 9 verticais)
 - ~2,400 linhas | ~72 KB
 - Regenerado a cada push/merge que altere CLAUDE.md ou VERSIONS.json
@@ -18,11 +19,13 @@ Este diretório contém scripts para gerar automaticamente documentação de age
 **Propósito:** Script principal que orquestra a geração de SKILL.md.
 
 **Uso:**
+
 ```bash
 python scripts/generate_skills_registry.py
 ```
 
 **Processo:**
+
 1. Lê CLAUDE.md (mapa de 20 agentes, tabelas, routing rules)
 2. Extrai dados de agentes horizontais e verticais
 3. Valida checksums MD5
@@ -31,7 +34,8 @@ python scripts/generate_skills_registry.py
 6. Consolidar em `manta-maestro/SKILL.md`
 
 **Output:**
-```
+
+```json
 [+] Sucesso!
     - Agentes: 20 (11 horizontais + 9 verticais)
     - Linhas: 2,424
@@ -47,6 +51,7 @@ python scripts/generate_skills_registry.py
 **Propósito:** Template Jinja2 reutilizável para gerar documentação de um agente.
 
 **Seções geradas:**
+
 - Metadados (código, nome, categoria, status, tier)
 - Aliases & roteamento
 - Skill e versionamento
@@ -61,6 +66,7 @@ python scripts/generate_skills_registry.py
 - Feedback loop (R9)
 
 **Uso em Python:**
+
 ```python
 from jinja2 import Environment, FileSystemLoader
 
@@ -144,7 +150,8 @@ descriptions = {
 ### Ciclo de Vida (para verticais apenas)
 
 Todos os 9 agentes verticais (S1–S4, S6–S10) suportam:
-```
+
+```json
 [1, 2, 3, 4, 5, 6, 7, 8]  # 8 fases
 ```
 
@@ -160,6 +167,7 @@ Todos os 9 agentes verticais (S1–S4, S6–S10) suportam:
 ### Trigger Phrases (keywords para maestro)
 
 Exemplo: `agente-saneamento`
+
 ```python
 trigger_phrases = [
     'saneamento', 'ETA', 'ETE', 'adutora', 'esgoto', 'AySA',
@@ -170,6 +178,7 @@ trigger_phrases = [
 ### Exemplos de Prompts (golden set)
 
 Exemplo: `agente-saneamento`
+
 ```python
 exemplo_prompts = [
     'Dimensione uma ETA para município de 500k hab...',
@@ -264,6 +273,7 @@ Proprietário: mneves@mantaassociados.com
 ### Automação (sugerida)
 
 **Git hook (pre-commit):**
+
 ```bash
 #!/bin/bash
 # .git/hooks/pre-commit
@@ -283,6 +293,7 @@ fi
 ```
 
 **CI/CD (GitHub Actions):**
+
 ```yaml
 name: Validate SKILL.md
 on: [pull_request]
@@ -343,6 +354,7 @@ cost_by_phase = {
 - Built-in: `re`, `json`, `hashlib`, `pathlib`, `datetime`
 
 **Instalar:**
+
 ```bash
 pip install jinja2
 ```
@@ -367,7 +379,8 @@ pip install jinja2
 
 **Symptom:** Nenhuma saída de sucesso
 
-**Fix:** 
+**Fix:**
+
 1. Verificar CLAUDE.md existe: `ls -la /home/user/Codex-exemplo/CLAUDE.md`
 2. Verificar diretório de output: `mkdir -p manta-maestro/`
 3. Verificar permissões de escrita: `touch manta-maestro/test.txt`
@@ -395,7 +408,7 @@ pip install jinja2
 
 ## Contato & Governança
 
-**Owner:** mneves@mantaassociados.com
+**Owner:** <mneves@mantaassociados.com>
 **Version:** v5.0 (2026-07-25)
 **Ticket:** MNT-2026-UPGRADE-AGENTS-V5
 

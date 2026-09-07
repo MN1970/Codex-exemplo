@@ -10,6 +10,7 @@
 ## Pre-Deployment Checklist
 
 ### Code Quality ✅
+
 - [x] All 12 components implemented (Phase A–D complete)
 - [x] 10 test cases passing (smoke + integration)
 - [x] Code review completed
@@ -17,6 +18,7 @@
 - [x] Git history clean, all commits attributed
 
 ### Documentation ✅
+
 - [x] API reference (MAESTRO-OS-v6-API.md)
 - [x] Developer guide (MAESTRO-OS-v6-DEVELOPER.md)
 - [x] Quick-start guide (QUICKSTART-v6.md)
@@ -24,6 +26,7 @@
 - [x] Troubleshooting guide
 
 ### Testing ✅
+
 - [x] Smoke tests: 5 representative projects passing
 - [x] Integration tests: Full-stack (A+B+C) validation passing
 - [x] Performance targets validated:
@@ -33,6 +36,7 @@
 - [x] Healthcheck all green
 
 ### Infrastructure ✅
+
 - [x] Supabase schema deployed (6 tables, 8 functions)
 - [x] RAG collections initialized (bge-small-en-v1.5)
 - [x] Environment variables configured
@@ -615,11 +619,13 @@ kubectl rollout undo deployment/maestro-os -n production
 ## Support & Escalation
 
 **Production Support Contacts:**
-- **Critical (P1):** ops-critical@company.com
-- **High (P2):** ops@company.com
-- **Medium (P3):** ops-dev@company.com
+
+- **Critical (P1):** <ops-critical@company.com>
+- **High (P2):** <ops@company.com>
+- **Medium (P3):** <ops-dev@company.com>
 
 **Escalation Path:**
+
 1. Check logs: `tail -f logs/agent_runs.jsonl`
 2. Run healthcheck: `./maestro.sh healthcheck`
 3. Review database: `SELECT * FROM workflows WHERE status = 'failed' ORDER BY created_at DESC LIMIT 5`

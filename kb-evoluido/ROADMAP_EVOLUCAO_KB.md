@@ -11,7 +11,8 @@
 ### **FASE 1️⃣: GO-LIVE & ESTABILIZAÇÃO (Agosto 2026)**
 
 #### Semana 1 (Aug 01-05) — Deploy em Produção
-```
+
+```text
 ✅ Deploy Supabase (kb-evoluido schema + 68 registros seed)
 ✅ Airflow DAG ativado (cron 06:00 UTC diário)
 ✅ Prometheus + Grafana live (9 métricas, 6 painéis)
@@ -27,7 +28,8 @@
 ```
 
 #### Semana 2-4 (Aug 08-31) — Estabilização & Feedback Loop
-```
+
+```text
 🔄 Ativação do feedback loop (rejeições capturadas)
    ├─ Agente S8 valida 15 constantes AySA (meta: 80% aprovação)
    ├─ Agente S9 testa 20 fórmulas ANEEL (meta: 85% acurácia)
@@ -54,7 +56,8 @@
 ### **FASE 2️⃣: EXPANSÃO VERTICAL (Setembro-Outubro 2026)**
 
 #### Setembro — Ativação S7 (Aeroportos) + S10 (Barragens)
-```
+
+```text
 🏢 S7 — Aeroportos (ANAC/ICAO/FAA)
    ├─ Constantes: 18 novos padrões PAPI, ILS, PCN
    ├─ Templates: 5 (estudo prévio, básico, exec, obra, O&M)
@@ -77,7 +80,8 @@
 ```
 
 #### Outubro — Refinamento & Machine Learning
-```
+
+```text
 🧠 Modelo de Learning Rate por Segmento
    ├─ S8 (Saneamento): K-means clustering (3 clusters, IWA standards)
    ├─ S9 (Energia): Linear regression (R² target: 0.85+)
@@ -103,7 +107,8 @@
 ### **FASE 3️⃣: INTEGRAÇÃO PROFUNDA (Novembro 2026 - Janeiro 2027)**
 
 #### Novembro — Integração ERP SAP/BI
-```
+
+```text
 🔗 Conexão bidirecional Supabase ↔ SAP
    ├─ Sync de constantes S1-S10 (via iFlow)
    ├─ Feedback de Orçamento (manta-05) → KB
@@ -126,7 +131,8 @@
 ```
 
 #### Dezembro — Auto-Updates sem Gate Humano (Tier 2)
-```
+
+```text
 🤖 Confiança > 85% = Auto-Merge
    ├─ Threshold: 95% consenso entre 2+ agentes
    ├─ Exemplos:
@@ -148,7 +154,8 @@
 ```
 
 #### Janeiro 2027 — Expansão Modelos Multi-Tipologia
-```
+
+```text
 🔍 Segmentação em sub-tipos:
    ├─ S8 (Saneamento): ETA, ETE, adutoras, elevatórias (4 sub-tipos)
    ├─ S9 (Energia): LT, Subestação, UHE, UEE, Distribuição (5 sub-tipos)
@@ -168,7 +175,8 @@
 ### **FASE 4️⃣: ESCALABILIDADE & INTELIGÊNCIA (Fevereiro - Junho 2027)**
 
 #### Fevereiro — GraphQL API + Multi-Language
-```
+
+```text
 🔌 API GraphQL (schema gerado auto)
    ├─ Query: constants by segment, category, version
    ├─ Mutation: propose update (auto-validates)
@@ -189,7 +197,8 @@
 ```
 
 #### Março-Abril — BIM Integration (S7 + Futuro)
-```
+
+```text
 🏗️ Parsing automático de modelos IFC/RVT:
    ├─ Extração de features estruturais
    ├─ Validação contra constantes KB (ex: PCN em S7)
@@ -212,7 +221,8 @@
 ```
 
 #### Maio-Junho — Kubernetes Scaling + Real-Time
-```
+
+```text
 ☸️ Deploy Kubernetes:
    ├─ Airflow: 10 workers (auto-scale, 2-20 pods)
    ├─ FastAPI: 5 réplicas (Ingress + health checks)
@@ -240,7 +250,7 @@
 
 ### **Feedback Loop Permanente**
 
-```
+```text
 ┌─────────────────────────────────────────────┐
 │ 1. Agente rejeita constante (< 70% conf.)  │
 └─────────────────────────────────────────────┘
@@ -282,7 +292,7 @@
 
 ### **Monitoramento Contínuo (24/7)**
 
-```
+```text
 Prometheus              Grafana              AlertManager
 ├─ kb_constant_updates   ├─ Heatmap S6-S10    ├─ CRITICAL: Slack 🔴
 ├─ model_accuracy        ├─ Accuracy trend    ├─ WARNING: Slack 🟡
@@ -293,6 +303,7 @@ Prometheus              Grafana              AlertManager
 ```
 
 **SLO (Service Level Objectives)**:
+
 - Disponibilidade: 99.9% (< 43 min downtime/mês)
 - Latência P95 ingestion: < 60s
 - Acurácia KB predictions: >= 88%
@@ -317,21 +328,25 @@ Prometheus              Grafana              AlertManager
 ## 🔐 GARANTIAS DE ESTABILIDADE
 
 ✅ **Versionamento Completo**
+
 - Semântico (v1.0 → v1.1 → v2.0)
 - Cada mudança é um commit (reversível)
 - Rollback automático em 2 min se alerta crítico
 
 ✅ **Auditoria 100%**
+
 - User ID, timestamp, before/after, motivo
 - Não deletável, imutável (append-only)
 - Rastreabilidade LGPD/SOX completa
 
 ✅ **Gate Humano Crítico**
+
 - Constantes com impacto legal (Lei 12.334, ANEEL) → MN sempre
 - Normas internacionais (ICAO, PIANC) → validação obrigatória
 - Threshold > 95% confiança = bypass automático
 
 ✅ **Failover & Disaster Recovery**
+
 - Backup diário Supabase (7 dias retention)
 - Snapshot antes de cada deploy
 - Recovery Time Objective (RTO): < 30 min
@@ -343,7 +358,7 @@ Prometheus              Grafana              AlertManager
 
 ### **Mecanismo Central: Feedback Loop com Detecção Automática**
 
-```
+```text
 Dia 1: Agente S8 rejeita K_RECICLAGEM_UASB (confiança 65%)
 Dia 2: Agente S8 rejeita novamente (nova razão, confiança 68%)
 Dia 3: Agente S8 rejeita 3ª vez (padrão detectado!)
@@ -375,7 +390,8 @@ Dia 6: Constante publicada, agentes notificados, logs auditados
 ## 🚨 CENÁRIOS CRÍTICOS & RESPOSTA
 
 ### Cenário 1: Rejeição em Cascata (> 10/dia)
-```
+
+```yaml
 Acionador: AlertManager dispara
 Resposta: 
   1. Pause automático de updates (confiança < 60%)
@@ -388,7 +404,8 @@ Tempo esperado: 2-5 min detecção + rollback
 ```
 
 ### Cenário 2: Model Drift (R² cai de 0.85 → 0.60)
-```
+
+```yaml
 Acionador: ML pipeline valida nova métrica R² < threshold
 Resposta:
   1. Pause deploy novo modelo
@@ -402,7 +419,8 @@ Tempo esperado: 4-24 horas (depende causa)
 ```
 
 ### Cenário 3: Inconsistência Inter-Agentes (2+ agentes discordam)
-```
+
+```yaml
 Acionador: Validação cruzada detecta S8 vs S6 conflito
 Resposta:
   1. Pause update (confiança = 0)

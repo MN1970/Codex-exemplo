@@ -24,7 +24,7 @@ This document describes the **automated secrets rotation policy** for Manta Maes
 
 ### Files & Components
 
-```
+```text
 Codex-exemplo/
 ├── scripts/
 │   ├── rotate_secrets.py           ✨ Main rotation CLI
@@ -40,7 +40,7 @@ Codex-exemplo/
 
 ### Rotation Workflow
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  APScheduler Trigger (cron: e.g., "0 2 * * 0")             │
 └──────────────────┬──────────────────────────────────────────┘
@@ -137,6 +137,7 @@ Edit `scripts/rotation_policy.json` → `scheduled_rotations`:
 **Cron Format:** `minute hour day month day_of_week` (standard 5-field)
 
 Examples:
+
 - `0 2 * * 0` = Every Sunday at 02:00 UTC
 - `0 3 * * 1` = Every Monday at 03:00 UTC
 - `0 4 1,15 * *` = 1st & 15th of each month at 04:00 UTC
@@ -151,6 +152,7 @@ Examples:
 **Runs:** Automatically before each scheduled rotation.
 
 **What it checks:**
+
 - M365: OAuth token exchange with Azure AD
 - Supabase: API connectivity with existing key
 - MantaHub: Bearer token auth with API health endpoint
@@ -159,12 +161,14 @@ Examples:
 **Location:** `scripts/validate_secret.py`
 
 **To run manually:**
+
 ```bash
 python scripts/validate_secret.py
 ```
 
 **Output:**
-```
+
+```text
 ✓ M365_CLIENT_SECRET is valid
 ✓ SUPABASE_KEY is valid
 ✓ MANTAHUB_TOKEN is valid
@@ -182,6 +186,7 @@ If any validation **fails**, the rotation is **aborted** (see `pre_rotation.on_f
 **Runs:** Automatically after each successful rotation.
 
 **What it checks:**
+
 - M365: OAuth token with new secret
 - Supabase: API call with new key
 - MantaHub: Bearer auth with new token
@@ -190,12 +195,14 @@ If any validation **fails**, the rotation is **aborted** (see `pre_rotation.on_f
 **Location:** `scripts/verify_secret.py`
 
 **To run manually:**
+
 ```bash
 python scripts/verify_secret.py
 ```
 
 **Output:**
-```
+
+```text
 ✅ New M365_CLIENT_SECRET verified and working
 ✅ New SUPABASE_KEY verified and working
 ✅ New MANTAHUB_TOKEN verified and working
@@ -211,6 +218,7 @@ If verification **fails**, a Slack alert is sent but the rotation is not rolled 
 ### Rotation Log (`rotation_log.json`)
 
 Every rotation is logged with:
+
 - `secret_name` — Which secret was rotated
 - `rotation_timestamp` — When (ISO 8601)
 - `old_version` — Hash/ID of old secret
@@ -223,6 +231,7 @@ Every rotation is logged with:
 - `slack_notified` — Were ops notified?
 
 **Example entry:**
+
 ```json
 {
   "secret_name": "M365_CLIENT_SECRET",
@@ -258,12 +267,14 @@ LIMIT 20;
 **Channel:** `#agent-ops`
 
 **Triggered on:**
+
 - ✅ `rotation_success` — Secret rotated, verified, synced
 - ❌ `rotation_failed` — Rotation failed (action required)
 - ⚠️ `expiring_soon` — Secret expiring in 7-21 days (pre-alert)
 
 **Message format:**
-```
+
+```text
 ✅ Secret rotated
 Secret: M365_CLIENT_SECRET
 Timestamp: 2026-07-25T02:15:03Z
@@ -277,6 +288,7 @@ Key Vault sync: ✅
 **Recipients:** `devops@mantaassociados.com`, `security@mantaassociados.com`
 
 **Triggered on:**
+
 - ❌ `rotation_failed` — Immediate alert for manual action
 - 🚨 `critical_secret_expired` — Secret is expired (past due)
 
@@ -287,12 +299,14 @@ Key Vault sync: ✅
 ### Setup
 
 1. **Prerequisites:**
+
    ```bash
    pip install azure-identity azure-keyvault-secrets
    az login
    ```
 
 2. **Environment variables:**
+
    ```bash
    export AZURE_KEYVAULT_NAME="prod-maestro-v5"
    export AZURE_SUBSCRIPTION_ID="<your-sub-id>"
@@ -300,6 +314,7 @@ Key Vault sync: ✅
 
 3. **Permissions:**
    Your service principal must have `Key Vault Secrets Officer` role:
+
    ```bash
    az role assignment create \
      --role "Key Vault Secrets Officer" \
@@ -318,6 +333,7 @@ Key Vault sync: ✅
 ### Versioning
 
 Azure Key Vault **automatically versions** secrets:
+
 - Each `set_secret` creates a new version
 - Old versions remain recoverable (kept indefinitely)
 - Can rollback to any previous version via `restore_secret`
@@ -441,11 +457,13 @@ cat rotation_log.json | jq '.[] | select(.rotation_timestamp > "2026-07-20")'
 ### Rotation Failed — What To Do
 
 1. **Check pre-rotation validation:**
+
    ```bash
    python scripts/validate_secret.py
    ```
 
 2. **Check rotation log:**
+
    ```bash
    tail -20 rotation_log.json | jq '.'
    ```
@@ -454,6 +472,7 @@ cat rotation_log.json | jq '.[] | select(.rotation_timestamp > "2026-07-20")'
    - Look in `#agent-ops` for error details
 
 4. **Manual rollback (if needed):**
+
    ```bash
    # Restore previous secret from Key Vault
    az keyvault secret show --vault-name prod-maestro-v5 \
@@ -467,6 +486,7 @@ cat rotation_log.json | jq '.[] | select(.rotation_timestamp > "2026-07-20")'
 **Cause:** Missing `AZURE_KEYVAULT_NAME` or insufficient permissions
 
 **Fix:**
+
 ```bash
 # 1. Verify Key Vault name
 echo $AZURE_KEYVAULT_NAME
@@ -482,11 +502,13 @@ az keyvault secret list --vault-name prod-maestro-v5
 **Symptom:** `validate_secret.py` shows ❌ for a secret
 
 **Possible causes:**
+
 - Current secret is corrupted/invalid
 - Service (M365, Supabase, etc.) is down
 - Network connectivity issue
 
 **Fix:**
+
 ```bash
 # 1. Test connectivity to service directly
 curl -v https://login.microsoftonline.com/common/.well-known/openid-configuration
@@ -505,6 +527,7 @@ echo $M365_CLIENT_SECRET | head -c 10  # Print first 10 chars only
 ### Q: How long does a rotation take?
 
 **A:** Typically 5-30 seconds depending on:
+
 - Pre-validation (10-20s)
 - Secret generation (< 1s)
 - Key Vault sync (5-10s)
@@ -513,7 +536,8 @@ echo $M365_CLIENT_SECRET | head -c 10  # Print first 10 chars only
 
 ### Q: What happens if rotation fails?
 
-**A:** 
+**A:**
+
 1. Rotation is logged as `status = "failed"`
 2. Slack alert sent to `#agent-ops` with error details
 3. Email alert sent to DevOps + Security teams
@@ -532,7 +556,8 @@ echo $M365_CLIENT_SECRET | head -c 10  # Print first 10 chars only
 
 ### Q: What if I miss a rotation?
 
-**A:** 
+**A:**
+
 - Daily expiry check (`0 7 * * *`) alerts if secret is expiring
 - If expiry passes, post-expiry alerts are sent
 - Service will fail until secret is manually rotated
@@ -540,6 +565,7 @@ echo $M365_CLIENT_SECRET | head -c 10  # Print first 10 chars only
 ### Q: How do I rotate a compromised secret immediately?
 
 **A:**
+
 ```bash
 # Emergency rotation (bypasses validation)
 python scripts/rotate_secrets.py rotate --secret <NAME> --force
@@ -560,6 +586,7 @@ python scripts/rotate_secrets.py rotate --secret <NAME> --force
 ```
 
 Then reload settings:
+
 ```bash
 # APScheduler will pick up changes on next heartbeat
 python scripts/rotate_secrets.py --reload-policy
@@ -583,7 +610,7 @@ python scripts/rotate_secrets.py --reload-policy
 - **CLAUDE.md v5.0** — Master registry & architecture
 - **rotation_policy.json** — Policy definition
 - **settings.json** — APScheduler configuration
-- **Azure Key Vault docs** — https://learn.microsoft.com/en-us/azure/key-vault/
+- **Azure Key Vault docs** — <https://learn.microsoft.com/en-us/azure/key-vault/>
 
 ---
 

@@ -83,7 +83,7 @@ A v5.0.1 marca a transição de **design para produção operacional**. O deploy
 
 **Ação:** Fazer upload direto para SharePoint usando a estrutura MCP SharePoint (ou via UI):
 
-```
+```text
 mnassociados.sharepoint.com/sites/Engenharia/
   └── Documentos Compartilhados/
       └── 04_IA/
@@ -102,10 +102,12 @@ mnassociados.sharepoint.com/sites/Engenharia/
 ```
 
 **Arquivos complementares** (já em pastas de suporte):
+
 - `refs/README.md` (referências e fontes por agente)
 - `prompts/starters.md` (exemplos de perguntas iniciais)
 
 **Prioridade:**
+
 1. ⭐ **agente-saneamento** (PRIORIDADE AYSÁ, mais consultas esperadas)
 2. **agente-energia** (ANEEL, State Grid — volume alto)
 3. **agente-portos** (ANTAQ — consultoria frequente)
@@ -115,16 +117,18 @@ mnassociados.sharepoint.com/sites/Engenharia/
 ### 3.2 Documentação de Arquitetura — Atualizar para v5.0.1
 
 **Arquivo em repo:**
+
 - `sharepoint/00-arquitetura/INDICE-CANONICAL-v5.0.md` ← **USE ESTE — é o mais completo**
 
 **Ação:** Renomear e publicar no SharePoint como v5.0.1:
 
-```
+```text
 00-arquitetura/INDICE-CANONICO-v5.0.1-LIVE.md
   (reflectir status "17 agentes em produção desde 2026-08-02")
 ```
 
 **Seções críticas do INDICE que devem estar em SP:**
+
 - Eixo S (Segmentos): confirma S1-S10 operacionais, S12/S13 propostos, S11 identificado
 - Routing rules: padrões de menção para cada agente
 - RAG collections: 5 coleções operacionais (san, ene, por, bar, editais)
@@ -179,7 +183,7 @@ mnassociados.sharepoint.com/sites/Engenharia/
 
 ### 5.1 Onde Cada Agente Publica Seus Artefatos
 
-```
+```text
 SharePoint Manta Maestro (principal: /01-agentes-fundamentais/)
 
 ├── agente-saneamento/ (S8, ⭐ PRIORIDADE AYSÁ)
@@ -229,6 +233,7 @@ SharePoint Manta Maestro (principal: /01-agentes-fundamentais/)
 ### 5.2 Que Dados Vêm Para SP de Supabase
 
 **Tabelas de referência (leitura):**
+
 - `rag_collections` (5 linhas: san, ene, por, bar, editais)
 - `sp_agent_routing` (9 linhas: S1-S10 routing rules)
 - `maestro_routing_keywords` (50+ palavras-chave por agente)
@@ -245,6 +250,7 @@ SharePoint Manta Maestro (principal: /01-agentes-fundamentais/)
 **Pergunta:** Usar `bge-small-en-v1.5` (384-d) ou `bge-m3` (1024-d)?
 
 **Implicação para SP:**
+
 - Se migrar para bge-m3: documentar em `RAG-COLLECTIONS-GUIDE.md` e atualizar `INDICE-CANONICO`
 - Isso afeta documentação de performance (latência cache hits, índice HNSW)
 
@@ -256,7 +262,8 @@ SharePoint Manta Maestro (principal: /01-agentes-fundamentais/)
 
 **Status:** Convenção A adotada nesta consolidação. S12/S13 criados, pendente gate MN para ativar.
 
-**Ação para SP:** 
+**Ação para SP:**
+
 - Usar Convenção A em todos os documentos (já está no INDICE)
 - Quando S12/S13 forem aprovados: criar pastas `02-agentes-horizontais-propostos/agente-oleo-gas/` e `agente-edificacoes/`
 - Até lá, documentar como "Propostos, não despacháveis"
@@ -368,4 +375,3 @@ Esta consolidação v5.0.1 reconcilia:
 **Preparado por:** Claude Code — Manta Maestro Consolidation  
 **Sessão:** Phase 1 + Phase 2 + Deployment orchestration  
 **Status:** Pronto para ação — Transferência a SharePoint
-

@@ -28,7 +28,7 @@ description: >
 
 Antes de qualquer ação:
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │  AGENTE SANEAMENTO — INTAKE                      │
 │                                                  │
@@ -66,7 +66,7 @@ Antes de qualquer ação:
 
 ## 2. ARQUITETURA — 5 VERTENTES
 
-```
+```text
    ┌────────────────────────────────────────────────────┐
    │  V1 Análise Técnica & Risco                        │
    │  V2 Inteligência Setorial (ANA, ERAS, SNIS, IWA)   │
@@ -79,11 +79,13 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
+
 - `san-scanner.md` — premissas: demanda per capita, K1/K2, horizonte
 - `san-risk.md` — matriz de risco 5×5 (mananciais, tarifa, ambiental, social)
 - `san-thesis.md` — tese técnica + score 0-100
 
 ### V2 — Inteligência Setorial
+
 - `san-int-orchestrator.md`
 - `axes/01-normas.md` — NBR 12211-12218 (BR), diretrizes AySA (AR), IWA
 - `axes/02-regulatorio.md` — Lei 14.026, ANA (BR); ERAS + PIRHA (AR)
@@ -93,12 +95,14 @@ Antes de qualquer ação:
 - `axes/06-academia.md` — ABES, IWA, publicações Water Research
 
 ### V3 — Gestão de Obra Urbana
+
 - `san-cronograma.md` — obra faseada, interferências urbanas
 - `san-medicao-fisica.md` — rede por m linear, ETA/ETE por vazão implantada
 - `san-interferencias.md` — trânsito, energia, gás, telecom
 - `san-ligacoes.md` — cronograma ligação por rua
 
 ### V4 — Document Intelligence
+
 - `san-doc-orchestrator.md`
 - `san-doc-projeto.md` — memorial hidráulico
 - `san-doc-cad.md` — DWG/DXF (cad-quantifier + gis-integration)
@@ -108,6 +112,7 @@ Antes de qualquer ação:
 - `san-doc-hidraulica.md` — EPANET, SWMM, Hidrogênius
 
 ### V5 — 12 Disciplinas de Saneamento
+
 - `disciplines/D01-mananciais.md` (superficial × subterrâneo, outorga)
 - `disciplines/D02-adutora.md` (Hazen-Williams, golpe de aríete)
 - `disciplines/D03-ETA.md` (ciclo completo × em linha)
@@ -126,12 +131,14 @@ Antes de qualquer ação:
 ## 4. KNOWLEDGE ENGINE (RAG)
 
 ### Armazenamento
+
 - Casos: `san:cases:CASE-SAN-XXX`
 - Índice: `san:cases:index`
 - Config: `san:config:*`
 - Dados ativos: `san:active:*`
 
 ### Fontes iniciais
+
 - **AySA/ERAS** — Marco Regulatorio PIRHA + projetos (Riachuelo, Sistema Norte, Sistema Sur)
 - Lei 14.026/2020 + regulamentação ANA
 - NBR 12211-12218 (concepção, ETA), NBR 9648-9651 (esgoto)
@@ -204,7 +211,7 @@ Antes de qualquer ação:
 
 ## 10. METADADOS
 
-```
+```yaml
 Skill: agente-saneamento
 Versão: 1.0.0
 Criada: 2026-07-05

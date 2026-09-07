@@ -10,7 +10,7 @@
 
 A infraestrutura permite descobrir, shardear e indexar em paralelo Knowledge Extractions que não têm embeddings ainda.
 
-```
+```text
 KEs sem embedding → Discover → Shard → Parallel indexing → Verify
      (lista)      (SQL)    (Python)  (N subagents)       (SQL)
 ```
@@ -34,6 +34,7 @@ python3 scripts/run_ke_indexing_demo.py
 ```
 
 Isso mostra:
+
 - Discovery de 5 KEs fictícias
 - Sharding em 2 shards
 - Geração de prompts prontos para subagents
@@ -51,6 +52,7 @@ Mostra exatamente como fica o SQL INSERT que vai pro Supabase MCP.
 ### 3️⃣ Em produção (quando novos KEs chegarem)
 
 1. **Discovery via Supabase MCP:**
+
    ```sql
    SELECT ke.ke_codigo, ke.descricao
    FROM public.knowledge_extractions ke
@@ -60,7 +62,8 @@ Mostra exatamente como fica o SQL INSERT que vai pro Supabase MCP.
    ```
 
 2. **Se houver resultados, colar em Claude Code:**
-   ```
+
+   ```text
    Tenho N KEs sem embeddings:
    [resultado JSON aqui]
    
@@ -77,6 +80,7 @@ Mostra exatamente como fica o SQL INSERT que vai pro Supabase MCP.
    - Reporta sucesso/falhas
 
 4. **Verification via Supabase MCP:**
+
    ```sql
    SELECT COUNT(*) AS total_kes,
           COUNT(emb.ke_codigo) AS com_embedding,
@@ -84,13 +88,14 @@ Mostra exatamente como fica o SQL INSERT que vai pro Supabase MCP.
    FROM public.knowledge_extractions ke
    LEFT JOIN public.ke_embeddings emb USING(ke_codigo);
    ```
+
    Esperado: `sem_embedding = 0`
 
 ---
 
 ## Arquivos
 
-```
+```text
 scripts/
 ├── parallel_ke_embeddings_indexer.py  ← Orchestrator (núcleo)
 ├── run_ke_indexing_demo.py            ← Demo end-to-end

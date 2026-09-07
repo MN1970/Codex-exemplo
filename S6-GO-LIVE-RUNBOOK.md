@@ -1,5 +1,6 @@
 # S6 Go-Live Runbook — Decision Tree & Troubleshooting
-**Version: v5.0 | Agent: Manta 03-S6 (Portos) | Owner: mneves@mantaassociados.com**
+
+**Version: v5.0 | Agent: Manta 03-S6 (Portos) | Owner: <mneves@mantaassociados.com>**
 
 Real-time decision tree for launch day (T-6h through T+24h) with diagnostic commands.
 
@@ -7,7 +8,7 @@ Real-time decision tree for launch day (T-6h through T+24h) with diagnostic comm
 
 ## LAUNCH DAY TIMELINE
 
-```
+```text
 T-6h    Pre-deployment validation (PHASE 1 of checklist)
 T-5h    Sign-off gate (PHASE 2)
 T-4h    Database migrations (PHASE 3)
@@ -29,7 +30,7 @@ T+24h   Daily report (PHASE 13)
 
 ### BEFORE LAUNCH (T-6h to T+0)
 
-```
+```yaml
 START: Launch day begins (T-6h)
 │
 ├─ Q1: All pre-deployment tests passing?
@@ -84,7 +85,7 @@ READINESS GATE: All conditions met → PROCEED TO T+0
 
 ### AT LAUNCH (T+0)
 
-```
+```text
 GO-LIVE WINDOW (T+0 to T+30min)
 │
 ├─ T+0min: Merge to main, activate routing
@@ -115,7 +116,7 @@ GO-LIVE WINDOW (T+0 to T+30min)
 
 ## POST-LAUNCH DECISIONS (T+1h to T+24h)
 
-```
+```text
 MONITORING LOOP (every 10 min for first hour, then 30 min, then 2h)
 │
 ├─ CHECK: Routing accuracy still >= 75%?
@@ -657,7 +658,7 @@ curl -s http://localhost:9200/por_v5.0/_stats | jq '.indices.por_v5.0.primaries.
 
 ## ESCALATION FLOWCHART
 
-```
+```text
 Issue detected
     ↓
 Is it ACTION 1–10? (Pre-launch)

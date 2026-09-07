@@ -29,7 +29,7 @@ description: >
 
 Antes de qualquer ação:
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │  AGENTE PORTOS — INTAKE                          │
 │                                                  │
@@ -72,7 +72,7 @@ Antes de qualquer ação:
 
 ## 2. ARQUITETURA — 5 VERTENTES
 
-```
+```text
    ┌────────────────────────────────────────────────────┐
    │  V1 Análise Técnica & Risco                        │
    │  V2 Inteligência Setorial (ANTAQ, PIANC, Marinha)  │
@@ -85,11 +85,13 @@ Antes de qualquer ação:
 ## 3. MÓDULOS POR VERTENTE
 
 ### V1 — Análise Técnica & Risco
+
 - `por-scanner.md` — premissas: tipo terminal, aeronave/navio de projeto, movimentação
 - `por-risk.md` — matriz de risco 5×5 (assoreamento, sísmica, ondas extremas, ambiental)
 - `por-thesis.md` — tese técnica + score 0-100
 
 ### V2 — Inteligência Setorial
+
 - `por-int-orchestrator.md`
 - `axes/01-normas.md` — NBR 9782 (ações portuárias), NBR 6122, ROM 0.2/2.0
 - `axes/02-regulatorio.md` — ANTAQ (arrendamento, TUP), Marinha (NORMAM), IBAMA
@@ -99,12 +101,14 @@ Antes de qualquer ação:
 - `axes/06-academia.md` — COPPE, IPT, publicações PIANC
 
 ### V3 — Gestão de Obra Marítima
+
 - `por-cronograma.md` — janelas operacionais (chuvosa, seca, safra)
 - `por-medicao-fisica.md` — dragagem por volume beam-swath, cais por vão
 - `por-interferencias.md` — navegação em operação, órgãos ambientais
 - `por-suprimentos.md` — estacas metálicas cravadas, blocos, guindastes
 
 ### V4 — Document Intelligence
+
 - `por-doc-orchestrator.md`
 - `por-doc-batimetria.md` — carta náutica DHN + levantamento próprio
 - `por-doc-projeto.md` — memorial de cálculo, plantas
@@ -114,6 +118,7 @@ Antes de qualquer ação:
 - `por-doc-sondagem-maritima.md` — SPT em plataforma flutuante
 
 ### V5 — 10 Disciplinas Portuárias
+
 - `disciplines/D01-batimetria.md`
 - `disciplines/D02-dragagem.md` (aprofundamento × manutenção)
 - `disciplines/D03-hidrodinamica.md` (onda, corrente, maré, assoreamento)
@@ -131,12 +136,14 @@ Antes de qualquer ação:
 ## 4. KNOWLEDGE ENGINE (RAG)
 
 ### Armazenamento
+
 - Casos: `por:cases:CASE-POR-XXX`
 - Índice: `por:cases:index`
 - Config: `por:config:*`
 - Dados ativos: `por:active:*`
 
 ### Fontes iniciais
+
 - ANTAQ resoluções + editais de arrendamento (2018-2026)
 - PIANC reports (MarCom 121 defensas, 158 dragagem, 165 canais)
 - ROM 0.2 (ações), ROM 2.0 (marítimo civil)
@@ -210,7 +217,7 @@ Antes de qualquer ação:
 
 ## 10. METADADOS
 
-```
+```yaml
 Skill: agente-portos
 Versão: 1.0.0
 Criada: 2026-07-05

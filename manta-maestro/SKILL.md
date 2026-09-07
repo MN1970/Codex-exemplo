@@ -42,7 +42,6 @@ Registro consolidado de capabilities, routing, tiering e exemplos para todos os 
 | Manta 03-S1 | rodovias | agente-rodovias | Sonnet | rod:v5.0:* | Prod |
 | Manta 03-S8 | saneamento | agente-saneamento | Sonnet | san:v5.0:* | Prod |
 
-
 ---
 
 ## AGENTES HORIZONTAIS (Tier 1)
@@ -56,6 +55,7 @@ Especialista em assessoria estratégica e governança — recomendações, estud
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** advisory-board, manta-15
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -70,14 +70,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -86,14 +87,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -101,11 +101,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para advisory"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -118,6 +117,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -128,6 +128,7 @@ Dashboard Grafana: `manta 15-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -136,6 +137,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Advisory ou 05_Advisory
@@ -151,7 +153,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 14 — APRESENTACOES
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Sonnet
@@ -161,6 +162,7 @@ Especialista em criação de apresentações executivas (PowerPoint) — slides,
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** pptx, slides, manta-14
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -175,14 +177,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -191,14 +194,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -206,11 +208,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para apresentacoes"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -223,6 +224,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -233,6 +235,7 @@ Dashboard Grafana: `manta 14-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -241,6 +244,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Apresentacoes ou 05_Apresentacoes
@@ -256,7 +260,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 16 — ARQUITETO-IA
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Opus
@@ -266,6 +269,7 @@ Especialista em arquitetura e governança de agentes IA — design de agents, or
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** ai-arch, manta-16-arq
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -280,14 +284,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -296,14 +301,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -311,11 +315,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para arquiteto-ia"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -328,6 +331,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -338,6 +342,7 @@ Dashboard Grafana: `manta 16-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Opus:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -346,6 +351,7 @@ Se timeout em Opus:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Arquiteto-Ia ou 05_Arquiteto-Ia
@@ -361,7 +367,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 13 — BD
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Sonnet
@@ -371,6 +376,7 @@ Especialista em business development e estratégia comercial — prospecção, n
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** business-dev, manta-13
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -385,14 +391,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -401,14 +408,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -416,11 +422,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para bd"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -433,6 +438,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -443,6 +449,7 @@ Dashboard Grafana: `manta 13-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -451,6 +458,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Bd ou 05_Bd
@@ -466,7 +474,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 01 — CLAIMS
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Opus
@@ -476,6 +483,7 @@ Especialista em indenizações, sinistros e gestão de claims — análise de ri
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** manta-claims, claim-mgmt
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -490,14 +498,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -506,14 +515,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -521,11 +529,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para claims"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -538,6 +545,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -548,6 +556,7 @@ Dashboard Grafana: `manta 01-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Opus:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -556,6 +565,7 @@ Se timeout em Opus:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Claims ou 05_Claims
@@ -571,7 +581,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 02 — CONTRATUAL
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Sonnet
@@ -581,6 +590,7 @@ Especialista em contratos, análise legal e questões jurídicas — revisão de
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** manta-02, legal
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -595,14 +605,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -611,14 +622,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -626,11 +636,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para contratual"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -643,6 +652,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -653,6 +663,7 @@ Dashboard Grafana: `manta 02-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -661,6 +672,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Contratual ou 05_Contratual
@@ -676,7 +688,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 07 — CRONOGRAMA
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Sonnet
@@ -686,6 +697,7 @@ Especialista em cronogramas, gestão de projetos e planejamento — Gantt, PERT/
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** schedule, manta-07
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -700,14 +712,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -716,14 +729,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -731,11 +743,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para cronograma"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -748,6 +759,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -758,6 +770,7 @@ Dashboard Grafana: `manta 07-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -766,6 +779,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Cronograma ou 05_Cronograma
@@ -781,7 +795,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 04 — IMOBILIARIO
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Sonnet
@@ -791,6 +804,7 @@ Especialista em projetos imobiliários — viabilidade, design, licenciamento, i
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** real-estate, manta-04
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -805,14 +819,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -821,14 +836,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -836,11 +850,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para imobiliario"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -853,6 +866,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -863,6 +877,7 @@ Dashboard Grafana: `manta 04-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -871,6 +886,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Imobiliario ou 05_Imobiliario
@@ -886,7 +902,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 00 — MAESTRO
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Haiku→Sonnet
@@ -896,6 +911,7 @@ Router canônico do Maestro (Manta 00) — orquestra roteamento determinístico,
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** router, manta-router
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -910,14 +926,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -926,14 +943,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -941,11 +957,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para maestro"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -958,6 +973,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -968,6 +984,7 @@ Dashboard Grafana: `manta 00-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Haiku→Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -976,6 +993,7 @@ Se timeout em Haiku→Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Maestro ou 05_Maestro
@@ -991,7 +1009,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 06 — MODELAGEM
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Sonnet
@@ -1001,6 +1018,7 @@ Especialista em modelagem financeira, cenários e simulações — análise de s
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** modeling, manta-06
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -1015,14 +1033,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -1031,14 +1050,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -1046,11 +1064,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para modelagem"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -1063,6 +1080,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -1073,6 +1091,7 @@ Dashboard Grafana: `manta 06-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -1081,6 +1100,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Modelagem ou 05_Modelagem
@@ -1096,7 +1116,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 05 — ORCAMENTO
 
 **Categoria:** horizontal | **Status:** Prod | **Tier default:** Sonnet
@@ -1106,6 +1125,7 @@ Especialista em orçamentação e gestão de custos — SICRO, composições, si
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** budget, manta-05
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** N/A (horizontal)
@@ -1120,14 +1140,15 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
 - Bash (executar comandos — conforme permissão)
 - WebSearch / WebFetch (pesquisa online)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -1136,14 +1157,13 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 ### Ciclo de Vida (8 fases)
 
-
 Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
-
 
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 N/A
 ```
 
@@ -1151,11 +1171,10 @@ N/A
 
 **Adequado para este agente:**
 
-
 - "Exemplo de prompt para orcamento"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre projetos de infraestrutura específicos (rodovia, ETA, etc.)
 
 ### Tiering Automático (R7)
@@ -1168,6 +1187,7 @@ N/A
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -1178,6 +1198,7 @@ Dashboard Grafana: `manta 05-dashboard` (custo/dia, latência p50/p95/p99, taxa 
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -1186,6 +1207,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Orcamento ou 05_Orcamento
@@ -1201,8 +1223,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
-
 ---
 
 ## AGENTES VERTICAIS (Tier 2–3)
@@ -1216,6 +1236,7 @@ Especialista em infraestrutura rodoviária (Manta 03-S1) — pavimentos, drenage
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** Rodovias
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** rod:v5.0:*
@@ -1230,6 +1251,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -1238,8 +1260,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (rod:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -1247,7 +1269,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -1261,6 +1282,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -1268,19 +1290,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 rodovia | pavimento | CBUQ | SICRO | DNIT | terraplenagem | drenagem-rodoviária | tráfego
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Qual a espessura de pavimento CBUQ para tráfego VDM=1500 veículos/dia?"
 
@@ -1290,8 +1310,8 @@ rodovia | pavimento | CBUQ | SICRO | DNIT | terraplenagem | drenagem-rodoviária
 
 - "Qual o custo de terraplenagem para aterro de 2m em solo arenoso?"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -1304,6 +1324,7 @@ rodovia | pavimento | CBUQ | SICRO | DNIT | terraplenagem | drenagem-rodoviária
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -1314,6 +1335,7 @@ Dashboard Grafana: `manta 03-s1-dashboard` (custo/dia, latência p50/p95/p99, ta
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -1322,6 +1344,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Rodovias ou 05_Agente-Rodovias
@@ -1337,7 +1360,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 03-S2 — AGENTE-OAE
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
@@ -1347,6 +1369,7 @@ Especialista em obras de arte especiais (pontes, viadutos, túneis) — OAE, est
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** OAE
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** oae:v5.0:*
@@ -1361,6 +1384,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -1369,8 +1393,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (oae:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -1378,7 +1402,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -1392,6 +1415,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -1399,19 +1423,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 ponte | viaduto | OAE | NBR 7187 | túnel | fundação | estrutura-metálica | concreto-protendido
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Dimensione uma ponte de concreto protendido com vão de 40m"
 
@@ -1421,8 +1443,8 @@ ponte | viaduto | OAE | NBR 7187 | túnel | fundação | estrutura-metálica | c
 
 - "Revise o projeto estrutural de túnel em NATM"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -1435,6 +1457,7 @@ ponte | viaduto | OAE | NBR 7187 | túnel | fundação | estrutura-metálica | c
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -1445,6 +1468,7 @@ Dashboard Grafana: `manta 03-s2-dashboard` (custo/dia, latência p50/p95/p99, ta
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -1453,6 +1477,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Oae ou 05_Agente-Oae
@@ -1468,7 +1493,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 03-S3 — AGENTE-FERROVIA
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
@@ -1478,6 +1502,7 @@ Especialista em infraestrutura ferroviária (Manta 03-S3) — via permanente, tr
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** Ferrovia
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** fer:v5.0:*
@@ -1492,6 +1517,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -1500,8 +1526,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (fer:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -1509,7 +1535,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -1523,6 +1548,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -1530,19 +1556,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 ferrovia | trilho | via-permanente | bitola | catenária | AMV | dormente
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Dimensione a via permanente para ferrovia regional de 150 km"
 
@@ -1552,8 +1576,8 @@ ferrovia | trilho | via-permanente | bitola | catenária | AMV | dormente
 
 - "Especifique o sistema de drenagem para via permanente em terreno encharcado"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -1566,6 +1590,7 @@ ferrovia | trilho | via-permanente | bitola | catenária | AMV | dormente
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -1576,6 +1601,7 @@ Dashboard Grafana: `manta 03-s3-dashboard` (custo/dia, latência p50/p95/p99, ta
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -1584,6 +1610,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Ferrovia ou 05_Agente-Ferrovia
@@ -1599,7 +1626,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 03-S4 — AGENTE-METRO
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
@@ -1609,6 +1635,7 @@ Especialista em transporte metroviário e VLT (Manta 03-S4) — metrô, estaçõ
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** Metrô
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** met:v5.0:*
@@ -1623,6 +1650,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -1631,8 +1659,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (met:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -1640,7 +1668,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -1654,6 +1681,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -1661,19 +1689,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 metrô | estação | NATM | PSD | linha | VLT | sinalização-metrô
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Dimensione uma estação de metrô subterrânea em NATM com profundidade de 20m"
 
@@ -1683,8 +1709,8 @@ metrô | estação | NATM | PSD | linha | VLT | sinalização-metrô
 
 - "Especifique os aparelhos de apoio sísmico para estrutura de VLT elevado"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -1697,6 +1723,7 @@ metrô | estação | NATM | PSD | linha | VLT | sinalização-metrô
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -1707,6 +1734,7 @@ Dashboard Grafana: `manta 03-s4-dashboard` (custo/dia, latência p50/p95/p99, ta
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -1715,6 +1743,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Metro ou 05_Agente-Metro
@@ -1730,7 +1759,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 03-S6 — AGENTE-PORTOS
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
@@ -1740,6 +1768,7 @@ Especialista em infraestrutura portuária (Manta 03-S6) — terminais, dragagem,
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** Portos
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** por:v5.0:*
@@ -1754,6 +1783,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -1762,8 +1792,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (por:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -1771,7 +1801,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -1785,6 +1814,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -1792,19 +1822,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 porto | terminal | ANTAQ | dragagem | berço | PIANC | containerizado
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Dimensione um terminal de contêineres para 500k TEU/ano"
 
@@ -1814,8 +1842,8 @@ porto | terminal | ANTAQ | dragagem | berço | PIANC | containerizado
 
 - "Especifique o molhe de proteção para porto exposto a ondas de até 4m"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -1828,6 +1856,7 @@ porto | terminal | ANTAQ | dragagem | berço | PIANC | containerizado
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -1838,6 +1867,7 @@ Dashboard Grafana: `manta 03-s6-dashboard` (custo/dia, latência p50/p95/p99, ta
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -1846,6 +1876,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Portos ou 05_Agente-Portos
@@ -1861,7 +1892,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 03-S7 — AGENTE-AEROPORTOS
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
@@ -1871,6 +1901,7 @@ Especialista em infraestrutura aeroportuária (Manta 03-S7) — pistas, taxiways
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** Aeroportos
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** aer:v5.0:*
@@ -1885,6 +1916,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -1893,8 +1925,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (aer:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -1902,7 +1934,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -1916,6 +1947,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -1923,19 +1955,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 aeroporto | pista | RWY | taxiway | TPS | ANAC | RBAC | balizamento | ILS
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Dimensione uma pista de pouso para aviação regional (ATR-72)"
 
@@ -1945,8 +1975,8 @@ aeroporto | pista | RWY | taxiway | TPS | ANAC | RBAC | balizamento | ILS
 
 - "Especifique o sistema de proteção contra fogo e emergência (TECA) para terminal"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -1959,6 +1989,7 @@ aeroporto | pista | RWY | taxiway | TPS | ANAC | RBAC | balizamento | ILS
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -1969,6 +2000,7 @@ Dashboard Grafana: `manta 03-s7-dashboard` (custo/dia, latência p50/p95/p99, ta
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -1977,6 +2009,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Aeroportos ou 05_Agente-Aeroportos
@@ -1992,7 +2025,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 03-S8 — AGENTE-SANEAMENTO
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
@@ -2002,6 +2034,7 @@ Especialista em saneamento básico (Manta 03-S8) — ETAs, ETEs, adução, drena
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** Saneamento
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** san:v5.0:*
@@ -2016,6 +2049,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -2024,8 +2058,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (san:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -2033,7 +2067,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -2047,6 +2080,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -2054,19 +2088,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 saneamento | ETA | ETE | adutora | esgoto | AySA | drenagem urbana | SNIS | Lei 14.026
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Dimensione uma ETA para município de 500k hab com coagulação/floculação/sedimentação"
 
@@ -2076,8 +2108,8 @@ saneamento | ETA | ETE | adutora | esgoto | AySA | drenagem urbana | SNIS | Lei 
 
 - "Especifique o sistema de drenagem urbana e macrodrenagem para bacia de 5km2"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -2090,6 +2122,7 @@ saneamento | ETA | ETE | adutora | esgoto | AySA | drenagem urbana | SNIS | Lei 
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -2100,6 +2133,7 @@ Dashboard Grafana: `manta 03-s8-dashboard` (custo/dia, latência p50/p95/p99, ta
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -2108,6 +2142,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Saneamento ou 05_Agente-Saneamento
@@ -2123,7 +2158,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 03-S9 — AGENTE-ENERGIA
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
@@ -2133,6 +2167,7 @@ Especialista em setor elétrico (Manta 03-S9) — transmissão, geração, subes
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** Energia
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** ene:v5.0:*
@@ -2147,6 +2182,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -2155,8 +2191,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (ene:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -2164,7 +2200,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -2178,6 +2213,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -2185,19 +2221,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 transmissão | LT | subestação | ANEEL | leilão | ONS | EPE | torre | cabo ACSR
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Dimensione uma linha de transmissão de 500kV com 200km de comprimento"
 
@@ -2207,8 +2241,8 @@ transmissão | LT | subestação | ANEEL | leilão | ONS | EPE | torre | cabo AC
 
 - "Especifique o sistema de proteção e controle para interligação de usina hidrelétrica"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -2221,6 +2255,7 @@ transmissão | LT | subestação | ANEEL | leilão | ONS | EPE | torre | cabo AC
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -2231,6 +2266,7 @@ Dashboard Grafana: `manta 03-s9-dashboard` (custo/dia, latência p50/p95/p99, ta
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -2239,6 +2275,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Energia ou 05_Agente-Energia
@@ -2254,7 +2291,6 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
 ## Manta 03-S10 — AGENTE-BARRAGENS
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
@@ -2264,6 +2300,7 @@ Especialista em barragens e estruturas hidráulicas (Manta 03-S10) — CFRD, CCR
 ### Aliases & Roteamento
 
 Roteia automaticamente para este agente se o usuário menciona:
+
 - **Aliases principais:** Barragens
 - **Confidence score:** Maestro calcula via keyword matching + embedding similarity
 - **RAG collection:** bar:v5.0:*
@@ -2278,6 +2315,7 @@ Roteia automaticamente para este agente se o usuário menciona:
 ### Capabilities
 
 **Tools disponíveis:**
+
 - Read (ler arquivos do workspace)
 - Grep (buscar padrões em código/docs)
 - Glob (encontrar arquivos por pattern)
@@ -2286,8 +2324,8 @@ Roteia automaticamente para este agente se o usuário menciona:
 
 - RAG Query (bar:v5.0:*)
 
-
 **Skills/Plugins:**
+
 - autodesk-toolkit (processamento CAD/BIM — conforme segmento)
 - cronograma-toolkit (Gantt/XER/MSP)
 - docx/xlsx/pptx (edição de documentos)
@@ -2295,7 +2333,6 @@ Roteia automaticamente para este agente se o usuário menciona:
 - pdf (processamento de PDFs estruturados)
 
 ### Ciclo de Vida (8 fases)
-
 
 Este agente suporta as seguintes fases de um projeto:
 
@@ -2309,6 +2346,7 @@ Este agente suporta as seguintes fases de um projeto:
 8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
 
 **Declaração de fase (recomendado):**
+
 ```json
 {
   "phase": "projeto-executivo",
@@ -2316,19 +2354,17 @@ Este agente suporta as seguintes fases de um projeto:
 }
 ```
 
-
-
 ### Trigger Phrases (Maestro Routing)
 
 Palavras-chave que acionam este agente automaticamente:
-```
+
+```text
 barragem | vertedouro | CFRD | rejeitos | TSF | ICOLD | Lei 12.334 | descomissionamento
 ```
 
 ### Exemplos de Prompts (Golden Set)
 
 **Adequado para este agente:**
-
 
 - "Dimensione uma barragem CFRD (concreto) com altura de 80m para irrigação"
 
@@ -2338,8 +2374,8 @@ barragem | vertedouro | CFRD | rejeitos | TSF | ICOLD | Lei 12.334 | descomissio
 
 - "Especifique o plano de descomissionamento seguro para barragem de 50 anos"
 
-
 **Não adequado (roteado a outro agente):**
+
 - Prompts sobre processos horizontais (contrato, claims, etc.)
 
 ### Tiering Automático (R7)
@@ -2352,6 +2388,7 @@ barragem | vertedouro | CFRD | rejeitos | TSF | ICOLD | Lei 12.334 | descomissio
 ### Observabilidade
 
 Todos os runs são tracked em Supabase (`agent_runs` table):
+
 - `run_id` (UUID único)
 - `input_tokens`, `output_tokens`, `cost_usd`
 - `latency_ms`, `status` (success|timeout|error)
@@ -2362,6 +2399,7 @@ Dashboard Grafana: `manta 03-s10-dashboard` (custo/dia, latência p50/p95/p99, t
 ### Fallback Inteligente (R8)
 
 Se timeout em Sonnet:
+
 1. Log em `agent_runs` com `timeout=true`
 2. Resubmit com próximo tier (Sonnet ou Opus)
 3. Reinjetar contexto (RAG results, partial output)
@@ -2370,6 +2408,7 @@ Se timeout em Sonnet:
 ### SharePoint Routing
 
 Este agente roteia automaticamente para pasta no SharePoint:
+
 - **Site:** Manta.net
 - **Drive:** Projetos
 - **Pasta sugerida:** 03_Projetos/Barragens ou 05_Agente-Barragens
@@ -2385,13 +2424,11 @@ Este agente roteia automaticamente para pasta no SharePoint:
 
 ---
 
-
-
 ---
 
 ## Governança & Manutenção
 
-**Proprietário:** mneves@mantaassociados.com
+**Proprietário:** <mneves@mantaassociados.com>
 **Versão master:** CLAUDE.md v5.0
 **Checksums:** VERSIONS.json (20 skills, versionamento MD5)
 **Aprovação:** Gate humano antes de merge principal
