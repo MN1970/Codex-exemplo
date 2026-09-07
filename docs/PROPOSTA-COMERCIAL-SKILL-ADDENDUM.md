@@ -1,29 +1,36 @@
-# Addendum pronto para deploy — Variante "PTC-Infraestrutura/Concessão de Grande Porte"
+# Addendum M6 — SUPERADO, mantido só como histórico
 
-**Status:** pronto para colar na skill de produção. **Ainda não aplicado** —
-esta sessão não tem acesso de escrita ao SharePoint (`SharePoint_Manta` sem
-autenticação neste ambiente). Falta um passo manual: copiar o bloco da
-Seção A abaixo para dentro de
-`Engenharia/Documentos Compartilhados/04_IA/Manta-Maestro/02-sub-skills/
-skill-proposta-comercial-SKILL.md`, na posição indicada, e confirmar o gate
-humano (MN) antes de publicar.
-
-Este addendum implementa a recomendação de `docs/MODELO-MESTRE-PROPOSTA.md`
-(validada contra MNT-2026-COM-1183_D) sem alterar nenhuma seção existente da
-skill `proposta-comercial` — é puramente aditivo.
+> ⚠️ **Este addendum não corresponde à skill real e não foi aplicado
+> como está.** Ele foi escrito assumindo uma skill de **18 seções**,
+> modos **M1–M6** e uma proposta de referência **MNT-2026-COM-1183_D** —
+> nenhum desses três fatos existe na skill real de produção. Verificação
+> feita em 2026-09-07 via `SharePoint_Manta` MCP (acesso de leitura e
+> escrita real, antes indisponível): a skill real
+> (`04_IA/Manta-Maestro/05-sub-skills/skill-proposta-comercial-SKILL.md`)
+> tem **14 seções**, **5 modos (M1–M5, sem M6)**, tabela de **12 níveis**
+> e referência real **Hope PPP MNT-2025-COM-1104**. Detalhe completo da
+> correção em `docs/MODELO-MESTRE-PROPOSTA.md`.
+>
+> **O que foi de fato aplicado em produção** (2026-09-07, a pedido do
+> usuário): a ideia central deste addendum — segregar Tarifa × Success
+> Fee, definir a exigibilidade do success fee pela formalização do
+> evento-gatilho (não pela implementação física), e adicionar cláusula
+> de multa/juros de mora/correção monetária por atraso de pagamento —
+> foi reescrita num resumo compacto (809 caracteres, dentro do limite
+> real de 1024) e enviada diretamente para a skill real no SharePoint.
+> Não existe "Seção A para colar" nem posição de inserção depois de
+> "M1–M5" — o formato real da skill não é um documento markdown de
+> seções longas, é um resumo denso de uma linha.
+>
+> O conteúdo abaixo desta nota é mantido **apenas como registro
+> histórico** do raciocínio original (a lógica das cláusulas em si —
+> exigibilidade por formalização, três parcelas de mora — segue válida
+> e foi o que orientou a versão real aplicada). Não usar como
+> instrução de deploy: a skill já foi atualizada.
 
 ---
 
-## Onde inserir
-
-No arquivo `skill-proposta-comercial-SKILL.md`, inserir o bloco da **Seção A**
-como uma nova seção **imediatamente depois** de "## 5 Modos de Operação
-(M1–M5)" e **antes** de "## Workflow de Geração". Nenhum texto existente
-precisa ser removido ou renumerado — M1 a M5 continuam exatamente como estão.
-
----
-
-## SEÇÃO A — Conteúdo a colar
+## Conteúdo histórico (não aplicar literalmente — ver nota acima)
 
 ```markdown
 ## M6 — Variante PTC-Infraestrutura/Concessão de Grande Porte
@@ -89,43 +96,26 @@ monetária). Esta cláusula não substitui, mas complementa, os prazos e
 condições já definidos na Seção 13 quanto à forma de faturamento e
 aprovação de medições.
 
-### Convenção de versionamento (variante M6)
+### Fonte de validação (histórica — ver correção no topo do arquivo)
 
-Propostas M6 usam sufixo de letra para revisões substanciais em resposta a
-processo regulatório público (`MNT-YYYY-COM-NNNN_A`, `_B`, `_C`...), em vez
-do `REV_00/REV_01` padrão do M1 — porque a numeração acompanha o calendário
-do processo (audiência pública, publicação de edital, leilão), não um ciclo
-de revisão interna da Manta. Fora da variante M6, manter `REV_NN`.
-
-### Fusão de cláusulas finais (opcional, só na variante M6)
-
-Para propostas M6, as seções 6 (Fora do Escopo), 8 (Casos Omissos), 15
-(Validade), 16 (Contato/Dados da Empresa), 17 (Limitação de
-Responsabilidade) e 18 (Disclaimer) PODEM ser condensadas em uma única
-seção final "Propriedade Intelectual e Cláusulas Finais", em formato de
-tabela compacta, seguida de uma **Ficha Técnica do Documento** (cliente,
-projeto, documento, código, versão, data de emissão, classificação,
-responsável, contato comercial, fontes primárias, repositório). Fora da
-variante M6, manter as 18 seções numeradas individualmente — a fusão é
-opcional e específica deste perfil de cliente/proposta.
-
-### Fonte de validação
-
-Proposta real: MNT-2026-COM-1183_D (Concessão Rota 2 de Julho —
-BR-116/324/BA, Nova Infra Invest, 26/08/2026). Análise completa em
-`docs/MODELO-MESTRE-PROPOSTA.md` no repositório `Codex-exemplo`.
+Proposta citada originalmente: MNT-2026-COM-1183_D (Concessão Rota 2 de
+Julho — BR-116/324/BA, Nova Infra Invest, 26/08/2026) — revisão "_D" não
+localizada no SharePoint; a revisão real mais recente encontrada é "_C".
 ```
 
 ---
 
-## Checklist de aplicação (para quem for publicar no SharePoint)
+## Checklist real de aplicação (o que de fato foi feito)
 
-- [ ] Colar o bloco da Seção A no arquivo de produção, na posição indicada.
-- [ ] Confirmar que M1–M5 permanecem inalterados.
+- [x] Ler a skill real no SharePoint antes de escrever qualquer coisa
+      (`read_document` em `05-sub-skills/skill-proposta-comercial-SKILL.md`).
+- [x] Reescrever a ideia das 3 cláusulas (Tarifa×Success Fee, exigibilidade
+      por formalização, juros de mora) no formato real (resumo ≤1024
+      caracteres), não como "seção a colar".
+- [x] Upload via `SharePoint_Manta` (`upload_file`, overwrite) e
+      verificação por leitura pós-upload (809 bytes confirmados).
 - [ ] Revisar com jurídico os percentuais padrão de multa/juros/correção
-      monetária da cláusula de atraso de pagamento antes de publicar.
-- [ ] Gate humano (MN) — aprovação antes de publicar.
-- [ ] Registrar a mudança no changelog da skill (nova versão da
-      `skill-proposta-comercial-SKILL.md`).
-- [ ] Atualizar `04_IA/Manta-Maestro/00-arquitetura/` se a variante M6 for
-      referenciada na arquitetura canônica do Manta Maestro.
+      monetária antes do próximo uso real em proposta de cliente.
+- [ ] MN confirmar se existe cópia local da skill (`Sync-MantaMaestro.ps1`)
+      que precise ser atualizada com o mesmo texto, para não ser
+      sobrescrita no próximo sync.

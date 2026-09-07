@@ -4,13 +4,26 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.1** (2026-09-01) — reconcilia trabalho de branch paralela:
-análise e recomendação de modelo mestre de proposta técnico-comercial
-(variante **M6**, PTC-Infraestrutura/Concessão de grande porte),
-validada contra a proposta MNT-2026-COM-1183_D e a skill
-`proposta-comercial` (A7-bd). Ver seção "Modelo Mestre de Proposta" e
-Histórico de versões. Alteração na skill de produção pendente de gate
-humano (MN).
+Versão: **v5.4.2** (2026-09-07) — **correção de premissa fabricada +
+aplicação real**: a v5.4.1 (abaixo) validava a skill `proposta-comercial`
+contra dados nunca checados no SharePoint real (18 seções, "agente
+A7-bd", modo M6, proposta "MNT-2026-COM-1183_D"). Com acesso real ao
+SharePoint (`SharePoint_Manta` MCP) confirmamos a skill real (14
+seções, M1–M5, referência MNT-2025-COM-1104) e **aplicamos diretamente
+em produção** a ideia central da v5.4.1 — segregação Tarifa×Success
+Fee, exigibilidade por formalização do evento-gatilho, cláusula de
+juros de mora — no formato real da skill (resumo ≤1024 caracteres). Ver
+seção "Modelo Mestre de Proposta", `docs/MODELO-MESTRE-PROPOSTA.md` e
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (reconciliação arquitetural
+mais ampla, ainda pendente).
+
+Consolida v5.4.1 (2026-09-01, **premissa não verificada — ver correção
+acima**) — reconciliava trabalho de branch paralela: análise e
+recomendação de modelo mestre de proposta técnico-comercial (variante
+"M6", PTC-Infraestrutura/Concessão de grande porte), validada contra a
+proposta "MNT-2026-COM-1183_D" e a skill `proposta-comercial`
+("A7-bd"). Mantido como histórico — ver `docs/MODELO-MESTRE-PROPOSTA.md`
+para o que era real e o que não era.
 
 Consolida v5.4 (2026-08-31) — **Padrão Motiva ligado ao routing e aos
 agentes de output**: nova keyword de cliente na seção ROUTING
@@ -490,30 +503,38 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
-Análise de referência sobre uso da proposta MNT-2026-COM-1183_D (Concessão
-Rota 2 de Julho) como modelo mestre de propostas técnico-comerciais do
-Manta Maestro, validada contra a skill `proposta-comercial` (agente
-A7-bd/Manta 13-bd — 18 seções canônicas). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
+> ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
+> abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
+> um "agente A7-bd" e um modo "M6" validado contra
+> "MNT-2026-COM-1183_D" — nada disso bate com a skill real de
+> produção. Com acesso real ao SharePoint (`SharePoint_Manta` MCP)
+> nesta sessão, confirmamos que a skill real
+> (`04_IA/Manta-Maestro/05-sub-skills/skill-proposta-comercial-SKILL.md`)
+> tem **14 seções**, **5 modos (M1–M5)**, tabela de **12 níveis** e
+> referência real **Hope PPP MNT-2025-COM-1104**; a revisão mais
+> recente de MNT-2026-COM-1183 encontrada é **"_C"**, não "_D". Detalhe
+> completo em `docs/MODELO-MESTRE-PROPOSTA.md`.
 
-Recomendação: adotar como variante especializada "PTC-Infraestrutura/
-Concessão de grande porte" (modo **M6**), incorporando ao padrão os blocos
-de dados oficiais rastreáveis, cenários com success fee opcional, método
-do paramétrico em etapas, infraestrutura incluída e ficha técnica de
-fechamento — sem substituir o modo genérico M1 da skill.
+A ideia central (segregar **Tarifa** × **Success Fee** na seção de
+Preço, definir a **exigibilidade do success fee** pela **formalização**
+do evento-gatilho — economia de custo → aprovação de orçamento;
+conquista → formalização da conquista; cronograma → marco formalmente
+aprovado — nunca pela implementação física, e acrescentar cláusula de
+**multa, juros de mora e correção monetária** por atraso de pagamento)
+**já foi aplicada na skill real** em 2026-09-07, a pedido do usuário —
+reescrita no formato verdadeiro dela (resumo compacto ≤1024 caracteres,
+não um documento de seções longas). Arquivo verificado por leitura
+pós-upload: 809 bytes. Detalhe e checklist real em
+`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` (o addendum original de
+"18 seções/M6" está lá marcado como histórico/não aplicável).
 
-O addendum M6 também segrega, na Seção 12 (Preço), tabelas separadas de
-**Tarifas** e **Success Fee**, define os gatilhos de **exigibilidade do
-success fee** por tipo de critério de sucesso (economia de custo →
-formalização da aprovação do orçamento; conquista → formalização da
-conquista; cronograma → marco formalmente aprovado — sempre a partir da
-**formalização** do evento-gatilho, não da sua implementação física) e
-acrescenta cláusula padrão de **multa, juros de mora e correção
-monetária** por atraso de pagamento (Seção 13). O texto pronto para
-colar na skill de produção está em
-`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`. Alteração na skill em si
-depende de gate humano (MN) e é feita na fonte no SharePoint, fora deste
-repositório — publicação ainda pendente (sem acesso de escrita ao
-SharePoint nesta sessão).
+Pendências: (1) revisão jurídica dos percentuais padrão de multa/juros/
+correção monetária antes do próximo uso real em proposta de cliente;
+(2) confirmar se existe cópia local da skill sincronizada por
+`Sync-MantaMaestro.ps1` que precise do mesmo texto, para não ser
+sobrescrita no próximo sync a partir da máquina local do usuário; (3)
+reconciliação arquitetural mais ampla entre este repositório e o
+SharePoint real — ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
 ---
 
@@ -545,6 +566,23 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ## GAPS ABERTOS / PENDÊNCIAS
 
+- **🔴 Este repositório diverge do Manta Maestro real no SharePoint
+  (novo, crítico, encontrado em 2026-09-07)**: com acesso real de
+  leitura/escrita ao `SharePoint_Manta` MCP nesta sessão, confirmamos
+  que a arquitetura real em produção (`09-base-conhecimento/
+  INDICE-CANONICAL.md`) é **diferente** da descrita neste `CLAUDE.md`
+  em pontos centrais — não só a skill `proposta-comercial` (ver
+  "Modelo Mestre de Proposta" e `docs/MODELO-MESTRE-PROPOSTA.md`), mas
+  a numeração de segmentos: a real usa **exatamente a "Convenção B"**
+  que este arquivo diz ter "descartado" logo abaixo (S6=Edificações,
+  S7=Portos, S8=Aeroportos, S9=Saneamento, S10=Energia,
+  **S11=Barragens**) — e não tem os "20+ agentes"/RAG Supabase/
+  APScheduler/ML descritos neste repositório. Análise e roadmap de
+  reconciliação em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`. Ação:
+  decisão MN sobre se este repositório deve convergir para o modelo
+  real do SharePoint (provável) ou se são propositalmente dois
+  sistemas paralelos (improvável, mas precisa ser dito explicitamente
+  se for o caso).
 - **Numeração de segmento divergente (novo, encontrado nesta
   consolidação)**: `docs/DISCIPLINAS-D01-D20.md`,
   `docs/ATIVIDADES-A1-A10.md` e uma linha em
@@ -678,6 +716,9 @@ Codex-exemplo/
 │   ├── SUPABASE-PROJECT-AUDIT.md          # G012 — auditoria real via MCP Supabase
 │   ├── SEGMENTOS-S12-S13-DECISION.md      # G014 — investigação real via MCP Supabase; confirma S11/S12/S13
 │   ├── SEGMENTO-S11-MINERACAO-GAP-G015.md # G015 — S11 (Mineração) identificado; roadmap formalização (novo, 2026-07-31)
+│   ├── MODELO-MESTRE-PROPOSTA.md          # 🆕 v5.4.2 — corrigido: skill real tem 14 seções/M1-M5, não 18/M6 (2026-09-07)
+│   ├── PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md # 🆕 v5.4.2 — addendum M6 original marcado histórico; mudança já aplicada na skill real
+│   ├── GAP-RECONCILIACAO-SHAREPOINT-REAL.md # 🔴 novo, crítico — repositório diverge do Manta Maestro real (SharePoint), decisão MN pendente
 │   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
 │   └── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
@@ -698,18 +739,43 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.1** (2026-09-01) — análise e recomendação de modelo mestre de
-  proposta técnico-comercial (variante **M6**, PTC-Infraestrutura/
-  Concessão de grande porte), validada contra a proposta
-  MNT-2026-COM-1183_D e a skill `proposta-comercial` (A7-bd). Addendum
-  M6 (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`) segrega Tarifa ×
-  Success Fee na Seção 12, define exigibilidade do success fee por
+- **v5.4.2** (2026-09-07) — **correção da v5.4.1 + aplicação real na
+  skill de produção**. A v5.4.1 (abaixo) partia de uma premissa nunca
+  verificada contra o SharePoint real: skill de 18 seções, modo "M6",
+  proposta de referência "MNT-2026-COM-1183_D". Com acesso real de
+  leitura/escrita ao SharePoint (`SharePoint_Manta` MCP) nesta sessão,
+  confirmamos a skill real
+  (`04_IA/Manta-Maestro/05-sub-skills/skill-proposta-comercial-SKILL.md`):
+  14 seções, modos M1–M5 (sem M6), tabela de 12 níveis, referência real
+  Hope PPP MNT-2025-COM-1104 (revisão mais recente de MNT-2026-COM-1183
+  encontrada é "_C", não "_D"). A ideia central da v5.4.1 — segregar
+  Tarifa × Success Fee, exigibilidade do success fee pela formalização
+  do evento-gatilho (economia de custo → aprovação de orçamento;
+  conquista → formalização da conquista; cronograma → marco aprovado —
+  nunca pela implementação física), e cláusula de multa/juros de
+  mora/correção monetária por atraso de pagamento — foi reescrita no
+  formato real (resumo compacto ≤1024 caracteres) e **aplicada
+  diretamente na skill de produção** (upload verificado, 809 bytes),
+  a pedido do usuário. Detalhe em `docs/MODELO-MESTRE-PROPOSTA.md` e
+  `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` (addendum original
+  marcado como histórico). Reconciliação arquitetural mais ampla
+  (segmentos S1–S13 deste repositório vs. S1–S11 reais, "20+
+  agentes"/RAG Supabase fictícios vs. estrutura real de `SKILL.md`)
+  registrada como gap separado em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`, não resolvida nesta
+  versão.
+- **v5.4.1** (2026-09-01, **premissa não verificada — ver correção na
+  v5.4.2**) — análise e recomendação de modelo mestre de proposta
+  técnico-comercial (variante "M6", PTC-Infraestrutura/Concessão de
+  grande porte), validada contra a proposta "MNT-2026-COM-1183_D" e a
+  skill `proposta-comercial` ("A7-bd"). Addendum M6
+  (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`) segregava Tarifa ×
+  Success Fee na Seção 12, definia exigibilidade do success fee por
   formalização do evento-gatilho (economia de custo, conquista ou
-  cronograma) e acrescenta cláusula de multa/juros de mora/correção
-  monetária por atraso de pagamento na Seção 13. Análise completa em
-  `docs/MODELO-MESTRE-PROPOSTA.md`. Trabalho de branch paralela,
-  reconciliado com v5.4 nesta consolidação — alteração na skill de
-  produção pendente de gate humano (MN).
+  cronograma) e acrescentava cláusula de multa/juros de mora/correção
+  monetária por atraso de pagamento na Seção 13. Mantido como
+  histórico — a lógica das cláusulas em si seguiu válida e orientou a
+  v5.4.2, mas a skill real tem estrutura diferente (14 seções, M1–M5).
 - **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
   agentes de output** (aprovado por MN). Duas mudanças de
   comportamento, não só documentação:
