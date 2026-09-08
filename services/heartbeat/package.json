@@ -1,0 +1,17 @@
+{
+  "name": "@manta-maestro/heartbeat-service",
+  "version": "1.0.0",
+  "description": "Agent heartbeat / health-registry service for Manta Maestro. Agents POST status every 5 min; Maestro queries /health/routable before routing.",
+  "main": "heartbeat-service.js",
+  "private": true,
+  "scripts": {
+    "start": "node heartbeat-service.js",
+    "demo": "node heartbeat-service.js --demo"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pg": "^8.11.3"
+  }
+}

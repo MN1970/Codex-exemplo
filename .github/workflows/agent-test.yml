@@ -1,0 +1,290 @@
+name: Agent Test Suite
+
+# ---------------------------------------------------------------------
+# CI/CD de testes de agentes — Manta Maestro
+# ---------------------------------------------------------------------
+# 4 categorias de teste, cada uma em seu próprio job para paralelismo e
+# reporte independente:
+#
+#   lint  — markdownlint + yamllint + schema do frontmatter dos agentes
+#   unit  — pytest -m unit  (schema, consistência CLAUDE.md <-> agentes)
+#   rag   — pytest -m rag   (consistência de coleções + verificação live opcional)
+#   smoke — pytest -m smoke (5 perguntas reais por agente via API Anthropic, <30s cada)
+#
+# `all-checks` agrega os 4 jobs num único status — é ESSE o check que
+# deve ser marcado como obrigatório em Settings → Branches → Branch
+# protection rules para bloquear merge. Ver docs/TESTING-AGENTS.md.
+# ---------------------------------------------------------------------
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".claude/agents/**"
+      - "CLAUDE.md"
+      - "supabase/migrations/**"
+      - "tests/**"
+      - "pytest.ini"
+      - ".github/workflows/agent-test.yml"
+  push:
+    branches:
+      - "agent/**" # branches de trabalho em agente individual, ex: agent/portos-v2
+      - "agents/**" # variante de nomenclatura
+      - "main"
+  workflow_dispatch:
+    inputs:
+      require_smoke:
+        description: "Falhar (em vez de pular) se ANTHROPIC_API_KEY estiver ausente"
+        type: boolean
+        default: false
+
+concurrency:
+  group: agent-test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+  # Timeout por resposta de agente no smoke test (segundos). Requisito: <30s.
+  SMOKE_TIMEOUT_SECONDS: "30"
+  SMOKE_MAX_TOKENS: "500"
+
+permissions:
+  contents: read
+  pull-requests: write # necessário para o publish-unit-test-result-action comentar no PR
+  checks: write # necessário para publicar o check-run com o resultado dos testes
+
+jobs:
+  # ---------------------------------------------------------------------
+  # 1. LINT — markdown, yaml, e schema do frontmatter dos agentes.
+  #    Não precisa de secrets, roda em segundos, é o feedback mais rápido.
+  # ---------------------------------------------------------------------
+  lint:
+    name: Lint (markdown, yaml, frontmatter)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: tests/requirements.txt
+
+      - name: Install test dependencies
+        run: pip install -r tests/requirements.txt yamllint
+
+      - name: Lint YAML (workflows, fixtures, config)
+        run: |
+          yamllint -c .yamllint.yml \
+            .github/workflows \
+            tests/rag/collections.yaml \
+            tests/smoke/model_map.yaml \
+            tests/smoke/queries
+
+      - name: Lint Markdown (agentes, CLAUDE.md, docs)
+        uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: |
+            **/*.md
+            !node_modules/**
+
+      - name: Validate agent frontmatter schema (pytest -m unit, schema only)
+        run: |
+          python -m pytest tests/unit/test_agent_schema.py \
+            --junitxml=reports/lint-junit.xml -v
+
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-lint
+          path: reports/lint-junit.xml
+          retention-days: 30
+
+  # ---------------------------------------------------------------------
+  # 2. UNIT — schema completo + consistência CLAUDE.md <-> .claude/agents/.
+  #    Sem rede, sem secrets.
+  # ---------------------------------------------------------------------
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: tests/requirements.txt
+
+      - name: Install test dependencies
+        run: pip install -r tests/requirements.txt
+
+      - name: Run unit tests
+        run: |
+          python -m pytest -m unit \
+            --junitxml=reports/unit-junit.xml \
+            --cov=tests/lib --cov-report=xml:reports/unit-coverage.xml \
+            --cov-report=term-missing \
+            -v
+
+      - name: Upload unit test report + coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-unit
+          path: |
+            reports/unit-junit.xml
+            reports/unit-coverage.xml
+          retention-days: 30
+
+  # ---------------------------------------------------------------------
+  # 3. RAG — consistência estática sempre; verificação live só se os
+  #    secrets do Supabase estiverem configurados no repositório.
+  # ---------------------------------------------------------------------
+  rag:
+    name: RAG collection tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: tests/requirements.txt
+
+      - name: Install test dependencies
+        run: pip install -r tests/requirements.txt
+
+      - name: Run RAG tests
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # Em `main`, exigimos que a verificação live rode de verdade;
+          # em PRs de fork (sem acesso a secrets) ela é pulada sem falhar.
+          REQUIRE_RAG_LIVE_TESTS: ${{ github.ref == 'refs/heads/main' && secrets.SUPABASE_URL != '' && 'true' || 'false' }}
+        run: |
+          python -m pytest -m rag \
+            --junitxml=reports/rag-junit.xml -v
+
+      - name: Upload RAG test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-rag
+          path: reports/rag-junit.xml
+          retention-days: 30
+
+  # ---------------------------------------------------------------------
+  # 4. SMOKE — 5 perguntas de exemplo por agente, resposta real da API
+  #    Anthropic, cada resposta deve chegar em < 30s. Matrix por agente
+  #    para paralelizar e isolar qual agente especificamente regrediu.
+  # ---------------------------------------------------------------------
+  smoke:
+    name: Smoke (${{ matrix.agent }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        agent:
+          - agente-portos
+          - agente-aeroportos
+          - agente-saneamento
+          - agente-energia
+          - agente-barragens
+          - agente-oleo-gas
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: tests/requirements.txt
+
+      - name: Install test dependencies
+        run: pip install -r tests/requirements.txt
+
+      - name: Run smoke tests for ${{ matrix.agent }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SMOKE_TIMEOUT_SECONDS: ${{ env.SMOKE_TIMEOUT_SECONDS }}
+          SMOKE_MAX_TOKENS: ${{ env.SMOKE_MAX_TOKENS }}
+          REQUIRE_SMOKE_TESTS: ${{ github.event.inputs.require_smoke || (github.ref == 'refs/heads/main' && 'true') || 'false' }}
+        run: |
+          python -m pytest tests/smoke/test_agent_smoke.py \
+            -k "${{ matrix.agent }}" \
+            --junitxml=reports/smoke-${{ matrix.agent }}-junit.xml \
+            -v
+
+      - name: Upload smoke test report (${{ matrix.agent }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-smoke-${{ matrix.agent }}
+          path: reports/smoke-${{ matrix.agent }}-junit.xml
+          retention-days: 30
+
+  # ---------------------------------------------------------------------
+  # 5. REPORT — agrega todos os JUnit XML num resumo único, publicado
+  #    no Step Summary do workflow e como comentário no PR.
+  # ---------------------------------------------------------------------
+  report:
+    name: Publish test report
+    needs: [lint, unit, rag, smoke]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all test reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-report-*
+          path: reports
+          merge-multiple: true
+
+      - name: Publish unified JUnit summary
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Agent Test Results
+          path: "reports/**/*junit.xml"
+          reporter: java-junit
+          fail-on-error: false # o gate real é o job all-checks abaixo
+
+      - name: Upload merged report bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-full
+          path: reports
+          retention-days: 30
+
+  # ---------------------------------------------------------------------
+  # 6. GATE — único status a marcar como "required" em branch protection.
+  #    Falha se qualquer um dos 4 jobs de teste falhar ou for cancelado.
+  # ---------------------------------------------------------------------
+  all-checks:
+    name: All agent checks passed
+    needs: [lint, unit, rag, smoke]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any required job did not succeed
+        run: |
+          echo "lint:  ${{ needs.lint.result }}"
+          echo "unit:  ${{ needs.unit.result }}"
+          echo "rag:   ${{ needs.rag.result }}"
+          echo "smoke: ${{ needs.smoke.result }}"
+
+          if [[ "${{ needs.lint.result }}" != "success" ]] || \
+             [[ "${{ needs.unit.result }}" != "success" ]] || \
+             [[ "${{ needs.rag.result }}" != "success" ]] || \
+             [[ "${{ needs.smoke.result }}" != "success" ]]; then
+            echo "::error::Um ou mais jobs de teste de agente falharam — merge bloqueado."
+            exit 1
+          fi
+          echo "Todos os testes de agente passaram."

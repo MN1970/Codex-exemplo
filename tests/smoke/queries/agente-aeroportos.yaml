@@ -1,0 +1,15 @@
+# 5 perguntas de exemplo para o smoke test do agente-aeroportos (Manta 03-S7).
+- prompt: "Quero dimensionar a pista de pouso do aeroporto regional (código 3C). Por onde começo?"
+  expect_any: ["pista", "rwy", "código de referência", "pcn"]
+
+- prompt: "Qual RBAC cobre projeto de pátio de aeronaves?"
+  expect_any: ["rbac", "pátio", "anac"]
+
+- prompt: "Preciso do PCN da pista para operação de A320neo."
+  expect_any: ["pcn", "pista", "aeronave"]
+
+- prompt: "Como projeto o balizamento CAT II para operação noturna?"
+  expect_any: ["balizamento", "cat ii", "papi", "ils"]
+
+- prompt: "ICAO Annex 14 permite offset lateral de RWY na minha configuração?"
+  expect_any: ["icao", "annex 14", "rwy", "offset"]

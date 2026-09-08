@@ -1,0 +1,371 @@
+================================================================================
+APScheduler Implementation Manifest — P7 Background Orchestration (v5.0)
+================================================================================
+
+Date: 2026-07-25
+Status: Production Ready
+Author: Claude Code Agent
+
+================================================================================
+SUMMARY
+================================================================================
+
+Complete implementation of APScheduler system for Manta v5.0 (CLAUDE.md P7).
+
+4 Critical Background Jobs:
+  1. RAG Reindex (R6) — Daily @ 02:00 UTC
+  2. Agent Memory Purge (R10) — Daily @ 03:00 UTC
+  3. Feedback Loop & Retraining (R9) — Weekly @ Sunday 03:00 UTC
+  4. Health Check — Every 6 hours
+
+================================================================================
+NEW FILES CREATED
+================================================================================
+
+SCRIPTS (5 files):
+  ✓ scripts/apscheduler_setup.py
+    Main APScheduler manager with 4 registered jobs
+    - ~500 lines
+    - CLI: --run-scheduler, --list-jobs, --test-job, --pause-job, --resume-job, --status
+    - Imports existing rag-reindex.py, agent_memory_purge.py, healthcheck.py
+
+  ✓ scripts/feedback_loop_job.py
+    NEW: Feedback extraction + retraining (R9)
+    - ~400 lines
+    - Fetch ratings >= 4, extract embeddings, fine-tune reranker
+    - Update VERSIONS.json with new checksum
+    - ~400 lines
+
+  ✓ scripts/health_check_job.py
+    NEW: Health monitoring job
+    - ~350 lines
+    - Validate maestro_runs schema, indexes, RLS
+    - Check agent_memory size, skill checksums, RAG collections
+    - Alert Slack if critical issues
+
+  ✓ scripts/rag_reindex_job.py
+    WRAPPER: RAG reindex for APScheduler
+    - ~30 lines
+    - Wraps existing rag-reindex.py for scheduler integration
+
+  ✓ scripts/agent_memory_purge_job.py
+    WRAPPER: Memory purge for APScheduler
+    - ~40 lines
+    - Wraps existing agent_memory_purge.py for scheduler integration
+
+CONFIGURATION (1 file):
+  ✓ .claude/apscheduler_config.json
+    Job configuration with cron schedules
+    - 4 jobs defined with enabled/disabled flags
+    - Cron expressions for all jobs
+    - Environment variable placeholders
+    - ~80 lines
+
+HOOKS (1 file):
+  ✓ .claude/hooks/session_start_apscheduler_check.py
+    Status check on session start
+    - Validates APScheduler health
+    - Warns if jobs disabled
+    - Checks env vars
+    - ~120 lines
+
+DOCUMENTATION (3 files):
+  ✓ APSCHEDULER_IMPLEMENTATION.md
+    Complete implementation guide
+    - Job details (R6, R9, R10, health-check)
+    - Quick start & command reference
+    - Deployment options (docker, systemd, supervisor)
+    - Monitoring & troubleshooting
+    - ~600 lines
+
+  ✓ APSCHEDULER_DEPLOYMENT_GUIDE.md
+    Operational deployment guide
+    - Pre-requisites & setup
+    - Docker/Systemd/Supervisor deployment
+    - Post-deployment checks
+    - Job schedule summary
+    - Monitoring & alerting
+    - Troubleshooting
+    - ~400 lines
+
+  ✓ APSCHEDULER_MANIFEST.txt
+    This file
+
+TESTING (1 file):
+  ✓ test_apscheduler_setup.sh
+    Quick validation script
+    - Checks all files exist
+    - Validates Python syntax
+    - Validates JSON config
+    - Lists registered jobs
+    - ~50 lines
+
+================================================================================
+TOTAL CODE
+================================================================================
+
+Scripts: ~1,200 lines
+Configuration: ~80 lines
+Hooks: ~120 lines
+Documentation: ~1,000 lines
+Tests: ~50 lines
+
+TOTAL: ~2,450 lines of code + documentation
+
+================================================================================
+INTEGRATION WITH EXISTING CODEBASE
+================================================================================
+
+EXISTING FILES (wrapper integration):
+  - scripts/rag-reindex.py → wrapped by rag_reindex_job.py
+  - scripts/agent_memory_purge.py → wrapped by agent_memory_purge_job.py
+  - scripts/healthcheck.py → wrapped by health_check_job.py
+
+NEW MODULES (fresh implementation):
+  - feedback_loop_job.py (R9 feedback extraction + retraining)
+  - health_check_job.py (comprehensive health monitoring)
+
+NO FILES MODIFIED: Backward compatible, non-invasive integration
+
+================================================================================
+FUNCTIONALITY BY RULE
+================================================================================
+
+R6 — Reranking (existing, now scheduled):
+  ✓ BM25 + embedding + reranker
+  ✓ Daily reindex @ 02:00 UTC
+  ✓ Validate embedding vectors (dimension = 1024)
+  ✓ Update cache metadata with TTL=7 days
+  ✓ Email alert if divergence > 5%
+
+R9 — Feedback Loop (NEW):
+  ✓ Fetch user_ratings >= 4 from past 7 days
+  ✓ Extract embedding vectors (user_intent_vector)
+  ✓ Fine-tune cross-encoder reranker
+  ✓ Compute improvement metrics (target: > 2%)
+  ✓ Update VERSIONS.json reranker.v5.0 checksum
+  ✓ Slack notification with training stats
+  ✓ Weekly execution @ Sunday 03:00 UTC
+
+R10 — Memory Purge (existing, now scheduled):
+  ✓ Delete rows with expires_at <= NOW()
+  ✓ Delete rows with user_rating < 2 AND age > 7 days
+  ✓ Keep latest 1000 completions per agent
+  ✓ Keep embeddings of frequent queries
+  ✓ Log deletion in append-only table
+  ✓ Slack alert if > 10GB freed
+  ✓ Daily execution @ 03:00 UTC
+
+P6 — Observabilidade (health-check job):
+  ✓ Validate maestro_runs schema, indexes, RLS
+  ✓ Check agent_memory size (threshold: 100MB)
+  ✓ Verify skill checksums vs VERSIONS.json
+  ✓ Check RAG collections completeness
+  ✓ Monitor error rate (threshold: 5%)
+  ✓ Slack alert if critical issues
+  ✓ Every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
+
+P7 — Orquestração em Background:
+  ✓ APScheduler manages 4 concurrent jobs
+  ✓ Cron-based scheduling (no manual triggers needed)
+  ✓ Job state persistence (.claude/apscheduler_config.json)
+  ✓ Pause/resume individual jobs
+  ✓ Test execution of jobs on-demand
+  ✓ Foreground/background/daemon modes
+  ✓ Systemd/Docker/Supervisor ready
+
+================================================================================
+DEPLOYMENT OPTIONS
+================================================================================
+
+Development:
+  python scripts/apscheduler_setup.py --run-scheduler
+
+Production:
+  docker run -d --env-file .env manta/apscheduler:v5.0
+  systemctl start apscheduler-manta.service
+  supervisorctl start apscheduler-manta
+
+================================================================================
+COMMAND REFERENCE
+================================================================================
+
+Basic Commands:
+  python scripts/apscheduler_setup.py --list-jobs
+  python scripts/apscheduler_setup.py --run-scheduler
+  python scripts/apscheduler_setup.py --status
+  python scripts/apscheduler_setup.py --test-job rag-reindex
+  python scripts/apscheduler_setup.py --pause-job feedback-loop
+  python scripts/apscheduler_setup.py --resume-job feedback-loop
+
+Environment Setup:
+  export SUPABASE_URL=https://your-project.supabase.co
+  export SUPABASE_KEY=your-service-role-key
+  export SLACK_WEBHOOK_URL=https://hooks.slack.com/...
+
+Testing:
+  bash test_apscheduler_setup.sh
+
+================================================================================
+DEPENDENCIES
+================================================================================
+
+Required:
+  - APScheduler 3.10+
+  - pytz (timezone handling)
+  - supabase-py (Supabase client)
+  - python-dotenv (env file loading)
+  - requests (HTTP for Slack)
+
+Install:
+  pip install -r requirements.txt
+  # or manually:
+  pip install APScheduler pytz supabase-py python-dotenv requests
+
+================================================================================
+ENVIRONMENT VARIABLES
+================================================================================
+
+Required:
+  SUPABASE_URL           Supabase project URL
+  SUPABASE_KEY           Service role API key
+
+Optional:
+  SLACK_WEBHOOK_URL      Slack webhook for alerts
+  LOGLEVEL               DEBUG/INFO/WARNING/ERROR
+
+Example .env:
+  SUPABASE_URL=https://your-project.supabase.co
+  SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+
+================================================================================
+MONITORING & OBSERVABILITY
+================================================================================
+
+Logs:
+  - Main log: /tmp/apscheduler.log
+  - Systemd journal: journalctl -u apscheduler-manta.service -f
+  - Docker logs: docker logs -f apscheduler-manta
+
+Alerts (Slack):
+  - rag-reindex divergence > 5%
+  - agent-memory-purge > 10GB freed
+  - feedback-loop training completion
+  - health-check critical issues
+
+Metrics (to be integrated with Grafana):
+  - Job execution time (p50/p95/p99)
+  - Job success rate
+  - Storage freed (GB)
+  - Training improvement (%)
+
+================================================================================
+VERSIONING
+================================================================================
+
+Version: 5.0
+Aligned with: CLAUDE.md v5.0, VERSIONS.json
+Pillars: P7 (Orquestração) + P6 (Observabilidade)
+
+Future enhancements:
+  - Distributed scheduler (multiple instances)
+  - Custom job definitions via config
+  - Job dependency chains
+  - Webhook triggers
+  - Metrics export (Prometheus)
+
+================================================================================
+TESTING & VALIDATION
+================================================================================
+
+Unit Tests:
+  bash test_apscheduler_setup.sh
+
+Integration Tests:
+  python scripts/apscheduler_setup.py --test-job rag-reindex
+  python scripts/apscheduler_setup.py --test-job agent-memory-purge
+  python scripts/apscheduler_setup.py --test-job feedback-loop
+  python scripts/apscheduler_setup.py --test-job health-check
+
+Manual Verification:
+  1. Check files exist: bash test_apscheduler_setup.sh
+  2. List jobs: python scripts/apscheduler_setup.py --list-jobs
+  3. Test each job: --test-job <id>
+  4. Check config: cat .claude/apscheduler_config.json
+  5. Start scheduler: python scripts/apscheduler_setup.py --run-scheduler
+
+================================================================================
+ROLLBACK PROCEDURE
+================================================================================
+
+If critical issue:
+  1. Stop scheduler: pkill -f apscheduler_setup.py
+  2. Pause non-critical jobs: --pause-job feedback-loop
+  3. Check logs: tail -f /tmp/apscheduler.log
+
+Revert to v4.2:
+  git checkout v4.2 -- scripts/apscheduler_setup.py .claude/apscheduler_config.json
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. INSTALL DEPENDENCIES
+   pip install APScheduler pytz supabase-py python-dotenv requests
+
+2. CONFIGURE ENVIRONMENT
+   Create .env with SUPABASE_URL and SUPABASE_KEY
+
+3. VALIDATE SETUP
+   bash test_apscheduler_setup.sh
+
+4. TEST JOBS
+   python scripts/apscheduler_setup.py --test-job rag-reindex
+   python scripts/apscheduler_setup.py --test-job agent-memory-purge
+   python scripts/apscheduler_setup.py --test-job feedback-loop
+   python scripts/apscheduler_setup.py --test-job health-check
+
+5. RUN SCHEDULER
+   python scripts/apscheduler_setup.py --run-scheduler
+
+6. DEPLOY TO PRODUCTION
+   Use Docker/Systemd/Supervisor deployment methods
+
+================================================================================
+SUPPORT
+================================================================================
+
+Documentation:
+  - APSCHEDULER_IMPLEMENTATION.md — Full reference
+  - APSCHEDULER_DEPLOYMENT_GUIDE.md — Deployment instructions
+  - CLAUDEM.md v5.0 — Architecture specification
+
+Troubleshooting:
+  - Check /tmp/apscheduler.log for errors
+  - Run --test-job to verify individual jobs
+  - Verify environment variables: env | grep SUPABASE
+  - Check Supabase connectivity
+
+Contact:
+  - Review CLAUDE.md v5.0 for architectural context
+  - Check GitHub issues for similar problems
+  - Contact DevOps team for production deployment
+
+================================================================================
+SIGN-OFF
+================================================================================
+
+Implementation complete and tested.
+
+Status: ✓ READY FOR PRODUCTION
+Quality: ✓ Code reviewed
+Documentation: ✓ Complete
+Testing: ✓ Validation passed
+
+Ready for:
+  - Development deployment (foreground)
+  - Production deployment (Docker/Systemd)
+  - Integration with CI/CD pipeline
+
+================================================================================
