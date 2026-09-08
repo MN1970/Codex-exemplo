@@ -4,9 +4,11 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
+Versão: **v4.2.2** (2026-09-08) — v4.2 expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+proposta técnico-comercial + ADR das pendências arquiteturais D1–D4
+(multi-tenancy, versionamento de agentes, fallback de modelo, retenção
+de logs).
 
 ---
 
@@ -137,6 +139,31 @@ SharePoint nesta sessão).
 
 ---
 
+## PENDÊNCIAS ARQUITETURAIS D1–D4
+
+Quatro decisões arquiteturais pendentes, levantadas no acompanhamento do
+Portal (`portal-manta-maestro`): **D1** multi-tenancy, **D2**
+versionamento de agentes, **D3** fallback de modelo, **D4** retenção de
+logs. Diagnóstico e proposta para cada uma em
+`docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md` — status: **proposta,
+aguardando gate humano (MN)**. Nenhuma mudança de schema ou de agente
+foi aplicada ainda; o ADR só recomenda.
+
+Resumo das recomendações (ver ADR para diagnóstico completo):
+
+- **D1**: `tenant_id` + RLS no Supabase existente (sem projeto separado
+  por cliente); tenants iniciais `manta-interno`, `aysa`, `regis-dd`.
+- **D2**: frontmatter semver em `.claude/agents/*.md` e SKILL.md +
+  tabela `agent_versions`; git como fonte, SharePoint como publicação.
+- **D3**: fallback assimétrico — Haiku↔Sonnet livre, mas **sem fallback
+  automático para Opus** em Manta 01/06/15/16; sempre logado e sinalizado
+  na resposta.
+- **D4**: retenção em camadas (90/180 dias operacional, indefinida para
+  claim/contratual/advisory), soft-delete 30 dias antes de purga
+  definitiva, verificar exigência regulatória específica do tenant AySA.
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -175,6 +202,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.2** (2026-09-08) — ADR das pendências arquiteturais D1–D4
+  (multi-tenancy, versionamento de agentes, fallback de modelo, retenção
+  de logs). Ver `docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md`. Status:
+  proposta, aguardando gate humano (MN).
 - **v4.2.1** (2026-09-01) — análise e recomendação de modelo mestre de
   proposta técnico-comercial, validada contra a proposta MNT-2026-COM-1183_D
   e a skill `proposta-comercial` (A7-bd). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
