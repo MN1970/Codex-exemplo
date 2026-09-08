@@ -1,10 +1,13 @@
 # Gap — Reconciliação entre este repositório e o Manta Maestro real (SharePoint)
 
 **Status:** 🟡 parcialmente investigado e parcialmente resolvido em
-2026-09-07 (numeração de segmento corrigida; gap do embedder G010
-resolvido com decisão real; Supabase confirmado real). **Reconciliação
-completa não terminada** — escopo grande demais para uma sessão só.
-Documentado aqui conforme combinado com o usuário em 2026-09-07.
+2026-09-07/08 (numeração de segmento corrigida; gap do embedder G010
+resolvido com decisão real; Supabase confirmado real; risco de edição
+concorrente no SharePoint real identificado após um saneamento
+estrutural em produção disparado por duas sessões Claude em paralelo).
+**Reconciliação completa não terminada** — escopo grande demais para
+uma sessão só. Documentado aqui conforme combinado com o usuário em
+2026-09-07.
 
 > ⚠️ **Atualização 2026-09-07 (mesma sessão, investigação mais
 > profunda)**: a primeira versão deste documento concluía que a
@@ -111,6 +114,57 @@ explorado, mas não há confirmação:
   `rag_chunks` via RPC `match_rag_chunks` — não uma tabela chamada
   exatamente como este repositório assume em todo lugar)
 
+## Risco de edição concorrente no SharePoint real (descoberto 2026-09-07/08)
+
+Achado novo, distinto das divergências de conteúdo acima: o SharePoint
+real não é um documento estático que esta sessão lê e corrige — é uma
+árvore **ativamente editada por múltiplas sessões/processos em
+paralelo**, e essa concorrência já causou uma perda real de trabalho.
+
+Sequência confirmada (ver `docs/MODELO-MESTRE-PROPOSTA.md` §3 para o
+detalhe técnico completo):
+
+1. Esta sessão aplicou a correção de Tarifa×Success Fee/exigibilidade/
+   juros de mora na skill real em
+   `04_IA/Manta-Maestro/05-sub-skills/skill-proposta-comercial-SKILL.md`
+   (809 bytes, 2026-09-07T15:26:24Z).
+2. Horas depois, **outra sessão Claude** (Claude Desktop Windows,
+   trabalhando em algo chamado "Proposta manta gestão co...") tentou
+   localizar essa mesma skill e não encontrou nem `05-sub-skills/` nem
+   `02-sub-skills/` — viu uma estrutura totalmente diferente
+   (`02-agentes-horizontais/agente-bd`, vazia), confirmada por
+   screenshot compartilhado pelo usuário.
+3. Essa confusão de caminho, relatada por duas sessões distintas,
+   disparou um **saneamento estrutural real do SharePoint em
+   produção** no mesmo dia — documentado pela própria fonte primária,
+   `09-base-conhecimento/INDICE-CANONICAL.md` v1.1 §13 ("Changelog de
+   saneamento — 2026-09-07"). O saneamento fundiu o corpo operacional
+   da skill em `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`
+   (v3.3.0) a partir de um pacote de conteúdo **anterior** à correção
+   do passo 1 — ou seja, a correção desta sessão ficou **órfã**: o
+   caminho real mudou antes que a mudança pudesse ser considerada
+   permanente, e o conteúdo consolidado no novo caminho não carregava
+   as cláusulas aplicadas.
+4. Esta sessão detectou isso ao **reler a fonte real antes de assumir
+   que a correção anterior ainda era válida** (em vez de confiar que
+   um upload bem-sucedido permanece correto indefinidamente), e
+   reaplicou as três cláusulas no novo caminho real como v3.3.1
+   (16.191 bytes, verificado por leitura pós-upload em
+   2026-09-08T00:48:09Z).
+
+**Implicação para qualquer sessão futura (Claude ou humana) que edite
+este SharePoint**: um upload bem-sucedido não é garantia de
+permanência. Antes de editar qualquer arquivo já editado nesta ou em
+sessões anteriores, **reler o arquivo primeiro** para confirmar que o
+caminho e o conteúdo ainda são os esperados — especialmente em dias
+com atividade concorrente conhecida (múltiplas sessões, o próprio
+processo de sync `Sync-MantaMaestro.ps1` rodando na máquina local do
+usuário, ou um saneamento estrutural em andamento). Isso é
+particularmente relevante para a Routine diária de sincronização
+GitHub↔SharePoint criada nesta sessão (`trig_01KPNtXg2TJJaNYhHoetrB3D`):
+seu prompt precisa reler o índice canônico a cada execução, não assumir
+caminhos fixos.
+
 ## O que isso pode significar
 
 Três hipóteses, em ordem decrescente de probabilidade — **atualizadas**
@@ -169,13 +223,20 @@ precisa do MN:
    `proposta-comercial`), **sempre verificar contra o SharePoint real
    primeiro**, não confiar no que já está escrito aqui.
 
-## Feito nesta sessão (2026-09-07)
+## Feito nesta sessão (2026-09-07/08)
 
 - Numeração de segmento corrigida no `CLAUDE.md` (S1–S11 real).
 - Gap do embedder (G010) resolvido com decisão real (`docs/EMBEDDER-DECISION.md`,
   `docs/SUPABASE-PROJECT-AUDIT.md`, `CLAUDE.md` atualizados).
 - Confirmado que o núcleo Supabase/RAG é real (não fictício) — ver
   seção "O que é confirmado como real" acima.
+- Detectado e documentado o risco de edição concorrente no SharePoint
+  real: um saneamento estrutural em produção, disparado por confusão
+  de caminho relatada por duas sessões Claude distintas, orfanou a
+  correção da skill `proposta-comercial` aplicada por esta sessão; a
+  correção foi reaplicada no novo caminho real como v3.3.1 — ver seção
+  "Risco de edição concorrente no SharePoint real" acima e
+  `docs/MODELO-MESTRE-PROPOSTA.md` §3.
 
 ## Não resolvido nesta sessão
 
