@@ -1,0 +1,23 @@
+# Observability scripts for Manta Maestro (v4.2)
+# Core Python libraries (stdlib): json, logging, argparse, csv, pathlib, datetime, re, time, hashlib, uuid, traceback, collections
+# No external dependencies required for basic functionality
+
+# Optional dependencies for enhanced functionality:
+# (uncomment as needed)
+
+# Azure SDK (for sp_healthcheck.py production deployment)
+# azure-identity==1.13.0
+# azure-keyvault-secrets==4.4.0
+# requests==2.31.0
+
+# PostgreSQL connectivity (for maestro_runs logging, eval_routing.py)
+# psycopg2-binary==2.9.9
+
+# Pandas (for advanced audit report generation)
+# pandas==2.1.3
+
+# YAML parsing (for golden_set schema and test prompts)
+# pyyaml==6.0.1
+
+# HTTP client improvements
+# urllib3==2.1.0

@@ -2,8 +2,25 @@
 
 **Status:** análise concluída, addendum pronto para colar na skill de produção.
 **Ainda não aplicado** — mudança de valores/estrutura de tarifa comercial
-exige gate humano (MN) antes de publicar no SharePoint, seguindo o mesmo
-fluxo já usado em `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` (variante M6).
+exige gate humano (MN) antes de publicar no SharePoint.
+
+> ⚠️ **Correção de rastreamento (2026-09-09):** a primeira versão deste
+> documento assumia, com base numa cópia local desatualizada, que a
+> tabela tarifária de produção vivia em
+> `04_IA/Manta-Maestro/05-sub-skills/skill-proposta-comercial-SKILL.md`.
+> Verificação direta no SharePoint (`SharePoint_Manta` MCP, leitura)
+> mostra que esse arquivo hoje é só um stub de 667 bytes apontando para
+> `_DEPRECATED.md` — o corpo operacional da skill (numeração, tabela
+> tarifária, dados fixos, cláusulas) foi fundido em 2026-09-07 (v3.3.0)
+> para dentro de **`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`**
+> (versão atual: **3.3.1**, 2026-09-07). Duas boas notícias dessa
+> verificação: (1) a tabela tarifária real de produção ("Tabela
+> tarifaria padrao [v3.3.0]", base 176h/mês) é **idêntica** — mesmos 13
+> perfis e valores — à usada na comparação da seção 3 abaixo, então a
+> análise permanece válida; (2) a variante "Tipo A / Concessão de
+> Infraestrutura de Grande Porte" (equivalente ao antigo addendum "M6")
+> **já está aplicada em produção**, não mais pendente. O addendum da
+> seção 4 abaixo foi corrigido para apontar ao arquivo e à seção reais.
 
 Fonte: planilha de orçamento de projeto fornecida pelo usuário
 (`Orçamento_CLIENTE.xlsx`, fechamento com Mauricio em 24/04/26), aba
@@ -96,11 +113,13 @@ skill. Antes de publicar, **confirmar com o gate humano (MN)** se:
 
 ## 4. Addendum pronto para colar na skill de produção
 
-Assim como o addendum M6 (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`),
-o bloco abaixo é **aditivo** — substitui apenas a seção "Tabela Tarifária
-Padrão" do arquivo de produção
-`Engenharia/Documentos Compartilhados/04_IA/Manta-Maestro/02-sub-skills/
-skill-proposta-comercial-SKILL.md`. **Não publicar sem aprovação MN.**
+O bloco abaixo **substitui** a seção "Tabela tarifaria padrao [v3.3.0]"
+do arquivo real de produção
+`Engenharia/Documentos Compartilhados/04_IA/Manta-Maestro/02-atividades/
+A1-proposta/SKILL.md` (versão atual 3.3.1, confirmado por leitura direta
+via `SharePoint_Manta` MCP em 2026-09-09 — **não** o stub
+`05-sub-skills/skill-proposta-comercial-SKILL.md`, que só redireciona
+para `_DEPRECATED.md`). **Não publicar sem aprovação MN.**
 
 ```markdown
 ## Tabela Tarifária Padrão (atualização 2026 — base 176h/mês)
@@ -136,11 +155,14 @@ Estrutura por Função × Nível (substitui a tabela de 13 perfis anterior).
 ### Checklist de aplicação (para quem for publicar no SharePoint)
 
 - [ ] Decidir com o gate humano (MN) os 3 pontos da seção 3 acima.
-- [ ] Colar o bloco da seção 4 substituindo "Tabela Tarifária Padrão" no
-      arquivo de produção, na posição indicada.
+- [ ] Colar o bloco da seção 4 substituindo "Tabela tarifaria padrao
+      [v3.3.0]" em `04_IA/Manta-Maestro/02-atividades/A1-proposta/
+      SKILL.md`, na posição indicada, e bump de versão para 3.3.2.
 - [ ] Confirmar que a mudança de estrutura (13 perfis → Função × Nível)
-      não quebra referências existentes em propostas M1–M6 já emitidas.
-- [ ] Registrar a mudança no changelog da skill (nova versão da
-      `skill-proposta-comercial-SKILL.md`).
+      não quebra referências existentes em propostas Tipo A/PRC/variante
+      de concessão já emitidas.
+- [ ] Registrar a mudança no changelog do arquivo (campo `updated`/
+      `supersedes` no frontmatter e nota de versão no corpo, como já é
+      feito para v3.3.0/v3.3.1).
 - [ ] Atualizar `CLAUDE.md` (este repositório) quando a publicação for
       confirmada.

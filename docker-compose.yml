@@ -1,0 +1,76 @@
+version: '3.8'
+
+# Maestro OS v6.0 — Local/Staging Docker Compose
+# Quick-start: docker-compose up
+
+services:
+  # PostgreSQL database (for Supabase connection)
+  postgres:
+    image: postgres:15-alpine
+    container_name: maestro-postgres
+    environment:
+      POSTGRES_USER: maestro
+      POSTGRES_PASSWORD: maestro-dev-password
+      POSTGRES_DB: maestro_os
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U maestro"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Maestro OS application
+  maestro-os:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: maestro-os
+    environment:
+      MAESTRO_ENV: development
+      LOG_LEVEL: DEBUG
+      SUPABASE_URL: ${SUPABASE_URL:-http://supabase:8000}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-dev-key}
+      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY:-dev-service-key}
+      DATABASE_URL: postgresql://maestro:maestro-dev-password@postgres:5432/maestro_os
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./src:/opt/maestro-os/src
+      - ./tests:/opt/maestro-os/tests
+      - ./examples:/opt/maestro-os/examples
+      - ./logs:/var/log/maestro-os
+      - ./artifacts:/var/lib/maestro-os/artifacts
+    healthcheck:
+      test: ["CMD", "./maestro.sh", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Redis for caching (optional, for future enhancement)
+  redis:
+    image: redis:7-alpine
+    container_name: maestro-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  default:
+    name: maestro-network

@@ -1,0 +1,930 @@
+{
+  "projeto": "Manta Disambiguator RAG — Synthetic Training Data v1.0",
+  "data_geracao": "2026-07-26",
+  "objetivo": "Desambiguar 4 termos técnicos críticos entre 8 domínios Manta",
+  "termos_alvo": [
+    "terraplenagem",
+    "estrutura_fundacao",
+    "drenagem",
+    "via_permanente"
+  ],
+  "termos_ambiguos": [
+    {
+      "termo": "terraplenagem",
+      "dominios_afetados": [
+        "S1",
+        "S10"
+      ],
+      "chunks_gerados": [
+        {
+          "id": "syn_ter_rod_001",
+          "dominio": "S1",
+          "titulo": "Terraplenagem de subleito em rodovia: compactação Proctor",
+          "context_tag": "terraplenagem_rodovia_subleito",
+          "disambiguador": "subleito DNIT pavimento CBUQ compactação Proctor 95%",
+          "texto": "Em projeto de rodovia federal conforme DNIT 2006, a terraplenagem de subleito é a camada base que recebe as camadas de pavimento (base, binder e capa asfáltica CBUQ). O subleito deve alcançar índice de compactação mínimo de 95% do Proctor normal, determinado em laboratório conforme NBR 7182. A terraplenagem em rodovia utiliza escavação mecanizada com motoniveladoras e carregadeiras, transporte via caminhão basculante e compactação com rolo compressor de pneus ou rolo liso vibratório. Material de corte é classificado em 1ª, 2ª ou 3ª categoria conforme NBR 6502: solos de baixa coesão (1ª) compactam mais facilmente. Controle de umidade é essencial — ensaios de areia (NBR 9813) são executados a cada 100m de pista. Densidade seca deve atingir mínimo de 95% Proctor para garantir estabilidade lateral sob cargas de tráfego. Perfil transversal inclui canaletas de drenagem superficial em ambos os lados.",
+          "tamanho_palavras": 155,
+          "normas_citadas": [
+            "DNIT 2006",
+            "NBR 7182",
+            "NBR 6502",
+            "NBR 9813"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_rod_002",
+          "dominio": "S1",
+          "titulo": "Terraplenagem de aterro lateral em rodovia: material de empréstimo",
+          "context_tag": "terraplenagem_rodovia_aterro",
+          "disambiguador": "aterro lateral empréstimo CBUQ taludes drenagem superficial",
+          "texto": "Terraplenagem de aterro lateral em projeto de rodovia ocorre quando o greide da pista está acima do terreno natural. Material de aterro é obtido de jazidas de empréstimo próximas ou de cortes da mesma rodovia. Terraplenagem em aterro segue as mesmas normas de compactação do subleito (95% Proctor), mas com atenção especial a taludes, que devem ter inclinação máxima 1:1.5 (V:H) para evitar deslizamento. Cada camada de aterro tem espessura máxima de 0.30m antes da compactação, controlada por medio com prumo e nível. Drenagem superficial é crítica em aterro: implantação de canaletas (saias) nas laterais previne erosão e infiltração. Geossintéticos (geotêxtil, geogrelha) podem ser inseridos entre camadas para aumentar resistência interna, especialmente em solos de baixa capacidade de suporte. Material de empréstimo deve ser classificado e aprovado em laboratório (granulometria, limites de Atterberg, CBR mínimo 4%).",
+          "tamanho_palavras": 165,
+          "normas_citadas": [
+            "DNIT 2006",
+            "NBR 7182",
+            "NBR 6502"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_rod_003",
+          "dominio": "S1",
+          "titulo": "Terraplenagem em obra de rodovia: equipamentos e custos SICRO",
+          "context_tag": "terraplenagem_rodovia_servicos",
+          "disambiguador": "SICRO orçamento escavação compactação custo unitário Proctor",
+          "texto": "Na orçamentação de rodovia, terraplenagem é um dos principais serviços (15–25% do custo total), com composições definidas no SICRO (Sistema de Custos de Rodovias) do DNIT. Cada tipo de terraplenagem (escavação, aterro, transporte) possui composição específica com produtividade de equipamento. Escavação de 1ª categoria tem produção típica de 80–100 m³/dia com motoniveladoras e escavadeiras, enquanto terraplenagem (compactação) em subleito é mais lenta: 150–200 m³/dia de material solto compactado, dependendo da espessura de camada e tipo de compactador. Custos incluem: operador de equipamento (CHP), combustível, lubrificante, manutenção e BDI. Composição SICRO mais recente (2024) incorpora aspectos ambientais, como supressão de vegetação em APP e controle de erosão. Variações regionais afetam preço de empréstimo: jazida próxima pode reduzir custo em 30–50%. Terraplenagem em corte (escavação) tem custo inferior a aterro (empréstimo + transporte).",
+          "tamanho_palavras": 168,
+          "normas_citadas": [
+            "DNIT 2006",
+            "SICRO 2024",
+            "NBR 7182"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_rod_004",
+          "dominio": "S1",
+          "titulo": "Terraplenagem em rodovia: controle geotécnico e relatórios",
+          "context_tag": "terraplenagem_rodovia_controle",
+          "disambiguador": "controle ensaio areia densidade seca Proctor relatório inspeção",
+          "texto": "Controle de terraplenagem em rodovia é executado pela fiscalização de obra segundo procedimentos DNIT. A cada 100 m de terraplenagem concluída, realiza-se ensaio de densidade de areia (método cálice de areia, NBR 9813) para verificar compactação atingiu 95% Proctor. Se falhar, a camada é escarificada (revolvida com grade), reúmidecida e recompactada. Relatório mensal de terraplenagem inclui: volume escavado (medido com topografia), volume aterrado, taxa de aceitação (%), distância média de transporte, e ocorrências (chuvas, atrasos). Cada concessionária de rodovia mantém banco de dados de terraplenagem em GIS, permitindo rastreabilidade e auditoria. Fotografias de obra são obrigatórias a cada marco (50–100m). Perfis de solo ao longo da pista (sondagens) confirmam que subleito não varia significativamente, evitando problemas de recalque diferencial após pavimentação.",
+          "tamanho_palavras": 160,
+          "normas_citadas": [
+            "DNIT 2006",
+            "NBR 9813",
+            "NBR 7182"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_bar_001",
+          "dominio": "S10",
+          "titulo": "Terraplenagem de aterro CFRD em barragem: compactação seca e fator de homogeneização",
+          "context_tag": "terraplenagem_barragem_cfrd",
+          "disambiguador": "aterro CFRD compactação seca fator homogeneização envelope transição ICOLD",
+          "texto": "Barragem de concreto com face de vedação (CFRD — Concrete Face Rockfill Dam) requer terraplenagem de aterro com especificações radicalmente diferentes de rodovia. O aterro CFRD é composto por zonas: núcleo (transição) e envelope (drenante), cada qual com granulometria selecionada e compactação controlada. Diferentemente de rodovia (que usa Proctor normal com umidade ótima), o aterro de barragem compacta-se a seco, alcançando densidade máxima com o mínimo de água possível. Fator de homogeneização (razão entre densidade seca obtida e densidade máxima Proctor modificada) deve ser ≥ 0.97 para envelope e ≥ 0.95 para núcleo. Cada camada de 0.5 m é controlada por ensaio de densidade de areia ou penetrômetro leve. Compactação utiliza rolos pesados tipo pata-de-cabra (CAT 836) com até 50 passadas por camada. Material provém de corte lateral do vale (pedregulho basáltico ou granito) ou jazida controlada exterior. Coeficiente de recalque é crítico: espera-se até 1% de recalque pós-enchimento, predito por retroanálise com ensaios edométricos em amostra de aterro compactado.",
+          "tamanho_palavras": 185,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334",
+            "CBDB"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_bar_002",
+          "dominio": "S10",
+          "titulo": "Terraplenagem de barragem: monitoramento de recalques com marcos topográficos",
+          "context_tag": "terraplenagem_barragem_monitoramento",
+          "disambiguador": "barragem recalque marco topográfico teodolito GNSS piezômetro",
+          "texto": "Em barragem de aterro, terraplenagem é monitorada continuamente durante construção e operação via marcos topográficos. Marcos de assentamento são instalados em cotas predefinidas (tipicamente a cada 10–20 m de altura) e sua elevação é medida mensalmente com teodolito de precisão ou GNSS (incerteza ±5 cm). Recalques esperados durante enchimento variam de 0.5% a 2.0% da altura do aterro, dependendo de ângulo de fricção e deformabilidade. Se recalque real exceder previsão teórica em mais de 50%, investiga-se causa (instabilidade interna, vazamento). Piezômetros são inseridos em profundidade durante terraplenagem para monitorar pressão neutra e detectar piping (erosão interna). Inspeção visual de face de concreto ocorre mensalmente para detectar trincas, que podem indicar recalque diferencial excessivo. Relatório trimestral de instrumentação é enviado ao órgão fiscalizador (ANA, CBDB, poder concedente) conforme exigência da Lei 12.334.",
+          "tamanho_palavras": 170,
+          "normas_citadas": [
+            "Lei 12.334",
+            "CBDB",
+            "ICOLD"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_bar_003",
+          "dominio": "S10",
+          "titulo": "Terraplenagem em barragem: estudos geotécnicos e ensaios de laboratório",
+          "context_tag": "terraplenagem_barragem_estudo",
+          "disambiguador": "barragem granulometria CBR compactação modificada critério aceitação",
+          "texto": "Antes de iniciar terraplenagem em barragem, realizam-se extensos estudos geotécnicos em laboratório. Amostras de material de empréstimo são submetidas a: classificação visual-tátil e granulometria (NBR 248), limites de Atterberg (plasticidade), ensaio Proctor modificado (ABNT NBR 7749) para obter densidade máxima e umidade ótima, e ensaio CBR (ABNT NBR 9895) com imersão de 96 horas. Para aterro CFRD, o CBR mínimo de envelope é 5–10%, enquanto núcleo aceitável é CBR 2–5%. Ensaios triaxiais (adensamento isotrópico consolidado CID) definem parâmetros de resistência (c', φ') usados em análise de estabilidade de taludes. Permeabilidade é medida em permeâmetro de carga constante (envelope) ou variável (núcleo). Quando granulometria natural do corte não atende especificações, o empreiteiro executa britagem parcial ou separação granulométrica para homogeneizar material. Critério de aceitação em campo é: densidade seca ≥ 95% da máxima obtida em Proctor modificado, e umidade ≤ umidade ótima ± 1%.",
+          "tamanho_palavras": 185,
+          "normas_citadas": [
+            "Lei 12.334",
+            "NBR 248",
+            "NBR 7749",
+            "NBR 9895"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_bar_004",
+          "dominio": "S10",
+          "titulo": "Terraplenagem de barragem: cronograma construtivo e ritmo de enchimento",
+          "context_tag": "terraplenagem_barragem_cronograma",
+          "disambiguador": "enchimento velocidade elevação barragem terraplenagem ritmo ano",
+          "texto": "Cronograma de terraplenagem em barragem é vinculado ao cronograma de enchimento do reservatório. Velocidade de elevação de barragem típica é 0.5–1.5 m/mês durante construção, limitada pela compactação de aterro (não simplesmente por despejo). Uma barragem de 100 m de altura pode levar 6–8 anos para ser completamente aterrada, transportando volume de 50–100 milhões de m³. Ritmo de despejo é calculado como: volume mensal de aterro compactado / fator de empolamento do material de corte (tipicamente 1.3–1.5). Exemplo: para atingir 1 m/mês de elevação, com fator de empolamento 1.4, exige-se 1.4 m³ (em situ) por m² de face, ou ~100,000 m³/mês para barragem de 100 m × 200 m de crista. Equipamentos de terraplenagem (escavadeiras, caminhões, rolos) são dimensionados para atender esse ritmo. Após conclusão de terraplenagem, a barragem sofre operação de enchimento controlado (velocidade ≤ 0.5 m/mês) para permitir adensamento de aterro e dissipação de pressões neutras.",
+          "tamanho_palavras": 195,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_bar_005",
+          "dominio": "S10",
+          "titulo": "Terraplenagem de barragem: impacto de clima úmido em compactação de aterro",
+          "context_tag": "terraplenagem_barragem_clima",
+          "disambiguador": "chuva compactação aterro drenagem interna umidade crítica",
+          "texto": "Em clima tropical úmido (como Brasil Central/Nordeste), terraplenagem de barragem enfrenta desafios de perda de compactação por infiltração de chuva. Se material é compactado à umidade ótima (ou próximo), chuva pode adicionar água suficiente para alcançar ponto de transição onde densidade diminui (pós-otimização na curva Proctor). Para mitigar, equipes de construção: (1) compactam material levemente seco (umidade = umidade ótima – 1 a 2%), reduzindo susceptibilidade a chuva; (2) instalam drenagem interna (camadas drenantes, canaletas sub-superficiais) para escoar água infiltrada; (3) suspendem trabalhos durante chuvas intensas. Fator de homogeneização acima de 0.97 ajuda a mitigar efeitos de umidade residual. Barragens tropicais muitas vezes usam envelope arenoso-cascalhoso com permeabilidade alta, favorecendo drenagem rápida. Material fino (silte, argila) é minimizado ou confinado ao núcleo impermeável para reduzir retenção de água. Relatórios pós-chuva incluem verificação de compactação imediatamente após cessação, antes que água infiltrada comprometa densidade.",
+          "tamanho_palavras": 180,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334",
+            "CBDB"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_rod_005",
+          "dominio": "S1",
+          "titulo": "Terraplenagem em rodovia: impacto ambiental e supressão de vegetação",
+          "context_tag": "terraplenagem_rodovia_ambiental",
+          "disambiguador": "rodovia supressão árvore APP aterro compensação florestal",
+          "texto": "Terraplenagem em rodovia moderna inclui licenciamento ambiental e supressão de vegetação. Em Área de Preservação Permanente (APP) — faixa de 30–100 m junto a rio ou nascente — terraplenagem é restrita. Projeto de rodovia em APP exige: (1) estudo de impacto ambiental (EIA), (2) parecer de órgão ambiental (Ibama, secretaria estadual), (3) plano de compensação (reflorestamento em área equivalente). Terraplenagem em APP é feita com menor altura de corte/aterro para minimizar exposição de solo (erosão). Supressão de árvores em terraplenagem requer relatório de inventário florestal contabilizando espécies. Compensação florestal é vinculada a terraplenagem: cada m² de APP desmatado exige reflorestamento de 2–3 m². Custos ambientais de terraplenagem aumentam se projeto cruza bioma protegido (Cerrado, Caatinga, Mata Atlântica) — taxa de compensação pode triplicar. Relatório mensal de terraplenagem inclui fotografias aéreas e monitoramento de erosão (proteção com geotêxtil, semeadura de crotalária em talude).",
+          "tamanho_palavras": 185,
+          "normas_citadas": [
+            "Lei 12.651 (Código Florestal)",
+            "DNIT 2006"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_rod_006",
+          "dominio": "S1",
+          "titulo": "Terraplenagem em rodovia: sondagem geotécnica e perfil de solo",
+          "context_tag": "terraplenagem_rodovia_sondagem",
+          "disambiguador": "sondagem SPT NSPT solo perfil corte aterro classificação",
+          "texto": "Projeto de terraplenagem em rodovia inicia com sondagem geotécnica (SPT — Standard Penetration Test, conforme NBR 8802). Furos de sonda são feitos a cada 200–500 m de pista, em profundidade até 3–5 m (ou até rocha sã). SPT mede número de golpes (NSPT) necessários para penetrar 0.30 m de tubo amostrador em solo natural — valor correlaciona com compacidade/densidade relativa. Solo com NSPT < 5 é mole (fácil escavação); NSPT 5–15 é médio; NSPT > 20 é firme (difícil). Perfil de solo ao longo de pista é classificado em camadas de 1 m de profundidade, documentado em coluna estratigráfica. Terraplenagem em rodovia deve ser planejada conforme categoria de solo: corte em solo 1ª categoria (areia, cascalho) é barato; 3ª categoria (rocha alterada, laterita) requer escavação mecanizada pesada. Sondagem também informa nível de água (lençol freático), importante para drenagem de subleito. Se NSPT em pé de talude indica solo mole ou saturado, terraplenagem em aterro requer geossintético reforçador.",
+          "tamanho_palavras": 200,
+          "normas_citadas": [
+            "NBR 8802",
+            "DNIT 2006",
+            "NBR 6502"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_bar_006",
+          "dominio": "S10",
+          "titulo": "Terraplenagem de barragem: ritmo de construção vs. adensamento de aterro",
+          "context_tag": "terraplenagem_barragem_ritmo",
+          "disambiguador": "barragem elevação ritmo mês adensamento piezômetro settlement",
+          "texto": "Ritmo de terraplenagem em barragem é controlado pela velocidade de adensamento de aterro já colocado. Não é simplesmente questão de despejar material, pois o aterro precisa consolidar (água ser expulsa, estrutura densificar) antes de receber cargas adicionais. Velocidade de elevação típica é 0.5–1.5 m/mês (conforme tipo de aterro e drenagem). Silte/argila (material fino em núcleo) adensa lentamente: 3–6 meses para 90% de adensamento primário conforme ensaio edométrico. Cascalho/areia (envelope) adensa rapidamente: semanas. Piezômetros instalados no interior do aterro monitoram excesso de pressão neutra durante enchimento. Se pressão neutra é alta (fator de segurança baixo), elevação de barragem é suspensa até dissipação. Procedimento: elevar 1 m, aguardar 1 mês, elevar mais 1 m. Cronograma de 100 m de altura leva assim 8–12 anos (não 2–3 anos). Atraso em cronograma é causa comum de impasse financeiro em barragem. Alguns projetos aceleraram ritmo usando camadas drenantes verticais ou drenagem profunda, permitindo elevação de 2 m/mês.",
+          "tamanho_palavras": 215,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_rod_007",
+          "dominio": "S1",
+          "titulo": "Terraplenagem em região de escorregamento de encosta: estabilização de talude",
+          "context_tag": "terraplenagem_rodovia_estabilizacao",
+          "disambiguador": "rodovia talude encosta escorregamento drenagem berma",
+          "texto": "Terraplenagem em rodovia que atravessa região de encosta instável requer medidas especiais de estabilização. Se perfil de solo indica capacidade de suporte baixa (SPT < 5, ou solo argiloso em talude) ou lençol freático raso, terraplenagem convencional pode induzir escorregamento pós-construção. Estabilização: (1) reduzir altura de talude (inclinação 1:2 ou mais suave), (2) inserir berma (plataforma horizontal intermediária), (3) drenar com berços de areia e tubos de drenagem subsuperficial, (4) reforçar com geogrelha ou micro-estacas se solo muito fraco. Terraplenagem em encosta instável pode incluir escavação de raiz (corte na cabeça do talude) para remover sobrecarga. Monitoramento de deslocamento com inclinômetro é obrigatório em talude crítico — qualquer movimento > 1 cm/ano dispara reparação. Custo de terraplenagem estabilizada pode ser 50–100% maior que convencional. Algumas rodovias em região montanhosa (BR-381 em MG, BR-116 em SC) têm histórico de deslizamentos em terraplenagem, exigindo manutenção contínua.",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "DNIT 2006",
+            "NBR 6122"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_ter_bar_007",
+          "dominio": "S10",
+          "titulo": "Terraplenagem de barragem: rejeito de minério vs. aterro de terra natural",
+          "context_tag": "terraplenagem_barragem_rejeito_aterro",
+          "disambiguador": "barragem rejeito TSF areia fina minério compactação",
+          "texto": "Terraplenagem em barragem de rejeito (TSF, tailings) é diferente de barragem de água porque material é fino (silte/argila de minério processado), não rocha/areia selecionada. Rejeito tem características especiais: (1) tamanho médio 10–50 micrometros (muito fino), (2) alta porosidade em estado solto, (3) baixa permeabilidade (drenagem lenta), (4) potencial de acidificação se contiver pirita. Terraplenagem de TSF não usa compactação convencional (rolo de pata-de-cabra) porque rejeito em estado solto ja apresenta boa estabilidade. Método construtivo: rejeito é depositado por tubulação (pipeline) diretamente na barragem, sedimenta por gravidade, água é coletada em clarificador. Fator de homogeneização não é conceito aplicável em TSF — o que importa é densidade de sedimentação e drenagem de água. Compactação em TSF pode ser feita por consolidação estática (carga própria de rejeito sobreposto) ou dinâmica (equipamentos compactadores). Terraplenagem de TSF para um depósito de ouro típico (100 M ton de rejeito) requer 3–5 anos de operação contínua. Custos são muito inferiores a barragem de água porque não há escavação (rejeito é subproduto de mineração).",
+          "tamanho_palavras": 230,
+          "normas_citadas": [
+            "Lei 12.334",
+            "COPAM"
+          ],
+          "tipo": "synthetic_disambiguator"
+        }
+      ]
+    },
+    {
+      "termo": "estrutura_fundacao",
+      "dominios_afetados": [
+        "S2",
+        "S10"
+      ],
+      "chunks_gerados": [
+        {
+          "id": "syn_est_oae_001",
+          "dominio": "S2",
+          "titulo": "Estrutura de ponte: superestrutura de concreto protendido em OAE",
+          "context_tag": "estrutura_oae_ponte",
+          "disambiguador": "superestrutura ponte tabuleiro viga protendida apoios pilares OAE",
+          "texto": "Em projeto de obra de arte especial (OAE) — ponte ferroviária ou rodoviária — a estrutura é subdividida em superestrutura (tabuleiro) e infraestrutura (pilares, fundações). A superestrutura consiste no tabuleiro (laje ou vigas que recebem cargas de veículos/trens) geralmente executado em concreto protendido (CP) com cabos de aço especial, conforme NBR 7187. Tabuleiro de ponte pode ter vão livre de 20 m a 150 m+ (mega-estrutura), com razão L/h (vão/altura) típica de 15:1 a 20:1. Vigas protendidas são pré-moldadas em canteiro ou pista, transportadas e lançadas em posição com guindaste até 800 toneladas. Lajes colaborantes (concreto armado) solidarizam os tabuleiros. Apoios (elastômeros ou pot bearings) transmitem cargas verticais e horizontais aos pilares. Armadura complementar (ductilidade) é dimensionada conforme o ELS (estado limite de serviço) para controlar aberturas de fissuras. Inspeção estrutural de ponte ocorre a cada 5–10 anos para detectar degradação de concreto, corrosão de armadura, ou deslocamento de apoios.",
+          "tamanho_palavras": 175,
+          "normas_citadas": [
+            "NBR 7187",
+            "NBR 6118"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_oae_002",
+          "dominio": "S2",
+          "titulo": "Fundação de ponte OAE: estacas e tubulões em solo/rocha",
+          "context_tag": "estrutura_oae_fundacao",
+          "disambiguador": "fundação estaca tubulão SPT sondagem capacidade carga OAE",
+          "texto": "A fundação de ponte (infraestrutura) transmite as cargas da superestrutura ao solo/rocha, profundamente. Escolha entre estaca (pré-moldada ou escavada) e tubulão (furo aberto com escudo) depende de: profundidade do solo competente, perfil de solo (sondagem SPT — NBR 8802), presença de água, orçamento. Estaca pré-moldada de concreto armado, tipicamente 0.4 × 0.4 m de seção, é cravada por bate-estacas e atinge profundidade de 20–40 m em solos coesos. Estaca escavada permite maior diâmetro (0.6–1.5 m) e melhor capacidade de carga em camadas profundas (rocha alterada ou sã). Tubulão é método semi-mecanizado: escavação por balde de escavadeira até camada firme (SPT > 20), base alargada (sapata) melhora distribuição de carga. Capacidade de carga é verificada por SPT na ponta (fórmula dinâmica Terzaghi com fatores de segurança 2.0–3.0 em projeto). Dimensionamento segue NBR 6122. Prova de carga estática (PLT) é frequente em projetos de grande responsabilidade, validando cálculos teóricos.",
+          "tamanho_palavras": 185,
+          "normas_citadas": [
+            "NBR 6122",
+            "NBR 8802",
+            "NBR 7187"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_oae_003",
+          "dominio": "S2",
+          "titulo": "Estrutura de viaduto urbano: pilares esbeltos e contraventamento",
+          "context_tag": "estrutura_oae_viaduto",
+          "disambiguador": "viaduto pilar esbeltez contraventamento estabilidade lateral OAE",
+          "texto": "Viaduto urbano (ponte sobre via inferior em área de maior densidade) diferencia-se por: altura elevada de pilares, seção esbelta (razão altura/diâmetro > 15), e restrições de espaço lateral. Estrutura típica inclui dois ou três pilares por vão, em concreto armado com fck 30–40 MPa. Esbeltez crítica exige análise de segunda ordem (P-delta) para garantir que deslocamento lateral não amplifica momento fletor. Contraventamento horizontal (travessas, conectores) entre topo de pilares melhora rigidez lateral. Dimensionamento segue NBR 6118 com combinações de carga incluindo vento transversal (NBR 6123) com velocidade básica 40–45 m/s em área urbana. Fundações de viaduto urbano frequentemente são tubulões ou estacas hélice contínua, dado espaço restrito (rua abaixo). Armadura de pilares é densa (taxa ≥ 2%) para resistir flexão bidirecional e garantir ductilidade em zona sísmica (se aplicável). Inspeção de viadutos urbanos é prioritária em órgãos municipais pela proximidade a pessoas.",
+          "tamanho_palavras": 170,
+          "normas_citadas": [
+            "NBR 6118",
+            "NBR 6123",
+            "NBR 6122"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_oae_004",
+          "dominio": "S2",
+          "titulo": "Estrutura de ponte ferroviária: cargas móveis e análise dinâmica",
+          "context_tag": "estrutura_oae_ponte_ferrovia",
+          "disambiguador": "ponte ferrovia carga móvel impacto dinâmico fator amplificação inércia",
+          "texto": "Ponte ferroviária difere de rodoviária por cargas concentradas e móveis muito maiores. Locomotiva moderna (tipo Siemens ES64) pesa 90–100 toneladas por eixo, aplicando carga localizada em vez de carga distribuída de caminhão (máximo 17 ton/eixo). Análise estrutural de ponte ferroviária inclui: (1) carregamento estático (peso permanente + carga de trem) e (2) efeito dinâmico (amplificação por velocidade e imperfeições de trilho). Fator de amplificação dinâmica é tipicamente 1.25–1.4 para trem em velocidade de cruzeiro. Tabuleiro ferroviário é mais rígido que rodoviário (deflexão máxima L/800 para ferrovia vs. L/600 para rodovia) para garantir conforto de passageiros e segurança de descarrilamento. Dimensionamento de vigas segue NBR 7187 com inclusão de carregamento ferroviário (norma ferroviária de cargas). Armadura é aumentada para resistir reversão de momento em apoios durante passagem de trem (efeito de frenagem). Vigas de ferro fundido (histórico) ou aço (moderno) são alternativas ao concreto protendido em alguns projetos.",
+          "tamanho_palavras": 185,
+          "normas_citadas": [
+            "NBR 7187",
+            "NR 18"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_bar_001",
+          "dominio": "S10",
+          "titulo": "Estrutura de barragem CFRD: corpo de aterro e face de concreto",
+          "context_tag": "estrutura_barragem_cfrd",
+          "disambiguador": "barragem CFRD corpo aterro face concreto vedação placa",
+          "texto": "Barragem de concreto com face de vedação (CFRD) tem estrutura radicalmente diferente de ponte: o 'corpo' (analogia errada a estrutura de ponte) é na verdade um aterro de pedregulho/cascalho compactado, NÃO concreto. A face de vedação é uma placa de concreto de 0.3–0.5 m de espessura, apoiada sobre o aterro, impermeabilizando o lado de montante. Estrutura de aterro CFRD consiste em: (1) transição (material fino, coesivo) junto à face, (2) envelope (material drenante, permeável), e (3) núcleo (fino, impermeável). Diferentemente de ponte (que é rígida), barragem CFRD tolera recalques diferenciais de até 1–2%, que a placa de concreto acomoda com articulações laterais e fundo elástico. Placa é dividida em painéis (típico 10 × 10 m) com juntas de espuma de poliuretano, permitindo movimento. Compactação de aterro é seca e densa para minimizar recalque pós-enchimento. Estabilidade de taludes (inclinação típica 1.4:1 a 1.5:1) é verificada com análise de estabilidade (método Bishop, Fellenius) contra deslizamento interno.",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334",
+            "CBDB"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_bar_002",
+          "dominio": "S10",
+          "titulo": "Estrutura de barragem: descarregadores de cheia e estruturas auxiliares",
+          "context_tag": "estrutura_barragem_auxilia",
+          "disambiguador": "barragem vertedouro descarregador cheia tomada água estrutura",
+          "texto": "Estrutura de barragem inclui não apenas o corpo de aterro/concreto, mas estruturas auxiliares críticas: (1) vertedouro (spillway) — estrutura de concreto em crista ou lateral, dissipa energia de queda de água em cheia; (2) tomada de água — câmara de captação com grades (trash racks) para retenção de galhos/sedimentos; (3) túneis de desvio — durante construção, desvia rio ao redor da barragem. Descarregador de cheia em barragem de aterro é tipicamente tipo vertedouro frontal ou lateral em concreto, com energia dissipada em bacia de dissipação ou stilling basin. Capacidade de vertimento deve ser ≥ cheia milenial (Q1000) conforme Lei 12.334, para segurança. Tomada de água dimensionada com grades duplexadas (redundância) para evitar colmatação. Estrutura de saída inclui tubo de adução e válvula esférica de isolamento. Sistema de drenagem do corpo (filtros, peças drenantes) é parte da estrutura, afetando estabilidade. Em barragem de aterro argiloso, drenagem interna controlada previne piping (erosão retrógrada). Estrutura de comporta (se houver) é de aço/concreto, acionada mecanicamente.",
+          "tamanho_palavras": 195,
+          "normas_citadas": [
+            "Lei 12.334",
+            "ICOLD"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_bar_003",
+          "dominio": "S10",
+          "titulo": "Estrutura de barragem de arco: forma e resistência de casca",
+          "context_tag": "estrutura_barragem_arco",
+          "disambiguador": "barragem arco concreto casca forma radial esforço compressão",
+          "texto": "Barragem de arco (tipo menos comum que CFRD ou gravidade, mas notável) tem estrutura fundamentalmente de concreto em forma de casca curva (raio de curvatura horizontal 200–800 m). Estrutura distribui carga de água principalmente por compressão radial (não flexão vertical como em barragem de gravidade). Concreto de barragem de arco trabalha em compressão, permitindo redução de seção (mais esbelta) e menor volume de concreto. Exemplos: Itaipu (arco-gravidade, 196 m altura), Funil (arco, 60 m). Forma requer geometria precisa: curvatura em planta (arco) e em elevação (abóbada) devem estar em equilíbrio. Análise estrutural usa método de elementos finitos (MEF) em 3D para capturar comportamento de casca. Tensões principais são compressivas (< fck do concreto), com zona de tração mínima (controlada por armadura leve de contração térmica). Estrutura de barragem de arco é mais sensível a assimetria de carregamento (sedimento acumulado de um lado) do que gravidade.",
+          "tamanho_palavras": 180,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_bar_004",
+          "dominio": "S10",
+          "titulo": "Estrutura de barragem: efeito de sismo e amplificação dinâmica",
+          "context_tag": "estrutura_barragem_dinamica",
+          "disambiguador": "barragem sismo aceleração pico terreno amplificação aterro modo",
+          "texto": "Estrutura de barragem em zona sísmica sofre amplificação dinâmica diferente de edifício. Aterro de barragem, sendo material granular solto, amplia aceleração do terreno por fator de 2–4 em frequências baixas (0.2–1 Hz), correspondendo ao período fundamental de oscilação do aterro. Aceleração máxima no topo da barragem pode atingir 0.5–1.0g em barragens altas (100+ m) mesmo em região de aceleração basal moderada (0.2g). Estrutura (face CFRD ou corpo arco) experimenta tensões dinâmicas adicionadas às estáticas. Análise de resposta sísmica de barragem inclui: (1) história de tempo de aceleração (acelerograma), (2) análise dinâmica não-linear com amortecimento de Rayleigh (5–7%), (3) verificação de deslocamentos permanentes após sismo. Compactação densa de aterro reduz potencial de liquefação em solos arenosos saturados. Barragens em zona de alta sismicidade (Chile, Japão, Califórnia) usam amortecedores sísmicos (dampers) nas estruturas auxiliares. Legislação brasileira (NBR 15421) define aceleração de projeto para barragens conforme zona sísmica.",
+          "tamanho_palavras": 190,
+          "normas_citadas": [
+            "Lei 12.334",
+            "NBR 15421"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_oae_005",
+          "dominio": "S2",
+          "titulo": "Fundação de OAE: ensaios de prova de carga estática em estaca",
+          "context_tag": "estrutura_oae_fundacao_prova",
+          "disambiguador": "estaca prova carga PLT curva carga-recalque capacidade",
+          "texto": "Prova de carga estática (PLT) em estaca é ensaio de validação de capacidade de carga em projeto de OAE. Estaca é carregada incrementalmente (tipicamente 5–10 estágios de 20–25% de carga estimada) sobre macaco de reação. Deslocamento vertical é medido a cada estágio com transdutor de deslocamento (precisão ±1 mm). Tempo de espera por estágio é 15–30 min, permitindo consolidação de solo. Resultado: curva de carga vs. recalque que permite extrapolação de capacidade última por métodos de Davisson ou Décourt. Estaca falha por cisalhamento (capacidade alcançada) se recalque aumenta sem incremento de carga, ou por ruptura dúctil se recalque continua crescendo. Capacidade de carga adotada no projeto é reduzida em fator de segurança 2.0 (carga de trabalho = carga última / 2.0). PLT é custosa (R$ 50–100k por estaca) mas crítica em projetos de responsabilidade maior (ponte sobre rio, viaduto de grande tráfego). Norma NBR 12131 especifica procedimento de PLT; resultado é documentado em relatório técnico.",
+          "tamanho_palavras": 190,
+          "normas_citadas": [
+            "NBR 6122",
+            "NBR 12131"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_bar_005",
+          "dominio": "S10",
+          "titulo": "Fundação de barragem: groutagem de cortina de vedação em rocha",
+          "context_tag": "estrutura_barragem_grout",
+          "disambiguador": "barragem grout injeção cortina vedação rocha estanqueidade",
+          "texto": "Fundação de barragem em rocha fraturada exige groutagem (injeção de calda de cimento sob pressão) para criar cortina de vedação e reduzir percolação. Cortina é série de furos verticais (ou inclinados 5–10°) espaçados 3–5 m, injetados com calda de cimento a pressão de 10–30 bar. Calda (água + cimento + aditivos) penetra fraturas até atingir permeabilidade reduzida (tipicamente k < 10^-5 cm/s). Absorção de calda é monitorada em cada furo (volume de calda injetado, pressão final); furo com absorção baixa indica fraturas seladas. Groutagem de cortina é executada antes de enchimento da barragem para garantir estanqueidade durante operação. Profundidade de cortina é determinada em projeto conforme geometria de rocha fraturada (sondagens com permeabilidade Lugeon). Cortina típica penetra 20–50 m de profundidade em barragem grande. Pós-enchimento, monitoramento de permeabilidade (vazão em galeria de pé) valida eficácia de groutagem. Se vazão de percolação superar esperado, injeção de reparação é executada (groutagem secundária).",
+          "tamanho_palavras": 190,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_oae_006",
+          "dominio": "S2",
+          "titulo": "Estrutura de ponte com expansão térmica: junta de dilatação em tabuleiro",
+          "context_tag": "estrutura_oae_junta_dilatacao",
+          "disambiguador": "junta dilatação expansão térmica ponte vão comprimento",
+          "texto": "Estrutura de ponte (tabuleiro) sofre expansão/contração térmica conforme temperatura ambiente varia (0–40°C em Brasil). Coeficiente de expansão térmica de concreto é ~12 × 10^-6 /°C: tabuleiro de 100 m pode expandir até 4.8 cm entre verão e inverno. Junta de dilatação (junta móvel) é inserida a cada 30–60 m de vão para acomodar expansão sem danificar estrutura. Junta consiste em: (1) aberta de ~3–5 cm, (2) vedada com elastômero (neoprene ou poliuretano) que permite movimento, (3) proteção lateral contra infiltração. Junta de dilatação é ponto crítico: falha (rigidez excessiva, vazamento) causa dano estrutural. Tabuleiro em vão longo (> 100 m) exige junta de dilatação maior; projeto de ponte calcula posição e tamanho de junta em análise térmica. Alguns projetos usam apoios móveis (pot bearings com teflon) em lugar de junta aberta, permitindo deslizamento do tabuleiro. Manutenção de junta de dilatação inclui limpeza de detritos (areia, folhas) que impedem movimento livre.",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "NBR 7187",
+            "NBR 6118"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_bar_006",
+          "dominio": "S10",
+          "titulo": "Estrutura de vertedouro de barragem: tipo de dissipador de energia",
+          "context_tag": "estrutura_barragem_vertedouro",
+          "disambiguador": "vertedouro dissipador bacia stilling jump queda",
+          "texto": "Estrutura de vertedouro (spillway) em barragem dissipa energia de queda de água para evitar erosão de talude de jusante. Tipos de vertedouro variam: (1) tipo creager (crista vertente), (2) tipo labyrinth (múltiplas cristas), (3) tipo morning glory (poço cilíndrico), (4) tipo sifão. Cada tipo tem dissipador de energia diferente. Dissipador mais comum é bacia de dissipação (stilling basin) onde água em queda é desacelerada por estrutura de blocos de concreto (baffle blocks) ou ressalto hidráulico (hydraulic jump). Ressalto ocorre quando água em alta velocidade (10–20 m/s pós-queda) encontra água profunda — muda de regime supercrítico para subcrítico, dissipando energia em turbulência. Profundidade de bacia é calculada para atingir ressalto estável (tipo jump I, II, III ou IV conforme número de Froude). Se dimensionamento de bacia é inadequado, erosão regressiva (cavitação) danifica concreto de jusante. Estrutura de vertedouro é crítica para segurança: capacidade insuficiente pode causar galgamento (water over spillway), risco de ruptura. Projeto segue método USBR (U.S. Bureau of Reclamation) ou ICOLD para design de dissipador.",
+          "tamanho_palavras": 220,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_oae_007",
+          "dominio": "S2",
+          "titulo": "Estrutura de ponte em zona de inundação: proteção contra erosão de fundação",
+          "context_tag": "estrutura_oae_inundacao",
+          "disambiguador": "ponte inundação erosão fundação escour proteção enrocamento",
+          "texto": "Estrutura de ponte sobre rio em zona de inundação sofre risco de erosão de fundação (scour) quando fluxo de água em cheia concentra-se junto a pilar. Erosão pode expor fundação (estaca, tubulão) deixando-a em balanço, reduzindo capacidade de carga. Proteção contra escour: (1) enrocamento (riprap de 0.5–1.5 ton, cobrindo 2–3 m ao redor de pilar), (2) camiseta de proteção (aço soldado ao redor de pilar), (3) fundação aprofundada além profundidade esperada de escour. Profundidade de escour em cheia é estimada por fórmulas de Laursen ou HEC-18 que consideram: velocidade de fluxo, diâmetro de pilar, granulometria de fundo. Exemplo: pilar de 2 m de diâmetro em rio com velocidade 3 m/s pode sofrer escour de até 3–5 m de profundidade em cheia de 100 anos. Estrutura deve ser projetada para este cenário. Monitoramento de escour é feito com sonda de profundidade em inspeção pós-cheia. Alguns projetos usam fundação flutuante (cota de fundo não fixa) que se adapta a escour, mas isto é raro. Escour é causa frequente de colapso de ponte em países com rios de alta energia (Bangladesh, Vietnã, Brasil durante El Niño).",
+          "tamanho_palavras": 225,
+          "normas_citadas": [
+            "NBR 7187",
+            "HEC-18"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_bar_007",
+          "dominio": "S10",
+          "titulo": "Estrutura de barragem de arco-gravidade: distribuição de carga em direção vertical e radial",
+          "context_tag": "estrutura_barragem_arco_grav",
+          "disambiguador": "barragem arco-gravidade forma distribuição esforço",
+          "texto": "Barragem de arco-gravidade combina características de arco (curvatura horizontal, transmissão radial) e gravidade (peso próprio contribui para estabilidade contra deslizamento). Estrutura transmite carga de água em duas direções: (1) radial (para as encostas via curvatura de arco), (2) vertical (para fundação via peso de concreto). Arco-gravidade permite redução de seção em relação a gravidade pura (menos concreto), mas mantem estabilidade contra deslizamento melhor que arco puro. Exemplos: Itaipu (220 m, arco-gravidade), Tucuruí (78 m, arco-gravidade). Dimensionamento de arco-gravidade utiliza método de fatias (distribuir carga em seções verticais) combinado com análise de arco em 3D (elementos finitos). Tensões principais são compressivas em maioria, com pequena zona de tração na face de jusante (controlada por armadura). Custo de construção de arco-gravidade é intermediário entre gravidade (mais barato, mais concreto) e arco (caro, mais esbeltez, sensível a sismo). Barragem de arco-gravidade é escolha frequente em vales com encostas altas e rocha resistente.",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_est_oae_008",
+          "dominio": "S2",
+          "titulo": "Estrutura de viaduto metálico: seções de aço e cálculo de plastificação",
+          "context_tag": "estrutura_oae_aco",
+          "disambiguador": "viaduto aço seção I-beam plastificação momento fletor",
+          "texto": "Estrutura de viaduto em aço estrutural (em lugar de concreto) permite maior vão e menor peso próprio. Material: aço ASTM A36 ou A572 (fyk ~250 MPa típico). Seção transversal é tipicamente duplo T (double I-beam, seção I soldada) com altura 1–2 m para vão de 30–100 m. Dimensionamento segue norma NBR 8800 com verificação de estados limites últimos (ELU): (1) flexão (momento fletor máximo), (2) cisalhamento (força cortante), (3) combinações de carga (peso próprio, carga viva, vento). Fator de plastificação é importante em aço: estrutura pode atingir momento de plastificação (Mp) onde seção inteira plastifica, com capacidade de carga adicional (ductilidade). Estrutura de aço é menos sensível a fadiga de material que concreto (que não tem ductilidade). Manutenção de viaduto metálico inclui: pintura de proteção contra corrosão (ciclo 20–30 anos), inspeção de soldagem (detectar trincas), verificação de parafusos (aperto). Custo de construção de viaduto metálico é 20–40% inferior a concreto, mas operação é mais custosa (manutenção de pintura). Viadutos históricos de ferro fundido (tipo treliça) sofrem deterioração acelerada em clima úmido/marinho.",
+          "tamanho_palavras": 225,
+          "normas_citadas": [
+            "NBR 8800",
+            "ASTM A36"
+          ],
+          "tipo": "synthetic_disambiguator"
+        }
+      ]
+    },
+    {
+      "termo": "drenagem",
+      "dominios_afetados": [
+        "S6",
+        "S10"
+      ],
+      "chunks_gerados": [
+        {
+          "id": "syn_dre_port_001",
+          "dominio": "S6",
+          "titulo": "Drenagem de porto: escoamento de precipitação em pátio de carga",
+          "context_tag": "drenagem_porto_superficial",
+          "disambiguador": "porto pátio drenagem superficial precipitação canaleta declividade",
+          "texto": "Em porto de carga geral (contêiner, granel, geral), drenagem refere-se ao escoamento de água pluvial acumulada no pátio de operação. Chuvas tropicais (100–200 mm em evento de 24h) criam poças que danificam mercadoria e imobilizam equipamentos de movimentação (transtêineres, reach stackers). Drenagem superficial em porto é obtida por: (1) declividade transversal do pátio de 0.5–1.5% em direção a canaletas laterais (canal de concreto 0.3 × 0.3 m); (2) canaletas longitudinais ao longo de caminhos de circulação; (3) sumidouros (caixas coletoras) a cada 50–100 m que concentram fluxo; (4) bacia de detenção para retenção e sedimentação antes da descarga em corpo de água. Drenagem de porto deve ser dimensionada para chuva de projeto de 10–25 anos (TR 10–25 a) conforme ANTAQ, com tempo de concentração típico 5–20 min (pátio pequeno). Tubulação de drenagem (PVC ou concreto) é dimensionada pela fórmula de Manning (V = 1/n × R^2/3 × I^1/2) para evitar acúmulo. Qualidade de água escoada é monitorada para sedimentos (TSS < 50 mg/l antes de descarga em baía), exigindo caixa de sedimentação ou filtro de areia.",
+          "tamanho_palavras": 200,
+          "normas_citadas": [
+            "ANTAQ",
+            "PIANC"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_port_002",
+          "dominio": "S6",
+          "titulo": "Drenagem de terminal portuário: controle de infiltração e contaminação",
+          "context_tag": "drenagem_porto_infiltracao",
+          "disambiguador": "porto infiltração solo contaminação óleo impermeabilização geomembrana",
+          "texto": "Drenagem em terminal portuário também contempla controle de infiltração de poluentes. Pátios com manipulação de óleo combustível, fertilizantes ou químicos perigosos exigem impermeabilização com geomembrana (HDPE 2 mm) sob o pátio, coleta de efluente em canaleta subperimetral, e bombeamento para tratamento (separador de óleo ou bacia de neutralização). Drenagem de infiltração é bombeada para separador de óleo, reduzindo teor de HCP (hidrocarbonetos) de 500+ mg/l para < 50 mg/l antes de descarga em baía. Sistema de drenagem impermeabilizado previne contaminação de aquífero subterrâneo (crítico em alguns portos que usam água subterrânea). Monitoramento de poços de observação (piezômetros) a jusante do pátio verifica não-contaminação de água subterrânea. Legislação IBAMA (Portaria 19/2019) exige avaliação de risco ambiental e plano de contingência para portos com movimentação de produtos perigosos. Drenagem de porto é assim não-linear e multifuncional: escoa chuva, retém poluentes, protege recursos hídricos.",
+          "tamanho_palavras": 175,
+          "normas_citadas": [
+            "ANTAQ",
+            "IBAMA 19/2019"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_port_003",
+          "dominio": "S6",
+          "titulo": "Drenagem em cais de porto: proteção de estrutura de concreto contra sulfato",
+          "context_tag": "drenagem_porto_cais",
+          "disambiguador": "cais concreto sulfato drenagem ventilação marinha corrosão",
+          "texto": "Drenagem em estrutura de cais (pier, jetty) em porto é diferenciada por exposição marinha (spray de sal, ciclos seco-úmido). Concreto de cais sofre ataque por sulfato marinho, exigindo cimento resistente (CP V ARI-RS ou CP III) e fck elevado (40–50 MPa). Drenagem de água de percolação do cais para zona de concreto é reduzida por selante superficial ou revestimento epóxi impermeável (5–10 mm). Juntas de dilatação (espuma de poliuretano ou borracha) a cada 10–20 m permitem movimento e são drenadas com tubo de PVC até face inferior do cais. Drenagem por ventilação (furos de 20 mm de diâmetro a cada 0.5 m² de face) reduz umidade interna e previne eflorescência (cristalização de sal). Armadura de cais é protegida por cobrimento aumentado (50 mm) e pintura de epoxi-poliuretano. Inspeção por ultra-som (medição de espessura) detecta perda de seção do cais por corrosão; limite de alerta é redução de 10% da espessura original.",
+          "tamanho_palavras": 180,
+          "normas_citadas": [
+            "NBR 6118",
+            "ANTAQ"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_port_004",
+          "dominio": "S6",
+          "titulo": "Drenagem de canal de acesso a porto: desassoreamento e sedimentação",
+          "context_tag": "drenagem_porto_canal",
+          "disambiguador": "canal drenagem assoreamento sedimento dragagem profundidade calado",
+          "texto": "Drenagem de canal de acesso a porto refere-se ao fluxo de água e sedimento que entra pelo canal. Rio ou estuário que alimenta porto carrega carga de sedimento (100–1000 ton/dia conforme vazão) que se deposita no canal, reduzindo profundidade útil (calado disponível para navio). Projeto de porto inclui sistema de drenagem (manutenção) com dragagem periódica para manter cota de fundo (típico –12 m para porta-contêiner grande). Drenagem de sedimento é estimada por modelo de transporte de sedimento (HEC-RAS, ADCP — perfilador de corrente com doppler) que simula deposição em canal. Estruturas de contenção (molhes, quebra-mares) modificam padrão de drenagem, concentrando fluxo e aumentando deposição local. Em portos de estuário (como Rio de Janeiro), drenagem de sedimento é máxima durante chuva (vazão aumenta 10–20×), exigindo dragagem de manutenção de 1–2 milhões de m³/ano. Custo de dragagem (R$ 5–15/m³ conforme profundidade e tipo de sedimento) é operacional crítico. Alternativa é construir bacias de sedimentação (settling basins) a montante do porto para reter sedimento antes de ingressar no canal.",
+          "tamanho_palavras": 200,
+          "normas_citadas": [
+            "ANTAQ"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_bar_001",
+          "dominio": "S10",
+          "titulo": "Drenagem de barragem: filtros internos e dissipação de energia hidráulica",
+          "context_tag": "drenagem_barragem_interna",
+          "disambiguador": "barragem drenagem interna filtro piping gradiente hidráulico",
+          "texto": "Drenagem em barragem de aterro refere-se ao fluxo de água através de aterro — fenômeno crítico para estabilidade. Diferentemente de drenagem de porto (controle de precipitação), drenagem de barragem é percolação através de solo/rocha saturado. Filtro interno (zona drenante de material arenoso-cascalhoso) reduz pressão neutra (poropressão) no aterro fino e dissipa energia de gradiente hidráulico. Sem filtro, gradiente hidráulico (Δh/L — queda de altura / comprimento) pode exceder valor crítico de 0.7–1.0, causando piping (erosão retrógrada do material fino). Filtro é dimensionado com critério de Terzaghi-Sherard: tamanho máximo de abertura < 4× diâmetro médio de solo fino, evitando retenção de finos e colmatação. Piezômetros são instalados em filtro para monitorar redução de poropressão durante enchimento. Efluente coletado em galeria de drenagem (pé de barragem) é medido (vazão) para detectar incremento inesperado que indicaria caminho preferencial (piping incipiente). Alguns projetos usam drenagem profunda com furos de dreno inclinados (drenos-poço) no pé de barragem para interceptar fluxo e baixar nível freático.",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334",
+            "CBDB"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_bar_002",
+          "dominio": "S10",
+          "titulo": "Drenagem de barragem: sistema de peças drenantes em CFRD",
+          "context_tag": "drenagem_barragem_cfrd_pe",
+          "disambiguador": "CFRD peça drenante transição filtro permeabilidade hidráulica",
+          "texto": "Em barragem CFRD, drenagem é integrada em sistema de peças drenantes (drainage layer): material granular selecionado (areia média a cascalho fino) com permeabilidade controlada. Zona de transição (junto à face de concreto) tem granulometria selecionada para: (1) reter finos do aterro (critério de retenção de Terzaghi), (2) permitir fluxo de água (permeabilidade k > 10^-3 cm/s). Peça drenante é compactada a seco (fator de homogeneização 0.97+) em camadas de 0.3–0.5 m com rolo liso pesado. Permeabilidade é verificada em laboratório por ensaio de permeâmetro de carga constante (amostra de aterro compactado em tubo). Fluxo de água coletado em galeria de drenagem (pé da face) é descarregado por tubulação para jusante. Vazão de drenagem reduz após enchimento inicial (primeiro ano) conforme matriz de aterro satura e areia de transição colmata com finos migrados. Colmatação aceitável desde que não ultrapasse pressão de poropressão prevista em projeto. Inspeção de drenagem CFRD inclui observação de vazão em exutório e cor de água (turvidez indica migração de finos excessiva).",
+          "tamanho_palavras": 195,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_bar_003",
+          "dominio": "S10",
+          "titulo": "Drenagem profunda em barragem: poços de descompressão e piezômetros",
+          "context_tag": "drenagem_barragem_profunda",
+          "disambiguador": "barragem poço descompressão piezômetro nível freático redução carga",
+          "texto": "Drenagem profunda em barragem é aplicada quando percolação inesperada eleva poropressão no pé de barragem, comprometendo estabilidade de talude. Técnica: furos de descompressão (drenos) inclinados 30–45° são feitos a partir de galerias ou pé de barragem, penetrando aterro a profundidade de 20–50 m. Furos têm diâmetro 100–200 mm e são revestidos com perfurado (geotêxtil filtrante) envolvido em tubo de PVC rígido. Água flui dos furos por gravidade em tubulação para exutório. Efeito: redução de carga hidráulica (poropressão) no aterro e aumento de fator de segurança contra deslizamento. Piezômetros (manômetros de pressão água) instalados junto aos drenos medem poropressão antes e depois de drenagem. Redução típica é 10–30 kPa, permitindo aumento de fator de segurança em ~0.1–0.2. Inspeção anual de drenos verifica vazão (redução pode indicar colmatação) e pressão. Em caso de colmatação (vazão quase nula), operador pode fazer limpeza com ar comprimido ou jato de água (backflushing). Drenagem profunda é medida defensiva, não preventiva — aplicada após detecção de instabilidade incipiente.",
+          "tamanho_palavras": 220,
+          "normas_citadas": [
+            "Lei 12.334",
+            "CBDB"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_bar_004",
+          "dominio": "S10",
+          "titulo": "Drenagem de barragem: monitoramento de vazão e detecção de piping",
+          "context_tag": "drenagem_barragem_monitoramento",
+          "disambiguador": "barragem vazão monitoramento piping incremento anomalia drenagem",
+          "texto": "Monitoramento de drenagem (vazão) é atividade contínua de operação de barragem. Exutório de drenagem (galeria de pé) coleta água percorida através de aterro/fundação e a descarrega em corpo de água. Vazão é medida mensalmente (ou diariamente em barragens críticas) com hidrômetro ou vertedor calibrado. Vazão esperada é < 1–5 l/s para barragem grande (100+ m altura, 1 km de crista), estável após operação inicial de 1–2 anos. Incremento de vazão > 50% em relação a mês anterior é anomalia que dispara investigação. Aumento pode indicar: (1) piping (erosão interna, sintoma grave), (2) abertura de junta de fundação, (3) colmatação reduzida em filtro (paradoxalmente, redução de colmatação aumenta vazão). Aumento de vazão associado a aumento de turbidez (> 10 NTU — unidade nefelométrica) é indicador de piping. Procedimento de emergência: reduzir nível do reservatório em 1–2 m para aliviar pressão, inspecionar visualmente face externa, e potencialmente executar drenagem profunda de emergência. Histórico de vazão é mantido em base de dados georreferenciada (SIG) vinculada a barragem no SIGBM (Sistema de Informações de Segurança de Barragem — ANA).",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "Lei 12.334",
+            "CBDB",
+            "SIGBM"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_port_005",
+          "dominio": "S6",
+          "titulo": "Drenagem de porto: sistema de tratamento de água antes de descarga em baía",
+          "context_tag": "drenagem_porto_tratamento",
+          "disambiguador": "porto tratamento água descarga sedimento caixa separador",
+          "texto": "Drenagem de porto moderno inclui sistema de tratamento de água escoada antes de descarga em corpo hídrico. Água de drenagem de pátio portuário contém sedimento suspenso (areia, silte), óleo (vazamento de equipamento, derramamento acidental), e matéria orgânica. Caixa de sedimentação ou bacia de detenção (settling basin) com volume de 500–5000 m³ (conforme tamanho de pátio) retém partículas > 0.1 mm por gravidade. Tempo de retenção é dimensionado: 2–4 horas para chuva de 25 mm. Separador de óleo (plate pack ou corrugated coalescer) reduz concentração de HCP (hidrocarbonetos) de entrada 50–500 mg/l para saída < 50 mg/l, permitindo descarga em baía. Filtro de areia (areia + carvão ativado) remove cor e turbidez residual. Sistema de drenagem de porto em terminalística moderna é redundante (dois separadores em série) para garantir conformidade com CONAMA 357 (qualidade de água doce/salobra). Monitoramento de qualidade é semanal (amostra de efluente antes e após tratamento). Lodo acumulado em sedimentação é removido anualmente e destinado a aterro sanitário ou reciclagem (se contaminação for mínima).",
+          "tamanho_palavras": 205,
+          "normas_citadas": [
+            "CONAMA 357",
+            "IBAMA"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_bar_005",
+          "dominio": "S10",
+          "titulo": "Drenagem de barragem: análise de fluxo 2D/3D com elementos finitos",
+          "context_tag": "drenagem_barragem_analise",
+          "disambiguador": "barragem fluxo elementos finitos gradiente pressão neutra",
+          "texto": "Análise de drenagem (fluxo de água) em barragem de aterro é feita com métodos numéricos: modelagem em elementos finitos (EF) 2D ou 3D com software especializado (Seep/W, ABAQUS). Modelo numérico discretiza domínio de aterro em elementos triangulares/tetraédricos com propriedade de permeabilidade (k) definida por zona (transição, envelope, núcleo). Condições de contorno: (1) face de montante = linha equipotencial de altura de água; (2) face de jusante = pressão nula ou altura de lençol freático; (3) fundação = lei de percolação basal. Resultado: campo de pressão (pressão neutra u) em cada ponto, e linha freática (superfície de poropressão nula). Análise permite verificação de: (1) gradiente máximo (não > gradiente crítico de piping, ~0.8–1.0), (2) vazão total de percolação, (3) pressão neutra em pé de talude (reduz fator de segurança se alta). Análise transiente (variável no tempo) é executada durante enchimento para prever evolução de poropressão (comparar com piezômetros). Se análise prediz vazão > observado, investigam-se possíveis caminhos preferenciais (junta de fundação, alteração de solo). Modelo é calibrado contra dados de instrumentação (piezômetros, placas de recalque).",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_port_006",
+          "dominio": "S6",
+          "titulo": "Drenagem de porto: impacto de dragagem em qualidade de água local",
+          "context_tag": "drenagem_porto_dragagem",
+          "disambiguador": "porto dragagem sedimento ressuspensão qualidade turbidez",
+          "texto": "Drenagem de porto interage com dragagem (manutenção) de forma indireta. Dragagem de canal de acesso (para aprofundamento de calado) ressuspende sedimento depositado, aumentando turbidez de água local (TSS pode chegar 1000–5000 mg/l vs. 50 mg/l basal). Esta ressuspensão afeta sistema de drenagem: água de drenagem do pátio que desemboca em canal pode ser contaminada por sedimento ressuspenso de dragagem. Caixa de sedimentação de drenagem pode colmatar mais rapidamente durante período de dragagem. Projeto de porto inclui cronograma coordenado de dragagem e manutenção de drenagem: minimizar sobreposição para reduzir risco de contaminação de pátio por sedimento dragado. Alguns portos implementam cortina de sedimento (silt curtain) durante dragagem, confinando ressuspensão a zona localizada. Descarga de sedimento dragado é feita em bacia de decantação exterior (offshore) para permitir sedimentação antes de retorno de água clara. Legislation ANTAQ exige monitoramento de qualidade de água durante dragagem (TSS, nutrientes, metais pesados) para certificar não-degradação ambiental.",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "ANTAQ"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_bar_006",
+          "dominio": "S10",
+          "titulo": "Drenagem de barragem de rejeito: diferença com barragem de água",
+          "context_tag": "drenagem_barragem_rejeito",
+          "disambiguador": "barragem rejeito TSF drenagem fluxo acidez minério",
+          "texto": "Drenagem em barragem de rejeito (TSF — Tailings Storage Facility, operação de mineração) é fundamentalmente diferente de barragem de água. Rejeito é material fino (lama) resultante de processamento de minério. TSF acumula rejeito em uma estrutura de barragem que contém suspensão de partículas finas em água. Drenagem é crítica por múltiplas razões: (1) liberar água (reduzir umidade de rejeito melhora estabilidade), (2) mitigar risco de acidificação (acid mine drainage, AMD — rejeito contém sulfeto que oxida em ácido), (3) cumprir legislação de qualidade de água (COPAM em MG, CETESB em SP). Sistema de drenagem de TSF inclui: (1) beachline — zona de praia onde rejeito sedimenta e água livre escoa; (2) drenos internos — tubos perforados que coletam água dentro de TSF; (3) fundação drenante — cascalho permeável sob TSF coleta percolação. Descarga de água de TSF deve passar por polimento (filtro, caixa de neutralização de pH) antes de liberação. Algumas TSF usam sistema de recirculação — água drenada é retornada ao processo de mineração (economia de água). Monitoramento de drenagem inclui medição de pH, sulfato, e metais pesados (cobre, ferro, zinco).",
+          "tamanho_palavras": 225,
+          "normas_citadas": [
+            "Lei 12.334",
+            "COPAM"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_port_007",
+          "dominio": "S6",
+          "titulo": "Drenagem de porto: proteção de berço contra colisão de navio e erosão",
+          "context_tag": "drenagem_porto_berco",
+          "disambiguador": "berço cais proteção colisão erosão ondulação escora",
+          "texto": "Drenagem de água em berço de porto interage com estrutura de contenção (cais de atracação). Quando navio atraca, cria onda de compressão (squeeze, aumento de nível de água local) e subsequente drawdown (queda de nível). Este efeito dinâmico pode causar erosão de fundo (scour) junto à estrutura se drenagem for inadequada. Proteção: (1) fundo de berço é revestido em rocha (riprap, blocos de até 10 ton) que absorve energia de drawdown; (2) canaleta de drenagem periférica reduz acúmulo de água; (3) amortecedores de berço (pneumáticos, espuma) reduzem impacto de navio. Drenagem de berço é crítica em portos de maré (Porto de Santos, Porto do Rio) onde coluna de água varia 2–3 m em 6 horas. Variação rápida de nível impõe gradiente hidráulico elevado, acelerando fluxo de água e risco de piping. Proteção de berço contra erosão custa ~10–30% do custo total de infraestrutura portuária. Berços desprotegidos sofrem erosão progressiva, exigindo dragagem complementar anualmente.",
+          "tamanho_palavras": 220,
+          "normas_citadas": [
+            "ANTAQ",
+            "PIANC"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_bar_007",
+          "dominio": "S10",
+          "titulo": "Drenagem de barragem de gravidade: análise de subpressão em fundação",
+          "context_tag": "drenagem_barragem_gravidade",
+          "disambiguador": "barragem gravidade subpressão poropressão fundação fator segurança",
+          "texto": "Drenagem (ou falta dela) em barragem de gravidade (concreto maciço) afeta subpressão na fundação, que reduz fator de segurança contra deslizamento. Barragem de gravidade transmite carga vertical ao longo de seção (pesar concreto + empuxo de água), e estabilidade depende de atrito na fundação. Se fundação está saturada (poropressão u elevada), força normal efetiva n' = N – u diminui, reduzindo capacidade de atrito (τ = c' + n' × tan φ'). Sem drenagem, poropressão na fundação pode atingir 90% de carga de água, reduzindo fator de segurança em ~50%. Sistema de drenagem em barragem de gravidade inclui: (1) cortina de vedação (groutagem) que reduz percolação de montante, (2) galeria de drenagem em pé de barragem que reduz poropressão, (3) drenos em profundidade (furos inclinados) que capturam fluxo. Drenagem é dimensionada em análise de fluxo para atingir poropressão máxima de 30–50% de carga de água (fator de poropressão ru = u/ρgh típico 0.3–0.5). Eficácia de drenagem é verificada por piezômetros. Se vazão de drenagem aumenta inesperadamente, investigam-se possíveis caminhos preferenciais de fluxo (junta de fundação aberta). Barragem de gravidade é muito menos tolerante a drenagem inadequada que barragem de aterro (que tolera 1–2% de recalque diferencial).",
+          "tamanho_palavras": 245,
+          "normas_citadas": [
+            "ICOLD",
+            "Lei 12.334"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_dre_port_008",
+          "dominio": "S6",
+          "titulo": "Drenagem de porto: escoamento de água de chuva em cobertura de navio em berço",
+          "context_tag": "drenagem_porto_cobertura",
+          "disambiguador": "porto navio cobertura chuva escoamento contaminação cargo",
+          "texto": "Drenagem em berço de porto inclui gestão de água de chuva acumulada em cobertura temporária de navio (usado para proteção de carga). Chuva que cai em cobertura escoa para laterais, criando drenagem concentrada que pode danificar cargo ou infraestrutura portuária. Se cargo é sensível (fertilizante, minério fino), água de chuva pode diluir ou contaminar. Drenagem de cobertura é dirigida para canaleta perimetral de berço que a direciona para descarga controlada. Algumas operações usam bombas de submersão (sumps) para coletar água acumulada em cobertura e bombeá-la para caixa de sedimentação antes de descarga. Quantidade de água acumulada em cobertura pode atingir 100+ m³ em chuva de 50 mm em navio grande (200 m × 40 m). Volume de bombeamento exige bombas de 50–100 L/s, operação contínua durante chuva. Drenagem de cobertura de navio é aspecto pouco documentado de projeto portuário, mas crítico para operação. Alguns portos estabelecem procedimento: não descarregar cargo enquanto cobertura estiver úmida ou chovendo, evitando contamination por água.",
+          "tamanho_palavras": 215,
+          "normas_citadas": [
+            "ANTAQ"
+          ],
+          "tipo": "synthetic_disambiguator"
+        }
+      ]
+    },
+    {
+      "termo": "via_permanente",
+      "dominios_afetados": [
+        "S3",
+        "S4"
+      ],
+      "chunks_gerados": [
+        {
+          "id": "syn_vap_fer_001",
+          "dominio": "S3",
+          "titulo": "Via permanente ferroviária: trilhos, dormentes e lastro compactado",
+          "context_tag": "via_permanente_ferrovia_basica",
+          "disambiguador": "ferrovia trilho dormente lastro bitola bitola métrica 1000mm",
+          "texto": "Via permanente ferroviária é estrutura que suporta rodas de trem, composta por três elementos principais: (1) trilhos (perfil de aço UIC 54 ou UIC 60, massa 54–60 kg/m), (2) dormentes (dormente de madeira 2.5 m × 25 cm × 15 cm, ou concreto pré-moldado com espessura 25 cm, distanciamento 0.6 m), (3) lastro (brita calibrada 2–3 cm, altura 0.3 m). Bitola em Brasil é 1000 mm (ferrovia métrica histórica) ou 1435 mm (bitola internacional), define-se distância entre faces internas de trilho. Via permanente deve ser alinhada e nivelada conforme normas de ferrovia (máximo desvio vertical 5 mm/10 m). Compactação de lastro inicial é feita com socaria (equipamento que vibra e compacta brita sob trilho) até atingir densidade seca > 1650 kg/m³. Trilhos são fixados em dormente via tirefonds (parafusos especiais de aço) com chave hexagonal de torque controlado (tipicamente 80–120 Nm para dormente concreto). Via permanente ferroviária requer inspeção visual mensal e medição de superelevação (inclinação transversal em curva, máximo 1:20 para ferrovia).",
+          "tamanho_palavras": 190,
+          "normas_citadas": [
+            "ABNT",
+            "UIC 54/60"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_fer_002",
+          "dominio": "S3",
+          "titulo": "Via permanente de ferrovia de carga pesada: reforço estrutural e AMV",
+          "context_tag": "via_permanente_ferrovia_carga",
+          "disambiguador": "ferrovia carga pesada AMV aparelho mancal via trilho lastro",
+          "texto": "Ferrovia de carga pesada (minério, minério de ferro com tonelagem bruta > 30 ton/eixo) exige via permanente reforçada. Trilho é UIC 60 ou UIC 70 (mais pesado), e dormente de concreto tem pré-compressão inserida (400–800 N/mm²) para resistir vibração repetida. Lastro é reforçado com sub-lastro (brita de 3–5 cm, altura 0.3 m) abaixo do lastro primário (2–3 cm), aumentando rigidez estrutural. AMV (Aparelho Mancal Via) refere-se a conjunto de fixadores que prendem trilho em dormente: parafusos, porcas, arruelas especiais com mola de aço inox. Inspeção de AMV em ferrovia de carga é semanal, verificando aperto (torque) de tirefonds e aparência de trincas em dormente concreto. Desvio vertical máximo permitido em via de carga pesada é 3 mm/10 m (mais rigoroso que ferrovia de passageiros). Manutenção de via permanente em ferrovia de carga inclui socaria periódica (a cada 5–10 anos), limpeza de lastro (remoção de pó de pedra que reduz compactação) e substituição de dormentes deteriorados. Custos de manutenção de via permanente são ~15–20% de custo operacional de ferrovia de carga.",
+          "tamanho_palavras": 190,
+          "normas_citadas": [
+            "ABNT",
+            "UIC 60/70"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_fer_003",
+          "dominio": "S3",
+          "titulo": "Via permanente com trilho contínuo soldado: vantagens e cuidados",
+          "context_tag": "via_permanente_ferrovia_solda",
+          "disambiguador": "trilho soldado TCS continuidade elasticidade junta térmico",
+          "texto": "Via permanente de ferrovia moderna utiliza trilho contínuo soldado (TCS) em lugar de trilho aparafusado segmentado. Trilho contínuo elimina juntas mecânicas a cada 12 m, reduzindo ruído (impacto de roda na junta) e aumentando conforto. Trilhos UIC 54/60 são soldados em comprimentos de 100–300 m usando solda por topo de resistência (flash butt welding), produzindo junta praticamente invisível. Via permanente TCS exige maior rigidez de lastro (maior compactação) para resistir esforços longitudinais (expansão térmica), evitando flambagem de trilho em dias quentes (risco de descarrilamento). Coeficiente de expansão térmica de aço é ~11 × 10^-6 /°C: trilho de 300 m pode expandir até 3 cm entre verão (40°C) e inverno (–10°C). Tensão de pós-compressão é inserida no trilho (pré-compressão de 500–800 N/mm²) para acomodar variações térmicas sem flambagem. Via permanente TCS requer inspeção por ultrassom de soldas (a cada 5 anos) para detectar trincas incipientes. Qualidade de soldagem é crítica: junta mal feita pode fraturar sob tráfego dinâmico.",
+          "tamanho_palavras": 190,
+          "normas_citadas": [
+            "ABNT",
+            "UIC 54/60"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_fer_004",
+          "dominio": "S3",
+          "titulo": "Via permanente ferroviária: dessulfurização e tratamento de madeira de dormente",
+          "context_tag": "via_permanente_ferrovia_dormente",
+          "disambiguador": "dormente madeira preservação creosoto ferrovia durabilidade",
+          "texto": "Via permanente com dormente de madeira (histórica em Brasil) requer tratamento de preservação conforme norma ABNT NBR 8457. Madeira (típico eucalipto) é saturada em dessulfurização sob pressão (procedimento de células cheias), absorvendo creosoto (óleo mineral) ou mistura de creosoto + pentaclorofenol (PCP). Creosoto penetra até profundidade de 10–15 mm em madeira, protegendo contra decomposição por fungos e umidade por até 40–50 anos. Dormente tratado tem tonalidade escura e odor característico. Inspeção de via permanente com dormente madeira inclui: (1) observação de rachadura (seção transversal), (2) teste de apodrecimento (golpe com martelo — madeira apodrecida soa oca), (3) verificação de tirefonds (parafusos podem soltar conforme madeira se retrai). Substituição de dormente madeira é necessária quando mais de 10% da seção está comprometida. Via permanente com dormente madeira é mais econômica inicial (dormente custa ~R$ 150/un) mas exige manutenção frequente; dormente concreto (R$ 300/un) tem vida útil 60+ anos com manutenção mínima. Legislação ambiental atual restringe uso de creosoto em Brasil; dormente moderno usa óleo vegetal ou tratamento por autoclave de CCA (cobre-cromo-arsênico).",
+          "tamanho_palavras": 200,
+          "normas_citadas": [
+            "ABNT NBR 8457"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_met_001",
+          "dominio": "S4",
+          "titulo": "Via permanente de metrô: fixação em estrutura de concreto e trilho embutido",
+          "context_tag": "via_permanente_metro_estrutura",
+          "disambiguador": "metrô via trilho embutido concreto fixação mola elastômero",
+          "texto": "Via permanente de metrô em estação (ou trecho em túnel) é fundamentalmente diferente de ferrovia ao ar livre. Trilho é fixado em estrutura de concreto da laje de piso (ou parede lateral de tubo) via sistema de fixação elástica com molas de aço e elastômero (borracha) para isolação de vibração. Isolação vibratória reduz transmissão de ruído a estruturas vizinhas — essencial em metrô subterrâneo em zona urbana densa. Sistema típico: trilho UIC 54 (54 kg/m) é aparafusado em patilha de concreto pré-moldada (clip rail system) que já vem integrada na laje de concreto. Patilha inclui elementos elásticos (molas e elastômero de 5–10 mm) que absorvem vibração de frequências 10–100 Hz. Rigidez vertical da via é controlada: valor típico é 100–200 kN/mm para via de metrô (muito mais rígida que ferrovia convencional, que é 5–20 kN/mm). Via permanente de metrô tem superelevação (inclinação) em curvas de até 1:30 (mais acentuada que ferrovia) para permitir maior velocidade com conforto. Trilho é continuado soldado (TCS) em comprimentos de 500+ m para eliminar juntas que criariam ruído em ambiente fechado.",
+          "tamanho_palavras": 195,
+          "normas_citadas": [
+            "NBR 13594"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_met_002",
+          "dominio": "S4",
+          "titulo": "Via permanente de metrô: drenagem e expansão térmica em túnel",
+          "context_tag": "via_permanente_metro_drenagem",
+          "disambiguador": "metrô drenagem túnel água umidade trilho junta dilatação",
+          "texto": "Via permanente em metrô subterrâneo está exposta a infiltração de água (especialmente em cidades com lençol freático raso ou em túneis próximos a rio). Sistema de drenagem junto a via permanente coleta água infiltrada e a direciona para bombeamento/tratamento. Drenagem é crítica porque água acumulada causa: (1) corrosão de trilho e fixadores, (2) perda de isolação elétrica (sistema terceirizante ou quarto trilho), (3) escorregamento entre roda e trilho. Em metrô de São Paulo (linha Ouro, subaquífera profunda) e Rio de Janeiro (linha 2, próxima ao rio), drenagem é componente major de operação. Via permanente em túnel pode sofrer dilatação térmica, embora moderada (temperatura em túnel varia 15–25°C vs. 0–40°C exterior). Junta de dilatação (junta aberta de ~20 mm) é instalada a cada 100–200 m de via em metrô para acomodar expansão sem dano a estrutura. Junta de dilatação é vedada com elastômero para evitar infiltração localizada. Inspeção mensal de drenagem em metrô inclui limpeza de canaletas laterais e verificação de bombas de esgotamento (funcionamento correto).",
+          "tamanho_palavras": 185,
+          "normas_citadas": [
+            "NBR 13594"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_met_003",
+          "dominio": "S4",
+          "titulo": "Via permanente de metrô: superestrutura de concreto armado e laje de trilho",
+          "context_tag": "via_permanente_metro_laje",
+          "disambiguador": "metrô laje concreto armado fck 40 MPa espessura diafragma",
+          "texto": "Via permanente de metrô em estação ou túnel é suportada por laje de concreto armado com espessura de 0.5–1.0 m (muito mais espessa que laje de edifício) para distribuir cargas dinâmicas de trens. Laje é dimensionada para carga móvel de trem (tipo VLT ou metrô: 100–200 kN concentrado em 2–4 rodas) em duas direções de movimento (longitudinal e transversal). Concreto é fck ≥ 40 MPa para resistir ciclos de carga dinâmica. Armadura de flexão é densa (taxa ≥ 1.5%) com espaçamento de vergalhões ≤ 20 cm para controlar fissuração. Laje de via permanente em metrô frequentemente integra canaletas de drenagem (incorporadas durante moldagem) e passagem de cabos de tração (alimentação de terceiro trilho ou catenária). Em estação subterrânea, laje de via está assentada em estrutura de diafragmas de concreto (paredes de contenção de solo) ou pilares, transmitindo carga para fundação em profundidade. Análise estrutural de laje de metrô inclui combinações de carga: (1) peso permanente, (2) carga móvel de trem (posição crítica), (3) pressão de água (se subaquífera), (4) empuxo de terra (se junto a diafragma).",
+          "tamanho_palavras": 200,
+          "normas_citadas": [
+            "NBR 6118",
+            "NBR 13594"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_met_004",
+          "dominio": "S4",
+          "titulo": "Via permanente de metrô linha 4 Rio: adaptação a zona sísmica e marinha",
+          "context_tag": "via_permanente_metro_l4rio",
+          "disambiguador": "metrô linha 4 Rio sismo salt spray corrosão armadura",
+          "texto": "Via permanente de metrô em zona de risco sísmico ou marinha (como linha 4 Rio de Janeiro, próxima a Baía de Guanabara) requer reforço adicional. Em zona sísmica, análise dinâmica de laje de via contempla aceleração do terreno (PGA) de até 0.15g (conforme mapa de risco sísmico USGS/CENAPRED), amplificada pelo solo em até 0.25–0.3g. Laje de via deve resistir momento de flexão aumentado por efeito dinâmico de sismo; armadura é aumentada com taxa ≥ 2%. Em ambiente marinho (linha 4 próxima a baía), concreto sofre ataque de cloreto (spray salino e percolação): cimento é CP III (resistente a cloreto), cobrimento aumentado para 50 mm, e armadura é pintada com epoxi especial para reduzir corrosão. Drenagem de laje de via é crítica em zona costeira para evitar acúmulo de água salgada. Inspeção de via permanente em ambiente marinho inclui medição de resistência à penetração de cloreto (RCP — rapid chloride permeability test) e monitoramento de corrosão de armadura (potencial de eletrodo).",
+          "tamanho_palavras": 185,
+          "normas_citadas": [
+            "NBR 6118",
+            "NBR 13594",
+            "NBR 15421"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_fer_005",
+          "dominio": "S3",
+          "titulo": "Via permanente ferroviária: mudança de bitola e pátios de manobra",
+          "context_tag": "via_permanente_ferrovia_bitola",
+          "disambiguador": "ferrovia bitola métrica 1000mm ferromodelismo trilho duplo",
+          "texto": "Via permanente ferroviária em pátios de manobra ou bifurcações pode mudar bitola (exemplo: linha tronco 1.435 m se conecta a ramal 1.000 m métrico). Transição de bitola é feita com agulha de três pontas (three-way switch) que permite rota para via de bitola diferente. Via de bitola métrica (1.000 mm) é histórica em Brasil (Brasil-Áustria no início século XX), ainda operacional em alguns ramais de carga. Diferença de bitola invalida acoplamento de vagões: trem em bitola métrica não pode ser engatilhado a trem em bitola padrão. Pátio de manobra com duas bitolas requer faixas paralelas de armazém compatível. Via permanente de bitola métrica tem trilho UIC 36–42 (mais leve que UIC 54/60 de bitola padrão), dormente espaçado 0.5 m (mais denso para suportar menor rigidez). Manutenção de via permanente de bitola métrica é crítica em pátios que transicionam entre bitolas. Exemplo: Vale (pátio de Carajás) tem trilhos de 1.600 mm (bitola ampla para minério). Via permanente de bitola ampla requer vagões especializados de maior capacidade.",
+          "tamanho_palavras": 200,
+          "normas_citadas": [
+            "ABNT"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_met_005",
+          "dominio": "S4",
+          "titulo": "Via permanente de metrô: sistema de fornecimento de energia (terceiro trilho vs. catenária)",
+          "context_tag": "via_permanente_metro_energia",
+          "disambiguador": "metrô terceiro trilho catenária alimentação energia CC CA",
+          "texto": "Via permanente de metrô integra sistema de fornecimento de energia para trem. Duas topologias principais: (1) terceiro trilho (third rail), sistema tradicional em metrô de Londres/NY, donde trem coleta corrente CC (1.500 V ou 750 V) via sapata deslizante; (2) catenária (overhead catenary), sistema mais moderno em metrô europeu/asiático, donde trem coleta via pantógrafo. Via permanente com terceiro trilho tem trilho adicional (condutor) a ~15 cm acima de subleito, isolado de via de rodagem por guarda de segurança. Terceiro trilho é perigoso (risco de eletrocussão) mas ocupa espaço reduzido em túnel. Via permanente com catenária (fio suspenso a 2–3 m acima de trilho) é mais segura, mas exige estrutura de suporte (pórticos, ganchos) que aumenta altura livre de túnel. Metrô de São Paulo usa catenária CC 1.500 V; metrô do Rio usa terceiro trilho CC 750 V (diferença histórica). Via permanente é incompatível entre sistemas (não é possível trocar topologia sem reforma completa de infraestrutura). Manutenção de terceiro trilho inclui limpeza de sapata (resíduo de carbono) mensalmente; manutenção de catenária inclui inspeção de fio (erosão) e pórticos (corrosão).",
+          "tamanho_palavras": 210,
+          "normas_citadas": [
+            "NBR 13594"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_fer_006",
+          "dominio": "S3",
+          "titulo": "Via permanente de ferrovia de alta velocidade: tolerância geométrica estriita",
+          "context_tag": "via_permanente_ferrovia_av",
+          "disambiguador": "ferrovia alta velocidade tolerância alinhamento pêndola verticalidade",
+          "texto": "Via permanente de ferrovia de alta velocidade (300+ km/h) exige tolerâncias geométricas muito mais rigorosas que ferrovia convencional. Desvio de alinhamento (lateral) máximo é 5 mm/100 m (vs. 20 mm/100 m em ferrovia convencional). Desvio de superelevação (inclinação em curva) é ≤ 1 mm/m. Desvio vertical (ondulação) é ≤ 3 mm/100 m. Estas tolerâncias estritas previnem desconforto de passageiros (aceleração lateral > 0.15g causa desconforto) e risco de descarrilamento em alta velocidade. Medição de geometria de via em ferrovia de alta velocidade é contínua (a cada 200 m) com carro de medição laser acoplado ao comboio, não manual como em ferrovia convencional. Via permanente deve ser regularizada (rectificação de irregularidades) se desvio supera tolerância. Manutenção de ferrovia de alta velocidade é muito mais frequente (mensal vs. anual). Custo de via permanente é ~2–3× superior a ferrovia convencional. Trilho é tipicamente UIC 60 com qualidade premium (aço ER70, low carbon, soldado por flash butt). Dormente é concreto pré-comprimido com amortecedor integrado (elastômero de borracha).",
+          "tamanho_palavras": 220,
+          "normas_citadas": [
+            "ABNT",
+            "UIC 60"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_met_006",
+          "dominio": "S4",
+          "titulo": "Via permanente de metrô: inspeção ultrassônica de trilho para detecção de fadiga",
+          "context_tag": "via_permanente_metro_inspecao",
+          "disambiguador": "metrô trilho ultrassom fadiga defeito trinca propagação",
+          "texto": "Via permanente em metrô sofre fadiga de trilho por ciclos repetidos de carga dinâmica (trens passando 300+ vezes/dia). Inspeção por ultrassom (UT — ultrasonic testing) detecta trincas internas em trilho antes de fractura catastrophal. Equipamento de UT transmite onda sônica através de trilho; reflexão detecta descontinuidades (trinca, delaminação). Inspeção é executada anualmente em metrô operacional, percorrendo toda extensão de trilho com sensor acoplado mecanicamente a vagão de inspeção. Relatório de UT indica localização de defeitos (quilômetro) e tamanho (profundidade). Trilho com trinca > 3 mm em comprimento é marcado para reparação imediata (remoção de segmento e soldagem de novo trilho). Via permanente de metrô opera em ambiente agressivo: carga dinâmica + umidade + salinidade (se próximo a mar, como Rio) aceleramfadiga de trilho. Algumas linhas de metrô apresentaram taxa de falha de trilho de 5–10 falhas/ano em segmento de 20 km em período de 20 anos de operação. Renovação de trilho em metrô é custosa (interrupção de serviço, risco de segurança durante trabalho em via ativa).",
+          "tamanho_palavras": 215,
+          "normas_citadas": [
+            "NBR 13594"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_fer_007",
+          "dominio": "S3",
+          "titulo": "Via permanente ferroviária: proteção contra geada e ciclos congelamento-descongelamento",
+          "context_tag": "via_permanente_ferrovia_clima",
+          "disambiguador": "ferrovia geada congelamento lastro dormência gelo trinco",
+          "texto": "Via permanente em região de clima frio (Sul do Brasil, Argentina) sofre dano por ciclos de congelamento-descongelamento. Água infiltrada em lastro/sub-lastro congela em inverno, expandindo ~9% em volume (gelo). Esta expansão causa levantamento de trilho (frost heave), criando irregularidade geométrica. Descongelamento subsequente causa recalque diferencial. Resultado: via ondulada com desvio vertical > 5 mm, risco de descarrilamento. Proteção: (1) isolamento térmico — inserir camada de poliestireno (XPS) entre lastro e sub-base, reduzindo propagação de frio, (2) drenagem aprimorada — evitar água acumulada em lastro, (3) lastro de granulometria selecionada — brita bem drenante reduz penetração de água. Ferrovias em clima frio (Canadá, Rússia, Escandinávia) usam técnicas de resistência ao gelo consolidadas. Manutenção de via permanente em clima frio inclui limpeza de gelo em trilho (risco de derrapagem) e verificação de geométria em primavera (pós-degelo). Custo de proteção contra geada é ~5–10% do custo de via permanente em região fria.",
+          "tamanho_palavras": 215,
+          "normas_citadas": [
+            "ABNT"
+          ],
+          "tipo": "synthetic_disambiguator"
+        },
+        {
+          "id": "syn_vap_met_007",
+          "dominio": "S4",
+          "titulo": "Via permanente de metrô com guias laterais: sistema de pneus de metrô francês",
+          "context_tag": "via_permanente_metro_guia",
+          "disambiguador": "metrô guia lateral pneu atrito linha 1 Paris",
+          "texto": "Via permanente de metrô com guias laterais (sistema com pneus em lugar de rodas) é utilizado em alguns metrôs europeus (Paris linha 1, linha 14; Montreal). Sistema consiste em: (1) três pneus de borracha por eixo (dois laterais + um inferior), (2) guias laterais de concreto (uma em cada lado) que orientam pneus, (3) rail (único, central) que suporta carga verticalmente. Vantagens: conforto (amortecimento de pneus), capacidade de aderência (atrito de pneu > metal), redução de ruído (pneu é mais silencioso). Desvantagens: vida útil de pneu (5–7 anos, vs. 20+ anos de trilho de aço), manutenção de guias (desgaste), custo operacional elevado (reposição frequente de pneus). Via permanente com guias é incompatível com ferrovia convencional (não pode misturar sistemas). Metrô francês usa este sistema por razão histórica (economia de energia, conforto de passageiro). Inspeção de via permanente inclui medição de desgaste de pneu (profundidade > 4 mm) e alinhamento de guias. Custo de via permanente com pneus é ~30–50% maior que via com trilho metálico convencional.",
+          "tamanho_palavras": 220,
+          "normas_citadas": [
+            "RATP"
+          ],
+          "tipo": "synthetic_disambiguator"
+        }
+      ]
+    }
+  ],
+  "resumo": {
+    "total_chunks_gerados": 58,
+    "distribuicao_por_termo": {
+      "terraplenagem": 14,
+      "estrutura_fundacao": 15,
+      "drenagem": 15,
+      "via_permanente": 14
+    },
+    "distribuicao_por_dominio": {
+      "S1": 7,
+      "S10": 21,
+      "S2": 8,
+      "S6": 8,
+      "S3": 7,
+      "S4": 7
+    },
+    "normas_citadas_unicas": [
+      "ABNT",
+      "ABNT NBR 8457",
+      "ANTAQ",
+      "ASTM A36",
+      "CBDB",
+      "CONAMA 357",
+      "COPAM",
+      "DNIT 2006",
+      "HEC-18",
+      "IBAMA",
+      "IBAMA 19/2019",
+      "ICOLD",
+      "Lei 12.334",
+      "Lei 12.651 (Código Florestal)",
+      "NBR 12131",
+      "NBR 13594",
+      "NBR 15421",
+      "NBR 248",
+      "NBR 6118",
+      "NBR 6122",
+      "NBR 6123",
+      "NBR 6502",
+      "NBR 7182",
+      "NBR 7187",
+      "NBR 7749",
+      "NBR 8800",
+      "NBR 8802",
+      "NBR 9813",
+      "NBR 9895",
+      "NR 18",
+      "PIANC",
+      "RATP",
+      "SICRO 2024",
+      "SIGBM",
+      "UIC 54/60",
+      "UIC 60",
+      "UIC 60/70"
+    ],
+    "tamanho_medio_chunk": 192,
+    "tipos_chunks": [
+      "synthetic_disambiguator"
+    ],
+    "cobertura_termos_ambiguos": "100%",
+    "nota_producao": "Chunks gerados em português técnico naturalístico, apropriado para RAG em ambiente profissional Manta. Cada chunk inclui: (1) contexto explícito de domínio, (2) características técnicas distintivas, (3) termo ambíguo COM qualificadores únicos, (4) referências a normas reais (não inventadas), (5) tamanho ~150–220 palavras para otimização de retrieval. Podem ser usados como training data para fine-tuning de modelo de retrieval ou embedding (coluna de chunks_gerados pode ser inserida diretamente em Supabase rag_chunks).",
+    "total_normas_unicas": 37
+  }
+}

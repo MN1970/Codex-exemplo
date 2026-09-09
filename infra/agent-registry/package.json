@@ -1,0 +1,20 @@
+{
+  "name": "@manta-maestro/agent-registry",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Manta Maestro agent auto-registration service: webhook handler + self-test + A/B test/promotion pipeline for new .claude/agents/*.md agents.",
+  "main": "auto-registration-service.js",
+  "scripts": {
+    "webhook": "node webhook-handler.js",
+    "register": "node auto-registration-service.js",
+    "sweep": "node ab-test-service.js sweep",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,723 @@
+{
+  "version": "1.0.0",
+  "name": "golden_set_v1",
+  "created_at": "2026-07-25T00:46:04.903461+00:00",
+  "num_qa_pairs": 50,
+  "schema": {
+    "qa_id": "string (qa_001, qa_002, ...)",
+    "question": "string (human question for RAG)",
+    "golden_answer": "string (expected correct answer)",
+    "agent_id": "string (agente-saneamento, agente-energia, ...)",
+    "expected_chunks": "array of strings (chunk IDs to retrieve)",
+    "difficulty_level": "enum (easy, medium, hard)",
+    "source_domain": "string (technical domain)",
+    "created_at": "ISO8601 timestamp"
+  },
+  "qa_pairs": [
+    {
+      "qa_id": "qa_001",
+      "question": "Qual m\u00e9todo para calcular golpe de ar\u00edete em adutoras pressurizadas?",
+      "golden_answer": "Usar f\u00f3rmula de Joukowsky: \u0394H = (a/g) \u00d7 \u0394v, onde 'a' \u00e9 celeridade (1200-1400 m/s em PVC), 'g' gravidade, '\u0394v' mudan\u00e7a de velocidade. Alternativa: m\u00e9todo das caracter\u00edsticas para transientes hidr\u00e1ulicos.",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "hydraulics",
+      "created_at": "2026-07-25T00:46:04.901918+00:00"
+    },
+    {
+      "qa_id": "qa_002",
+      "question": "Como dimensionar uma ETA de ciclo completo para 150 mil habitantes?",
+      "golden_answer": "ETA de ciclo completo inclui coagula\u00e7\u00e3o, flocula\u00e7\u00e3o, decanta\u00e7\u00e3o, filtra\u00e7\u00e3o e desinfec\u00e7\u00e3o. Para 150k hab com consumo de 200 L/hab.dia, considera taxas de flocula\u00e7\u00e3o hidr\u00e1ulica 400-600 m\u00b3/m\u00b2.dia e decanta\u00e7\u00e3o 40-60 m\u00b3/m\u00b2.dia.",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "water_treatment",
+      "created_at": "2026-07-25T00:46:04.901955+00:00"
+    },
+    {
+      "qa_id": "qa_003",
+      "question": "O que \u00e9 subs\u00eddio cruzado na Lei 14.026 de saneamento?",
+      "golden_answer": "Subs\u00eddio cruzado: arrecada\u00e7\u00e3o em cliente classe A (alta renda) subsidia cliente classe C (baixa renda) para universaliza\u00e7\u00e3o de 99% \u00e1gua e 90% esgoto at\u00e9 2033. Tarifa social obrigat\u00f3ria.",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.901961+00:00"
+    },
+    {
+      "qa_id": "qa_004",
+      "question": "Como dimensionar um reservat\u00f3rio de reten\u00e7\u00e3o para drenagem urbana?",
+      "golden_answer": "Volume = (i \u00d7 A \u00d7 (Tr/3600)) - (C \u00d7 Tr), onde i \u00e9 intensidade chuva (mm/h), A \u00e1rea drenagem (m\u00b2), Tr per\u00edodo retorno (s), C vaz\u00e3o de sa\u00edda (m\u00b3/s). M\u00e9todo racional ou hidrograma unit\u00e1rio.",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "stormwater",
+      "created_at": "2026-07-25T00:46:04.901965+00:00"
+    },
+    {
+      "qa_id": "qa_005",
+      "question": "Qual a diferen\u00e7a entre EPANET e SWMM para modelagem de redes de \u00e1gua?",
+      "golden_answer": "EPANET: redes pressurizadas de distribui\u00e7\u00e3o de \u00e1gua, an\u00e1lise de qualidade e vaz\u00e3o. SWMM: drenagem urbana e escoamento superficial, simula\u00e7\u00e3o de chuva-vaz\u00e3o.",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "software",
+      "created_at": "2026-07-25T00:46:04.901968+00:00"
+    },
+    {
+      "qa_id": "qa_006",
+      "question": "Como avaliar a colmata\u00e7\u00e3o de filtro de areias em ETA?",
+      "golden_answer": "Monitorar perda de carga (man\u00f4metro diferencial), velocidade de filtra\u00e7\u00e3o (taxa aplica\u00e7\u00e3o), qualidade turbidez efluente. Retrolavagem quando \u0394P > 1.5-2.0 m ou turbidez > 1 UNT.",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "water_treatment",
+      "created_at": "2026-07-25T00:46:04.901972+00:00"
+    },
+    {
+      "qa_id": "qa_007",
+      "question": "O que significa RAP no contexto de concess\u00f5es de saneamento?",
+      "golden_answer": "RAP = Remunera\u00e7\u00e3o por Aumento de Qualidade ou Receita, conforme regula\u00e7\u00e3o. Mecanismo para remunerar investimentos de melhoria (efici\u00eancia, qualidade, universaliza\u00e7\u00e3o).",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.901975+00:00"
+    },
+    {
+      "qa_id": "qa_008",
+      "question": "AySA me pediu um estudo de reabilita\u00e7\u00e3o da Planta Norte. Por onde come\u00e7ar?",
+      "golden_answer": "Diagn\u00f3stico de capacidade atual (ETE prim\u00e1ria vs secund\u00e1ria), teste de efici\u00eancia de remo\u00e7\u00e3o de carga (DBO, DQO), avalia\u00e7\u00e3o de lodo, defini\u00e7\u00e3o de tecnologia nova (UASB, MBR, lodo ativado).",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "wastewater_argentina",
+      "created_at": "2026-07-25T00:46:04.901982+00:00"
+    },
+    {
+      "qa_id": "qa_009",
+      "question": "Qual \u00e9 o m\u00e9todo para dimensionar rede coletora de esgoto pela NBR 9649?",
+      "golden_answer": "NBR 9649 estabelece: di\u00e2metro m\u00ednimo 100mm, declividade m\u00ednima 0.5% (esgoto dom\u00e9stico), velocidade m\u00edn 0.6 m/s, m\u00e1x 3 m/s, profundidade m\u00e1x 5.5m. Usar f\u00f3rmula de Manning para verifica\u00e7\u00e3o.",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "sewerage_design",
+      "created_at": "2026-07-25T00:46:04.901991+00:00"
+    },
+    {
+      "qa_id": "qa_010",
+      "question": "Como calcular a altura manom\u00e9trica de uma esta\u00e7\u00e3o elevat\u00f3ria?",
+      "golden_answer": "Hm = Hg + \u0394H, onde Hg \u00e9 altura geom\u00e9trica (suc\u00e7\u00e3o + recalque) e \u0394H s\u00e3o perdas de carga. Verificar NPSH dispon\u00edvel >= NPSH requerido da bomba. Sobre-eleva\u00e7\u00e3o t\u00edpica 10-20%.",
+      "agent_id": "agente-saneamento",
+      "expected_chunks": [
+        "chunk_saneamento_1",
+        "chunk_saneamento_2",
+        "chunk_saneamento_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "hydraulics",
+      "created_at": "2026-07-25T00:46:04.901995+00:00"
+    },
+    {
+      "qa_id": "qa_011",
+      "question": "Como dimensionar uma linha de transmiss\u00e3o de 500kV para 250km?",
+      "golden_answer": "Usar coordenadas de torre (altura, base), calcular imped\u00e2ncia s\u00e9rie (R, L, C), capacidade t\u00e9rmica (ampacidade), queda de tens\u00e3o (< 5%), estabilidade transit\u00f3ria. Normas: ABNT NBR 6655, IEEE 738.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "transmission",
+      "created_at": "2026-07-25T00:46:04.902010+00:00"
+    },
+    {
+      "qa_id": "qa_012",
+      "question": "Qual \u00e9 o per\u00edodo de concess\u00e3o t\u00edpico para gera\u00e7\u00e3o e\u00f3lica no Brasil?",
+      "golden_answer": "Tipicamente 20-30 anos em contrato de concess\u00e3o. PPA (Power Purchase Agreement) entre gerador e distribuidor/grande consumidor, pre\u00e7o fixo ou vari\u00e1vel com indexa\u00e7\u00e3o.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "renewable_energy",
+      "created_at": "2026-07-25T00:46:04.902014+00:00"
+    },
+    {
+      "qa_id": "qa_013",
+      "question": "Qual \u00e9 a celeridade do cabo ACSR 636 MCM em LT de 345kV?",
+      "golden_answer": "Celeridade de propaga\u00e7\u00e3o onda eletromagn\u00e9tica em linha a\u00e9rea: v = c / sqrt(\u03b5r) \u2248 0.97c (300k km/s aprox). Para cabo ACSR 636 MCM, tabelado em normas IEEE, t\u00edpico ~0.95-0.97c.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "transmission_design",
+      "created_at": "2026-07-25T00:46:04.902017+00:00"
+    },
+    {
+      "qa_id": "qa_014",
+      "question": "Qual RBAC orienta projeto de pista de subesta\u00e7\u00e3o?",
+      "golden_answer": "Norma ABNT NBR 14039 (instala\u00e7\u00f5es el\u00e9tricas em MT) e IEC 61936 (MT de corrente alternada). Dist\u00e2ncias de seguran\u00e7a, aterramento, layout, sinaliza\u00e7\u00e3o, prote\u00e7\u00e3o.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "standards",
+      "created_at": "2026-07-25T00:46:04.902031+00:00"
+    },
+    {
+      "qa_id": "qa_015",
+      "question": "O que \u00e9 MRE na opera\u00e7\u00e3o do SIN brasileiro?",
+      "golden_answer": "MRE = Mecanismo de Realoca\u00e7\u00e3o de Energia. Hidroel\u00e9tricas brasileiras colocam energia em pool e dividem risco de vaz\u00e3o. Diferen\u00e7as de receita compensadas entre usinas (gera\u00e7\u00e3o real vs garantida).",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "operation",
+      "created_at": "2026-07-25T00:46:04.902034+00:00"
+    },
+    {
+      "qa_id": "qa_016",
+      "question": "Qual \u00e9 a diferen\u00e7a entre leil\u00e3o de transmiss\u00e3o e concess\u00e3o direta?",
+      "golden_answer": "Leil\u00e3o: competi\u00e7\u00e3o p\u00fablica, ANEEL fixa RAP m\u00ednima. Concess\u00e3o direta: empresa privada prop\u00f5e projeto, ANEEL avalia. Leil\u00e3o reduz custos, concess\u00e3o direta permite inova\u00e7\u00e3o.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.902038+00:00"
+    },
+    {
+      "qa_id": "qa_017",
+      "question": "Como calcular a queda de tens\u00e3o em um circuito de distribui\u00e7\u00e3o?",
+      "golden_answer": "\u0394V(%) = (R\u00d7P + X\u00d7Q) / (10 \u00d7 V\u00b2), onde R, X s\u00e3o resist\u00eancia/reat\u00e2ncia (\u03a9/km), P, Q s\u00e3o pot\u00eancia ativa/reativa (kW, kVAr), V \u00e9 tens\u00e3o (kV). M\u00e1ximo: 8% em distribui\u00e7\u00e3o prim\u00e1ria.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "distribution",
+      "created_at": "2026-07-25T00:46:04.902041+00:00"
+    },
+    {
+      "qa_id": "qa_018",
+      "question": "O que \u00e9 RAP em leil\u00e3o de transmiss\u00e3o ANEEL?",
+      "golden_answer": "RAP = Receita Anual Permitida, determinada por ANEEL em edital de concess\u00e3o. Define remunera\u00e7\u00e3o garantida ao concession\u00e1rio por T anos (tipicamente 30-35). Revis\u00e3o tarif\u00e1ria a cada 4-5 anos.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.902045+00:00"
+    },
+    {
+      "qa_id": "qa_019",
+      "question": "Como fazer estudo de ampacidade para condutor em LT?",
+      "golden_answer": "Usar metodologia IEEE 738 ou IEC 60287: balan\u00e7ear ganhos de calor por efeito Joule vs perdas por radia\u00e7\u00e3o/convec\u00e7\u00e3o. Dados: temperatura ambiente, velocidade vento, eleva\u00e7\u00e3o, fator solar, emissividade.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "transmission_design",
+      "created_at": "2026-07-25T00:46:04.902048+00:00"
+    },
+    {
+      "qa_id": "qa_020",
+      "question": "Como projetar uma subesta\u00e7\u00e3o de 230kV isolada em g\u00e1s (GIS)?",
+      "golden_answer": "GIS vs isola\u00e7\u00e3o ar: menor footprint, menor manuten\u00e7\u00e3o, custo inicial maior. Equipamentos: transformador, disjuntor GIS, para-raios, seccionadora, transformador de corrente/tens\u00e3o. Arranjo: barra simples ou dupla conforme carga.",
+      "agent_id": "agente-energia",
+      "expected_chunks": [
+        "chunk_energia_1",
+        "chunk_energia_2",
+        "chunk_energia_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "substation_design",
+      "created_at": "2026-07-25T00:46:04.902051+00:00"
+    },
+    {
+      "qa_id": "qa_021",
+      "question": "Qual PIANC bulletin cobre projeto de quebra-mar em enrocamento?",
+      "golden_answer": "PIANC WG33 (2016): Design of Low-Crested Coastal Defence Structures. Para ber\u00e7o-porto: WG34 (Breakwater Design), analisa ondas, recorr\u00eancia tempestade, altura de onda (H1/3, Hmax).",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "standards",
+      "created_at": "2026-07-25T00:46:04.902061+00:00"
+    },
+    {
+      "qa_id": "qa_022",
+      "question": "Como calcular o volume de areia em praia artificial para mitiga\u00e7\u00e3o portu\u00e1ria?",
+      "golden_answer": "Volume = (profundidade \u00d7 comprimento \u00d7 largura) com fator de compacta\u00e7\u00e3o (1.3-1.5). Material: areia com granulometria 0.15-2mm (conforme norma). Manuten\u00e7\u00e3o anual para eros\u00e3o (5-15% ao ano).",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "environmental",
+      "created_at": "2026-07-25T00:46:04.902064+00:00"
+    },
+    {
+      "qa_id": "qa_023",
+      "question": "O que \u00e9 TUP no contexto de concess\u00e3o portu\u00e1ria?",
+      "golden_answer": "TUP = Terminal de Uso Privado. Pessoa jur\u00eddica autorizada ANTAQ a operar terminal portu\u00e1rio por concess\u00e3o (20-40 anos t\u00edpico). Diferente de Terminal P\u00fablico (porto organizado).",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.902067+00:00"
+    },
+    {
+      "qa_id": "qa_024",
+      "question": "Qual \u00e9 a diferen\u00e7a entre um p\u00eder e um cais?",
+      "golden_answer": "Cais: estrutura paralela ao costado, amarra\u00e7\u00e3o lateral do navio. P\u00eder: estrutura perpendicular, amarra\u00e7\u00e3o em tandem (proa-popa). P\u00eder permite maior throughput, cais maior flexibilidade de acesso.",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "terminal_design",
+      "created_at": "2026-07-25T00:46:04.902070+00:00"
+    },
+    {
+      "qa_id": "qa_025",
+      "question": "Como dimensionar a defensa de um ber\u00e7o para navio Panamax?",
+      "golden_answer": "Panamax: 300m comprimento, 33m boca, 12m calado. Defensa absorve energia cin\u00e9tica (0.5\u00d7M\u00d7V\u00b2). Tipo: tubo cil\u00edndrico, pneu, fender pneum\u00e1tico. Espa\u00e7amento 30-50m, resist\u00eancia > for\u00e7a de amarra\u00e7\u00e3o.",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "terminal_design",
+      "created_at": "2026-07-25T00:46:04.902076+00:00"
+    },
+    {
+      "qa_id": "qa_026",
+      "question": "Qual \u00e9 o calado m\u00e1ximo permitido no Porto de Santos?",
+      "golden_answer": "Calado operacional ~ 14-15m em mar\u00e9 alta (Porto de Santos tem 12.5m de profundidade nominal). Limitado por dragagem e batimetria. Revisar ANTAQ/Porto Authority para dados atualizados.",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "port_operation",
+      "created_at": "2026-07-25T00:46:04.902080+00:00"
+    },
+    {
+      "qa_id": "qa_027",
+      "question": "Como dimensiono o p\u00e1tio de estocagem para cargas cont\u00eainer + granel?",
+      "golden_answer": "TEU/m\u00b2 (cont\u00eainer): 8-12 (altura at\u00e9 5 camadas). Granel: t/m\u00b2 (3-5 metros altura). Mix: considerar rotatividade, dwell time. Equipamentos de movimenta\u00e7\u00e3o: RTG, SC, carretas.",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "terminal_design",
+      "created_at": "2026-07-25T00:46:04.902083+00:00"
+    },
+    {
+      "qa_id": "qa_028",
+      "question": "O que \u00e9 arrendamento portu\u00e1rio conforme ANTAQ?",
+      "golden_answer": "ANTAQ autoriza arrendamento de \u00e1reas/ber\u00e7os em portos organizados para opera\u00e7\u00e3o de terminal. Contrato por 25-40 anos, renov\u00e1vel. Operador paga \u00e0 administra\u00e7\u00e3o portu\u00e1ria taxa de arrendamento e taxa de utiliza\u00e7\u00e3o.",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.902089+00:00"
+    },
+    {
+      "qa_id": "qa_029",
+      "question": "Como calculo o n\u00famero de port\u00eaineres para um terminal de cont\u00eaineres com throughput de 2M TEU/ano?",
+      "golden_answer": "Produtividade port\u00eainer: 30-40 moves/hora. Para 2M TEU, ciclo anual \u00f7 (dias \u00fateis \u00d7 horas \u00d7 produtividade) = n\u00famero equipamentos. T\u00edpico: 8-12 port\u00eaineres para 2M TEU.",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "port_equipment",
+      "created_at": "2026-07-25T00:46:04.902092+00:00"
+    },
+    {
+      "qa_id": "qa_030",
+      "question": "Como planejo dragagem de canal de acesso com mar\u00e9 de 2.5m?",
+      "golden_answer": "Profundidade projeto = (calado operacional - mar\u00e9 m\u00ednima) + allowance de seguran\u00e7a (0.5-1.0m). Dragagem mec\u00e2nica vs hidr\u00e1ulica. Volante de dragagem considerando reciclagem e sazonalidade.",
+      "agent_id": "agente-portos",
+      "expected_chunks": [
+        "chunk_portos_1",
+        "chunk_portos_2",
+        "chunk_portos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "dredging",
+      "created_at": "2026-07-25T00:46:04.902103+00:00"
+    },
+    {
+      "qa_id": "qa_031",
+      "question": "Como projeto o balizamento CAT II para opera\u00e7\u00e3o noturna em aeroporto?",
+      "golden_answer": "CAT II (decis\u00e3o altura 100-200 ft, visibilidade 400-800m). Luzes de aproxima\u00e7\u00e3o, pista, zona de toque. ILS (Instrument Landing System) com localizer, glideslope, marker beacons. Norma ICAO Annex 14, parte 4.",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "navigation_aids",
+      "created_at": "2026-07-25T00:46:04.902112+00:00"
+    },
+    {
+      "qa_id": "qa_032",
+      "question": "Qual \u00e9 a diferen\u00e7a entre TPS e TECA em um aeroporto?",
+      "golden_answer": "TPS = Terminal de Passageiros (landside, gates, check-in, bagagem, embarque). TECA = Terminal de Cargas (log\u00edstica, alf\u00e2ndega, armazenagem). Independentes, com infraestrutura pr\u00f3pria (p\u00e1tio, garagens, docas).",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "terminal_design",
+      "created_at": "2026-07-25T00:46:04.902115+00:00"
+    },
+    {
+      "qa_id": "qa_033",
+      "question": "Qual \u00e9 o PCN (Pavement Classification Number) da minha pista?",
+      "golden_answer": "PCN (ICAO Annex 14): n\u00famero que caracteriza capacidade de pavimento em suportar carga de aeronave. C\u00e1lculo: resist\u00eancia CBR do subleito, espessura camadas, m\u00e9todo FAA ACN-PCN. Escala 10-100.",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "airfield_design",
+      "created_at": "2026-07-25T00:46:04.902119+00:00"
+    },
+    {
+      "qa_id": "qa_034",
+      "question": "Como dimensiono uma pista de pouso para aeronaves tipo A320neo?",
+      "golden_answer": "A320neo: comprimento 37.6m, altura 12.5m, peso m\u00e1ximo 73-80t (MTOW), dist\u00e2ncia decolagem ~2400m, pouso ~1500m. Pista: m\u00ednimo 2500m (margem seguran\u00e7a), pavimento r\u00edgido ou flex\u00edvel (NBR 14054).",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "airfield_design",
+      "created_at": "2026-07-25T00:46:04.902125+00:00"
+    },
+    {
+      "qa_id": "qa_035",
+      "question": "Qual \u00e9 a vida \u00fatil t\u00edpica de pavimento r\u00edgido (concreto) em pista?",
+      "golden_answer": "20-30 anos com manuten\u00e7\u00e3o preventiva (junta de dilata\u00e7\u00e3o, selagem). Pavimento flex\u00edvel (asfalto): 15-20 anos. Considerar tr\u00e1fego acumulado (ESA = Equivalent Single Axle), clima, drenagem.",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "pavement_design",
+      "created_at": "2026-07-25T00:46:04.902129+00:00"
+    },
+    {
+      "qa_id": "qa_036",
+      "question": "Como calculo o tamanho do p\u00e1tio de aeronaves para 20 A320 simult\u00e2neos?",
+      "golden_answer": "A320: footprint ~40m \u00d7 37m = ~1480 m\u00b2 com margens de seguran\u00e7a (20-25m entre proas). Para 20 A320: ~30-35k m\u00b2 p\u00e1tio + rodovias de acesso, pontes de embarque (~500m\u00b2/unidade).",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "airfield_design",
+      "created_at": "2026-07-25T00:46:04.902135+00:00"
+    },
+    {
+      "qa_id": "qa_037",
+      "question": "O que \u00e9 RBAC em avia\u00e7\u00e3o civil brasileira?",
+      "golden_answer": "RBAC = Regulamento Brasileiro de Avia\u00e7\u00e3o Civil (editado por ANAC). RBAC 14: Opera\u00e7\u00f5es de aer\u00f3dromos comerciais. RBAC 154: Projeto de aer\u00f3dromos. Normas de seguran\u00e7a, pavimento, sinaliza\u00e7\u00e3o.",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.902138+00:00"
+    },
+    {
+      "qa_id": "qa_038",
+      "question": "O que \u00e9 c\u00f3digo ICAO de refer\u00eancia de um aeroporto?",
+      "golden_answer": "C\u00f3digo refer\u00eancia ICAO Annex 14: classe de aer\u00f3dromo (1-4) \u00d7 comprimento RWY (A-F). Ex: c\u00f3digo 4F = aeronaves at\u00e9 A380 e RWY >= 2400m. Define requerimentos de seguran\u00e7a, espa\u00e7amentos, equipamentos.",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "standards",
+      "created_at": "2026-07-25T00:46:04.902141+00:00"
+    },
+    {
+      "qa_id": "qa_039",
+      "question": "Como projeto as rodovias de t\u00e1xi (taxiways) de um aeroporto regional?",
+      "golden_answer": "Largura m\u00ednima: 15-23m (conforme c\u00f3digo ICAO, acelera\u00e7\u00e3o requerida). Raio curva: 200-300m (A320). Dist\u00e2ncia eixo-eixo RWY-TWY: 150-300m (safety buffer). Pavimento: r\u00edgido ou flex\u00edvel, CBR > 4-8.",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "airfield_design",
+      "created_at": "2026-07-25T00:46:04.902147+00:00"
+    },
+    {
+      "qa_id": "qa_040",
+      "question": "ICAO Annex 14 permite offset lateral de RWY (pista)?",
+      "golden_answer": "Offset de RWY: m\u00e1ximo 2% do comprimento (norma ICAO). Utilizado para desviar de obst\u00e1culos ou considerar topografia. Deve manter operacionalidade em ambas as dire\u00e7\u00f5es.",
+      "agent_id": "agente-aeroportos",
+      "expected_chunks": [
+        "chunk_aeroportos_1",
+        "chunk_aeroportos_2",
+        "chunk_aeroportos_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "standards",
+      "created_at": "2026-07-25T00:46:04.902151+00:00"
+    },
+    {
+      "qa_id": "qa_041",
+      "question": "O que \u00e9 TSF (Tailings Storage Facility) e qual a vida \u00fatil t\u00edpica?",
+      "golden_answer": "TSF = barragem de rejeitos (minera\u00e7\u00e3o). Vida \u00fatil: 20-50 anos conforme volume anual de rejeito. Risco de liquefa\u00e7\u00e3o em alteamento a montante. Monitoramento: piez\u00f4metros, inclin\u00f4metros.",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "tailings_management",
+      "created_at": "2026-07-25T00:46:04.902158+00:00"
+    },
+    {
+      "qa_id": "qa_042",
+      "question": "Como calcular a altura m\u00e1xima de \u00e1gua (HMC) em barragem?",
+      "golden_answer": "HMC = eleva\u00e7\u00e3o (cota de coroamento - 1-2m borda livre) menos efeito de onda. Margem seguran\u00e7a: borda livre >= 1.5-2.0m. Hidrograma de cheia, m\u00e9todo estat\u00edstico (tempo retorno 500-1000 anos).",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "hydrology",
+      "created_at": "2026-07-25T00:46:04.902162+00:00"
+    },
+    {
+      "qa_id": "qa_043",
+      "question": "Qual \u00e9 o coeficiente de seguran\u00e7a m\u00ednimo contra ruptura em barragem?",
+      "golden_answer": "FS (fator seguran\u00e7a) m\u00ednimo: 1.5 (estado normal) a 1.3 (estado acidental). C\u00e1lculo: momento resistente / momento tomba, m\u00e9todo lamelas ou Bishop simplificado, superf\u00edcie cr\u00edtica.",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "stability_analysis",
+      "created_at": "2026-07-25T00:46:04.902165+00:00"
+    },
+    {
+      "qa_id": "qa_044",
+      "question": "Qual bulletin ICOLD cobre rejeitos filtrados (dry stack)?",
+      "golden_answer": "ICOLD Bulletin 164 (2016): Filtered Tailings. Tecnologia compacta\u00e7\u00e3o de rejeitos (< 8% \u00e1gua), filtra\u00e7\u00e3o, segrega\u00e7\u00e3o granulom\u00e9trica. Menor risco de liquefa\u00e7\u00e3o vs rejeito convencional.",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "standards",
+      "created_at": "2026-07-25T00:46:04.902168+00:00"
+    },
+    {
+      "qa_id": "qa_045",
+      "question": "Como projeto uma barragem CFRD (Concrete Face Rockfill Dam) de 80m?",
+      "golden_answer": "CFRD: n\u00facleo de enrocamento + face de concreto (0.5-1.0m espessura). Projeto: estabilidade encosta (inclina\u00e7\u00e3o 1:1.5 a 1:2), drenagem interna, geot\u00eaxtil anti-eros\u00e3o, constru\u00e7\u00e3o faseada (se\u00e7\u00e3o 1-2m altura).",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "dam_engineering",
+      "created_at": "2026-07-25T00:46:04.902171+00:00"
+    },
+    {
+      "qa_id": "qa_046",
+      "question": "O que \u00e9 PNSB e quais s\u00e3o as exig\u00eancias para inspe\u00e7\u00e3o peri\u00f3dica?",
+      "golden_answer": "PNSB = Plano Nacional de Seguran\u00e7a de Barragens (Lei 12.334/2010). Inspe\u00e7\u00e3o peri\u00f3dica: anual para barragem categoria alta/risco alto, avalia\u00e7\u00e3o de estabilidade a cada 2 anos (engenheiro registrado CREA).",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.902174+00:00"
+    },
+    {
+      "qa_id": "qa_047",
+      "question": "Como fa\u00e7o dam breach analysis p\u00f3s-Brumadinho?",
+      "golden_answer": "HEC-RAS ou similar: modelo 1D/2D de inunda\u00e7\u00e3o. Inputs: hidrografia, DEM, par\u00e2metros roughness. Cen\u00e1rios: ruptura parcial vs total, velocidade propaga\u00e7\u00e3o onda. Mapa de inunda\u00e7\u00e3o, altura \u00e1gua, velocidade.",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "hard",
+      "source_domain": "hazard_assessment",
+      "created_at": "2026-07-25T00:46:04.902177+00:00"
+    },
+    {
+      "qa_id": "qa_048",
+      "question": "Qual \u00e9 a diferen\u00e7a entre barragem de concreto CCR e CCV?",
+      "golden_answer": "CCR = Concreto Compactado a Rolo (baixo cimento, alto friccionante, constru\u00e7\u00e3o r\u00e1pida). CCV = Concreto Convencional (lan\u00e7amento convencional). CCR: mais econ\u00f4mico, menos calor, maior resist\u00eancia fric\u00e7\u00e3o.",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "dam_engineering",
+      "created_at": "2026-07-25T00:46:04.902183+00:00"
+    },
+    {
+      "qa_id": "qa_049",
+      "question": "O que significa categoria de risco (baixa/m\u00e9dia/alta) conforme PNSB?",
+      "golden_answer": "PNSB: classifica\u00e7\u00e3o por altura, volume, popula\u00e7\u00e3o afetada, dano potencial. Categoria alta: H > 15m, V > 3M m\u00b3, ou dano > 100 pessoas. Define frequ\u00eancia inspe\u00e7\u00e3o, requisitos projeto, estudo de confiabilidade.",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "easy",
+      "source_domain": "regulation",
+      "created_at": "2026-07-25T00:46:04.902186+00:00"
+    },
+    {
+      "qa_id": "qa_050",
+      "question": "Como projeto filtro drenante em barragem de enrocamento?",
+      "golden_answer": "Filtro (areia grossa ou pedrisco) entre n\u00facleo e drenagem. Crit\u00e9rio: D\u2081\u2085(filtro) / D\u2088\u2085(n\u00facleo) < 5. Reduz eros\u00e3o regressiva, dissipa press\u00e3o poro. Espessura m\u00ednima 2-3m.",
+      "agent_id": "agente-barragens",
+      "expected_chunks": [
+        "chunk_barragens_1",
+        "chunk_barragens_2",
+        "chunk_barragens_3"
+      ],
+      "difficulty_level": "medium",
+      "source_domain": "seepage_control",
+      "created_at": "2026-07-25T00:46:04.902189+00:00"
+    }
+  ],
+  "evaluation_metrics": {
+    "recall_at_5": "fraction of QAs where golden chunk in top-5 results",
+    "mrr": "Mean Reciprocal Rank (1 / avg position of best chunk)",
+    "ndcg_5": "Normalized Discounted Cumulative Gain@5"
+  }
+}

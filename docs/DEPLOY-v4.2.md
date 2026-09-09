@@ -87,6 +87,37 @@ WHERE agent_slug LIKE 'agente-%'
 
 Esperado: 5 linhas em cada consulta.
 
+### 2.4. Verificação real (2026-08-29 — projeto `manta-maestro`, `ogxxgvgtulrbbppshjie`)
+
+**A migração já estava aplicada em produção.** Projeto Supabase estava
+`INACTIVE` (pausado por inatividade); após `restore_project`, as
+consultas de 2.3 rodaram direto contra o banco real:
+
+- `rag_collections`: 10 no total (as 5 legado + as 5 novas + `orcamento`),
+  todas com `storage_prefix`/contagem de fontes batendo com o `.sql`.
+- `sp_agent_routing`: as 5 linhas esperadas, `priority=100`.
+- `maestro_routing_keywords`: contagens batendo com o `.sql` (aeroportos 7,
+  barragens 9, energia 8, portos 9, saneamento 8).
+
+**Não é preciso reaplicar** — o `INSERT ... ON CONFLICT DO NOTHING` já
+rodou (idempotente, mas redundante rodar de novo).
+
+**Gap real encontrado, fora do escopo original deste runbook**: a
+tabela `manta_rag_chunks` (292 chunks no total) tem quase nenhum
+conteúdo indexado para os 5 segmentos novos — **aeroportos: 7 chunks,
+saneamento: 5 chunks, portos/energia/barragens: 0 chunks**. Também tem
+duas colunas de embedding — `embedding` (BAAI/bge-small-en-v1.5, 384d;
+162/292 populado) e `embedding_m3` (BGE-M3 multilíngue; 0/292, coluna
+ainda não usada — provável upgrade planejado para cobrir espanhol/AySA).
+`manta_rag_ml_training_runs` existe mas tem 0 linhas (nenhum
+treino/fine-tuning real já rodou) e `ultima_recuperacao` está nula em
+todos os chunks (o RAG nunca serviu uma busca real em produção).
+
+**Novo item de trabalho**: ingestão de conteúdo real (normas, editais,
+casos) para popular `por:`, `ene:`, `bar:` — sem isso, os agentes
+verticais desses 3 segmentos não têm nenhuma base RAG para consultar,
+mesmo com toda a configuração (coleção, routing, keywords) já correta.
+
 ---
 
 ## 3. SharePoint — pastas dos agentes + pastas de projeto
@@ -173,7 +204,26 @@ Casos que falharem: iterar nas keywords do
 
 ---
 
-## 6. Rollback
+## 6. Extensão do registry `aluci-guard` (S6-S10)
+
+**Arquivos prontos:** `docs/aluci-guard/registry-extension-{portos,
+aeroportos,saneamento,energia,barragens}.md` + consolidação em
+`docs/aluci-guard/README.md` (neste PR).
+
+- [x] Extrair das 5 SKILL.md as referências normativas/legais citadas
+  (57 no total: 15 compatíveis com o schema atual `normas_abnt.py`/
+  `leis_federais.py`, 42 exigindo categoria nova — setorial/
+  internacional).
+- [ ] Gate MN: decidir nome/formato das categorias novas de registry
+  (`normas_setoriais.py`, `normas_internacionais.py`, possível fatia
+  argentina para saneamento/AySA).
+- [ ] Confirmar onde vive o código-fonte real da skill `aluci-guard`
+  (o ambiente atual só tem o `SKILL.md`, sem `auditor.py`/`registry/`)
+  para abrir PR lá com as 57 entradas.
+- [ ] Validar vigência real das 57 entradas antes de marcá-las
+  `vigente` no registry de produção.
+
+## 7. Rollback
 
 Se algo der errado após o deploy dos PRs + Supabase migration:
 
@@ -195,9 +245,20 @@ Se algo der errado após o deploy dos PRs + Supabase migration:
 - [x] Migração Supabase candidata escrita (`.sql` neste PR).
 - [x] Prompts de teste de routing escritos (`.md` neste PR).
 - [x] SP site canônico identificado.
+- [x] Extração das referências normativas das 5 SKILL.md p/ aluci-guard
+  (`docs/aluci-guard/`, neste PR) — 57 entradas aguardando gate MN.
+- [x] Aplicação da migração Supabase — **confirmado direto no banco em
+  2026-08-29** (ver §2.4); o runbook estava desatualizado, não é
+  preciso rodar de novo.
+- [x] Atualização do `ARQUITETURA-AGENTES-IA.md` (v1.0.0 → v2.0.0) —
+  já está em v2.0.0 na cópia deste repo (`sharepoint/00-arquitetura/`);
+  falta só o re-upload no SP real (bloqueado, ver abaixo).
 - [ ] Merge dos PRs pelo MN.
-- [ ] Aplicação da migração Supabase.
-- [ ] Criação manual das 10 pastas SP (5 agentes + 5 projetos).
-- [ ] Escrita e upload dos 5 SKILL.md.
-- [ ] Atualização do `ARQUITETURA-AGENTES-IA.md` (v1.0.0 → v2.0.0).
-- [ ] Execução dos testes de routing.
+- [ ] Ingestão de conteúdo real no RAG para portos/energia/barragens
+  (hoje 0 chunks cada — ver §2.4). Prioridade sobre qualquer outro
+  item de Supabase.
+- [ ] Criação manual das 10 pastas SP (5 agentes + 5 projetos) —
+  bloqueado: MCP M365 disponível é somente leitura.
+- [ ] Upload dos 5 SKILL.md no SP — mesmo bloqueio de acesso.
+- [ ] Execução dos testes de routing — bloqueado: endpoint real
+  (`hub.mantaassociados.com/askcad`) não acessível neste ambiente.
