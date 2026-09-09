@@ -1,11 +1,28 @@
 # Atualização da Tabela Tarifária — 2026
 
-**Status:** ✅ **PUBLICADO em produção** — a tabela tarifária real de
-`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` foi atualizada
-para a versão **3.3.2** em 2026-09-09 (gate humano MN confirmado
-diretamente nesta conversa: "sim para tudo"), substituindo a lista de 13
-perfis pela matriz Função × Nível abaixo. Publicação verificada por
-releitura do arquivo via `SharePoint_Manta` MCP.
+**Status:** ✅ **PUBLICADO em produção, revisão v3.3.3** — a tabela
+tarifária real de `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`
+foi atualizada em duas rodadas em 2026-09-09:
+
+- **v3.3.2** (gate humano confirmado nesta conversa: "sim para tudo"):
+  substituiu a lista de 13 perfis pela matriz Função × Nível da seção 2
+  abaixo (fonte: fechamento de orçamento de projeto, 24/04/2026).
+- **v3.3.3** (a pedido do usuário, com base na planilha
+  `Tarifas_Consolidadas_Manta_revB.xlsx` — "Tabela Consolidada de
+  Tarifas Profissionais revB", gerada a pedido de Willer Monteiro/
+  Diretoria de IA + PMO, 09/09/2026): consolidou a tabela pegando o
+  **maior valor por nível** entre as tabelas de origem, exceto
+  Diretoria (valores definidos manualmente nesta rodada: Sócio Diretor
+  R$ 900/h, novo nível "Diretor de Infraestrutura" R$ 700/h). Unificou
+  Especialista Pleno e Júnior em R$ 470/h (perderam a diferenciação por
+  senioridade nesse nível — sinalizado, não corrigido, a pedido do
+  usuário). Renomeou "Analista" para "Analista (Engenharia / Software)"
+  com tarifas maiores (Sênior R$ 285/h, Pleno R$ 176/h) e adicionou o
+  grupo "Orçamentista" com os mesmos 3 valores. Nova condição: hora
+  extra = 1,5× a hora normal, para todas as funções.
+
+Publicação de ambas as rodadas verificada por releitura do arquivo via
+`SharePoint_Manta` MCP.
 
 > ⚠️ **Correção de rastreamento (2026-09-09):** a primeira versão deste
 > documento assumia, com base numa cópia local desatualizada, que a
@@ -170,3 +187,53 @@ Estrutura por Função × Nível (substitui a tabela de 13 perfis anterior).
 - [x] Registrar a mudança no changelog do arquivo (campo `updated`/
       `supersedes` no frontmatter e nota de versão v3.3.2 no corpo).
 - [x] Atualizar `CLAUDE.md` (este repositório).
+
+---
+
+## 5. Revisão B (v3.3.3) — consolidação com `Tarifas_Consolidadas_Manta_revB.xlsx`
+
+Planilha adicional fornecida pelo usuário: **"Tabela Consolidada de
+Tarifas Profissionais"**, ficha técnica indica "Gerado por Claude AI —
+a pedido de Willer Monteiro (Diretoria de IA + PMO)", 09/09/2026 21:28,
+ID `c6b44f92-5c2f-4e59-be29-49f7259d8a94`. Critério de consolidação:
+**maior valor entre as duas tabelas de origem, por nível**, exceto
+Diretoria (valores definidos manualmente pelo usuário nesta rodada).
+Nova condição: hora extra = 1,5× a hora normal, para todas as funções.
+
+| Função | Nível | Tarifa (R$/h) | Tarifa (R$/mês, 176h) | Hora extra (1,5×) |
+|---|---|---|---|---|
+| Diretoria | Sócio Diretor / Consultor Internacional | R$ 900,00 | R$ 158.400,00 | R$ 1.350,00 |
+| Diretoria | Diretor de Infraestrutura | R$ 700,00 | R$ 123.200,00 | R$ 1.050,00 |
+| Coordenação | Máster | R$ 550,00 | R$ 96.800,00 | R$ 825,00 |
+| Coordenação | Sênior | R$ 522,50 | R$ 91.960,00 | R$ 783,75 |
+| Coordenação | Pleno | R$ 496,38 | R$ 87.362,88 | R$ 744,57 |
+| Especialista | Máster | R$ 500,00 | R$ 88.000,00 | R$ 750,00 |
+| Especialista | Sênior | R$ 475,00 | R$ 83.600,00 | R$ 712,50 |
+| Especialista | Pleno | R$ 470,00 | R$ 82.720,00 | R$ 705,00 |
+| Especialista | Júnior | R$ 470,00 | R$ 82.720,00 | R$ 705,00 |
+| Engenharia | Máster | R$ 561,00 | R$ 98.736,00 | R$ 841,50 |
+| Engenharia | Sênior | R$ 532,95 | R$ 93.799,20 | R$ 799,43 |
+| Engenharia | Pleno | R$ 506,30 | R$ 89.108,80 | R$ 759,45 |
+| Engenharia | Júnior | R$ 480,99 | R$ 84.654,24 | R$ 721,49 |
+| Analista (Engenharia / Software) | Sênior | R$ 285,00 | R$ 50.160,00 | R$ 427,50 |
+| Analista (Engenharia / Software) | Pleno | R$ 176,00 | R$ 30.976,00 | R$ 264,00 |
+| Analista (Engenharia / Software) | Júnior | R$ 135,38 | R$ 23.826,88 | R$ 203,07 |
+| Orçamentista | Sênior | R$ 285,00 | R$ 50.160,00 | R$ 427,50 |
+| Orçamentista | Pleno | R$ 176,00 | R$ 30.976,00 | R$ 264,00 |
+| Orçamentista | Júnior | R$ 135,38 | R$ 23.826,88 | R$ 203,07 |
+| Estágio | Estagiário | R$ 80,00 | R$ 14.080,00 | R$ 120,00 |
+
+**Mudanças vs. v3.3.2 (seção 2):** Diretoria +12,5% no Sócio Diretor
+(R$ 800→900) e novo nível Diretor de Infraestrutura (R$ 700); Engenharia
+e Coordenação inalteradas; Especialista Pleno/Júnior unificados em
+R$ 470 (Pleno subiu 4,2%, Júnior subiu 9,6% — **nota:** essa unificação
+elimina a diferenciação por senioridade nesse nível, sinalizado ao
+usuário antes de publicar, mantido a pedido dele); "Analista" virou
+"Analista (Engenharia / Software)" com Sênior/Pleno bem mais altos
+(+90%/+23%); novo grupo "Orçamentista" com os mesmos 3 valores de
+Analista; Estágio inalterado.
+
+**Publicado em produção em 2026-09-09** (a pedido explícito do
+usuário): `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`
+atualizado de **3.3.2 → 3.3.3** via `SharePoint_Manta` MCP, publicação
+confirmada por releitura (19.003 bytes).

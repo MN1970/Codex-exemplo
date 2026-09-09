@@ -592,6 +592,21 @@ Pendente: confirmar que a mudança de estrutura não quebra referências
 em propostas Tipo A/PRC/variante de concessão já emitidas que citem os
 nomes de perfil antigos (ação de equipe, não bloqueante).
 
+**Revisão B (2026-09-09, mesmo dia) — v3.3.3**: a pedido do usuário,
+consolidada com `Tarifas_Consolidadas_Manta_revB.xlsx` ("Tabela
+Consolidada de Tarifas Profissionais", gerada a pedido de Willer
+Monteiro/Diretoria de IA + PMO) — critério: maior valor por nível entre
+as tabelas de origem, exceto Diretoria (definida manualmente). Adiciona
+"Diretor de Infraestrutura" (R$ 700/h) em Diretoria e sobe Sócio Diretor
+para R$ 900/h; unifica Especialista Pleno/Júnior em R$ 470/h (perde a
+diferenciação por senioridade nesse nível — sinalizado ao usuário antes
+de publicar, mantido a pedido dele); renomeia "Analista" para "Analista
+(Engenharia / Software)" com tarifas maiores e adiciona o grupo
+"Orçamentista" com os mesmos valores; nova condição de hora extra
+(1,5× a hora normal, todas as funções). Publicado via `SharePoint_Manta`
+MCP (3.3.2 → 3.3.3), confirmado por releitura. Ver seção 5 de
+`docs/ATUALIZACAO-TARIFAS-2026.md`.
+
 ---
 
 ## PADRÕES DE OUTPUT POR CLIENTE
