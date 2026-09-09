@@ -4,25 +4,32 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.4** (2026-09-09) — **atualização da tabela tarifária +
-correção de rastreamento pós-fusão da skill real**. (1) Nova análise
-comparando a tabela tarifária padrão (13 perfis, base 176h/mês) com a
-tarifa adotada por Função × Nível de uma planilha real de fechamento de
-orçamento de projeto — ver `docs/ATUALIZACAO-TARIFAS-2026.md`. (2)
-Verificação direta no SharePoint (`SharePoint_Manta` MCP, leitura) nesta
-data mostra que o arquivo real da skill de proposta
-(`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, versão
+Versão: **v5.4.5** (2026-09-09) — **atualização da tabela tarifária
+publicada em produção**. A tabela tarifária padrão da skill de proposta
+(`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`) foi
+atualizada de 13 perfis (lista única) para uma matriz Função × Nível, a
+partir de planilha real de fechamento de orçamento de projeto (aba
+"Tarifas") — gate humano MN confirmado nesta sessão. Escrita aplicada
+via `SharePoint_Manta` MCP, arquivo passou da versão 3.3.1 para
+**3.3.2**, publicação confirmada por releitura. Ver
+`docs/ATUALIZACAO-TARIFAS-2026.md` para a análise, a comparação de
+valores e as 3 decisões tomadas (estrutura, queda de Sócio/Diretor,
+remoção de "Projetista Sênior").
+
+Consolida v5.4.4 (2026-09-09) — **correção de rastreamento pós-fusão da
+skill real**. Verificação direta no SharePoint (`SharePoint_Manta` MCP,
+leitura) mostrou que o arquivo real da skill de proposta
+(`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, então versão
 **3.3.1**) já fundiu de volta, ainda em 2026-09-07, o corpo de **18
-seções + Anexo** e a **tabela de 13 perfis** (idêntica à usada nesta
-análise) junto com a variante "Tipo A / Concessão de Infraestrutura de
-Grande Porte" (equivalente ao antigo addendum "M6") — já aplicada em
-produção. Isso desatualiza o achado da v5.4.2 (abaixo, mesma data) de
-"14 seções, M1–M5, tabela de 12 níveis": a fusão v3.3.0 parece ter
-ocorrido depois daquela verificação, no mesmo dia. O arquivo
-`05-sub-skills/skill-proposta-comercial-SKILL.md` citado pela v5.4.2
-hoje é só um stub de 667 bytes redirecionando para `_DEPRECATED.md`.
-Detalhe da reconciliação em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
-(pendente de atualização nesta versão — ver Gaps abertos).
+seções + Anexo** e a **tabela de 13 perfis** junto com a variante "Tipo
+A / Concessão de Infraestrutura de Grande Porte" (equivalente ao antigo
+addendum "M6") — já aplicada em produção. Isso desatualizou o achado da
+v5.4.2 (abaixo, mesma data) de "14 seções, M1–M5, tabela de 12 níveis":
+a fusão v3.3.0 parece ter ocorrido depois daquela verificação, no mesmo
+dia. O arquivo `05-sub-skills/skill-proposta-comercial-SKILL.md` citado
+pela v5.4.2 hoje é só um stub de 667 bytes redirecionando para
+`_DEPRECATED.md`. Detalhe da reconciliação em
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
 Consolida v5.4.3 (2026-09-07) — **fase 1 da reconciliação com o
 SharePoint real: numeração de segmento corrigida**. A pedido do
@@ -560,31 +567,30 @@ SharePoint real — ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
 ---
 
-## TABELA TARIFÁRIA — ATUALIZAÇÃO 2026
+## TABELA TARIFÁRIA — ATUALIZAÇÃO 2026 ✅ PUBLICADA
 
-Análise da tabela tarifária padrão usada pela skill de proposta
+Atualização da tabela tarifária padrão usada pela skill de proposta
 (atividade `A1-proposta`), a partir de uma planilha real de fechamento
 de orçamento de projeto (aba "Tarifas", tarifa adotada por Função ×
-Nível). Compara com a tabela atual de 13 perfis e propõe uma estrutura
-em 2 eixos (Função × Nível) com valores atualizados. Ver
-`docs/ATUALIZACAO-TARIFAS-2026.md`.
+Nível). Ver `docs/ATUALIZACAO-TARIFAS-2026.md` para a análise completa
+e a comparação com a tabela anterior.
 
-> ⚠️ **Correção de rastreamento (2026-09-09)**: verificação direta no
-> SharePoint (`SharePoint_Manta` MCP, leitura) confirma que a tabela
-> tarifária real de produção está em
-> `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (seção
-> "Tabela tarifaria padrao [v3.3.0]") — **não** no antigo
-> `05-sub-skills/skill-proposta-comercial-SKILL.md`, hoje só um stub
-> redirecionando para `_DEPRECATED.md`. A tabela real é **idêntica**
-> (mesmos 13 perfis e valores) à usada nesta análise, o que valida a
-> comparação. Essa mesma leitura mostra que a variante de Concessão de
-> Infraestrutura de Grande Porte (equivalente ao antigo "M6") **já está
-> aplicada em produção**, não mais pendente.
+**Publicada em produção em 2026-09-09** (gate humano MN confirmado
+nesta sessão — "sim para tudo"): o arquivo real
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` foi atualizado
+via `SharePoint_Manta` MCP (escrita) da versão 3.3.1 para **3.3.2**,
+substituindo a lista de 13 perfis pela matriz Função × Nível. Publicação
+confirmada por releitura do arquivo. Decisões tomadas: estrutura migrou
+para Função × Nível (não é só reajuste de valores nos perfis antigos); a
+queda de -20% em Sócio/Diretor foi aceita como intencional (reflete a
+tarifa real do fechamento, não um artefato do BDI do projeto de
+origem); "Projetista Sênior" foi removido por não ter Função
+correspondente na nova matriz, com nota no arquivo indicando usar o
+nível "Especialista" mais próximo até reconciliação futura.
 
-Alteração de valores/estrutura de tarifa continua dependendo de gate
-humano (MN) antes de publicar no SharePoint — esta sessão confirmou
-acesso de leitura ao `SharePoint_Manta` MCP, mas a escrita na tabela
-tarifária de produção não foi executada, aguardando confirmação.
+Pendente: confirmar que a mudança de estrutura não quebra referências
+em propostas Tipo A/PRC/variante de concessão já emitidas que citem os
+nomes de perfil antigos (ação de equipe, não bloqueante).
 
 ---
 
@@ -839,6 +845,14 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.5** (2026-09-09) — tabela tarifária padrão da skill de proposta
+  (`A1-proposta`) **atualizada em produção**: de 13 perfis (lista única)
+  para matriz Função × Nível, a partir de planilha real de fechamento de
+  orçamento (aba "Tarifas"). Gate humano MN confirmado nesta sessão;
+  escrita aplicada via `SharePoint_Manta` MCP
+  (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` 3.3.1 →
+  3.3.2), publicação verificada por releitura. Ver
+  `docs/ATUALIZACAO-TARIFAS-2026.md`.
 - **v5.4.4** (2026-09-09) — análise de atualização da tabela tarifária
   padrão da skill de proposta (`A1-proposta`), a partir de planilha real
   de fechamento de orçamento (aba "Tarifas", Função × Nível). Ver

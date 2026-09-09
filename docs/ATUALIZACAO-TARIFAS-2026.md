@@ -1,8 +1,11 @@
 # Atualização da Tabela Tarifária — 2026
 
-**Status:** análise concluída, addendum pronto para colar na skill de produção.
-**Ainda não aplicado** — mudança de valores/estrutura de tarifa comercial
-exige gate humano (MN) antes de publicar no SharePoint.
+**Status:** ✅ **PUBLICADO em produção** — a tabela tarifária real de
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` foi atualizada
+para a versão **3.3.2** em 2026-09-09 (gate humano MN confirmado
+diretamente nesta conversa: "sim para tudo"), substituindo a lista de 13
+perfis pela matriz Função × Nível abaixo. Publicação verificada por
+releitura do arquivo via `SharePoint_Manta` MCP.
 
 > ⚠️ **Correção de rastreamento (2026-09-09):** a primeira versão deste
 > documento assumia, com base numa cópia local desatualizada, que a
@@ -100,26 +103,28 @@ da tabela vigente na skill — exceto Sócio/Diretor, que cai. Isso é
 consistente com um projeto real fechado com BDI de 67,5% (Overhead 25% +
 Lucro 15% + Imposto 17,5% + Contingência 10%), que aparentemente reflete
 uma política de precificação mais atual do que a tabela publicada na
-skill. Antes de publicar, **confirmar com o gate humano (MN)** se:
+skill. Decisão do gate humano (MN, confirmado nesta conversa em
+2026-09-09 — "sim para tudo") sobre os 3 pontos abaixo, **já aplicada em
+produção**:
 
-1. A tabela da skill deve migrar para a estrutura em 2 eixos
-   (Função × Nível) ou se os novos valores devem apenas substituir os
-   `R$/h` da lista de 13 perfis existente, mantendo os nomes atuais.
-2. A queda em Sócio/Diretor (-20%) é intencional ou um efeito do BDI
-   específico deste projeto (67,5%) que não deve virar tarifa padrão.
-3. "Projetista Sênior" (perfil hoje sem correspondência na nova aba
-   Tarifas) deve ser mantido, removido ou mapeado para algum nível de
-   Especialista/Técnico.
+1. **Migrar para a estrutura em 2 eixos** (Função × Nível) — decidido:
+   sim, substitui a lista de 13 perfis (não é só um reajuste de `R$/h`
+   mantendo os nomes antigos).
+2. **Queda em Sócio/Diretor (-20%)** — aceita como intencional (reflete
+   a tarifa real adotada no fechamento de orçamento de 24/04/2026, não
+   um artefato do BDI específico do projeto).
+3. **"Projetista Sênior"** (sem correspondência direta na nova aba
+   Tarifas) — removido da tabela; nota registrada no arquivo de
+   produção instruindo usar o nível "Especialista" mais próximo por
+   senioridade até reconciliação futura.
 
-## 4. Addendum pronto para colar na skill de produção
+## 4. Addendum aplicado na skill de produção
 
-O bloco abaixo **substitui** a seção "Tabela tarifaria padrao [v3.3.0]"
-do arquivo real de produção
+O bloco abaixo **substituiu** a seção "Tabela tarifaria padrao
+[v3.3.1]" do arquivo real de produção
 `Engenharia/Documentos Compartilhados/04_IA/Manta-Maestro/02-atividades/
-A1-proposta/SKILL.md` (versão atual 3.3.1, confirmado por leitura direta
-via `SharePoint_Manta` MCP em 2026-09-09 — **não** o stub
-`05-sub-skills/skill-proposta-comercial-SKILL.md`, que só redireciona
-para `_DEPRECATED.md`). **Não publicar sem aprovação MN.**
+A1-proposta/SKILL.md`, agora na versão **3.3.2** (2026-09-09) — publicado
+via `SharePoint_Manta` MCP e confirmado por releitura do arquivo.
 
 ```markdown
 ## Tabela Tarifária Padrão (atualização 2026 — base 176h/mês)
@@ -152,17 +157,16 @@ Estrutura por Função × Nível (substitui a tabela de 13 perfis anterior).
 > Função × Nível.
 ```
 
-### Checklist de aplicação (para quem for publicar no SharePoint)
+### Checklist de aplicação (publicado em 2026-09-09)
 
-- [ ] Decidir com o gate humano (MN) os 3 pontos da seção 3 acima.
-- [ ] Colar o bloco da seção 4 substituindo "Tabela tarifaria padrao
-      [v3.3.0]" em `04_IA/Manta-Maestro/02-atividades/A1-proposta/
-      SKILL.md`, na posição indicada, e bump de versão para 3.3.2.
+- [x] Decidir com o gate humano (MN) os 3 pontos da seção 3 acima.
+- [x] Colar o bloco da seção 4 substituindo "Tabela tarifaria padrao"
+      em `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, e
+      bump de versão para 3.3.2.
 - [ ] Confirmar que a mudança de estrutura (13 perfis → Função × Nível)
       não quebra referências existentes em propostas Tipo A/PRC/variante
-      de concessão já emitidas.
-- [ ] Registrar a mudança no changelog do arquivo (campo `updated`/
-      `supersedes` no frontmatter e nota de versão no corpo, como já é
-      feito para v3.3.0/v3.3.1).
-- [ ] Atualizar `CLAUDE.md` (este repositório) quando a publicação for
-      confirmada.
+      de concessão já emitidas — pendente de checagem manual pela equipe
+      Manta contra propostas já emitidas.
+- [x] Registrar a mudança no changelog do arquivo (campo `updated`/
+      `supersedes` no frontmatter e nota de versão v3.3.2 no corpo).
+- [x] Atualizar `CLAUDE.md` (este repositório).
