@@ -4,9 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
+Versão: **v4.2.2** (2026-09-09) — v4.2 expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+proposta técnico-comercial + análise de atualização da tabela tarifária.
 
 ---
 
@@ -137,6 +137,23 @@ SharePoint nesta sessão).
 
 ---
 
+## TABELA TARIFÁRIA — ATUALIZAÇÃO 2026
+
+Análise da tabela tarifária padrão usada pela skill `proposta-comercial`
+(A7-bd / Manta 13-bd), a partir de uma planilha real de fechamento de
+orçamento de projeto (aba "Tarifas", tarifa adotada por Função × Nível).
+Compara com a tabela atual de 13 perfis e propõe uma estrutura em 2 eixos
+(Função × Nível) com valores atualizados. Ver `docs/ATUALIZACAO-TARIFAS-2026.md`.
+
+Assim como o modelo mestre de proposta (seção acima), esta é uma análise
+e recomendação — a tabela tarifária em produção vive no arquivo
+`skill-proposta-comercial-SKILL.md` no SharePoint, fora deste
+repositório. Alteração de valores/estrutura de tarifa depende de gate
+humano (MN) e publicação feita na fonte no SharePoint — pendente (sem
+acesso de escrita ao SharePoint nesta sessão).
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -175,6 +192,10 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.2** (2026-09-09) — análise e recomendação de atualização da
+  tabela tarifária padrão da skill `proposta-comercial`, a partir de
+  planilha real de fechamento de orçamento (aba "Tarifas", Função ×
+  Nível). Ver `docs/ATUALIZACAO-TARIFAS-2026.md`.
 - **v4.2.1** (2026-09-01) — análise e recomendação de modelo mestre de
   proposta técnico-comercial, validada contra a proposta MNT-2026-COM-1183_D
   e a skill `proposta-comercial` (A7-bd). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
