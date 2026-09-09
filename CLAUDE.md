@@ -4,7 +4,18 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.5** (2026-09-09) — **atualização da tabela tarifária
+Versão: **v5.4.6** (2026-09-09) — **cláusula de despesas reembolsáveis
+publicada em produção**. A cláusula "Deslocamentos" (Seção 12 do
+A1-proposta) só definia a forma fiscal do ressarcimento; a pedido do
+usuário, revisado o texto vigente e publicada a versão renomeada
+"Deslocamentos e despesas reembolsáveis" (`04_IA/Manta-Maestro/
+02-atividades/A1-proposta/SKILL.md`, 3.3.3 → **3.3.4**): regra padrão de
+que essas despesas são sempre por conta do CLIENTE, e lista explícita de
+categorias (táxis/Uber, deslocamentos incl. Jundiaí, passagens,
+traslados, hospedagem). Publicação confirmada por releitura. Ver
+`docs/ATUALIZACAO-DESPESAS-REEMBOLSAVEIS-2026.md`.
+
+Consolida v5.4.5 (2026-09-09) — **atualização da tabela tarifária
 publicada em produção**. A tabela tarifária padrão da skill de proposta
 (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`) foi
 atualizada de 13 perfis (lista única) para uma matriz Função × Nível, a
@@ -609,6 +620,22 @@ MCP (3.3.2 → 3.3.3), confirmado por releitura. Ver seção 5 de
 
 ---
 
+## DESPESAS REEMBOLSÁVEIS — ATUALIZAÇÃO 2026 ✅ PUBLICADA
+
+A cláusula "Deslocamentos" (Seção 12 do A1-proposta) definia só a forma
+fiscal do ressarcimento (Nota de Débito ou Nota Fiscal), sem listar quais
+despesas são cobertas. A pedido do usuário, revisado o texto vigente e
+depois publicada (v3.3.3 → **3.3.4**) a cláusula renomeada para
+"Deslocamentos e despesas reembolsáveis", com regra padrão explícita
+(essas despesas são **sempre por conta do CLIENTE**, nunca absorvidas
+pela MANTA) e lista de categorias: táxis/Uber, deslocamentos rodoviários/
+locais (incluindo trajetos a Jundiaí), passagens (aéreas/rodoviárias),
+traslados e hospedagem (hotéis). Publicado via `SharePoint_Manta` MCP,
+confirmado por releitura (18.947 bytes). Ver
+`docs/ATUALIZACAO-DESPESAS-REEMBOLSAVEIS-2026.md`.
+
+---
+
 ## PADRÕES DE OUTPUT POR CLIENTE
 
 Referências canônicas de formato de entregável (EAP em Excel/PPT,
@@ -860,6 +887,15 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.6** (2026-09-09) — cláusula "Deslocamentos" (Seção 12 do
+  A1-proposta) **atualizada em produção**: renomeada para
+  "Deslocamentos e despesas reembolsáveis", com regra padrão de que
+  essas despesas são sempre por conta do CLIENTE e lista explícita de
+  categorias (táxis/Uber, deslocamentos incl. Jundiaí, passagens,
+  traslados, hospedagem). Escrita aplicada via `SharePoint_Manta` MCP
+  (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` 3.3.3 →
+  3.3.4), confirmada por releitura. Ver
+  `docs/ATUALIZACAO-DESPESAS-REEMBOLSAVEIS-2026.md`.
 - **v5.4.5** (2026-09-09) — tabela tarifária padrão da skill de proposta
   (`A1-proposta`) **atualizada em produção**: de 13 perfis (lista única)
   para matriz Função × Nível, a partir de planilha real de fechamento de
