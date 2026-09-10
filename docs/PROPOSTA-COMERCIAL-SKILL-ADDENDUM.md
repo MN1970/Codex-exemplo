@@ -1,12 +1,25 @@
 # Addendum pronto para deploy — Variante "PTC-Infraestrutura/Concessão de Grande Porte"
 
-**Status:** pronto para colar na skill de produção. **Ainda não aplicado** —
-esta sessão não tem acesso de escrita ao SharePoint (`SharePoint_Manta` sem
-autenticação neste ambiente). Falta um passo manual: copiar o bloco da
-Seção A abaixo para dentro de
+**Status:** ✅ **gate humano (MN) aprovado em 2026-09-10.** Ainda **não
+aplicado** na skill de produção — falta só o passo mecânico: colar o
+bloco da Seção A abaixo dentro de
 `Engenharia/Documentos Compartilhados/04_IA/Manta-Maestro/02-sub-skills/
-skill-proposta-comercial-SKILL.md`, na posição indicada, e confirmar o gate
-humano (MN) antes de publicar.
+skill-proposta-comercial-SKILL.md`, na posição indicada. Bloqueado nesta
+sessão porque o conector `SharePoint_Manta` está desconectado (MCP
+server disconnected) — precisa ser feito por uma sessão/pessoa com
+acesso de escrita ao SharePoint.
+
+**⚠️ Confirmar antes de publicar:** a "Fonte de validação" abaixo cita
+`MNT-2026-COM-1183_D`. Um levantamento completo do SharePoint em
+2026-09-10 (118 propostas catalogadas + leitura integral do documento)
+**não encontrou nenhum arquivo `_D`** — apenas a revisão `_C`
+(`MNT-2026-COM-1183_C_3.pdf`, 21 páginas, 24/08/2026), cujo próprio
+controle de revisão interno diz substituir a `_B`, sem mencionar uma
+`_D`. Antes de colar este addendum na skill de produção, confirmar se a
+`_D` existe em algum outro lugar (ex.: rascunho local, e-mail, versão
+ainda não subida) ou corrigir a referência de fonte para `_C` nos dois
+lugares abaixo (nesta seção e na "Fonte de validação" dentro do bloco a
+colar).
 
 Este addendum implementa a recomendação de `docs/MODELO-MESTRE-PROPOSTA.md`
 (validada contra MNT-2026-COM-1183_D) sem alterar nenhuma seção existente da
@@ -79,9 +92,11 @@ BR-116/324/BA, Nova Infra Invest, 26/08/2026). Análise completa em
 
 ## Checklist de aplicação (para quem for publicar no SharePoint)
 
+- [x] Gate humano (MN) — aprovado em 2026-09-10.
+- [ ] Confirmar fonte de validação (_C vs. _D — ver aviso acima) antes de
+      colar o bloco.
 - [ ] Colar o bloco da Seção A no arquivo de produção, na posição indicada.
 - [ ] Confirmar que M1–M5 permanecem inalterados.
-- [ ] Gate humano (MN) — aprovação antes de publicar.
 - [ ] Registrar a mudança no changelog da skill (nova versão da
       `skill-proposta-comercial-SKILL.md`).
 - [ ] Atualizar `04_IA/Manta-Maestro/00-arquitetura/` se a variante M6 for
