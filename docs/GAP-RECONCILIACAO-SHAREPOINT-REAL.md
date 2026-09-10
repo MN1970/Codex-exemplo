@@ -1,10 +1,33 @@
 # Gap — Reconciliação entre este repositório e o Manta Maestro real (SharePoint)
 
 **Status:** 🟡 parcialmente investigado e parcialmente resolvido em
-2026-09-07 (numeração de segmento corrigida; gap do embedder G010
-resolvido com decisão real; Supabase confirmado real). **Reconciliação
-completa não terminada** — escopo grande demais para uma sessão só.
-Documentado aqui conforme combinado com o usuário em 2026-09-07.
+2026-09-07/08 (numeração de segmento corrigida; gap do embedder G010
+resolvido com decisão real; Supabase confirmado real; risco de edição
+concorrente no SharePoint real identificado após um saneamento
+estrutural em produção disparado por duas sessões Claude em paralelo).
+**Reconciliação completa não terminada** — escopo grande demais para
+uma sessão só. Documentado aqui conforme combinado com o usuário em
+2026-09-07.
+
+> 🔴 **Atualização 2026-09-10 — recorrência confirmada da fabricação na
+> skill `proposta-comercial`, hoje em produção.** A "Variante Tipo A /
+> Concessão de Infraestrutura de Grande Porte" que hoje existe na skill
+> real (`02-atividades/A1-proposta/SKILL.md`, v3.3.5) reproduz quase
+> palavra-por-palavra o addendum fabricado deste repositório
+> (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`), incluindo a referência
+> a uma revisão de proposta (`MNT-2026-COM-1183_D`) que **não existe**
+> (só `_C_3` é encontrável no SharePoint). Ver seção dedicada
+> "Recorrência confirmada — Variante Tipo A (2026-09-10)" mais abaixo
+> para a evidência completa, incluindo a admissão da própria fonte
+> canônica (`INDICE-CANONICAL.md`) de que esse conteúdo "antes só
+> existia num pacote de skill fora do SharePoint, nunca escrito na
+> árvore". Isso significa que a correção de premissa de 2026-09-07/08
+> (seção "Skill `proposta-comercial`" na tabela abaixo) **não eliminou
+> o risco** — o mesmo tipo de contaminação recorreu depois, por um
+> caminho diferente (fusão de pacote externo no saneamento estrutural,
+> não uma sessão reescrevendo o CLAUDE.md deste repositório). Ação
+> recomendada: MN revisar e corrigir a skill real diretamente antes de
+> usá-la em proposta de cliente.
 
 > ⚠️ **Atualização 2026-09-07 (mesma sessão, investigação mais
 > profunda)**: a primeira versão deste documento concluía que a
@@ -111,6 +134,57 @@ explorado, mas não há confirmação:
   `rag_chunks` via RPC `match_rag_chunks` — não uma tabela chamada
   exatamente como este repositório assume em todo lugar)
 
+## Risco de edição concorrente no SharePoint real (descoberto 2026-09-07/08)
+
+Achado novo, distinto das divergências de conteúdo acima: o SharePoint
+real não é um documento estático que esta sessão lê e corrige — é uma
+árvore **ativamente editada por múltiplas sessões/processos em
+paralelo**, e essa concorrência já causou uma perda real de trabalho.
+
+Sequência confirmada (ver `docs/MODELO-MESTRE-PROPOSTA.md` §3 para o
+detalhe técnico completo):
+
+1. Esta sessão aplicou a correção de Tarifa×Success Fee/exigibilidade/
+   juros de mora na skill real em
+   `04_IA/Manta-Maestro/05-sub-skills/skill-proposta-comercial-SKILL.md`
+   (809 bytes, 2026-09-07T15:26:24Z).
+2. Horas depois, **outra sessão Claude** (Claude Desktop Windows,
+   trabalhando em algo chamado "Proposta manta gestão co...") tentou
+   localizar essa mesma skill e não encontrou nem `05-sub-skills/` nem
+   `02-sub-skills/` — viu uma estrutura totalmente diferente
+   (`02-agentes-horizontais/agente-bd`, vazia), confirmada por
+   screenshot compartilhado pelo usuário.
+3. Essa confusão de caminho, relatada por duas sessões distintas,
+   disparou um **saneamento estrutural real do SharePoint em
+   produção** no mesmo dia — documentado pela própria fonte primária,
+   `09-base-conhecimento/INDICE-CANONICAL.md` v1.1 §13 ("Changelog de
+   saneamento — 2026-09-07"). O saneamento fundiu o corpo operacional
+   da skill em `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`
+   (v3.3.0) a partir de um pacote de conteúdo **anterior** à correção
+   do passo 1 — ou seja, a correção desta sessão ficou **órfã**: o
+   caminho real mudou antes que a mudança pudesse ser considerada
+   permanente, e o conteúdo consolidado no novo caminho não carregava
+   as cláusulas aplicadas.
+4. Esta sessão detectou isso ao **reler a fonte real antes de assumir
+   que a correção anterior ainda era válida** (em vez de confiar que
+   um upload bem-sucedido permanece correto indefinidamente), e
+   reaplicou as três cláusulas no novo caminho real como v3.3.1
+   (16.191 bytes, verificado por leitura pós-upload em
+   2026-09-08T00:48:09Z).
+
+**Implicação para qualquer sessão futura (Claude ou humana) que edite
+este SharePoint**: um upload bem-sucedido não é garantia de
+permanência. Antes de editar qualquer arquivo já editado nesta ou em
+sessões anteriores, **reler o arquivo primeiro** para confirmar que o
+caminho e o conteúdo ainda são os esperados — especialmente em dias
+com atividade concorrente conhecida (múltiplas sessões, o próprio
+processo de sync `Sync-MantaMaestro.ps1` rodando na máquina local do
+usuário, ou um saneamento estrutural em andamento). Isso é
+particularmente relevante para a Routine diária de sincronização
+GitHub↔SharePoint criada nesta sessão (`trig_01KPNtXg2TJJaNYhHoetrB3D`):
+seu prompt precisa reler o índice canônico a cada execução, não assumir
+caminhos fixos.
+
 ## O que isso pode significar
 
 Três hipóteses, em ordem decrescente de probabilidade — **atualizadas**
@@ -169,13 +243,20 @@ precisa do MN:
    `proposta-comercial`), **sempre verificar contra o SharePoint real
    primeiro**, não confiar no que já está escrito aqui.
 
-## Feito nesta sessão (2026-09-07)
+## Feito nesta sessão (2026-09-07/08)
 
 - Numeração de segmento corrigida no `CLAUDE.md` (S1–S11 real).
 - Gap do embedder (G010) resolvido com decisão real (`docs/EMBEDDER-DECISION.md`,
   `docs/SUPABASE-PROJECT-AUDIT.md`, `CLAUDE.md` atualizados).
 - Confirmado que o núcleo Supabase/RAG é real (não fictício) — ver
   seção "O que é confirmado como real" acima.
+- Detectado e documentado o risco de edição concorrente no SharePoint
+  real: um saneamento estrutural em produção, disparado por confusão
+  de caminho relatada por duas sessões Claude distintas, orfanou a
+  correção da skill `proposta-comercial` aplicada por esta sessão; a
+  correção foi reaplicada no novo caminho real como v3.3.1 — ver seção
+  "Risco de edição concorrente no SharePoint real" acima e
+  `docs/MODELO-MESTRE-PROPOSTA.md` §3.
 
 ## Não resolvido nesta sessão
 
@@ -192,3 +273,91 @@ precisa do MN:
 - Aguarda decisão do MN sobre a recomendação item 1 (confirmar
   explicitamente que o SharePoint é a fonte real e que este
   repositório deve convergir para ela).
+
+## Recorrência confirmada — Variante Tipo A (2026-09-10)
+
+Investigação read-only via `SharePoint_Manta` MCP, motivada por outro
+agente desta sessão ter encontrado, ao verificar onde publicar o
+addendum M6 deste repositório, uma seção na skill real que já parecia
+conter o mesmo conteúdo — antes de qualquer escrita ser feita.
+
+**Estado do arquivo real no momento da checagem**:
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, **v3.3.5**,
+`updated: 2026-09-09`, modificado em `2026-09-10T00:14:22Z`,
+18.964 bytes, `modified_by: Mauricio Neves`. A seção da variante está
+internamente etiquetada `[v3.3.0]` — ou seja, segundo o próprio
+arquivo, existe desde a v3.3.0 (a fusão do saneamento estrutural de
+2026-09-07 descrita na seção 3 de `docs/MODELO-MESTRE-PROPOSTA.md`),
+não é conteúdo novo desta versão.
+
+**Busca por `MNT-2026-COM-1183`** no SharePoint (`find_item`) retornou
+apenas `MNT-2026-COM-1183_C_3.pdf`. Nenhuma revisão `_D` existe —
+confirma, de forma independente, o mesmo achado da investigação de
+2026-09-07/08.
+
+**Comparação literal** entre o addendum fabricado deste repositório e o
+texto real da skill hoje:
+
+> Fabricado (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`, histórico):
+> "Extensão do modo **M1 (Proposta Completa)** para propostas de
+> avaliação técnica, paramétrico de CAPEX/OPEX e gestão integrada em
+> concessões de infraestrutura de grande porte (rodovias, ferrovias,
+> portos, aeroportos, saneamento, energia, barragens). Validada contra
+> a proposta real MNT-2026-COM-1183_D (Concessão Rota 2 de Julho)."
+
+> Skill real, hoje (v3.3.5): "Extensao do **Tipo A** para propostas de
+> avaliacao tecnica, parametrico de CAPEX/OPEX e gestao integrada em
+> concessoes de infraestrutura de grande porte (rodovias, ferrovias,
+> portos, aeroportos, saneamento, energia, barragens) [...] Validada
+> contra a proposta real MNT-2026-COM-1183_D (Concessao Rota 2 de
+> Julho, Nova Infra Invest, 26/08/2026)."
+
+Idêntico exceto a troca de nomenclatura "modo M1" → "Tipo A" (reflexo
+da reestruturação real de "18 seções/Modos" para "Tipos de proposta") e
+o acréscimo de data/investidor. Os 5 blocos batem nome a nome (Dados
+Oficiais do Empreendimento, Cenários de Contratação/success fee,
+Método do Paramétrico em Etapas, Infraestrutura e Ferramentas
+Incluídas, Controle de Revisão + Ficha Técnica).
+
+**Prova decisiva — a própria fonte canônica admite a origem**: o
+`09-base-conhecimento/INDICE-CANONICAL.md` real (v1.1, §13, changelog
+do saneamento estrutural de 2026-09-07) registra, sobre esta mesma
+mudança:
+
+> "'02-atividades/A1-proposta/SKILL.md' passou de v3.2.0 (5498 bytes,
+> só metodologia) para v3.3.0 (13342 bytes): incorporou [...] uma nova
+> variante 'Tipo A / Concessão de Infraestrutura de Grande Porte' (5
+> blocos adicionais [...]) — validada contra a proposta real
+> MNT-2026-COM-1183_D [...]. Esse conteúdo antes só existia num pacote
+> de skill fora do SharePoint, nunca escrito na árvore."
+
+Ou seja, o próprio índice canônico confirma que o conteúdo veio de um
+**pacote externo ao SharePoint, nunca antes verificado contra a árvore
+real** — a descrição bate com o addendum fabricado deste repositório
+(ou um pacote equivalente com a mesma origem não verificada). Não há
+registro de checagem contra a proposta real antes da fusão; a
+referência "_D" nunca existiu e persiste mesmo assim.
+
+**Veredito: recorrência confirmada, não coincidência nem trabalho
+legítimo independente.** A correção de premissa aplicada em
+2026-09-07/08 (ver tabela de divergências acima) resolveu o sintoma no
+`CLAUDE.md` deste repositório, mas não impediu que a mesma fabricação
+entrasse na skill de produção por um caminho diferente — fusão de um
+pacote externo durante um saneamento estrutural automatizado, sem gate
+humano de verificação de fonte primária. A skill real está, hoje,
+contaminada e em uso potencial por qualquer proposta que utilize a
+variante "Tipo A".
+
+**Nota sobre autoria**: o campo `modified_by` da versão atual (v3.3.5)
+registra "Mauricio Neves" — isso não implica necessariamente edição
+manual direta; pode refletir o processo de sync automatizado
+(`Sync-MantaMaestro.ps1`, mencionado na seção anterior) rodando sob a
+conta do usuário, ou uma sessão Claude local operando com essas
+credenciais. Não investigado mais a fundo nesta sessão.
+
+**Recomendação**: MN revisar a seção "Variante Tipo A" na skill real
+diretamente, remover ou corrigir a referência a `MNT-2026-COM-1183_D`,
+e revalidar os 5 blocos contra uma fonte primária real (ou uma proposta
+real distinta) antes de qualquer uso em proposta de cliente. Este
+repositório não tem — nem deveria assumir — mandato para corrigir a
+skill de produção sem esse gate humano.

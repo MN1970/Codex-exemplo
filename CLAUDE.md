@@ -4,12 +4,61 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.4** (2026-09-08) — **ADR das pendências arquiteturais
+Versão: **v5.4.7** (2026-09-10) — **ADR das pendências arquiteturais
 D1–D4** (multi-tenancy, versionamento de agentes, fallback de modelo,
 retenção de logs). Diagnóstico e proposta completos em
 `docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md`. Status: **proposta,
 aguardando gate humano (MN)** — nenhuma mudança de schema ou de agente
 foi aplicada. Ver seção "Pendências arquiteturais D1–D4".
+
+Consolida v5.4.6 (2026-09-10) — **diretriz de posicionamento**: foco
+na maturidade profissional da equipe Manta, com IA como apoio/
+multiplicador (não substituição), para propostas do segmento
+Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
+("Diretriz de posicionamento (2026-09-10)"). É orientação de conteúdo
+para propostas futuras — não altera nem alega nada sobre a skill de
+produção.
+
+Consolida v5.4.5 (2026-09-10) — **recorrência confirmada da
+fabricação na skill real de proposta**. Investigação read-only via
+`SharePoint_Manta` MCP confirmou que a seção "Variante Tipo A /
+Concessão de Infraestrutura de Grande Porte", hoje viva em
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.5),
+reproduz quase palavra-por-palavra o addendum fabricado deste
+repositório (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`), incluindo a
+referência a uma revisão de proposta inexistente
+(`MNT-2026-COM-1183_D` — só `_C_3` é encontrável). A própria fonte
+canônica (`INDICE-CANONICAL.md` §13) admite que esse conteúdo "antes só
+existia num pacote de skill fora do SharePoint, nunca escrito na
+árvore" — ou seja, a correção de premissa da v5.4.2/v5.4.3 não impediu
+uma recorrência por um caminho diferente (fusão de pacote externo no
+saneamento estrutural de 2026-09-07, sem gate humano de verificação de
+fonte primária). Detalhe completo, incluindo a comparação literal, em
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (seção "Recorrência
+confirmada — Variante Tipo A (2026-09-10)"). **Nenhuma escrita foi
+feita na skill de produção** — recomendação registrada para o MN
+revisar e corrigir diretamente.
+
+Consolida v5.4.4 (2026-09-08) — **a skill real de proposta mudou de
+lugar de novo, no mesmo dia, e foi reaplicada**. Horas depois da
+correção v5.4.2 (skill em `05-sub-skills/skill-proposta-comercial-
+SKILL.md`), uma **outra sessão Claude** (Claude Desktop Windows)
+tentou localizar a mesma skill, não encontrou o caminho e viu uma
+estrutura totalmente diferente — essa confusão disparou, em paralelo
+a esta sessão, um **saneamento estrutural real** do SharePoint
+(`INDICE-CANONICAL.md` v1.1, §13), que fundiu o corpo operacional da
+skill em `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`
+(v3.3.0) a partir de um pacote de conteúdo **anterior** à correção
+v5.4.2 — ou seja, a segregação Tarifa×Success Fee, a exigibilidade por
+formalização e a cláusula de juros de mora **ficaram órfãs** no
+caminho antigo, que virou só um ponteiro de descontinuação. Reaplicadas
+nesta sessão no novo caminho real como **v3.3.1** (16.191 bytes,
+verificado por leitura pós-upload em 2026-09-08T00:48:09Z). Ver seção
+"Modelo Mestre de Proposta" §3 e `docs/MODELO-MESTRE-PROPOSTA.md` §3
+para o detalhe completo, incluindo o risco de **edição concorrente**
+no SharePoint real (múltiplas sessões/processos editando a mesma
+árvore no mesmo dia) — antes de editar essa skill de novo, sempre
+reler o arquivo primeiro.
 
 Consolida v5.4.3 (2026-09-07) — **fase 1 da reconciliação com o
 SharePoint real: numeração de segmento corrigida**. A pedido do
@@ -512,6 +561,16 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
+> 🔴 **Atualização 2026-09-10**: a seção "Variante Tipo A / Concessão de
+> Infraestrutura de Grande Porte", hoje viva na skill real
+> (`02-atividades/A1-proposta/SKILL.md`, v3.3.5), foi confirmada como
+> **recorrência da fabricação** corrigida abaixo — reproduz quase
+> palavra-por-palavra o addendum fabricado deste repositório e cita a
+> mesma revisão inexistente `MNT-2026-COM-1183_D`. Nenhuma escrita foi
+> feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+> ("Recorrência confirmada — Variante Tipo A") para a evidência
+> completa e a recomendação ao MN.
+
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
 > um "agente A7-bd" e um modo "M6" validado contra
@@ -531,11 +590,25 @@ conquista → formalização da conquista; cronograma → marco formalmente
 aprovado — nunca pela implementação física, e acrescentar cláusula de
 **multa, juros de mora e correção monetária** por atraso de pagamento)
 **já foi aplicada na skill real** em 2026-09-07, a pedido do usuário —
-reescrita no formato verdadeiro dela (resumo compacto ≤1024 caracteres,
-não um documento de seções longas). Arquivo verificado por leitura
-pós-upload: 809 bytes. Detalhe e checklist real em
-`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` (o addendum original de
-"18 seções/M6" está lá marcado como histórico/não aplicável).
+reescrita no formato verdadeiro dela.
+
+> ⚠️ **A skill mudou de lugar de novo, no mesmo dia (2026-09-07/08)**:
+> horas depois da correção acima, uma confusão de caminho reportada por
+> outra sessão Claude disparou um saneamento estrutural real do
+> SharePoint. A skill foi fundida em
+> `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.0),
+> puxando um pacote de conteúdo anterior à correção — **sem** as
+> cláusulas acima. Reaplicadas nesta sessão como **v3.3.1** no novo
+> caminho real (16.191 bytes, verificado por leitura pós-upload).
+> `05-sub-skills/skill-proposta-comercial-SKILL.md` **não é mais a
+> fonte** — virou um ponteiro de descontinuação. Detalhe completo em
+> `docs/MODELO-MESTRE-PROPOSTA.md` §3. **O SharePoint real está sendo
+> editado por múltiplas sessões em paralelo** — antes de editar essa
+> skill de novo, sempre reler o arquivo primeiro.
+
+Detalhe e checklist real em `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`
+(o addendum original de "18 seções/M6" está lá marcado como
+histórico/não aplicável).
 
 Pendências: (1) revisão jurídica dos percentuais padrão de multa/juros/
 correção monetária antes do próximo uso real em proposta de cliente;
@@ -823,10 +896,53 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.4** (2026-09-08) — ADR das pendências arquiteturais D1–D4
+- **v5.4.7** (2026-09-10) — ADR das pendências arquiteturais D1–D4
   (multi-tenancy, versionamento de agentes, fallback de modelo, retenção
   de logs). Ver `docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md`. Status:
   proposta, aguardando gate humano (MN).
+- **v5.4.6** (2026-09-10) — diretriz de posicionamento (MN): propostas
+  de Infraestrutura devem destacar a maturidade profissional da equipe
+  Manta primeiro, com a IA da Manta posicionada como apoio/multiplicador
+  de produtividade — nunca como substituição da experiência técnica.
+  Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`; não altera a skill de
+  produção.
+- **v5.4.5** (2026-09-10) — investigação read-only confirmou
+  recorrência da fabricação da skill `proposta-comercial`: a variante
+  "Tipo A / Infraestrutura de Grande Porte" viva em produção (v3.3.5)
+  reproduz o addendum fabricado deste repositório quase
+  palavra-por-palavra, citando a mesma revisão inexistente
+  `MNT-2026-COM-1183_D`. Documentado em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e `docs/MODELO-MESTRE-PROPOSTA.md`.
+  Nenhuma alteração feita na skill real — recomendação registrada para
+  gate humano (MN).
+- **v5.4.4** (2026-09-08) — **skill real de proposta mudou de lugar de
+  novo e foi reaplicada, segunda rodada no mesmo dia**. Horas depois
+  da v5.4.2 aplicar a correção em `05-sub-skills/skill-proposta-
+  comercial-SKILL.md` (809 bytes), outra sessão Claude (Claude Desktop
+  Windows) tentou localizar essa mesma skill e não encontrou o
+  caminho, encontrando uma estrutura de pastas totalmente diferente
+  (`02-agentes-horizontais/agente-bd`, vazia). Isso disparou, em
+  paralelo a esta sessão, um saneamento estrutural real do SharePoint
+  (documentado em `09-base-conhecimento/INDICE-CANONICAL.md` v1.1,
+  §13), que fundiu o corpo operacional da skill em
+  `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.0, a
+  partir de um pacote de conteúdo externo **anterior** à correção da
+  v5.4.2) e transformou o caminho antigo num ponteiro de
+  descontinuação. A correção da v5.4.2 ficou órfã. Reaplicada nesta
+  mesma sessão no novo caminho real como **v3.3.1** (16.191 bytes,
+  verificado por leitura pós-upload em 2026-09-08T00:48:09Z),
+  preservando o corpo operacional completo já consolidado pelo
+  saneamento (numeração, tabela de 13 perfis, dados fixos do
+  proponente, estrutura de 18 seções + Anexo, variante "Tipo A") e
+  reinserindo a segregação Tarifa×Success Fee, a exigibilidade por
+  formalização do evento-gatilho e a cláusula de juros de
+  mora/multa/correção monetária. Detalhe completo em
+  `docs/MODELO-MESTRE-PROPOSTA.md` §3. Achado novo e relevante:
+  **o SharePoint real está sendo editado por múltiplas
+  sessões/processos em paralelo no mesmo dia** — antes de editar essa
+  skill de novo, sempre reler o arquivo primeiro (risco de edição
+  concorrente, documentado também em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`).
 - **v5.4.3** (2026-09-07) — **fase 1 da reconciliação com o SharePoint
   real: numeração de segmento corrigida**, a pedido do usuário. A
   numeração real (`INDICE-CANONICAL.md`, lido via `SharePoint_Manta`
