@@ -124,8 +124,9 @@ SharePoint):
 - Marca d'água obrigatória: "MANTA ASSOCIADOS", diagonal -45°, opacidade
   8–12%, cor Marrom Quente.
 - Rodapé de rastreabilidade em toda página (impressa/PDF):
-  `{cliente} | {projeto} | v{versão} | {data} | {autor} | {classificação}
-  | trace: {trace_id}` — campos sem valor real conhecido (autor,
+  `{cliente} | {projeto} | {data} | {autor} | {classificação}
+  | trace: {trace_id}` — campo de versão removido do rodapé (2026-09-10,
+  a pedido do usuário); campos sem valor real conhecido (autor,
   trace_id) ficam como placeholder explícito, nunca fabricados.
 - Regra de logo: documento com cliente nomeado → logo cliente no canto
   superior esquerdo, logo Manta no inferior direito; documento sem

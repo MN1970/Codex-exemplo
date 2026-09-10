@@ -277,8 +277,9 @@ Escuro `#5D3A1A`, Laranja Manta `#E07B3D`, Marrom Quente `#8B4A2D`),
 tipografia serifada em títulos (`Georgia, serif`), marca d'água
 diagonal ("MANTA ASSOCIADOS", opacidade 10%, `-45deg`) e rodapé de
 rastreabilidade (`position:fixed`, repete em toda página impressa/PDF)
-no formato `{cliente} | {projeto} | v{versão} | {data} | {autor} |
-{classificação} | trace: {id}` — campos sem valor real conhecido
+no formato `{cliente} | {projeto} | {data} | {autor} |
+{classificação} | trace: {id}` — campo de versão removido do rodapé
+(2026-09-10, a pedido do usuário); campos sem valor real conhecido
 (autor, trace_id) ficam como placeholder explícito `[A PREENCHER]`,
 nunca fabricados.
 

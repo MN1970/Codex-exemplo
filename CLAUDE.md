@@ -4,7 +4,28 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.9** (2026-09-10) — **handoff Manta 13→14 executado:
+Versão: **v5.4.10** (2026-09-10) — **campo de versão removido do
+rodapé de rastreabilidade da proposta básica**. A pedido do usuário,
+o campo `v{versão}` foi retirado do rodapé de rastreabilidade
+(`position:fixed`, repete em toda página impressa/PDF) do template
+canônico Tipo A/PRC — formato anterior `{cliente} | {projeto} |
+v{versão} | {data} | {autor} | {classificação} | trace: {trace_id}`,
+novo formato `{cliente} | {projeto} | {data} | {autor} |
+{classificação} | trace: {trace_id}`. Aplicado em
+`docs/templates/template-ptc-tipo-a-v1.html` (linha do
+`.manta-pagefooter`), `docs/MODELO-MESTRE-PROPOSTA.md` §6 e
+`.claude/agents/agente-bd.md` ("Modelo de proposta e resumo
+executivo"). **Não aplicado nesta versão** (fora do escopo pedido):
+os arquivos `docs/templates/template-ptc-tipo-a-v1.docx` e
+`resumo-executivo-ptc-tipo-a-v1.pptx` já gerados (v5.4.9) continuam
+com o rodapé antigo (contêm `v{versão}`) — precisam ser regenerados
+se o campo de versão também deve sair desses dois formatos; e o
+template já publicado no SharePoint real (skill `A1-proposta`
+v3.3.8, `04_IA/Manta-Maestro/02-atividades/A1-proposta/template-ptc-
+tipo-a-v1.html`) também segue com o rodapé antigo até uma nova
+sessão relê-lo e reenviar a versão corrigida.
+
+Consolida v5.4.9 (2026-09-10) — **handoff Manta 13→14 executado:
 DOCX e PPTX gerados a partir do template canônico**. A pedido do
 usuário ("execute o handoff completo"), o agente `agente-bd.md`
 (Manta 13) executou o handoff documentado na v5.4.8 (última seção
@@ -942,9 +963,9 @@ Codex-exemplo/
 │   ├── templates/
 │   │   ├── EAP-PADRAO-MOTIVA.xlsx               # 🆕 v5.3 — template EAP (capa + hierarquia 4 níveis)
 │   │   ├── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
-│   │   ├── template-ptc-tipo-a-v1.html          # 🆕 v5.4.8 — template canônico Tipo A/PRC (também publicado no SharePoint real, skill A1-proposta v3.3.8)
-│   │   ├── template-ptc-tipo-a-v1.docx          # 🆕 v5.4.9 — mesmo template em DOCX (handoff Manta 13→14, output canônico "técnica")
-│   │   └── resumo-executivo-ptc-tipo-a-v1.pptx  # 🆕 v5.4.9 — resumo executivo em PPTX, 5 cards (output canônico "executiva")
+│   │   ├── template-ptc-tipo-a-v1.html          # 🆕 v5.4.8, rodapé corrigido em v5.4.10 — template canônico Tipo A/PRC (também publicado no SharePoint real, skill A1-proposta v3.3.8 — SharePoint ainda com rodapé antigo, ver v5.4.10)
+│   │   ├── template-ptc-tipo-a-v1.docx          # 🆕 v5.4.9 — mesmo template em DOCX (handoff Manta 13→14, output canônico "técnica") — ⚠️ rodapé ainda com v{versão}, não regenerado na v5.4.10
+│   │   └── resumo-executivo-ptc-tipo-a-v1.pptx  # 🆕 v5.4.9 — resumo executivo em PPTX, 5 cards (output canônico "executiva") — ⚠️ rodapé ainda com v{versão}, não regenerado na v5.4.10
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (✅ numeração de S já era a real — resolvido 2026-09-07)
@@ -975,6 +996,22 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.10** (2026-09-10) — **campo de versão removido do rodapé de
+  rastreabilidade da proposta básica**. A pedido explícito do
+  usuário, o campo `v{versão}` foi retirado do rodapé fixo de
+  rastreabilidade do template canônico Tipo A/PRC — de `{cliente} |
+  {projeto} | v{versão} | {data} | {autor} | {classificação} | trace:
+  {trace_id}` para `{cliente} | {projeto} | {data} | {autor} |
+  {classificação} | trace: {trace_id}`. Alterado em três lugares:
+  `docs/templates/template-ptc-tipo-a-v1.html` (`.manta-pagefooter`),
+  `docs/MODELO-MESTRE-PROPOSTA.md` §6 (descrição do sistema visual) e
+  `.claude/agents/agente-bd.md` (seção "Modelo de proposta e resumo
+  executivo"). Escopo confirmado explicitamente com o usuário antes de
+  editar. **Deixado de fora, por decisão do usuário nesta rodada**:
+  os artefatos DOCX/PPTX já gerados na v5.4.9 e o template já
+  publicado no SharePoint real (skill `A1-proposta` v3.3.8) — ambos
+  continuam com o campo de versão no rodapé até que uma próxima ação
+  explícita regenere/reenvie essas cópias.
 - **v5.4.9** (2026-09-10) — **handoff Manta 13→14 executado: DOCX e
   PPTX gerados a partir do template canônico**. A pedido explícito do
   usuário, o `agente-bd.md` (Manta 13) executou o handoff para Manta
