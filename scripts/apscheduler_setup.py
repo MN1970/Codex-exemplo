@@ -28,6 +28,7 @@ from datetime import datetime
 from typing import Dict, List, Optional, Callable
 import threading
 import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 # Configure logging
 logging.basicConfig(
@@ -380,6 +381,57 @@ class APSchedulerManager:
         }
 
 
+class _HealthHandler(BaseHTTPRequestHandler):
+    """Serve /health e /metrics para o container de deploy verificar que o
+    scheduler está de pé (ver .github/workflows/maestro-background-deploy.yml,
+    job 'Test in Container')."""
+
+    manager: "APSchedulerManager" = None
+
+    def _write(self, status_code: int, body: bytes, content_type: str) -> None:
+        self.send_response(status_code)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        if self.path == "/health":
+            payload = {
+                "status": "ok",
+                "scheduler_running": bool(self.manager.scheduler.running),
+                "timestamp": datetime.now(utc).isoformat(),
+            }
+            self._write(200, json.dumps(payload).encode("utf-8"), "application/json")
+        elif self.path == "/metrics":
+            job_count = len(self.manager.scheduler.get_jobs())
+            running = 1 if self.manager.scheduler.running else 0
+            body = (
+                "# HELP maestro_job_count Number of registered APScheduler jobs\n"
+                "# TYPE maestro_job_count gauge\n"
+                f"maestro_job_count {job_count}\n"
+                "# HELP maestro_scheduler_running Whether the scheduler is running (1/0)\n"
+                "# TYPE maestro_scheduler_running gauge\n"
+                f"maestro_scheduler_running {running}\n"
+            ).encode("utf-8")
+            self._write(200, body, "text/plain; version=0.0.4")
+        else:
+            self._write(404, b'{"error": "not found"}', "application/json")
+
+    def log_message(self, format: str, *args) -> None:
+        logger.debug("[HTTP] " + format, *args)
+
+
+def _start_health_server(manager: "APSchedulerManager", port: int = 8080) -> HTTPServer:
+    """Sobe /health e /metrics numa thread daemon, sem bloquear o scheduler."""
+    _HealthHandler.manager = manager
+    server = HTTPServer(("0.0.0.0", port), _HealthHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    logger.info(f"✓ Health/metrics server em :{port} (/health, /metrics)")
+    return server
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="APScheduler Setup — P7 Background Orchestration"
@@ -428,6 +480,7 @@ def main():
     if args.run_scheduler:
         logger.info("Mode: RUN_SCHEDULER (foreground)")
         if manager.start():
+            _start_health_server(manager)
             try:
                 logger.info("Scheduler running. Press Ctrl+C to stop.")
                 while True:
@@ -470,6 +523,7 @@ def main():
     else:
         logger.info("No option specified. Running scheduler...")
         if manager.start():
+            _start_health_server(manager)
             try:
                 logger.info("Scheduler running. Press Ctrl+C to stop.")
                 while True:

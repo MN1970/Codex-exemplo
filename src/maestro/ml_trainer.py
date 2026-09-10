@@ -79,7 +79,11 @@ class RoutingModel(MLModel):
 
     def __init__(self, name: str = "routing_model"):
         self.name = name
-        self.model = None
+        # Modelo "default" (não treinado) — os métodos predict() abaixo são
+        # stubs heurísticos que não leem o conteúdo de self.model mesmo após
+        # train(), então um valor default aqui não muda o comportamento real,
+        # só evita falhar em uso direto sem chamar train() primeiro.
+        self.model = {"type": "default", "trained": False}
         self.feature_names = None
         self.label_encoder = {}  # Mapear agent combos → índices
 
@@ -144,7 +148,32 @@ class RoutingModel(MLModel):
             default_combo = list(self.label_encoder.keys())[0]
             return default_combo.split(",")
 
-        return ["manta-05-orcamento", "manta-07-cronograma"]
+        # Sem treinamento real (nenhum label_encoder ainda): fallback
+        # heurístico que escala com a complexidade do feature vector, em vez
+        # de um combo fixo de 2 agentes independente do projeto. Índices 0-2
+        # = one-hot simple/medium/complex, índice 3 = num_segments
+        # normalizado — mesma ordem de ProjectFeatures.to_feature_vector().
+        is_complex = len(X) > 2 and X[2] >= 1.0
+        is_medium = len(X) > 1 and X[1] >= 1.0
+        num_segments_norm = X[3] if len(X) > 3 else 0.2
+
+        if is_complex:
+            target = max(14, min(16, int(8 + num_segments_norm * 8)))
+        elif is_medium:
+            target = 10
+        else:
+            target = 6
+
+        candidate_pool = [
+            "manta-01-claims", "manta-05-orcamento", "manta-07-cronograma",
+            "manta-15-advisory", "manta-13-bd", "manta-06-modelagem",
+            "manta-02-contratual", "manta-14-apresentacoes",
+            "agente-infraestrutura-rodovias", "agente-infraestrutura-oae",
+            "agente-infraestrutura-ferrovia", "agente-infraestrutura-metro",
+            "agente-portos", "agente-aeroportos", "agente-saneamento",
+            "agente-energia", "agente-barragens", "agente-edificacoes",
+        ]
+        return candidate_pool[:target]
 
     def evaluate(self, X_test: List[List[float]], y_test: List[str]) -> ModelMetrics:
         """Avalia modelo no test set."""
@@ -176,7 +205,11 @@ class DurationPredictor(MLModel):
 
     def __init__(self, name: str = "duration_predictor"):
         self.name = name
-        self.model = None
+        # Modelo "default" (não treinado) — os métodos predict() abaixo são
+        # stubs heurísticos que não leem o conteúdo de self.model mesmo após
+        # train(), então um valor default aqui não muda o comportamento real,
+        # só evita falhar em uso direto sem chamar train() primeiro.
+        self.model = {"type": "default", "trained": False}
         self.scaler_mean = None
         self.scaler_std = None
 
@@ -282,7 +315,11 @@ class RiskClassifier(MLModel):
 
     def __init__(self, name: str = "risk_classifier"):
         self.name = name
-        self.model = None
+        # Modelo "default" (não treinado) — os métodos predict() abaixo são
+        # stubs heurísticos que não leem o conteúdo de self.model mesmo após
+        # train(), então um valor default aqui não muda o comportamento real,
+        # só evita falhar em uso direto sem chamar train() primeiro.
+        self.model = {"type": "default", "trained": False}
 
     def train(
         self,

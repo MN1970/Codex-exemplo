@@ -136,17 +136,30 @@ class SafePythonSandbox:
 
     def _prepare_safe_globals(self, allow_imports: list) -> Dict:
         """Prepara dicionário seguro de globals."""
+        allowed = set(allow_imports or [])
+
+        def _safe_import(name, *args, **kwargs):
+            """__import__ restrito à whitelist — permite `import math` no
+            código sandboxed em vez de depender só do nome já estar
+            pré-injetado nos globals (a promessa da classe é justamente
+            'whitelist de importações', não 'nomes pré-injetados')."""
+            if name in allowed and self.SAFE_MODULES.get(name) is not None:
+                return self.SAFE_MODULES[name]
+            raise ImportError(f"Import de '{name}' não permitido no sandbox")
+
         globals_dict = {
             "__builtins__": {
                 "abs": abs, "len": len, "max": max, "min": min,
                 "sum": sum, "range": range, "round": round,
                 "print": print, "str": str, "int": int, "float": float,
                 "list": list, "dict": dict, "tuple": tuple, "set": set,
+                "__import__": _safe_import,
             }
         }
 
-        # Adicionar módulos whitelistados
-        for module_name in (allow_imports or []):
+        # Adicionar módulos whitelistados também como nomes diretos (código
+        # que não usa `import` pode referenciar math/numpy/etc. direto)
+        for module_name in allowed:
             if module_name in self.SAFE_MODULES:
                 globals_dict[module_name] = self.SAFE_MODULES[module_name]
 
@@ -189,9 +202,6 @@ class StructuralCalculator:
             Dict com factor_of_safety, stress, etc
         """
         code = f"""
-import math
-import numpy as np
-
 height = {height}
 angle = math.radians({angle_deg})
 gamma = {gamma_soil}

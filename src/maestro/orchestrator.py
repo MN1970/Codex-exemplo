@@ -94,7 +94,8 @@ class MaestroOrchestrator:
         """
         execution = WorkflowExecution(
             project_id=workflow.project.id,
-            workflow_id=f"{workflow.project.id}-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+            workflow_id=f"{workflow.project.id}-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}",
+            status="running"
         )
 
         try:
@@ -160,7 +161,7 @@ class MaestroOrchestrator:
         """
         # Selecionar agentes: usar detecção + fase declarada
         agents_to_invoke = list(set(
-            detection.agents_selected +
+            detection.agents_pool +
             fan_out_phase.agents
         ))
 
