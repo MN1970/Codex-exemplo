@@ -4,7 +4,25 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-10) — **rotina de reconciliação: tabela
+Versão: **v5.4.8** (2026-09-10) — **template canônico Tipo A/PRC criado
+e publicado no SharePoint real como v3.3.8 da skill `A1-proposta`**. A
+pedido do usuário ("Manta Maestro pode executar e implementar" →
+"subir este modelo como template canônico no SharePoint"), o modelo
+padrão de proposta gerado nesta sessão
+(`docs/templates/template-ptc-tipo-a-v1.html`) foi enviado ao
+SharePoint real em
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/template-ptc-tipo-a-
+v1.html` (17.204 bytes, upload verificado por leitura pós-upload) e a
+skill real `A1-proposta` foi atualizada para **v3.3.8** — releu o
+arquivo antes de editar (risco de edição concorrente), adicionou a
+nova seção "Template e exemplares -- Tipo A / PRC" referenciando o
+template (mirroring a seção já existente para o Tipo B), marcou "Tipo
+A (PTC)" como tendo "Template canônico disponível", e registrou o
+changelog em `[v3.3.8: ...]` no frontmatter. Upload verificado por
+leitura pós-upload (21.083 bytes). Ver seção "Modelo Mestre de
+Proposta" e `docs/MODELO-MESTRE-PROPOSTA.md` §6.
+
+Consolida v5.4.7 (2026-09-10) — **rotina de reconciliação: tabela
 tarifária corrigida (grupo "Orçamentista" removido, v3.3.5-v3.3.7 da
 skill real)**. A Routine periódica GitHub↔SharePoint
 (`trig_01KPNtXg2TJJaNYhHoetrB3D`) releu a skill real e encontrou que
@@ -904,7 +922,8 @@ Codex-exemplo/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
 │   │   ├── EAP-PADRAO-MOTIVA.xlsx               # 🆕 v5.3 — template EAP (capa + hierarquia 4 níveis)
-│   │   └── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
+│   │   ├── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
+│   │   └── template-ptc-tipo-a-v1.html          # 🆕 v5.4.8 — template canônico Tipo A/PRC (também publicado no SharePoint real, skill A1-proposta v3.3.8)
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (✅ numeração de S já era a real — resolvido 2026-09-07)
@@ -935,6 +954,31 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.8** (2026-09-10) — **template canônico Tipo A/PRC criado e
+  publicado no SharePoint real (skill `A1-proposta` v3.3.8)**. A
+  pedido explícito do usuário, um modelo padrão de proposta Tipo A/PRC
+  foi montado nesta sessão a partir da conferência da skill real e da
+  proposta real MNT-2026-COM-1301 (Concessionária Rota da Liberdade,
+  Lote 07): capa, sumário, resumo executivo (5 cards) e as 18 seções +
+  Anexo I, com as cláusulas obrigatórias (Segregação Tarifa×Success
+  Fee, Exigibilidade, Deslocamentos, Atraso de pagamento, Não
+  Aliciamento, Seção IA, tabela tarifária vigente, dados fixos da
+  proponente) já escritas por extenso e o restante como orientação a
+  preencher por proposta — usando o sistema visual canônico
+  (`03-funcionais/F3-portal/theme`: paleta, tipografia serifada, marca
+  d'água, rodapé de rastreabilidade). O arquivo foi versionado neste
+  repositório em `docs/templates/template-ptc-tipo-a-v1.html` **e**
+  enviado ao SharePoint real em
+  `04_IA/Manta-Maestro/02-atividades/A1-proposta/template-ptc-tipo-a-
+  v1.html` (upload verificado por leitura pós-upload, 17.204 bytes). A
+  skill real `A1-proposta` foi relida antes de editar (risco de edição
+  concorrente já documentado nas versões anteriores) e atualizada para
+  **v3.3.8**: nova seção "Template e exemplares -- Tipo A / PRC"
+  referenciando o template (mesmo padrão já usado para o Tipo B), nota
+  "Template canônico disponível" adicionada ao bullet do Tipo A, e
+  changelog registrado no frontmatter da skill. Upload da skill
+  verificado por leitura pós-upload (21.083 bytes). Detalhe completo
+  em `docs/MODELO-MESTRE-PROPOSTA.md` §6.
 - **v5.4.7** (2026-09-10) — **rotina de reconciliação: tabela
   tarifária corrigida (v3.3.5-v3.3.7 da skill A1-proposta)**. A
   Routine periódica GitHub↔SharePoint (`trig_01KPNtXg2TJJaNYhHoetrB3D`)

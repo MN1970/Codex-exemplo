@@ -245,7 +245,66 @@ caminho do arquivo real mudou desde a última vez que
 `GAP-RECONCILIACAO-SHAREPOINT-REAL.md` foi escrito. Atualização de
 referência registrada lá, não neste arquivo.
 
-## 6. O que fica pendente / fora do escopo desta correção
+## 6. Template canônico Tipo A/PRC criado e publicado (2026-09-10)
+
+A pedido do usuário — que pediu para revisar a formatação/visualização
+da proposta padrão da Manta contra o Manta Maestro, e depois para
+"subir este modelo como template canônico no SharePoint" — foi
+montado um modelo padrão genérico de proposta Tipo A/PRC nesta sessão,
+a partir de duas fontes conferidas:
+
+1. A skill real `A1-proposta` (v3.3.7 no momento da montagem) — 18
+   seções + Anexo I, cláusulas obrigatórias por extenso.
+2. Uma proposta real analisada nesta sessão — **MNT-2026-COM-1301**
+   (Concessionária Rota da Liberdade, Lote 07 Ouro Preto–Mariana), já
+   usando a tabela tarifária vigente (sem "Orçamentista", confirmando
+   a v3.3.6) e a segregação Tarifa×Success Fee corretamente — mas
+   **sem** a cláusula de atraso de pagamento nem o texto padrão da
+   Seção IA, ambos adicionados na revisão feita para o cliente.
+
+O modelo inclui: capa, sumário/índice, resumo executivo (5 cards:
+Objeto/Escopo/Prazos/Preço/Entregáveis), as 18 seções + Anexo I com as
+cláusulas fixas já escritas por extenso (Segregação Tarifa×Success
+Fee, Exigibilidade, Deslocamentos, Atraso de pagamento, Não
+Aliciamento, Seção IA, tabela tarifária vigente, dados fixos da
+proponente) e o restante como orientação (caixa cinza-itálico) a
+preencher por proposta.
+
+**Sistema visual**: conferido contra o padrão visual canônico real
+(`03-funcionais/F3-portal/theme/SKILL.md`, "fonte única canônica") —
+paleta corrigida para os 4 hex canônicos (Terracota `#C45A2B`, Marrom
+Escuro `#5D3A1A`, Laranja Manta `#E07B3D`, Marrom Quente `#8B4A2D`),
+tipografia serifada em títulos (`Georgia, serif`), marca d'água
+diagonal ("MANTA ASSOCIADOS", opacidade 10%, `-45deg`) e rodapé de
+rastreabilidade (`position:fixed`, repete em toda página impressa/PDF)
+no formato `{cliente} | {projeto} | v{versão} | {data} | {autor} |
+{classificação} | trace: {id}` — campos sem valor real conhecido
+(autor, trace_id) ficam como placeholder explícito `[A PREENCHER]`,
+nunca fabricados.
+
+**Publicado em dois lugares**:
+- Este repositório: `docs/templates/template-ptc-tipo-a-v1.html`.
+- SharePoint real: `04_IA/Manta-Maestro/02-atividades/A1-proposta/
+  template-ptc-tipo-a-v1.html` (17.204 bytes, upload verificado por
+  leitura pós-upload).
+
+A skill real `A1-proposta` foi relida imediatamente antes da edição
+(confirmado ainda v3.3.7, sem mudança desde a última leitura) e
+atualizada para **v3.3.8**: nova seção "Template e exemplares -- Tipo
+A / PRC" referenciando o template (no mesmo padrão da seção já
+existente para o Tipo B), nota "Template canônico disponível"
+adicionada ao bullet do Tipo A, e entrada de changelog no frontmatter.
+Upload da skill verificado por leitura pós-upload (21.083 bytes,
+conteúdo conferido integralmente, sem sinal de corrupção).
+
+**Pendências deste template** (herdadas da revisão da proposta real
+que o originou): revisão jurídica dos percentuais de multa/juros/
+correção monetária antes do próximo uso real (já registrada acima);
+confirmação de que a skill real não mudou de novo desde 2026-09-10
+antes de reutilizar este template (risco de edição concorrente, ver
+§5 abaixo).
+
+## 7. O que fica pendente / fora do escopo desta correção
 
 - **Risco de edição concorrente**: o SharePoint real está sendo editado
   por múltiplas sessões/processos em paralelo no mesmo dia (esta

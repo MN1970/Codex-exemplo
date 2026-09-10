@@ -1,0 +1,207 @@
+<title>Modelo Padrão — Proposta Manta</title>
+<style>
+:root{
+  --vinho:#5D3A1A; --terracota:#C45A2B; --laranja:#E07B3D; --marrom-quente:#8B4A2D;
+  --cinza:#444444; --cinza-claro:#F2ECE8; --bg:#FAF7F5;
+}
+body{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+.manta-watermark{position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-45deg); font-family:Georgia,serif; font-size:5rem; font-weight:700; letter-spacing:.3rem; color:var(--marrom-quente); opacity:.1; white-space:nowrap; pointer-events:none; z-index:0;}
+.manta-pagefooter{position:fixed; left:0; right:0; bottom:0; background:rgba(250,247,245,.94); border-top:1px solid #eee; padding:5px 24px; font-size:.68rem; color:var(--cinza); text-align:center; z-index:5;}
+@media print{ .manta-watermark, .manta-pagefooter{ position:fixed; } }
+*{box-sizing:border-box;}
+body{background:var(--bg); color:#222; font-family:Calibri,"Segoe UI",Arial,sans-serif; margin:0;}
+.page-shell{max-width:900px; margin:0 auto; padding:0 24px 80px; position:relative; z-index:1;}
+.cover{position:relative; min-height:480px; display:flex; align-items:center; padding:60px 24px; border-bottom:6px solid var(--terracota); background:#fff;}
+.brand{font-family:Georgia,serif; font-weight:700; font-size:1.8rem; color:var(--vinho); margin:0;}
+.tag{color:var(--terracota); margin:.2rem 0 2rem;}
+.cover-title{font-family:Georgia,serif; color:var(--vinho); font-size:2.1rem; margin:0 0 .6rem;}
+.cover-sub{color:#555; font-size:1.05rem; margin:0 0 1.5rem;}
+.cover-meta p{margin:.25rem 0; font-size:.92rem;}
+.cover-meta .conf{color:var(--terracota); font-weight:700;}
+.cover-footer{margin-top:2rem; padding-top:1rem; border-top:2px solid var(--terracota); font-size:.85rem; color:var(--cinza);}
+h1{font-family:Georgia,serif; color:var(--vinho); font-size:1.5rem; border-bottom:3px solid var(--terracota); padding-bottom:6px; margin:2.2rem 0 1rem;}
+h2{font-family:Georgia,serif; color:var(--terracota); font-size:1.2rem; margin:1.6rem 0 .7rem;}
+h3{font-family:Georgia,serif; color:var(--vinho); font-size:1.02rem; margin:1.2rem 0 .5rem;}
+p{line-height:1.5; margin:.6rem 0;}
+.guide{background:var(--cinza-claro); border-left:4px solid var(--terracota); border-radius:4px; padding:10px 14px; font-size:.88rem; color:#5a5a5a; font-style:italic; margin:.6rem 0 1rem;}
+.guide b{color:var(--vinho); font-style:normal;}
+.clause{background:#fff; border:1px solid #E7DED8; border-radius:6px; padding:12px 16px; margin:.8rem 0;}
+table{width:100%; border-collapse:collapse; margin:.6rem 0 1rem; font-size:.92rem;}
+th,td{border:1px solid #E7DED8; padding:6px 10px; text-align:left;}
+th{background:var(--vinho); color:#fff;}
+tbody tr:nth-child(even){background:var(--cinza-claro);}
+.toc{list-style:none; padding:0; column-count:2; column-gap:32px;}
+.toc li{margin-bottom:6px; break-inside:avoid;}
+.toc a{color:var(--vinho); text-decoration:none;}
+.toc a:hover{text-decoration:underline;}
+code{background:var(--cinza-claro); padding:1px 5px; border-radius:3px; font-size:.85em;}
+.sx-card{background:#fff; border:1px solid #E7DED8; border-left:5px solid var(--terracota); border-radius:6px; padding:14px 18px; margin-bottom:14px;}
+.sx-card h2{margin:0 0 8px; font-size:1.05rem;}
+.sx-tag{font-size:10px; background:var(--terracota); color:#fff; border-radius:10px; padding:2px 10px; font-weight:700; margin-left:8px;}
+</style>
+
+<div class="manta-watermark">MANTA ASSOCIADOS</div>
+<div class="manta-pagefooter">[CLIENTE] | [PROJETO] | v[VERSÃO/REV] | [DATA] | [INICIAIS DO AUTOR] | [CLASSIFICAÇÃO] | trace: [ID DE CONTROLE]</div>
+
+<div class="page-shell">
+
+<section class="cover">
+  <div>
+    <p class="brand">MANTA ASSOCIADOS</p>
+    <p class="tag">Consultoria em Infraestrutura e Engenharia</p>
+    <h1 class="cover-title" style="border:none;">PROPOSTA TÉCNICO-COMERCIAL</h1>
+    <p class="cover-sub">[Objeto resumido em uma linha — ex.: Apoio à Gestão Integral da Concessão — {Projeto}]</p>
+    <div class="cover-meta">
+      <p>ID do Documento: MNT-AAAA-COM-NNNN</p>
+      <p>Tipo: [Tipo A — PTC] / [Tipo B — PRT] / [PRC] — REV_00 (ou sufixo de letra _A/_B/_C para revisão em processo regulatório público)</p>
+      <p>Destinatário: [Razão social do cliente]</p>
+      <p>Data: [DD de mês de AAAA]</p>
+      <p class="conf">Classificação: CONFIDENCIAL</p>
+    </div>
+    <div class="cover-footer">
+      <p>Manta Consultoria Ltda. — CNPJ 56.063.961/0001-08</p>
+      <p>Av. Marcos Penteado de Ulhoa Rodrigues, 939, andar 8, sala 850, Torre I – Edif. Jacarandá, Tamboré, Barueri – SP</p>
+    </div>
+  </div>
+</section>
+
+<section>
+<h1>Sumário</h1>
+<ul class="toc">
+  <li><a href="#s1">1. Introdução</a></li>
+  <li><a href="#sumex">Sumário Executivo</a></li>
+  <li><a href="#s2">2. Objeto</a></li>
+  <li><a href="#s3">3. Escopo dos Serviços</a></li>
+  <li><a href="#s4">4. Documentação a ser Disponibilizada</a></li>
+  <li><a href="#s5">5. Entregáveis</a></li>
+  <li><a href="#s6">6. Fora do Escopo</a></li>
+  <li><a href="#s7">7. Prazo</a></li>
+  <li><a href="#s8">8. Dos Casos Omissos</a></li>
+  <li><a href="#s9">9. Benefícios e Valor</a></li>
+  <li><a href="#s10">10. Equipe</a></li>
+  <li><a href="#s11">11. Modalidade Contratual</a></li>
+  <li><a href="#s12">12. Preço</a></li>
+  <li><a href="#s13">13. Medição e Pagamento</a></li>
+  <li><a href="#s14">14. Não Aliciamento e Confidencialidade</a></li>
+  <li><a href="#s15">15. Validade da Proposta</a></li>
+  <li><a href="#s16">16. Contato Comercial e Dados da Empresa</a></li>
+  <li><a href="#s17">17. Limitação de Responsabilidade</a></li>
+  <li><a href="#s18">18. Disclaimer</a></li>
+  <li><a href="#anexo1">Anexo I — Apresentação da Empresa</a></li>
+</ul>
+<div class="guide"><b>Nota:</b> para propostas Tipo B (proposta técnica em nome do cliente para licitação/concessão), não usar esta estrutura de 18 seções — seguir <code>template-prt-rodovias-v1.md</code> (9 blocos canônicos). Para PRC (só comercial), usar a mesma numeração suprimindo as seções de escopo/metodologia.</div>
+</section>
+
+<h1 id="s1">1. Introdução</h1>
+<div class="guide">Apresentação da Manta ao cliente destinatário, contexto do projeto/edital/EVTEA que origina a proposta, e histórico de relacionamento prévio com o cliente ou com o ativo (se houver).</div>
+
+<h1 id="sumex">Sumário Executivo</h1>
+<div class="guide">Não é uma das 18 seções — é um adicional de valor recomendado. Síntese em cards de: Objeto (§2), Escopo (§3), Prazos (§7), Preço (§12), Entregáveis (§5), com bloco de rastreabilidade apontando para cada seção detalhada. Ver modelo de 5 cards abaixo.</div>
+<div class="sx-card"><h2>1 · Objeto <span class="sx-tag">Seção 2</span></h2><p>[3-4 bullets: o que a Manta entrega, com quem, e o modelo de atuação em fases, se houver]</p></div>
+<div class="sx-card"><h2>2 · Escopo <span class="sx-tag">Seção 3</span></h2><p>[frentes de atuação principais, ferramentas de apoio se aplicável]</p></div>
+<div class="sx-card"><h2>3 · Prazos <span class="sx-tag">Seção 7</span></h2><p>[duração, fases, marcos principais]</p></div>
+<div class="sx-card"><h2>4 · Preço <span class="sx-tag">Seção 12</span></h2><p>[quadro resumo de valores fixos/recorrentes; Success Fee sempre à parte, com nota de exigibilidade por formalização; referência à cláusula de atraso]</p></div>
+<div class="sx-card"><h2>5 · Entregáveis <span class="sx-tag">Seção 5</span></h2><p>[lista curta dos produtos principais]</p></div>
+
+<h1 id="s2">2. Objeto</h1>
+<div class="guide">Descrição formal do que será contratado.</div>
+
+<h1 id="s3">3. Escopo dos Serviços</h1>
+<div class="guide">Frentes de atuação detalhadas (3.1, 3.2, 3.3...). Se houver Comitê Técnico + Ferramentas de Apoio (SaaS), descrever os módulos e a base de conhecimento (RAG) se aplicável.</div>
+
+<h1 id="s4">4. Documentação a ser Disponibilizada</h1>
+<div class="guide">O que o cliente precisa fornecer para a execução dos serviços.</div>
+
+<h1 id="s5">5. Entregáveis</h1>
+<div class="guide">Lista de produtos (relatórios, dashboards, pareceres) — separar por frente/trilha se houver mais de uma.</div>
+
+<h1 id="s6">6. Fora do Escopo</h1>
+<div class="guide">Exclusões explícitas — inclui, quando aplicável, que decisões de negócio/investimento permanecem de competência exclusiva do cliente.</div>
+
+<h1 id="s7">7. Prazo</h1>
+<div class="guide">Duração, fases, cronograma orientativo. Indicar regra de renovação automática e antecedência mínima para não renovação, se aplicável.</div>
+
+<h1 id="s8">8. Dos Casos Omissos</h1>
+<div class="guide">Tratamento de situações imprevistas não cobertas pela proposta.</div>
+
+<h1 id="s9">9. Benefícios e Valor</h1>
+<div class="guide">Proposta de valor (conhecimento, independência, confiabilidade). <b>Cláusula IA — sempre incluir</b> (texto padrão abaixo, reescrever o parágrafo anterior de valor conforme o cliente, mas manter este texto ou equivalente):</div>
+<div class="clause"><p>A MANTA integra recursos de Inteligência Artificial de forma estruturada e sistemática às suas atividades técnicas e analíticas, sempre em apoio — nunca em substituição — ao julgamento técnico sênior. Os recursos de IA são aplicados nos processos de leitura e extração estruturada de dados, identificação de inconsistências e divergências entre registros, cruzamento de informações entre frentes de atuação, consolidação de evidências e geração assistida de relatórios técnicos. Todos os produtos gerados com apoio de IA passam por revisão e validação de profissionais sêniores da MANTA antes da emissão ao cliente.</p></div>
+<div class="guide">⚠️ Nunca citar "Manta Mestro" ou a arquitetura interna de IA (agentes por segmento, orquestração, códigos "Manta NN") no texto entregue ao cliente.</div>
+
+<h1 id="s10">10. Equipe</h1>
+<div class="guide">Modelo de alocação, perfis, atuação conjunta entre trilhas/frentes, se houver.</div>
+
+<h1 id="s11">11. Modalidade Contratual</h1>
+<div class="guide">HH, preço fixo, success fee, ou modalidade híbrida.</div>
+<h2>11.1 Tabela Tarifária Padrão da MANTA</h2>
+<div class="guide">Base 176h/mês. Valores já incluem encargos, overhead e margem — sem custos adicionais exceto deslocamentos (Seção 12).</div>
+<table>
+<thead><tr><th>Função</th><th>Nível</th><th>R$/h</th><th>Hora extra (1,5×)</th></tr></thead>
+<tbody>
+<tr><td>Diretoria</td><td>Sócio Diretor / Consultor Internacional</td><td>900,00</td><td>1.350,00</td></tr>
+<tr><td>Diretoria</td><td>Diretor de Infraestrutura</td><td>700,00</td><td>1.050,00</td></tr>
+<tr><td>Coordenação</td><td>Master</td><td>550,00</td><td>825,00</td></tr>
+<tr><td>Coordenação</td><td>Sênior</td><td>522,50</td><td>783,75</td></tr>
+<tr><td>Coordenação</td><td>Pleno</td><td>496,38</td><td>744,57</td></tr>
+<tr><td>Especialista</td><td>Master</td><td>500,00</td><td>750,00</td></tr>
+<tr><td>Especialista</td><td>Sênior</td><td>475,00</td><td>712,50</td></tr>
+<tr><td>Especialista</td><td>Pleno</td><td>470,00</td><td>705,00</td></tr>
+<tr><td>Especialista</td><td>Júnior</td><td>470,00</td><td>705,00</td></tr>
+<tr><td>Engenharia</td><td>Master</td><td>561,00</td><td>841,50</td></tr>
+<tr><td>Engenharia</td><td>Sênior</td><td>532,95</td><td>799,43</td></tr>
+<tr><td>Engenharia</td><td>Pleno</td><td>506,30</td><td>759,45</td></tr>
+<tr><td>Engenharia</td><td>Júnior</td><td>480,99</td><td>721,49</td></tr>
+<tr><td>Analista (Engenharia/Software)</td><td>Sênior</td><td>285,00</td><td>427,50</td></tr>
+<tr><td>Analista (Engenharia/Software)</td><td>Pleno</td><td>176,00</td><td>264,00</td></tr>
+<tr><td>Analista (Engenharia/Software)</td><td>Júnior</td><td>135,38</td><td>203,07</td></tr>
+<tr><td>Estágio</td><td>Estagiário</td><td>80,00</td><td>120,00</td></tr>
+</tbody>
+</table>
+<div class="guide">Perfis sem correspondência direta (ex.: Projetista Sênior) → função Especialista pelo nível de senioridade equivalente. Atividades de orçamento/planejamento → Coordenação, Especialista ou Engenharia por senioridade — <b>sem função ou tabela específica de Orçamentista</b> (removida na v3.3.6). Produtos de software ligados a IA usam a mesma graduação de "Analista (Engenharia/Software)".</div>
+
+<h1 id="s12">12. Preço</h1>
+<div class="guide">Detalhar por fase/frente. <b>Regras obrigatórias abaixo.</b></div>
+<div class="clause"><h3>Segregação Tarifa × Success Fee</h3><p>A remuneração sempre separa duas tabelas: (a) <b>Tarifa</b> — remuneração fixa por perfil/hora do escopo-base; (b) <b>Success Fee</b> — remuneração contingente, calculada como percentual sobre o critério de sucesso definido especificamente em cada proposta (economia de custo, conquista, ou cumprimento de cronograma). Nunca somar as duas em uma única linha de preço.</p></div>
+<div class="clause"><h3>Exigibilidade do Success Fee</h3><p>Só se torna exigível a partir da <b>formalização documentada</b> do evento que caracteriza o sucesso — nunca de uma percepção informal de resultado:</p>
+<table><thead><tr><th>Critério de sucesso</th><th>Evento que torna o success fee exigível</th></tr></thead><tbody>
+<tr><td>Economia de custo (CAPEX/OPEX)</td><td>Formalização da aprovação do orçamento pelo cliente incorporando a economia identificada</td></tr>
+<tr><td>Conquista (leilão, licitação, aprovação regulatória)</td><td>Formalização da conquista (homologação, assinatura de contrato, publicação da aprovação)</td></tr>
+<tr><td>Cronograma / marco contratual</td><td>Formalização do marco atingido e aprovado pelo cliente</td></tr>
+</tbody></table>
+<p>Sem a formalização do evento-gatilho, não há success fee devido — a mera expectativa de sucesso não gera exigibilidade nem vencimento de prazo de pagamento.</p></div>
+<div class="clause"><h3>Deslocamentos e Despesas Reembolsáveis</h3><p>Sempre por conta do <b>cliente</b>, mediante comprovação fiscal e tarefas previamente aprovadas: táxi/aplicativos, deslocamentos locais, passagens, traslados, hospedagem. Duas modalidades de ressarcimento: Nota de Débito (valor exato, sem impostos) ou Nota Fiscal (recomposição tributária, alíquota 17,50%).</p></div>
+<h2>12.X Reajuste</h2>
+<div class="guide">Reajuste anual pelo IPCA (ou índice equivalente), a partir do 13º mês de vigência, como padrão.</div>
+
+<h1 id="s13">13. Medição e Pagamento</h1>
+<table><thead><tr><th>Etapa</th><th>Responsável</th><th>Prazo</th></tr></thead><tbody>
+<tr><td>Apresentação do Boletim/Fatura</td><td>MANTA</td><td>Até o dia 5 do mês seguinte</td></tr>
+<tr><td>Aprovação</td><td>CLIENTE</td><td>Até o dia 10</td></tr>
+<tr><td>Emissão da Nota Fiscal</td><td>MANTA</td><td>Dia 10, após aprovação</td></tr>
+<tr><td>Pagamento</td><td>CLIENTE</td><td>Até o dia 25, transferência bancária</td></tr>
+</tbody></table>
+<div class="clause"><h3>Atraso de pagamento</h3><p>Aplicável tanto à Tarifa quanto ao Success Fee. Em caso de atraso no pagamento de qualquer fatura além do prazo de vencimento acordado, incidem sobre o valor em aberto, sem necessidade de aviso ou notificação prévia: multa moratória de 2% sobre o valor da fatura em atraso; juros de mora de 1% ao mês, pro rata die, desde o vencimento até o efetivo pagamento; atualização monetária pelo IPCA (ou índice equivalente pactuado) sobre o saldo devedor no mesmo período. Percentuais de referência — revisão jurídica recomendada antes do próximo uso real em proposta de cliente.</p></div>
+
+<h1 id="s14">14. Não Aliciamento e Confidencialidade</h1>
+<div class="clause"><p>Vigência do contrato + 24 (vinte e quatro) meses; penalidade de 10× (dez vezes) o valor total da proposta em caso de descumprimento. Sigilo sobre informações técnicas, financeiras e estratégicas, por prazo indeterminado.</p></div>
+
+<h1 id="s15">15. Validade da Proposta</h1>
+<p>30 (trinta) dias corridos, contados da data de emissão — padrão.</p>
+
+<h1 id="s16">16. Contato Comercial e Dados da Empresa</h1>
+<div class="clause"><p>Contato Comercial: Willer Monteiro — (31) 98757-2197 — comercial@mantaassociados.com<br>
+Razão Social: Manta Consultoria Ltda. — CNPJ 56.063.961/0001-08<br>
+Endereço: Av. Marcos Penteado de Ulhoa Rodrigues, 939, andar 8, sala 850, Torre I – Edif. Jacarandá, 06.460-040, Tamboré, Barueri – SP<br>
+Dados Bancários: Banco Santander — Agência 3630 — Conta Corrente 13008405-3</p></div>
+
+<h1 id="s17">17. Limitação de Responsabilidade</h1>
+<div class="guide">Atuação consultiva/de suporte técnico, não substitui a responsabilidade legal/contratual/regulatória do cliente. Responsabilidade da Manta tipicamente limitada ao valor pago nos últimos 12 meses.</div>
+
+<h1 id="s18">18. Disclaimer</h1>
+<div class="guide">Confidencialidade do documento, propriedade intelectual do conteúdo técnico/metodológico e das ferramentas proprietárias da Manta.</div>
+
+<h1 id="anexo1">Anexo I — Apresentação da Empresa</h1>
+<div class="guide">Credenciais, projetos de referência (buscar no corpus indexado <code>03-exemplares/bd/manta_propostas_index.json</code> — ex.: Rodoanel SP, Fernão Dias, Rodoanel Complementar), equipe.</div>
+
+</div>
