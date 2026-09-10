@@ -4,18 +4,50 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.5** (2026-09-10) — reconciliação da branch que implanta o
+Versão: **v5.4.7** (2026-09-10) — reconciliação da branch que implanta o
 par de skills `sessao-salvar` / `sessao-retomar` (handoff de sessão
 entre plataformas Claude, em `.claude/skills/`, originado em 2026-09-04)
 com o trabalho de reconciliação SharePoint real feito em paralelo em
-`main` (v5.4.2 a v5.4.4, abaixo — inclui a segunda relocação real da
-skill `proposta-comercial` em 2026-09-08). Ver seção "SKILLS — Handoff
-de sessão entre plataformas". Conector SharePoint Manta não estava
-habilitado na sessão que implantou as skills (v5.4.3 confirma, em
-sessão separada, que o mesmo conector `SharePoint_Manta` MCP funciona
-com acesso real de leitura/escrita — ver "Gaps abertos"); nesta
-reconciliação o conector foi de fato habilitado e o handoff testado de
-ponta a ponta (ver "SKILLS").
+`main` (v5.4.2 a v5.4.6, abaixo — inclui a segunda relocação real da
+skill `proposta-comercial` em 2026-09-08, a recorrência de fabricação
+confirmada em 2026-09-10 e a diretriz de posicionamento também de
+2026-09-10). Ver seção "SKILLS — Handoff de sessão entre plataformas".
+Conector SharePoint Manta não estava habilitado na sessão que implantou
+as skills (v5.4.3 confirma, em sessão separada, que o mesmo conector
+`SharePoint_Manta` MCP funciona com acesso real de leitura/escrita —
+ver "Gaps abertos"); nesta reconciliação o conector foi de fato
+habilitado e o handoff testado de ponta a ponta (ver "SKILLS"). Nenhuma
+mudança feita nesta reconciliação toca a skill `proposta-comercial` ou
+a investigação de fabricação (v5.4.5/v5.4.6) — escopo desta branch
+permanece só o par `sessao-salvar`/`sessao-retomar`.
+
+Consolida v5.4.6 (2026-09-10) — **diretriz de posicionamento**: foco
+na maturidade profissional da equipe Manta, com IA como apoio/
+multiplicador (não substituição), para propostas do segmento
+Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
+("Diretriz de posicionamento (2026-09-10)"). É orientação de conteúdo
+para propostas futuras — não altera nem alega nada sobre a skill de
+produção.
+
+Consolida v5.4.5 (2026-09-10) — **recorrência confirmada da
+fabricação na skill real de proposta**. Investigação read-only via
+`SharePoint_Manta` MCP confirmou que a seção "Variante Tipo A /
+Concessão de Infraestrutura de Grande Porte", hoje viva em
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.5),
+reproduz quase palavra-por-palavra o addendum fabricado deste
+repositório (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`), incluindo a
+referência a uma revisão de proposta inexistente
+(`MNT-2026-COM-1183_D` — só `_C_3` é encontrável). A própria fonte
+canônica (`INDICE-CANONICAL.md` §13) admite que esse conteúdo "antes só
+existia num pacote de skill fora do SharePoint, nunca escrito na
+árvore" — ou seja, a correção de premissa da v5.4.2/v5.4.3 não impediu
+uma recorrência por um caminho diferente (fusão de pacote externo no
+saneamento estrutural de 2026-09-07, sem gate humano de verificação de
+fonte primária). Detalhe completo, incluindo a comparação literal, em
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (seção "Recorrência
+confirmada — Variante Tipo A (2026-09-10)"). **Nenhuma escrita foi
+feita na skill de produção** — recomendação registrada para o MN
+revisar e corrigir diretamente.
 
 Consolida v5.4.4 (2026-09-08) — **a skill real de proposta mudou de
 lugar de novo, no mesmo dia, e foi reaplicada**. Horas depois da
@@ -541,6 +573,16 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
+> 🔴 **Atualização 2026-09-10**: a seção "Variante Tipo A / Concessão de
+> Infraestrutura de Grande Porte", hoje viva na skill real
+> (`02-atividades/A1-proposta/SKILL.md`, v3.3.5), foi confirmada como
+> **recorrência da fabricação** corrigida abaixo — reproduz quase
+> palavra-por-palavra o addendum fabricado deste repositório e cita a
+> mesma revisão inexistente `MNT-2026-COM-1183_D`. Nenhuma escrita foi
+> feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+> ("Recorrência confirmada — Variante Tipo A") para a evidência
+> completa e a recomendação ao MN.
+
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
 > um "agente A7-bd" e um modo "M6" validado contra
@@ -853,7 +895,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.4.5)
+├── CLAUDE.md                              # este arquivo (master registry, v5.4.7)
 ├── README.md
 ├── .claude/
 │   ├── agents/
@@ -867,9 +909,9 @@ Codex-exemplo/
 │   │   └── agente-edificacoes.md          # S6 real (frontmatter interno ainda diz S13 — renumeração pendente)
 │   └── skills/
 │       ├── sessao-salvar/
-│       │   └── SKILL.md                   # 🆕 v5.4.4/v5.4.5 — salva handoff de sessão no SharePoint
+│       │   └── SKILL.md                   # 🆕 v5.4.4/v5.4.7 — salva handoff de sessão no SharePoint
 │       └── sessao-retomar/
-│           └── SKILL.md                   # 🆕 v5.4.4/v5.4.5 — retoma handoff salvo por sessao-salvar; testado ponta a ponta em v5.4.5
+│           └── SKILL.md                   # 🆕 v5.4.4/v5.4.7 — retoma handoff salvo por sessao-salvar; testado ponta a ponta em 2026-09-10
 ├── docs/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
@@ -905,11 +947,11 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.5** (2026-09-10) — reconciliação da branch `claude/leia-e-
+- **v5.4.7** (2026-09-10) — reconciliação da branch `claude/leia-e-
   descreva-uxrmga` (implantação do par de skills `sessao-salvar` /
   `sessao-retomar`, originada em 2026-09-04) com o trabalho de
   reconciliação SharePoint real feito em paralelo em `main`
-  (v5.4.2 a v5.4.4, abaixo). Adiciona `.claude/skills/sessao-salvar/` e
+  (v5.4.2 a v5.4.6, abaixo). Adiciona `.claude/skills/sessao-salvar/` e
   `.claude/skills/sessao-retomar/`, catálogo de skills, item de deploy
   checklist e gap sobre o conector SharePoint Manta (não habilitado na
   sessão original de 2026-09-04 — reconciliado com o achado de
@@ -918,7 +960,24 @@ Codex-exemplo/
   de fato habilitado e o par de skills testado de ponta a ponta contra
   um projeto real de handoff já em uso pela equipe,
   `12_HANDOFFS/handoff-continuidade/`, fechando a validação Chat↔Code).
-  Ver seção "SKILLS — Handoff de sessão entre plataformas".
+  Ver seção "SKILLS — Handoff de sessão entre plataformas". Não toca a
+  skill `proposta-comercial` nem a investigação de fabricação
+  (v5.4.5/v5.4.6) — fora do escopo desta branch.
+- **v5.4.6** (2026-09-10) — diretriz de posicionamento (MN): propostas
+  de Infraestrutura devem destacar a maturidade profissional da equipe
+  Manta primeiro, com a IA da Manta posicionada como apoio/multiplicador
+  de produtividade — nunca como substituição da experiência técnica.
+  Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`; não altera a skill de
+  produção.
+- **v5.4.5** (2026-09-10) — investigação read-only confirmou
+  recorrência da fabricação da skill `proposta-comercial`: a variante
+  "Tipo A / Infraestrutura de Grande Porte" viva em produção (v3.3.5)
+  reproduz o addendum fabricado deste repositório quase
+  palavra-por-palavra, citando a mesma revisão inexistente
+  `MNT-2026-COM-1183_D`. Documentado em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e `docs/MODELO-MESTRE-PROPOSTA.md`.
+  Nenhuma alteração feita na skill real — recomendação registrada para
+  gate humano (MN).
 - **v5.4.4** (2026-09-08) — **skill real de proposta mudou de lugar de
   novo e foi reaplicada, segunda rodada no mesmo dia**. Horas depois
   da v5.4.2 aplicar a correção em `05-sub-skills/skill-proposta-
