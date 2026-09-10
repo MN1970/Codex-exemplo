@@ -27,6 +27,18 @@
 > exigibilidade por formalização, três parcelas de mora — segue válida
 > e foi o que orientou a versão real aplicada). Não usar como
 > instrução de deploy: a skill já foi atualizada.
+>
+> ⚠️ **Atualização (2026-09-08)**: o caminho `05-sub-skills/skill-
+> proposta-comercial-SKILL.md` citado acima **também está superado**.
+> Horas depois da correção de 2026-09-07, um saneamento estrutural real
+> do SharePoint (disparado por uma confusão de caminho relatada por
+> outra sessão Claude) fundiu o corpo operacional da skill em
+> `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` — o antigo
+> caminho virou só um ponteiro de descontinuação. As três cláusulas
+> foram reaplicadas nesse novo caminho real como v3.3.1. Ver
+> `docs/MODELO-MESTRE-PROPOSTA.md` §3 e
+> `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` para o detalhe completo,
+> incluindo o risco de edição concorrente que este episódio revelou.
 
 ---
 

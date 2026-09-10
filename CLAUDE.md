@@ -4,15 +4,39 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.4** (2026-09-07) — reconciliação da branch que implanta o
+Versão: **v5.4.5** (2026-09-10) — reconciliação da branch que implanta o
 par de skills `sessao-salvar` / `sessao-retomar` (handoff de sessão
 entre plataformas Claude, em `.claude/skills/`, originado em 2026-09-04)
-com o trabalho de reconciliação SharePoint real (v5.4.2/v5.4.3, abaixo).
-Ver seção "SKILLS — Handoff de sessão entre plataformas". Conector
-SharePoint Manta não estava habilitado na sessão que implantou as
-skills (v5.4.3 confirma, em sessão separada, que o mesmo conector
-`SharePoint_Manta` MCP funciona com acesso real de leitura/escrita —
-ver "Gaps abertos").
+com o trabalho de reconciliação SharePoint real feito em paralelo em
+`main` (v5.4.2 a v5.4.4, abaixo — inclui a segunda relocação real da
+skill `proposta-comercial` em 2026-09-08). Ver seção "SKILLS — Handoff
+de sessão entre plataformas". Conector SharePoint Manta não estava
+habilitado na sessão que implantou as skills (v5.4.3 confirma, em
+sessão separada, que o mesmo conector `SharePoint_Manta` MCP funciona
+com acesso real de leitura/escrita — ver "Gaps abertos"); nesta
+reconciliação o conector foi de fato habilitado e o handoff testado de
+ponta a ponta (ver "SKILLS").
+
+Consolida v5.4.4 (2026-09-08) — **a skill real de proposta mudou de
+lugar de novo, no mesmo dia, e foi reaplicada**. Horas depois da
+correção v5.4.2 (skill em `05-sub-skills/skill-proposta-comercial-
+SKILL.md`), uma **outra sessão Claude** (Claude Desktop Windows)
+tentou localizar a mesma skill, não encontrou o caminho e viu uma
+estrutura totalmente diferente — essa confusão disparou, em paralelo
+a esta sessão, um **saneamento estrutural real** do SharePoint
+(`INDICE-CANONICAL.md` v1.1, §13), que fundiu o corpo operacional da
+skill em `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`
+(v3.3.0) a partir de um pacote de conteúdo **anterior** à correção
+v5.4.2 — ou seja, a segregação Tarifa×Success Fee, a exigibilidade por
+formalização e a cláusula de juros de mora **ficaram órfãs** no
+caminho antigo, que virou só um ponteiro de descontinuação. Reaplicadas
+nesta sessão no novo caminho real como **v3.3.1** (16.191 bytes,
+verificado por leitura pós-upload em 2026-09-08T00:48:09Z). Ver seção
+"Modelo Mestre de Proposta" §3 e `docs/MODELO-MESTRE-PROPOSTA.md` §3
+para o detalhe completo, incluindo o risco de **edição concorrente**
+no SharePoint real (múltiplas sessões/processos editando a mesma
+árvore no mesmo dia) — antes de editar essa skill de novo, sempre
+reler o arquivo primeiro.
 
 Consolida v5.4.3 (2026-09-07) — **fase 1 da reconciliação com o
 SharePoint real: numeração de segmento corrigida**. A pedido do
@@ -536,11 +560,25 @@ conquista → formalização da conquista; cronograma → marco formalmente
 aprovado — nunca pela implementação física, e acrescentar cláusula de
 **multa, juros de mora e correção monetária** por atraso de pagamento)
 **já foi aplicada na skill real** em 2026-09-07, a pedido do usuário —
-reescrita no formato verdadeiro dela (resumo compacto ≤1024 caracteres,
-não um documento de seções longas). Arquivo verificado por leitura
-pós-upload: 809 bytes. Detalhe e checklist real em
-`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` (o addendum original de
-"18 seções/M6" está lá marcado como histórico/não aplicável).
+reescrita no formato verdadeiro dela.
+
+> ⚠️ **A skill mudou de lugar de novo, no mesmo dia (2026-09-07/08)**:
+> horas depois da correção acima, uma confusão de caminho reportada por
+> outra sessão Claude disparou um saneamento estrutural real do
+> SharePoint. A skill foi fundida em
+> `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.0),
+> puxando um pacote de conteúdo anterior à correção — **sem** as
+> cláusulas acima. Reaplicadas nesta sessão como **v3.3.1** no novo
+> caminho real (16.191 bytes, verificado por leitura pós-upload).
+> `05-sub-skills/skill-proposta-comercial-SKILL.md` **não é mais a
+> fonte** — virou um ponteiro de descontinuação. Detalhe completo em
+> `docs/MODELO-MESTRE-PROPOSTA.md` §3. **O SharePoint real está sendo
+> editado por múltiplas sessões em paralelo** — antes de editar essa
+> skill de novo, sempre reler o arquivo primeiro.
+
+Detalhe e checklist real em `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`
+(o addendum original de "18 seções/M6" está lá marcado como
+histórico/não aplicável).
 
 Pendências: (1) revisão jurídica dos percentuais padrão de multa/juros/
 correção monetária antes do próximo uso real em proposta de cliente;
@@ -564,25 +602,32 @@ localiza e carrega o handoff mais recente em outra plataforma
 
 | Skill | Descrição | Gatilho | Localização | Status |
 |-------|-----------|---------|--------------|--------|
-| sessao-salvar | Destila a sessão atual em `HANDOFF.md` e sobe para o SharePoint | "salvar sessão", "handoff", "vou continuar no Code/Chat/Cowork" | `.claude/skills/sessao-salvar/SKILL.md` | 🆕 Implantado 2026-09-04 (local) |
-| sessao-retomar | Localiza o handoff mais recente do projeto no SharePoint e retoma o trabalho a partir dos "Próximos passos" | "retomar sessão", "retomar handoff", "/sessao-retomar {projeto}" | `.claude/skills/sessao-retomar/SKILL.md` | 🆕 Implantado 2026-09-04 (local) |
+| sessao-salvar | Destila a sessão atual em `HANDOFF.md` e sobe para o SharePoint | "salvar sessão", "handoff", "vou continuar no Code/Chat/Cowork" | `.claude/skills/sessao-salvar/SKILL.md` | ✅ Testado ponta a ponta 2026-09-10 (ver abaixo) |
+| sessao-retomar | Localiza o handoff mais recente do projeto no SharePoint e retoma o trabalho a partir dos "Próximos passos" | "retomar sessão", "retomar handoff", "/sessao-retomar {projeto}" | `.claude/skills/sessao-retomar/SKILL.md` | ✅ Testado ponta a ponta 2026-09-10 (ver abaixo) |
 
-**Pré-requisito operacional (bloqueio parcial ativo em 2026-09-04):**
-ambas as skills exigem um conector MCP do SharePoint conectado à sessão.
-`sessao-salvar` precisa de ferramentas de **escrita** (`list_folders`,
-`create_folder`, `upload_file`); `sessao-retomar` precisa apenas de
-ferramentas de **leitura** (`list_folders`, `list_files`,
-`read_document`, `download_file`). Nesta sessão de implantação, o
-conector **"SharePoint Manta"** aparece instalado na org mas **não
-habilitado no chat** (`enabledInChat: false`), e o conector
-**"Microsoft 365"** (habilitado) expõe ferramentas de leitura/busca
-(`sharepoint_search`, `sharepoint_folder_search`) — o suficiente, em
-princípio, para viabilizar `sessao-retomar` (não testado nesta sessão),
-mas sem `upload_file`/`create_folder` para `sessao-salvar`. A mesma
-limitação de escrita já registrada em F2/Gaps abertos para os templates
-Motiva. `sessao-salvar` só conseguirá gravar de fato no SharePoint
-quando o conector correto for habilitado com escopo de escrita nessa
-sessão/chat.
+**Pré-requisito operacional — ✅ validado com teste real em 2026-09-10**
+(bloqueio original de 2026-09-04 resolvido): ambas as skills exigem um
+conector MCP do SharePoint conectado à sessão. `sessao-salvar` precisa
+de ferramentas de **escrita** (`list_folders`, `create_folder`,
+`upload_file`); `sessao-retomar` precisa apenas de **leitura**
+(`list_folders`, `list_files`, `read_document`, `download_file`). Na
+sessão original de implantação (2026-09-04), o conector **"SharePoint
+Manta"** aparecia instalado na org mas não habilitado no chat. Em
+2026-09-10, o usuário habilitou o conector nesta sessão e o par de
+skills foi executado de ponta a ponta contra o SharePoint real:
+`sessao-retomar` localizou e leu o handoff mais recente de um projeto
+real já em uso pela equipe (`12_HANDOFFS/handoff-continuidade/`,
+20260902-1543, gravado no Chat), e `sessao-salvar` gravou duas
+confirmações reais — uma fechando a validação Chat→Code desse mesmo
+projeto (`12_HANDOFFS/handoff-continuidade/20260907-1733/HANDOFF.md`)
+e outra documentando esta implantação
+(`12_HANDOFFS/codex-exemplo/20260907-1736/HANDOFF.md`) — ambas
+verificadas por releitura pós-upload. Conclusão: o bloqueio era só
+falta de habilitação do conector nessa sessão/chat, não uma limitação
+estrutural da skill (mesma conclusão que a reconciliação SharePoint
+real de v5.4.3 já havia levantado, em sessão separada). A mesma
+limitação de escrita (quando o conector correto não está habilitado)
+segue registrada em F2/Gaps abertos para os templates Motiva.
 
 > **Nota de proveniência**: os commits desta branch também traziam uma
 > seção "MODELO MESTRE DE PROPOSTA" (v4.2.1, análise da proposta
@@ -623,16 +668,14 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ## GAPS ABERTOS / PENDÊNCIAS
 
-- **Conector SharePoint Manta não habilitado na sessão que implantou
-  `sessao-salvar` (2026-09-04)**: ver seção "SKILLS" — o conector
-  "SharePoint Manta" apareceu instalado na org mas não habilitado no
-  chat daquela sessão específica, e o "Microsoft 365" habilitado só
-  tinha ferramentas de leitura. A investigação de reconciliação abaixo
-  (2026-09-07, sessão separada) confirma que o mesmo conector
-  `SharePoint_Manta` MCP funciona com acesso real de leitura/escrita —
-  então é uma questão de habilitação por sessão/chat, não uma
-  limitação estrutural. Ação: habilitar o conector antes de validar um
-  handoff real feito por `sessao-salvar`.
+- ~~**Conector SharePoint Manta não habilitado na sessão que implantou
+  `sessao-salvar` (2026-09-04)**~~ — **✅ resolvido em 2026-09-10**: o
+  usuário habilitou o conector nesta sessão e o par `sessao-salvar`/
+  `sessao-retomar` foi testado de ponta a ponta contra o SharePoint
+  real (ver seção "SKILLS" para os handoffs gravados/lidos e
+  verificados). Confirma o que a investigação de reconciliação de
+  2026-09-07 (sessão separada) já apontava: era questão de habilitação
+  por sessão/chat, não limitação estrutural da skill.
 - **🟡 Este repositório diverge do Manta Maestro real no SharePoint
   (encontrado em 2026-09-07 — numeração e embedder já corrigidos,
   resto aberto)**: com acesso real de leitura/escrita ao
@@ -778,7 +821,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 - [ ] Rodar aluci-guard sobre este documento antes de merge
 - [ ] Rodar consist-guard sobre este documento antes de merge
 - [ ] Gate humano: aprovação MN antes de merge
-- [ ] Habilitar conector SharePoint Manta (ou Microsoft 365 com escopo de escrita) para permitir gravação real dos handoffs da skill `sessao-salvar` (leitura de `sessao-retomar` pode já funcionar via Microsoft 365 — não testado nesta sessão)
+- [x] ~~Habilitar conector SharePoint Manta (ou Microsoft 365 com escopo de escrita) para permitir gravação real dos handoffs da skill `sessao-salvar`~~ — **feito em 2026-09-10**: conector habilitado, `sessao-salvar`/`sessao-retomar` testados de ponta a ponta (ver seção SKILLS)
 
 ### Correção de numeração de segmento (2026-09-07, fase 1 da reconciliação com o SharePoint real)
 
@@ -810,7 +853,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.4.4)
+├── CLAUDE.md                              # este arquivo (master registry, v5.4.5)
 ├── README.md
 ├── .claude/
 │   ├── agents/
@@ -824,9 +867,9 @@ Codex-exemplo/
 │   │   └── agente-edificacoes.md          # S6 real (frontmatter interno ainda diz S13 — renumeração pendente)
 │   └── skills/
 │       ├── sessao-salvar/
-│       │   └── SKILL.md                   # 🆕 v5.4.4 — salva handoff de sessão no SharePoint
+│       │   └── SKILL.md                   # 🆕 v5.4.4/v5.4.5 — salva handoff de sessão no SharePoint
 │       └── sessao-retomar/
-│           └── SKILL.md                   # 🆕 v5.4.4 — retoma handoff salvo por sessao-salvar
+│           └── SKILL.md                   # 🆕 v5.4.4/v5.4.5 — retoma handoff salvo por sessao-salvar; testado ponta a ponta em v5.4.5
 ├── docs/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
@@ -862,17 +905,48 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.4** (2026-09-07) — reconciliação da branch `claude/leia-e-
+- **v5.4.5** (2026-09-10) — reconciliação da branch `claude/leia-e-
   descreva-uxrmga` (implantação do par de skills `sessao-salvar` /
   `sessao-retomar`, originada em 2026-09-04) com o trabalho de
   reconciliação SharePoint real feito em paralelo em `main`
-  (v5.4.2/v5.4.3, abaixo). Adiciona `.claude/skills/sessao-salvar/` e
+  (v5.4.2 a v5.4.4, abaixo). Adiciona `.claude/skills/sessao-salvar/` e
   `.claude/skills/sessao-retomar/`, catálogo de skills, item de deploy
   checklist e gap sobre o conector SharePoint Manta (não habilitado na
   sessão original de 2026-09-04 — reconciliado com o achado de
   v5.4.2/v5.4.3 de que o mesmo conector funciona com acesso real de
-  leitura/escrita em outra sessão). Ver seção "SKILLS — Handoff de
-  sessão entre plataformas".
+  leitura/escrita em outra sessão; nesta reconciliação o conector foi
+  de fato habilitado e o par de skills testado de ponta a ponta contra
+  um projeto real de handoff já em uso pela equipe,
+  `12_HANDOFFS/handoff-continuidade/`, fechando a validação Chat↔Code).
+  Ver seção "SKILLS — Handoff de sessão entre plataformas".
+- **v5.4.4** (2026-09-08) — **skill real de proposta mudou de lugar de
+  novo e foi reaplicada, segunda rodada no mesmo dia**. Horas depois
+  da v5.4.2 aplicar a correção em `05-sub-skills/skill-proposta-
+  comercial-SKILL.md` (809 bytes), outra sessão Claude (Claude Desktop
+  Windows) tentou localizar essa mesma skill e não encontrou o
+  caminho, encontrando uma estrutura de pastas totalmente diferente
+  (`02-agentes-horizontais/agente-bd`, vazia). Isso disparou, em
+  paralelo a esta sessão, um saneamento estrutural real do SharePoint
+  (documentado em `09-base-conhecimento/INDICE-CANONICAL.md` v1.1,
+  §13), que fundiu o corpo operacional da skill em
+  `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.0, a
+  partir de um pacote de conteúdo externo **anterior** à correção da
+  v5.4.2) e transformou o caminho antigo num ponteiro de
+  descontinuação. A correção da v5.4.2 ficou órfã. Reaplicada nesta
+  mesma sessão no novo caminho real como **v3.3.1** (16.191 bytes,
+  verificado por leitura pós-upload em 2026-09-08T00:48:09Z),
+  preservando o corpo operacional completo já consolidado pelo
+  saneamento (numeração, tabela de 13 perfis, dados fixos do
+  proponente, estrutura de 18 seções + Anexo, variante "Tipo A") e
+  reinserindo a segregação Tarifa×Success Fee, a exigibilidade por
+  formalização do evento-gatilho e a cláusula de juros de
+  mora/multa/correção monetária. Detalhe completo em
+  `docs/MODELO-MESTRE-PROPOSTA.md` §3. Achado novo e relevante:
+  **o SharePoint real está sendo editado por múltiplas
+  sessões/processos em paralelo no mesmo dia** — antes de editar essa
+  skill de novo, sempre reler o arquivo primeiro (risco de edição
+  concorrente, documentado também em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`).
 - **v5.4.3** (2026-09-07) — **fase 1 da reconciliação com o SharePoint
   real: numeração de segmento corrigida**, a pedido do usuário. A
   numeração real (`INDICE-CANONICAL.md`, lido via `SharePoint_Manta`
