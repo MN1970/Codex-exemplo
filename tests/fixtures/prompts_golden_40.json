@@ -1,9 +1,9 @@
 {
   "metadata": {
     "version": "v5.0",
-    "description": "40 golden test cases para Maestro Router E2E — cobertura completa S1-S10 + horizontais",
+    "description": "Golden test cases para Maestro Router E2E — cobertura S1-S10 + horizontais. Meta original era 40 (ver nome do arquivo); só 36 foram efetivamente escritos — corrigido para refletir o conteúdo real em vez de inflar a contagem.",
     "last_updated": "2026-07-25",
-    "total_cases": 40
+    "total_cases": 36
   },
   "test_cases": [
     {

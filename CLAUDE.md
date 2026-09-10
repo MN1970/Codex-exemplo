@@ -4,7 +4,25 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.6** (2026-09-10) — **diretriz de posicionamento**: foco
+Versão: **v5.4.7** (2026-09-10) — **padrão de marca institucional
+(`branding/`)**: registra os ativos oficiais de identidade visual da
+Manta Associados — logo (`branding/logo-manta.jpg`), capa-modelo de
+Proposta Técnica (`branding/capa-padrao-proposta.pdf`, ex.:
+MNT-2026-COM-1192_A) e a especificação de layout obrigatório
+(`branding/PADRAO-PROPOSTA.md`) — como referência única para toda capa
+de proposta técnica/comercial. Este padrão é **institucional**
+(aplica-se a toda proposta Manta, independente de cliente ou segmento)
+e complementa, sem substituir, os padrões de output por cliente e o
+Modelo Mestre de Proposta: `branding/` define a marca Manta; os demais
+definem conteúdo/precificação (inclusive a skill real, que segue tendo
+sua própria localização e versão no SharePoint) e formato específico
+por cliente. Pendência: logo em baixa resolução (249×104px, extraído
+de PDF) — substituir por versão vetorial quando disponível. Ortogonal
+às mudanças de diretriz de posicionamento (v5.4.6) e de recorrência da
+fabricação na skill de proposta (v5.4.5) tratadas nas versões abaixo.
+Ticket `MNT-2026-BRANDING-CAPA-PADRAO`.
+
+Consolida v5.4.6 (2026-09-10) — **diretriz de posicionamento**: foco
 na maturidade profissional da equipe Manta, com IA como apoio/
 multiplicador (não substituição), para propostas do segmento
 Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
@@ -124,8 +142,9 @@ Consolida v5.0.1 operacional (2026-07-31):
   gaps G010/G012/G014 resolvidos, 15 Sonnets investigação paralela.
 
 Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) +
-`MNT-2026-P3-04-ESG-AGENT` + `MNT-2026-MOTIVA-258-PATTERN` (novo,
-padrão de output por cliente).
+`MNT-2026-P3-04-ESG-AGENT` + `MNT-2026-MOTIVA-258-PATTERN` (padrão de
+output por cliente) + `MNT-2026-BRANDING-CAPA-PADRAO` (novo, padrão de
+marca institucional).
 
 > **Nota de proveniência**: este arquivo **reconcilia** dois work streams
 > paralelos na mesma data:
@@ -155,12 +174,13 @@ padrão de output por cliente).
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
 12. [Padrões de output por cliente](#padrões-de-output-por-cliente)
-13. [Model tiering](#model-tiering)
-14. [Gaps abertos / pendências](#gaps-abertos--pendências)
-15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
-16. [Deploy checklist v5.0](#deploy-checklist-v50)
-17. [Arquivos deste repositório](#arquivos-deste-repositório)
-18. [Histórico de versões](#histórico-de-versões)
+13. [Padrão de marca institucional](#padrão-de-marca---capas-de-proposta)
+14. [Model tiering](#model-tiering)
+15. [Gaps abertos / pendências](#gaps-abertos--pendências)
+16. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
+17. [Deploy checklist v5.0](#deploy-checklist-v50)
+18. [Arquivos deste repositório](#arquivos-deste-repositório)
+19. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -626,6 +646,34 @@ cliente ao gerar output para ele.
 
 ---
 
+## PADRÃO DE MARCA — Capas de Proposta
+
+Diferente da seção anterior (padrão de output **por cliente**) e do
+Modelo Mestre de Proposta (conteúdo/precificação da skill real, que
+segue tendo sua própria localização/versão no SharePoint — ver seção
+acima), esta seção define o padrão **institucional** Manta: a
+capa/identidade visual usada em toda proposta técnica ou comercial,
+qualquer que seja o cliente ou segmento. Ativos oficiais em
+`branding/`:
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `branding/logo-manta.jpg` | Logo oficial "Manta Associados" |
+| `branding/capa-padrao-proposta.pdf` | Capa-modelo de Proposta Técnica (ex.: MNT-2026-COM-1192_A / MOTIVA) |
+| `branding/PADRAO-PROPOSTA.md` | Especificação da estrutura obrigatória da capa |
+
+Toda capa de proposta (técnica ou comercial) deve seguir o layout
+descrito em `branding/PADRAO-PROPOSTA.md`: código do documento
+(`MNT-YYYY-TIPO-SEQ`), título "PROPOSTA" + subtítulo, campos
+"Responsável"/"Empresa", padrão gráfico de losangos terracota e logo
+Manta no rodapé.
+
+⚠️ Pendência: logo atual está em baixa resolução (249×104px, extraído
+de PDF por falta de arquivo vetorial). Solicitar versão SVG/AI para
+substituir — ver Gaps abertos.
+
+---
+
 ## MODEL TIERING
 
 | Tier | Modelo | Uso típico |
@@ -732,6 +780,10 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 - **Cor institucional da Motiva não confirmada** — ver seção 5 de
   `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
   até confirmação do cliente.
+- **Logo institucional Manta em baixa resolução (novo)**:
+  `branding/logo-manta.jpg` (249×104px) foi extraído de um PDF de capa
+  por falta de arquivo original — substituir por versão vetorial
+  (SVG/AI/EPS) em alta resolução assim que disponível.
 
 ---
 
@@ -817,8 +869,12 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.2)
+├── CLAUDE.md                              # este arquivo (master registry, v5.4.7)
 ├── README.md
+├── branding/                              # 🆕 v5.4.7 — padrão de marca institucional
+│   ├── logo-manta.jpg
+│   ├── capa-padrao-proposta.pdf
+│   └── PADRAO-PROPOSTA.md
 ├── .claude/
 │   └── agents/
 │       ├── agente-portos.md               # S7 real (frontmatter interno ainda diz S6 — renumeração pendente, ver Deploy checklist)
@@ -864,6 +920,19 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.7** (2026-09-10) — **Padrão de marca institucional
+  (`branding/`)**: adicionado `branding/logo-manta.jpg` (logo oficial,
+  extraído de PDF de capa por falta de arquivo vetorial — pendência
+  registrada em Gaps), `branding/capa-padrao-proposta.pdf` (capa-modelo
+  de Proposta Técnica, MNT-2026-COM-1192_A/MOTIVA) e
+  `branding/PADRAO-PROPOSTA.md` (especificação da estrutura obrigatória
+  de capa). Nova seção "PADRÃO DE MARCA — Capas de Proposta", que
+  complementa (sem substituir) os Padrões de output por cliente e o
+  Modelo Mestre de Proposta: branding institucional Manta vs.
+  conteúdo/precificação da skill real vs. formato específico por
+  cliente. Ortogonal à diretriz de posicionamento (v5.4.6) e à
+  investigação de recorrência da fabricação na skill de proposta
+  (v5.4.5). Ticket `MNT-2026-BRANDING-CAPA-PADRAO`.
 - **v5.4.6** (2026-09-10) — diretriz de posicionamento (MN): propostas
   de Infraestrutura devem destacar a maturidade profissional da equipe
   Manta primeiro, com a IA da Manta posicionada como apoio/multiplicador

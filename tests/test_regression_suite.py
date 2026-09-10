@@ -377,7 +377,10 @@ class TestRegressionDeployment:
             with open(claude_path, 'r') as f:
                 content = f.read()
                 assert "v5.0" in content
-                assert "8 pilares" in content or "pilares" in content.lower()
+                # "8 pilares" (docs/ARQUITETURA-v5.0.md) foi superseded pelo
+                # modelo de "4 eixos (S×A×F×D)" na consolidação v5.0 do
+                # CLAUDE.md — checar o marcador atual, não o antigo.
+                assert "4 eixos" in content
 
     def test_no_breaking_changes(self):
         """Sem breaking changes em agent interfaces."""
