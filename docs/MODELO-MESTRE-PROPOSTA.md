@@ -152,16 +152,22 @@ normal, todas as funções):
 | Analista (Engenharia/Software) | Sênior | 285,00 | 50.160,00 | 427,50 |
 | Analista (Engenharia/Software) | Pleno | 176,00 | 30.976,00 | 264,00 |
 | Analista (Engenharia/Software) | Júnior | 135,38 | 23.826,88 | 203,07 |
-| Orçamentista | Sênior | 285,00 | 50.160,00 | 427,50 |
-| Orçamentista | Pleno | 176,00 | 30.976,00 | 264,00 |
-| Orçamentista | Júnior | 135,38 | 23.826,88 | 203,07 |
 | Estágio | Estagiário | 80,00 | 14.080,00 | 120,00 |
 
-Notas (fonte: ficha técnica da revB, dentro da própria skill real):
+Notas (fonte: ficha técnica da revB, dentro da própria skill real,
+nota 1 revisada na v3.3.6 — ver §5 abaixo):
 
-1. Perfis de produtos de software ligados a IA usam as mesmas
-   maturidades e tarifas de "Analista (Engenharia/Software)" — sem
-   tabela específica.
+1. **Enquadramento por maturidade, não por área de atuação** [revisado
+   v3.3.6]: profissionais de qualquer área (engenharia, planejamento,
+   software/TI, orçamento, entre outras) são remunerados enquadrando-se
+   na Função e no Nível da tabela acima (Diretoria, Coordenação,
+   Especialista, Engenharia ou Analista) que correspondam à sua
+   maturidade/senioridade real — **não há Função dedicada por área de
+   atuação**. Ex.: um orçamentista sênior usa a tarifa de Engenharia
+   Sênior ou Especialista Sênior, conforme a complexidade da atividade.
+   O grupo "Orçamentista", que existia como Função própria na v3.3.3
+   (tabela acima, tal como documentada em §4 nas versões anteriores
+   deste arquivo), **foi removido na v3.3.6** por este motivo — ver §5.
 2. Valores já incluem encargos, overhead e margem. Sem custos
    adicionais exceto deslocamentos (ver cláusula de Deslocamentos
    acima).
@@ -176,7 +182,70 @@ Notas (fonte: ficha técnica da revB, dentro da própria skill real):
 na seção 3: a skill real segue mudando fora desta sessão — **sempre
 reler antes de assumir que este documento reflete o estado atual**.
 
-## 5. O que fica pendente / fora do escopo desta correção
+## 5. ⚠️ Skill evoluiu de novo — v3.3.5 a v3.3.7 (2026-09-10, rotina de reconciliação)
+
+A rotina periódica de reconciliação GitHub↔SharePoint (routine
+`trig_01KPNtXg2TJJaNYhHoetrB3D`) releu a skill real em 2026-09-10 e
+encontrou mais três revisões desde a v3.3.4 documentada em §4 —
+**versão real agora é v3.3.7** (19.736 bytes,
+`updated: 2026-09-10`, `supersedes: 3.3.6 (2026-09-10)`):
+
+- **v3.3.5**: adiciona o bloco "Ficha Técnica (linha única)" à
+  variante de Concessão de Infraestrutura de Grande Porte (uma linha
+  de fechamento: Cliente · Projeto · Documento · Código · Versão ·
+  Data · Classificação · Responsável · Contato · Fontes primárias ·
+  Repositório); e uma cláusula nova — **nunca citar "Manta Mestro" ou
+  a arquitetura interna de IA (agentes por segmento, orquestração,
+  códigos "Manta NN") no texto entregue ao cliente** — a narrativa
+  cliente-facing fala apenas em "ferramentas de Inteligência
+  Artificial da Manta Associados", de forma genérica.
+- **v3.3.6**: **remove o grupo "Orçamentista" da tabela tarifária**
+  (documentado em §4 acima) e generaliza a nota 1 — qualquer área
+  (engenharia, planejamento, software, orçamento etc.) se enquadra nos
+  níveis existentes (Diretoria/Coordenação/Especialista/Engenharia/
+  Analista) por senioridade, sem Função dedicada por área. **A tabela
+  em §4 acima já reflete essa correção** — a versão anterior deste
+  arquivo (e do `CLAUDE.md`) ainda listava "Orçamentista" como Função
+  própria; isso está desatualizado a partir de agora.
+- **v3.3.7**: remove, da seção "Variante — Tipo A / Concessão de
+  Infraestrutura de Grande Porte", a alegação de que os 5 blocos
+  adicionais foram "validados contra a proposta real
+  MNT-2026-COM-1183_D" — essa revisão **não existe** no SharePoint
+  (confirmado por busca: só retorna `MNT-2026-COM-1183_C_3`), a
+  citação entrou via fusão de pacote externo nunca conferido contra
+  fonte primária. O changelog da própria skill real cita este
+  repositório (`Codex-exemplo`) como onde esse achado foi documentado
+  — mesmo achado já registrado em §1 acima ("revisão mais recente
+  encontrada no SharePoint é `_C_3`, não `_D`"). A estrutura dos 5
+  blocos foi mantida; apenas a alegação de validação foi removida, sem
+  substituí-la por nova citação não verificada — a variante segue
+  **pendente de validação contra uma proposta real específica antes de
+  uso em cliente**.
+
+**Caminho real atual (confirmado por leitura direta em 2026-09-10,
+após a v3.3.4)**: `04_IA/Manta-Maestro/02-atividades/A1-proposta/
+SKILL.md`, **v3.3.7**, 19.736 bytes. Mais uma vez a skill mudou fora
+desta sessão entre uma leitura e outra no mesmo dia — reforça a
+recomendação já feita em §3/§4: **sempre reler antes de editar ou de
+assumir que este documento reflete o estado atual**.
+
+### Achado correlato: nova arquitetura canônica v5.0.1 no SharePoint
+
+A mesma rotina localizou `00-arquitetura/manta-maestro-arquitetura-
+v5.0.md` (versão **5.0.1**, 26/07/2026, "Drive A canônico"), que
+substitui `manta-maestro-arquitetura-v3.0.md`/`v3.1.md`/`v3.2.md`
+(todos marcados `DEPRECATED` em 2026-09-08 e citados como fonte real
+em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`). Conteúdo confirma —
+não contradiz — as decisões já reconciliadas neste repositório:
+numeração de segmentos S1–S11 (S5=imobiliário, S6=edificações,
+S7=portos … S11=barragens) e embedder canônico `bge-small-en-v1.5`
+(384-d, confirmado em produção Supabase). Não há mudança de conteúdo a
+propagar para este repositório a partir desse documento — só o nome/
+caminho do arquivo real mudou desde a última vez que
+`GAP-RECONCILIACAO-SHAREPOINT-REAL.md` foi escrito. Atualização de
+referência registrada lá, não neste arquivo.
+
+## 6. O que fica pendente / fora do escopo desta correção
 
 - **Risco de edição concorrente**: o SharePoint real está sendo editado
   por múltiplas sessões/processos em paralelo no mesmo dia (esta

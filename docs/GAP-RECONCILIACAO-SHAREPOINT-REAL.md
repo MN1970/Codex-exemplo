@@ -238,6 +238,36 @@ precisa do MN:
   "Risco de edição concorrente no SharePoint real" acima e
   `docs/MODELO-MESTRE-PROPOSTA.md` §3.
 
+## Atualização 2026-09-10 (rotina de reconciliação) — documento de arquitetura real mudou de nome/versão
+
+A Routine periódica de reconciliação GitHub↔SharePoint
+(`trig_01KPNtXg2TJJaNYhHoetrB3D`) encontrou que os documentos citados
+acima como fonte real de arquitetura —
+`00-arquitetura/manta-maestro-arquitetura-v3.0.md`/`v3.1.md`/`v3.2.md`
+— estão **todos marcados `DEPRECATED` desde 2026-09-08**. O documento
+canônico atual é `00-arquitetura/manta-maestro-arquitetura-v5.0.md`
+(**versão 5.0.1**, 26/07/2026, "Drive A canônico"), que formaliza a
+promoção da v5.0.0 (antes em "Drive B DEPRECATED") ao canônico. Lido
+integralmente nesta rotina — **não contradiz** nada do que já está
+confirmado como real acima: reafirma a numeração S1–S11 (S5=imobiliário,
+S6=edificações, S7=portos…S11=barragens) e o embedder canônico
+`bge-small-en-v1.5` (384-d, confirmado em produção Supabase,
+`bge-m3` avaliado e não aprovado). Ou seja: é uma **atualização de
+nome/caminho do documento-fonte**, não uma nova divergência de
+conteúdo — os itens "Feito nesta sessão" abaixo continuam válidos, só
+a citação ao arquivo real deveria apontar para `v5.0.md` (v5.0.1) em
+vez de `v3.0.md`/`v3.2.md` em qualquer atualização futura deste gap.
+
+Também confirmado nesta mesma leitura: a skill real `A1-proposta`
+evoluiu de v3.3.4 para **v3.3.7** desde a última leitura (2026-09-10),
+incluindo a remoção do grupo "Orçamentista" da tabela tarifária
+(generalizado por senioridade, v3.3.6) e a remoção de uma alegação de
+validação não verificável contra uma revisão de proposta inexistente
+(v3.3.7) — detalhe completo em `docs/MODELO-MESTRE-PROPOSTA.md` §5.
+Reforça, mais uma vez, o achado já registrado acima sobre edição
+concorrente: a skill mudou de versão três vezes entre duas leituras
+desta sessão no mesmo dia.
+
 ## Não resolvido nesta sessão
 
 - Renumerar o frontmatter interno dos agentes `.md` afetados.

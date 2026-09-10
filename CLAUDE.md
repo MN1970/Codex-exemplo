@@ -4,15 +4,33 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.6** (2026-09-10) — **regra obrigatória: toda proposta
+Versão: **v5.4.7** (2026-09-10) — **rotina de reconciliação: tabela
+tarifária corrigida (grupo "Orçamentista" removido, v3.3.5-v3.3.7 da
+skill real)**. A Routine periódica GitHub↔SharePoint
+(`trig_01KPNtXg2TJJaNYhHoetrB3D`) releu a skill real e encontrou que
+ela evoluiu de v3.3.4 para v3.3.7 desde a última leitura no mesmo dia:
+o grupo "Orçamentista" (v5.4.5/v5.4.6 deste arquivo) foi removido da
+tabela tarifária na v3.3.6 — qualquer área se enquadra nos níveis
+existentes por senioridade, não por Função dedicada — e uma cláusula
+sobre citação de "Manta Mestro" ao cliente e um bloco de Ficha Técnica
+foram adicionados (v3.3.5), além de uma alegação de validação não
+verificável ter sido removida (v3.3.7). Ver "Modelo Mestre de
+Proposta" e `docs/MODELO-MESTRE-PROPOSTA.md` §5. A mesma rotina também
+localizou a arquitetura canônica atual em
+`00-arquitetura/manta-maestro-arquitetura-v5.0.md` (v5.0.1, substitui
+v3.0/v3.1/v3.2 deprecados) — não contradiz nada já reconciliado, só
+atualiza o caminho do documento-fonte; ver
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
+
+Consolida v5.4.6 (2026-09-10) — **regra obrigatória: toda proposta
 comercial deve usar o modelo mestre vigente**. A pedido do usuário,
 formalizada no topo da seção "Modelo Mestre de Proposta" uma regra
 explícita: toda proposta gerada por qualquer agente Manta deve (1)
 seguir a estrutura real da skill `A1-proposta` (14 seções, modos
-M1–M5) e (2) usar exclusivamente a tabela tarifária vigente (v3.3.4,
-"revB"), nunca perfis ou valores anteriores a 2026-09-09. Não muda o
-conteúdo do modelo em si (já documentado na v5.4.5) — torna
-explícito e obrigatório o que antes era apenas descritivo.
+M1–M5) e (2) usar exclusivamente a tabela tarifária vigente, nunca
+perfis ou valores anteriores a 2026-09-09. Não muda o conteúdo do
+modelo em si (já documentado na v5.4.5) — torna explícito e
+obrigatório o que antes era apenas descritivo.
 
 Consolida v5.4.5 (2026-09-10) — **tabela tarifária real atualizada
 (v3.3.2-v3.3.4 da skill A1-proposta)**: consolidação "revB" das
@@ -636,16 +654,21 @@ reescrita no formato verdadeiro dela.
 > | Especialista | Master / Sênior / Pleno / Júnior | 500,00 / 475,00 / 470,00 / 470,00 | 750,00 / 712,50 / 705,00 / 705,00 |
 > | Engenharia | Master / Sênior / Pleno / Júnior | 561,00 / 532,95 / 506,30 / 480,99 | 841,50 / 799,43 / 759,45 / 721,49 |
 > | Analista (Eng./Software) | Sênior / Pleno / Júnior | 285,00 / 176,00 / 135,38 | 427,50 / 264,00 / 203,07 |
-> | Orçamentista | Sênior / Pleno / Júnior | 285,00 / 176,00 / 135,38 | 427,50 / 264,00 / 203,07 |
 > | Estágio | Estagiário | 80,00 | 120,00 |
 >
-> Perfis de IA/software usam a mesma graduação de "Analista
-> (Engenharia/Software)". "Projetista Sênior" e "Técnico" (tabelas
-> antigas) não têm Função equivalente ainda — usar "Especialista" mais
-> próximo até reconciliação. Valores já incluem encargos, overhead e
-> margem — sem custo adicional exceto deslocamentos (ver cláusula
-> acima). Tabela completa (com valores mensais) em
-> `docs/MODELO-MESTRE-PROPOSTA.md` §4.
+> **Correção 2026-09-10** (rotina de reconciliação, skill evoluiu para
+> v3.3.7): o grupo "Orçamentista", listado como Função própria até a
+> v3.3.3/v5.4.6 deste arquivo, **foi removido na v3.3.6** — qualquer
+> área (engenharia, planejamento, software, orçamento etc.) agora se
+> enquadra nos níveis acima por **maturidade/senioridade**, não por
+> Função dedicada; ex.: um orçamentista sênior usa a tarifa de
+> Engenharia Sênior ou Especialista Sênior. Perfis de IA/software usam
+> a mesma graduação de "Analista (Engenharia/Software)". "Projetista
+> Sênior" e "Técnico" (tabelas antigas) não têm Função equivalente
+> ainda — usar "Especialista" mais próximo até reconciliação. Valores
+> já incluem encargos, overhead e margem — sem custo adicional exceto
+> deslocamentos (ver cláusula acima). Tabela completa (com valores
+> mensais) em `docs/MODELO-MESTRE-PROPOSTA.md` §4/§5.
 
 Detalhe e checklist real em `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`
 (o addendum original de "18 seções/M6" está lá marcado como
@@ -912,6 +935,34 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.7** (2026-09-10) — **rotina de reconciliação: tabela
+  tarifária corrigida (v3.3.5-v3.3.7 da skill A1-proposta)**. A
+  Routine periódica GitHub↔SharePoint (`trig_01KPNtXg2TJJaNYhHoetrB3D`)
+  releu a skill real e a arquitetura canônica no SharePoint e encontrou
+  duas atualizações desde a última leitura (v5.4.5/v5.4.6, mesma
+  data): (1) a skill `A1-proposta` evoluiu de v3.3.4 para **v3.3.7** —
+  v3.3.5 adiciona a cláusula "nunca citar Manta Mestro/arquitetura
+  interna ao cliente" e o bloco "Ficha Técnica (linha única)" na
+  variante de concessão; **v3.3.6 remove o grupo "Orçamentista" da
+  tabela tarifária** (documentado nas v5.4.5/v5.4.6 deste arquivo como
+  Função própria — isso ficou desatualizado), generalizando o
+  enquadramento por maturidade/senioridade para qualquer área; v3.3.7
+  remove uma alegação de validação contra uma revisão de proposta
+  (`MNT-2026-COM-1183_D`) que não existe no SharePoint — o mesmo achado
+  já registrado neste repositório em `docs/MODELO-MESTRE-PROPOSTA.md`
+  §1, citado no changelog da própria skill real. Tabela tarifária em
+  "Modelo Mestre de Proposta" corrigida (remoção da linha
+  "Orçamentista"); detalhe completo em
+  `docs/MODELO-MESTRE-PROPOSTA.md` §5. (2) Localizado o documento de
+  arquitetura canônico atual do SharePoint,
+  `00-arquitetura/manta-maestro-arquitetura-v5.0.md` (v5.0.1,
+  26/07/2026, "Drive A canônico"), que substitui
+  `v3.0.md`/`v3.1.md`/`v3.2.md` (deprecados desde 2026-09-08) — não
+  contradiz nenhuma decisão já reconciliada (numeração S1–S11, embedder
+  bge-small-en-v1.5), só atualiza o caminho do documento-fonte citado
+  em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`. Reforça mais uma vez
+  o achado de edição concorrente: a skill real mudou de versão três
+  vezes no mesmo dia entre duas leituras desta sessão.
 - **v5.4.6** (2026-09-10) — **regra obrigatória: toda proposta
   comercial deve usar o modelo mestre vigente**. A pedido explícito do
   usuário, adicionada no topo da seção "Modelo Mestre de Proposta" uma
