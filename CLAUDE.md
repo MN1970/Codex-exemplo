@@ -4,7 +4,21 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-10) — **skill de proposta (A1-proposta)
+Versão: **v5.4.8** (2026-09-10) — **tabela tarifária revisada: remove
+grupo "Orçamentista" e generaliza enquadramento por maturidade**. A
+pedido do usuário: a nota 1 da tabela tarifária (`A1-proposta`) foi
+reescrita para deixar explícito que profissionais de qualquer área
+(engenharia, planejamento, software, orçamento etc.) são remunerados
+enquadrando-se nos níveis já existentes (Diretoria/Coordenação/
+Especialista/Engenharia/Analista) conforme sua maturidade/senioridade
+— não há Função dedicada por área de atuação. O grupo "Orçamentista"
+(3 linhas: Sênior/Pleno/Júnior), redundante com essa regra, foi
+removido da tabela. Escrita aplicada via `SharePoint_Manta` MCP
+(`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, 3.3.5 →
+**3.3.6**), publicação confirmada por releitura (18.907 bytes). Ver
+`docs/ATUALIZACAO-TARIFAS-2026.md` seção 6.
+
+Consolida v5.4.7 (2026-09-10) — **skill de proposta (A1-proposta)
 revisada: ficha técnica condensada + regra de não citar "Manta Mestro"
 ao cliente**. A pedido do usuário: (1) o bloco "Controle de Revisão +
 Ficha Técnica" da variante Tipo A/Concessão, que antes aparecia
@@ -964,6 +978,17 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.8** (2026-09-10) — tabela tarifária padrão da skill de proposta
+  (`A1-proposta`) revisada a pedido do usuário: remove o grupo dedicado
+  "Orçamentista" (3 linhas: Sênior/Pleno/Júnior) e generaliza a nota 1
+  para "enquadramento por maturidade" — profissionais de qualquer área
+  (engenharia, planejamento, software, orçamento etc.) se enquadram nos
+  níveis existentes (Diretoria/Coordenação/Especialista/Engenharia/
+  Analista) por senioridade, sem Função dedicada por área. Escrita
+  aplicada via `SharePoint_Manta` MCP
+  (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` 3.3.5 →
+  3.3.6), confirmada por releitura (18.907 bytes). Ver
+  `docs/ATUALIZACAO-TARIFAS-2026.md` seção 6.
 - **v5.4.7** (2026-09-10) — skill de proposta (`A1-proposta`) revisada
   a pedido do usuário em dois pontos: (1) o bloco "Controle de Revisão +
   Ficha Técnica" da variante Tipo A/Concessão de Infraestrutura, antes

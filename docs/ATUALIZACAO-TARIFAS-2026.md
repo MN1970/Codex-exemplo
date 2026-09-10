@@ -237,3 +237,32 @@ Analista; Estágio inalterado.
 usuário): `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`
 atualizado de **3.3.2 → 3.3.3** via `SharePoint_Manta` MCP, publicação
 confirmada por releitura (19.003 bytes).
+
+## 6. Revisão C (2026-09-10) — v3.3.6: remove "Orçamentista", generaliza enquadramento por maturidade
+
+A pedido do usuário: o grupo "Orçamentista" (3 linhas — Sênior/Pleno/
+Júnior, introduzido na revB/v3.3.3 com os mesmos valores de "Analista
+(Engenharia / Software)") foi **removido** da tabela tarifária padrão.
+
+Em seu lugar, a nota 1 da tabela — que antes só cobria perfis de
+software/IA ("usar as mesmas tarifas de Analista") — foi **reescrita e
+generalizada** para qualquer área de atuação: profissionais de
+engenharia, planejamento, software/TI, orçamento, entre outras, são
+remunerados enquadrando-se na Função e no Nível já existentes na
+tabela (Diretoria, Coordenação, Especialista, Engenharia ou Analista)
+que correspondam à sua maturidade/senioridade real — não existe (nem
+deve existir) uma Função dedicada por área de atuação. Exemplo dado no
+próprio texto da nota: um orçamentista sênior usa a tarifa de
+Engenharia Sênior ou Especialista Sênior, conforme a complexidade da
+atividade; um planejador pleno usa Engenharia Pleno ou Especialista
+Pleno.
+
+Ou seja, a mudança não reduz a cobertura da tabela — ela deixa de listar
+áreas de atuação como Funções próprias e passa a tratá-las como um
+critério transversal de enquadramento dentro das Funções que já
+existiam.
+
+**Publicado em produção em 2026-09-10** (a pedido explícito do
+usuário): `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`
+atualizado de **3.3.5 → 3.3.6** via `SharePoint_Manta` MCP, publicação
+confirmada por releitura (18.907 bytes).
