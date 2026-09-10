@@ -218,12 +218,12 @@ Political support: [cross-party backing, governor endorsement if applicable]."
    - Identify all formal stakeholders (regulators, license-holders, concessionaires)
    - Identify informal stakeholders (NGOs, community leaders, media)
    - Use SPU/B3/TSE data to map property interests, corporate control, political affiliations
-   
+
 2. Assess each stakeholder's power base
    - Formal authority (regulatory veto, licensing control, budgetary authority)
    - Market leverage (market share, control of critical infrastructure)
    - Social power (community mobilization, media reach, international pressure)
-   
+
 3. Initial interest assessment
    - Survey regulatory positions from existing filings
    - Review past press statements from likely allies/opposition
@@ -244,11 +244,11 @@ Political support: [cross-party backing, governor endorsement if applicable]."
    - Pro-project bloc (developer, certain regulators, businesses seeking investment)
    - Opposition bloc (environmental NGOs, property-rights groups, competing operators)
    - Swing voters (unaligned elected officials, media, undecided regulators)
-   
+
 2. Identify veto players
    - Which stakeholders can unilaterally block project via legal challenge, regulatory refusal, or media campaign?
    - What is their credibility/track record?
-   
+
 3. Historical precedent analysis
    - Similar past projects: Which coalitions formed? Which actors switched sides?
    - Success factors: How did winning coalitions manage opposition?
@@ -268,11 +268,11 @@ Political support: [cross-party backing, governor endorsement if applicable]."
    - **First:** High-impact, high-negotiability stakeholders (e.g., state environmental agency seeking credible mitigation)
    - **Second:** Medium-impact stakeholders, build momentum
    - **Third:** Hard blockers (engage late, with full coalition aligned against them)
-   
+
 2. Identify decision gates + leverage points
    - Where does regulatory approval cascade (e.g., municipal → state → federal)?
    - Where can early wins create path dependencies (e.g., environmental approval unlocks political support)?
-   
+
 3. Design communication sequencing
    - Phase-specific messaging (e.g., infrastructure benefits in Phase 1, environmental mitigation in Phase 2)
    - Identify communication lead for each stakeholder group
@@ -294,12 +294,12 @@ Political support: [cross-party backing, governor endorsement if applicable]."
    - Landowners: Appraisal process, relocation assistance, profit-sharing (if applicable)
    - NGOs: Environmental steering committee, offset packages, monitoring protocols
    - Competitors: Regulatory dialogue, interoperability agreements
-   
+
 2. Coalition management
    - Brief pro-project stakeholders before opposition engagement
    - Identify swing voters early, design customized offers
    - Isolate hard blockers (reduce negotiation bandwidth on lost causes)
-   
+
 3. Public engagement (if applicable)
    - Transparent project webpage, community meetings, media engagement
    - Respond to opposition claims with factual rebuttals
@@ -318,11 +318,11 @@ Political support: [cross-party backing, governor endorsement if applicable]."
 1. Formal regulatory approvals
    - Submit consolidated applications with all stakeholder support letters
    - Prepare for judicial review / regulatory appeals
-   
+
 2. Agreement execution
    - Final compensation packages, relocation assistance, partnership agreements
    - Bond/escrow arrangements (if applicable)
-   
+
 3. Post-approval opposition management
    - Monitor court challenges, media campaigns
    - Sustain coalition momentum (briefs in litigation, regulatory comment periods)
@@ -498,6 +498,7 @@ Political support: [cross-party backing, governor endorsement if applicable]."
 5. **Fishing Communities** — Environmental impact on fish stocks, coastal livelihoods
 
 **Power Ranking:**
+
 | Stakeholder | Power | Interest | Negotiability |
 |------------|-------|---------|---------------|
 | ANTAQ | 5/5 | Sectoral growth, fiscal returns | High (standardized concession terms) |
@@ -703,20 +704,20 @@ Political support: [cross-party backing, governor endorsement if applicable]."
 
 ## VII. DELIVERABLES & FORMATS
 
-### Output Suite (per project engagement):
+### Output Suite (per project engagement)
 
 1. **Stakeholder Universe Map** (visual network diagram + spreadsheet)
    - 50-150 actors, power index, interest alignment, communication lead
-   
+
 2. **Coalition Landscape Matrix** (strategic narrative + visual)
    - Pro/anti/swing blocs, veto players, leverage points, coalition stability score
-   
+
 3. **Negotiation Roadmap** (timeline + decision gates)
    - 5-phase plan with stakeholder sequence, engagement tactics, contingencies
-   
+
 4. **Communication Templates** (sector-customized language bank)
    - 20-30 templates (regulatory, landowner, NGO, competitor, politician)
-   
+
 5. **Risk Dashboard** (heatmap + mitigation action plan)
    - Opposition intensity by stakeholder, veto player checklist, judicial defense strategy
 

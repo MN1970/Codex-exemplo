@@ -523,7 +523,7 @@ python scripts/setup_maestro_runs.py --schedule-jobs
 | Taxa de Erro | error_rate_pct, timeout_rate_pct | Por agente | Último período completo |
 | Latência (p50/p95/p99) | Percentis | Por agente | Último período |
 | Feedback Distribution | 0-5 stars | Agregado | Último período |
-| Model Tier Distribution | haiku|sonnet|opus | Diário | Últimos 30 dias |
+| Model Tier Distribution | haiku\|sonnet\|opus | Diário | Últimos 30 dias |
 | Top 10 Runs por Custo | cost_usd | Run-level | Último período |
 
 ### 8.3 Alertas Sugeridos

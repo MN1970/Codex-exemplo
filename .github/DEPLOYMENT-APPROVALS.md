@@ -13,7 +13,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
 - [ ] **APPROVED** by _____________________ (name)
   - **Timestamp:** _____________________
   - **Channel:** (Slack / Email / Phone)
-  - **Notes:** 
+  - **Notes:**
 
 ---
 
@@ -49,7 +49,7 @@ Sign-off record for deployment phases. **All phases must be approved before proc
   - [ ] Approved by: _____________________ (name — MN)
   - [ ] Timestamp: _____________________
   - [ ] Approval method: (Email / Slack / Phone)
-  - [ ] Email subject or Slack thread link: 
+  - [ ] Email subject or Slack thread link:
 
 ---
 

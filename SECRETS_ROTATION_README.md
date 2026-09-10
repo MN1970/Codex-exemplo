@@ -513,7 +513,7 @@ echo $M365_CLIENT_SECRET | head -c 10  # Print first 10 chars only
 
 ### Q: What happens if rotation fails?
 
-**A:** 
+**A:**
 1. Rotation is logged as `status = "failed"`
 2. Slack alert sent to `#agent-ops` with error details
 3. Email alert sent to DevOps + Security teams
@@ -532,7 +532,7 @@ echo $M365_CLIENT_SECRET | head -c 10  # Print first 10 chars only
 
 ### Q: What if I miss a rotation?
 
-**A:** 
+**A:**
 - Daily expiry check (`0 7 * * *`) alerts if secret is expiring
 - If expiry passes, post-expiry alerts are sent
 - Service will fail until secret is manually rotated

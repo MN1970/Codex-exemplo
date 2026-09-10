@@ -55,6 +55,7 @@
 ## 3. Data Architecture
 
 ### 3.1 Input Sources
+
 | Source | Type | Frequency | Authority |
 |--------|------|-----------|-----------|
 | Project scope (BMS/Gantt) | Structured | Per project | Client |
@@ -65,6 +66,7 @@
 | Logistics networks | API | Daily | ANTAQ/ANP |
 
 ### 3.2 Output Destinations
+
 | Artifact | Format | Destination | Audience |
 |----------|--------|-------------|----------|
 | RFQ document | DOCX + PDF | SharePoint `/03-Procurement/` | Procurement team |
@@ -74,6 +76,7 @@
 | Delivery schedule | Gantt + CSV | Project portal | Supply chain |
 
 ### 3.3 Supabase Collections (New in v1.0)
+
 | Collection | Prefix | Chunk Type | Volume |
 |------------|--------|-----------|--------|
 | `proc_suppliers` | proc-sup: | Vendor profiles, certifications | ~5K records |
