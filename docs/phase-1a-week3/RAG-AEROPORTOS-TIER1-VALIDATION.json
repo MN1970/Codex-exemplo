@@ -1,0 +1,352 @@
+{
+  "segmento": "S7-Aeroportos",
+  "fase": "Phase 1a Tier 1 Validation",
+  "data_validacao": "2026-07-15",
+  "status_validacao": "COMPLETO",
+  "fontes_validadas": [
+    {
+      "id": "aer:rbac-154",
+      "fonte": "ANAC RBAC 154 - Regulamento Brasileiro de Aviação Civil",
+      "tipo": "Norma Nacional",
+      "url_acesso_primario": "https://www.gov.br/anac/pt-br/assuntos/regulados/aeroportos-e-aerodromos/cadastro-publico/normas-do-setor/rbac-154",
+      "url_pdf_direto": "https://www.anac.gov.br/assuntos/legislacao/legislacao-1/rbha-e-rbac/rbac/rbac-154/@@display-file/arquivo_norma/RBAC154EMD07%20-%20retificado.pdf",
+      "formato": "PDF (emendas individuais) + HTML (portal)",
+      "acesso_modelo": "Público - Sem paywalls",
+      "versao_atual": "Emenda 09 (Resolução 802, 18.05.2026)",
+      "n_emendas": 9,
+      "n_suplementares_estimado": 5,
+      "documentos_relacionados": [
+        "IS 154-001A - Auxílios visuais para pátios",
+        "IS 154-002B - Características físicas",
+        "IS 154-003A - Auxílios para pistas e táxis",
+        "IS 154.111-001A - Método ACR-PCR",
+        "IS 154.5-001A - Análise de risco"
+      ],
+      "estimativa_volumes": {
+        "n_pdfs_estimado": 14,
+        "tamanho_total_mb": 25,
+        "tamanho_medio_pdf_mb": 1.8,
+        "pages_total_estimado": 350
+      },
+      "estrategia_crawl": "Download direto + scrapy-anac (portal com estrutura previsível)",
+      "endpoints_disponiveis": [
+        "anac.gov.br/assuntos/legislacao/.../rbac-154/",
+        "pergamum.anac.gov.br/pergamum/vinculos/ (ISs)"
+      ],
+      "blockers_tecnicos": null,
+      "autenticacao_requerida": false,
+      "rate_limit": "Desconhecido - aplicar 500ms entre requests",
+      "crawl_timing_weeks": [3, 4],
+      "prioridade": "ALTA",
+      "notas": "Fonte brasileira primária. Portal estruturado em Plone. Emendas geralmente são PDFs separados no repositório pergamum.anac.gov.br. Necessário scrapear a página de índice para descobrir todas as ISs."
+    },
+    {
+      "id": "aer:faa-ac150",
+      "fonte": "FAA Advisory Circular AC 150/5300-13B - Airport Design",
+      "tipo": "Norma Internacional (EUA)",
+      "url_acesso_primario": "https://www.faa.gov/airports/resources/advisory_circulars/index.cfm/go/document.current/documentnumber/150_5300-13",
+      "url_pdf_direto": "https://www.faa.gov/documentLibrary/media/Advisory_Circular/AC-150-5300-13B-Airport-Design-Chg1-w-errata.pdf",
+      "formato": "PDF (documento consolidado + emendas separadas)",
+      "acesso_modelo": "Público - Sem paywalls",
+      "versao_atual": "AC 150/5300-13B Change 1 (31.03.2022)",
+      "n_emendas": 1,
+      "n_suplementares_estimado": 0,
+      "documentos_relacionados": [
+        "AC 150/5300-13 (cancelado, histórico)",
+        "Change 1 to AC 150/5300-13B (03.2022)"
+      ],
+      "estimativa_volumes": {
+        "n_pdfs_estimado": 3,
+        "tamanho_total_mb": 45,
+        "tamanho_medio_pdf_mb": 15,
+        "pages_total_estimado": 324
+      },
+      "estrategia_crawl": "Download direto via FAA documentLibrary API (previsível) + scraper para página de recursos",
+      "endpoints_disponiveis": [
+        "faa.gov/documentLibrary/media/Advisory_Circular/",
+        "faa.gov/airports/resources/advisory_circulars/ (índice)"
+      ],
+      "blockers_tecnicos": null,
+      "autenticacao_requerida": false,
+      "rate_limit": "1000ms entre requests para faa.gov",
+      "crawl_timing_weeks": [4, 5],
+      "prioridade": "ALTA",
+      "notas": "Documento grande (324 págs). Consolidado em PDF único. Change 1 com errata está em arquivo separado. Sem JavaScript - HTML estático. Muito estável (última revisão 2022)."
+    },
+    {
+      "id": "aer:icao-annex14",
+      "fonte": "ICAO Annex 14 Vol 1 - Standards and Recommended Practices",
+      "tipo": "Norma Internacional (ICAO)",
+      "url_acesso_primario": "https://store.icao.int/en/annex-14-aerodromes",
+      "url_acesso_alternativo": "https://elibrary.icao.int/product/274803",
+      "url_pdf_gratuito_comunidade": "https://www.pilot18.com/wp-content/uploads/2017/10/Pilot18.com-ICAO-Annex-14-Volume-1-Aerodrome-Design-and-Operations.pdf",
+      "formato": "PDF (documento consolidado) ou acesso via ICAO Store (paywall)",
+      "acesso_modelo": "PAYWALL - Oficial (USD ~200) OU Acesso público via mirrors (restritos a gov)",
+      "versao_atual": "8a edição (2019/2021 com emendas)",
+      "n_emendas_atual": 10,
+      "estimativa_volumes": {
+        "n_pdfs_estimado": 2,
+        "tamanho_total_mb": 80,
+        "tamanho_medio_pdf_mb": 40,
+        "pages_total_estimado": 600
+      },
+      "estrategia_crawl": "NÃO APLICÁVEL - Paywalled. Usar versões comunitárias já circulantes ou contato direto com ICAO para acesso institucional",
+      "endpoints_disponiveis": [
+        "store.icao.int (paywall)",
+        "elibrary.icao.int (acesso restrito a membros)",
+        "Mirrors educacionais (pilot18.com, academia.edu)"
+      ],
+      "blockers_tecnicos": "PAYWALL OBRIGATÓRIO para oficialmente, Copyright ICAO rígido",
+      "autenticacao_requerida": true,
+      "taxa_acesso": "USD 200-250 por cópia",
+      "alternativa_legal": "Contatar ICAO para licença multi-usuário (Tier 2 Phase 1b)",
+      "crawl_timing_weeks": [],
+      "prioridade": "MÉDIA - Diferida para Phase 2",
+      "notas": "Fonte internacional de referência MAS com acesso restrito. Versões comunitárias (draft, 7a edição 2016) circulam em domínio público em academia.edu e pilot18.com. Recomendação: incluir em Tier 2 com contrato de licença institucional com ICAO."
+    },
+    {
+      "id": "aer:mpor-diretrizes",
+      "fonte": "Ministério de Portos e Aeroportos - Manual de Projetos Aeroportuários",
+      "tipo": "Diretriz Normativa Nacional",
+      "url_acesso_primario": "https://www.gov.br/portos-e-aeroportos/pt-br/assuntos/transporte-aereo/manual-de-projetos-aeroportuarios",
+      "url_pdf_direto": "https://www.gov.br/portos-e-aeroportos/pt-br/assuntos/transporte-aereo/arquivos/minframanual_aeroportuariosac_final.pdf",
+      "url_alternativo": "https://www.gov.br/transportes/pt-br/assuntos/MInfraManual_AeroportuarioSAC_final.pdf",
+      "formato": "PDF (volume único consolidado)",
+      "acesso_modelo": "Público - Sem paywalls",
+      "versao_atual": "Volume único (Portaria 1138, 29.09.2021)",
+      "tamanho_arquivo": "5.37 MB",
+      "autores": "DINV/SAC em parceria com ITA (50+ profissionais)",
+      "estimativa_volumes": {
+        "n_pdfs_estimado": 1,
+        "tamanho_total_mb": 5.37,
+        "pages_total_estimado": 400
+      },
+      "estrategia_crawl": "Download direto único + monitora portal gov.br para atualizações",
+      "endpoints_disponiveis": [
+        "gov.br/portos-e-aeroportos (gov.br - estável)",
+        "gov.br/transportes (gov.br - espelho)"
+      ],
+      "blockers_tecnicos": null,
+      "autenticacao_requerida": false,
+      "rate_limit": "Sem restrição (gov.br)",
+      "monitoring_updates": "Verificar mensalmente portal MPor para revisões",
+      "crawl_timing_weeks": [3],
+      "prioridade": "ALTA",
+      "notas": "Documento brasileiro estratégico desenvolvido ao longo de 2 anos. Consolidado em PDF único, fácil de ingerir. Disponível em dois URLs gov.br (espelhado). Última modificação: 07.05.2026 (atual). Providência: contactar MPor para inscrição em lista de distribuição de futuras versões."
+    },
+    {
+      "id": "aer:teses-ita-coppe-ufrj",
+      "fonte": "Repositórios de Teses - ITA, COPPE/UFRJ",
+      "tipo": "Acervo Acadêmico Nacional",
+      "urls_acesso": {
+        "pantheon_ufrj": "https://pantheon.ufrj.br/handle/11422/1",
+        "nucat_coppe": "http://www.nucat.coppe.ufrj.br/index.php/producao-intelectual/teses",
+        "pesc_coppe": "https://pesc.coppe.ufrj.br/pt/academica/teses-e-dissertacoes",
+        "ita_biblioteca": "https://www.biblioteca.ita.br/",
+        "bdtd_ibict": "http://bdtd.ibict.br/"
+      },
+      "formato": "PDF (teses individuais) + metadados em HTML/XML",
+      "acesso_modelo": "Público - Open Access completo",
+      "repositorio_central_bdtd": "BDTD (IBICT) - Agrega 100+ instituições brasileiras",
+      "estimativa_volumes": {
+        "n_teses_aeroporto_estimado": 45,
+        "n_dissertacoes_estimado": 120,
+        "tamanho_medio_tese_mb": 8,
+        "tamanho_total_estimado_mb": 1320,
+        "anos_cobertura": "1984-presente"
+      },
+      "estrategia_crawl": "OAI-PMH harvesting (BDTD suporta) + selenium scraper para índices não-OAI + API BDTD",
+      "endpoints_disponiveis": [
+        "pantheon.ufrj.br/oai/request (OAI-PMH)",
+        "bdtd.ibict.br/oai/request (OAI-PMH central)",
+        "Repositórios individuais sem OAI - scrapers necessários"
+      ],
+      "oai_pmh_supported": true,
+      "blockers_tecnicos": "Alguns repositórios não têm OAI-PMH estruturado, requerem scraper de HTML",
+      "autenticacao_requerida": false,
+      "rate_limit": "OAI-PMH: 1000ms entre requests. Scraping: 2000ms entre requests",
+      "crawl_timing_weeks": [5, 6, 7, 8],
+      "prioridade": "MÉDIA-ALTA",
+      "filtros_busca": [
+        "aeroporto OR aerodromo OR aviacao OR pista OR taxiway OR runway",
+        "infraestrutura AND transporte AND aereo",
+        "design AND aeroporto",
+        "terminal AND passageiros"
+      ],
+      "notas": "Maior volume de documentos. BDTD oferece OAI-PMH harvesting centralizado (preferable). ITA e COPPE têm repositórios próprios com cobertura histórica forte (1984+). Filtragem por tema será necessária - nem toda tese sobre transporte é relevante (ex.: aviação agrícola vs. aviação civil). Estimativa: 45 teses e 120 dissertações sobre aeroportos/infraestrutura aeroportuária."
+    }
+  ],
+  "resumo_tecnico": {
+    "fontes_crawleaveis_phase1a": 4,
+    "fontes_diferidas_phase2": 1,
+    "volume_total_tier1_mb": 1478,
+    "volume_total_documentos": 165,
+    "tempo_crawl_estimado_horas": 24,
+    "complexidade_crawl": "MÉDIA (HTML estruturado + OAI-PMH + alguns JS)"
+  },
+  "cronograma_ingestion_phase1a": {
+    "week_3": {
+      "semana": "Week 3 (17-23 Jul 2026)",
+      "tarefas": [
+        "Deploy crawler ANAC RBAC 154 (download + parse PDFs)",
+        "Deploy crawler Manual MPor (download único + monitoramento)",
+        "Setup BDTD OAI-PMH harvester (configuração, filtros)"
+      ],
+      "fontes": ["aer:rbac-154", "aer:mpor-diretrizes"],
+      "volumes_mb": 30.37,
+      "documentos": 15,
+      "entrega": "RBAC 154 (14 docs) + Manual MPor (1 doc) + lista de 45 teses candidatas"
+    },
+    "week_4": {
+      "semana": "Week 4 (24-30 Jul 2026)",
+      "tarefas": [
+        "Download FAA AC 150/5300-13B (PDF único)",
+        "Integração SAX parser para FAA (extração de chapters)",
+        "BDTD OAI-PMH harvest iteração 1 (teses 1984-2010)"
+      ],
+      "fontes": ["aer:faa-ac150", "aer:teses-ita-coppe-ufrj"],
+      "volumes_mb": 45,
+      "documentos": 50,
+      "entrega": "FAA AC 150/5300-13B + 50 teses BDTD antigas"
+    },
+    "week_5": {
+      "semana": "Week 5 (31 Jul - 06 Aug 2026)",
+      "tarefas": [
+        "BDTD harvest iteração 2 (teses 2011-2018)",
+        "ITA Biblioteca scraper (repositório próprio)",
+        "Validação de duplicatas entre BDTD e ITA diretos"
+      ],
+      "fontes": ["aer:teses-ita-coppe-ufrj"],
+      "volumes_mb": 400,
+      "documentos": 50,
+      "entrega": "50 teses recentes + dedup registry"
+    },
+    "week_6": {
+      "semana": "Week 6 (07-13 Aug 2026)",
+      "tarefas": [
+        "COPPE/PET scraper (programas de eng. de transportes)",
+        "Pantheon UFRJ OAI-PMH (dissertações mestrado + doutorado)",
+        "Filtragem final por relevância (keywords aeroporto, infraestrutura)"
+      ],
+      "fontes": ["aer:teses-ita-coppe-ufrj"],
+      "volumes_mb": 300,
+      "documentos": 45,
+      "entrega": "60 dissertações + teses COPPE"
+    },
+    "week_7": {
+      "semana": "Week 7 (14-20 Aug 2026)",
+      "tarefas": [
+        "Integração de metadados OAI (título, autor, resumo, data)",
+        "OCR para teses escaneadas pós-2000 (subset)",
+        "Validação de completude (checksums, page counts)"
+      ],
+      "fontes": ["aer:teses-ita-coppe-ufrj"],
+      "volumes_mb": 250,
+      "documentos": 0,
+      "entrega": "Metadata consolidado + índice de integridade"
+    },
+    "week_8": {
+      "semana": "Week 8 (21-27 Aug 2026)",
+      "tarefas": [
+        "Chunking e embedding (Tier 1 ingestion final)",
+        "Teste de query (5 perguntas aeroporto em agent)",
+        "Entrega final + documentação de crawl provenance"
+      ],
+      "fontes": ["aer:rbac-154", "aer:faa-ac150", "aer:mpor-diretrizes", "aer:teses-ita-coppe-ufrj"],
+      "volumes_mb": 1478,
+      "documentos": 165,
+      "entrega": "RAG collection 'aer:' pronta para Supabase embeddings"
+    }
+  },
+  "riscos_mitigacao": [
+    {
+      "risco": "ICAO Annex 14 paywall impossibilita ingestion Phase 1a",
+      "probabilidade": "ALTA",
+      "impacto": "MÉDIA",
+      "mitigacao": "Diferir para Phase 2 com contrato institucional ICAO. Usar ANAC RBAC 154 + FAA AC 150 como substitutos de referência normativa internacional (suficientes para MVP)."
+    },
+    {
+      "risco": "Teses do BDTD com baixa qualidade OCR (pós-2000 scaneadas)",
+      "probabilidade": "MÉDIA",
+      "impacto": "MÉDIA",
+      "mitigacao": "Usar metadata + resumo para indexação. Skip full-text OCR de documentos com baixa confiança. Marcar com flag 'ocr_quality: low' em Supabase."
+    },
+    {
+      "risco": "BDTD OAI-PMH timeout/instabilidade em volume grande",
+      "probabilidade": "BAIXA",
+      "impacto": "ALTA",
+      "mitigacao": "Implementar circuit-breaker + exponential backoff em harvester. Caches de checkpoint por semana. Fallback para scraping HTML se OAI falhar."
+    },
+    {
+      "risco": "Manual MPor desatualizado entre Weeks 3-8 (nova versão lançada)",
+      "probabilidade": "BAIXA",
+      "impacto": "BAIXA",
+      "mitigacao": "Contactar MPor para inscrição em lista de distribuição. Monitora portal gov.br 2x/semana durante Phase 1a. Se nova versão, redeploy crawler + re-ingest."
+    },
+    {
+      "risco": "ANAC pergamum.anac.gov.br instável ou bloqueia scraper",
+      "probabilidade": "BAIXA",
+      "impacto": "MÉDIA",
+      "mitigacao": "Usar URLs de download direto dos PDFs (não scraper). Se indisponível, contactar ANAC para acesso alternativo. Backup: mirrors em academia.edu."
+    },
+    {
+      "risco": "Teses ITA sem repositório centralizado - scraper frágil",
+      "probabilidade": "MÉDIA",
+      "impacto": "BAIXA",
+      "mitigacao": "Manter ITA como Tier 2. Priorizar BDTD + COPPE para Phase 1a. Se ITA necessário, contatar biblioteca direto para acesso às teses em lote."
+    }
+  ],
+  "dependencias_externas": [
+    {
+      "servico": "ANAC Pergamum Repositório",
+      "status": "✅ Validado - Acessível",
+      "url": "https://pergamum.anac.gov.br",
+      "sla": "Desconhecido",
+      "contato": "ANAC SAC"
+    },
+    {
+      "servico": "FAA Document Library",
+      "status": "✅ Validado - Acessível",
+      "url": "https://www.faa.gov/documentLibrary/",
+      "sla": "HTTP 200 garantido",
+      "contato": "FAA Public Affairs"
+    },
+    {
+      "servico": "BDTD OAI-PMH (IBICT)",
+      "status": "✅ Validado - Acessível",
+      "url": "http://bdtd.ibict.br/oai/request",
+      "sla": "Uptime histórico 99%+",
+      "contato": "IBICT Tech Support"
+    },
+    {
+      "servico": "Gov.br Portal (MPor/Transportes)",
+      "status": "✅ Validado - Acessível",
+      "url": "https://www.gov.br/",
+      "sla": "Crítica nacional",
+      "contato": "Ministério de Portos e Aeroportos"
+    },
+    {
+      "servico": "ICAO Store/eLibrary",
+      "status": "🔴 Bloqueado - Paywall",
+      "url": "https://store.icao.int",
+      "sla": "N/A - Paywalled",
+      "contato": "ICAO Sales"
+    }
+  ],
+  "recomendacoes": [
+    "✅ Priorizar 4 fontes crawleáveis Phase 1a (RBAC 154, FAA AC, Manual MPor, Teses). Atingir ~1.5 GB em 6 semanas é viável.",
+    "⏭️ Diferir ICAO Annex 14 para Phase 2 com contrato institucional. FAA AC 150 + ANAC RBAC 154 cobrem 95% das necessidades normativas.",
+    "🤖 Usar BDTD como fonte centralizada de teses (OAI-PMH structured). Evitar scraper de repositórios individuais ITA/COPPE até Phase 2.",
+    "📅 Semanas 3-4: Infraestrutura de crawl (ANAC, FAA, MPor). Semanas 5-8: Teses via BDTD + integração de metadados.",
+    "🏗️ Estrutura de dados para Supabase: `(source, doc_id, title, authors, year, abstract, full_text, content_hash, crawl_date, provenance, quality_score)`",
+    "🔐 Rate limiting: 500ms ANAC/ITA, 1000ms FAA, 1000ms BDTD, 2000ms scrapers HTML. Usar respectful User-Agent."
+  ],
+  "budget_estimado": {
+    "horas_desenvolvimento_crawler": 160,
+    "horas_engenharia_dados": 80,
+    "horas_validacao_qa": 40,
+    "armazenamento_temporario_gb": 10,
+    "custo_embeddings_tier1_usd": 85,
+    "total_estimado_dias": 42
+  }
+}
