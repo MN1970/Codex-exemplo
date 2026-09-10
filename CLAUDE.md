@@ -4,7 +4,7 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.5** (2026-09-10) — **padrão de marca institucional
+Versão: **v5.4.7** (2026-09-10) — **padrão de marca institucional
 (`branding/`)**: registra os ativos oficiais de identidade visual da
 Manta Associados — logo (`branding/logo-manta.jpg`), capa-modelo de
 Proposta Técnica (`branding/capa-padrao-proposta.pdf`, ex.:
@@ -15,12 +15,40 @@ de proposta técnica/comercial. Este padrão é **institucional**
 e complementa, sem substituir, os padrões de output por cliente e o
 Modelo Mestre de Proposta: `branding/` define a marca Manta; os demais
 definem conteúdo/precificação (inclusive a skill real, que segue tendo
-sua própria localização e versão no SharePoint — ver "Modelo Mestre de
-Proposta" abaixo) e formato específico por cliente. Pendência: logo em
-baixa resolução (249×104px, extraído de PDF) — substituir por versão
-vetorial quando disponível. Ortogonal às mudanças de numeração de
-segmento e de localização da skill de proposta tratadas nas versões
-abaixo. Ticket `MNT-2026-BRANDING-CAPA-PADRAO`.
+sua própria localização e versão no SharePoint) e formato específico
+por cliente. Pendência: logo em baixa resolução (249×104px, extraído
+de PDF) — substituir por versão vetorial quando disponível. Ortogonal
+às mudanças de diretriz de posicionamento (v5.4.6) e de recorrência da
+fabricação na skill de proposta (v5.4.5) tratadas nas versões abaixo.
+Ticket `MNT-2026-BRANDING-CAPA-PADRAO`.
+
+Consolida v5.4.6 (2026-09-10) — **diretriz de posicionamento**: foco
+na maturidade profissional da equipe Manta, com IA como apoio/
+multiplicador (não substituição), para propostas do segmento
+Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
+("Diretriz de posicionamento (2026-09-10)"). É orientação de conteúdo
+para propostas futuras — não altera nem alega nada sobre a skill de
+produção.
+
+Consolida v5.4.5 (2026-09-10) — **recorrência confirmada da
+fabricação na skill real de proposta**. Investigação read-only via
+`SharePoint_Manta` MCP confirmou que a seção "Variante Tipo A /
+Concessão de Infraestrutura de Grande Porte", hoje viva em
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.5),
+reproduz quase palavra-por-palavra o addendum fabricado deste
+repositório (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`), incluindo a
+referência a uma revisão de proposta inexistente
+(`MNT-2026-COM-1183_D` — só `_C_3` é encontrável). A própria fonte
+canônica (`INDICE-CANONICAL.md` §13) admite que esse conteúdo "antes só
+existia num pacote de skill fora do SharePoint, nunca escrito na
+árvore" — ou seja, a correção de premissa da v5.4.2/v5.4.3 não impediu
+uma recorrência por um caminho diferente (fusão de pacote externo no
+saneamento estrutural de 2026-09-07, sem gate humano de verificação de
+fonte primária). Detalhe completo, incluindo a comparação literal, em
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (seção "Recorrência
+confirmada — Variante Tipo A (2026-09-10)"). **Nenhuma escrita foi
+feita na skill de produção** — recomendação registrada para o MN
+revisar e corrigir diretamente.
 
 Consolida v5.4.4 (2026-09-08) — **a skill real de proposta mudou de
 lugar de novo, no mesmo dia, e foi reaplicada**. Horas depois da
@@ -546,6 +574,16 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
+> 🔴 **Atualização 2026-09-10**: a seção "Variante Tipo A / Concessão de
+> Infraestrutura de Grande Porte", hoje viva na skill real
+> (`02-atividades/A1-proposta/SKILL.md`, v3.3.5), foi confirmada como
+> **recorrência da fabricação** corrigida abaixo — reproduz quase
+> palavra-por-palavra o addendum fabricado deste repositório e cita a
+> mesma revisão inexistente `MNT-2026-COM-1183_D`. Nenhuma escrita foi
+> feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+> ("Recorrência confirmada — Variante Tipo A") para a evidência
+> completa e a recomendação ao MN.
+
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
 > um "agente A7-bd" e um modo "M6" validado contra
@@ -831,9 +869,9 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.4.5)
+├── CLAUDE.md                              # este arquivo (master registry, v5.4.7)
 ├── README.md
-├── branding/                              # 🆕 v5.4.5 — padrão de marca institucional
+├── branding/                              # 🆕 v5.4.7 — padrão de marca institucional
 │   ├── logo-manta.jpg
 │   ├── capa-padrao-proposta.pdf
 │   └── PADRAO-PROPOSTA.md
@@ -882,7 +920,7 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.5** (2026-09-10) — **Padrão de marca institucional
+- **v5.4.7** (2026-09-10) — **Padrão de marca institucional
   (`branding/`)**: adicionado `branding/logo-manta.jpg` (logo oficial,
   extraído de PDF de capa por falta de arquivo vetorial — pendência
   registrada em Gaps), `branding/capa-padrao-proposta.pdf` (capa-modelo
@@ -892,9 +930,24 @@ Codex-exemplo/
   complementa (sem substituir) os Padrões de output por cliente e o
   Modelo Mestre de Proposta: branding institucional Manta vs.
   conteúdo/precificação da skill real vs. formato específico por
-  cliente. Ortogonal às mudanças de numeração de segmento (v5.4.3) e de
-  localização da skill de proposta (v5.4.4). Ticket
-  `MNT-2026-BRANDING-CAPA-PADRAO`.
+  cliente. Ortogonal à diretriz de posicionamento (v5.4.6) e à
+  investigação de recorrência da fabricação na skill de proposta
+  (v5.4.5). Ticket `MNT-2026-BRANDING-CAPA-PADRAO`.
+- **v5.4.6** (2026-09-10) — diretriz de posicionamento (MN): propostas
+  de Infraestrutura devem destacar a maturidade profissional da equipe
+  Manta primeiro, com a IA da Manta posicionada como apoio/multiplicador
+  de produtividade — nunca como substituição da experiência técnica.
+  Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`; não altera a skill de
+  produção.
+- **v5.4.5** (2026-09-10) — investigação read-only confirmou
+  recorrência da fabricação da skill `proposta-comercial`: a variante
+  "Tipo A / Infraestrutura de Grande Porte" viva em produção (v3.3.5)
+  reproduz o addendum fabricado deste repositório quase
+  palavra-por-palavra, citando a mesma revisão inexistente
+  `MNT-2026-COM-1183_D`. Documentado em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e `docs/MODELO-MESTRE-PROPOSTA.md`.
+  Nenhuma alteração feita na skill real — recomendação registrada para
+  gate humano (MN).
 - **v5.4.4** (2026-09-08) — **skill real de proposta mudou de lugar de
   novo e foi reaplicada, segunda rodada no mesmo dia**. Horas depois
   da v5.4.2 aplicar a correção em `05-sub-skills/skill-proposta-
