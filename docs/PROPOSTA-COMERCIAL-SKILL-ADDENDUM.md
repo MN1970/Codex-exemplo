@@ -1,9 +1,23 @@
 # Addendum pronto para deploy — Variante "PTC-Infraestrutura/Concessão de Grande Porte"
 
-**Status:** pronto para colar na skill de produção. **Ainda não aplicado** —
-esta sessão não tem acesso de escrita ao SharePoint (`SharePoint_Manta` sem
-autenticação neste ambiente). Falta um passo manual: copiar o bloco da
-Seção A abaixo para dentro de
+> **STATUS (2026-09-10): SUPERADO — NÃO APLICAR.**
+> Verificado por leitura direta do SharePoint que a skill de produção já
+> foi reorganizada (absorção de 2026-09-07 na atividade canônica
+> `A1-proposta`, hoje em
+> `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, v3.3.5) e já
+> incorpora este mesmo conteúdo, em versão mais recente (`[v3.3.0]` na
+> fonte, já refinado até v3.3.5 — ex.: a Ficha Técnica já foi condensada
+> em linha única). O caminho de destino original deste addendum
+> (`02-sub-skills/skill-proposta-comercial-SKILL.md`) hoje é apenas um
+> stub de redirecionamento. Colar o bloco abaixo duplicaria/regrediria
+> conteúdo já publicado. Ver nota em `docs/MODELO-MESTRE-PROPOSTA.md`.
+> O texto abaixo fica preservado só como registro histórico da proposta
+> original de addendum.
+
+**Status histórico (2026-09-01):** pronto para colar na skill de produção.
+**Ainda não aplicado** — esta sessão não tinha acesso de escrita ao
+SharePoint (`SharePoint_Manta` sem autenticação naquele ambiente). Faltava
+um passo manual: copiar o bloco da Seção A abaixo para dentro de
 `Engenharia/Documentos Compartilhados/04_IA/Manta-Maestro/02-sub-skills/
 skill-proposta-comercial-SKILL.md`, na posição indicada, e confirmar o gate
 humano (MN) antes de publicar.

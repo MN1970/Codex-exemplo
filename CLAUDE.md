@@ -119,21 +119,30 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ## MODELO MESTRE DE PROPOSTA
 
-Análise de referência sobre uso da proposta MNT-2026-COM-1183_D (Concessão
-Rota 2 de Julho) como modelo mestre de propostas técnico-comerciais do
-Manta Maestro, validada contra a skill `proposta-comercial` (agente
-A7-bd/Manta 13-bd — 18 seções canônicas). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
+**Atualização 2026-09-10: recomendação já implementada em produção,
+independentemente deste repositório.** Em 2026-09-07 a skill
+`proposta-comercial` foi absorvida pela atividade canônica
+**A1-proposta** (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`,
+hoje v3.3.5) e reestruturada de "18 seções + Modos M1–M5" para "Tipos de
+proposta" (Tipo A/PTC, Tipo B/PRT, PRC). Essa fonte já contém a seção
+`## Variante -- Tipo A / Concessão de Infraestrutura de Grande Porte`,
+com os mesmos 5 blocos recomendados abaixo, em versão mais recente que a
+descrita neste registro. **O addendum em
+`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` está superado e não deve mais
+ser aplicado** — publicá-lo regrediria a skill de v3.3.5 para v3.3.0.
+Detalhes em `docs/MODELO-MESTRE-PROPOSTA.md`.
 
-Recomendação: adotar como variante especializada "PTC-Infraestrutura/
-Concessão de grande porte" (modo **M6**), incorporando ao padrão os blocos
-de dados oficiais rastreáveis, cenários com success fee opcional, método
-do paramétrico em etapas, infraestrutura incluída e ficha técnica de
-fechamento — sem substituir o modo genérico M1 da skill. O texto pronto
-para colar na skill de produção está em
-`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`. Alteração na skill em si
-depende de gate humano (MN) e é feita na fonte no SharePoint, fora deste
-repositório — publicação ainda pendente (sem acesso de escrita ao
-SharePoint nesta sessão).
+Análise original (2026-09-01, histórica): uso da proposta
+MNT-2026-COM-1183_D (Concessão Rota 2 de Julho) como modelo mestre de
+propostas técnico-comerciais do Manta Maestro, validada contra a skill
+`proposta-comercial` (agente A7-bd/Manta 13-bd — 18 seções canônicas à
+época). Recomendação original: adotar como variante especializada
+"PTC-Infraestrutura/Concessão de grande porte" (modo M6), incorporando ao
+padrão os blocos de dados oficiais rastreáveis, cenários com success fee
+opcional, método do paramétrico em etapas, infraestrutura incluída e
+ficha técnica de fechamento — sem substituir o modo genérico M1 da skill.
+Essa recomendação foi adotada na fonte de produção antes deste
+repositório conseguir aplicá-la.
 
 ---
 
@@ -175,6 +184,12 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.2** (2026-09-10) — reconciliação: a recomendação de modelo
+  mestre de proposta (v4.2.1) foi confirmada como já implementada na
+  fonte de produção (`A1-proposta/SKILL.md` v3.3.5, absorvida em
+  2026-09-07), em versão mais recente que a analisada aqui. O addendum
+  local (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`) foi marcado como
+  superado/não aplicar para evitar regressão. Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
 - **v4.2.1** (2026-09-01) — análise e recomendação de modelo mestre de
   proposta técnico-comercial, validada contra a proposta MNT-2026-COM-1183_D
   e a skill `proposta-comercial` (A7-bd). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.

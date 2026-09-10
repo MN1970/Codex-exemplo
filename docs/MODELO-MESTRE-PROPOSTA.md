@@ -1,5 +1,22 @@
 # Modelo Mestre de Proposta — Validação contra MNT-2026-COM-1183_D
 
+> **STATUS (2026-09-10): JÁ IMPLEMENTADO EM PRODUÇÃO — análise superada.**
+> Em 2026-09-07 a skill `proposta-comercial` foi absorvida pela atividade
+> canônica **A1-proposta**
+> (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, hoje v3.3.5) e
+> reestruturada de "18 seções + Modos M1–M5" para "Tipos de proposta" (Tipo
+> A/PTC, Tipo B/PRT, PRC). Essa skill já contém a seção `## Variante --
+> Tipo A / Concessão de Infraestrutura de Grande Porte [v3.3.0]`, com os
+> mesmos 5 blocos recomendados aqui (dados oficiais rastreáveis, cenários
+> com success fee, paramétrico em 5 etapas, infraestrutura incluída, ficha
+> técnica) e citando a mesma proposta de referência
+> `MNT-2026-COM-1183_D`. O caminho antigo
+> (`02-sub-skills/skill-proposta-comercial-SKILL.md`) hoje é só um stub de
+> redirecionamento. **O addendum em
+> `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` não deve mais ser aplicado**
+> — colaria uma versão (v3.3.0) mais antiga que a já publicada (v3.3.5).
+> Este arquivo fica como registro histórico da análise original.
+
 Este documento registra a análise solicitada pela Diretoria (MN) sobre se a
 proposta técnico-comercial **MNT-2026-COM-1183_D** (Concessão Rota 2 de
 Julho — BR-116/324/BA, cliente Nova Infra Invest) pode servir de **modelo
