@@ -4,7 +4,22 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.10** (2026-09-10) — **campo de versão removido do
+Versão: **v5.4.11** (2026-09-10) — **links de apoio adicionados ao
+agente-bd (CVs da equipe + propostas anteriores)**. A pedido do
+usuário, dois links do SharePoint real foram registrados em
+`.claude/agents/agente-bd.md` ("Modelo de proposta e resumo
+executivo") como fontes de apoio para a montagem de propostas: uma
+pasta de CVs da equipe (`PessoasOrganizacao/03_PESSOAS/02_CVS/
+01_MAR_2025`) e uma pasta de propostas anteriores da Manta (link de
+compartilhamento). **Nenhum dos dois conteúdos foi lido ou
+verificado** — confirmado via `get_site_info` que o MCP
+`SharePoint_Manta` desta sessão está vinculado ao site `Engenharia`
+apenas; o site `PessoasOrganizacao`, onde esses dois links vivem, está
+fora do alcance desta sessão. Os links ficam registrados como
+referência a checar manualmente (ou por uma sessão com acesso a esse
+site) antes de qualquer uso real em proposta de cliente.
+
+Consolida v5.4.10 (2026-09-10) — **campo de versão removido do
 rodapé de rastreabilidade da proposta básica**. A pedido do usuário,
 o campo `v{versão}` foi retirado do rodapé de rastreabilidade
 (`position:fixed`, repete em toda página impressa/PDF) do template
@@ -996,6 +1011,20 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.11** (2026-09-10) — **links de apoio adicionados ao
+  agente-bd (CVs da equipe + propostas anteriores)**. A pedido
+  explícito do usuário, registrados dois links do SharePoint real em
+  `.claude/agents/agente-bd.md` como fontes de apoio para propostas:
+  pasta de CVs da equipe (`PessoasOrganizacao/03_PESSOAS/02_CVS/
+  01_MAR_2025`, para a seção de equipe técnica) e uma pasta de
+  propostas anteriores da Manta (link de compartilhamento, para
+  consulta de modelos/exemplares reais). Tentativa de verificar o
+  conteúdo via `SharePoint_Manta` MCP: `get_site_info` confirmou que
+  esta sessão está vinculada ao site `Engenharia`, não a
+  `PessoasOrganizacao` — os dois links ficam fora do alcance desta
+  sessão. Registrados apenas como referência, **sem verificação de
+  conteúdo**, com essa limitação documentada explicitamente no próprio
+  agente para evitar uso indevido antes de confirmação manual.
 - **v5.4.10** (2026-09-10) — **campo de versão removido do rodapé de
   rastreabilidade da proposta básica**. A pedido explícito do
   usuário, o campo `v{versão}` foi retirado do rodapé fixo de

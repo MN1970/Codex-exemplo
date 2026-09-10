@@ -138,6 +138,18 @@ SharePoint):
 várias vezes no mesmo dia em sessões anteriores) para confirmar que a
 tabela tarifária e a estrutura ainda são as vigentes.
 
+**Fontes de apoio adicionais** (adicionadas 2026-09-10, a pedido do
+usuário) — ficam no site SharePoint `PessoasOrganizacao`, **fora do
+alcance do MCP `SharePoint_Manta` desta sessão** (que só tem acesso ao
+site `Engenharia`); portanto o conteúdo destes links **não foi lido
+nem verificado** por nenhuma sessão até agora, apenas registrado como
+referência a checar manualmente por quem tiver acesso:
+- **CVs da equipe** (para a seção de equipe técnica/curricula das
+  propostas): `https://mnassociados.sharepoint.com/sites/PessoasOrganizacao/03_PESSOAS/Forms/AllItems.aspx?id=%2Fsites%2FPessoasOrganizacao%2F03%5FPESSOAS%2F02%5FCVS%2F01%5FMAR%5F2025`
+  (pasta `03_PESSOAS/02_CVS/01_MAR_2025`).
+- **Propostas anteriores da Manta** (referência de modelos/exemplares
+  reais já emitidos): `https://mnassociados.sharepoint.com/:f:/s/PessoasOrganizacao/IgDn_Oq4CoMQSogBAE4HLp7BAQior8mkvtcyWikX9zExWh4`.
+
 ## Ferramentas e integrações
 
 - Consulta licitações (Licitanet, TED, plataforma de concessão estadual),
