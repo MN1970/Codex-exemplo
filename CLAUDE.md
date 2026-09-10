@@ -4,13 +4,41 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.10** (2026-09-10) — **diretriz de posicionamento**: foco
+Versão: **v5.4.11** (2026-09-10) — **fabricação da "Variante Tipo A"
+corrigida em produção + template canônico Tipo A/PRC publicado**.
+Releitura direta da skill real (`SharePoint_Manta` MCP,
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`) mostra que ela
+avançou, fora desta sessão/repositório, de v3.3.6 (minha edição de
+remoção do grupo "Orçamentista") para **v3.3.8**: (a) **v3.3.7** removeu
+a alegação de que os 5 blocos da "Variante Tipo A" foram "validados
+contra a proposta real MNT-2026-COM-1183_D" — a recorrência de
+fabricação apontada na v5.4.9 abaixo — sem substituí-la por nova
+citação não verificada, mantendo a estrutura dos blocos e sinalizando-a
+como "pendente de validação contra uma proposta real específica antes
+de uso em cliente"; (b) **v3.3.8** adicionou um template canônico Tipo
+A/PRC (`template-ptc-tipo-a-v1.html`, capa + sumário + resumo executivo
++ 18 seções + Anexo I com as cláusulas padrão já escritas por extenso),
+"gerado e conferido nesta sessão contra a proposta real
+MNT-2026-COM-1301 (Concessionária Rota da Liberdade, Lote 07)". Ou
+seja, a correção que a v5.4.9 recomendava ao MN **já foi aplicada em
+produção** — este repositório só está sincronizando a documentação após
+o fato, sem ter feito a escrita. **Ressalva** (verificação independente
+via `find_item` nesta sessão): o contexto do cliente é real (pasta
+`02_CLIENTE/27_CLIENTE_VIA_LIBERDADE/.../Lote 7`), mas o número
+`MNT-2026-COM-1301` em si não foi encontrado em nenhum documento além
+do próprio changelog da skill que o cita — diferente da confirmação
+limpa obtida antes para MNT-2026-COM-1104 e MNT-2026-COM-1183_C_3.
+Recomenda-se confirmar diretamente antes de tratar o template como
+totalmente validado. Ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+(seção atualizada) e `docs/MODELO-MESTRE-PROPOSTA.md`.
+
+Consolida v5.4.10 (2026-09-10) — **diretriz de posicionamento**: foco
 na maturidade profissional da equipe Manta, com IA como apoio/
 multiplicador (não substituição), para propostas do segmento
 Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
 ("Diretriz de posicionamento (2026-09-10)"). É orientação de conteúdo
 para propostas futuras — não altera nem alega nada sobre a skill de
-produção. (Reconciliada nesta versão a partir de `main`, sessão
+produção. (Reconciliada em v5.4.10 a partir de `main`, sessão
 paralela.)
 
 Consolida v5.4.9 (2026-09-10, reconciliada nesta versão a partir de
@@ -35,7 +63,9 @@ feita na skill de produção por essa sessão** — recomendação registrada
 para o MN revisar e corrigir diretamente essa seção específica. **Nota:
 esta sessão publicou v3.3.6 (grupo "Orçamentista" removido, ver v5.4.8
 abaixo) sem tocar na seção "Variante Tipo A" — o achado acima segue
-válido e pendente na skill tal como publicada.**
+válido e pendente na skill tal como publicada. Nota de reconciliação
+(v5.4.11 acima): a correção recomendada aqui já foi aplicada em
+produção como v3.3.7/v3.3.8 — o achado NÃO segue pendente, ver v5.4.11.**
 
 Consolida v5.4.8 (2026-09-10) — **tabela tarifária revisada: remove
 grupo "Orçamentista" e generaliza enquadramento por maturidade**. A
@@ -1021,6 +1051,21 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.11** (2026-09-10) — releitura direta da skill real
+  (`SharePoint_Manta` MCP) mostra que ela avançou, fora desta sessão,
+  de v3.3.6 para **v3.3.8**: v3.3.7 removeu a alegação fabricada de
+  validação contra `MNT-2026-COM-1183_D` na "Variante Tipo A" (achado
+  da v5.4.9 abaixo), sem substituí-la por citação não verificada; v3.3.8
+  adicionou um template canônico Tipo A/PRC
+  (`template-ptc-tipo-a-v1.html`), conferido contra a proposta real
+  `MNT-2026-COM-1301` (Concessionária Rota da Liberdade, Lote 07) — 
+  ressalva: o cliente/lote é real, mas o número da proposta em si não
+  foi confirmado por `find_item` além do próprio changelog da skill. A
+  correção que a v5.4.9 recomendava ao MN já estava aplicada em
+  produção quando esta sessão releu o arquivo — nenhuma escrita foi
+  necessária, só sincronização de documentação. Ver
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e
+  `docs/MODELO-MESTRE-PROPOSTA.md`.
 - **v5.4.10** (2026-09-10, reconciliada nesta versão a partir de
   `main`) — diretriz de posicionamento (MN): propostas de
   Infraestrutura devem destacar a maturidade profissional da equipe

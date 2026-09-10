@@ -9,6 +9,17 @@
 > confirmada — Variante Tipo A"). Nenhuma escrita foi feita na skill —
 > recomendação registrada para o MN corrigir diretamente na fonte.
 
+> ✅ **Atualização (2026-09-10, mesmo dia, sessão seguinte)**: a
+> recorrência acima já foi corrigida em produção, fora deste
+> repositório — skill avançou v3.3.5 → v3.3.6 (esta sessão, tabela
+> tarifária) → **v3.3.7** (removeu a alegação de validação contra
+> `MNT-2026-COM-1183_D`, sem substituí-la por citação não verificada) →
+> **v3.3.8** (template canônico Tipo A/PRC, conferido contra
+> `MNT-2026-COM-1301`/Concessionária Rota da Liberdade — ressalva: esse
+> número específico não foi confirmado por busca independente, ver
+> `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`). Detalhe em `CLAUDE.md`
+> v5.4.11.
+
 > ⚠️ **Correção (2026-09-07)**: a versão original deste documento (ver
 > histórico no fim do arquivo) validava a skill `proposta-comercial`
 > contra uma proposta **"MNT-2026-COM-1183_D"** e descrevia a skill como

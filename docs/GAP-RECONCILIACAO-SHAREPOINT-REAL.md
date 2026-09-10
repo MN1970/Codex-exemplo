@@ -379,3 +379,51 @@ e revalidar os 5 blocos contra uma fonte primária real (ou uma proposta
 real distinta) antes de qualquer uso em proposta de cliente. Este
 repositório não tem — nem deveria assumir — mandato para corrigir a
 skill de produção sem esse gate humano.
+
+> ✅ **Atualização 2026-09-10 (mesmo dia, sessão seguinte) — corrigido em
+> produção**. Releitura direta da skill real (`SharePoint_Manta` MCP)
+> mostra que ela avançou, fora desta sessão/repositório, de v3.3.6 para
+> **v3.3.8**:
+> - **v3.3.7** removeu a alegação de que os 5 blocos da "Variante Tipo
+>   A" foram "validados contra a proposta real MNT-2026-COM-1183_D" —
+>   sem substituí-la por uma nova citação não verificada — e passou a
+>   marcar a variante explicitamente como "pendente de validação contra
+>   uma proposta real específica antes de uso em cliente". A estrutura
+>   dos 5 blocos foi mantida sem alteração; só a alegação de validação
+>   foi removida.
+> - **v3.3.8** adicionou um template canônico Tipo A/PRC
+>   (`template-ptc-tipo-a-v1.html`), "gerado e conferido nesta sessão
+>   contra a proposta real MNT-2026-COM-1301 (Concessionária Rota da
+>   Liberdade, Lote 07) e contra este SKILL.md" — segundo o changelog do
+>   próprio arquivo.
+>
+> A recomendação acima **já foi atendida** — não por esta sessão nem
+> pela que investigou (nenhuma das duas escreveu na skill), mas por
+> processo/sessão externa a este repositório, entre a checagem de
+> 2026-09-10T00:14:22Z (v3.3.5, achado registrado acima) e a releitura
+> desta atualização.
+>
+> **Verificação independente da nova referência (`MNT-2026-COM-1301`),
+> feita nesta sessão via `find_item`**: resultado misto, não uma
+> confirmação limpa como se poderia desejar depois do episódio
+> `_1183_D`.
+> - O **contexto real existe**: há uma pasta de cliente real
+>   `02_CLIENTE/27_CLIENTE_VIA_LIBERDADE/.../Lote 7 - Riscos/` com
+>   material de 2025-05-25 ("LOTE 7: OURO PRETO - MARIANA", plano de
+>   negócios referencial) — bate com "Concessionária Rota da Liberdade,
+>   Lote 07" citado no changelog da skill. Não é um nome inventado do
+>   zero.
+> - **Mas o próprio número `MNT-2026-COM-1301` não aparece em nenhum
+>   documento além do changelog da skill que o cita** — diferente da
+>   confirmação limpa que se conseguiu para `MNT-2026-COM-1104` (Hope
+>   PPP) e `MNT-2026-COM-1183_C_3` em investigações anteriores. Pode ser
+>   uma proposta real ainda não indexada pela busca, ou pode ser o mesmo
+>   padrão de citação não conferida contra fonte primária que causou o
+>   problema original — não dá para diferenciar as duas hipóteses só com
+>   `find_item`.
+> - **Recomendação**: antes de tratar o template `template-ptc-tipo-a-v1.html`
+>   como totalmente validado, confirmar diretamente (ex.: `read_document`
+>   no material de "27_CLIENTE_VIA_LIBERDADE/Lote 7") se existe de fato
+>   uma proposta numerada `MNT-2026-COM-1301` para esse cliente/lote, ou
+>   se o número é, de novo, uma citação não lastreada. Ver `CLAUDE.md`
+>   v5.4.11.
