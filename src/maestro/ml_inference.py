@@ -9,6 +9,7 @@ from datetime import datetime
 
 from .ml_features import ProjectFeatures, FeatureEngineer
 from .ml_trainer import RoutingModel, DurationPredictor, RiskClassifier
+from .detector import ComplexityDetector
 
 
 @dataclass
@@ -28,8 +29,8 @@ class RoutingSuggestion:
 class DurationEstimate:
     """Estimativa de duração."""
     estimated_minutes: int
-    estimated_hours: float         # For human readability
     confidence: float              # 0–1
+    estimated_hours: float = 0.0   # For human readability — sempre recalculado em __post_init__
     confidence_interval_mins: Tuple[int, int] = None  # (lower, upper)
 
     def __post_init__(self):
@@ -188,13 +189,19 @@ class MLInferenceEngine:
         # Stub: inferir com heurísticas
         characteristics = FeatureEngineer.infer_characteristics(description)
 
+        # Reaproveita o ComplexityDetector real (já testado, detecta
+        # segmentos/complexidade por regex) em vez de valores fixos —
+        # description de mega-projeto e de projeto simples não deveriam
+        # gerar as mesmas features.
+        detection = ComplexityDetector().detect(description)
+
         return ProjectFeatures(
             project_id=project_id,
             project_type="multi_segment",
             title=description[:100],
-            num_segments=2,
-            segments=["S7", "S10"],
-            complexity_level="medium",
+            num_segments=detection.num_segments,
+            segments=detection.segments_detected,
+            complexity_level=detection.complexity_level.value,
             budget_range="250M+",
             **characteristics
         )

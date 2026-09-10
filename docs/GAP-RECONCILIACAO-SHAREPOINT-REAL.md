@@ -29,6 +29,8 @@ uma sessão só. Documentado aqui conforme combinado com o usuário em
 > recomendada: MN revisar e corrigir a skill real diretamente antes de
 > usá-la em proposta de cliente.
 
+<!-- -->
+
 > ⚠️ **Atualização 2026-09-07 (mesma sessão, investigação mais
 > profunda)**: a primeira versão deste documento concluía que a
 > infraestrutura Supabase/RAG era "nunca confirmada como real". Isso
@@ -62,13 +64,31 @@ divergências estruturais, não só pontuais.
 ## Divergências confirmadas
 
 | Dimensão | Este repositório (`Codex-exemplo`) | SharePoint real (`INDICE-CANONICAL.md`) |
-|---|---|---|
+| --- | --- | --- |
 | Segmentos | S1–S13 (+ S11 "Mineração" identificado, S12 Óleo&Gás, S13 Edificações, todos "propostos") | **S1–S11**, sendo S1=Rodovias, S2=OAE, S3=Ferrovia, S4=Metrô, **S5=Imobiliário**, **S6=Edificações**, **S7=Portos**, **S8=Aeroportos**, **S9=Saneamento**, **S10=Energia**, **S11=Barragens** |
 | Numeração S6–S11 | "Convenção A" (S6=Portos...S10=Barragens), com "Convenção B" explicitamente descartada nos Gaps abertos | É **exatamente** a "Convenção B" que este repositório descartou — Edificações=S6, Barragens=S11 |
 | Atividades | A1–A10 (Proposta, Quantidades, Orçamento, Modelagem, Cronograma, Contratual, Claims, Advisory, Regulatório, Risco) | **Mesma lista e mesma ordem** — este eixo bate |
 | Estrutura de skill | "20+ agentes" nomeados "Manta 00–25", cada um um `.claude/agents/*.md` extenso | `SKILL.md` por segmento/atividade/disciplina/funcional/sub-skill, em pastas numeradas (`01-segmentos/`, `02-atividades/`, `03-funcionais/`, `04-disciplinas/`, `05-sub-skills/`) — sem "Manta NN" como identidade central |
 | RAG / infraestrutura | Supabase pgvector (projeto `ogxxgvgtulrbbppshjie`), 9 coleções, embedder bge-small/bge-m3 (contradição não resolvida), APScheduler, ML routing (XGBoost/NN), consensus voting, disaster recovery (RTO/RPO), Docker/K8s deploy | **Parcialmente confirmado real** (ver seção dedicada abaixo): projeto Supabase `ogxxgvgtulrbbppshjie` existe de fato (mesma conta, API real), com tabelas RAG populadas; embedder canônico real é bge-small-en-v1.5 (bge-m3 rejeitado 24/07). **Sem evidência real encontrada**: APScheduler (real usa `cron` de Linux — ver `07-execucoes/pipeline/cron.txt`), ML routing/XGBoost, consensus voting, disaster recovery RTO/RPO, deploy Docker/K8s — nada disso aparece nos documentos reais de arquitetura (`00-arquitetura/manta-maestro-arquitetura-v3.0.md`/`v3.2.md`) lidos até agora |
-| Skill `proposta-comercial` | 18 seções, modos M1–M6, tabela de 13 perfis, ref. MNT-2026-COM-1183_D | 14 seções, modos M1–M5, tabela de 12 níveis, ref. Hope PPP MNT-2025-COM-1104 — corrigido em `docs/MODELO-MESTRE-PROPOSTA.md` |
+| Skill `proposta-comercial` | 18 seções, modos M1–M6, tabela de 13 perfis, ref. MNT-2026-COM-1183_D | 14 seções, modos M1–M5, tabela de 12 níveis, ref. Hope PPP MNT-2025-COM-1104 — corrigido em `docs/MODELO-MESTRE-PROPOSTA.md` ⚠️ **ver nota abaixo — esta linha ficou desatualizada em 2026-09-09** |
+
+> ⚠️ **Nota (2026-09-09)**: a coluna "SharePoint real" da linha acima
+> reflete a investigação de 2026-09-07 **antes** de uma fusão que
+> aconteceu no mesmo dia. Releitura direta em 2026-09-09
+> (`SharePoint_Manta` MCP) mostra que a skill de proposta agora vive em
+> `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (versão
+> 3.3.1, "supersedes: 3.3.0 (2026-09-07)"), cujo próprio changelog diz
+> que a v3.3.0 "funde o corpo operacional da antiga skill
+> `05-sub-skills/skill-proposta-comercial-SKILL.md`" de volta para
+> dentro do arquivo de atividade. O arquivo real hoje tem **18 seções +
+> Anexo**, **tabela de 13 perfis** (idêntica à conhecida antes da
+> "correção") e a variante "Tipo A / Concessão de Infraestrutura de
+> Grande Porte" (equivalente ao antigo modo "M6") **já aplicada**. O
+> antigo `05-sub-skills/skill-proposta-comercial-SKILL.md` hoje é um
+> stub de 667 bytes redirecionando para `_DEPRECATED.md`. Ver
+> `docs/ATUALIZACAO-TARIFAS-2026.md` para o detalhe e para uma nova
+> análise de atualização de valores da tabela tarifária, a partir de
+> planilha real de fechamento de orçamento.
 
 ## O que é confirmado como real (investigação de 2026-09-07)
 
@@ -305,6 +325,8 @@ texto real da skill hoje:
 > portos, aeroportos, saneamento, energia, barragens). Validada contra
 > a proposta real MNT-2026-COM-1183_D (Concessão Rota 2 de Julho)."
 
+<!-- -->
+
 > Skill real, hoje (v3.3.5): "Extensao do **Tipo A** para propostas de
 > avaliacao tecnica, parametrico de CAPEX/OPEX e gestao integrada em
 > concessoes de infraestrutura de grande porte (rodovias, ferrovias,
@@ -361,3 +383,53 @@ e revalidar os 5 blocos contra uma fonte primária real (ou uma proposta
 real distinta) antes de qualquer uso em proposta de cliente. Este
 repositório não tem — nem deveria assumir — mandato para corrigir a
 skill de produção sem esse gate humano.
+
+> ✅ **Atualização 2026-09-10 (mesmo dia, sessão seguinte) — corrigido em
+> produção**. Releitura direta da skill real (`SharePoint_Manta` MCP)
+> mostra que ela avançou, fora desta sessão/repositório, de v3.3.6 para
+> **v3.3.8**:
+>
+> - **v3.3.7** removeu a alegação de que os 5 blocos da "Variante Tipo
+>   A" foram "validados contra a proposta real MNT-2026-COM-1183_D" —
+>   sem substituí-la por uma nova citação não verificada — e passou a
+>   marcar a variante explicitamente como "pendente de validação contra
+>   uma proposta real específica antes de uso em cliente". A estrutura
+>   dos 5 blocos foi mantida sem alteração; só a alegação de validação
+>   foi removida.
+> - **v3.3.8** adicionou um template canônico Tipo A/PRC
+>   (`template-ptc-tipo-a-v1.html`), "gerado e conferido nesta sessão
+>   contra a proposta real MNT-2026-COM-1301 (Concessionária Rota da
+>   Liberdade, Lote 07) e contra este SKILL.md" — segundo o changelog do
+>   próprio arquivo.
+>
+> A recomendação acima **já foi atendida** — não por esta sessão nem
+> pela que investigou (nenhuma das duas escreveu na skill), mas por
+> processo/sessão externa a este repositório, entre a checagem de
+> 2026-09-10T00:14:22Z (v3.3.5, achado registrado acima) e a releitura
+> desta atualização.
+>
+> **Verificação independente da nova referência (`MNT-2026-COM-1301`),
+> feita nesta sessão via `find_item`**: resultado misto, não uma
+> confirmação limpa como se poderia desejar depois do episódio
+> `_1183_D`.
+>
+> - O **contexto real existe**: há uma pasta de cliente real
+>   `02_CLIENTE/27_CLIENTE_VIA_LIBERDADE/.../Lote 7 - Riscos/` com
+>   material de 2025-05-25 ("LOTE 7: OURO PRETO - MARIANA", plano de
+>   negócios referencial) — bate com "Concessionária Rota da Liberdade,
+>   Lote 07" citado no changelog da skill. Não é um nome inventado do
+>   zero.
+> - **Mas o próprio número `MNT-2026-COM-1301` não aparece em nenhum
+>   documento além do changelog da skill que o cita** — diferente da
+>   confirmação limpa que se conseguiu para `MNT-2026-COM-1104` (Hope
+>   PPP) e `MNT-2026-COM-1183_C_3` em investigações anteriores. Pode ser
+>   uma proposta real ainda não indexada pela busca, ou pode ser o mesmo
+>   padrão de citação não conferida contra fonte primária que causou o
+>   problema original — não dá para diferenciar as duas hipóteses só com
+>   `find_item`.
+> - **Recomendação**: antes de tratar o template `template-ptc-tipo-a-v1.html`
+>   como totalmente validado, confirmar diretamente (ex.: `read_document`
+>   no material de "27_CLIENTE_VIA_LIBERDADE/Lote 7") se existe de fato
+>   uma proposta numerada `MNT-2026-COM-1301` para esse cliente/lote, ou
+>   se o número é, de novo, uma citação não lastreada. Ver `CLAUDE.md`
+>   v5.4.11.

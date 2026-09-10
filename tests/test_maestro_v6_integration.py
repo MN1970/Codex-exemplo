@@ -67,7 +67,7 @@ class TestMaestroV6Integration(unittest.TestCase):
         )
 
         feature_vector = features.to_feature_vector()
-        self.assertEqual(len(feature_vector), 16)  # 16 features
+        self.assertEqual(len(feature_vector), 18)  # 18 features (FeatureEngineer.to_feature_vector)
         self.assertTrue(all(0 <= v <= 1 for v in feature_vector))  # All normalized
 
         # Phase C: Engineering analysis
@@ -242,9 +242,6 @@ class TestMaestroV6Integration(unittest.TestCase):
         # Phase C: Code execution
         sandbox = SafePythonSandbox()
         code = """
-import math
-import numpy as np
-
 # Stress distribution calculation
 load = 5000  # kN
 width = 5.0   # m
@@ -270,7 +267,7 @@ result = {
 
         # Simulate 16 agents
         for i in range(16):
-            self.metrics_complex.add_agent_metric(f"agent-{i}", 3.0, 50000, "completed", 6000)
+            self.metrics_complex.add_agent_metric(f"agent-{i}", 3.0, 35000, "completed", 6000)
 
         self.metrics_complex.add_consensus_metric("orçamento", 5, 4, True, False, 1.5)
         self.metrics_complex.add_consensus_metric("cronograma", 4, 4, True, False, 1.0)

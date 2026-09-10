@@ -1,10 +1,11 @@
 {
+  // Sem "globs" aqui de propósito: o job de lint (agent-test.yml) passa os
+  // globs explicitamente (repo inteiro em push; só o diff em pull_request).
+  // Um "globs" fixo aqui seria mesclado com o que a action recebe e
+  // forçaria lint do repo inteiro sempre, inclusive em PR.
   "config": ".markdownlint.jsonc",
-  "globs": [
-    "**/*.md"
-  ],
   "ignores": [
-    "node_modules/**",
+    "**/node_modules/**",
     ".git/**"
   ]
 }

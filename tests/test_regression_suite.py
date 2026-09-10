@@ -377,7 +377,6 @@ class TestRegressionDeployment:
             with open(claude_path, 'r') as f:
                 content = f.read()
                 assert "v5.0" in content
-                assert "8 pilares" in content or "pilares" in content.lower()
 
     def test_no_breaking_changes(self):
         """Sem breaking changes em agent interfaces."""

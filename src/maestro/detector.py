@@ -33,7 +33,7 @@ class DetectionResult:
     complexity_level: ComplexityLevel
 
     # Agent pool
-    agents_needed: int                  # Total agents 8-16
+    total_agents: int                   # Total agents 8-16
     agents_vertical: List[str]          # Segmento agents
     agents_horizontal: List[str]        # Atividade agents
     agents_pool: List[str]              # All agents in order (priority)
@@ -248,7 +248,7 @@ ACTIVITY_PATTERNS = {
     }
 }
 
-BASE_HORIZONTAL_AGENTS = ["manta-01-claims", "manta-05-orcamento", "manta-07-cronograma", "manta-15-advisory"]
+BASE_HORIZONTAL_AGENTS = ["manta-01-claims", "manta-05-orcamento", "manta-07-cronograma", "manta-15-advisory", "manta-13-bd"]
 
 # ============================================
 # 3. DETECTOR LOGIC
@@ -306,7 +306,7 @@ class ComplexityDetector:
             segments_detected=segments_detected,
             num_segments=len(segments_detected),
             complexity_level=complexity,
-            agents_needed=agents_total,
+            total_agents=agents_total,
             agents_vertical=agents_vertical,
             agents_horizontal=agents_horizontal,
             agents_pool=agents_pool,
@@ -456,6 +456,6 @@ if __name__ == "__main__":
         result = detector.detect(test)
         print(f"Segments: {result.segments_detected}")
         print(f"Complexity: {result.complexity_level.value}")
-        print(f"Agents: {result.agents_needed}")
+        print(f"Agents: {result.total_agents}")
         print(f"Token Budget: {result.token_budget:,}")
         print(f"Reasoning:\n{result.reasoning}")

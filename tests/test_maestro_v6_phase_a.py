@@ -24,10 +24,10 @@ project:
 agents:
   - name: agente-portos
     tier: sonnet
-    rag_prefix: por:
+    rag_prefix: "por:"
   - name: agente-energia
     tier: sonnet
-    rag_prefix: ene:
+    rag_prefix: "ene:"
   - name: manta-05-orcamento
     tier: sonnet
   - name: manta-07-cronograma

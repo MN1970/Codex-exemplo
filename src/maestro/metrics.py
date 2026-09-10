@@ -144,7 +144,13 @@ class PerformanceReport:
 
         # Evaluate targets
         self.execution_time_met = self.execution_time_min <= self.target_execution_time_min
-        self.consensus_rate_met = self.execution_metrics.consensus_rate_pct >= self.target_consensus_rate_pct
+        # Sem decisões de consenso no workflow (ex.: projeto simples sem
+        # conflito entre agentes), a meta de 85% não se aplica — não há
+        # nada para "resolver automaticamente" nem para falhar.
+        self.consensus_rate_met = (
+            self.execution_metrics.total_decisions == 0
+            or self.execution_metrics.consensus_rate_pct >= self.target_consensus_rate_pct
+        )
         self.token_budget_met = self.execution_metrics.total_tokens_used <= self.target_token_budget
         self.agent_response_met = self.avg_agent_response_time_secs <= self.target_agent_response_secs
 

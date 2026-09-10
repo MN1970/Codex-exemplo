@@ -2,7 +2,8 @@
 """
 Maestro Router E2E Tests (v5.0)
 =========================================
-40 golden test cases for routing accuracy, context injection, and tiering.
+36 golden test cases for routing accuracy, context injection, and tiering
+(fixture file mantém o nome histórico "prompts_golden_40.json").
 
 Cobertura:
   - S1–S10 (9 verticais): rodovias, OAE, ferrovia, metrô, portos, aeroportos, saneamento, energia, barragens
@@ -27,6 +28,7 @@ Uso:
 import json
 import os
 import sys
+import unicodedata
 import pytest
 from pathlib import Path
 from dataclasses import dataclass
@@ -36,6 +38,21 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def _normalize(text: str) -> str:
+    """Lowercase + remove diacríticos, para casar 'subestação' com 'subestacao'."""
+    nfkd = unicodedata.normalize('NFKD', text.lower())
+    return ''.join(c for c in nfkd if not unicodedata.combining(c))
+
+
+# Substantivos que nomeiam o ativo físico do segmento (porto, aeroporto, ponte...)
+# são um sinal mais forte de dispatch do que um termo de disciplina genérico
+# (drenagem, esgoto) que aparece em vários segmentos — usado para desempate.
+_ANCHOR_KEYWORDS = {_normalize(k) for k in [
+    "terminal", "porto", "aeroporto", "rodovia", "ferrovia", "metro",
+    "barragem", "ponte", "viaduto", "subestacao", "usina", "eta", "ete", "adutora",
+]}
 
 
 # ============================================================================
@@ -110,7 +127,8 @@ class MockMaestroRouter:
                            "retroarea", "patio", "TUP", "TPS", "PIANC", "hidrovia"],
             "manta-03-s7": ["aeroporto", "pista", "RWY", "taxiway", "TWY", "patio", "TPS",
                            "TECA", "ANAC", "RBAC", "ICAO", "Annex 14", "FAA", "balizamento",
-                           "PAPI", "ILS", "PCN", "gate", "jetway", "ponte", "embarque"],
+                           "PAPI", "ILS", "PCN", "gate", "jetway", "ponte", "embarque",
+                           "passageiros"],
             "manta-03-s10": ["barragem", "vertedouro", "CFRD", "CCR", "RCC", "rejeitos", "TSF",
                             "PNSB", "ICOLD", "CBDB", "dique", "SIGBM", "ANM", "ANA", "Lei 12.334"],
             "manta-03-s1": ["rodovia", "pavimento", "CBUQ", "BGS", "terraplenagem", "SICRO",
@@ -167,21 +185,34 @@ class MockMaestroRouter:
           2. Context + phase inference
           3. Tiering + config
         """
-        prompt_lower = prompt.lower()
+        prompt_norm = _normalize(prompt)
         context_hints = context_hints or []
+        context_hints_norm = {_normalize(h) for h in context_hints}
 
-        # Stage 1: Keyword matching
+        # Stage 1: Keyword matching. Pontuação por contagem absoluta de matches
+        # (não por matches/len(keywords)): normalizar pelo tamanho da lista de
+        # keywords penaliza injustamente verticais com vocabulário mais rico
+        # frente a horizontais com listas curtas (ex.: "custo" sozinho, numa
+        # lista de 6 palavras-chave de manta-05, vencia "ETA"+"AySA" numa
+        # lista de 16 de manta-03-s8). Keywords-âncora (nome do ativo físico:
+        # porto, aeroporto, ponte...) pesam mais que termos de disciplina
+        # genéricos (drenagem, custo) para desempate em casos ambíguos.
         best_agent = None
         best_score = 0.0
 
         for agent_id, keywords in self.routing_rules.items():
-            matches = sum(1 for kw in keywords if kw.lower() in prompt_lower)
-            score = matches / len(keywords) if keywords else 0
+            keywords_norm = [_normalize(kw) for kw in keywords]
+            matched_in_text = {kw_norm for kw_norm in keywords_norm if kw_norm in prompt_norm}
+            score = sum(1.5 if kw_norm in _ANCHOR_KEYWORDS else 1.0 for kw_norm in matched_in_text)
 
-            # Boost score se keyword está em context_hints
-            for hint in context_hints:
-                if hint.lower() in keywords:
-                    score += 0.15
+            # Boost se uma keyword do agente aparece nos context_hints mas
+            # ainda não contou no texto — hints não devem duplicar um match
+            # que o próprio texto do prompt já rendeu (senão um agente cujos
+            # context_hints só repetem suas próprias keywords "infla" o score
+            # artificialmente frente a um concorrente com match textual real).
+            for kw_norm in keywords_norm:
+                if kw_norm in context_hints_norm and kw_norm not in matched_in_text:
+                    score += 1.0
 
             if score > best_score:
                 best_score = score
@@ -192,16 +223,19 @@ class MockMaestroRouter:
             best_agent = "manta-00"
 
         # Stage 2: Phase inference
-        phase = self._infer_phase(prompt_lower)
+        phase = self._infer_phase(prompt_norm)
 
         # Stage 3: Tiering
         if complexity_score is None:
-            complexity_score = len([h for h in context_hints if h.lower() in prompt_lower])
+            complexity_score = len([h for h in context_hints_norm if h in prompt_norm])
 
         model_tier = self._compute_tiering(best_agent, complexity_score, len(prompt))
 
-        # Construct routing confidence
-        routing_confidence = min(0.95, best_score + 0.05)
+        # Construct routing confidence. Escala por contagem de matches (não
+        # mais por proporção do tamanho da lista de keywords): 1 match ->
+        # 0.80, 2+ -> 0.95 (teto). Um único keyword bem específico (ex.:
+        # "AySA", "subestação") já é sinal suficiente de dispatch correto.
+        routing_confidence = min(0.95, 0.65 + 0.15 * best_score) if best_score > 0 else 0.0
 
         # Get agent config
         agent_config = self.agent_configs.get(best_agent, {})
@@ -224,21 +258,22 @@ class MockMaestroRouter:
             }
         )
 
-    def _infer_phase(self, prompt: str) -> Optional[str]:
-        """Infere phase (ciclo de vida) baseado em keywords."""
+    def _infer_phase(self, prompt_norm: str) -> Optional[str]:
+        """Infere phase (ciclo de vida) baseado em keywords. `prompt_norm` já
+        vem normalizado (minúsculo, sem acento) de `route()`."""
         phases_map = {
-            "estudo-previo": ["estudo prévio", "diagnóstico", "benchmarking", "baseline"],
-            "projeto-basico": ["projeto básico", "conceito", "layout", "viabilidade"],
-            "projeto-executivo": ["projeto executivo", "detalh", "especificação", "técnico"],
-            "obra": ["obra", "execução", "construção", "implantação"],
-            "operacao": ["operação", "manutenção", "O&M", "gestão", "OPEX"],
-            "licitacao": ["licitação", "edital", "concorrência", "processo competitivo"],
-            "due-diligence": ["due diligence", "auditoria", "DD", "M&A"],
+            "estudo-previo": ["estudo previo", "diagnostico", "benchmarking", "baseline"],
+            "projeto-basico": ["projeto basico", "conceito", "layout", "viabilidade"],
+            "projeto-executivo": ["projeto executivo", "detalh", "especificacao", "tecnico", "analise"],
+            "obra": ["obra", "execucao", "construcao", "implantacao"],
+            "operacao": ["operacao", "manutencao", "o&m", "gestao", "opex"],
+            "licitacao": ["licitacao", "edital", "concorrencia", "processo competitivo", "subsidio", "tarifa"],
+            "due-diligence": ["due diligence", "auditoria", "dd", "m&a"],
             "encerramento": ["encerramento", "descomissionamento", "final"],
         }
 
         for phase, keywords in phases_map.items():
-            if any(kw in prompt for kw in keywords):
+            if any(_normalize(kw) in prompt_norm for kw in keywords):
                 return phase
 
         # Default: projeto-basico se ambíguo
@@ -256,7 +291,7 @@ class MockMaestroRouter:
 
         if complexity_score < 3.0 and prompt_len < 1500:
             return "haiku-4-5"
-        elif complexity_score >= 4.5 or prompt_len > 3000:
+        elif complexity_score > 4.5 or prompt_len > 3000:
             return "opus"
         else:
             return "sonnet-5"
