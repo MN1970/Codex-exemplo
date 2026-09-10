@@ -4,7 +4,15 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.5** (2026-09-10) — **recorrência confirmada da
+Versão: **v5.4.6** (2026-09-10) — **diretriz de posicionamento**: foco
+na maturidade profissional da equipe Manta, com IA como apoio/
+multiplicador (não substituição), para propostas do segmento
+Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
+("Diretriz de posicionamento (2026-09-10)"). É orientação de conteúdo
+para propostas futuras — não altera nem alega nada sobre a skill de
+produção.
+
+Consolida v5.4.5 (2026-09-10) — **recorrência confirmada da
 fabricação na skill real de proposta**. Investigação read-only via
 `SharePoint_Manta` MCP confirmou que a seção "Variante Tipo A /
 Concessão de Infraestrutura de Grande Porte", hoje viva em
@@ -856,6 +864,12 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.6** (2026-09-10) — diretriz de posicionamento (MN): propostas
+  de Infraestrutura devem destacar a maturidade profissional da equipe
+  Manta primeiro, com a IA da Manta posicionada como apoio/multiplicador
+  de produtividade — nunca como substituição da experiência técnica.
+  Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`; não altera a skill de
+  produção.
 - **v5.4.5** (2026-09-10) — investigação read-only confirmou
   recorrência da fabricação da skill `proposta-comercial`: a variante
   "Tipo A / Infraestrutura de Grande Porte" viva em produção (v3.3.5)

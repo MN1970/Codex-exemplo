@@ -24,6 +24,50 @@
 > vs. a estrutura real de `SKILL.md` por segmento) **não está coberta
 > aqui** — ver gap dedicado em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
+## Diretriz de posicionamento (2026-09-10) — maturidade profissional + IA Manta, foco Infraestrutura
+
+Diretriz do MN para propostas futuras do segmento Infraestrutura (rodovias,
+OAE, ferrovia, metrô, portos, aeroportos, saneamento, energia, barragens):
+dar destaque explícito à **maturidade técnica dos profissionais da Manta**,
+posicionando as ferramentas de IA da Manta como **apoio/multiplicador de
+produtividade da equipe sênior**, nunca como substituição da experiência
+humana. Isso é uma diretriz de conteúdo para novas propostas — não uma
+alegação sobre o que já existe na skill de produção (ver correções e
+recorrência de fabricação acima; nenhuma mudança foi feita na skill real
+por causa desta diretriz).
+
+**Onde aplicar**: na seção "Benefícios e Valor" (skill `proposta-comercial`,
+seção 9 no padrão histórico observado / seção equivalente na estrutura real
+por Tipos), e reforçado na seção de Equipe, sempre que o objeto for de
+infraestrutura.
+
+**Elementos a incluir**:
+
+1. **Maturidade da equipe primeiro, IA depois** — currículos, tempo de
+   atuação no segmento específico e projetos de referência do time
+   alocado vêm antes de qualquer menção a IA. A ordem de apresentação
+   importa: IA é ferramenta de apoio à entrega de profissionais seniores,
+   não o argumento central da proposta.
+2. **IA como apoio, com limites explícitos** — manter o padrão já usado em
+   propostas reais (ver `docs/MODELO-MESTRE-PROPOSTA.md`, tom da proposta
+   MNT-2026-COM-1183_C_3): IA aplicada a leitura/extração de dados,
+   cruzamento de informações entre disciplinas e geração assistida de
+   relatórios — sempre com a ressalva de que "todos os produtos gerados
+   com apoio de IA passam por revisão e validação de profissionais
+   seniores antes da emissão".
+3. **Foco em infraestrutura específico** — trocar exemplos genéricos por
+   casos do segmento do cliente (ex.: paramétrico de CAPEX/OPEX de
+   rodovia/porto/barragem, não um exemplo abstrato), amarrando a
+   experiência técnica (normas, SICRO/SINAPI, ANTT/ANTAQ/ANAC/ANEEL/ANM
+   conforme o segmento) à maturidade da equipe, e só então à IA como
+   acelerador desse trabalho.
+
+**Não fazer**: não usar esta diretriz como pretexto para inflar
+capacidades de IA não verificadas (ver todo o histórico de fabricação
+documentado neste arquivo e em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`)
+— a maturidade profissional é o argumento principal; a IA é coadjuvante
+declarado com limites claros.
+
 ## 1. O que é real, confirmado via SharePoint (`SharePoint_Manta` MCP)
 
 - **Caminho real**: `Documentos Compartilhados/04_IA/Manta-Maestro/
