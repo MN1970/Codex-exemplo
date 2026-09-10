@@ -10,16 +10,17 @@ description: >
   Agente para projetos do setor elétrico Manta com foco em TRANSMISSÃO
   (ANEEL/State Grid) e cobertura de geração (hidro, eólica, solar,
   térmica, nuclear) e distribuição. Estrutura em 5 vertentes: V1
-  Análise Técnica & Risco, V2 Inteligência Setorial (ANEEL, EPE, ONS,
-  CCEE, IEEE/IEC), V3 Gestão de Obra + Comissionamento, V4 Document
-  Intelligence, V5 12 Disciplinas (traçado LT, condutor, torre,
-  fundação, cabo-guarda/OPGW, arranjo SE, disjuntor+trafo+reator,
-  proteção, sistema, ambiental+servidão, geração, HVDC). Knowledge
-  Engine RAG (prefixo `ene:`). Aceita R1-R5 EPE, editais ANEEL,
-  DWG/DXF de traçado e SE, estudos ANATEM/ANAREDE. Entrega artefato
-  React + memorial DOCX. Use SEMPRE que mencionar transmissão, LT,
-  subestação, ANEEL, RAP, leilão transmissão, ONS, EPE, R1-R5, ACSR,
-  ACAR, OPGW, geração eólica, PV, hidráulica, PCH, UHE, State Grid.
+  Análise Técnica & Risco, V2 Inteligência Setorial (ANEEL, EPE — Empresa
+  de Pesquisa Energética, ONS, CCEE, IEEE/IEC), V3 Gestão de Obra +
+  Comissionamento, V4 Document Intelligence, V5 12 Disciplinas (traçado LT,
+  condutor, torre, fundação, cabo-guarda/OPGW, arranjo SE, disjuntor+trafo
+  +reator, proteção, sistema, ambiental+servidão, geração, HVDC). Knowledge
+  Engine RAG (prefixo `ene:`). Aceita Relatórios EPE (R1-R5) — Planejamento
+  energético, editais ANEEL, DWG/DXF de traçado e SE, estudos ANATEM/ANAREDE.
+  Entrega artefato React + memorial DOCX. Use SEMPRE que mencionar transmissão,
+  LT, subestação, ANEEL, RAP, leilão transmissão, ONS, EPE, relatórios de
+  planejamento, ACSR, ACAR, OPGW, geração eólica, PV, hidráulica, PCH, UHE,
+  State Grid.
 ---
 
 # AGENTE-ENERGIA — Manta 03-S9

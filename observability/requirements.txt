@@ -1,0 +1,16 @@
+# Manta Maestro — dependências Python para observability/
+# pip install -r observability/requirements.txt
+
+opentelemetry-api>=1.24,<2
+opentelemetry-sdk>=1.24,<2
+opentelemetry-exporter-otlp-proto-grpc>=1.24,<2
+
+# Auto-instrumentação opcional (usada nos exemplos para propagar contexto
+# automaticamente em chamadas HTTP saintes entre Maestro e agentes):
+opentelemetry-instrumentation-requests>=0.45b0
+opentelemetry-instrumentation-httpx>=0.45b0
+
+# Necessário apenas se o Maestro/agente expõe um servidor HTTP (ex.: FastAPI)
+# que recebe chamadas de outros agentes e precisa extrair o contexto entrante
+# automaticamente:
+opentelemetry-instrumentation-fastapi>=0.45b0

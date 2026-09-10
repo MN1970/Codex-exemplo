@@ -1,0 +1,125 @@
+{
+  "query": "Como dimensionar um sistema de ETA completo para 200 mil habitantes com eficiência energética?",
+  "chunks": [
+    {
+      "chunk_id": "san_001",
+      "text": "ETA (Estação de Tratamento de Água) ciclo completo inclui as operações unitárias: coagulação/floculação, decantação, filtração, desinfecção e estabilização. Para população de 200 mil habitantes, considerando demanda de 150 L/hab/dia, tem-se vazão de projeto de aproximadamente 350 L/s. A dosagem de coagulante depende da qualidade da água bruta.",
+      "source": "NBR 12211:2022 — Sistemas de adução de água para abastecimento público",
+      "bm25_score": 0.95
+    },
+    {
+      "chunk_id": "san_002",
+      "text": "O processo de coagulação química é a primeira etapa do tratamento. Usa-se geralmente sulfato de alumínio ou cloreto férrico. A dosagem varia de 10 a 100 mg/L dependendo da alcalinidade e turbidez da água bruta. Testes de jartest são recomendados para otimizar a dosagem.",
+      "source": "SNIS — Sistema Nacional de Informações sobre Saneamento",
+      "bm25_score": 0.87
+    },
+    {
+      "chunk_id": "san_003",
+      "text": "A eficiência energética em ETA pode ser melhorada através de: seleção otimizada de bombas de velocidade variável, aproveitamento de desnível topográfico, uso de energia solar em sistemas de pequeno porte, automação e controle de processos.",
+      "source": "Manual de Saneamento Rural — BNDES",
+      "bm25_score": 0.92
+    },
+    {
+      "chunk_id": "san_004",
+      "text": "O consumo energético típico de uma ETA convencional é de 0.5 a 1.0 kWh por metro cúbico de água tratada, dependendo da qualidade da água bruta e dos processos adotados. Estações com sistemas de pré-oxidação podem consumir até 1.5 kWh/m³.",
+      "source": "Artigo técnico — Eficiência Energética em ETA",
+      "bm25_score": 0.85
+    },
+    {
+      "chunk_id": "san_005",
+      "text": "A decantação é a operação unitária que segue a floculação. Permite a sedimentação de partículas menores e flocos gerados no processo anterior. Tanques de decantação devem ser dimensionados com base na taxa de aplicação hidráulica, geralmente entre 1 e 3 m³/(m².dia).",
+      "source": "NBR 12211:2022",
+      "bm25_score": 0.80
+    },
+    {
+      "chunk_id": "san_006",
+      "text": "A Lei 14.026/2020 estabelece normas para saneamento básico no Brasil, incluindo tratamento de água e esgoto. Define marcos regulatórios para concessões e investimentos públicos. A universalização do saneamento é meta até 2033.",
+      "source": "Lei 14.026/2020",
+      "bm25_score": 0.45
+    },
+    {
+      "chunk_id": "san_007",
+      "text": "Filtração rápida em areia é a etapa mais comum após decantação. Leitos filtrantes com altura de 0.60 a 1.0 m e taxa de filtração de 4 a 12 m/h são típicos. Limpeza do filtro ocorre quando a perda de carga atinge 1.5 a 2.0 m de coluna de água.",
+      "source": "NBR 12211:2022",
+      "bm25_score": 0.88
+    },
+    {
+      "chunk_id": "san_008",
+      "text": "Desinfecção com cloro (gás, hipoclorito ou dióxido de cloro) é obrigatória por lei. Residual de cloro deve estar entre 0.5 e 2.0 mg/L na rede de distribuição. Tempo de contato mínimo é 30 minutos em condições ótimas de pH e temperatura.",
+      "source": "Portaria MS 2.914/2011",
+      "bm25_score": 0.86
+    },
+    {
+      "chunk_id": "san_009",
+      "text": "Estabilização de água é o processo de equilibrar o pH e dureza para evitar corrosão de tubulações ou incrustações. Para pH estável, usa-se carbonato de cálcio em leitos calcários ou adição controlada de cal. O índice de saturação de Langelier deve ficar entre -0.5 e +0.5.",
+      "source": "Manual Técnico — FNSP",
+      "bm25_score": 0.79
+    },
+    {
+      "chunk_id": "san_010",
+      "text": "AsSorção em carvão ativado pode ser necessária se houver presença de matéria orgânica dissolvida ou compostos com sabor e odor. Carvão ativado em pó (CAP) tem custo menor que carvão ativado granular (CAG), mas CAG permite regeneração e reutilização.",
+      "source": "Relatório Técnico ANA",
+      "bm25_score": 0.70
+    },
+    {
+      "chunk_id": "san_011",
+      "text": "A capacidade de uma ETA é determinada pela vazão máxima que precisa ser processada (vazão de projeto). Para população em crescimento, recomenda-se projeto com 20-30% de margem de capacidade. Reservatórios de distribuição devem ter volume entre 20-40% da demanda diária.",
+      "source": "NBR 12211:2022",
+      "bm25_score": 0.89
+    },
+    {
+      "chunk_id": "san_012",
+      "text": "Custos operacionais de uma ETA incluem: energia elétrica (~40-50%), produtos químicos (~30-35%), pessoal (~10-15%), manutenção (~5-10%). Otimização energética pode reduzir custos operacionais em até 30-40%.",
+      "source": "Estudo de Caso — BNDES",
+      "bm25_score": 0.84
+    },
+    {
+      "chunk_id": "san_013",
+      "text": "Sistemas de tratamento avançado como osmose reversa, ultrafiltração e nanofiltração são usados em casos específicos (água salobra, contaminação química). Aumentam significativamente o custo de implantação e operação.",
+      "source": "Revisão Técnica — IWA",
+      "bm25_score": 0.65
+    },
+    {
+      "chunk_id": "san_014",
+      "text": "Monitoramento de qualidade de água em ETA deve ser contínuo. Parâmetros essenciais: turbidez (<0.5 NTU), pH (6.5-8.5), cloro residual livre (0.5-2.0 mg/L), coliformes (zero), E. coli (zero). Análises completas mensalmente.",
+      "source": "Portaria MS 2.914/2011",
+      "bm25_score": 0.82
+    },
+    {
+      "chunk_id": "san_015",
+      "text": "Projeto de ETA para município deve considerar: população a servir, crescimento demográfico esperado, qualidade da água bruta, topografia, disponibilidade de terreno, integração com sistema de distribuição, redundância de unidades de tratamento.",
+      "source": "Diretrizes Técnicas SABESP",
+      "bm25_score": 0.88
+    },
+    {
+      "chunk_id": "san_016",
+      "text": "Compra de coagulante, desinfetante e outros químicos deve ser feita anualmente com licitação. Fornecedores qualificados devem cumprir especificações de qualidade. Armazenamento adequado é essencial (temperatura, umidade, ventilação).",
+      "source": "Procedimento Administrativo",
+      "bm25_score": 0.50
+    },
+    {
+      "chunk_id": "san_017",
+      "text": "Automação de ETA com SCADA permite monitoramento remoto, controle de dosagens, otimização de processos e histórico de operação. Investimento inicial elevado, mas reduz custos operacionais de longo prazo.",
+      "source": "Relatório Técnico ANEEL",
+      "bm25_score": 0.77
+    },
+    {
+      "chunk_id": "san_018",
+      "text": "Resíduos de tratamento (lodo de ETA) requerem adequada gestão. Opções: leitos de secagem (terreno disponível), centrifugação, filtro-prensa, ou incineração. Descarte em aterro sanitário adequado é obrigatório.",
+      "source": "NBR 10004:2004",
+      "bm25_score": 0.68
+    },
+    {
+      "chunk_id": "san_019",
+      "text": "Bombeamento é essencial em ETA se não há desnível natural. Seleção de bombas deve considerar: vazão, altura manométrica total, eficiência, confiabilidade. Bombas de velocidade variável (frequência variável) economizam energia.",
+      "source": "Manual de Bombas — Eletrobomba",
+      "bm25_score": 0.81
+    },
+    {
+      "chunk_id": "san_020",
+      "text": "Treinamento de operadores é fundamental para eficiência de ETA. Programa de qualificação deve cobrir: processos de tratamento, químicos, equipamentos, segurança, legislação, controle de qualidade. Certificação profissional é recomendada.",
+      "source": "Diretrizes SABESP",
+      "bm25_score": 0.60
+    }
+  ]
+}

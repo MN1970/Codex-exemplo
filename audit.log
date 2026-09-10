@@ -1,0 +1,47 @@
+2026-07-25 02:19:03,309 [INFO] ================================================================================
+2026-07-25 02:19:03,309 [INFO] Starting Agent Audit v2 (CLAUDE.md v5.0 + VERSIONS.json)
+2026-07-25 02:19:03,309 [INFO] ================================================================================
+2026-07-25 02:19:03,310 [INFO] Extracted 1 agents from CLAUDE.md mapa
+2026-07-25 02:19:03,310 [INFO] Found 5 agent files in .claude/agents
+2026-07-25 02:19:03,311 [WARNING] Agent agente-aeroportos: 1 divergence(s) — CHECKSUM_MISMATCH (expected=a8e1f3c2, actual=b392e63c)
+2026-07-25 02:19:03,311 [WARNING] Agent agente-barragens: 1 divergence(s) — CHECKSUM_MISMATCH (expected=d3c4a2f5, actual=13c5e3ed)
+2026-07-25 02:19:03,311 [WARNING] Agent agente-energia: 1 divergence(s) — CHECKSUM_MISMATCH (expected=e2b5c3a1, actual=d8ca1b2b)
+2026-07-25 02:19:03,311 [WARNING] Agent agente-portos: 1 divergence(s) — CHECKSUM_MISMATCH (expected=b7d3e5a2, actual=de56705e)
+2026-07-25 02:19:03,312 [WARNING] Agent agente-saneamento: 1 divergence(s) — CHECKSUM_MISMATCH (expected=f1a3d2b4, actual=3435f9cb)
+2026-07-25 02:19:03,312 [INFO] JSON report written to rag_evals/audit_agents.json
+2026-07-25 02:19:03,312 [INFO] Divergence report written to rag_evals/divergence_report.json
+2026-07-25 02:19:03,312 [INFO] ================================================================================
+2026-07-25 02:19:03,312 [INFO] Audit completed at 2026-07-25T02:19:03.312095+00:00
+2026-07-25 02:19:03,312 [INFO]   Total agents: 5
+2026-07-25 02:19:03,312 [INFO]   Synced: 0
+2026-07-25 02:19:03,313 [INFO]   Drift detected: 5
+2026-07-25 02:19:03,313 [INFO]   Not in registry: 0
+2026-07-25 02:19:03,313 [INFO]   Missing v5.0 spec: 0
+2026-07-25 02:19:03,313 [INFO]   Incomplete: 0
+2026-07-25 02:19:03,313 [INFO] ================================================================================
+2026-07-25 02:19:03,313 [ERROR] AUDIT FAILED: 5 divergence(s) > threshold 0
+2026-07-25 02:19:03,313 [ERROR] Review rag_evals/divergence_report.json for remediation steps
+2026-07-25 02:20:21,037 [INFO] ================================================================================
+2026-07-25 02:20:21,037 [INFO] Starting Agent Audit v2 (CLAUDE.md v5.0 + VERSIONS.json)
+2026-07-25 02:20:21,037 [INFO] ================================================================================
+2026-07-25 02:20:21,038 [INFO] Extracted 1 agents from CLAUDE.md mapa
+2026-07-25 02:20:21,038 [INFO] Found 5 agent files in .claude/agents
+2026-07-25 02:20:21,039 [WARNING] Agent agente-aeroportos: 1 divergence(s) — CHECKSUM_MISMATCH (expected=a8e1f3c2, actual=b392e63c)
+2026-07-25 02:20:21,039 [WARNING] Agent agente-barragens: 1 divergence(s) — CHECKSUM_MISMATCH (expected=d3c4a2f5, actual=13c5e3ed)
+2026-07-25 02:20:21,039 [WARNING] Agent agente-energia: 1 divergence(s) — CHECKSUM_MISMATCH (expected=e2b5c3a1, actual=d8ca1b2b)
+2026-07-25 02:20:21,039 [WARNING] Agent agente-portos: 1 divergence(s) — CHECKSUM_MISMATCH (expected=b7d3e5a2, actual=de56705e)
+2026-07-25 02:20:21,039 [WARNING] Agent agente-saneamento: 1 divergence(s) — CHECKSUM_MISMATCH (expected=f1a3d2b4, actual=3435f9cb)
+2026-07-25 02:20:21,040 [INFO] JSON report written to rag_evals/audit_agents.json
+2026-07-25 02:20:21,040 [INFO] HTML report written to rag_evals/audit_agents.html
+2026-07-25 02:20:21,040 [INFO] Divergence report written to rag_evals/divergence_report.json
+2026-07-25 02:20:21,040 [INFO] ================================================================================
+2026-07-25 02:20:21,040 [INFO] Audit completed at 2026-07-25T02:20:21.039705+00:00
+2026-07-25 02:20:21,040 [INFO]   Total agents: 5
+2026-07-25 02:20:21,040 [INFO]   Synced: 0
+2026-07-25 02:20:21,040 [INFO]   Drift detected: 5
+2026-07-25 02:20:21,040 [INFO]   Not in registry: 0
+2026-07-25 02:20:21,040 [INFO]   Missing v5.0 spec: 0
+2026-07-25 02:20:21,040 [INFO]   Incomplete: 0
+2026-07-25 02:20:21,040 [INFO] ================================================================================
+2026-07-25 02:20:21,041 [ERROR] AUDIT FAILED: 5 divergence(s) > threshold 0
+2026-07-25 02:20:21,041 [ERROR] Review rag_evals/divergence_report.json for remediation steps

@@ -1,0 +1,20 @@
+# docker-compose.datadog.yml — overlay Datadog para o stack de observability.
+#
+# Uso (fan-out para Jaeger LOCAL + Datadog SaaS ao mesmo tempo):
+#
+#   export DD_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#   export DD_SITE=datadoghq.com   # ou datadoghq.eu, us5.datadoghq.com etc.
+#   docker compose -f docker-compose.yml -f docker-compose.datadog.yml up -d
+#
+# Este overlay só troca o arquivo de config do otel-collector (que passa a
+# ter o exporter `datadog` habilitado, ver otel-collector-config.datadog.yaml).
+# Nenhuma mudança é necessária no lado das apps: elas continuam apontando
+# para o mesmo OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317.
+
+services:
+  otel-collector:
+    volumes:
+      - ./otel-collector-config.datadog.yaml:/etc/otel-collector-config.yaml:ro
+    environment:
+      - DD_API_KEY=${DD_API_KEY:?defina DD_API_KEY antes de subir este overlay}
+      - DD_SITE=${DD_SITE:-datadoghq.com}
