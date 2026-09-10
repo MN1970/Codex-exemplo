@@ -79,6 +79,64 @@ de oportunidades, devido diligência e estrutura de negócio.
 8. **Decisão de investimento** — apresentação ao comitê de investimento,
   aprovação de risco/retorno.
 
+## Modelo de proposta e resumo executivo (A1-proposta)
+
+Quando a oportunidade avança para proposta técnico-comercial formal, este
+agente segue o modelo mestre confirmado contra a skill real `A1-proposta`
+(SharePoint, `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`,
+v3.3.8) — **nota de reconciliação**: no SharePoint real essa skill
+"absorve o antigo agente-bd" (é uma skill única, não dois agentes
+separados); neste repositório o papel de BD (Manta 13) e o de proposta
+continuam desenhados como colaboração entre Manta 13 e Manta 14
+(apresentações), mas o **conteúdo/estrutura da proposta em si segue
+sempre a skill real**, nunca uma estrutura própria deste agente.
+
+**Template canônico**: `docs/templates/template-ptc-tipo-a-v1.html`
+(também publicado no SharePoint real, mesmo caminho da skill) — 18
+seções + Anexo I, com as cláusulas obrigatórias (Segregação
+Tarifa×Success Fee, Exigibilidade por formalização, Deslocamentos,
+Atraso de pagamento, Seção IA, tabela tarifária vigente) já escritas
+por extenso.
+
+**Resumo executivo** — bloco recomendado logo após a Introdução (§1),
+antes do Objeto (§2); não é uma das 18 seções canônicas, é um adicional
+de valor. Formato de 5 cards, cada um referenciando a seção detalhada:
+
+| Card | Conteúdo | Seção de referência |
+|---|---|---|
+| 1. Objeto | 3–4 bullets: o que a Manta entrega, com quem, modelo de atuação em fases | §2 |
+| 2. Escopo | Frentes de atuação principais; ferramentas de apoio (SaaS) se aplicável | §3 |
+| 3. Prazos | Duração, fases, marcos principais (linha do tempo visual) | §7 |
+| 4. Preço | Quadro-resumo de valores fixos/recorrentes; Success Fee sempre à parte, com nota de exigibilidade por formalização; referência à cláusula de atraso | §12 |
+| 5. Entregáveis | Lista curta dos produtos principais | §5 |
+
+Fecha com um bloco de **rastreabilidade** (uma linha) apontando cada
+card para a seção detalhada correspondente.
+
+**Novos formatos — sistema visual canônico** (confirmado contra
+`03-funcionais/F3-portal/theme/SKILL.md`, "fonte única canônica" do
+SharePoint):
+- Paleta: Terracota `#C45A2B`, Marrom Escuro `#5D3A1A`, Laranja Manta
+  `#E07B3D`, Marrom Quente `#8B4A2D` — não inventar cores fora dessas 4,
+  não usar azul corporativo.
+- Tipografia: serifada em títulos (ex. `Georgia, serif`), sans geométrica
+  no corpo — nunca fontes de sistema aleatórias.
+- Marca d'água obrigatória: "MANTA ASSOCIADOS", diagonal -45°, opacidade
+  8–12%, cor Marrom Quente.
+- Rodapé de rastreabilidade em toda página (impressa/PDF):
+  `{cliente} | {projeto} | v{versão} | {data} | {autor} | {classificação}
+  | trace: {trace_id}` — campos sem valor real conhecido (autor,
+  trace_id) ficam como placeholder explícito, nunca fabricados.
+- Regra de logo: documento com cliente nomeado → logo cliente no canto
+  superior esquerdo, logo Manta no inferior direito; documento sem
+  cliente → logo Manta no canto superior esquerdo. Nunca esconder o
+  logo Manta.
+
+**Antes de gerar qualquer proposta**: reler a skill real no SharePoint
+(risco de edição concorrente já documentado — a skill mudou de versão
+várias vezes no mesmo dia em sessões anteriores) para confirmar que a
+tabela tarifária e a estrutura ainda são as vigentes.
+
 ## Ferramentas e integrações
 
 - Consulta licitações (Licitanet, TED, plataforma de concessão estadual),
@@ -104,6 +162,10 @@ de oportunidades, devido diligência e estrutura de negócio.
   fluxo de caixa.
 - **manta-15 (advisory)** — parecer consolidado, recomendação de
   investimento, matriz de risco.
+- **manta-14 (apresentações)** — geração da proposta técnico-comercial
+  (DOCX/PPTX) a partir do template canônico Tipo A/PRC e do resumo
+  executivo montados neste agente; ver "Modelo de proposta e resumo
+  executivo" acima.
 
 ## O que este agente NÃO faz
 
