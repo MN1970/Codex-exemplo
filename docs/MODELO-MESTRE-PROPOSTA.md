@@ -106,7 +106,77 @@ Reaplicada nesta mesma sessão, no novo local real, como **v3.3.1**:
 `05-sub-skills/skill-proposta-comercial-SKILL.md` **não é mais a fonte**
 — é só um ponteiro de descontinuação; não editar mais esse caminho.
 
-## 4. O que fica pendente / fora do escopo desta correção
+## 4. ⚠️ Tabela tarifária atualizada — v3.3.2 a v3.3.4 (2026-09-08/09, mudança de negócio real)
+
+A pedido do usuário ("e as tarifas da manta?"), relemos a skill real em
+2026-09-10 e confirmamos que ela evoluiu **três versões** desde a v3.3.1
+(seção 3 acima) — desta vez uma **atualização de negócio legítima**,
+não um acidente de sync:
+
+- **v3.3.2**: a tabela tarifária, antes no formato de 13 perfis
+  nomeados individualmente, foi migrada para uma matriz **Função ×
+  Nível**.
+- **v3.3.3** (09/09/2026): consolidação **"Tabela Consolidada de
+  Tarifas Profissionais revB"** (planilha
+  `Tarifas_Consolidadas_Manta_revB.xlsx`), gerada a pedido de **Willer
+  Monteiro / Diretoria de IA + PMO**. Critério: maior valor por nível
+  entre as tabelas de origem, exceto Diretoria (valores definidos
+  manualmente nesta rodada). Mudanças: adiciona "Diretor de
+  Infraestrutura" em Diretoria; unifica Especialista Pleno/Júnior em
+  R$ 470/h; adiciona o grupo "Orçamentista"; padroniza hora extra em
+  **1,5×** a hora normal para todas as funções.
+- **v3.3.4**: expande a cláusula de Deslocamentos (seção 12) para (a)
+  listar as categorias de despesa reembolsável — táxi/Uber,
+  deslocamentos locais (ex.: Jundiaí), passagens, traslados,
+  hospedagem — e (b) fixar como regra padrão que essas despesas são
+  **sempre por conta do cliente**, nunca absorvidas pela Manta.
+
+**Tabela tarifária vigente** (base 176h/mês; hora extra = 1,5× a hora
+normal, todas as funções):
+
+| Função | Nível | R$/h | R$/mês (176h) | Hora extra (R$/h) |
+|---|---|---|---|---|
+| Diretoria | Sócio Diretor / Consultor Internacional | 900,00 | 158.400,00 | 1.350,00 |
+| Diretoria | Diretor de Infraestrutura | 700,00 | 123.200,00 | 1.050,00 |
+| Coordenação | Master | 550,00 | 96.800,00 | 825,00 |
+| Coordenação | Sênior | 522,50 | 91.960,00 | 783,75 |
+| Coordenação | Pleno | 496,38 | 87.362,88 | 744,57 |
+| Especialista | Master | 500,00 | 88.000,00 | 750,00 |
+| Especialista | Sênior | 475,00 | 83.600,00 | 712,50 |
+| Especialista | Pleno | 470,00 | 82.720,00 | 705,00 |
+| Especialista | Júnior | 470,00 | 82.720,00 | 705,00 |
+| Engenharia | Master | 561,00 | 98.736,00 | 841,50 |
+| Engenharia | Sênior | 532,95 | 93.799,20 | 799,43 |
+| Engenharia | Pleno | 506,30 | 89.108,80 | 759,45 |
+| Engenharia | Júnior | 480,99 | 84.654,24 | 721,49 |
+| Analista (Engenharia/Software) | Sênior | 285,00 | 50.160,00 | 427,50 |
+| Analista (Engenharia/Software) | Pleno | 176,00 | 30.976,00 | 264,00 |
+| Analista (Engenharia/Software) | Júnior | 135,38 | 23.826,88 | 203,07 |
+| Orçamentista | Sênior | 285,00 | 50.160,00 | 427,50 |
+| Orçamentista | Pleno | 176,00 | 30.976,00 | 264,00 |
+| Orçamentista | Júnior | 135,38 | 23.826,88 | 203,07 |
+| Estágio | Estagiário | 80,00 | 14.080,00 | 120,00 |
+
+Notas (fonte: ficha técnica da revB, dentro da própria skill real):
+
+1. Perfis de produtos de software ligados a IA usam as mesmas
+   maturidades e tarifas de "Analista (Engenharia/Software)" — sem
+   tabela específica.
+2. Valores já incluem encargos, overhead e margem. Sem custos
+   adicionais exceto deslocamentos (ver cláusula de Deslocamentos
+   acima).
+3. "Projetista Sênior" e "Técnico" (perfis de versões anteriores desta
+   tabela) não têm Função correspondente na matriz atual — até
+   reconciliação, usar o nível "Especialista" mais próximo por
+   senioridade.
+
+**Caminho real atual (confirmado por leitura direta em 2026-09-10)**:
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, **v3.3.4**
+(`updated: 2026-09-09`), 18.947 bytes. Reforça o padrão já observado
+na seção 3: a skill real segue mudando fora desta sessão — **sempre
+reler antes de assumir que este documento reflete o estado atual**.
+
+## 5. O que fica pendente / fora do escopo desta correção
 
 - **Risco de edição concorrente**: o SharePoint real está sendo editado
   por múltiplas sessões/processos em paralelo no mesmo dia (esta
@@ -127,6 +197,6 @@ Reaplicada nesta mesma sessão, no novo local real, como **v3.3.1**:
 ---
 
 *Correção feita a partir de leitura real via `SharePoint_Manta` MCP
-(site `Engenharia`, biblioteca `Documentos`) em 2026-09-07/08. Substitui
-a análise original deste arquivo, que partia de uma premissa não
-verificada — ver nota no topo.*
+(site `Engenharia`, biblioteca `Documentos`) em 2026-09-07/08/10.
+Substitui a análise original deste arquivo, que partia de uma premissa
+não verificada — ver nota no topo.*

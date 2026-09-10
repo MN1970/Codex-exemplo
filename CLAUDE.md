@@ -4,7 +4,16 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.4** (2026-09-08) — **a skill real de proposta mudou de
+Versão: **v5.4.5** (2026-09-10) — **tabela tarifária real atualizada
+(v3.3.2-v3.3.4 da skill A1-proposta)**: consolidação "revB" das
+tarifas profissionais (pedido de Willer Monteiro/Diretoria de IA +
+PMO, 09/09/2026) — nova matriz Função×Nível substituindo os 13 perfis
+antigos, mais a cláusula de deslocamentos expandida (sempre por conta
+do cliente). Mudança de negócio legítima na skill real, não um
+acidente de sync — ver seção "Modelo Mestre de Proposta" e
+`docs/MODELO-MESTRE-PROPOSTA.md` §4 para a tabela completa.
+
+Consolida v5.4.4 (2026-09-08) — **a skill real de proposta mudou de
 lugar de novo, no mesmo dia, e foi reaplicada**. Horas depois da
 correção v5.4.2 (skill em `05-sub-skills/skill-proposta-comercial-
 SKILL.md`), uma **outra sessão Claude** (Claude Desktop Windows)
@@ -561,6 +570,47 @@ reescrita no formato verdadeiro dela.
 > editado por múltiplas sessões em paralelo** — antes de editar essa
 > skill de novo, sempre reler o arquivo primeiro.
 
+> ⚠️ **Skill evoluiu de novo — v3.3.2 a v3.3.4 (2026-09-08/09), mudança
+> de negócio legítima, não acidente de sync**: a skill real
+> (`02-atividades/A1-proposta/SKILL.md`) recebeu três revisões desde a
+> v3.3.1 acima, verificadas por leitura direta em 2026-09-10:
+> - **v3.3.2**: tabela tarifária migrada do formato antigo de 13
+>   perfis para uma matriz **Função × Nível**.
+> - **v3.3.3** (09/09/2026): consolidação **"Tabela Consolidada de
+>   Tarifas Profissionais revB"** (`Tarifas_Consolidadas_Manta_revB.xlsx`),
+>   gerada a pedido de Willer Monteiro/Diretoria de IA + PMO — critério:
+>   maior valor por nível entre as tabelas de origem, exceto Diretoria
+>   (valores definidos manualmente). Adiciona "Diretor de
+>   Infraestrutura" em Diretoria, unifica Especialista Pleno/Júnior em
+>   R$ 470/h, adiciona o grupo "Orçamentista". Nova condição: hora
+>   extra = 1,5× a hora normal (todas as funções).
+> - **v3.3.4**: expande a cláusula de Deslocamentos (seção 12) —
+>   lista as categorias de despesa reembolsável (táxi/Uber,
+>   deslocamentos locais, passagens, traslados, hospedagem) e fixa
+>   como regra padrão que essas despesas são **sempre por conta do
+>   cliente**, nunca absorvidas pela Manta.
+>
+> Tabela tarifária vigente (v3.3.4, base 176h/mês; hora extra = 1,5×):
+>
+> | Função | Nível | R$/h | Hora extra |
+> |---|---|---|---|
+> | Diretoria | Sócio Diretor / Consultor Internacional | 900,00 | 1.350,00 |
+> | Diretoria | Diretor de Infraestrutura | 700,00 | 1.050,00 |
+> | Coordenação | Master / Sênior / Pleno | 550,00 / 522,50 / 496,38 | 825,00 / 783,75 / 744,57 |
+> | Especialista | Master / Sênior / Pleno / Júnior | 500,00 / 475,00 / 470,00 / 470,00 | 750,00 / 712,50 / 705,00 / 705,00 |
+> | Engenharia | Master / Sênior / Pleno / Júnior | 561,00 / 532,95 / 506,30 / 480,99 | 841,50 / 799,43 / 759,45 / 721,49 |
+> | Analista (Eng./Software) | Sênior / Pleno / Júnior | 285,00 / 176,00 / 135,38 | 427,50 / 264,00 / 203,07 |
+> | Orçamentista | Sênior / Pleno / Júnior | 285,00 / 176,00 / 135,38 | 427,50 / 264,00 / 203,07 |
+> | Estágio | Estagiário | 80,00 | 120,00 |
+>
+> Perfis de IA/software usam a mesma graduação de "Analista
+> (Engenharia/Software)". "Projetista Sênior" e "Técnico" (tabelas
+> antigas) não têm Função equivalente ainda — usar "Especialista" mais
+> próximo até reconciliação. Valores já incluem encargos, overhead e
+> margem — sem custo adicional exceto deslocamentos (ver cláusula
+> acima). Tabela completa (com valores mensais) em
+> `docs/MODELO-MESTRE-PROPOSTA.md` §4.
+
 Detalhe e checklist real em `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`
 (o addendum original de "18 seções/M6" está lá marcado como
 histórico/não aplicável).
@@ -826,6 +876,26 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.5** (2026-09-10) — **tabela tarifária real atualizada (v3.3.2-
+  v3.3.4 da skill A1-proposta)**. Consultado o SharePoint real
+  novamente (a pedido do usuário, "e as tarifas da manta?"), confirmamos
+  que a skill evoluiu três versões desde a v3.3.1 (documentada na
+  v5.4.4): v3.3.2 migrou a tabela tarifária do formato antigo de 13
+  perfis para uma matriz Função×Nível; v3.3.3 (09/09/2026) consolidou
+  a "Tabela Consolidada de Tarifas Profissionais revB"
+  (`Tarifas_Consolidadas_Manta_revB.xlsx`, pedido de Willer
+  Monteiro/Diretoria de IA + PMO) — critério de maior valor por nível
+  entre as tabelas de origem (exceto Diretoria, definida manualmente),
+  novo grupo "Orçamentista", unificação de Especialista Pleno/Júnior em
+  R$ 470/h, e hora extra padronizada em 1,5× para todas as funções;
+  v3.3.4 expandiu a cláusula de Deslocamentos (seção 12) fixando que
+  essas despesas são sempre por conta do cliente. Nenhuma dessas
+  mudanças é acidente de sync — são atualizações de negócio legítimas
+  na skill real. Tabela completa replicada em "Modelo Mestre de
+  Proposta" e em `docs/MODELO-MESTRE-PROPOSTA.md` §4. Reforça o achado
+  da v5.4.4 sobre edição concorrente: a skill real segue mudando fora
+  desta sessão, sempre reler antes de assumir o estado documentado
+  aqui.
 - **v5.4.4** (2026-09-08) — **skill real de proposta mudou de lugar de
   novo e foi reaplicada, segunda rodada no mesmo dia**. Horas depois
   da v5.4.2 aplicar a correção em `05-sub-skills/skill-proposta-
