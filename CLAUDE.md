@@ -4,7 +4,27 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.4** (2026-09-08) — **a skill real de proposta mudou de
+Versão: **v5.4.5** (2026-09-10) — **recorrência confirmada da
+fabricação na skill real de proposta**. Investigação read-only via
+`SharePoint_Manta` MCP confirmou que a seção "Variante Tipo A /
+Concessão de Infraestrutura de Grande Porte", hoje viva em
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.5),
+reproduz quase palavra-por-palavra o addendum fabricado deste
+repositório (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`), incluindo a
+referência a uma revisão de proposta inexistente
+(`MNT-2026-COM-1183_D` — só `_C_3` é encontrável). A própria fonte
+canônica (`INDICE-CANONICAL.md` §13) admite que esse conteúdo "antes só
+existia num pacote de skill fora do SharePoint, nunca escrito na
+árvore" — ou seja, a correção de premissa da v5.4.2/v5.4.3 não impediu
+uma recorrência por um caminho diferente (fusão de pacote externo no
+saneamento estrutural de 2026-09-07, sem gate humano de verificação de
+fonte primária). Detalhe completo, incluindo a comparação literal, em
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (seção "Recorrência
+confirmada — Variante Tipo A (2026-09-10)"). **Nenhuma escrita foi
+feita na skill de produção** — recomendação registrada para o MN
+revisar e corrigir diretamente.
+
+Consolida v5.4.4 (2026-09-08) — **a skill real de proposta mudou de
 lugar de novo, no mesmo dia, e foi reaplicada**. Horas depois da
 correção v5.4.2 (skill em `05-sub-skills/skill-proposta-comercial-
 SKILL.md`), uma **outra sessão Claude** (Claude Desktop Windows)
@@ -526,6 +546,16 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
+> 🔴 **Atualização 2026-09-10**: a seção "Variante Tipo A / Concessão de
+> Infraestrutura de Grande Porte", hoje viva na skill real
+> (`02-atividades/A1-proposta/SKILL.md`, v3.3.5), foi confirmada como
+> **recorrência da fabricação** corrigida abaixo — reproduz quase
+> palavra-por-palavra o addendum fabricado deste repositório e cita a
+> mesma revisão inexistente `MNT-2026-COM-1183_D`. Nenhuma escrita foi
+> feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+> ("Recorrência confirmada — Variante Tipo A") para a evidência
+> completa e a recomendação ao MN.
+
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
 > um "agente A7-bd" e um modo "M6" validado contra
@@ -826,6 +856,15 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.5** (2026-09-10) — investigação read-only confirmou
+  recorrência da fabricação da skill `proposta-comercial`: a variante
+  "Tipo A / Infraestrutura de Grande Porte" viva em produção (v3.3.5)
+  reproduz o addendum fabricado deste repositório quase
+  palavra-por-palavra, citando a mesma revisão inexistente
+  `MNT-2026-COM-1183_D`. Documentado em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e `docs/MODELO-MESTRE-PROPOSTA.md`.
+  Nenhuma alteração feita na skill real — recomendação registrada para
+  gate humano (MN).
 - **v5.4.4** (2026-09-08) — **skill real de proposta mudou de lugar de
   novo e foi reaplicada, segunda rodada no mesmo dia**. Horas depois
   da v5.4.2 aplicar a correção em `05-sub-skills/skill-proposta-

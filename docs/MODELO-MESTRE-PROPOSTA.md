@@ -1,5 +1,14 @@
 # Modelo Mestre de Proposta — correção de premissa + segregação Tarifa×Success Fee
 
+> 🔴 **Atualização (2026-09-10)**: a fabricação corrigida abaixo
+> **recorreu** por outro caminho — a variante "Tipo A / Infraestrutura
+> de Grande Porte", hoje viva na skill real (v3.3.5), reproduz quase
+> palavra-por-palavra o addendum fabricado deste repositório, incluindo
+> a mesma revisão inexistente `MNT-2026-COM-1183_D`. Evidência completa
+> em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Recorrência
+> confirmada — Variante Tipo A"). Nenhuma escrita foi feita na skill —
+> recomendação registrada para o MN corrigir diretamente na fonte.
+
 > ⚠️ **Correção (2026-09-07)**: a versão original deste documento (ver
 > histórico no fim do arquivo) validava a skill `proposta-comercial`
 > contra uma proposta **"MNT-2026-COM-1183_D"** e descrevia a skill como
