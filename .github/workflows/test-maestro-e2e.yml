@@ -208,6 +208,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     needs: [regression-gate, router-e2e, cross-agent-flows]
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -263,6 +267,7 @@ jobs:
           always() &&
           github.event_name == 'pull_request'
         uses: actions/github-script@v7
+        continue-on-error: true # comentário é side-effect auxiliar, não deve derrubar o gate de coverage
         with:
           script: |
             const fs = require('fs');
