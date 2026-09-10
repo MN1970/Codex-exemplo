@@ -29,6 +29,8 @@ uma sessão só. Documentado aqui conforme combinado com o usuário em
 > recomendada: MN revisar e corrigir a skill real diretamente antes de
 > usá-la em proposta de cliente.
 
+<!-- -->
+
 > ⚠️ **Atualização 2026-09-07 (mesma sessão, investigação mais
 > profunda)**: a primeira versão deste documento concluía que a
 > infraestrutura Supabase/RAG era "nunca confirmada como real". Isso
@@ -62,7 +64,7 @@ divergências estruturais, não só pontuais.
 ## Divergências confirmadas
 
 | Dimensão | Este repositório (`Codex-exemplo`) | SharePoint real (`INDICE-CANONICAL.md`) |
-|---|---|---|
+| --- | --- | --- |
 | Segmentos | S1–S13 (+ S11 "Mineração" identificado, S12 Óleo&Gás, S13 Edificações, todos "propostos") | **S1–S11**, sendo S1=Rodovias, S2=OAE, S3=Ferrovia, S4=Metrô, **S5=Imobiliário**, **S6=Edificações**, **S7=Portos**, **S8=Aeroportos**, **S9=Saneamento**, **S10=Energia**, **S11=Barragens** |
 | Numeração S6–S11 | "Convenção A" (S6=Portos...S10=Barragens), com "Convenção B" explicitamente descartada nos Gaps abertos | É **exatamente** a "Convenção B" que este repositório descartou — Edificações=S6, Barragens=S11 |
 | Atividades | A1–A10 (Proposta, Quantidades, Orçamento, Modelagem, Cronograma, Contratual, Claims, Advisory, Regulatório, Risco) | **Mesma lista e mesma ordem** — este eixo bate |
@@ -323,6 +325,8 @@ texto real da skill hoje:
 > portos, aeroportos, saneamento, energia, barragens). Validada contra
 > a proposta real MNT-2026-COM-1183_D (Concessão Rota 2 de Julho)."
 
+<!-- -->
+
 > Skill real, hoje (v3.3.5): "Extensao do **Tipo A** para propostas de
 > avaliacao tecnica, parametrico de CAPEX/OPEX e gestao integrada em
 > concessoes de infraestrutura de grande porte (rodovias, ferrovias,
@@ -384,6 +388,7 @@ skill de produção sem esse gate humano.
 > produção**. Releitura direta da skill real (`SharePoint_Manta` MCP)
 > mostra que ela avançou, fora desta sessão/repositório, de v3.3.6 para
 > **v3.3.8**:
+>
 > - **v3.3.7** removeu a alegação de que os 5 blocos da "Variante Tipo
 >   A" foram "validados contra a proposta real MNT-2026-COM-1183_D" —
 >   sem substituí-la por uma nova citação não verificada — e passou a
@@ -407,6 +412,7 @@ skill de produção sem esse gate humano.
 > feita nesta sessão via `find_item`**: resultado misto, não uma
 > confirmação limpa como se poderia desejar depois do episódio
 > `_1183_D`.
+>
 > - O **contexto real existe**: há uma pasta de cliente real
 >   `02_CLIENTE/27_CLIENTE_VIA_LIBERDADE/.../Lote 7 - Riscos/` com
 >   material de 2025-05-25 ("LOTE 7: OURO PRETO - MARIANA", plano de

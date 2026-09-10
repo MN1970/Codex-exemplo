@@ -23,7 +23,7 @@ apenas no fechamento do documento (a ocorrência do topo, antes da Seção 1,
 foi removida). O campo "Versão" da linha única já embute o que mudou da
 revisão anterior, em até uma frase:
 
-```
+```text
 Cliente · Projeto · Documento · Código · Versão: [REV atual]
 (anterior: [REV-1] -- o que mudou, 1 frase) · Data · Classificação ·
 Responsável · Contato · Fontes primárias · Repositório

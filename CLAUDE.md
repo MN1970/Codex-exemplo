@@ -17,6 +17,7 @@ citação não verificada, mantendo a estrutura dos blocos e sinalizando-a
 como "pendente de validação contra uma proposta real específica antes
 de uso em cliente"; (b) **v3.3.8** adicionou um template canônico Tipo
 A/PRC (`template-ptc-tipo-a-v1.html`, capa + sumário + resumo executivo
+
 + 18 seções + Anexo I com as cláusulas padrão já escritas por extenso),
 "gerado e conferido nesta sessão contra a proposta real
 MNT-2026-COM-1301 (Concessionária Rota da Liberdade, Lote 07)". Ou
@@ -226,9 +227,10 @@ assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
 
 Consolida v5.0.1 operacional (2026-07-31):
-- **v5.0.0 operacional** (aprovado 2026-07-22): 20 agentes em produção,
+
++ **v5.0.0 operacional** (aprovado 2026-07-22): 20 agentes em produção,
   infraestrutura Maestro-OS v6.0 completa (APScheduler, ML, observability)
-- **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
++ **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
   gaps G010/G012/G014 resolvidos, 15 Sonnets investigação paralela.
 
 Tickets: `MNT-2026-CONSOLIDACAO-ARCH-V5` (operacional) +
@@ -237,11 +239,12 @@ padrão de output por cliente).
 
 > **Nota de proveniência**: este arquivo **reconcilia** dois work streams
 > paralelos na mesma data:
+>
 > 1. **v5.0.0 (main, 22/07)** — implementação operacional aprovada com
 >    todos os agentes em produção
 > 2. **v5.0 (branch, 31/07)** — formalização de arquitetura com gaps
 >    investigados e decisões explicitadas
-> 
+>
 > Diferenças encontradas durante merge (numeração segmentos, status de
 > produção) estão documentadas neste arquivo. Decisões divergentes foram
 > preservadas em notas explícitas (ver "Eixo S", "Gaps abertos") em vez
@@ -251,14 +254,14 @@ padrão de output por cliente).
 
 ## Sumário
 
-1. [Modelo de 4 eixos (S×A×F×D)](#modelo-de-4-eixos-saf%C3%97d)
+1. [Modelo de 4 eixos (S×A×F×D)](#modelo-de-4-eixos-safd)
 2. [Eixo S — Segmentos](#eixo-s--segmentos)
 3. [Eixo A — Atividades](#eixo-a--atividades)
 4. [Eixo F — Funcionais](#eixo-f--funcionais)
 5. [Eixo D — Disciplinas](#eixo-d--disciplinas)
 6. [Eixo temporal — Ciclo de vida](#eixo-temporal--ciclo-de-vida-8-fases)
 7. [Modelo de composição S.A.D](#modelo-de-composição-sad)
-8. [Mapa completo de agentes — 20 operacionais + 2 propostos](#mapa-completo-de-agentes--20-operacionais--2-propostos)
+8. [Mapa completo de agentes — 21 operacionais + 2 sem segmento confirmado](#mapa-completo-de-agentes--21-operacionais--2-sem-segmento-confirmado)
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
@@ -280,7 +283,7 @@ ortogonais**, mais um eixo temporal auxiliar que se aplica a qualquer
 composição:
 
 | Eixo | Pergunta que responde | Cardinalidade | Exemplos |
-|------|------------------------|---------------|----------|
+| ------ | ------------------------ | --------------- | ---------- |
 | **S** — Segmento | Qual o domínio de infraestrutura? | S1–S11 (numeração real do SharePoint, corrigida 2026-09-07; Óleo&Gás e Mineração sem S confirmado — ver "Eixo S") | Rodovias, Portos, Saneamento |
 | **A** — Atividade | Qual o tipo de entrega/trabalho? | A1–A10 | Orçamento, Cronograma, Claims |
 | **F** — Funcional | Qual capacidade técnica transversal é usada? | F1–F8 | RAG/routing, SharePoint, Guardrails |
@@ -328,7 +331,7 @@ Documento de referência canônico e mais detalhado deste modelo:
 > divergência (agentes, RAG, infraestrutura) ainda não reconciliado.
 
 | Código | Segmento | Agente | Status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
 | S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
@@ -362,7 +365,7 @@ Documentado por completo em `docs/ATIVIDADES-A1-A10.md` (v1.0,
 metodologia e handoffs por atividade. Resumo:
 
 | Código | Atividade | Agente(s) responsável(is) | Status do mapeamento |
-|--------|-----------|-----------------------------|-----------------------|
+| -------- | ----------- | ----------------------------- | ----------------------- |
 | A1 | Proposta | Manta 13 (bd) + Manta 14 (apresentações) | ✅ Mapeado |
 | A2 | Quantidades | Vertical do segmento (Manta 03-Sx) + skills de takeoff (`cad-quantifier`, `evtea-quantifier`) | ✅ Mapeado (sem agente horizontal dedicado — por natureza pertence ao vertical) |
 | A3 | Orçamento | Manta 05 (orçamento) | ✅ Mapeado |
@@ -383,7 +386,7 @@ Documentado por completo em `docs/FUNCIONAIS-F1-F8.md` (v1.0.0,
 status por funcional. Resumo:
 
 | Código | Funcional | Skill/sistema correspondente hoje |
-|--------|-----------|-------------------------------------|
+| -------- | ----------- | ------------------------------------- |
 | F1 | IA (routing, model tiering) | Maestro (Manta 00) + lógica de routing desta seção |
 | F2 | SharePoint (indexação, sync) | MCP `SharePoint_Manta` — leitura completa; escrita/upload disponível via tools do MCP, mas sync automático `.claude/agents/` ↔ SP ainda manual |
 | F3 | Portal (web, SSO, permissões) | `portal-gestao-manta`, `portal-megaprojeto-builder`, `portal-metro-l4` |
@@ -442,7 +445,7 @@ do SharePoint — ver "Eixo S — Segmentos"; os códigos S originais destes
 exemplos, de `ARQUITETURA-AGENTES-IA.md` v3.0.0 §2.6, usavam a
 numeração antiga já corrigida):
 
-```
+```text
 S9.A3.D07  = Saneamento + Orçamento + Econômica
             → Manta 05 (agente-orcamento) com contexto de saneamento
               (RAG san:*, handoff de agente-saneamento)
@@ -482,7 +485,7 @@ Não somam ao total operacional.
 ### Horizontais (transversais a todos os segmentos) — 11 agentes
 
 | Código | Agente | Arquivo | Aliases | Tier default | Status |
-|--------|--------|---------|---------|--------------|--------|
+| -------- | -------- | --------- | --------- | -------------- | -------- |
 | Manta 00 | maestro (router) | `maestro.v5.0.md` (spec de arquitetura — ver nota) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
 | Manta 01 | claims | `agente-claims.md` | 02-C, manta-claims | Opus | ✅ Operacional |
 | Manta 02 | contratual | `agente-contratual.md` | manta-02, contratual | Sonnet | ✅ Operacional |
@@ -514,7 +517,7 @@ Numeração corrigida em 2026-09-07 para bater com o SharePoint real —
 ver "Eixo S — Segmentos" para a explicação completa.
 
 | Código | Segmento | Agente | Status |
-|--------|----------|--------|--------|
+| -------- | ---------- | -------- | -------- |
 | S1 | Rodovias | agente-infraestrutura (S1) | ✅ Operacional |
 | S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
@@ -537,7 +540,7 @@ agente** (não por número de segmento) — por isso a numeração dos
 segmentos (corrigida em 2026-09-07, ver "Eixo S") é apenas rótulo
 informativo, sem efeito sobre esta lógica:
 
-```
+```text
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
    → agente-saneamento (S9)
 
@@ -589,13 +592,14 @@ que o usuário use as palavras-chave descritas em seus frontmatters.
 
 **Casos ambíguos** (documentados em `tests/routing/prompts.md`, mantidos
 sem alteração):
-- UHE (barragem + LT + SE) → dispatch primário `agente-barragens` +
+
++ UHE (barragem + LT + SE) → dispatch primário `agente-barragens` +
   handoff `agente-energia`.
-- ETE + subestação → dispatch primário `agente-saneamento` + handoff
++ ETE + subestação → dispatch primário `agente-saneamento` + handoff
   `agente-energia`.
-- Porto + pista de carga → dispatch primário `agente-portos` + handoff
++ Porto + pista de carga → dispatch primário `agente-portos` + handoff
   `agente-aeroportos`.
-- Adutora atravessa barragem de rejeitos → `agente-saneamento` com
++ Adutora atravessa barragem de rejeitos → `agente-saneamento` com
   consulta técnica ao `agente-barragens`.
 
 ---
@@ -611,7 +615,7 @@ executou `list_tables` no projeto `ogxxgvgtulrbbppshjie`
 linhas e `manta_rag_documents` com 111 linhas.
 
 | Coleção | Prefixo storage | Fontes iniciais | Status |
-|---------|-----------------|-----------------|--------|
+| --------- | ----------------- | ----------------- | -------- |
 | rodovias | rod: | DNIT, SICRO, NBR-DNIT | ✅ Operacional (pré-existente) |
 | oae | oae: | NBR 7187, 6118, 6122, PRL/RioSP | ✅ Operacional (pré-existente) |
 | ferrovia | fer: | AREMA, DNIT ferroviário, concessionárias | ✅ Operacional (pré-existente) |
@@ -625,9 +629,10 @@ linhas e `manta_rag_documents` com 111 linhas.
 | edificações | edi: *(sugerido)* | NBR 15575, LEED, BIM | 🔲 Não criada — segmento renumerado para S6, depende do gate MN |
 
 Sub-prefixos de contexto (mantidos do v4.2):
-- `san:br:` / `san:ar:` — saneamento por país (Brasil × Argentina AySA).
-- `ene:t:` / `ene:d:` / `ene:g:` — energia por transmissão/distribuição/geração.
-- `bar:c:` / `bar:t:` / `bar:e:` / `bar:r:` — barragens por tipologia.
+
++ `san:br:` / `san:ar:` — saneamento por país (Brasil × Argentina AySA).
++ `ene:t:` / `ene:d:` / `ene:g:` — energia por transmissão/distribuição/geração.
++ `bar:c:` / `bar:t:` / `bar:e:` / `bar:r:` — barragens por tipologia.
 
 > ✅ **Divergência de embedder resolvida em 2026-09-07** — a arquitetura
 > real (`09-base-conhecimento/RAG_ARQUITETURA_CANONICA.md`, lida via
@@ -649,14 +654,14 @@ Confirmado por auditoria real: tabela `sp_agent_routing` tem 9 linhas
 em produção (ver seção RAG acima).
 
 | Agente | Pasta SP sugerida | Pattern |
-|--------|-------------------|---------|
-| agente-saneamento | 03_Projetos/Saneamento/* | *.pdf, *.dwg, *.xlsx |
-| agente-energia | 03_Projetos/Energia/* | *.pdf, *.dwg, *.xlsx |
-| agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
-| agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
-| agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
-| agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento sem numeração real confirmada |
-| agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento renumerado para S6, pendente gate MN |
+| -------- | ------------------- | --------- |
+| agente-saneamento | 03_Projetos/Saneamento/* | *.pdf,*.dwg, *.xlsx |
+| agente-energia | 03_Projetos/Energia/* | *.pdf,*.dwg, *.xlsx |
+| agente-portos | 03_Projetos/Portos/* | *.pdf,*.dwg, *.xlsx |
+| agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf,*.dwg, *.xlsx |
+| agente-barragens | 03_Projetos/Barragens/* | *.pdf,*.dwg, *.xlsx |
+| agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf,*.dwg, *.xlsx — 🔲 planejado, segmento sem numeração real confirmada |
+| agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf,*.dwg, *.xlsx — 🔲 planejado, segmento renumerado para S6, pendente gate MN |
 
 ---
 
@@ -671,6 +676,8 @@ em produção (ver seção RAG acima).
 > feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
 > ("Recorrência confirmada — Variante Tipo A") para a evidência
 > completa e a recomendação ao MN.
+
+<!-- -->
 
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
@@ -816,7 +823,7 @@ cliente ao gerar output para ele.
 ## MODEL TIERING
 
 | Tier | Modelo | Uso típico |
-|---|---|---|
+| --- | --- | --- |
 | Triagem | Claude Haiku 4.5 | Routing, intake, extração de metadados |
 | Execução | Claude Sonnet 4.6 | Análise técnica, redação, orçamento, cronograma |
 | Complexo | Claude Opus 4.7/4.8 | Claims complexos, arquitetura, second opinion crítico |
@@ -828,7 +835,7 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ## GAPS ABERTOS / PENDÊNCIAS
 
-- **🟡 Este repositório diverge do Manta Maestro real no SharePoint
++ **🟡 Este repositório diverge do Manta Maestro real no SharePoint
   (encontrado em 2026-09-07 — numeração e embedder já corrigidos,
   resto aberto)**: com acesso real de leitura/escrita ao
   `SharePoint_Manta` MCP nesta sessão, confirmamos que a arquitetura
@@ -850,14 +857,14 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   as próximas fases (numeração — concluída; embedder — concluído;
   renumerar frontmatter dos agentes, corrigir specs de Supabase/RAG, e
   decidir o destino do que não tem lastro real — ainda não escopadas).
-- **S5 (Imobiliário) sem vertical dedicado**: o índice canônico real
++ **S5 (Imobiliário) sem vertical dedicado**: o índice canônico real
   trata Imobiliário como segmento vertical S5; este repositório só tem
   "imobiliário" como horizontal de negócio (Manta 04). Decisão MN
   pendente sobre criar um vertical S5 dedicado ou manter só o
   horizontal — não resolvido na correção de numeração desta versão
   (fase 1 tratou só os segmentos que já tinham agente vertical
   correspondente).
-- **`agente-oleo-gas` e "Mineração" sem segmento real confirmado**: a
++ **`agente-oleo-gas` e "Mineração" sem segmento real confirmado**: a
   numeração antiga tratava esses dois como "S12"/"S11" com base numa
   consulta a `manta_agent_capabilities` (Supabase) que nunca foi
   confirmada como infraestrutura real — ver
@@ -868,7 +875,7 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   raciocínio anterior. Ação: decisão MN sobre formalizar essas
   capacidades no SharePoint real (se de fato existirem) ou
   descontinuar esse conteúdo do repositório.
-- ~~**Embedder (G010)**~~ — **✅ resolvido em 2026-09-07** com decisão
++ ~~**Embedder (G010)**~~ — **✅ resolvido em 2026-09-07** com decisão
   real: `09-base-conhecimento/RAG_ARQUITETURA_CANONICA.md` (SharePoint
   real, lido via `SharePoint_Manta` MCP) confirma que `bge-m3` foi
   avaliado em 24/07/2026 e **explicitamente rejeitado**, e
@@ -884,27 +891,27 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   auditoria G012) — a infraestrutura RAG básica existe de verdade,
   ainda que com specs diferentes das assumidas em partes deste
   repositório. Ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
-- **Supabase — projeto `xgluoaaymbdzbbudnwrh` (G012)**: auditoria real
++ **Supabase — projeto `xgluoaaymbdzbbudnwrh` (G012)**: auditoria real
   (`docs/SUPABASE-PROJECT-AUDIT.md`) concluiu, com evidência de API,
   que é provavelmente referência morta (projeto não pertence à
   organização Supabase ativa da conta corporativa). **Confirmação
   humana (dashboard) ainda pendente** antes de remover a referência —
   ver action items AI-1 a AI-10 nesse documento.
-- **RLS desabilitado em 3 tabelas públicas** (`rag_collections`,
++ **RLS desabilitado em 3 tabelas públicas** (`rag_collections`,
   `sp_agent_routing`, `maestro_routing_keywords`) — achado de segurança
   correlato da auditoria G012, com SQL de remediação já redigido mas
   **não aplicado** (requer policies de leitura corretas antes de
   habilitar RLS, para não quebrar o acesso do próprio Maestro em
   runtime). Ver AI-6 em `docs/SUPABASE-PROJECT-AUDIT.md`.
-- **3 projetos Supabase `INACTIVE`** (`manta-tocantins`,
++ **3 projetos Supabase `INACTIVE`** (`manta-tocantins`,
   `manta-rodovias`, `manta-portal-piloto`) — decisão de consolidar,
   arquivar ou manter pendente MN (ver AI-7/AI-8 no mesmo documento).
-- **A9 (Regulatório) e A10 (Risco)**: sem Manta-code horizontal
++ **A9 (Regulatório) e A10 (Risco)**: sem Manta-code horizontal
   dedicado — ver Eixo A.
-- **Edificações (S6) e Óleo & Gás sem RAG, sem rota SharePoint, sem
++ **Edificações (S6) e Óleo & Gás sem RAG, sem rota SharePoint, sem
   keyword de routing** — agentes existem como arquivo, mas não são
   despacháveis pelo Maestro hoje.
-- **Templates Motiva sem upload real para o SharePoint da equipe**:
++ **Templates Motiva sem upload real para o SharePoint da equipe**:
   `docs/templates/EAP-PADRAO-MOTIVA.xlsx` e
   `PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx` existem versionados
   neste repositório e já estão referenciados no routing e nos agentes
@@ -916,7 +923,7 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   não se aplica mais a partir de agora; o upload em si não foi feito
   nesta sessão (fora do escopo combinado, que era só a correção de
   numeração de segmento) mas deixou de depender de acesso externo.
-- **Cor institucional da Motiva não confirmada** — ver seção 5 de
++ **Cor institucional da Motiva não confirmada** — ver seção 5 de
   `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
   até confirmação do cliente.
 
@@ -954,46 +961,46 @@ Checklist completo e detalhado em `docs/DEPLOY-CHECKLIST-v5.0.md`
 (herda o checklist v4.2, ainda com 8/10 itens pendentes fora do git, e
 adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
-- [x] Consolidar modelo de 4 eixos (S×A×F×D) no CLAUDE.md master
-- [x] ~~Reconciliar divergência de numeração de segmento (Convenção A)~~
++ [x] Consolidar modelo de 4 eixos (S×A×F×D) no CLAUDE.md master
++ [x] ~~Reconciliar divergência de numeração de segmento (Convenção A)~~
       — **revertido em 2026-09-07**: a "Convenção A" era a numeração
       errada; a real (SharePoint) é a que este item chamava de
       "Convenção B". Ver checklist de correção logo abaixo.
-- [x] Corrigir tabela de coleções RAG com dados de auditoria real (9 confirmadas — nota: fonte dessa "auditoria" é parte da infraestrutura Supabase ainda não confirmada como real, ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`)
-- [x] ~~Registrar S12 (Óleo & Gás) e S13 (Edificações) como propostos~~ — Edificações renumerado para S6 (real); Óleo & Gás segue sem S confirmado
-- [x] ~~Identificar S11 (Mineração) a partir de `manta_agent_capabilities`~~ — fonte não confirmada como real; S11 real é Barragens
-- [x] Linkar Eixo A/F/D aos documentos dedicados já produzidos
-- [x] ~~Corrigir numeração de segmento em `docs/DISCIPLINAS-D01-D20.md`, `docs/ATIVIDADES-A1-A10.md` e `agente-aeroportos.v5.0.md` (Convenção B → A)~~ — **não era necessário**: esses arquivos já usavam a numeração correta (real)
-- [x] Abrir gap G015 — documentação de formalização S11 (Mineração) em `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md` (mantido como histórico)
-- [ ] Reconciliar `docs/EMBEDDER-DECISION.md` com achado de
++ [x] Corrigir tabela de coleções RAG com dados de auditoria real (9 confirmadas — nota: fonte dessa "auditoria" é parte da infraestrutura Supabase ainda não confirmada como real, ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`)
++ [x] ~~Registrar S12 (Óleo & Gás) e S13 (Edificações) como propostos~~ — Edificações renumerado para S6 (real); Óleo & Gás segue sem S confirmado
++ [x] ~~Identificar S11 (Mineração) a partir de `manta_agent_capabilities`~~ — fonte não confirmada como real; S11 real é Barragens
++ [x] Linkar Eixo A/F/D aos documentos dedicados já produzidos
++ [x] ~~Corrigir numeração de segmento em `docs/DISCIPLINAS-D01-D20.md`, `docs/ATIVIDADES-A1-A10.md` e `agente-aeroportos.v5.0.md` (Convenção B → A)~~ — **não era necessário**: esses arquivos já usavam a numeração correta (real)
++ [x] Abrir gap G015 — documentação de formalização S11 (Mineração) em `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md` (mantido como histórico)
++ [ ] Reconciliar `docs/EMBEDDER-DECISION.md` com achado de
       `docs/SUPABASE-PROJECT-AUDIT.md` antes de decidir embedder
-- [ ] Confirmar manualmente o destino do projeto `xgluoaa...` (AI-1)
-- [ ] Aplicar RLS nas 3 tabelas expostas (AI-6)
-- [ ] Criar RAG + rota SP + routing keywords para Edificações (S6) e Óleo & Gás (se aprovado)
-- [ ] Rodar aluci-guard sobre este documento antes de merge
-- [ ] Rodar consist-guard sobre este documento antes de merge
-- [ ] Gate humano: aprovação MN antes de merge
++ [ ] Confirmar manualmente o destino do projeto `xgluoaa...` (AI-1)
++ [ ] Aplicar RLS nas 3 tabelas expostas (AI-6)
++ [ ] Criar RAG + rota SP + routing keywords para Edificações (S6) e Óleo & Gás (se aprovado)
++ [ ] Rodar aluci-guard sobre este documento antes de merge
++ [ ] Rodar consist-guard sobre este documento antes de merge
++ [ ] Gate humano: aprovação MN antes de merge
 
 ### Correção de numeração de segmento (2026-09-07, fase 1 da reconciliação com o SharePoint real)
 
-- [x] Ler `INDICE-CANONICAL.md` real via `SharePoint_Manta` MCP e
++ [x] Ler `INDICE-CANONICAL.md` real via `SharePoint_Manta` MCP e
       confirmar a numeração real (S1–S11, Edificações=S6…Barragens=S11)
-- [x] Reescrever tabela "Eixo S — Segmentos" com a numeração real
-- [x] Atualizar "Mapa completo de agentes" (verticais), "Modelo de
++ [x] Reescrever tabela "Eixo S — Segmentos" com a numeração real
++ [x] Atualizar "Mapa completo de agentes" (verticais), "Modelo de
       composição S.A.D", "ROUTING", "RAG", "SharePoint routing rules"
       com os novos códigos
-- [x] Remover a nota de "inconsistência" em Eixo D (os arquivos já
++ [x] Remover a nota de "inconsistência" em Eixo D (os arquivos já
       estavam certos)
-- [x] Atualizar Gaps abertos e Questionário MN
-- [ ] Renumerar o frontmatter interno dos 5 agentes verticais afetados
++ [x] Atualizar Gaps abertos e Questionário MN
++ [ ] Renumerar o frontmatter interno dos 5 agentes verticais afetados
       (`agente-portos.md` S6→S7, `agente-aeroportos.md` S7→S8,
       `agente-saneamento.md` S8→S9, `agente-energia.md` S9→S10,
       `agente-barragens.md` S10→S11, `agente-edificacoes.md` S13→S6) —
       **fora do escopo desta fase**, próxima fase da reconciliação
-- [ ] Renomear/atualizar migrações SQL e nomes de arquivo que citam a
++ [ ] Renomear/atualizar migrações SQL e nomes de arquivo que citam a
       numeração antiga (`2026_07_05_v4_2_agents_s6_s10.sql`,
       `2026_07_31_v4_3_agents_s12_s13.sql`) — fora do escopo desta fase
-- [ ] Reconciliação mais ampla (infraestrutura Supabase/APScheduler/ML
++ [ ] Reconciliação mais ampla (infraestrutura Supabase/APScheduler/ML
       fictícia vs. estrutura real de `SKILL.md`) — ver
       `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`, fases seguintes ainda
       não escopadas
@@ -1002,7 +1009,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ## Arquivos deste repositório
 
-```
+```text
 Codex-exemplo/
 ├── CLAUDE.md                              # este arquivo (master registry, v5.2)
 ├── README.md
@@ -1051,14 +1058,14 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.11** (2026-09-10) — releitura direta da skill real
++ **v5.4.11** (2026-09-10) — releitura direta da skill real
   (`SharePoint_Manta` MCP) mostra que ela avançou, fora desta sessão,
   de v3.3.6 para **v3.3.8**: v3.3.7 removeu a alegação fabricada de
   validação contra `MNT-2026-COM-1183_D` na "Variante Tipo A" (achado
   da v5.4.9 abaixo), sem substituí-la por citação não verificada; v3.3.8
   adicionou um template canônico Tipo A/PRC
   (`template-ptc-tipo-a-v1.html`), conferido contra a proposta real
-  `MNT-2026-COM-1301` (Concessionária Rota da Liberdade, Lote 07) — 
+  `MNT-2026-COM-1301` (Concessionária Rota da Liberdade, Lote 07) —
   ressalva: o cliente/lote é real, mas o número da proposta em si não
   foi confirmado por `find_item` além do próprio changelog da skill. A
   correção que a v5.4.9 recomendava ao MN já estava aplicada em
@@ -1066,14 +1073,14 @@ Codex-exemplo/
   necessária, só sincronização de documentação. Ver
   `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e
   `docs/MODELO-MESTRE-PROPOSTA.md`.
-- **v5.4.10** (2026-09-10, reconciliada nesta versão a partir de
++ **v5.4.10** (2026-09-10, reconciliada nesta versão a partir de
   `main`) — diretriz de posicionamento (MN): propostas de
   Infraestrutura devem destacar a maturidade profissional da equipe
   Manta primeiro, com a IA da Manta posicionada como apoio/
   multiplicador de produtividade — nunca como substituição da
   experiência técnica. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`;
   não altera a skill de produção.
-- **v5.4.9** (2026-09-10, reconciliada nesta versão a partir de
++ **v5.4.9** (2026-09-10, reconciliada nesta versão a partir de
   `main`) — investigação read-only (outra sessão) confirmou recorrência
   da fabricação da skill `proposta-comercial`: a variante "Tipo A /
   Infraestrutura de Grande Porte" viva em produção (então v3.3.5)
@@ -1085,7 +1092,7 @@ Codex-exemplo/
   real por essa sessão — recomendação registrada para gate humano (MN).
   **Pendente**: a v5.4.8 (abaixo) publicou v3.3.6 sem tocar na seção
   "Variante Tipo A" — este achado segue válido na skill tal como está.
-- **v5.4.8** (2026-09-10) — tabela tarifária padrão da skill de proposta
++ **v5.4.8** (2026-09-10) — tabela tarifária padrão da skill de proposta
   (`A1-proposta`) revisada a pedido do usuário: remove o grupo dedicado
   "Orçamentista" (3 linhas: Sênior/Pleno/Júnior) e generaliza a nota 1
   para "enquadramento por maturidade" — profissionais de qualquer área
@@ -1096,7 +1103,7 @@ Codex-exemplo/
   (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` 3.3.5 →
   3.3.6), confirmada por releitura (18.907 bytes). Ver
   `docs/ATUALIZACAO-TARIFAS-2026.md` seção 6.
-- **v5.4.7** (2026-09-10) — skill de proposta (`A1-proposta`) revisada
++ **v5.4.7** (2026-09-10) — skill de proposta (`A1-proposta`) revisada
   a pedido do usuário em dois pontos: (1) o bloco "Controle de Revisão +
   Ficha Técnica" da variante Tipo A/Concessão de Infraestrutura, antes
   duplicado (antes da Seção 1 e no fechamento), foi condensado em
@@ -1110,7 +1117,7 @@ Codex-exemplo/
   (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` 3.3.4 →
   3.3.5), confirmada por releitura (18.964 bytes). Ver
   `docs/ATUALIZACAO-FICHA-TECNICA-E-BRANDING-2026.md`.
-- **v5.4.6** (2026-09-09) — cláusula "Deslocamentos" (Seção 12 do
++ **v5.4.6** (2026-09-09) — cláusula "Deslocamentos" (Seção 12 do
   A1-proposta) **atualizada em produção**: renomeada para
   "Deslocamentos e despesas reembolsáveis", com regra padrão de que
   essas despesas são sempre por conta do CLIENTE e lista explícita de
@@ -1119,7 +1126,7 @@ Codex-exemplo/
   (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` 3.3.3 →
   3.3.4), confirmada por releitura. Ver
   `docs/ATUALIZACAO-DESPESAS-REEMBOLSAVEIS-2026.md`.
-- **v5.4.5** (2026-09-09) — tabela tarifária padrão da skill de proposta
++ **v5.4.5** (2026-09-09) — tabela tarifária padrão da skill de proposta
   (`A1-proposta`) **atualizada em produção**: de 13 perfis (lista única)
   para matriz Função × Nível, a partir de planilha real de fechamento de
   orçamento (aba "Tarifas"). Gate humano MN confirmado nesta sessão;
@@ -1127,7 +1134,7 @@ Codex-exemplo/
   (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` 3.3.1 →
   3.3.2), publicação verificada por releitura. Ver
   `docs/ATUALIZACAO-TARIFAS-2026.md`.
-- **v5.4.4** (2026-09-09) — análise de atualização da tabela tarifária
++ **v5.4.4** (2026-09-09) — análise de atualização da tabela tarifária
   padrão da skill de proposta (`A1-proposta`), a partir de planilha real
   de fechamento de orçamento (aba "Tarifas", Função × Nível). Ver
   `docs/ATUALIZACAO-TARIFAS-2026.md`. Verificação direta no SharePoint
@@ -1138,7 +1145,7 @@ Codex-exemplo/
   de Grande Porte ("M6") já está aplicada em produção — desatualizando o
   achado de "14 seções/12 níveis" da v5.4.2 abaixo, que antecedeu a
   fusão v3.3.0 no mesmo dia.
-- **v5.4.3.1** (2026-09-08, reconciliada nesta versão a partir de
++ **v5.4.3.1** (2026-09-08, reconciliada nesta versão a partir de
   `main`) — **skill real de proposta mudou de lugar de novo e foi
   reaplicada, segunda rodada no mesmo dia**. Horas depois da v5.4.2
   aplicar a correção em `05-sub-skills/skill-proposta-comercial-
@@ -1169,7 +1176,7 @@ Codex-exemplo/
   `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`). A v5.4.4 (acima)
   verificou o mesmo arquivo um dia depois e confirmou o corpo
   consolidado intacto.
-- **v5.4.3** (2026-09-07) — **fase 1 da reconciliação com o SharePoint
++ **v5.4.3** (2026-09-07) — **fase 1 da reconciliação com o SharePoint
   real: numeração de segmento corrigida**, a pedido do usuário. A
   numeração real (`INDICE-CANONICAL.md`, lido via `SharePoint_Manta`
   MCP) é S1–S11 com Edificações=S6, Portos=S7, Aeroportos=S8,
@@ -1188,7 +1195,7 @@ Codex-exemplo/
   migrações SQL, ou reconciliar a infraestrutura Supabase/APScheduler/
   ML fictícia — fases seguintes da reconciliação, ainda não escopadas
   (ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`).
-- **v5.4.2** (2026-09-07) — **correção da v5.4.1 + aplicação real na
++ **v5.4.2** (2026-09-07) — **correção da v5.4.1 + aplicação real na
   skill de produção**. A v5.4.1 (abaixo) partia de uma premissa nunca
   verificada contra o SharePoint real: skill de 18 seções, modo "M6",
   proposta de referência "MNT-2026-COM-1183_D". Com acesso real de
@@ -1213,7 +1220,7 @@ Codex-exemplo/
   registrada como gap separado em
   `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`, não resolvida nesta
   versão.
-- **v5.4.1** (2026-09-01, **premissa não verificada — ver correção na
++ **v5.4.1** (2026-09-01, **premissa não verificada — ver correção na
   v5.4.2**) — análise e recomendação de modelo mestre de proposta
   técnico-comercial (variante "M6", PTC-Infraestrutura/Concessão de
   grande porte), validada contra a proposta "MNT-2026-COM-1183_D" e a
@@ -1225,44 +1232,44 @@ Codex-exemplo/
   monetária por atraso de pagamento na Seção 13. Mantido como
   histórico — a lógica das cláusulas em si seguiu válida e orientou a
   v5.4.2, mas a skill real tem estrutura diferente (14 seções, M1–M5).
-- **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
++ **v5.4** (2026-08-31) — **Padrão Motiva ligado ao routing e aos
   agentes de output** (aprovado por MN). Duas mudanças de
   comportamento, não só documentação:
-  - Nova regra na seção ROUTING: menção a `Motiva`/`CCR Rodovias`/
+  + Nova regra na seção ROUTING: menção a `Motiva`/`CCR Rodovias`/
     `SP-258`/`SP-330`/`Contorno Apucarana` aplica
     `docs/PADRAO-OUTPUT-MOTIVA.md` como co-agente de padrão de output,
     no mesmo estilo já usado para `manta-20-esg` — não substitui o
     dispatch primário por segmento.
-  - Referência direta ao documento na seção "Ferramentas e
+  + Referência direta ao documento na seção "Ferramentas e
     integrações" dos 4 agentes horizontais que de fato produzem o
     entregável para a Motiva: `agente-orcamento.md` (EAP Excel),
     `agente-cronograma.md` (insumo do Planejamento Gerencial),
     `agente-apresentacoes.md` (PPT), `agente-contratual.md` (norma de
     codificação de documentos do cliente).
-  - Ainda pendente (fora do alcance desta sessão): upload dos 2
+  + Ainda pendente (fora do alcance desta sessão): upload dos 2
     templates para o SharePoint real da equipe (`sites/Engenharia/
     .../04_IA/Manta-Maestro/`) — hoje só existem versionados neste
     repositório; e confirmação da cor institucional da Motiva (segue
     lacuna, ver seção 5 de `PADRAO-OUTPUT-MOTIVA.md`).
   Ticket `MNT-2026-MOTIVA-258-PATTERN`.
-- **v5.3** (2026-08-30) — **Templates Motiva implementados** (aprovado
++ **v5.3** (2026-08-30) — **Templates Motiva implementados** (aprovado
   por MN). Dois arquivos novos em `docs/templates/`:
-  - `EAP-PADRAO-MOTIVA.xlsx` — aba Capa (bloco de cabeçalho + legenda
+  + `EAP-PADRAO-MOTIVA.xlsx` — aba Capa (bloco de cabeçalho + legenda
     de preenchimento automático/manual) e aba EAP (cabeçalho de 16
     colunas, hierarquia de 4 níveis com 2 itens-modelo, fórmulas de
     custo total/preço unitário/preço total/% — validadas com
     recálculo LibreOffice, 0 erros).
-  - `PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx` — capa (versalete +
+  + `PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx` — capa (versalete +
     campos Cliente/Elaboração/Status), slide de sumário com as 5
     seções documentadas e slide-modelo de conteúdo com o rodapé
     padrão `[Rodovia] · [Segmento] · MOTIVA · [Seção] · nº/total`
     (validado com `office/validate.py` e QA visual).
-  - Paleta: grayscale neutro (padrão Manta) em ambos os arquivos —
+  + Paleta: grayscale neutro (padrão Manta) em ambos os arquivos —
     cor institucional da Motiva segue não confirmada (ver v5.2/seção
     5 de `PADRAO-OUTPUT-MOTIVA.md`); nota registrada no gerador e nas
     notas do orador da capa do PPTX para troca fácil quando a marca
     for confirmada. Ticket `MNT-2026-MOTIVA-258-PATTERN`.
-- **v5.2** (2026-08-30) — padrão de output do cliente Motiva
++ **v5.2** (2026-08-30) — padrão de output do cliente Motiva
   documentado (`docs/PADRAO-OUTPUT-MOTIVA.md`): formato de EAP em
   Excel (template v8, hierarquia de 4 níveis, código interno) e em
   PowerPoint, estrutura do relatório Caderno de Premissas FEL-1, norma
@@ -1270,49 +1277,49 @@ Codex-exemplo/
   confirmada em duas varreduras do SharePoint (geral e pastas
   "Material Recebido" de 10 projetos) — nenhum brandbook localizado.
   Ticket `MNT-2026-MOTIVA-258-PATTERN`.
-- **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
-  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
-  (ambiental, social, governança, integração), integração co-agente com 
-  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap. 
++ **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo
+  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões
+  (ambiental, social, governança, integração), integração co-agente com
+  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap.
   Tier: Sonnet. Status: v1.0 operacional. Agentes totais: 21 (12 h + 9 v).
   Ticket `MNT-2026-P3-04-ESG-AGENT`.
-- **v5.0.1** (2026-07-31) — **UNIFICADA**: merge de v5.0.0 operacional
++ **v5.0.1** (2026-07-31) — **UNIFICADA**: merge de v5.0.0 operacional
   (aprovado 2026-07-22, 20 agentes, Maestro-OS v6.0) + v5.0 consolidação
   (2026-07-31, gaps formalizados, 4 eixos A/F/D, 15 Sonnets investigação).
   Este documento reconcilia ambos os work streams: infraestrutura em
   produção + documentação de decisões e gaps. Status: **Operacional com
   transparência de decisões** — ready para produção com rastreabilidade
   completa de divergências encontradas em paralelo no mesmo dia.
-- **v5.0** (2026-07-31) — consolidação do modelo de 4 eixos (S×A×F×D)
++ **v5.0** (2026-07-31) — consolidação do modelo de 4 eixos (S×A×F×D)
   com o estado operacional v4.2 e com o trabalho paralelo produzido no
   mesmo branch nesta data (auditoria real Supabase, decisão de
   embedder, novos agentes S12/S13). Principais decisões desta
   consolidação:
-  - Mantida a numeração legada de segmentos (S6=Portos…S10=Barragens),
+  + Mantida a numeração legada de segmentos (S6=Portos…S10=Barragens),
     reconciliando uma divergência encontrada com 3 documentos que
     usavam uma renumeração diferente (sinalizados como pendentes de
     correção, não corrigidos automaticamente aqui) — decisão
     corroborada por consulta real a `manta_agent_capabilities` em
     produção (ver `docs/SEGMENTOS-S12-S13-DECISION.md`).
-  - Registrados S12 (Óleo & Gás) e S13 (Edificações) como **propostos**
+  + Registrados S12 (Óleo & Gás) e S13 (Edificações) como **propostos**
     (agentes criados, sem RAG/rota SP/routing — pendente gate MN),
     confirmados como capacidades reais (`ativo=true`) em
     `manta_agent_capabilities`, não erro de cadastro.
-  - S11 (Mineração) identificado na mesma tabela de produção,
+  + S11 (Mineração) identificado na mesma tabela de produção,
     `ativo=true` desde 2026-07-12, mas ainda sem agente/RAG/rota/
     routing — documentado como pendente de formalização (gap G015
     sugerido), não mais como "não atribuído".
-  - Coleções RAG atualizadas com números de auditoria real (9
+  + Coleções RAG atualizadas com números de auditoria real (9
     coleções, 204 chunks, 111 documentos, confirmados via `list_tables`
     em produção) em vez de contagem estimada.
-  - Divergência entre `EMBEDDER-DECISION.md` e o achado da auditoria
+  + Divergência entre `EMBEDDER-DECISION.md` e o achado da auditoria
     Supabase sobre a dimensão real do embedder documentada como não
     resolvida, em vez de escolhida unilateralmente.
-  - Eixos A, F e D linkados aos documentos dedicados já produzidos
+  + Eixos A, F e D linkados aos documentos dedicados já produzidos
     (`docs/ATIVIDADES-A1-A10.md`, `docs/FUNCIONAIS-F1-F8.md`,
     `docs/DISCIPLINAS-D01-D20.md`) em vez de duplicar o conteúdo aqui.
   Ticket `MNT-2026-CONSOLIDACAO-ARCH-V5`.
-- **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
++ **v4.2** (2026-07-05) — expansão S6–S10 (Portos, Aeroportos,
   Saneamento, Energia, Barragens). 5 novos agentes verticais + 5
   coleções RAG + 5 pastas SP. Ticket MNT-2026-UPGRADE-AGENTS-S6S10.
-- **v4.1** (anterior) — 15 agentes: horizontais + S1–S4.
++ **v4.1** (anterior) — 15 agentes: horizontais + S1–S4.

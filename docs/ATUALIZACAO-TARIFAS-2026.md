@@ -57,7 +57,7 @@ para a tabela tarifária comercial.
 A planilha tem 7 abas:
 
 | Aba | Conteúdo |
-|---|---|
+| --- | --- |
 | Orçamento | Orçamento de um projeto específico (CLIENTE): equipe alocada por função (Comitê Técnico, Coordenação, Especialistas, Equipe Técnica), horas/mês, custo salarial, BDI aplicado (Contingência 10% + Imposto 17,5% + Overhead 25% + Lucro 15% = 67,5%), fechamento em R$ 431.571,98 (3 meses) / R$ 863.143,96 mensal, tarifa média R$ 297,23/h |
 | Visita Técnica | Modelo de custo de viagem (passagem, hospedagem, diária, veículo, pedágio) — zerado neste orçamento |
 | Despesas | Modelo de custo de ferramentas (AutoCAD, Civil 3D, MS Project) — zerado neste orçamento |
@@ -74,7 +74,7 @@ da skill `proposta-comercial`, que é uma lista única de 13 "Perfis" (base
 Coordenação, Especialista, Engenharia e Analista).
 
 | Função | Nível | Custo Médio (R$/h) | Venda Médio (R$/h, BDI 67,5%) | **Tarifa Adotada (R$/h)** | Equivalente mensal (176h) |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | Diretoria | Sócio Diretor | 170,45 | 524,47 | **800,00** | 140.800,00 |
 | Coordenação | Máster | 170,45 | 524,46 | **550,00** | 96.800,00 |
 | Coordenação | Sênior | – | – | **522,50** | 91.960,00 |
@@ -100,7 +100,7 @@ Coordenação, Especialista, Engenharia e Analista).
 ## 3. Comparação com a tabela atual da skill (13 perfis)
 
 | Perfil atual (skill) | R$/h atual | Nível novo mais próximo | R$/h novo | Variação |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Sócio / Diretor | 1.000 | Diretoria — Sócio Diretor | 800,00 | **-20%** |
 | Engenheiro Máster | 392 | Engenharia — Máster | 561,00 | **+43%** |
 | Engenheiro Sênior | 347 | Engenharia — Sênior | 532,95 | **+54%** |
@@ -201,7 +201,7 @@ Diretoria (valores definidos manualmente pelo usuário nesta rodada).
 Nova condição: hora extra = 1,5× a hora normal, para todas as funções.
 
 | Função | Nível | Tarifa (R$/h) | Tarifa (R$/mês, 176h) | Hora extra (1,5×) |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Diretoria | Sócio Diretor / Consultor Internacional | R$ 900,00 | R$ 158.400,00 | R$ 1.350,00 |
 | Diretoria | Diretor de Infraestrutura | R$ 700,00 | R$ 123.200,00 | R$ 1.050,00 |
 | Coordenação | Máster | R$ 550,00 | R$ 96.800,00 | R$ 825,00 |

@@ -63,6 +63,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # histórico completo p/ diff contra o base da PR
 
       - name: Setup Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
@@ -82,12 +84,40 @@ jobs:
             tests/smoke/model_map.yaml \
             tests/smoke/queries
 
+      # Em pull_request, lint só nos .md alterados pela PR — o repo tem débito
+      # de markdown pré-existente grande demais para bloquear toda PR (ver
+      # docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md). Em push (main etc.), lint
+      # continua no repo inteiro, para não deixar o débito crescer sem ser
+      # percebido.
+      - name: Determine markdown files to lint
+        id: mdfiles
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            FILES=$(git diff --name-only --diff-filter=ACMR \
+              "${{ github.event.pull_request.base.sha }}" \
+              "${{ github.event.pull_request.head.sha }}" -- '*.md' \
+              | grep -v '/node_modules/' || true)
+            {
+              echo "has_files=$( [ -n "$FILES" ] && echo true || echo false )"
+              echo "globs<<MDLINT_EOF"
+              echo "$FILES"
+              echo "MDLINT_EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo "has_files=true"
+              echo "globs<<MDLINT_EOF"
+              echo "**/*.md"
+              echo "!**/node_modules/**"
+              echo "MDLINT_EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Lint Markdown (agentes, CLAUDE.md, docs)
+        if: steps.mdfiles.outputs.has_files == 'true'
         uses: DavidAnson/markdownlint-cli2-action@v19
         with:
-          globs: |
-            **/*.md
-            !**/node_modules/**
+          globs: ${{ steps.mdfiles.outputs.globs }}
 
       - name: Validate agent frontmatter schema (pytest -m unit, schema only)
         run: |

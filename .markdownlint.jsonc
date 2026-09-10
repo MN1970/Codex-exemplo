@@ -7,5 +7,6 @@
   "MD024": { "siblings_only": true }, // permite títulos repetidos entre arquivos (ex: "## Handoff com outros agentes")
   "MD033": false,         // permite HTML inline ocasional
   "MD041": false,         // primeira linha nem sempre é H1 (frontmatter vem antes)
-  "MD046": { "style": "fenced" }
+  "MD046": { "style": "fenced" },
+  "MD060": false          // tabelas largas com células muito longas (ex.: CLAUDE.md) tornam alinhamento de pipe impraticável
 }
