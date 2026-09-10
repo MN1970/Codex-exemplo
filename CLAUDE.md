@@ -58,6 +58,32 @@ pela v5.4.2 hoje é só um stub de 667 bytes redirecionando para
 `_DEPRECATED.md`. Detalhe da reconciliação em
 `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
+Consolida v5.4.3.1 (2026-09-08, reconciliada nesta versão a partir de
+`main`) — **a skill real de proposta mudou de lugar de novo, no mesmo
+dia, e foi reaplicada**. Horas depois da correção v5.4.2 (skill em
+`05-sub-skills/skill-proposta-comercial-SKILL.md`), uma **outra sessão
+Claude** (Claude Desktop Windows) tentou localizar a mesma skill, não
+encontrou o caminho e viu uma estrutura totalmente diferente — essa
+confusão disparou, em paralelo a esta sessão, um **saneamento
+estrutural real** do SharePoint (`INDICE-CANONICAL.md` v1.1, §13), que
+fundiu o corpo operacional da skill em
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.0) a
+partir de um pacote de conteúdo **anterior** à correção v5.4.2 — ou
+seja, a segregação Tarifa×Success Fee, a exigibilidade por
+formalização e a cláusula de juros de mora **ficaram órfãs** no
+caminho antigo, que virou só um ponteiro de descontinuação. Reaplicadas
+nessa sessão no novo caminho real como **v3.3.1** (16.191 bytes,
+verificado por leitura pós-upload em 2026-09-08T00:48:09Z). Ver seção
+"Modelo Mestre de Proposta" §3 e `docs/MODELO-MESTRE-PROPOSTA.md` §3
+para o detalhe completo, incluindo o risco de **edição concorrente**
+no SharePoint real (múltiplas sessões/processos editando a mesma
+árvore no mesmo dia) — antes de editar essa skill de novo, sempre
+reler o arquivo primeiro. **Nota de reconciliação**: a v5.4.4 (acima)
+verificou o mesmo arquivo um dia depois (2026-09-09) e confirmou que o
+corpo consolidado por esse saneamento (18 seções + Anexo, tabela de 13
+perfis, variante de Concessão) seguia intacto — as duas entradas
+descrevem o mesmo real coerentemente, em momentos diferentes.
+
 Consolida v5.4.3 (2026-09-07) — **fase 1 da reconciliação com o
 SharePoint real: numeração de segmento corrigida**. A pedido do
 usuário ("quero que os 2 se atualizem"), corrigida a numeração de
@@ -578,11 +604,25 @@ conquista → formalização da conquista; cronograma → marco formalmente
 aprovado — nunca pela implementação física, e acrescentar cláusula de
 **multa, juros de mora e correção monetária** por atraso de pagamento)
 **já foi aplicada na skill real** em 2026-09-07, a pedido do usuário —
-reescrita no formato verdadeiro dela (resumo compacto ≤1024 caracteres,
-não um documento de seções longas). Arquivo verificado por leitura
-pós-upload: 809 bytes. Detalhe e checklist real em
-`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` (o addendum original de
-"18 seções/M6" está lá marcado como histórico/não aplicável).
+reescrita no formato verdadeiro dela.
+
+> ⚠️ **A skill mudou de lugar de novo, no mesmo dia (2026-09-07/08)**:
+> horas depois da correção acima, uma confusão de caminho reportada por
+> outra sessão Claude disparou um saneamento estrutural real do
+> SharePoint. A skill foi fundida em
+> `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.0),
+> puxando um pacote de conteúdo anterior à correção — **sem** as
+> cláusulas acima. Reaplicadas nesta sessão como **v3.3.1** no novo
+> caminho real (16.191 bytes, verificado por leitura pós-upload).
+> `05-sub-skills/skill-proposta-comercial-SKILL.md` **não é mais a
+> fonte** — virou um ponteiro de descontinuação. Detalhe completo em
+> `docs/MODELO-MESTRE-PROPOSTA.md` §3. **O SharePoint real está sendo
+> editado por múltiplas sessões em paralelo** — antes de editar essa
+> skill de novo, sempre reler o arquivo primeiro.
+
+Detalhe e checklist real em `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`
+(o addendum original de "18 seções/M6" está lá marcado como
+histórico/não aplicável).
 
 Pendências: (1) revisão jurídica dos percentuais padrão de multa/juros/
 correção monetária antes do próximo uso real em proposta de cliente;
@@ -966,6 +1006,37 @@ Codex-exemplo/
   de Grande Porte ("M6") já está aplicada em produção — desatualizando o
   achado de "14 seções/12 níveis" da v5.4.2 abaixo, que antecedeu a
   fusão v3.3.0 no mesmo dia.
+- **v5.4.3.1** (2026-09-08, reconciliada nesta versão a partir de
+  `main`) — **skill real de proposta mudou de lugar de novo e foi
+  reaplicada, segunda rodada no mesmo dia**. Horas depois da v5.4.2
+  aplicar a correção em `05-sub-skills/skill-proposta-comercial-
+  SKILL.md` (809 bytes), outra sessão Claude (Claude Desktop Windows)
+  tentou localizar essa mesma skill e não encontrou o caminho,
+  encontrando uma estrutura de pastas totalmente diferente
+  (`02-agentes-horizontais/agente-bd`, vazia). Isso disparou, em
+  paralelo a esta sessão, um saneamento estrutural real do SharePoint
+  (documentado em `09-base-conhecimento/INDICE-CANONICAL.md` v1.1,
+  §13), que fundiu o corpo operacional da skill em
+  `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.0, a
+  partir de um pacote de conteúdo externo **anterior** à correção da
+  v5.4.2) e transformou o caminho antigo num ponteiro de
+  descontinuação. A correção da v5.4.2 ficou órfã. Reaplicada nessa
+  sessão no novo caminho real como **v3.3.1** (16.191 bytes,
+  verificado por leitura pós-upload em 2026-09-08T00:48:09Z),
+  preservando o corpo operacional completo já consolidado pelo
+  saneamento (numeração, tabela de 13 perfis, dados fixos do
+  proponente, estrutura de 18 seções + Anexo, variante "Tipo A") e
+  reinserindo a segregação Tarifa×Success Fee, a exigibilidade por
+  formalização do evento-gatilho e a cláusula de juros de
+  mora/multa/correção monetária. Detalhe completo em
+  `docs/MODELO-MESTRE-PROPOSTA.md` §3. Achado novo e relevante:
+  **o SharePoint real está sendo editado por múltiplas
+  sessões/processos em paralelo no mesmo dia** — antes de editar essa
+  skill de novo, sempre reler o arquivo primeiro (risco de edição
+  concorrente, documentado também em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`). A v5.4.4 (acima)
+  verificou o mesmo arquivo um dia depois e confirmou o corpo
+  consolidado intacto.
 - **v5.4.3** (2026-09-07) — **fase 1 da reconciliação com o SharePoint
   real: numeração de segmento corrigida**, a pedido do usuário. A
   numeração real (`INDICE-CANONICAL.md`, lido via `SharePoint_Manta`
