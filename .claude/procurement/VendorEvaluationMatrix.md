@@ -481,10 +481,10 @@ Some commodities may require different weights:
 | Commodity | Quality | Cost | Delivery | Risk |
 |---|---|---|---|---|
 | **Transmission Tower** (our example) | 40% | 30% | 20% | 10% |
-| **SCADA System** (S8) | 50% | 25% | 15% | 10% | (quality > cost) |
-| **Dredge Equipment** (S6) | 35% | 35% | 20% | 10% | (cost-sensitive) |
-| **Concrete (commodity)** | 20% | 60% | 15% | 5% | (price-driven) |
-| **Pipe Network** (critical infrastructure) | 45% | 20% | 25% | 10% | (quality + delivery) |
+| **SCADA System** (S8) | 50% | 25% | 15% | 10% (quality > cost) |
+| **Dredge Equipment** (S6) | 35% | 35% | 20% | 10% (cost-sensitive) |
+| **Concrete (commodity)** | 20% | 60% | 15% | 5% (price-driven) |
+| **Pipe Network** (critical infrastructure) | 45% | 20% | 25% | 10% (quality + delivery) |
 
 ---
 

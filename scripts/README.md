@@ -399,7 +399,7 @@ python scripts/eval_reranker_impact.py \
 
 ## Ordem de Execução Recomendada
 
-### Startup (quando novo agente é deployado):
+### Startup (quando novo agente é deployado)
 ```bash
 # 1. Healthcheck M365
 python scripts/sp_healthcheck.py > /tmp/health.json
@@ -420,7 +420,7 @@ python scripts/eval_reranker_impact.py
 # Verifica se improvement > 5% antes de ativar em produção
 ```
 
-### RAG + Reranking Pipeline (novo v5.0):
+### RAG + Reranking Pipeline (novo v5.0)
 ```bash
 # Teste de reranker com exemplo
 python scripts/rag_reranker.py \
@@ -438,7 +438,7 @@ python scripts/rag_reranker.py \
 python scripts/eval_reranker_impact.py --verbose
 ```
 
-### CI/CD Integration:
+### CI/CD Integration
 ```yaml
 # .github/workflows/observability.yml (exemplo)
 name: Observability Checks
@@ -460,7 +460,7 @@ jobs:
         run: python scripts/eval_routing.py --timeout 10
 ```
 
-### SessionStart hook (`.claude/settings.json`):
+### SessionStart hook (`.claude/settings.json`)
 ```json
 {
   "hooks": {
@@ -477,7 +477,7 @@ jobs:
 
 ## Help e Troubleshooting
 
-### Cada script tem `--help`:
+### Cada script tem `--help`
 ```bash
 python scripts/sp_healthcheck.py --help
 python scripts/audit_agents.py --help
@@ -485,7 +485,7 @@ python scripts/eval_routing.py --help
 python scripts/init_rag_golden_set.py --help
 ```
 
-### Logging:
+### Logging
 ```bash
 # Verbose mode (DEBUG level)
 python scripts/audit_agents.py --verbose 2>&1 | tee audit.log
@@ -494,7 +494,7 @@ python scripts/audit_agents.py --verbose 2>&1 | tee audit.log
 python scripts/sp_healthcheck.py 2>&1 | grep "azure_ad"
 ```
 
-### Comuns Issues:
+### Comuns Issues
 
 **`sp_healthcheck.py` falha com "Missing AZURE_CLIENT_ID"**
 ```bash

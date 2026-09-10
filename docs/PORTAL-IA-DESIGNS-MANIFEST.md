@@ -103,7 +103,7 @@ Documentação completa do sistema de design:
 - **Controls:** seletor UF (dropdown), período (mes/ano), threshold confiança (slider)
 - **Status:** progress bar com % de conclusão, tempo restante estimado
 - **Output:** tabela de resultados (código SICRO, score, banda, M/MO/EQ)
-- **Actions:** 
+- **Actions:**
   - Download Excel final
   - Validar com aluci-guard
   - Exportar JSON para RAG

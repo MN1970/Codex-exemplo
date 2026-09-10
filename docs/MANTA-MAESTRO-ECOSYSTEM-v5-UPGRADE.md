@@ -10,7 +10,7 @@
 
 ## EXECUTIVE SUMMARY
 
-O Manta Maestro v4.2 é uma arquitetura **sólida mas rígida** — um hub-and-spoke funcional com 20 agentes estáticos e roteamento por keywords. 
+O Manta Maestro v4.2 é uma arquitetura **sólida mas rígida** — um hub-and-spoke funcional com 20 agentes estáticos e roteamento por keywords.
 
 **O upgrade v5.0 transforma isso em um ECOSSISTEMA INTELIGENTE**:
 
@@ -40,8 +40,8 @@ O Manta Maestro v4.2 é uma arquitetura **sólida mas rígida** — um hub-and-s
 
 ### 1.2 Gaps críticos
 
-| Gap | Impacto | Solução v5 |
-|-----|--------|-----------|
+| Gap | Impacto | Descrição | Solução v5 |
+|-----|--------|-----------|-----------|
 | **Maestro cego** | Alto | Maestro não sabe quem são os agentes, apenas keywords | Registry dinâmico + heartbeat |
 | **Roteamento estático** | Alto | Se 2 agentes cabem, escolhe primeira regra sempre | ML ranking + confidence scores |
 | **Sem observabilidade** | Alto | Não há trace de qual agente resolveu o quê | Distributed tracing (OpenTelemetry) |

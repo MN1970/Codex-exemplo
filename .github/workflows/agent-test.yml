@@ -87,7 +87,7 @@ jobs:
         with:
           globs: |
             **/*.md
-            !node_modules/**
+            !**/node_modules/**
 
       - name: Validate agent frontmatter schema (pytest -m unit, schema only)
         run: |

@@ -71,10 +71,10 @@ deve escolher o **mais específico** (não necessariamente o primeiro
 match). Anotar o dispatch efetivo em revisão manual.
 
 - [ ] `Preciso projetar uma UHE com barragem CFRD de 100m e LT de 500kV até a SE.`
-    - Esperado: dispatch para **agente-barragens** (ou **agente-energia**?) com handoff explícito para o outro. Definir política MN.
+  - Esperado: dispatch para **agente-barragens** (ou **agente-energia**?) com handoff explícito para o outro. Definir política MN.
 - [ ] `A concessionária pediu uma ETE nova + subestação de 138kV no mesmo canteiro.`
-    - Esperado: **agente-saneamento** primário + handoff **agente-energia**.
+  - Esperado: **agente-saneamento** primário + handoff **agente-energia**.
 - [ ] `Porto arrendado no Amazonas com pátio + pista para carga aérea auxiliar.`
-    - Esperado: **agente-portos** primário + handoff **agente-aeroportos**.
+  - Esperado: **agente-portos** primário + handoff **agente-aeroportos**.
 - [ ] `Adutora atravessa uma barragem de rejeitos existente.`
-    - Esperado: **agente-saneamento** com consulta técnica ao **agente-barragens**.
+  - Esperado: **agente-saneamento** com consulta técnica ao **agente-barragens**.
