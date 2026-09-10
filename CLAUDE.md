@@ -4,7 +4,17 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.5** (2026-09-10) — **tabela tarifária real atualizada
+Versão: **v5.4.6** (2026-09-10) — **regra obrigatória: toda proposta
+comercial deve usar o modelo mestre vigente**. A pedido do usuário,
+formalizada no topo da seção "Modelo Mestre de Proposta" uma regra
+explícita: toda proposta gerada por qualquer agente Manta deve (1)
+seguir a estrutura real da skill `A1-proposta` (14 seções, modos
+M1–M5) e (2) usar exclusivamente a tabela tarifária vigente (v3.3.4,
+"revB"), nunca perfis ou valores anteriores a 2026-09-09. Não muda o
+conteúdo do modelo em si (já documentado na v5.4.5) — torna
+explícito e obrigatório o que antes era apenas descritivo.
+
+Consolida v5.4.5 (2026-09-10) — **tabela tarifária real atualizada
 (v3.3.2-v3.3.4 da skill A1-proposta)**: consolidação "revB" das
 tarifas profissionais (pedido de Willer Monteiro/Diretoria de IA +
 PMO, 09/09/2026) — nova matriz Função×Nível substituindo os 13 perfis
@@ -535,6 +545,32 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
+> 🔒 **Regra obrigatória (2026-09-10, a pedido do usuário)**: **toda
+> proposta comercial** gerada por qualquer agente Manta (Manta 13/bd,
+> Manta 14/apresentações, ou qualquer outro agente que produza uma
+> proposta técnico-comercial) **deve**:
+> 1. Seguir a estrutura completa da skill real `A1-proposta`
+>    (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`) — **14
+>    seções, modos M1–M5** — nunca a estrutura histórica de 18
+>    seções/modo M6 do addendum superado
+>    (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`);
+> 2. Usar exclusivamente a **tabela tarifária vigente** (v3.3.4, "revB",
+>    matriz Função×Nível reproduzida abaixo) — nunca os 13 perfis
+>    nomeados antigos nem qualquer valor de tarifa anterior a
+>    2026-09-09;
+> 3. Incluir a segregação Tarifa×Success Fee, a exigibilidade do
+>    success fee por formalização do evento-gatilho, a cláusula de
+>    juros de mora/multa/correção monetária, e a cláusula de
+>    deslocamentos (sempre por conta do cliente) — todas já presentes
+>    na skill real.
+>
+> Antes de gerar qualquer proposta, reler a skill real no SharePoint
+> (risco de edição concorrente documentado abaixo e em
+> `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`) para confirmar que a
+> tabela e a estrutura abaixo ainda são as vigentes. Qualquer proposta
+> já emitida com tarifas ou estrutura anteriores a esta data deve ser
+> revisada antes do próximo envio ao cliente.
+
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
 > um "agente A7-bd" e um modo "M6" validado contra
@@ -876,6 +912,23 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.6** (2026-09-10) — **regra obrigatória: toda proposta
+  comercial deve usar o modelo mestre vigente**. A pedido explícito do
+  usuário, adicionada no topo da seção "Modelo Mestre de Proposta" uma
+  regra normativa (não apenas descritiva, como nas versões anteriores):
+  toda proposta comercial gerada por qualquer agente Manta (Manta
+  13/bd, Manta 14/apresentações ou qualquer outro que produza
+  proposta) deve (1) seguir a estrutura real da skill `A1-proposta`
+  (14 seções, modos M1–M5 — nunca o addendum histórico de 18
+  seções/modo M6) e (2) usar exclusivamente a tabela tarifária vigente
+  (v3.3.4, "revB"), nunca os 13 perfis antigos ou valores anteriores a
+  2026-09-09; e reforça a obrigatoriedade das cláusulas de
+  Tarifa×Success Fee, exigibilidade por formalização, juros de
+  mora/multa/correção monetária e deslocamentos, todas já presentes na
+  skill real. Recomenda reler a skill real antes de cada proposta
+  (risco de edição concorrente já documentado nas versões anteriores).
+  Não altera o conteúdo do modelo em si — apenas torna obrigatório o
+  que antes era só informativo.
 - **v5.4.5** (2026-09-10) — **tabela tarifária real atualizada (v3.3.2-
   v3.3.4 da skill A1-proposta)**. Consultado o SharePoint real
   novamente (a pedido do usuário, "e as tarifas da manta?"), confirmamos
