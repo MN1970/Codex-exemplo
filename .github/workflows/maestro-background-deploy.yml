@@ -166,7 +166,7 @@ jobs:
 
       - name: Install test dependencies
         run: |
-          pip install schedule requests prometheus-client python-dotenv pydantic pytest pytest-asyncio
+          pip install schedule requests prometheus-client python-dotenv pydantic pytest pytest-asyncio APScheduler pytz PyYAML
 
       - name: Run unit tests
         run: |
