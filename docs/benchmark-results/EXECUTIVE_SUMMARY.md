@@ -14,6 +14,7 @@
 - Embedding model não discrimina contexto (rodovia ≠ barragem para "terraplenagem")
 
 ### Termos Ambíguos Críticos
+
 | Termo | Domínios afetados | Problema |
 |-------|------------------|----------|
 | terraplenagem | S1, S2, S10 | Subleito (rodovia) vs. aterro (barragem) |

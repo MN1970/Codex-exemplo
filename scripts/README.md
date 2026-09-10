@@ -99,6 +99,7 @@ python scripts/audit_agents.py --output-format json --divergence-threshold 1
 - `rag_evals/audit_agents.json` — Estruturado para CI/CD
 
 **Colunas do report**:
+
 | Campo | Descrição |
 |-------|-----------|
 | `agent_id` | Nome arquivo (agente-saneamento) |
@@ -208,6 +209,7 @@ qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",
 ```
 
 **Distribuição de QA Pairs** (por padrão, 10 por segmento):
+
 | Segmento | Questões | Domínios |
 |----------|----------|----------|
 | Saneamento (S8) | 10 | water_treatment, wastewater, regulation, hydraulics, etc. |
