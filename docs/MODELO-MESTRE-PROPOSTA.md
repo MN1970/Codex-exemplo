@@ -288,6 +288,40 @@ nunca fabricados.
   template-ptc-tipo-a-v1.html` (17.204 bytes, upload verificado por
   leitura pós-upload).
 
+### Handoff Manta 13 → Manta 14 executado (2026-09-10)
+
+A pedido do usuário ("execute o handoff completo"), o handoff descrito
+em `.claude/agents/agente-bd.md` foi executado de fato: os dois
+formatos de output canônico da skill real ("Proposta de output
+canônica": DOCX técnica + PPTX executiva) foram gerados a partir do
+template Tipo A/PRC, usando as skills `docx` (docx-js) e `pptx`
+(pptxgenjs) deste ambiente:
+
+- `docs/templates/template-ptc-tipo-a-v1.docx` — as 18 seções + Anexo
+  I completas, com as mesmas cláusulas obrigatórias do template HTML
+  escritas por extenso (Segregação Tarifa×Success Fee, Exigibilidade,
+  Deslocamentos, Atraso de pagamento, Seção IA, tabela tarifária
+  vigente, dados fixos da proponente). Tabelas com larguras duplas
+  (coluna + célula), `ShadingType.CLEAR` (não `SOLID`), quebras de
+  página dentro de parágrafo — seguindo as regras conhecidas da skill
+  `docx` para evitar corrupção.
+- `docs/templates/resumo-executivo-ptc-tipo-a-v1.pptx` — 7 slides:
+  capa (fundo escuro, paleta canônica), os 5 cards do resumo executivo
+  (Objeto/Escopo/Prazos/Preço/Entregáveis, cada um com visual próprio —
+  cards, timeline, tabela + stat callout, colunas), e um slide de
+  fechamento com rastreabilidade e dados de contato.
+
+**Validação estrutural** (`office/validate.py`, ambos os arquivos):
+"All validations PASSED!" — sem erros de schema, relações ou
+conteúdo. **Validação visual não realizada**: a conversão para PDF via
+LibreOffice falhou neste ambiente até para um arquivo `.txt` trivial
+("Error: source file could not be loaded"), confirmando que é uma
+limitação do ambiente desta sessão (não um defeito nos arquivos
+gerados) — não há como confirmar visualmente que não há overflow de
+texto ou sobreposição de elementos antes do primeiro uso real. Revisão
+visual manual (abrir no Word/PowerPoint) recomendada antes de usar em
+proposta de cliente.
+
 A skill real `A1-proposta` foi relida imediatamente antes da edição
 (confirmado ainda v3.3.7, sem mudança desde a última leitura) e
 atualizada para **v3.3.8**: nova seção "Template e exemplares -- Tipo

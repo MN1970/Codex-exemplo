@@ -4,7 +4,26 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.8** (2026-09-10) — **template canônico Tipo A/PRC criado
+Versão: **v5.4.9** (2026-09-10) — **handoff Manta 13→14 executado:
+DOCX e PPTX gerados a partir do template canônico**. A pedido do
+usuário ("execute o handoff completo"), o agente `agente-bd.md`
+(Manta 13) executou o handoff documentado na v5.4.8 (última seção
+"Ferramentas e integrações"/"Handoff") para Manta 14 (apresentações):
+gerou os dois formatos de output canônico da skill `A1-proposta`
+("Proposta de output canônica" — DOCX técnica + PPTX executiva) a
+partir do template Tipo A/PRC: `docs/templates/template-ptc-tipo-a-
+v1.docx` (18 seções + Anexo I, com as cláusulas obrigatórias por
+extenso, gerado via `docx`/docx-js) e
+`docs/templates/resumo-executivo-ptc-tipo-a-v1.pptx` (7 slides — capa,
+5 cards do resumo executivo, rastreabilidade — gerado via
+`pptx`/pptxgenjs, paleta canônica Manta). Ambos passaram na validação
+estrutural (`office/validate.py`, schema/relações/conteúdo — "All
+validations PASSED!"); a verificação visual por conversão para PDF
+não foi possível nesta sessão (LibreOffice indisponível no ambiente —
+falha até para arquivos triviais, confirmado não ser problema dos
+arquivos gerados). Ver `docs/MODELO-MESTRE-PROPOSTA.md` §6.
+
+Consolida v5.4.8 (2026-09-10) — **template canônico Tipo A/PRC criado
 e publicado no SharePoint real como v3.3.8 da skill `A1-proposta`**. A
 pedido do usuário ("Manta Maestro pode executar e implementar" →
 "subir este modelo como template canônico no SharePoint"), o modelo
@@ -923,7 +942,9 @@ Codex-exemplo/
 │   ├── templates/
 │   │   ├── EAP-PADRAO-MOTIVA.xlsx               # 🆕 v5.3 — template EAP (capa + hierarquia 4 níveis)
 │   │   ├── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
-│   │   └── template-ptc-tipo-a-v1.html          # 🆕 v5.4.8 — template canônico Tipo A/PRC (também publicado no SharePoint real, skill A1-proposta v3.3.8)
+│   │   ├── template-ptc-tipo-a-v1.html          # 🆕 v5.4.8 — template canônico Tipo A/PRC (também publicado no SharePoint real, skill A1-proposta v3.3.8)
+│   │   ├── template-ptc-tipo-a-v1.docx          # 🆕 v5.4.9 — mesmo template em DOCX (handoff Manta 13→14, output canônico "técnica")
+│   │   └── resumo-executivo-ptc-tipo-a-v1.pptx  # 🆕 v5.4.9 — resumo executivo em PPTX, 5 cards (output canônico "executiva")
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (✅ numeração de S já era a real — resolvido 2026-09-07)
@@ -954,6 +975,24 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.9** (2026-09-10) — **handoff Manta 13→14 executado: DOCX e
+  PPTX gerados a partir do template canônico**. A pedido explícito do
+  usuário, o `agente-bd.md` (Manta 13) executou o handoff para Manta
+  14 (apresentações) já documentado na v5.4.8, produzindo os dois
+  formatos de output canônico previstos em "Proposta de output
+  canônica" da skill `A1-proposta` (DOCX técnica + PPTX executiva):
+  `docs/templates/template-ptc-tipo-a-v1.docx` (18 seções + Anexo I
+  completas, cláusulas obrigatórias por extenso) e
+  `docs/templates/resumo-executivo-ptc-tipo-a-v1.pptx` (capa + 5 cards
+  do resumo executivo + slide de rastreabilidade, na paleta canônica
+  Manta). Gerados via `docx`/docx-js e `pptx`/pptxgenjs (skills deste
+  ambiente); ambos validados estruturalmente
+  (`office/validate.py` — "All validations PASSED!" nos dois). A
+  verificação visual (conversão para PDF/JPEG) não foi possível: o
+  LibreOffice deste ambiente falha até para um `.txt` trivial — testado
+  e confirmado não ser problema específico dos arquivos gerados, e sim
+  uma limitação do ambiente desta sessão. Detalhe em
+  `docs/MODELO-MESTRE-PROPOSTA.md` §6.
 - **v5.4.8** (2026-09-10) — **template canônico Tipo A/PRC criado e
   publicado no SharePoint real (skill `A1-proposta` v3.3.8)**. A
   pedido explícito do usuário, um modelo padrão de proposta Tipo A/PRC
