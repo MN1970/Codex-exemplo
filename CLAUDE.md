@@ -4,7 +4,40 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.8** (2026-09-10) — **tabela tarifária revisada: remove
+Versão: **v5.4.10** (2026-09-10) — **diretriz de posicionamento**: foco
+na maturidade profissional da equipe Manta, com IA como apoio/
+multiplicador (não substituição), para propostas do segmento
+Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
+("Diretriz de posicionamento (2026-09-10)"). É orientação de conteúdo
+para propostas futuras — não altera nem alega nada sobre a skill de
+produção. (Reconciliada nesta versão a partir de `main`, sessão
+paralela.)
+
+Consolida v5.4.9 (2026-09-10, reconciliada nesta versão a partir de
+`main`) — **recorrência confirmada da fabricação na skill real de
+proposta**. Investigação read-only via `SharePoint_Manta` MCP (outra
+sessão) confirmou que a seção "Variante Tipo A / Concessão de
+Infraestrutura de Grande Porte", viva em
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (então v3.3.5),
+reproduz quase palavra-por-palavra o addendum fabricado deste
+repositório (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`), incluindo a
+referência a uma revisão de proposta inexistente
+(`MNT-2026-COM-1183_D` — só `_C_3` é encontrável). A própria fonte
+canônica (`INDICE-CANONICAL.md` §13) admite que esse conteúdo "antes só
+existia num pacote de skill fora do SharePoint, nunca escrito na
+árvore" — ou seja, a correção de premissa da v5.4.2/v5.4.3 não impediu
+uma recorrência por um caminho diferente (fusão de pacote externo no
+saneamento estrutural de 2026-09-07, sem gate humano de verificação de
+fonte primária). Detalhe completo, incluindo a comparação literal, em
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (seção "Recorrência
+confirmada — Variante Tipo A (2026-09-10)"). **Nenhuma escrita foi
+feita na skill de produção por essa sessão** — recomendação registrada
+para o MN revisar e corrigir diretamente essa seção específica. **Nota:
+esta sessão publicou v3.3.6 (grupo "Orçamentista" removido, ver v5.4.8
+abaixo) sem tocar na seção "Variante Tipo A" — o achado acima segue
+válido e pendente na skill tal como publicada.**
+
+Consolida v5.4.8 (2026-09-10) — **tabela tarifária revisada: remove
 grupo "Orçamentista" e generaliza enquadramento por maturidade**. A
 pedido do usuário: a nota 1 da tabela tarifária (`A1-proposta`) foi
 reescrita para deixar explícito que profissionais de qualquer área
@@ -599,6 +632,16 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
+> 🔴 **Atualização 2026-09-10**: a seção "Variante Tipo A / Concessão de
+> Infraestrutura de Grande Porte", hoje viva na skill real
+> (`02-atividades/A1-proposta/SKILL.md`, v3.3.5), foi confirmada como
+> **recorrência da fabricação** corrigida abaixo — reproduz quase
+> palavra-por-palavra o addendum fabricado deste repositório e cita a
+> mesma revisão inexistente `MNT-2026-COM-1183_D`. Nenhuma escrita foi
+> feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+> ("Recorrência confirmada — Variante Tipo A") para a evidência
+> completa e a recomendação ao MN.
+
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
 > um "agente A7-bd" e um modo "M6" validado contra
@@ -978,6 +1021,25 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.10** (2026-09-10, reconciliada nesta versão a partir de
+  `main`) — diretriz de posicionamento (MN): propostas de
+  Infraestrutura devem destacar a maturidade profissional da equipe
+  Manta primeiro, com a IA da Manta posicionada como apoio/
+  multiplicador de produtividade — nunca como substituição da
+  experiência técnica. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`;
+  não altera a skill de produção.
+- **v5.4.9** (2026-09-10, reconciliada nesta versão a partir de
+  `main`) — investigação read-only (outra sessão) confirmou recorrência
+  da fabricação da skill `proposta-comercial`: a variante "Tipo A /
+  Infraestrutura de Grande Porte" viva em produção (então v3.3.5)
+  reproduz o addendum fabricado deste repositório quase
+  palavra-por-palavra, citando a mesma revisão inexistente
+  `MNT-2026-COM-1183_D` (só `_C_3` existe). Documentado em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e
+  `docs/MODELO-MESTRE-PROPOSTA.md`. Nenhuma alteração feita na skill
+  real por essa sessão — recomendação registrada para gate humano (MN).
+  **Pendente**: a v5.4.8 (abaixo) publicou v3.3.6 sem tocar na seção
+  "Variante Tipo A" — este achado segue válido na skill tal como está.
 - **v5.4.8** (2026-09-10) — tabela tarifária padrão da skill de proposta
   (`A1-proposta`) revisada a pedido do usuário: remove o grupo dedicado
   "Orçamentista" (3 linhas: Sênior/Pleno/Júnior) e generaliza a nota 1
