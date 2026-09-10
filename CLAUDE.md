@@ -4,7 +4,23 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.6** (2026-09-09) — **cláusula de despesas reembolsáveis
+Versão: **v5.4.7** (2026-09-10) — **skill de proposta (A1-proposta)
+revisada: ficha técnica condensada + regra de não citar "Manta Mestro"
+ao cliente**. A pedido do usuário: (1) o bloco "Controle de Revisão +
+Ficha Técnica" da variante Tipo A/Concessão, que antes aparecia
+duplicado (antes da Seção 1 e no fechamento), foi condensado em **uma
+única linha**, mantida só no fechamento do documento; (2) nova cláusula
+explícita determinando que o texto da proposta entregue ao cliente
+**nunca cite "Manta Mestro"** nem a arquitetura interna do sistema de
+IA (agentes por segmento, códigos "Manta NN") — a narrativa passa a
+falar da experiência e maturidade técnica da equipe, apoiada de forma
+genérica por "ferramentas de Inteligência Artificial da Manta
+Associados". Escrita aplicada via `SharePoint_Manta` MCP
+(`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, 3.3.4 →
+**3.3.5**), publicação confirmada por releitura (18.964 bytes). Ver
+`docs/ATUALIZACAO-FICHA-TECNICA-E-BRANDING-2026.md`.
+
+Consolida v5.4.6 (2026-09-09) — **cláusula de despesas reembolsáveis
 publicada em produção**. A cláusula "Deslocamentos" (Seção 12 do
 A1-proposta) só definia a forma fiscal do ressarcimento; a pedido do
 usuário, revisado o texto vigente e publicada a versão renomeada
@@ -636,6 +652,27 @@ confirmado por releitura (18.947 bytes). Ver
 
 ---
 
+## FICHA TÉCNICA CONDENSADA + NÃO CITAR "MANTA MESTRO" — ATUALIZAÇÃO 2026 ✅ PUBLICADA
+
+Duas mudanças na skill de proposta (`A1-proposta`), a pedido do usuário:
+
+1. **Ficha Técnica em uma linha só**: o bloco "Controle de Revisão + Ficha
+   Técnica" da variante Tipo A/Concessão de Infraestrutura, antes duplicado
+   (topo, antes da Seção 1, e fechamento), foi condensado em uma única
+   linha, mantida só no fechamento do documento.
+2. **Proposta ao cliente não cita "Manta Mestro"**: nova cláusula na Seção
+   IA (Seção 9) determinando que o texto entregue ao cliente nunca mencione
+   "Manta Mestro" nem a arquitetura interna de agentes por segmento/códigos
+   "Manta NN" — a narrativa foca na experiência e maturidade técnica da
+   equipe, apoiada de forma genérica por "ferramentas de Inteligência
+   Artificial da Manta Associados".
+
+Publicado via `SharePoint_Manta` MCP (v3.3.4 → **v3.3.5**), confirmado por
+releitura (18.964 bytes). Ver
+`docs/ATUALIZACAO-FICHA-TECNICA-E-BRANDING-2026.md`.
+
+---
+
 ## PADRÕES DE OUTPUT POR CLIENTE
 
 Referências canônicas de formato de entregável (EAP em Excel/PPT,
@@ -887,6 +924,20 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.7** (2026-09-10) — skill de proposta (`A1-proposta`) revisada
+  a pedido do usuário em dois pontos: (1) o bloco "Controle de Revisão +
+  Ficha Técnica" da variante Tipo A/Concessão de Infraestrutura, antes
+  duplicado (antes da Seção 1 e no fechamento), foi condensado em
+  **uma única linha**, mantida só no fechamento do documento; (2) nova
+  cláusula na Seção IA determinando que o texto entregue ao cliente
+  **nunca cite "Manta Mestro"** nem a arquitetura interna de agentes por
+  segmento/códigos "Manta NN" — a narrativa passa a falar da
+  experiência e maturidade técnica da equipe, apoiada de forma genérica
+  por "ferramentas de Inteligência Artificial da Manta Associados".
+  Escrita aplicada via `SharePoint_Manta` MCP
+  (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` 3.3.4 →
+  3.3.5), confirmada por releitura (18.964 bytes). Ver
+  `docs/ATUALIZACAO-FICHA-TECNICA-E-BRANDING-2026.md`.
 - **v5.4.6** (2026-09-09) — cláusula "Deslocamentos" (Seção 12 do
   A1-proposta) **atualizada em produção**: renomeada para
   "Deslocamentos e despesas reembolsáveis", com regra padrão de que
