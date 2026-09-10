@@ -498,6 +498,7 @@ Political support: [cross-party backing, governor endorsement if applicable]."
 5. **Fishing Communities** — Environmental impact on fish stocks, coastal livelihoods
 
 **Power Ranking:**
+
 | Stakeholder | Power | Interest | Negotiability |
 |------------|-------|---------|---------------|
 | ANTAQ | 5/5 | Sectoral growth, fiscal returns | High (standardized concession terms) |
