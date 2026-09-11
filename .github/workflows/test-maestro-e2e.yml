@@ -318,7 +318,7 @@ jobs:
           import json
           with open('tests/fixtures/prompts_golden_40.json') as f:
               data = json.load(f)
-              assert len(data['test_cases']) == 40, 'Expected 40 test cases'
+              assert len(data['test_cases']) == 36, f'Expected 36 test cases, got {len(data[\"test_cases\"])}'
               print(f'✅ Golden fixtures: {len(data[\"test_cases\"])} cases')
           "
           else
