@@ -4,16 +4,23 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-11) — **plano de conhecimento por
-agente/segmento/disciplina**, gerado a partir de releitura ao vivo do
-`INDICE-CANONICAL.md` real (v1.1): o eixo S vai até **S14** (Túneis,
-Mineração, Óleo e Gás — não S11 como a última leitura registrada aqui
-assumia), o eixo D até **D22** e o eixo A até **A11**. Produzidos 6
-briefs de conhecimento `DRAFT` para os itens "a confirmar" desses eixos
-e um guia prático de D03-Geotecnia (disciplina já madura em produção).
-Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` e a entrada completa em "GAPS
-ABERTOS" e "Histórico de versões". Nada escrito na fonte real
-(SharePoint) — proposta pendente de gate humano (MN).
+Versão: **v5.4.7** (2026-09-11) — **reconciliação de conhecimento por
+agente/segmento/disciplina**. Releitura ao vivo do `INDICE-CANONICAL.md`
+real (v1.1) mostrou que o eixo S vai até **S14** (Túneis, Mineração,
+Óleo e Gás), o eixo D até **D22** e o eixo A até **A11** — mais do que
+este arquivo assumia. Uma primeira leitura interpretou os itens
+marcados "a confirmar" nesses eixos como "vazios" e chegou a redigir 6
+briefs de conhecimento novos para eles; uma auditoria seguinte, lendo
+o SharePoint real pasta a pasta, encontrou o oposto — quase todos já
+têm conteúdo maduro e versionado em produção (`agente-tuneis`,
+`agente-mineracao`, `agente-oleo-gas`, `agente-S5-imobiliario`, skill
+`fiscalizacao-obras` para A11, entre outros). Os 6 briefs foram
+descartados. O achado que sobrou de valor real: um campo de código de
+segmento legado (`manta_code`) nos 3 segmentos mais novos que colide
+com o código real de outro segmento — risco de misroteamento em
+produção, se o routing real ainda usar esse campo. Ver
+`docs/PLANEJAMENTO-MANTA-MAESTRO.md` e "GAPS ABERTOS" para o detalhe
+completo. Nada foi escrito na fonte real (SharePoint) nesta sessão.
 
 Consolida v5.4.6 (2026-09-10) — **diretriz de posicionamento**: foco
 na maturidade profissional da equipe Manta, com IA como apoio/
@@ -236,7 +243,7 @@ Documento de referência canônico e mais detalhado deste modelo:
 | S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
 | S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| S5 | Imobiliário | *(sem agente vertical dedicado neste repositório)* | ⚠️ **Reclassificação pendente**: o índice canônico real trata Imobiliário como segmento vertical S5; este repositório trata "imobiliário" apenas como horizontal de negócio (Manta 04/`agente-imobiliario.md`). Decisão MN pendente sobre se cria vertical S5 dedicado ou mantém só o horizontal — fora do escopo desta correção de numeração (fase 1). |
+| S5 | Imobiliário | `agente-S5-imobiliario` (real, SharePoint) | ✅ **Corrigido em 2026-09-11** — leitura ao vivo confirma que o vertical S5 já existe e é maduro (v3.0.0, 5 sub-agentes: viabilidade, incorporação/patrimônio de afetação, avaliação, gestão de empreendimento, exit/securitização). A frase anterior ("sem agente vertical dedicado... decisão MN pendente") estava desatualizada. Este repositório ainda não tem o arquivo espelhado localmente. **Questão real, ainda aberta**: nenhum documento de S5 menciona ou reconcilia com Manta 04 (horizontal de negócio imobiliário) — sobreposição de escopo entre os dois não resolvida, não ausência de conteúdo. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §2. |
 | S6 | Edificações (residencial, comercial, galpão, hospitalar, institucional, data center) | agente-edificacoes | Renumerado de "S13" para **S6** (era tratado como "proposto"; no índice real não há essa distinção — ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` para o que ainda falta reconciliar em status/RAG/routing) |
 | S7 | Portos | agente-portos | Renumerado de "S6" para **S7** |
 | S8 | Aeroportos | agente-aeroportos | Renumerado de "S7" para **S8** |
@@ -422,7 +429,7 @@ ver "Eixo S — Segmentos" para a explicação completa.
 | S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
 | S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| S5 | Imobiliário | *(sem agente vertical dedicado — ver nota em "Eixo S")* | ⚠️ Reclassificação pendente |
+| S5 | Imobiliário | `agente-S5-imobiliario` (real, SharePoint, v3.0.0) | ✅ Corrigido 2026-09-11 — ver nota em "Eixo S" |
 | S6 | Edificações | agente-edificacoes | Renumerado de "S13" |
 | S7 | Portos | agente-portos | Renumerado de "S6" |
 | S8 | Aeroportos | agente-aeroportos | Renumerado de "S7" |
@@ -674,46 +681,49 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   as próximas fases (numeração — concluída; embedder — concluído;
   renumerar frontmatter dos agentes, corrigir specs de Supabase/RAG, e
   decidir o destino do que não tem lastro real — ainda não escopadas).
-- **S5 (Imobiliário) sem vertical dedicado**: o índice canônico real
-  trata Imobiliário como segmento vertical S5; este repositório só tem
-  "imobiliário" como horizontal de negócio (Manta 04). Decisão MN
-  pendente sobre criar um vertical S5 dedicado ou manter só o
-  horizontal — não resolvido na correção de numeração desta versão
-  (fase 1 tratou só os segmentos que já tinham agente vertical
-  correspondente).
-- **`agente-oleo-gas` e "Mineração" sem segmento real confirmado —
-  🟡 atualizado 2026-09-11, re-verificação ao vivo muda a conclusão
-  anterior**: releitura direta de `INDICE-CANONICAL.md` via MCP
-  `SharePoint_Manta` nesta data mostra **v1.1** (mesma data de geração,
-  2026-09-07, mas revisão mais nova que a lida na correção anterior
-  desta seção) — o índice real **não para mais em S11**: já lista
-  explicitamente **S12=Túneis, S13=Mineração, S14=Óleo e Gás**, todos
-  com pasta física criada e conteúdo marcado "a confirmar" (não
-  "inexistente"). Ou seja: Mineração e Óleo & Gás **têm, sim,
-  segmento real confirmado agora** — só não com os códigos "S12"/"S11"
-  que a numeração antiga deste repositório usava (Mineração é S13,
-  Óleo & Gás é S14; S12 é um segmento novo, Túneis, sem relação com
-  nenhum dos dois). O eixo D também cresceu para D01–D22 (não D01–D20)
-  e o eixo A para A1–A11 (não A1–A10) desde a última leitura registrada
-  aqui — ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` (novo, 2026-09-11)
-  para o detalhe completo e briefs de conhecimento propostos para os 3
-  segmentos + D21/D22 + A11/F9/F10, todos com status `DRAFT` (nada
-  escrito na fonte real ainda). `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md`
-  e `docs/SEGMENTOS-S12-S13-DECISION.md` mantidos como histórico do
+- ~~**S5 (Imobiliário) sem vertical dedicado**~~ — **corrigido em
+  2026-09-11**: leitura ao vivo confirma que `agente-S5-imobiliario`
+  já existe no SharePoint real, maduro (v3.0.0, 5 sub-agentes:
+  viabilidade, incorporação/patrimônio de afetação, avaliação, gestão
+  de empreendimento, exit/securitização). A pergunta "criar vertical ou
+  não" está respondida — já existe. **Questão nova, ainda aberta**:
+  nenhum dos documentos de S5 menciona ou reconcilia com Manta 04
+  (horizontal de negócio imobiliário) — sobreposição de escopo entre
+  os dois não resolvida. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §2.
+- **`agente-oleo-gas` (S14) e `agente-mineracao` (S13) — confirmados
+  reais e maduros em 2026-09-11, mas com um bug de metadado sério**:
+  releitura direta de `INDICE-CANONICAL.md` v1.1 e dos próprios
+  `SKILL.md` mostrou que o índice real vai até S14 (não S11) e que os
+  três segmentos mais novos (S12-Túneis, S13-Mineração, S14-Óleo e Gás)
+  já têm agentes de produção completos (`agente-tuneis`,
+  `agente-mineracao`, `agente-oleo-gas`, todos v1.0.0). **Achado mais
+  sério**: cada um carrega um campo `manta_code` legado que colide com
+  o código real de OUTRO segmento — S13 diz internamente "Manta
+  03-S11" (código real de Barragens), S14 diz "Manta 03-S12" (código
+  real de Túneis), S12 diz "Manta 03-S5" (código antigo de si mesmo).
+  Segmentos mais antigos (S9, S11) não têm esse campo legado — é
+  isolado aos 3 mais novos, herdado do template `agente-infraestrutura
+  v1.0.0` nunca migrado. **Se o routing de produção real ainda ler
+  `manta_code` em vez de `sp_operational_segment`, isso é um bug de
+  misroteamento ativo** (pergunta sobre óleo e gás → agente de túneis).
+  Ação: MN confirmar com quem opera o Maestro real qual campo o
+  routing efetivamente consome — prioridade alta. Detalhe completo em
+  `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §3.
+  `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md` e
+  `docs/SEGMENTOS-S12-S13-DECISION.md` mantidos como histórico do
   raciocínio anterior (usavam códigos que não correspondem aos reais).
-  Ação: decisão MN sobre (a) confirmar/descartar a formalização desses
-  3 segmentos como capacidade real de negócio da Manta, e (b) revisar
-  os briefs propostos antes de qualquer escrita no SharePoint.
 - **D03-Geotecnia — confirmado maduro em produção, proposta de agente
   "Manta 17/geotecnia" descartada (2026-09-11)**: uma sessão anterior
   chegou a rascunhar um agente horizontal dedicado a geotecnia partindo
   da premissa "nenhum agente cobre isso hoje". Leitura ao vivo do
   `SKILL.md` real de `D03-Geotecnia` (v2.0.0) mostrou que essa premissa
   era falsa — a disciplina já existe, madura, com normas, fórmulas,
-  red flags e handoffs formalizados para S1/S2/S3/S4/S7/S11. A
-  proposta de agente foi descartada sem merge; o guia de aplicação
-  prática de D03 (o que ele já cobre, o gap real — S12 ainda não listado
-  como segmento-cliente — e como os verticais devem consumi-lo) está em
+  red flags e handoffs formalizados para S1/S2/S3/S4/S8/S11. A
+  proposta de agente foi descartada sem merge. Uma segunda correção
+  (também 2026-09-11): S12-Túneis **não** depende de D03 como se
+  pensou inicialmente — já tem geotecnia própria internalizada; o gap
+  real é um possível drift de método entre D03 e essa geotecnia
+  interna, não uma lacuna de listagem. Guia completo em
   `docs/D03-GEOTECNIA-APLICACAO-PROJETOS-MANTA.md`.
 - ~~**Embedder (G010)**~~ — **✅ resolvido em 2026-09-07** com decisão
   real: `09-base-conhecimento/RAG_ARQUITETURA_CANONICA.md` (SharePoint
@@ -777,14 +787,24 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
    "Eixo S — Segmentos"). Renumeração dos 5 agentes operacionais
    (frontmatter interno de cada `.md`) e da migração/RAG/rotas SP
    segue como próxima fase, ainda não feita.
-2. **Óleo & Gás e Mineração sem segmento real confirmado**: formalizar
-   como capacidades reais no SharePoint (agente `.md`, RAG, rota SP,
-   routing keywords, com S confirmado) ou descontinuar esse conteúdo do
-   repositório? A "fonte de verdade" usada anteriormente para
-   justificá-los (Supabase `manta_agent_capabilities`) nunca foi
-   confirmada como real — ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
-3. **S5 Imobiliário**: criar vertical dedicado (como no SharePoint
-   real) ou manter só como horizontal (Manta 04, como hoje)?
+2. ~~**Óleo & Gás e Mineração sem segmento real confirmado**~~ — **em
+   grande parte respondido em 2026-09-11**: leitura ao vivo confirma
+   `agente-oleo-gas` (S14) e `agente-mineracao` (S13) já existem,
+   maduros, em produção — não precisam ser formalizados, só espelhados
+   neste repositório. **Nova questão aberta, mais séria**: os três
+   segmentos mais novos (S12/S13/S14) carregam um campo `manta_code`
+   legado que colide com o código real de OUTRO segmento (S13 diz
+   internamente "Manta 03-S11", que é Barragens; S14 diz "Manta
+   03-S12", que é Túneis). Se o routing de produção real ainda ler
+   `manta_code` em vez de `sp_operational_segment`, isso é um bug de
+   misroteamento ativo, não só uma inconsistência documental — MN
+   confirmar com quem opera o Maestro real qual campo o routing
+   efetivamente consome. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §3.
+3. ~~**S5 Imobiliário**~~ — **respondido em 2026-09-11**: o vertical
+   S5 já existe, maduro (v3.0.0, 5 sub-agentes), no SharePoint real.
+   Pergunta que sobra: como reconciliar/dividir escopo entre S5
+   (vertical) e Manta 04 (horizontal) — nenhum documento real trata
+   disso hoje.
 4. **Embedder**: antes de decidir bge-small vs. bge-m3, confirmar a
    dimensão real da coluna de vetor em produção — a decisão atual
    (`docs/EMBEDDER-DECISION.md`) parte de uma premissa não verificada
@@ -881,15 +901,9 @@ Codex-exemplo/
 │   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
 │   ├── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
-│   ├── PLANEJAMENTO-MANTA-MAESTRO.md      # 🆕 2026-09-11 — plano de conhecimento por agente/segmento/disciplina (DRAFT)
+│   ├── PLANEJAMENTO-MANTA-MAESTRO.md      # 🆕 2026-09-11 — relatório de reconciliação (achados reais vs. suposições, ver §1-3)
 │   ├── D03-GEOTECNIA-APLICACAO-PROJETOS-MANTA.md # 🆕 2026-09-11 — guia prático (D03 real, não um agente novo)
-│   ├── MATRIZ-CONHECIMENTO-POR-AGENTE.md  # 🆕 2026-09-11 — conhecimento essencial dos 21+ agentes (DRAFT)
-│   ├── S12-TUNEIS-SKILL.md                # 🆕 2026-09-11 — proposta de segmento (DRAFT, pasta SP vazia)
-│   ├── S13-MINERACAO-SKILL.md             # 🆕 2026-09-11 — proposta de segmento (DRAFT, pasta SP vazia)
-│   ├── S14-OLEOGAS-SKILL.md               # 🆕 2026-09-11 — proposta de segmento (DRAFT, pasta SP vazia)
-│   ├── D21-TOPOGRAFIA-GEODESIA-SKILL.md   # 🆕 2026-09-11 — proposta de disciplina (DRAFT, pasta SP vazia)
-│   ├── D22-TUNEIS-SKILL.md                # 🆕 2026-09-11 — proposta de disciplina (DRAFT, pasta SP vazia)
-│   └── A11-F9-F10-ESCOPO-PROPOSTO.md      # 🆕 2026-09-11 — proposta de escopo (DRAFT)
+│   └── MATRIZ-CONHECIMENTO-POR-AGENTE.md  # 🆕 2026-09-11 — conhecimento essencial dos 21+ agentes (hipótese, não cruzada linha a linha com o real)
 ├── sharepoint/
 │   ├── README.md
 │   └── 00-arquitetura/
@@ -907,21 +921,28 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.7** (2026-09-11) — plano de conhecimento por agente/segmento/
-  disciplina (`docs/PLANEJAMENTO-MANTA-MAESTRO.md`). Re-verificação ao
-  vivo do `INDICE-CANONICAL.md` real (v1.1) corrige leitura anterior:
-  o eixo S vai até **S14** (não S11), o eixo D até **D22** (não D20) e
-  o eixo A até **A11** (não A10) — Mineração (S13) e Óleo & Gás (S14)
-  têm, sim, segmento real confirmado, só com códigos diferentes dos
-  usados anteriormente neste repositório. Produzidos 6 briefs de
-  conhecimento em `DRAFT` para os itens "a confirmar" (S12-Túneis,
-  S13-Mineração, S14-Óleo e Gás, D21-Topografia/Geodésia, D22-Túneis,
-  A11-Fiscalização + F9/F10) e um guia prático de aplicação de
-  D03-Geotecnia (já madura em produção — não precisa de agente novo).
-  Consolida também a decisão já tomada de descartar a proposta de
-  agente "Manta 17/geotecnia" (premissa invalidada pela leitura ao vivo
-  de D03 real). **Nada escrito na fonte real (SharePoint)** — todo
-  conteúdo é proposta pendente de gate humano (MN).
+- **v5.4.7** (2026-09-11) — reconciliação de conhecimento por
+  agente/segmento/disciplina (`docs/PLANEJAMENTO-MANTA-MAESTRO.md`).
+  Re-verificação ao vivo do `INDICE-CANONICAL.md` real (v1.1) corrige
+  leitura anterior: o eixo S vai até **S14** (não S11), o eixo D até
+  **D22** (não D20) e o eixo A até **A11** (não A10). Uma primeira
+  passada tratou os itens "a confirmar" desses eixos como vazios e
+  redigiu 6 briefs de conhecimento novos (S12-Túneis, S13-Mineração,
+  S14-Óleo e Gás, D21-Topografia/Geodésia, D22-Túneis,
+  A11-Fiscalização + F9/F10); uma segunda auditoria, lendo o SharePoint
+  real pasta a pasta, encontrou conteúdo maduro já em produção para
+  quase todos eles (`agente-tuneis`, `agente-mineracao`,
+  `agente-oleo-gas`, skill `fiscalizacao-obras`, `agente-S5-imobiliario`
+  — este último nem estava no escopo original, achado incidental) — os
+  6 briefs foram **descartados** por serem redundantes ou, no caso de
+  F10, diretamente incorretos. Achado real que sobrou: um campo
+  `manta_code` legado nos 3 segmentos mais novos colide com o código
+  real de outro segmento (risco de misroteamento se o routing de
+  produção ainda usar esse campo — ver "GAPS ABERTOS"). Consolida
+  também a decisão já tomada de descartar a proposta de agente "Manta
+  17/geotecnia" e uma correção ao guia de D03 (S12 não depende de D03
+  como se pensou inicialmente). **Nada escrito na fonte real
+  (SharePoint)** nesta sessão.
 - **v5.4.6** (2026-09-10) — diretriz de posicionamento (MN): propostas
   de Infraestrutura devem destacar a maturidade profissional da equipe
   Manta primeiro, com a IA da Manta posicionada como apoio/multiplicador

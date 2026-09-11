@@ -44,8 +44,8 @@ A disciplina **D03-Geotecnia** já cobre, em produção:
   contratado × executado, base de claim).
 
 Segmentos-clientes já mapeados (aplicabilidade real, direto do
-SKILL.md): **S1 (Rodovias), S2 (OAE), S3 (Ferrovia), S4 (Metrô), S7
-(Portos), S11 (Barragens)** — com peso "Pesado" em terraplenagem (S1),
+SKILL.md): **S1 (Rodovias), S2 (OAE), S3 (Ferrovia), S4 (Metrô), S8
+(Aeroportos), S11 (Barragens)** — com peso "Pesado" em terraplenagem (S1),
 fundações, contenção, NATM (S4) e barragens (S11).
 
 **Conclusão prática**: se você (ou um agente vertical) precisa de
@@ -55,33 +55,44 @@ lugar certo (ver seção 3).
 
 ---
 
-## 2. O que falta (gap real, verificado)
+## 2. O que falta (gap real, verificado — corrigido em 2026-09-11)
 
-1. **S12-Túneis não está na lista de segmentos-clientes de D03** — apesar
-   de qualquer túnel NATM depender diretamente de RMR/Q/GSI para
-   classificar o maciço e definir a classe de suporte. Isso é uma
-   lacuna real na fonte oficial, não uma suposição: o SKILL.md de D03
-   lista S1/S2/S3/S4/S7/S11 e não lista S12. Como S12 (Túneis) hoje só
-   existe como pasta vazia no SharePoint ("a confirmar"), a lacuna em
-   D03 provavelmente é só um reflexo de S12 ainda não ter sido escrito
-   — ver `docs/S12-TUNEIS-SKILL.md` (deste PR) para a proposta de
-   conteúdo de S12, que já assume D03 como dependência principal.
+Uma versão anterior deste guia afirmava que "S12-Túneis falta na lista
+de segmentos-clientes de D03" e recomendava adicioná-lo assim que
+S12 fosse formalizado. **Essa recomendação estava errada** — auditoria
+posterior (leitura direta de `01-segmentos/S12-tuneis/SKILL.md`)
+confirmou que **S12 já existe, é maduro (`agente-tuneis` v1.0.0) e já
+tem sua própria sub-disciplina interna de geotecnia**
+(`disciplines/D01-geotecnia-tuneis.md`, dentro da V5 "10 Disciplinas
+Técnicas" do próprio agente) — ele não delega para D03, é
+autossuficiente para geotecnia de túnel. O gap real é outro:
+
+1. **Risco de duplicação de método entre D03 e o D01 interno de S12** —
+   D03 define RMR/Q/GSI, Hoek-Brown e classificação de maciço
+   canonicamente para o sistema; o `agente-tuneis` (S12) parece
+   reimplementar a mesma classificação de forma independente e local.
+   Não há evidência de divergência hoje, mas os dois nunca foram
+   comparados linha a linha — vale uma verificação humana para garantir
+   que não driftem com o tempo (ex.: se D03 for atualizado com uma nova
+   correlação NSPT, o D01 interno de S12 não seria notificado
+   automaticamente).
 2. **S6 (Edificações) e S9 (Saneamento) não aparecem em D03** apesar de
    fundações de edificações e ETAs/ETEs dependerem de geotecnia —
    provavelmente porque essas disciplinas tratam a parte geotécnica
    dentro de D04 (Fundações) sem retroalimentar D03 explicitamente.
    Não é necessariamente um erro (pode ser intencional — D04 já cobre a
    interface), mas vale confirmação humana.
-3. **Nenhum caso-âncora de S12/Túneis** está listado em D03 (os casos
-   citados — Ponta Grossa, Metrô L5, Tocantins L2040 — cobrem S1/S4,
-   não um túnel isolado como S12 pretende ser).
+3. **Nenhum caso-âncora de barragens de rejeito (S11/mineração)** listado
+   em D03, apesar de S13-Mineração (também real e maduro) tratar
+   geotecnia de cava e pilhas de estéril internamente — mesmo padrão de
+   possível duplicação do item 1, agora entre D03 e o `agente-mineracao`.
 
 ---
 
 ## 3. Como aplicar D03 nos projetos da Manta (guia de uso)
 
-Para qualquer agente vertical (S1, S2, S3, S4, S7, S11 — e S12 quando
-formalizado) que precise de geotecnia:
+Para qualquer agente vertical (S1, S2, S3, S4, S8, S11) que precise de
+geotecnia compartilhada:
 
 1. **Não reimplemente** classificação de solo/rocha, fórmulas de
    estabilidade ou correlações NSPT dentro do agente vertical — consuma
@@ -103,11 +114,13 @@ formalizado) que precise de geotecnia:
    1ª/2ª/3ª categoria entregue por D03 a D05 (Terraplenagem) é o insumo
    correto para precificar terraplenagem — não estimar a categoria
    dentro do orçamento sem essa base.
-5. **Ao expandir para S12-Túneis**: usar D03 para toda a investigação e
-   parâmetros de maciço (RMR/Q/GSI), e a nova disciplina proposta
-   **D22-Túneis** (`docs/D22-TUNEIS-SKILL.md`, deste PR) para o método
-   construtivo e dimensionamento de suporte propriamente dito — D03 não
-   deve ser duplicada dentro de D22, só consumida por ela.
+5. **Para S12-Túneis, S13-Mineração e S14-Óleo e Gás especificamente**:
+   note que esses três já são agentes verticais maduros e
+   autossuficientes (com suas próprias sub-disciplinas internas,
+   inclusive geotécnicas) — não são consumidores de D03 no mesmo
+   sentido que S1/S2/S3/S4/S8/S11. Não force um handoff para D03 nesses
+   três sem antes confirmar com quem mantém cada um se a duplicação de
+   método (item 1 da Seção 2) é aceitável ou precisa ser eliminada.
 
 ---
 
@@ -115,13 +128,12 @@ formalizado) que precise de geotecnia:
 
 - **Não criar um agente novo para geotecnia** — confirma a decisão já
   tomada nesta sessão (ver PR anterior, fechado): D03 já cobre essa
-  necessidade como disciplina transversal madura.
-- **Ação concreta e pequena, quando aprovada por MN**: adicionar
-  "S12" à lista de segmentos-clientes de D03 no SharePoint real
-  (`04-disciplinas/D03-geotecnia/SKILL.md`, campo "Segmentos onde D03
-  aparece"), assim que S12-Túneis for formalizado — isso é uma edição
-  de uma linha na fonte real, não uma proposta de arquitetura nova.
-- **Reaproveitar D03 como template**: os 6 briefs de disciplina/segmento
-  novos deste PR (S12, S13, S14, D21, D22) foram escritos espelhando a
-  estrutura e o nível de precisão técnica de D03 v2.0.0 — deve
-  facilitar a revisão humana por já seguir o padrão real.
+  necessidade como disciplina transversal madura para S1/S2/S3/S4/S8/S11.
+- **Não adicionar S12/S13/S14 à lista de segmentos-clientes de D03** —
+  recomendação anterior deste guia, retratada: esses três segmentos já
+  têm geotecnia própria internalizada, adicioná-los sugeriria uma
+  dependência que não existe de fato.
+- **Ação real pendente**: levar o risco de duplicação de método
+  (RMR/Q/GSI definido em D03 vs. reimplementado dentro de S12/S13) para
+  quem mantém essas skills, para decidir se vale unificar ou se a
+  duplicação é intencional/aceitável.
