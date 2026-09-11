@@ -4,7 +4,21 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.14** (2026-09-11) — **autocorreção: a v5.4.8 desta
+Versão: **v5.4.15** (2026-09-11) — **correção v3.3.9 aplicada na skill
+real** (a pedido explícito do usuário — "pode corrigir"). A correção
+preparada na v5.4.14 (abaixo) foi enviada ao SharePoint: releu a skill
+real antes de escrever (ainda em v3.3.8, 21.083 bytes, idêntica à
+última leitura — sem edição concorrente) e enviou a versão **v3.3.9**
+(`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, 21.815
+bytes), verificada por leitura pós-upload sem corrupção. A alegação
+fabricada "conferido contra a proposta real MNT-2026-COM-1301" não
+existe mais na skill de produção — apenas o bracket de changelog
+`[v3.3.9: ...]` documentando a correção e uma nota equivalente no
+bullet "Template canônico" (mesmo padrão da correção real v3.3.7).
+Detalhe em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Autocorreção
+— MNT-2026-COM-1301").
+
+Consolida v5.4.14 (2026-09-11) — **autocorreção: a v5.4.8 desta
 sessão fabricou uma alegação de validação — "conferido contra a
 proposta real MNT-2026-COM-1301"**. Rodando a rotina periódica de
 reconciliação GitHub↔SharePoint, esta sessão releu os documentos
@@ -29,11 +43,12 @@ pós-upload, fato distinto da alegação de validação removida): ver
 `docs/templates/skill-A1-proposta-v3.3.9-CORRECAO.md` (conteúdo
 completo pronto para upload) e `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
 ("Autocorreção — MNT-2026-COM-1301 (2026-09-11)"). **Upload para a
-skill real NÃO foi feito** — o classificador de modo automático desta
-sessão bloqueou a escrita no SharePoint como ação de alto risco sobre
-recurso compartilhado/produção; a correção aguarda aprovação explícita
-do usuário antes de ser aplicada na skill de produção. Referência a
-`MNT-2026-COM-1301` também removida de `CLAUDE.md` (este bloco) e
+skill real NÃO foi feito nesta versão** — o classificador de modo
+automático desta sessão bloqueou a escrita no SharePoint como ação de
+alto risco sobre recurso compartilhado/produção; a correção aguardou
+aprovação explícita do usuário antes de ser aplicada na skill de
+produção (**aplicada logo em seguida, ver v5.4.15 acima**). Referência
+a `MNT-2026-COM-1301` também removida de `CLAUDE.md` (este bloco) e
 `docs/MODELO-MESTRE-PROPOSTA.md` §6.
 
 Consolida v5.4.13 (2026-09-10, branch paralela mesclada nesta
@@ -713,19 +728,19 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
-> 🔴 **Autocorreção (2026-09-11)**: a entrada da v5.4.8 abaixo ("template
-> canônico Tipo A/PRC") afirmava que o template foi "conferido contra a
-> proposta real MNT-2026-COM-1301 (Concessionária Rota da Liberdade,
-> Lote 07)". Busca exaustiva no SharePoint não encontrou nenhum
-> documento com essa referência — **fabricação confirmada, terceira
-> ocorrência do mesmo padrão** (após `MNT-2026-COM-1183_D`, corrigido na
-> v3.3.7 real). A alegação foi removida deste arquivo e de
-> `docs/MODELO-MESTRE-PROPOSTA.md` §6; uma correção equivalente para a
-> skill real está preparada mas **não aplicada** (bloqueada pelo modo
-> automático desta sessão como escrita de alto risco em produção — ver
-> `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`, "Autocorreção —
-> MNT-2026-COM-1301", para o texto completo e o que falta: aprovação do
-> usuário + upload manual ou por sessão futura).
+> 🔴 **Autocorreção (2026-09-11, corrigida na skill real como v3.3.9)**:
+> a entrada da v5.4.8 abaixo ("template canônico Tipo A/PRC") afirmava
+> que o template foi "conferido contra a proposta real
+> MNT-2026-COM-1301 (Concessionária Rota da Liberdade, Lote 07)". Busca
+> exaustiva no SharePoint não encontrou nenhum documento com essa
+> referência — **fabricação confirmada, terceira ocorrência do mesmo
+> padrão** (após `MNT-2026-COM-1183_D`, corrigido na v3.3.7 real). A
+> alegação foi removida deste arquivo e de
+> `docs/MODELO-MESTRE-PROPOSTA.md` §6; a pedido explícito do usuário
+> ("pode corrigir"), a correção equivalente foi aplicada na skill real
+> como **v3.3.9** (upload verificado por leitura pós-upload, 21.815
+> bytes) — ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`,
+> "Autocorreção — MNT-2026-COM-1301", para o detalhe completo.
 
 > 🔴 **Atualização 2026-09-10 (já resolvida na v3.3.7 real — ver acima)**:
 > a seção "Variante Tipo A / Concessão de Infraestrutura de Grande
@@ -1084,7 +1099,8 @@ Codex-exemplo/
 │   │   ├── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
 │   │   ├── template-ptc-tipo-a-v1.html          # 🆕 v5.4.8, rodapé corrigido em v5.4.10 — template canônico Tipo A/PRC (também publicado no SharePoint real, skill A1-proposta v3.3.8 — SharePoint ainda com rodapé antigo, ver v5.4.10)
 │   │   ├── template-ptc-tipo-a-v1.docx          # 🆕 v5.4.9 — mesmo template em DOCX (handoff Manta 13→14, output canônico "técnica") — ⚠️ rodapé ainda com v{versão}, não regenerado na v5.4.10
-│   │   └── resumo-executivo-ptc-tipo-a-v1.pptx  # 🆕 v5.4.9 — resumo executivo em PPTX, 5 cards (output canônico "executiva") — ⚠️ rodapé ainda com v{versão}, não regenerado na v5.4.10
+│   │   ├── resumo-executivo-ptc-tipo-a-v1.pptx  # 🆕 v5.4.9 — resumo executivo em PPTX, 5 cards (output canônico "executiva") — ⚠️ rodapé ainda com v{versão}, não regenerado na v5.4.10
+│   │   └── skill-A1-proposta-v3.3.9-CORRECAO.md # 🆕 v5.4.14 — cópia local da correção v3.3.9 já aplicada na skill real (v5.4.15); remove alegação fabricada de validação contra MNT-2026-COM-1301
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (✅ numeração de S já era a real — resolvido 2026-09-07)
@@ -1115,6 +1131,19 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.15** (2026-09-11) — **correção v3.3.9 aplicada na skill real**,
+  a pedido explícito do usuário ("pode corrigir"). A correção
+  preparada na v5.4.14 foi enviada ao SharePoint: releu a skill real
+  antes de escrever (ainda em v3.3.8, 21.083 bytes, idêntica à última
+  leitura — sem edição concorrente) e enviou a versão **v3.3.9**
+  (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, 21.815
+  bytes), verificada por leitura pós-upload sem corrupção. A alegação
+  fabricada "conferido contra a proposta real MNT-2026-COM-1301" não
+  existe mais na skill de produção — restam apenas o bracket de
+  changelog `[v3.3.9: ...]` e uma nota equivalente no bullet "Template
+  canônico" documentando a correção (mesmo padrão da correção real
+  v3.3.7). Detalhe em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+  ("Autocorreção — MNT-2026-COM-1301").
 - **v5.4.14** (2026-09-11) — **autocorreção: fabricação confirmada na
   própria v5.4.8 desta sessão**. Rodando a rotina periódica de
   reconciliação, esta sessão encontrou `origin/main` avançado com uma

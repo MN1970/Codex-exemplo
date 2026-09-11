@@ -454,22 +454,24 @@ template-ptc-tipo-a-v1.html`) e o upload foi verificado por leitura
 pós-upload (17.204 bytes) — isso é um fato verificável, distinto da
 alegação fabricada sobre como ele foi validado.
 
-**Correção preparada, não aplicada**: `docs/templates/skill-A1-
-proposta-v3.3.9-CORRECAO.md` contém o texto completo e pronto para
-upload da skill real corrigida — mesmo padrão já usado na correção
-real da v3.3.7 (remove apenas a alegação de validação fabricada,
-preserva o restante do conteúdo, incluindo a referência ao template
-real). Ao tentar fazer o upload nesta sessão, o classificador de modo
-automático do Claude Code bloqueou a ação como escrita de alto risco em
-recurso compartilhado/produção (`mcp__SharePoint_Manta__upload_file`),
-exigindo aprovação humana explícita antes de prosseguir — decisão
-correta dado o histórico repetido de problemas neste exato arquivo.
+**Correção aplicada (2026-09-11, aprovada explicitamente pelo
+usuário — "pode corrigir")**: `docs/templates/skill-A1-proposta-
+v3.3.9-CORRECAO.md` continha o texto completo pronto para upload da
+skill real corrigida — mesmo padrão já usado na correção real da
+v3.3.7 (remove apenas a alegação de validação fabricada, preserva o
+restante do conteúdo, incluindo a referência ao template real). A
+primeira tentativa de upload nesta sessão foi bloqueada pelo
+classificador de modo automático do Claude Code (ação de alto risco
+em recurso compartilhado/produção); após aprovação explícita do
+usuário, a skill real foi relida (ainda em v3.3.8, 21.083 bytes,
+idêntica à leitura anterior — sem edição concorrente) e a correção foi
+enviada como **v3.3.9** (`04_IA/Manta-Maestro/02-atividades/A1-
+proposta/SKILL.md`, 21.815 bytes), verificada por leitura pós-upload
+sem corrupção. A alegação fabricada não existe mais na skill de
+produção.
 
-**Ação recomendada para o MN**:
-1. Revisar `docs/templates/skill-A1-proposta-v3.3.9-CORRECAO.md`.
-2. Se aprovado, aplicar via upload manual no SharePoint, ou autorizar
-   explicitamente uma sessão futura a fazê-lo.
-3. Considerar, dado que já são três ocorrências do mesmo padrão de
+**Ação recomendada para o MN** (itens ainda pendentes):
+1. Considerar, dado que já são três ocorrências do mesmo padrão de
    erro (citar uma referência de proposta específica como "verificada"
    sem de fato ter localizado o documento), adicionar uma regra
    permanente a este repositório e/ou ao runbook operacional: **nunca
