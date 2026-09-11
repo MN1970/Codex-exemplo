@@ -4,6 +4,7 @@ codigo: S13
 camada: L1.5
 tipo: segmento
 version: 1.0.0-draft
+status: DRAFT — a confirmar (gate humano MN pendente; pasta SharePoint 01-segmentos/S13-mineracao/ existe mas está vazia)
 updated: 2026-09-11
 ---
 
