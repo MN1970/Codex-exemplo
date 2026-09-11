@@ -288,13 +288,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate CLAUDE.md v5.0
+      - name: Validate CLAUDE.md
         run: |
-          echo "::group::CLAUDE.md v5.0 Validation"
-          if grep -q "v5.0" CLAUDE.md && grep -q "8 pilares" CLAUDE.md; then
-            echo "✅ CLAUDE.md v5.0 is valid"
+          echo "::group::CLAUDE.md Validation"
+          if grep -q "v5\." CLAUDE.md && grep -q "Modelo de 4 eixos" CLAUDE.md; then
+            echo "✅ CLAUDE.md is valid"
           else
-            echo "❌ CLAUDE.md v5.0 is missing"
+            echo "❌ CLAUDE.md is missing expected markers (v5.x version, modelo de 4 eixos)"
             exit 1
           fi
           echo "::endgroup::"
