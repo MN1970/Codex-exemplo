@@ -1,5 +1,28 @@
 # Modelo Mestre de Proposta — correção de premissa + segregação Tarifa×Success Fee
 
+> 🔴 **Autocorreção (2026-09-11)**: a §6 abaixo ("Template canônico Tipo
+> A/PRC criado e publicado") alegava validação contra "uma proposta real
+> analisada nesta sessão — **MNT-2026-COM-1301** (Concessionária Rota da
+> Liberdade, Lote 07 Ouro Preto–Mariana)". Busca exaustiva no SharePoint
+> (nome de arquivo, conteúdo indexado, pasta do cliente
+> `27_CLIENTE_VIA_LIBERDADE`) não encontrou nenhum documento com essa
+> referência — **fabricação confirmada, terceira ocorrência do mesmo
+> padrão** já descrito logo abaixo para `MNT-2026-COM-1183_D`, desta vez
+> introduzida pela própria sessão que publicou o template (não por um
+> pacote externo). A alegação foi removida da §6; uma correção
+> equivalente para a skill real está pronta mas não aplicada — ver
+> `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Autocorreção —
+> MNT-2026-COM-1301").
+
+> 🔴 **Atualização (2026-09-10)**: a fabricação corrigida abaixo
+> **recorreu** por outro caminho — a variante "Tipo A / Infraestrutura
+> de Grande Porte", hoje viva na skill real (v3.3.5), reproduz quase
+> palavra-por-palavra o addendum fabricado deste repositório, incluindo
+> a mesma revisão inexistente `MNT-2026-COM-1183_D`. Evidência completa
+> em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Recorrência
+> confirmada — Variante Tipo A"). Nenhuma escrita foi feita na skill —
+> recomendação registrada para o MN corrigir diretamente na fonte.
+
 > ⚠️ **Correção (2026-09-07)**: a versão original deste documento (ver
 > histórico no fim do arquivo) validava a skill `proposta-comercial`
 > contra uma proposta **"MNT-2026-COM-1183_D"** e descrevia a skill como
@@ -14,6 +37,50 @@
 > deste repositório vs. S1–S11 real, "20+ agentes"/Supabase/RAG fictícios
 > vs. a estrutura real de `SKILL.md` por segmento) **não está coberta
 > aqui** — ver gap dedicado em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
+
+## Diretriz de posicionamento (2026-09-10) — maturidade profissional + IA Manta, foco Infraestrutura
+
+Diretriz do MN para propostas futuras do segmento Infraestrutura (rodovias,
+OAE, ferrovia, metrô, portos, aeroportos, saneamento, energia, barragens):
+dar destaque explícito à **maturidade técnica dos profissionais da Manta**,
+posicionando as ferramentas de IA da Manta como **apoio/multiplicador de
+produtividade da equipe sênior**, nunca como substituição da experiência
+humana. Isso é uma diretriz de conteúdo para novas propostas — não uma
+alegação sobre o que já existe na skill de produção (ver correções e
+recorrência de fabricação acima; nenhuma mudança foi feita na skill real
+por causa desta diretriz).
+
+**Onde aplicar**: na seção "Benefícios e Valor" (skill `proposta-comercial`,
+seção 9 no padrão histórico observado / seção equivalente na estrutura real
+por Tipos), e reforçado na seção de Equipe, sempre que o objeto for de
+infraestrutura.
+
+**Elementos a incluir**:
+
+1. **Maturidade da equipe primeiro, IA depois** — currículos, tempo de
+   atuação no segmento específico e projetos de referência do time
+   alocado vêm antes de qualquer menção a IA. A ordem de apresentação
+   importa: IA é ferramenta de apoio à entrega de profissionais seniores,
+   não o argumento central da proposta.
+2. **IA como apoio, com limites explícitos** — manter o padrão já usado em
+   propostas reais (ver `docs/MODELO-MESTRE-PROPOSTA.md`, tom da proposta
+   MNT-2026-COM-1183_C_3): IA aplicada a leitura/extração de dados,
+   cruzamento de informações entre disciplinas e geração assistida de
+   relatórios — sempre com a ressalva de que "todos os produtos gerados
+   com apoio de IA passam por revisão e validação de profissionais
+   seniores antes da emissão".
+3. **Foco em infraestrutura específico** — trocar exemplos genéricos por
+   casos do segmento do cliente (ex.: paramétrico de CAPEX/OPEX de
+   rodovia/porto/barragem, não um exemplo abstrato), amarrando a
+   experiência técnica (normas, SICRO/SINAPI, ANTT/ANTAQ/ANAC/ANEEL/ANM
+   conforme o segmento) à maturidade da equipe, e só então à IA como
+   acelerador desse trabalho.
+
+**Não fazer**: não usar esta diretriz como pretexto para inflar
+capacidades de IA não verificadas (ver todo o histórico de fabricação
+documentado neste arquivo e em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`)
+— a maturidade profissional é o argumento principal; a IA é coadjuvante
+declarado com limites claros.
 
 ## 1. O que é real, confirmado via SharePoint (`SharePoint_Manta` MCP)
 
@@ -251,16 +318,17 @@ A pedido do usuário — que pediu para revisar a formatação/visualização
 da proposta padrão da Manta contra o Manta Maestro, e depois para
 "subir este modelo como template canônico no SharePoint" — foi
 montado um modelo padrão genérico de proposta Tipo A/PRC nesta sessão,
-a partir de duas fontes conferidas:
+a partir da skill real `A1-proposta` (v3.3.7 no momento da montagem) —
+18 seções + Anexo I, cláusulas obrigatórias por extenso.
 
-1. A skill real `A1-proposta` (v3.3.7 no momento da montagem) — 18
-   seções + Anexo I, cláusulas obrigatórias por extenso.
-2. Uma proposta real analisada nesta sessão — **MNT-2026-COM-1301**
-   (Concessionária Rota da Liberdade, Lote 07 Ouro Preto–Mariana), já
-   usando a tabela tarifária vigente (sem "Orçamentista", confirmando
-   a v3.3.6) e a segregação Tarifa×Success Fee corretamente — mas
-   **sem** a cláusula de atraso de pagamento nem o texto padrão da
-   Seção IA, ambos adicionados na revisão feita para o cliente.
+> 🔴 **Item removido (autocorreção 2026-09-11)**: esta seção afirmava
+> uma segunda fonte — "uma proposta real analisada nesta sessão,
+> MNT-2026-COM-1301 (Concessionária Rota da Liberdade, Lote 07 Ouro
+> Preto–Mariana)", com detalhes específicos sobre o que ela usava e
+> não usava. Busca exaustiva no SharePoint não encontrou nenhum
+> documento com essa referência — a afirmação era fabricada. Removida
+> sem substituição; o template foi montado apenas a partir da skill
+> real (item 1 acima). Ver alerta no topo deste arquivo.
 
 O modelo inclui: capa, sumário/índice, resumo executivo (5 cards:
 Objeto/Escopo/Prazos/Preço/Entregáveis), as 18 seções + Anexo I com as
