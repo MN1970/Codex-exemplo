@@ -1,14 +1,17 @@
 # Addendum pronto para deploy — Extensão de Geotecnia Rodoviária
 ## (perfil de cortes/aterros, baliza de uso de material, banco JSON consolidado, QA/QC de sondagens)
 
-**Status:** 🟡 **proposta técnica — aguardando gate humano (MN) antes de aplicar.**
-Ainda **não aplicada** à skill de produção. A skill `rodovias-geotecnia`
-não foi localizada neste repositório (`Codex-exemplo`) nem seu caminho
-canônico foi confirmado no SharePoint nesta sessão. Antes de publicar,
-localizar o `SKILL.md` de produção de `rodovias-geotecnia` (provável
-local: `04_IA/Manta-Maestro/02-sub-skills/` no SharePoint, por analogia
-ao padrão usado por `skill-proposta-comercial-SKILL.md`) e colar o bloco
-da Seção A abaixo na posição indicada.
+**Status:** ✅ **gate humano (MN) aprovado em 2026-09-12** (confirmado em
+sessão de chat). Aplicação técnica ainda **pendente**: a skill
+`rodovias-geotecnia` não foi localizada neste repositório
+(`Codex-exemplo`) nem seu caminho canônico foi confirmado no SharePoint
+nesta sessão. Antes de publicar, localizar o `SKILL.md` de produção de
+`rodovias-geotecnia` (provável local: `04_IA/Manta-Maestro/02-sub-skills/`
+no SharePoint, por analogia ao padrão usado por
+`skill-proposta-comercial-SKILL.md`) e colar o bloco da Seção A abaixo na
+posição indicada — passo bloqueado nesta sessão porque o conector
+`SharePoint_Manta` está desconectado (mesma situação já registrada para o
+addendum de `proposta-comercial`).
 
 **Atualização 2026-09-12:** os números de norma NBR/DNIT citados neste
 addendum foram verificados por pesquisa web (3 pesquisas independentes)
@@ -537,7 +540,7 @@ perfil silenciosamente quando `liberado_para_projeto_executivo` for falso.
 
 ## Checklist de aplicação (para quem for publicar)
 
-- [ ] Gate humano (MN) — **pendente**.
+- [x] Gate humano (MN) — **aprovado em 2026-09-12** (sessão de chat).
 - [ ] Confirmar o caminho canônico do `SKILL.md` de `rodovias-geotecnia` em
       produção (SharePoint ou outro repositório operacional) — não
       confirmado nesta sessão.
