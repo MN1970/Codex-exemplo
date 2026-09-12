@@ -371,13 +371,13 @@ class TestRegressionDeployment:
     """Gate: Deployment checklist."""
 
     def test_claude_md_valid(self):
-        """CLAUDE.md v5.0 válido."""
+        """CLAUDE.md válido (modelo de 4 eixos S×A×F×D)."""
         claude_path = Path("CLAUDE.md")
         if claude_path.exists():
             with open(claude_path, 'r') as f:
                 content = f.read()
-                assert "v5.0" in content
-                assert "8 pilares" in content or "pilares" in content.lower()
+                assert "v5." in content
+                assert "Modelo de 4 eixos" in content
 
     def test_no_breaking_changes(self):
         """Sem breaking changes em agent interfaces."""

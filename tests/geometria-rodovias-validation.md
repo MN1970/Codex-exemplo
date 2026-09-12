@@ -10,24 +10,28 @@
 ## Teste 1: Cálculo de Raio Mínimo
 
 ### Prompt
-```
+
+```text
 Preciso projetar uma curva horizontal em uma BR federal (Vd=100 km/h). 
 O raio disponível é 400m. Qual deve ser a superelevação? 
 Qual o comprimento da clotóide? Preciso de recuo de banqueta?
 ```
 
 ### Saída Esperada
+
 - ✅ Superelevação: e ≈ 4.7-5.0%
 - ✅ Comprimento clotóide: L_c ≈ 110-120m
 - ✅ Flecha de recuo: f ≈ 4.5-5.0m
 - ✅ Referência: ES 101/97, Item 5.2
 
 ### Critério de Pass
+
 - Respostas dentro de ±10% dos valores esperados
 - Justificativa baseada em norma DNIT
 - Cálculo demonstrado (não apenas resposta)
 
 ### Status
+
 - [ ] Pass
 - [ ] Fail
 - [ ] Comentários
@@ -37,24 +41,28 @@ Qual o comprimento da clotóide? Preciso de recuo de banqueta?
 ## Teste 2: Visibilidade em Curva
 
 ### Prompt
-```
+
+```text
 Tenho uma curva de 500m de raio em rodovia federal (Vd=100). 
 A distância de parada é 137m. Qual flecha de recuo preciso abrir 
 na banqueta de corte? Qual é a altura mínima de corte?
 ```
 
 ### Saída Esperada
+
 - ✅ Flecha: f ≈ 4.7m (conforme fórmula ES 101/97)
 - ✅ Justificativa: D²/(8R) - 0.6 → 137²/(8×500) - 0.6
 - ✅ Altura mínima corte: 5m (conforme doc 06)
 - ✅ Recomendação: Se corte > 5m, criar banqueta intermediária
 
 ### Critério de Pass
+
 - Fórmula correta
 - Valor dentro de ±5% do esperado
 - Justificativa clara da visibilidade
 
 ### Status
+
 - [ ] Pass
 - [ ] Fail
 - [ ] Comentários
@@ -64,15 +72,17 @@ na banqueta de corte? Qual é a altura mínima de corte?
 ## Teste 3: Orçamento com SICRO
 
 ### Prompt
-```
+
+```text
 Preciso orçar 1km de rodovia federal, pista simples, Vd=100 km/h, 
 pavimento CBUQ 5cm, BGS 15cm. Qual quantitativo e custo SICRO estimado? 
 Qual o valor total incluindo margem?
 ```
 
 ### Saída Esperada
+
 - ✅ Pavimento CBUQ 5cm: 7.200 m² (1km × 7.2m)
-- ✅ BGS 15cm: 7.200 m² 
+- ✅ BGS 15cm: 7.200 m²
 - ✅ Custo unitário SICRO 2026 (atualizado):
   - CBUQ 5cm: ~R$95/m² → R$684k
   - BGS 15cm: ~R$18/m² → R$130k
@@ -81,11 +91,13 @@ Qual o valor total incluindo margem?
 - ✅ Total 1km: ~R$5.4M (incluindo terraplenagem estimada)
 
 ### Critério de Pass
+
 - Quantitativo correto (área pavimento = 1km × largura)
 - Valores SICRO realistas (2026)
 - Cálculo de margem transparente
 
 ### Status
+
 - [ ] Pass
 - [ ] Fail
 - [ ] Comentários
@@ -95,7 +107,8 @@ Qual o valor total incluindo margem?
 ## Teste 4: Recomendação de Parâmetros Geométricos
 
 ### Prompt
-```
+
+```text
 Tenho uma rodovia estadual em topografia montanhosa. 
 Volume de tráfego: 400k veículos/ano. 
 Qual deve ser minha velocidade de projeto (Vd)?
@@ -103,6 +116,7 @@ Quais padrões geométricos (raio mínimo, superelevação, banqueta)?
 ```
 
 ### Saída Esperada
+
 - ✅ Vd recomendado: 80 km/h (rodovia estadual, montanhosa)
 - ✅ R_mín: 220m (conforme ES 101/97 para Vd=80)
 - ✅ e_máx: 7.0%
@@ -111,11 +125,13 @@ Quais padrões geométricos (raio mínimo, superelevação, banqueta)?
 - ✅ Justificativa: tráfego moderado + topografia difícil → geometria segura
 
 ### Critério de Pass
+
 - Vd coerente com dados de entrada
 - Parâmetros consistentes com Vd escolhido
 - Referência a normas DNIT
 
 ### Status
+
 - [ ] Pass
 - [ ] Fail
 - [ ] Comentários
@@ -125,13 +141,15 @@ Quais padrões geométricos (raio mínimo, superelevação, banqueta)?
 ## Teste 5: Análise de Risco Geométrico
 
 ### Prompt
-```
+
+```text
 Identifiquei um trecho da BR com 4 acidentes em 2 anos. 
 As curvas têm R=250m (Vd=100km/h). 
 Qual é o risco geométrico? Como mitigá-lo?
 ```
 
 ### Saída Esperada
+
 - ✅ Diagnóstico: Risco CRÍTICO (R=250m < R_mín=340m para Vd=100)
 - ✅ Análise:
   - Superelevação máxima insuficiente
@@ -144,11 +162,13 @@ Qual é o risco geométrico? Como mitigá-lo?
 - ✅ Recomendação: Opção 1 (reduzir Vd) é mais viável economicamente
 
 ### Critério de Pass
+
 - Identificação correta do risco
 - Comparação com norma
 - Mitigações realistas e hierarquizadas
 
 ### Status
+
 - [ ] Pass
 - [ ] Fail
 - [ ] Comentários
@@ -158,7 +178,7 @@ Qual é o risco geométrico? Como mitigá-lo?
 ## Resumo de Validação
 
 | Teste | Descrição | Esperado | Resultado | Status |
-|-------|-----------|----------|-----------|--------|
+| ------- | ----------- | ---------- | ----------- | -------- |
 | 1 | Raio mínimo & superelevação | e≈4.7%, Lc≈110m, f≈4.7m | ? | ⏳ |
 | 2 | Visibilidade em curva | f≈4.7m, H≥5m | ? | ⏳ |
 | 3 | Orçamento SICRO | R$5.4M (1km) | ? | ⏳ |

@@ -4,20 +4,90 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.6** (2026-09-10) — **diretriz de posicionamento**: foco
-na maturidade profissional da equipe Manta, com IA como apoio/
-multiplicador (não substituição), para propostas do segmento
-Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
+Versão: **v5.4.16** (2026-09-12) — **rotina de reconciliação:
+`INDICE-CANONICAL.md` evoluiu para v1.1, taxonomia S1–S14/A1–A11/
+F1–F10/D01–D22 confirmada real mas majoritariamente "a confirmar"**.
+Achado grande, ação pequena: a fonte canônica real do SharePoint tem
+uma nova estrutura de pastas (`01-segmentos/`, `02-atividades/`,
+`03-funcionais/`, `04-disciplinas/`) e um pacote de arquitetura
+"v6.1.0" resgatado de uma biblioteca órfã — mas o próprio índice
+canônico marca a maior parte como não confirmada e afirma
+explicitamente que a v6 **não foi adotada** (v5.0.1 continua vigente).
+Também encontrada uma quarta ocorrência do padrão de fabricação
+`MNT-2026-COM-1183_D`, agora dentro do changelog do próprio índice
+canônico. Único ajuste aplicado: linha A9 (Regulatório) corrigida —
+`rubrica-A9` confirmada ativa (era "TODO"), mais uma numeração
+ANEEL/ANAC desatualizada corrigida na mesma linha. Nenhuma mudança
+estrutural grande — decisão de arquitetura/formalização de segmentos
+segue pendente do MN. Detalhe completo em
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Reconciliação —
+INDICE-CANONICAL.md v1.1 e taxonomia expandida (2026-09-12)").
+
+Consolida v5.4.15 (2026-09-11) — **correção v3.3.9 aplicada na skill
+real** (a pedido explícito do usuário — "pode corrigir"). A correção
+preparada na v5.4.14 (abaixo) foi enviada ao SharePoint: releu a skill
+real antes de escrever (ainda em v3.3.8, 21.083 bytes, idêntica à
+última leitura — sem edição concorrente) e enviou a versão **v3.3.9**
+(`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, 21.815
+bytes), verificada por leitura pós-upload sem corrupção. A alegação
+fabricada "conferido contra a proposta real MNT-2026-COM-1301" não
+existe mais na skill de produção — apenas o bracket de changelog
+`[v3.3.9: ...]` documentando a correção e uma nota equivalente no
+bullet "Template canônico" (mesmo padrão da correção real v3.3.7).
+Detalhe em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Autocorreção
+— MNT-2026-COM-1301").
+
+Consolida v5.4.14 (2026-09-11) — **autocorreção: a v5.4.8 desta
+sessão fabricou uma alegação de validação — "conferido contra a
+proposta real MNT-2026-COM-1301"**. Rodando a rotina periódica de
+reconciliação GitHub↔SharePoint, esta sessão releu os documentos
+canônicos reais (índice, arquitetura, RAG, skill `A1-proposta`) — todos
+inalterados desde a última leitura — mas encontrou, ao checar
+`origin/main`, que uma sessão paralela (`session_01VFwyufkjNAjRownKxprv1c`)
+já havia identificado e documentado uma **recorrência da fabricação**
+na skill real (ver v5.4.12/v5.4.13 abaixo). Isso motivou checar o
+próprio trabalho desta sessão pelo mesmo padrão: busca exaustiva no
+SharePoint (`find_item` por nome e conteúdo indexado, busca dedicada na
+pasta do cliente `27_CLIENTE_VIA_LIBERDADE`) **não encontrou nenhum
+documento** com a referência `MNT-2026-COM-1301`, citada na v5.4.8
+como a proposta real usada para "conferir" o template canônico Tipo
+A/PRC. É a **terceira ocorrência confirmada** do mesmo padrão de
+fabricação neste histórico (após `MNT-2026-COM-1183_D` na v3.3.0/v3.3.5
+da skill, corrigido na v3.3.7) — desta vez introduzida pela própria
+sessão que publicou o template, não por um pacote externo. Correção
+preparada seguindo o mesmo padrão já usado na v3.3.7 real (remover
+apenas a alegação de validação, preservar o conteúdo estrutural
+verificável — o template existe e o upload foi confirmado por leitura
+pós-upload, fato distinto da alegação de validação removida): ver
+`docs/templates/skill-A1-proposta-v3.3.9-CORRECAO.md` (conteúdo
+completo pronto para upload) e `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+("Autocorreção — MNT-2026-COM-1301 (2026-09-11)"). **Upload para a
+skill real NÃO foi feito nesta versão** — o classificador de modo
+automático desta sessão bloqueou a escrita no SharePoint como ação de
+alto risco sobre recurso compartilhado/produção; a correção aguardou
+aprovação explícita do usuário antes de ser aplicada na skill de
+produção (**aplicada logo em seguida, ver v5.4.15 acima**). Referência
+a `MNT-2026-COM-1301` também removida de `CLAUDE.md` (este bloco) e
+`docs/MODELO-MESTRE-PROPOSTA.md` §6.
+
+Consolida v5.4.13 (2026-09-10, branch paralela mesclada nesta
+reconciliação — `session_01VFwyufkjNAjRownKxprv1c`) — **diretriz de
+posicionamento**: foco na maturidade profissional da equipe Manta, com
+IA como apoio/multiplicador (não substituição), para propostas do
+segmento Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
 ("Diretriz de posicionamento (2026-09-10)"). É orientação de conteúdo
 para propostas futuras — não altera nem alega nada sobre a skill de
-produção.
+produção. *(Renumerada de "v5.4.6" para "v5.4.13" nesta reconciliação —
+colisão de numeração entre branches paralelas que evoluíram do mesmo
+v5.4.4; ver nota de proveniência abaixo.)*
 
-Consolida v5.4.5 (2026-09-10) — **recorrência confirmada da
-fabricação na skill real de proposta**. Investigação read-only via
-`SharePoint_Manta` MCP confirmou que a seção "Variante Tipo A /
-Concessão de Infraestrutura de Grande Porte", hoje viva em
+Consolida v5.4.12 (2026-09-10, branch paralela mesclada nesta
+reconciliação — `session_01VFwyufkjNAjRownKxprv1c`) — **recorrência
+confirmada da fabricação na skill real de proposta**. Investigação
+read-only via `SharePoint_Manta` MCP confirmou que a seção "Variante
+Tipo A / Concessão de Infraestrutura de Grande Porte", então viva em
 `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.5),
-reproduz quase palavra-por-palavra o addendum fabricado deste
+reproduzia quase palavra-por-palavra o addendum fabricado deste
 repositório (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`), incluindo a
 referência a uma revisão de proposta inexistente
 (`MNT-2026-COM-1183_D` — só `_C_3` é encontrável). A própria fonte
@@ -29,8 +99,131 @@ saneamento estrutural de 2026-09-07, sem gate humano de verificação de
 fonte primária). Detalhe completo, incluindo a comparação literal, em
 `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (seção "Recorrência
 confirmada — Variante Tipo A (2026-09-10)"). **Nenhuma escrita foi
-feita na skill de produção** — recomendação registrada para o MN
-revisar e corrigir diretamente.
+feita na skill de produção nesta versão** — recomendação registrada
+para o MN revisar e corrigir diretamente (posteriormente corrigida na
+v3.3.7 real, ver v5.4.7 abaixo). *(Renumerada de "v5.4.5" para
+"v5.4.12" nesta reconciliação — mesma colisão de numeração; ver nota
+de proveniência abaixo.)*
+
+> **Nota de proveniência (2026-09-11)**: as versões v5.4.12 e v5.4.13
+> acima vieram de uma branch paralela (`session_01VFwyufkjNAjRownKxprv1c`),
+> já mesclada em `origin/main`, que evoluiu do mesmo v5.4.4 e também
+> numerou suas duas entradas como "v5.4.5" e "v5.4.6" — colidindo com
+> as versões desta sessão de mesmo número (tabela tarifária e regra
+> obrigatória, mantidas abaixo com seus números originais). Renumeradas
+> para v5.4.12/v5.4.13 ao reconciliar as duas branches nesta sessão,
+> sem alterar o conteúdo. Mesmo padrão de divergência de numeração já
+> documentado no topo deste arquivo para o merge v5.0.0/v5.0.
+
+Consolida v5.4.11 (2026-09-10) — **links de apoio adicionados ao
+agente-bd (CVs da equipe + propostas anteriores)**. A pedido do
+usuário, dois links do SharePoint real foram registrados em
+`.claude/agents/agente-bd.md` ("Modelo de proposta e resumo
+executivo") como fontes de apoio para a montagem de propostas: uma
+pasta de CVs da equipe (`PessoasOrganizacao/03_PESSOAS/02_CVS/
+01_MAR_2025`) e uma pasta de propostas anteriores da Manta (link de
+compartilhamento). **Nenhum dos dois conteúdos foi lido ou
+verificado** — confirmado via `get_site_info` que o MCP
+`SharePoint_Manta` desta sessão está vinculado ao site `Engenharia`
+apenas; o site `PessoasOrganizacao`, onde esses dois links vivem, está
+fora do alcance desta sessão. Os links ficam registrados como
+referência a checar manualmente (ou por uma sessão com acesso a esse
+site) antes de qualquer uso real em proposta de cliente.
+
+Consolida v5.4.10 (2026-09-10) — **campo de versão removido do
+rodapé de rastreabilidade da proposta básica**. A pedido do usuário,
+o campo `v{versão}` foi retirado do rodapé de rastreabilidade
+(`position:fixed`, repete em toda página impressa/PDF) do template
+canônico Tipo A/PRC — formato anterior `{cliente} | {projeto} |
+v{versão} | {data} | {autor} | {classificação} | trace: {trace_id}`,
+novo formato `{cliente} | {projeto} | {data} | {autor} |
+{classificação} | trace: {trace_id}`. Aplicado em
+`docs/templates/template-ptc-tipo-a-v1.html` (linha do
+`.manta-pagefooter`), `docs/MODELO-MESTRE-PROPOSTA.md` §6 e
+`.claude/agents/agente-bd.md` ("Modelo de proposta e resumo
+executivo"). **Não aplicado nesta versão** (fora do escopo pedido):
+os arquivos `docs/templates/template-ptc-tipo-a-v1.docx` e
+`resumo-executivo-ptc-tipo-a-v1.pptx` já gerados (v5.4.9) continuam
+com o rodapé antigo (contêm `v{versão}`) — precisam ser regenerados
+se o campo de versão também deve sair desses dois formatos; e o
+template já publicado no SharePoint real (skill `A1-proposta`
+v3.3.8, `04_IA/Manta-Maestro/02-atividades/A1-proposta/template-ptc-
+tipo-a-v1.html`) também segue com o rodapé antigo até uma nova
+sessão relê-lo e reenviar a versão corrigida.
+
+Consolida v5.4.9 (2026-09-10) — **handoff Manta 13→14 executado:
+DOCX e PPTX gerados a partir do template canônico**. A pedido do
+usuário ("execute o handoff completo"), o agente `agente-bd.md`
+(Manta 13) executou o handoff documentado na v5.4.8 (última seção
+"Ferramentas e integrações"/"Handoff") para Manta 14 (apresentações):
+gerou os dois formatos de output canônico da skill `A1-proposta`
+("Proposta de output canônica" — DOCX técnica + PPTX executiva) a
+partir do template Tipo A/PRC: `docs/templates/template-ptc-tipo-a-
+v1.docx` (18 seções + Anexo I, com as cláusulas obrigatórias por
+extenso, gerado via `docx`/docx-js) e
+`docs/templates/resumo-executivo-ptc-tipo-a-v1.pptx` (7 slides — capa,
+5 cards do resumo executivo, rastreabilidade — gerado via
+`pptx`/pptxgenjs, paleta canônica Manta). Ambos passaram na validação
+estrutural (`office/validate.py`, schema/relações/conteúdo — "All
+validations PASSED!"); a verificação visual por conversão para PDF
+não foi possível nesta sessão (LibreOffice indisponível no ambiente —
+falha até para arquivos triviais, confirmado não ser problema dos
+arquivos gerados). Ver `docs/MODELO-MESTRE-PROPOSTA.md` §6.
+
+Consolida v5.4.8 (2026-09-10) — **template canônico Tipo A/PRC criado
+e publicado no SharePoint real como v3.3.8 da skill `A1-proposta`**. A
+pedido do usuário ("Manta Maestro pode executar e implementar" →
+"subir este modelo como template canônico no SharePoint"), o modelo
+padrão de proposta gerado nesta sessão
+(`docs/templates/template-ptc-tipo-a-v1.html`) foi enviado ao
+SharePoint real em
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/template-ptc-tipo-a-
+v1.html` (17.204 bytes, upload verificado por leitura pós-upload) e a
+skill real `A1-proposta` foi atualizada para **v3.3.8** — releu o
+arquivo antes de editar (risco de edição concorrente), adicionou a
+nova seção "Template e exemplares -- Tipo A / PRC" referenciando o
+template (mirroring a seção já existente para o Tipo B), marcou "Tipo
+A (PTC)" como tendo "Template canônico disponível", e registrou o
+changelog em `[v3.3.8: ...]` no frontmatter. Upload verificado por
+leitura pós-upload (21.083 bytes). Ver seção "Modelo Mestre de
+Proposta" e `docs/MODELO-MESTRE-PROPOSTA.md` §6.
+
+Consolida v5.4.7 (2026-09-10) — **rotina de reconciliação: tabela
+tarifária corrigida (grupo "Orçamentista" removido, v3.3.5-v3.3.7 da
+skill real)**. A Routine periódica GitHub↔SharePoint
+(`trig_01KPNtXg2TJJaNYhHoetrB3D`) releu a skill real e encontrou que
+ela evoluiu de v3.3.4 para v3.3.7 desde a última leitura no mesmo dia:
+o grupo "Orçamentista" (v5.4.5/v5.4.6 deste arquivo) foi removido da
+tabela tarifária na v3.3.6 — qualquer área se enquadra nos níveis
+existentes por senioridade, não por Função dedicada — e uma cláusula
+sobre citação de "Manta Mestro" ao cliente e um bloco de Ficha Técnica
+foram adicionados (v3.3.5), além de uma alegação de validação não
+verificável ter sido removida (v3.3.7). Ver "Modelo Mestre de
+Proposta" e `docs/MODELO-MESTRE-PROPOSTA.md` §5. A mesma rotina também
+localizou a arquitetura canônica atual em
+`00-arquitetura/manta-maestro-arquitetura-v5.0.md` (v5.0.1, substitui
+v3.0/v3.1/v3.2 deprecados) — não contradiz nada já reconciliado, só
+atualiza o caminho do documento-fonte; ver
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
+
+Consolida v5.4.6 (2026-09-10) — **regra obrigatória: toda proposta
+comercial deve usar o modelo mestre vigente**. A pedido do usuário,
+formalizada no topo da seção "Modelo Mestre de Proposta" uma regra
+explícita: toda proposta gerada por qualquer agente Manta deve (1)
+seguir a estrutura real da skill `A1-proposta` (14 seções, modos
+M1–M5) e (2) usar exclusivamente a tabela tarifária vigente, nunca
+perfis ou valores anteriores a 2026-09-09. Não muda o conteúdo do
+modelo em si (já documentado na v5.4.5) — torna explícito e
+obrigatório o que antes era apenas descritivo.
+
+Consolida v5.4.5 (2026-09-10) — **tabela tarifária real atualizada
+(v3.3.2-v3.3.4 da skill A1-proposta)**: consolidação "revB" das
+tarifas profissionais (pedido de Willer Monteiro/Diretoria de IA +
+PMO, 09/09/2026) — nova matriz Função×Nível substituindo os 13 perfis
+antigos, mais a cláusula de deslocamentos expandida (sempre por conta
+do cliente). Mudança de negócio legítima na skill real, não um
+acidente de sync — ver seção "Modelo Mestre de Proposta" e
+`docs/MODELO-MESTRE-PROPOSTA.md` §4 para a tabela completa.
 
 Consolida v5.4.4 (2026-09-08) — **a skill real de proposta mudou de
 lugar de novo, no mesmo dia, e foi reaplicada**. Horas depois da
@@ -263,7 +456,7 @@ metodologia e handoffs por atividade. Resumo:
 | A6 | Contratual | Manta 02 (contratual) | ✅ Mapeado |
 | A7 | Claims | Manta 01 (claims) | ✅ Mapeado |
 | A8 | Advisory | Manta 15 (advisory) | ✅ Mapeado |
-| A9 | Regulatório | *(sem agente horizontal dedicado)* | 🔴 **Rubrica pendente (TODO)** — hoje distribuído pelos verticais (ANEEL em S9, ANAC em S7 etc.) + suporte pontual de Manta 02/Manta 15. Decisão MN pendente: criar Manta-code dedicado ou manter distribuído. |
+| A9 | Regulatório | *(sem agente horizontal dedicado)* | ⚠️ **Rubrica ativa, agente ainda pendente** (corrigido 2026-09-12) — `INDICE-CANONICAL.md` v1.1 (real, 2026-09-07) confirma `rubrica-A9` ativa (estava pendente na v1.0) e já documenta A9 com keywords reais de roteamento em `02-atividades/A9-regulatorio/`. A rubrica (auto-juiz de saída) não implica agente dedicado — hoje segue distribuído pelos verticais (ANEEL em S10, ANAC em S8 etc. — numeração corrigida nesta mesma revisão) + suporte pontual de Manta 02/Manta 15. Decisão MN pendente: criar Manta-code dedicado ou manter distribuído. Ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (achado 2026-09-12). |
 | A10 | Risco | Manta 15 (advisory) coordena consolidação; conteúdo vem de A1-A9 e S1-S13 | ⚠️ Processo transversal sem Manta-code próprio — **não interpretar como confirmação de um "Manta 17"** até registro formal aqui |
 
 ---
@@ -554,15 +747,58 @@ em produção (ver seção RAG acima).
 
 ## MODELO MESTRE DE PROPOSTA
 
-> 🔴 **Atualização 2026-09-10**: a seção "Variante Tipo A / Concessão de
-> Infraestrutura de Grande Porte", hoje viva na skill real
-> (`02-atividades/A1-proposta/SKILL.md`, v3.3.5), foi confirmada como
-> **recorrência da fabricação** corrigida abaixo — reproduz quase
-> palavra-por-palavra o addendum fabricado deste repositório e cita a
-> mesma revisão inexistente `MNT-2026-COM-1183_D`. Nenhuma escrita foi
-> feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
-> ("Recorrência confirmada — Variante Tipo A") para a evidência
-> completa e a recomendação ao MN.
+> 🔴 **Autocorreção (2026-09-11, corrigida na skill real como v3.3.9)**:
+> a entrada da v5.4.8 abaixo ("template canônico Tipo A/PRC") afirmava
+> que o template foi "conferido contra a proposta real
+> MNT-2026-COM-1301 (Concessionária Rota da Liberdade, Lote 07)". Busca
+> exaustiva no SharePoint não encontrou nenhum documento com essa
+> referência — **fabricação confirmada, terceira ocorrência do mesmo
+> padrão** (após `MNT-2026-COM-1183_D`, corrigido na v3.3.7 real). A
+> alegação foi removida deste arquivo e de
+> `docs/MODELO-MESTRE-PROPOSTA.md` §6; a pedido explícito do usuário
+> ("pode corrigir"), a correção equivalente foi aplicada na skill real
+> como **v3.3.9** (upload verificado por leitura pós-upload, 21.815
+> bytes) — ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`,
+> "Autocorreção — MNT-2026-COM-1301", para o detalhe completo.
+
+> 🔴 **Atualização 2026-09-10 (já resolvida na v3.3.7 real — ver acima)**:
+> a seção "Variante Tipo A / Concessão de Infraestrutura de Grande
+> Porte", então viva na skill real (`02-atividades/A1-proposta/SKILL.md`,
+> v3.3.5), foi confirmada como **recorrência da fabricação** — reproduzia
+> quase palavra-por-palavra o addendum fabricado deste repositório e
+> citava a mesma revisão inexistente `MNT-2026-COM-1183_D`. Achado de
+> uma branch paralela (`session_01VFwyufkjNAjRownKxprv1c`); nenhuma
+> escrita foi feita na skill por essa branch — a alegação foi removida
+> depois, na v3.3.7 real, por esta sessão (ver "Correção 2026-09-07" e
+> a nota da v5.4.7 no Histórico de versões). Ver
+> `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Recorrência confirmada
+> — Variante Tipo A") para a evidência completa.
+
+> 🔒 **Regra obrigatória (2026-09-10, a pedido do usuário)**: **toda
+> proposta comercial** gerada por qualquer agente Manta (Manta 13/bd,
+> Manta 14/apresentações, ou qualquer outro agente que produza uma
+> proposta técnico-comercial) **deve**:
+> 1. Seguir a estrutura completa da skill real `A1-proposta`
+>    (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`) — **14
+>    seções, modos M1–M5** — nunca a estrutura histórica de 18
+>    seções/modo M6 do addendum superado
+>    (`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`);
+> 2. Usar exclusivamente a **tabela tarifária vigente** (v3.3.4, "revB",
+>    matriz Função×Nível reproduzida abaixo) — nunca os 13 perfis
+>    nomeados antigos nem qualquer valor de tarifa anterior a
+>    2026-09-09;
+> 3. Incluir a segregação Tarifa×Success Fee, a exigibilidade do
+>    success fee por formalização do evento-gatilho, a cláusula de
+>    juros de mora/multa/correção monetária, e a cláusula de
+>    deslocamentos (sempre por conta do cliente) — todas já presentes
+>    na skill real.
+>
+> Antes de gerar qualquer proposta, reler a skill real no SharePoint
+> (risco de edição concorrente documentado abaixo e em
+> `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`) para confirmar que a
+> tabela e a estrutura abaixo ainda são as vigentes. Qualquer proposta
+> já emitida com tarifas ou estrutura anteriores a esta data deve ser
+> revisada antes do próximo envio ao cliente.
 
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
@@ -598,6 +834,52 @@ reescrita no formato verdadeiro dela.
 > `docs/MODELO-MESTRE-PROPOSTA.md` §3. **O SharePoint real está sendo
 > editado por múltiplas sessões em paralelo** — antes de editar essa
 > skill de novo, sempre reler o arquivo primeiro.
+
+> ⚠️ **Skill evoluiu de novo — v3.3.2 a v3.3.4 (2026-09-08/09), mudança
+> de negócio legítima, não acidente de sync**: a skill real
+> (`02-atividades/A1-proposta/SKILL.md`) recebeu três revisões desde a
+> v3.3.1 acima, verificadas por leitura direta em 2026-09-10:
+> - **v3.3.2**: tabela tarifária migrada do formato antigo de 13
+>   perfis para uma matriz **Função × Nível**.
+> - **v3.3.3** (09/09/2026): consolidação **"Tabela Consolidada de
+>   Tarifas Profissionais revB"** (`Tarifas_Consolidadas_Manta_revB.xlsx`),
+>   gerada a pedido de Willer Monteiro/Diretoria de IA + PMO — critério:
+>   maior valor por nível entre as tabelas de origem, exceto Diretoria
+>   (valores definidos manualmente). Adiciona "Diretor de
+>   Infraestrutura" em Diretoria, unifica Especialista Pleno/Júnior em
+>   R$ 470/h, adiciona o grupo "Orçamentista". Nova condição: hora
+>   extra = 1,5× a hora normal (todas as funções).
+> - **v3.3.4**: expande a cláusula de Deslocamentos (seção 12) —
+>   lista as categorias de despesa reembolsável (táxi/Uber,
+>   deslocamentos locais, passagens, traslados, hospedagem) e fixa
+>   como regra padrão que essas despesas são **sempre por conta do
+>   cliente**, nunca absorvidas pela Manta.
+>
+> Tabela tarifária vigente (v3.3.4, base 176h/mês; hora extra = 1,5×):
+>
+> | Função | Nível | R$/h | Hora extra |
+> |---|---|---|---|
+> | Diretoria | Sócio Diretor / Consultor Internacional | 900,00 | 1.350,00 |
+> | Diretoria | Diretor de Infraestrutura | 700,00 | 1.050,00 |
+> | Coordenação | Master / Sênior / Pleno | 550,00 / 522,50 / 496,38 | 825,00 / 783,75 / 744,57 |
+> | Especialista | Master / Sênior / Pleno / Júnior | 500,00 / 475,00 / 470,00 / 470,00 | 750,00 / 712,50 / 705,00 / 705,00 |
+> | Engenharia | Master / Sênior / Pleno / Júnior | 561,00 / 532,95 / 506,30 / 480,99 | 841,50 / 799,43 / 759,45 / 721,49 |
+> | Analista (Eng./Software) | Sênior / Pleno / Júnior | 285,00 / 176,00 / 135,38 | 427,50 / 264,00 / 203,07 |
+> | Estágio | Estagiário | 80,00 | 120,00 |
+>
+> **Correção 2026-09-10** (rotina de reconciliação, skill evoluiu para
+> v3.3.7): o grupo "Orçamentista", listado como Função própria até a
+> v3.3.3/v5.4.6 deste arquivo, **foi removido na v3.3.6** — qualquer
+> área (engenharia, planejamento, software, orçamento etc.) agora se
+> enquadra nos níveis acima por **maturidade/senioridade**, não por
+> Função dedicada; ex.: um orçamentista sênior usa a tarifa de
+> Engenharia Sênior ou Especialista Sênior. Perfis de IA/software usam
+> a mesma graduação de "Analista (Engenharia/Software)". "Projetista
+> Sênior" e "Técnico" (tabelas antigas) não têm Função equivalente
+> ainda — usar "Especialista" mais próximo até reconciliação. Valores
+> já incluem encargos, overhead e margem — sem custo adicional exceto
+> deslocamentos (ver cláusula acima). Tabela completa (com valores
+> mensais) em `docs/MODELO-MESTRE-PROPOSTA.md` §4/§5.
 
 Detalhe e checklist real em `docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`
 (o addendum original de "18 seções/M6" está lá marcado como
@@ -732,6 +1014,28 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 - **Cor institucional da Motiva não confirmada** — ver seção 5 de
   `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
   até confirmação do cliente.
+- **🟡 `INDICE-CANONICAL.md` real evoluiu para v1.1 (2026-09-07),
+  taxonomia expandida ainda "a confirmar"** (achado 2026-09-12): a
+  árvore real do SharePoint agora tem `01-segmentos/` (S1–S14),
+  `02-atividades/` (A1–A11), `03-funcionais/` (F1–F10) e
+  `04-disciplinas/` (D01–D22) — confirmado por `list_folders` real.
+  S12-tuneis (segmento novo, nunca mencionado antes neste
+  repositório), S13-mineracao, S14-oleogas, A11-fiscalizacao,
+  D21-topografia-geodesia, D22-tuneis, F9-meta e F10-pesquisa-
+  evolutiva existem como pastas mas estão marcados "a confirmar" pela
+  própria fonte canônica (conteúdo/keywords não auditados). Não
+  contradiz a postura atual deste repositório sobre Óleo & Gás/
+  Mineração — só dá números tentativos ainda não confirmados. Também
+  encontrado um pacote de arquitetura "v6.1.0" resgatado de uma
+  biblioteca SharePoint órfã (`04_IA`), **explicitamente ainda não
+  adotado** segundo o próprio `INDICE-CANONICAL.md` (v5.0.1 continua
+  vigente) — e uma quarta ocorrência do padrão de fabricação
+  `MNT-2026-COM-1183_D`, desta vez dentro do changelog do próprio
+  índice canônico. Nenhuma mudança estrutural feita — ver
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Reconciliação —
+  INDICE-CANONICAL.md v1.1 e taxonomia expandida") para o detalhe
+  completo. Decisão MN pendente sobre adoção da v6 e formalização dos
+  itens "a confirmar".
 
 ---
 
@@ -833,7 +1137,11 @@ Codex-exemplo/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
 │   │   ├── EAP-PADRAO-MOTIVA.xlsx               # 🆕 v5.3 — template EAP (capa + hierarquia 4 níveis)
-│   │   └── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
+│   │   ├── PLANEJAMENTO-GERENCIAL-PADRAO-MOTIVA.pptx  # 🆕 v5.3 — template capa/sumário/conteúdo
+│   │   ├── template-ptc-tipo-a-v1.html          # 🆕 v5.4.8, rodapé corrigido em v5.4.10 — template canônico Tipo A/PRC (também publicado no SharePoint real, skill A1-proposta v3.3.8 — SharePoint ainda com rodapé antigo, ver v5.4.10)
+│   │   ├── template-ptc-tipo-a-v1.docx          # 🆕 v5.4.9 — mesmo template em DOCX (handoff Manta 13→14, output canônico "técnica") — ⚠️ rodapé ainda com v{versão}, não regenerado na v5.4.10
+│   │   ├── resumo-executivo-ptc-tipo-a-v1.pptx  # 🆕 v5.4.9 — resumo executivo em PPTX, 5 cards (output canônico "executiva") — ⚠️ rodapé ainda com v{versão}, não regenerado na v5.4.10
+│   │   └── skill-A1-proposta-v3.3.9-CORRECAO.md # 🆕 v5.4.14 — cópia local da correção v3.3.9 já aplicada na skill real (v5.4.15); remove alegação fabricada de validação contra MNT-2026-COM-1301
 │   ├── ATIVIDADES-A1-A10.md               # Eixo A completo (rascunho p/ revisão MN)
 │   ├── FUNCIONAIS-F1-F8.md                # Eixo F completo
 │   ├── DISCIPLINAS-D01-D20.md             # Eixo D completo (✅ numeração de S já era a real — resolvido 2026-09-07)
@@ -864,21 +1172,242 @@ Codex-exemplo/
 
 ## Histórico de versões
 
-- **v5.4.6** (2026-09-10) — diretriz de posicionamento (MN): propostas
-  de Infraestrutura devem destacar a maturidade profissional da equipe
+- **v5.4.16** (2026-09-12) — **rotina de reconciliação: `INDICE-
+  CANONICAL.md` v1.1, taxonomia S1–S14/A1–A11/F1–F10/D01–D22**. A
+  rotina periódica GitHub↔SharePoint releu os documentos canônicos e
+  encontrou que `INDICE-CANONICAL.md` evoluiu de v1.0 (2026-07-11,
+  única versão até então conhecida por este repositório) para **v1.1**
+  (2026-09-07), documentando um saneamento estrutural real: nova
+  árvore de pastas `01-segmentos/` (S1–S14), `02-atividades/`
+  (A1–A11), `03-funcionais/` (F1–F10), `04-disciplinas/` (D01–D22),
+  confirmada por `list_folders` real nesta sessão. S1–S11 estão
+  populados de verdade; S12-tuneis (segmento novo, nunca mencionado
+  antes neste repositório), S13-mineracao, S14-oleogas, A11-
+  fiscalizacao, D21-topografia-geodesia, D22-tuneis, F9-meta e F10-
+  pesquisa-evolutiva existem só como pastas — o próprio índice
+  canônico os marca "a confirmar" (conteúdo/keywords não auditados).
+  Não contradiz a postura já existente deste repositório sobre Óleo &
+  Gás/Mineração ("sem segmento real confirmado") — só mostra que o
+  SharePoint já reservou números tentativos (diferentes da numeração
+  informal antiga deste repositório). Também encontrado um pacote de
+  arquitetura "v6.1.0" (`SKILL-MANTA-MAESTRO-v6.1.0.md` e mais dois
+  arquivos) resgatado em 2026-09-07 de uma biblioteca SharePoint órfã
+  chamada `04_IA` (confirmada como biblioteca real e distinta de
+  "Documentos Compartilhados" via `list_libraries`) — mas o próprio
+  `INDICE-CANONICAL.md` afirma explicitamente que essa arquitetura
+  "v6" **ainda não foi reconciliada/adotada como substituta da v5.0.1
+  vigente" — decisão de arquitetura em aberto, não uma mudança de
+  fato. As referências já existentes neste repositório a
+  `manta-maestro-arquitetura-v5.0.md` como fonte vigente permanecem
+  corretas, sem necessidade de mudança. Sinal de cautela registrado
+  (não confirmado como fabricação): `SKILL-MANTA-MAESTRO-v6.1.0.md`
+  cita textualmente uma seção `Codex-exemplo/CLAUDE.md
+  §RECONCILIAÇÃO COM MAESTRO OPERACIONAL` que **não existe** em
+  nenhuma versão real deste arquivo. Também encontrada uma **quarta
+  ocorrência** do padrão de fabricação `MNT-2026-COM-1183_D` (após as
+  três já documentadas nas v5.4.7/v5.4.12/v5.4.14-15) — desta vez
+  dentro do próprio changelog (§13) do `INDICE-CANONICAL.md` v1.1,
+  que narra o saneamento de 2026-09-07 citando essa mesma referência
+  fabricada como se fosse fato verificado. Não corrigido (é histórico
+  do SharePoint, fora do mandato desta rotina) — registrado para
+  explicar a origem da propagação. **Única ação aplicada nesta
+  execução**: linha A9 (Regulatório) em "Eixo A — Atividades"
+  corrigida — `INDICE-CANONICAL.md` v1.1 confirma `rubrica-A9` ativa
+  (estava pendente na v1.0), e uma numeração ANEEL/ANAC desatualizada
+  na mesma linha (S9/S7, deveria ser S10/S8 pela tabela "Eixo S" já
+  corrigida em 2026-09-07) foi corrigida junto. Detalhe completo em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Reconciliação —
+  INDICE-CANONICAL.md v1.1 e taxonomia expandida (2026-09-12)").
+- **v5.4.15** (2026-09-11) — **correção v3.3.9 aplicada na skill real**,
+  a pedido explícito do usuário ("pode corrigir"). A correção
+  preparada na v5.4.14 foi enviada ao SharePoint: releu a skill real
+  antes de escrever (ainda em v3.3.8, 21.083 bytes, idêntica à última
+  leitura — sem edição concorrente) e enviou a versão **v3.3.9**
+  (`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md`, 21.815
+  bytes), verificada por leitura pós-upload sem corrupção. A alegação
+  fabricada "conferido contra a proposta real MNT-2026-COM-1301" não
+  existe mais na skill de produção — restam apenas o bracket de
+  changelog `[v3.3.9: ...]` e uma nota equivalente no bullet "Template
+  canônico" documentando a correção (mesmo padrão da correção real
+  v3.3.7). Detalhe em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
+  ("Autocorreção — MNT-2026-COM-1301").
+- **v5.4.14** (2026-09-11) — **autocorreção: fabricação confirmada na
+  própria v5.4.8 desta sessão**. Rodando a rotina periódica de
+  reconciliação, esta sessão encontrou `origin/main` avançado com uma
+  branch paralela (v5.4.12/v5.4.13 abaixo) que já havia flagrado uma
+  recorrência de fabricação na skill real. Isso motivou checar o
+  próprio trabalho desta sessão pelo mesmo critério: busca exaustiva no
+  SharePoint (nome de arquivo, conteúdo indexado, pasta do cliente
+  `27_CLIENTE_VIA_LIBERDADE`) não encontrou **nenhum** documento com a
+  referência `MNT-2026-COM-1301`, citada na v5.4.8 como a proposta real
+  usada para validar o template canônico Tipo A/PRC — terceira
+  ocorrência confirmada do mesmo padrão (após `MNT-2026-COM-1183_D`).
+  Alegação removida de `CLAUDE.md` e `docs/MODELO-MESTRE-PROPOSTA.md`
+  §6; correção equivalente preparada para a skill real (remove só a
+  alegação, preserva o template — real e verificado por upload) mas
+  **não aplicada**: o modo automático desta sessão bloqueou a escrita
+  no SharePoint como ação de alto risco em produção. Ver
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Autocorreção —
+  MNT-2026-COM-1301") para o texto pronto e o que falta (aprovação do
+  usuário + upload).
+- **v5.4.13** (2026-09-10, branch paralela `session_01VFwyufkjNAjRownKxprv1c`,
+  mesclada e renumerada nesta reconciliação — era "v5.4.6" na branch de
+  origem) — diretriz de posicionamento (MN): propostas de
+  Infraestrutura devem destacar a maturidade profissional da equipe
   Manta primeiro, com a IA da Manta posicionada como apoio/multiplicador
   de produtividade — nunca como substituição da experiência técnica.
   Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`; não altera a skill de
   produção.
-- **v5.4.5** (2026-09-10) — investigação read-only confirmou
-  recorrência da fabricação da skill `proposta-comercial`: a variante
-  "Tipo A / Infraestrutura de Grande Porte" viva em produção (v3.3.5)
-  reproduz o addendum fabricado deste repositório quase
-  palavra-por-palavra, citando a mesma revisão inexistente
-  `MNT-2026-COM-1183_D`. Documentado em
-  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e `docs/MODELO-MESTRE-PROPOSTA.md`.
-  Nenhuma alteração feita na skill real — recomendação registrada para
-  gate humano (MN).
+- **v5.4.12** (2026-09-10, branch paralela `session_01VFwyufkjNAjRownKxprv1c`,
+  mesclada e renumerada nesta reconciliação — era "v5.4.5" na branch de
+  origem) — investigação read-only confirmou recorrência da fabricação
+  da skill `proposta-comercial`: a variante "Tipo A / Infraestrutura de
+  Grande Porte" então viva em produção (v3.3.5) reproduzia o addendum
+  fabricado deste repositório quase palavra-por-palavra, citando a
+  mesma revisão inexistente `MNT-2026-COM-1183_D`. Documentado em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` e
+  `docs/MODELO-MESTRE-PROPOSTA.md`. Nenhuma alteração feita na skill
+  real por essa branch — a alegação foi removida depois, na v3.3.7
+  real, por esta sessão (ver v5.4.7 abaixo).
+- **v5.4.11** (2026-09-10) — **links de apoio adicionados ao
+  agente-bd (CVs da equipe + propostas anteriores)**. A pedido
+  explícito do usuário, registrados dois links do SharePoint real em
+  `.claude/agents/agente-bd.md` como fontes de apoio para propostas:
+  pasta de CVs da equipe (`PessoasOrganizacao/03_PESSOAS/02_CVS/
+  01_MAR_2025`, para a seção de equipe técnica) e uma pasta de
+  propostas anteriores da Manta (link de compartilhamento, para
+  consulta de modelos/exemplares reais). Tentativa de verificar o
+  conteúdo via `SharePoint_Manta` MCP: `get_site_info` confirmou que
+  esta sessão está vinculada ao site `Engenharia`, não a
+  `PessoasOrganizacao` — os dois links ficam fora do alcance desta
+  sessão. Registrados apenas como referência, **sem verificação de
+  conteúdo**, com essa limitação documentada explicitamente no próprio
+  agente para evitar uso indevido antes de confirmação manual.
+- **v5.4.10** (2026-09-10) — **campo de versão removido do rodapé de
+  rastreabilidade da proposta básica**. A pedido explícito do
+  usuário, o campo `v{versão}` foi retirado do rodapé fixo de
+  rastreabilidade do template canônico Tipo A/PRC — de `{cliente} |
+  {projeto} | v{versão} | {data} | {autor} | {classificação} | trace:
+  {trace_id}` para `{cliente} | {projeto} | {data} | {autor} |
+  {classificação} | trace: {trace_id}`. Alterado em três lugares:
+  `docs/templates/template-ptc-tipo-a-v1.html` (`.manta-pagefooter`),
+  `docs/MODELO-MESTRE-PROPOSTA.md` §6 (descrição do sistema visual) e
+  `.claude/agents/agente-bd.md` (seção "Modelo de proposta e resumo
+  executivo"). Escopo confirmado explicitamente com o usuário antes de
+  editar. **Deixado de fora, por decisão do usuário nesta rodada**:
+  os artefatos DOCX/PPTX já gerados na v5.4.9 e o template já
+  publicado no SharePoint real (skill `A1-proposta` v3.3.8) — ambos
+  continuam com o campo de versão no rodapé até que uma próxima ação
+  explícita regenere/reenvie essas cópias.
+- **v5.4.9** (2026-09-10) — **handoff Manta 13→14 executado: DOCX e
+  PPTX gerados a partir do template canônico**. A pedido explícito do
+  usuário, o `agente-bd.md` (Manta 13) executou o handoff para Manta
+  14 (apresentações) já documentado na v5.4.8, produzindo os dois
+  formatos de output canônico previstos em "Proposta de output
+  canônica" da skill `A1-proposta` (DOCX técnica + PPTX executiva):
+  `docs/templates/template-ptc-tipo-a-v1.docx` (18 seções + Anexo I
+  completas, cláusulas obrigatórias por extenso) e
+  `docs/templates/resumo-executivo-ptc-tipo-a-v1.pptx` (capa + 5 cards
+  do resumo executivo + slide de rastreabilidade, na paleta canônica
+  Manta). Gerados via `docx`/docx-js e `pptx`/pptxgenjs (skills deste
+  ambiente); ambos validados estruturalmente
+  (`office/validate.py` — "All validations PASSED!" nos dois). A
+  verificação visual (conversão para PDF/JPEG) não foi possível: o
+  LibreOffice deste ambiente falha até para um `.txt` trivial — testado
+  e confirmado não ser problema específico dos arquivos gerados, e sim
+  uma limitação do ambiente desta sessão. Detalhe em
+  `docs/MODELO-MESTRE-PROPOSTA.md` §6.
+- **v5.4.8** (2026-09-10) — **template canônico Tipo A/PRC criado e
+  publicado no SharePoint real (skill `A1-proposta` v3.3.8)**. A
+  pedido explícito do usuário, um modelo padrão de proposta Tipo A/PRC
+  foi montado nesta sessão a partir da conferência da skill real
+  ⚠️ **e de uma alegação de validação contra "a proposta real
+  MNT-2026-COM-1301 (Concessionária Rota da Liberdade, Lote 07)" que
+  se confirmou fabricada — ver correção na v5.4.14**: capa, sumário, resumo executivo (5 cards) e as 18 seções +
+  Anexo I, com as cláusulas obrigatórias (Segregação Tarifa×Success
+  Fee, Exigibilidade, Deslocamentos, Atraso de pagamento, Não
+  Aliciamento, Seção IA, tabela tarifária vigente, dados fixos da
+  proponente) já escritas por extenso e o restante como orientação a
+  preencher por proposta — usando o sistema visual canônico
+  (`03-funcionais/F3-portal/theme`: paleta, tipografia serifada, marca
+  d'água, rodapé de rastreabilidade). O arquivo foi versionado neste
+  repositório em `docs/templates/template-ptc-tipo-a-v1.html` **e**
+  enviado ao SharePoint real em
+  `04_IA/Manta-Maestro/02-atividades/A1-proposta/template-ptc-tipo-a-
+  v1.html` (upload verificado por leitura pós-upload, 17.204 bytes). A
+  skill real `A1-proposta` foi relida antes de editar (risco de edição
+  concorrente já documentado nas versões anteriores) e atualizada para
+  **v3.3.8**: nova seção "Template e exemplares -- Tipo A / PRC"
+  referenciando o template (mesmo padrão já usado para o Tipo B), nota
+  "Template canônico disponível" adicionada ao bullet do Tipo A, e
+  changelog registrado no frontmatter da skill. Upload da skill
+  verificado por leitura pós-upload (21.083 bytes). Detalhe completo
+  em `docs/MODELO-MESTRE-PROPOSTA.md` §6.
+- **v5.4.7** (2026-09-10) — **rotina de reconciliação: tabela
+  tarifária corrigida (v3.3.5-v3.3.7 da skill A1-proposta)**. A
+  Routine periódica GitHub↔SharePoint (`trig_01KPNtXg2TJJaNYhHoetrB3D`)
+  releu a skill real e a arquitetura canônica no SharePoint e encontrou
+  duas atualizações desde a última leitura (v5.4.5/v5.4.6, mesma
+  data): (1) a skill `A1-proposta` evoluiu de v3.3.4 para **v3.3.7** —
+  v3.3.5 adiciona a cláusula "nunca citar Manta Mestro/arquitetura
+  interna ao cliente" e o bloco "Ficha Técnica (linha única)" na
+  variante de concessão; **v3.3.6 remove o grupo "Orçamentista" da
+  tabela tarifária** (documentado nas v5.4.5/v5.4.6 deste arquivo como
+  Função própria — isso ficou desatualizado), generalizando o
+  enquadramento por maturidade/senioridade para qualquer área; v3.3.7
+  remove uma alegação de validação contra uma revisão de proposta
+  (`MNT-2026-COM-1183_D`) que não existe no SharePoint — o mesmo achado
+  já registrado neste repositório em `docs/MODELO-MESTRE-PROPOSTA.md`
+  §1, citado no changelog da própria skill real. Tabela tarifária em
+  "Modelo Mestre de Proposta" corrigida (remoção da linha
+  "Orçamentista"); detalhe completo em
+  `docs/MODELO-MESTRE-PROPOSTA.md` §5. (2) Localizado o documento de
+  arquitetura canônico atual do SharePoint,
+  `00-arquitetura/manta-maestro-arquitetura-v5.0.md` (v5.0.1,
+  26/07/2026, "Drive A canônico"), que substitui
+  `v3.0.md`/`v3.1.md`/`v3.2.md` (deprecados desde 2026-09-08) — não
+  contradiz nenhuma decisão já reconciliada (numeração S1–S11, embedder
+  bge-small-en-v1.5), só atualiza o caminho do documento-fonte citado
+  em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`. Reforça mais uma vez
+  o achado de edição concorrente: a skill real mudou de versão três
+  vezes no mesmo dia entre duas leituras desta sessão.
+- **v5.4.6** (2026-09-10) — **regra obrigatória: toda proposta
+  comercial deve usar o modelo mestre vigente**. A pedido explícito do
+  usuário, adicionada no topo da seção "Modelo Mestre de Proposta" uma
+  regra normativa (não apenas descritiva, como nas versões anteriores):
+  toda proposta comercial gerada por qualquer agente Manta (Manta
+  13/bd, Manta 14/apresentações ou qualquer outro que produza
+  proposta) deve (1) seguir a estrutura real da skill `A1-proposta`
+  (14 seções, modos M1–M5 — nunca o addendum histórico de 18
+  seções/modo M6) e (2) usar exclusivamente a tabela tarifária vigente
+  (v3.3.4, "revB"), nunca os 13 perfis antigos ou valores anteriores a
+  2026-09-09; e reforça a obrigatoriedade das cláusulas de
+  Tarifa×Success Fee, exigibilidade por formalização, juros de
+  mora/multa/correção monetária e deslocamentos, todas já presentes na
+  skill real. Recomenda reler a skill real antes de cada proposta
+  (risco de edição concorrente já documentado nas versões anteriores).
+  Não altera o conteúdo do modelo em si — apenas torna obrigatório o
+  que antes era só informativo.
+- **v5.4.5** (2026-09-10) — **tabela tarifária real atualizada (v3.3.2-
+  v3.3.4 da skill A1-proposta)**. Consultado o SharePoint real
+  novamente (a pedido do usuário, "e as tarifas da manta?"), confirmamos
+  que a skill evoluiu três versões desde a v3.3.1 (documentada na
+  v5.4.4): v3.3.2 migrou a tabela tarifária do formato antigo de 13
+  perfis para uma matriz Função×Nível; v3.3.3 (09/09/2026) consolidou
+  a "Tabela Consolidada de Tarifas Profissionais revB"
+  (`Tarifas_Consolidadas_Manta_revB.xlsx`, pedido de Willer
+  Monteiro/Diretoria de IA + PMO) — critério de maior valor por nível
+  entre as tabelas de origem (exceto Diretoria, definida manualmente),
+  novo grupo "Orçamentista", unificação de Especialista Pleno/Júnior em
+  R$ 470/h, e hora extra padronizada em 1,5× para todas as funções;
+  v3.3.4 expandiu a cláusula de Deslocamentos (seção 12) fixando que
+  essas despesas são sempre por conta do cliente. Nenhuma dessas
+  mudanças é acidente de sync — são atualizações de negócio legítimas
+  na skill real. Tabela completa replicada em "Modelo Mestre de
+  Proposta" e em `docs/MODELO-MESTRE-PROPOSTA.md` §4. Reforça o achado
+  da v5.4.4 sobre edição concorrente: a skill real segue mudando fora
+  desta sessão, sempre reler antes de assumir o estado documentado
+  aqui.
 - **v5.4.4** (2026-09-08) — **skill real de proposta mudou de lugar de
   novo e foi reaplicada, segunda rodada no mesmo dia**. Horas depois
   da v5.4.2 aplicar a correção em `05-sub-skills/skill-proposta-
