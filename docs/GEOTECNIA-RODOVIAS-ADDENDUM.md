@@ -14,12 +14,18 @@ posição indicada — passo bloqueado nesta sessão porque o conector
 addendum de `proposta-comercial`).
 
 **Atualização 2026-09-12:** os números de norma NBR/DNIT citados neste
-addendum foram verificados por pesquisa web (3 pesquisas independentes)
-após a primeira versão — ver nota no início da seção 11 e a marcação de
-confiança por linha em `BALIZA_PADRAO_DNIT` (seção 11.3). Números/títulos
-de norma têm confiança alta; valores numéricos de CBR/expansão/IP em
-`aterro_corpo`/`aterro_coroamento` continuam como placeholder não
-confirmado — ver checklist de aplicação no fim deste documento.
+addendum foram verificados por pesquisa web (4 pesquisas independentes
+no total) após a primeira versão — ver nota no início da seção 11 e a
+marcação de confiança por linha em `BALIZA_PADRAO_DNIT` (seção 11.3).
+Números/títulos de norma têm confiança alta. Uma pesquisa dedicada
+confirmou `aterro_corpo` (CBR≥2%, expansão≤4%) e a expansão de
+`aterro_coroamento` (≤2%) contra o DNIT 108/2009-ES — mas revelou que o
+CBR mínimo do coroamento **não é um valor fixo** (era um placeholder de
+"6%" sem base normativa); corrigido para `especificacao_projeto`
+obrigatório, como já valia para `reforco_subleito`. Seguem pendentes
+(sem leitura direta do PDF oficial): expansão exata do reforço do
+subleito e a tabela de CBR por faixa de tráfego da base — ver checklist
+de aplicação no fim deste documento.
 
 Motivação: pedido de MN (2026-09-12) para complementar a capacidade de
 geotecnia rodoviária em 4 frentes — (1) modelagem do perfil dos cortes e do
@@ -306,16 +312,25 @@ def classificar_aashto(passante_200_pct, ll=None, ip=None):
 #     subleito real para esta camada, nunca usar um número fixo genérico.
 #     expansao_max=1.0 tem confiança média (uma fonte cita 2%, possível
 #     mistura com DNIT 137/2010-ES — regularização do subleito).
-#   - aterro_corpo / aterro_coroamento: cbr_min/expansao_max são valores de
-#     prática comum de mercado, NÃO confirmados no texto do DNIT 108/2009-ES
-#     nesta revisão (o agente de pesquisa confirmou título/escopo da norma,
-#     não os valores numéricos de aceitação) — tratar como placeholder até
-#     validação contra o PDF oficial ou o memorial de cálculo do projeto.
+#   - aterro_corpo: CBR mín. 2% e expansão máx. 4% CONFIRMADOS por pesquisa
+#     dedicada (2026-09-12, confiança média-alta — convergência de múltiplas
+#     fontes secundárias sobre o texto da norma, PDF oficial ainda não lido
+#     diretamente por bloqueio de rede desta sessão), compactação Método A
+#     (DNER-ME 129/94) a 100% da massa específica aparente seca máxima,
+#     camadas de até 0,30 m.
+#   - aterro_coroamento: expansão máx. 2% CONFIRMADA (mesma pesquisa,
+#     compactação Método B, camadas de até 0,20 m). cbr_min=None aqui DE
+#     PROPÓSITO: a pesquisa não encontrou um CBR mínimo fixo para esta
+#     camada no texto da norma — a exigência recorrente nas fontes é
+#     "capacidade de suporte melhor que a do corpo do aterro" e "ISC
+#     igual ou superior ao previsto em projeto", ou seja, relativo/definido
+#     em projeto, igual ao caso de reforco_subleito. SEMPRE passar
+#     especificacao_projeto com o CBR real exigido para esta camada.
 BALIZA_PADRAO_DNIT = {
     "aterro_corpo":        {"cbr_min": 2,    "expansao_max": 4.0, "ip_max": None, "gi_max": None,
-                             "confianca": "não confirmado — placeholder de mercado"},
-    "aterro_coroamento":   {"cbr_min": 6,    "expansao_max": 2.0, "ip_max": None, "gi_max": None,
-                             "confianca": "não confirmado — placeholder de mercado"},
+                             "confianca": "confirmado — DNIT 108/2009-ES (pesquisa web, PDF oficial não lido diretamente)"},
+    "aterro_coroamento":   {"cbr_min": None, "expansao_max": 2.0, "ip_max": None, "gi_max": None,
+                             "confianca": "expansão confirmada (DNIT 108/2009-ES); CBR é relativo/definido em projeto — usar especificacao_projeto"},
     "reforco_subleito":    {"cbr_min": None, "expansao_max": 1.0, "ip_max": None, "gi_max": None,
                              "confianca": "CBR é relativo ao subleito do projeto — usar especificacao_projeto"},
     "sub_base":            {"cbr_min": 20,   "expansao_max": 1.0, "ip_max": None, "gi_max": 0,
@@ -337,8 +352,9 @@ def avaliar_baliza_uso(material, camada_alvo, especificacao_projeto=None):
     pendencias, motivos_reprovacao = [], []
     cbr = material.get("cbr_pct")
     if limites.get("cbr_min") is None:
-        # ex.: reforço do subleito — sem mínimo absoluto na norma padrão;
-        # exige especificacao_projeto com o CBR do subleito local do projeto.
+        # ex.: reforço do subleito e coroamento do aterro — sem mínimo
+        # absoluto na norma padrão; exige especificacao_projeto com o CBR
+        # relativo real (do subleito, ou superior ao do corpo do aterro).
         pendencias.append("cbr_min não definido no padrão para esta camada — "
                            "informar especificacao_projeto com o CBR relativo do projeto")
     elif cbr is None:
@@ -558,11 +574,19 @@ perfil silenciosamente quando `liberado_para_projeto_executivo` for falso.
       (fontes secundárias, PDF oficial não acessível nesta sessão).
       `BALIZA_PADRAO_DNIT` já marca por linha quais valores são
       confirmados vs. placeholder de mercado.
-- [ ] Confirmar contra o PDF oficial do DNIT/IPR os valores numéricos
-      ainda com confiança média/placeholder (aterro_corpo,
-      aterro_coroamento, expansão do reforço do subleito, tabela de
-      CBR por faixa de tráfego N da base) antes de uso em documento
-      normativo formal ou disputa contratual.
+- [x] Valores de `aterro_corpo` (CBR≥2%, expansão≤4%) e `aterro_coroamento`
+      (expansão≤2%) confirmados por pesquisa web dedicada em 2026-09-12
+      (DNIT 108/2009-ES) — confiança média-alta, PDF oficial ainda não
+      lido diretamente (bloqueio de rede na sessão). CBR de
+      `aterro_coroamento` confirmado como relativo/definido em projeto,
+      não um valor fixo — corrigido de "6%" (não confirmado) para `None`
+      + `especificacao_projeto` obrigatório, mesmo tratamento de
+      `reforco_subleito`.
+- [ ] Confirmar contra o PDF oficial do DNIT/IPR (ainda pendente,
+      bloqueio de rede): expansão do reforço do subleito (1% vs. 2% —
+      fontes divergem) e a tabela completa de CBR por faixa de tráfego N
+      da base (DNIT 141/2022-ES) antes de uso em documento normativo
+      formal ou disputa contratual.
 - [ ] Confirmar se a especificação de terraplenagem/pavimentação do
       projeto em uso diverge da tabela `BALIZA_PADRAO_DNIT` (edital ou
       contrato podem definir CBR/IP mínimos próprios) — usar
