@@ -4,12 +4,21 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-10) — **ADR das pendências arquiteturais
-D1–D4** (multi-tenancy, versionamento de agentes, fallback de modelo,
-retenção de logs). Diagnóstico e proposta completos em
-`docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md`. Status: **proposta,
-aguardando gate humano (MN)** — nenhuma mudança de schema ou de agente
-foi aplicada. Ver seção "Pendências arquiteturais D1–D4".
+Versão: **v5.4.8** (2026-09-13) — **D1–D4 implementados** (multi-
+tenancy, versionamento de agentes, fallback de modelo, retenção de
+logs), aprovados por MN em 2026-09-13, após reconciliação do
+diagnóstico original contra o código real (várias premissas do ADR
+estavam desatualizadas — ver `docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md`,
+seção "Correção de diagnóstico — 2026-09-13"). Migrações candidatas +
+código commitados neste repositório; **aplicação em produção real
+(Supabase) ainda não feita** — depende de execução manual/CI dedicado.
+Ver seção "Pendências arquiteturais D1–D4".
+
+Consolida v5.4.7 (2026-09-10) — ADR das pendências arquiteturais D1–D4
+(multi-tenancy, versionamento de agentes, fallback de modelo, retenção
+de logs). Diagnóstico e proposta completos em
+`docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md`. Status na época: proposta,
+aguardando gate humano (MN) — superado pela v5.4.8 acima.
 
 Consolida v5.4.6 (2026-09-10) — **diretriz de posicionamento**: foco
 na maturidade profissional da equipe Manta, com IA como apoio/
@@ -622,26 +631,59 @@ SharePoint real — ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`.
 
 ## PENDÊNCIAS ARQUITETURAIS D1–D4
 
-Quatro decisões arquiteturais pendentes, levantadas no acompanhamento do
-Portal (`portal-manta-maestro`): **D1** multi-tenancy, **D2**
-versionamento de agentes, **D3** fallback de modelo, **D4** retenção de
-logs. Diagnóstico e proposta para cada uma em
-`docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md` — status: **proposta,
-aguardando gate humano (MN)**. Nenhuma mudança de schema ou de agente
-foi aplicada ainda; o ADR só recomenda.
+Quatro decisões arquiteturais levantadas no acompanhamento do Portal
+(`portal-manta-maestro`): **D1** multi-tenancy, **D2** versionamento de
+agentes, **D3** fallback de modelo, **D4** retenção de logs.
+Diagnóstico e proposta em `docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md` —
+**aprovado por MN em 2026-09-13** e implementado neste repositório
+(código + migrações candidatas), após reconciliação do diagnóstico
+original contra o código real (várias premissas do ADR original — "nada
+disso existe" — estavam desatualizadas; ver seção "Correção de
+diagnóstico — 2026-09-13" no ADR). **As migrações ainda não foram
+aplicadas em nenhum Supabase real** — são candidatas, como todo o
+padrão já usado neste repositório (`supabase/migrations/`).
 
-Resumo das recomendações (ver ADR para diagnóstico completo):
+Resumo do que foi implementado (ver ADR para o detalhe completo por
+arquivo):
 
-- **D1**: `tenant_id` + RLS no Supabase existente (sem projeto separado
-  por cliente); tenants iniciais `manta-interno`, `aysa`, `regis-dd`.
-- **D2**: frontmatter semver em `.claude/agents/*.md` e SKILL.md +
-  tabela `agent_versions`; git como fonte, SharePoint como publicação.
-- **D3**: fallback assimétrico — Haiku↔Sonnet livre, mas **sem fallback
-  automático para Opus** em Manta 01/06/15/16; sempre logado e sinalizado
-  na resposta.
-- **D4**: retenção em camadas (90/180 dias operacional, indefinida para
-  claim/contratual/advisory), soft-delete 30 dias antes de purga
-  definitiva, verificar exigência regulatória específica do tenant AySA.
+- **D1**: `supabase/migrations/2026_09_13_d1_multi_tenancy.sql` —
+  `tenant_id` + RLS em `rag_chunks`/`rag_collections`/`sp_agent_routing`,
+  compondo com as 13 policies de `agent_id`/`user_id` já existentes
+  (sem alterá-las). Tenants `aysa`/`regis-dd` marcados como
+  **propostos**, pendentes de confirmação MN — não usar como já
+  confirmados. `rag_chunks` tem 2 definições conflitantes no repo; a
+  migração assume `2026_08_02_rag_hierarchy_v5.sql` como canônica —
+  revisar se a produção real usar outro nome/schema
+  (`manta_rag_chunks`/`manta_rag_documents`, per auditoria SharePoint).
+- **D2**: frontmatter `version`/`source_of_truth`/`last_sync_sp`
+  adicionado aos 17 agentes registrados em `.claude/agents/`; validação
+  semver em `tests/lib/agent_loader.py`. Reaproveita `agents.version`
+  já existente no schema (não criou tabela `agent_versions` nova).
+- **D3**: `src/maestro/model_fallback.py` (`ModelTierPolicy`) — Haiku↔
+  Sonnet livre; **sem fallback automático para Opus** nos agentes com
+  `model: opus` no frontmatter real (claims, advisory, arquiteto-ia —
+  **não** modelagem, que usa `sonnet`); retry via `RateLimiter` já
+  existente em `queue_executor.py`; esgotado, retorna
+  `awaiting_human_decision` em vez de degradar silenciosamente. Ligado
+  a `orchestrator.py`. `scripts/fallback_strategy.py` (protótipo com
+  auto-escalonamento para Opus, oposto do desejado) foi avaliado e
+  descartado para este propósito.
+- **D4**: retenção em camadas — `agent_memory_purge.py` corrigido (era
+  mockado, agora reaproveita a lógica real de `agent_memory_cleanup.py`);
+  `routing_events` ganhou retenção de 90 dias
+  (`2026_09_13_d4_routing_retention.sql`, mesmo padrão de
+  `archive_old_maestro_runs()`); 3 tabelas novas
+  (`2026_09_13_d4_decision_retention_tables.sql`): `agent_decision_log`
+  (claim/contratual/advisory, indefinida), `artifact_review_log` (30d
+  reversível → arquivado), `cowork_task_log` (30d, job de purga real
+  deliberadamente fora de escopo desta migração).
+
+Testes verificados sem regressão: `tests/unit/` (156 testes),
+`tests/unit/test_agent_schema.py` (137), `yamllint`, e comparação
+antes/depois de `tests/test_maestro_v6_phase_a.py` +
+`test_maestro_v6_integration.py` (14 falhas idênticas pré-existentes,
+não introduzidas por esta mudança — YAML de fixture inválido e plugin
+`pytest-asyncio` ausente, ambos anteriores a este trabalho).
 
 ---
 
@@ -896,6 +938,19 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.8** (2026-09-13) — **D1–D4 implementados**, aprovados por MN.
+  Reconciliação prévia (4 sessões paralelas read-only) encontrou que o
+  diagnóstico original do ADR (v5.4.7) estava desatualizado em vários
+  pontos — RLS, versionamento de agente e retenção de agent_memory já
+  existiam parcialmente, só que inconsistentes/mockados/desconectados.
+  ADR corrigido (`docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md`, seção
+  "Correção de diagnóstico — 2026-09-13") e implementação feita em
+  código real: migração de multi-tenancy (D1), frontmatter de
+  versionamento nos 17 agentes + validação semver (D2), módulo
+  `ModelTierPolicy` ligado ao orchestrator (D3), correção do mock de
+  purga + 2 migrações novas de retenção (D4). Nenhuma migração foi
+  aplicada em produção Supabase real — seguem como candidatas. Ver
+  seção "Pendências arquiteturais D1–D4".
 - **v5.4.7** (2026-09-10) — ADR das pendências arquiteturais D1–D4
   (multi-tenancy, versionamento de agentes, fallback de modelo, retenção
   de logs). Ver `docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md`. Status:
