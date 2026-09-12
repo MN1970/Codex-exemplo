@@ -124,7 +124,11 @@ def gerar_perfil_corte(estaca, sondagem_ref):
                                  if c["profundidade_m"] <= estaca["altura_m"]]
         nspts = [c["nspt"] for c in camadas_superficiais if c["nspt"] is not None]
         nspt_medio = sum(nspts) / len(nspts) if nspts else None
-        categoria = camadas_superficiais[0].get("categoria_dnit", "indefinido") \
+        # categoria_dnit vem aninhada em camada["classificacao"], não na
+        # raiz da camada (ver schema da seção 12) — ler direto na raiz
+        # sempre cai em "indefinido" silenciosamente e força a inclinação
+        # conservadora de fallback mesmo com dado real disponível.
+        categoria = camadas_superficiais[0].get("classificacao", {}).get("categoria_dnit", "indefinido") \
                     if camadas_superficiais else "indefinido"
 
     (v, h), exige_berma, exige_estudo = definir_inclinacao_talude(
@@ -166,14 +170,20 @@ def avaliar_fundacao_aterro(estaca, sondagem_ref, peso_especifico_aterro_kn_m3=1
     nspts = [c["nspt"] for c in camadas_fundacao if c["nspt"] is not None]
     nspt_min = min(nspts) if nspts else None
 
-    if nspt_min is not None and nspt_min < 4:
+    if nspt_min is None:
+        # sondagem sem prof_total (ou sem camada dentro da zona de
+        # influência) NÃO é "adequado" por omissão — sem dado é sem dado.
+        veredito = "sem dado suficiente na zona de influência — sondagem incompleta"
+        tratamentos = ["completar/estender a sondagem até cobrir a zona de "
+                       "influência (~2x a altura do aterro) antes de avaliar"]
+    elif nspt_min < 4:
         veredito = "solo de fundação mole/fofo — risco de ruptura/recalque"
         tratamentos = ["remoção e substituição do solo mole (se espessura <2 m)",
                         "colchão drenante + geotêxtil de separação",
                         "bermas de equilíbrio (contrapeso lateral)",
                         "PVDs (drenos verticais) + sobrecarga temporária, se espessura grande",
                         "aterro em etapas com monitoramento de recalque/poropressão"]
-    elif nspt_min is not None and nspt_min < 8:
+    elif nspt_min < 8:
         veredito = "solo de fundação médio — aceitável com monitoramento"
         tratamentos = ["instrumentação (marcos superficiais + piezômetros)",
                         "controle de velocidade de alteamento"]
@@ -495,16 +505,23 @@ def qa_qc_sondagem(sondagens, eixo_pontos, data_referencia, regras=None):
                              "limite_m": regras["espacamento_max_m"]})
 
     for sond in sondagens:
-        # 2. Profundidade mínima abaixo do greide
+        # 2. Profundidade mínima abaixo do greide — SEMPRE avaliada, com ou
+        # sem cota_greide_m informada (checagem anterior só rodava quando
+        # cota_greide_m existia, deixando sondagens sem essa cota passarem
+        # sem checagem nenhuma). Quando a cota do greide é conhecida, mede
+        # a profundidade relativa a ela (a boca do furo pode estar acima ou
+        # abaixo do greide futuro); sem ela, usa a profundidade bruta do
+        # furo como aproximação.
         cota_greide = sond.get("cota_greide_m")
         prof_min_exigida = regras["profundidade_min_relativa_greide"]
         if cota_greide is not None:
-            prof_atingida_abaixo_greide = sond["cota_boca"] - prof_min_exigida - \
-                                           (sond["cota_boca"] - sond["prof_total"])
-            if sond["prof_total"] < prof_min_exigida and not sond.get("impenetravel_atingido"):
-                achados.append({"tipo": "profundidade_insuficiente", "severidade": "bloqueante",
-                                 "sondagem": sond["id"], "prof_total_m": sond["prof_total"],
-                                 "exigido_m": prof_min_exigida})
+            prof_abaixo_greide = sond["prof_total"] - (sond["cota_boca"] - cota_greide)
+        else:
+            prof_abaixo_greide = sond["prof_total"]
+        if prof_abaixo_greide < prof_min_exigida and not sond.get("impenetravel_atingido"):
+            achados.append({"tipo": "profundidade_insuficiente", "severidade": "bloqueante",
+                             "sondagem": sond["id"], "prof_abaixo_greide_m": round(prof_abaixo_greide, 2),
+                             "exigido_m": prof_min_exigida})
 
         # 3. Validade do laudo
         data_laudo = sond.get("rastreabilidade", {}).get("data_ensaio")
