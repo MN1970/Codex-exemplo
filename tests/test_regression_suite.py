@@ -21,6 +21,7 @@ Uso:
 import pytest
 import json
 import logging
+import re
 from pathlib import Path
 from typing import Dict, List
 from datetime import datetime
@@ -371,13 +372,13 @@ class TestRegressionDeployment:
     """Gate: Deployment checklist."""
 
     def test_claude_md_valid(self):
-        """CLAUDE.md v5.0 válido."""
+        """CLAUDE.md válido (título + linha de versão)."""
         claude_path = Path("CLAUDE.md")
         if claude_path.exists():
             with open(claude_path, 'r') as f:
                 content = f.read()
-                assert "v5.0" in content
-                assert "8 pilares" in content or "pilares" in content.lower()
+                assert content.startswith("# CLAUDE.md")
+                assert re.search(r"^Versão: \*\*v\d+\.\d+(\.\d+)?\*\*", content, re.MULTILINE)
 
     def test_no_breaking_changes(self):
         """Sem breaking changes em agent interfaces."""

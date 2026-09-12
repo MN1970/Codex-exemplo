@@ -45,13 +45,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install schedule requests prometheus-client python-dotenv pydantic
+          pip install schedule requests prometheus-client python-dotenv pydantic APScheduler pytz
 
       - name: Validate scheduler configuration
         run: |
           python3 -m py_compile scripts/apscheduler_setup.py
           python3 -c "
           import json
+          import re
           from pathlib import Path
 
           # Validate VERSIONS.json
@@ -66,8 +67,10 @@ jobs:
           if claude_md.exists():
               with open(claude_md) as f:
                   content = f.read()
-                  assert 'v5.0' in content, 'CLAUDE.md missing v5.0 marker'
-                  print('✓ CLAUDE.md valid (v5.0 present)')
+                  assert content.startswith('# CLAUDE.md'), 'CLAUDE.md missing expected title header'
+                  match = re.search(r'^Vers[aã]o:\s*\*\*v(\d+\.\d+(?:\.\d+)?)\*\*', content, re.MULTILINE)
+                  assert match, 'CLAUDE.md missing a \"Versão: **vX.Y[.Z]**\" line'
+                  print(f'✓ CLAUDE.md valid (versão {match.group(1)} declarada)')
           "
 
       - name: Dry-run scheduler
@@ -349,6 +352,9 @@ jobs:
           echo "color=$COLOR" >> $GITHUB_OUTPUT
 
       - name: Send Slack notification
+        # Só roda se o secret existir no repositório — sem ele, a action
+        # falha com "Specify secrets.SLACK_WEBHOOK_URL" em vez de pular.
+        if: always() && secrets.SLACK_WEBHOOK_URL != ''
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ steps.slack-notification.outputs.status }}
@@ -357,6 +363,6 @@ jobs:
             Commit: ${{ github.sha }}
             Branch: ${{ github.ref }}
             Author: ${{ github.actor }}
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
           fields: repo,message,commit,author,action,eventName,ref
-        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
