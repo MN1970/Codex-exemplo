@@ -76,12 +76,13 @@ jobs:
           from pathlib import Path
           import sys
           sys.path.insert(0, 'scripts')
-          from apscheduler_setup import MaestroScheduler
+          from apscheduler_setup import APSchedulerManager
 
-          scheduler = MaestroScheduler(Path.cwd())
-          print(f'✓ Scheduler initialized with {len(scheduler.jobs)} jobs')
-          for name, runner in scheduler.jobs.items():
-              print(f'  - {name}: {runner.config.schedule_cron}')
+          scheduler = APSchedulerManager(repo_root=Path.cwd())
+          scheduler.register_all_jobs()
+          print(f'✓ Scheduler initialized with {len(scheduler.jobs_registered)} jobs')
+          for name, job in scheduler.jobs_registered.items():
+              print(f'  - {name}: {job[\"cron\"]}')
           "
 
   # Build Docker image
