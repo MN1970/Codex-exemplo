@@ -66,6 +66,7 @@ Maestro (Manta 00)
 - **Fallback pesado**: Opus 5 (síntese final se contexto > 50k tokens)
 
 ### Limites
+
 | Parâmetro | Valor | Notas |
 |-----------|-------|-------|
 | Agentes paralelos | 8 | Fixo, respeitando quota Claude SDK |

@@ -485,7 +485,7 @@ python scripts/eval_routing.py --help
 python scripts/init_rag_golden_set.py --help
 ```
 
-### Logging:
+### Logging
 ```bash
 # Verbose mode (DEBUG level)
 python scripts/audit_agents.py --verbose 2>&1 | tee audit.log
@@ -494,7 +494,7 @@ python scripts/audit_agents.py --verbose 2>&1 | tee audit.log
 python scripts/sp_healthcheck.py 2>&1 | grep "azure_ad"
 ```
 
-### Comuns Issues:
+### Comuns Issues
 
 **`sp_healthcheck.py` falha com "Missing AZURE_CLIENT_ID"**
 ```bash

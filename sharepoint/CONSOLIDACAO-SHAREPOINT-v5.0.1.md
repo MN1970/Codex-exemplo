@@ -256,7 +256,7 @@ SharePoint Manta Maestro (principal: /01-agentes-fundamentais/)
 
 **Status:** Convenção A adotada nesta consolidação. S12/S13 criados, pendente gate MN para ativar.
 
-**Ação para SP:** 
+**Ação para SP:**
 - Usar Convenção A em todos os documentos (já está no INDICE)
 - Quando S12/S13 forem aprovados: criar pastas `02-agentes-horizontais-propostos/agente-oleo-gas/` e `agente-edificacoes/`
 - Até lá, documentar como "Propostos, não despacháveis"
