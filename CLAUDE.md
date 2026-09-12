@@ -130,10 +130,21 @@ de dados oficiais rastreáveis, cenários com success fee opcional, método
 do paramétrico em etapas, infraestrutura incluída e ficha técnica de
 fechamento — sem substituir o modo genérico M1 da skill. O texto pronto
 para colar na skill de produção está em
-`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`. Alteração na skill em si
-depende de gate humano (MN) e é feita na fonte no SharePoint, fora deste
-repositório — publicação ainda pendente (sem acesso de escrita ao
-SharePoint nesta sessão).
+`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`.
+
+**Gate humano: ✅ aprovado por MN em 2026-09-10.** Falta só a aplicação
+técnica: colar o bloco da Seção A do addendum em
+`skill-proposta-comercial-SKILL.md` no SharePoint. Essa etapa está
+bloqueada nesta sessão porque o conector `SharePoint_Manta` caiu
+(MCP server disconnected) — precisa ser feita numa sessão com esse
+conector ativo, ou manualmente por quem tem acesso ao SharePoint.
+
+**Pendência a resolver antes de publicar:** a fonte de validação citada
+(MNT-2026-COM-1183_**D**, 27 páginas) não foi localizada no SharePoint em
+levantamento de 2026-09-10 — só existe a revisão **_C** (21 páginas,
+24/08/2026), cujo controle de revisão interno não menciona uma `_D`.
+Confirmar se a `_D` existe em outro local antes de publicar o addendum
+citando-a como fonte, ou atualizar a referência para `_C`.
 
 ---
 
@@ -175,6 +186,13 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.2** (2026-09-10) — gate humano MN aprovado para a variante M6
+  (addendum de proposta técnico-comercial). Aplicação no SharePoint
+  pendente (conector `SharePoint_Manta` indisponível na sessão de
+  aprovação). Levantamento completo do acervo de propostas/CVs/
+  apresentações no SharePoint identificou que a fonte de validação
+  citada (MNT-2026-COM-1183_D) não foi localizada — só a revisão _C
+  existe; ver nota em "MODELO MESTRE DE PROPOSTA" acima.
 - **v4.2.1** (2026-09-01) — análise e recomendação de modelo mestre de
   proposta técnico-comercial, validada contra a proposta MNT-2026-COM-1183_D
   e a skill `proposta-comercial` (A7-bd). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
