@@ -799,7 +799,7 @@ continuam existindo como material de apoio detalhado por eixo.
 
 ---
 
-_Documento vivo. Alterações via pull request neste repositório,
+*Documento vivo. Alterações via pull request neste repositório,
 validação `aluci-guard` + `consist-guard`, e aprovação MN (gate humano)
 antes de qualquer merge — mesmo padrão de governança já em uso em
-`docs/DEPLOY-v4.2.md` e `docs/DEPLOY-CHECKLIST-v5.0.md`._
+`docs/DEPLOY-v4.2.md` e `docs/DEPLOY-CHECKLIST-v5.0.md`.*

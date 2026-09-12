@@ -72,7 +72,7 @@ Qual o valor total incluindo margem?
 
 ### Saída Esperada
 - ✅ Pavimento CBUQ 5cm: 7.200 m² (1km × 7.2m)
-- ✅ BGS 15cm: 7.200 m² 
+- ✅ BGS 15cm: 7.200 m²
 - ✅ Custo unitário SICRO 2026 (atualizado):
   - CBUQ 5cm: ~R$95/m² → R$684k
   - BGS 15cm: ~R$18/m² → R$130k

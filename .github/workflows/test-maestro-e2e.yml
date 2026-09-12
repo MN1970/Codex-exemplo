@@ -288,13 +288,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate CLAUDE.md v5.0
+      - name: Validate CLAUDE.md
         run: |
-          echo "::group::CLAUDE.md v5.0 Validation"
-          if grep -q "v5.0" CLAUDE.md && grep -q "8 pilares" CLAUDE.md; then
-            echo "✅ CLAUDE.md v5.0 is valid"
+          echo "::group::CLAUDE.md Validation"
+          # Checagem robusta a bumps de versão: exige o título esperado e uma
+          # linha "Versão: **vX.Y[.Z]**", em vez de uma string de versão
+          # hardcoded (ex.: "v5.0") que fica obsoleta a cada release.
+          if head -n1 CLAUDE.md | grep -q "^# CLAUDE.md" && \
+             grep -qE "^Versão: \*\*v[0-9]+\.[0-9]+(\.[0-9]+)?\*\*" CLAUDE.md; then
+            VERSION=$(grep -oE "^Versão: \*\*v[0-9]+\.[0-9]+(\.[0-9]+)?\*\*" CLAUDE.md | head -n1)
+            echo "✅ CLAUDE.md is valid ($VERSION)"
           else
-            echo "❌ CLAUDE.md v5.0 is missing"
+            echo "❌ CLAUDE.md missing expected title or 'Versão: **vX.Y[.Z]**' line"
             exit 1
           fi
           echo "::endgroup::"
@@ -363,6 +368,8 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs: [regression-gate, router-e2e, cross-agent-flows]
+    permissions:
+      statuses: write # necessário para "Set PR status" (createCommitStatus) — sem isso, 403 Resource not accessible by integration
     outputs:
       can-merge: ${{ steps.decision.outputs.can_merge }}
 

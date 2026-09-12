@@ -545,6 +545,7 @@ f = check_visibility(100, 500)  # → f ≈ 4.7m
 - **Risco**: limitações de terreno existente
 
 ### Comparação: BR Federal, Vd=100, 100km
+
 | Aspecto | Novo Traçado | Reabilitação |
 |---------|-------------|--------------|
 | Custo Geom | R$300M | R$75M |

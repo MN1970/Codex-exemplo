@@ -223,9 +223,9 @@ Uptime:         [valor ao vivo]  (target: >99%)  [✅/❌]
 Success rate:   [valor ao vivo]  (target: >95%)  [✅/❌]
 ```
 
-  - Cada `check_status` referencia o monitor correspondente (M1/M3/M2 — §6)
-    via `check` = nome do monitor, de forma que o ícone reflita o estado real
-    do monitor (OK/Alert/Warn/No Data), não apenas o valor pontual da métrica
+- Cada `check_status` referencia o monitor correspondente (M1/M3/M2 — §6)
+  via `check` = nome do monitor, de forma que o ícone reflita o estado real
+  do monitor (OK/Alert/Warn/No Data), não apenas o valor pontual da métrica
 
 ### 4.5 Timeseries — Fallback % (SLA auxiliar)
 
