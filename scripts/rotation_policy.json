@@ -1,0 +1,311 @@
+{
+  "/**": "Manta Maestro v5.0 — Secrets Rotation Policy",
+  "version": "v5.0",
+  "created_at": "2026-07-25T02:00:00Z",
+  "updated_by": "DevOps Team",
+  "description": "Defines rotation schedule, warning periods, and sync targets for all managed secrets",
+
+  "// ====== ROTATION INTERVALS ======": "",
+  "secrets": {
+    "M365_CLIENT_SECRET": {
+      "description": "Azure AD app secret for Microsoft 365 integration",
+      "service": "Microsoft Entra ID",
+      "rotation_days": 30,
+      "warning_days": 7,
+      "auto_rotate": true,
+      "requires_approval": false,
+      "sync_targets": ["azure-keyvault", "env-production"],
+      "policy_id": "pol_m365_001",
+      "criticality": "P1",
+      "audit_required": true
+    },
+    "MANTAHUB_TOKEN": {
+      "description": "API token for MantaHub internal service",
+      "service": "MantaHub",
+      "rotation_days": 30,
+      "warning_days": 7,
+      "auto_rotate": true,
+      "requires_approval": false,
+      "sync_targets": ["azure-keyvault", "env-production"],
+      "policy_id": "pol_mantahub_001",
+      "criticality": "P1",
+      "audit_required": true
+    },
+    "SUPABASE_KEY": {
+      "description": "Supabase anon/authenticated key for database access",
+      "service": "Supabase",
+      "rotation_days": 60,
+      "warning_days": 14,
+      "auto_rotate": true,
+      "requires_approval": false,
+      "sync_targets": ["azure-keyvault", "env-production", "supabase-dashboard"],
+      "policy_id": "pol_supabase_001",
+      "criticality": "P1",
+      "audit_required": true,
+      "notes": "Longer interval (60d) due to Supabase key generation latency"
+    },
+    "MANTABASE_PASSWORD": {
+      "description": "Database password for internal MantaBase instance",
+      "service": "MantaBase (PostgreSQL)",
+      "rotation_days": 90,
+      "warning_days": 21,
+      "auto_rotate": true,
+      "requires_approval": true,
+      "sync_targets": ["azure-keyvault", "env-production", "db-connection-string"],
+      "policy_id": "pol_mantabase_001",
+      "criticality": "P0",
+      "audit_required": true,
+      "notes": "Longest interval (90d) due to connection pool impact. Requires DBA approval."
+    }
+  },
+
+  "// ====== SCHEDULED ROTATIONS (APScheduler) ======": "",
+  "scheduled_rotations": {
+    "m365_monthly": {
+      "secret_name": "M365_CLIENT_SECRET",
+      "cron_expression": "0 2 * * 0",
+      "description": "Rotate M365_CLIENT_SECRET every Sunday at 02:00 UTC",
+      "enabled": true,
+      "retry_on_failure": true,
+      "max_retries": 3,
+      "retry_delay_seconds": 60
+    },
+    "mantahub_monthly": {
+      "secret_name": "MANTAHUB_TOKEN",
+      "cron_expression": "0 3 * * 1",
+      "description": "Rotate MANTAHUB_TOKEN every Monday at 03:00 UTC",
+      "enabled": true,
+      "retry_on_failure": true,
+      "max_retries": 3,
+      "retry_delay_seconds": 60
+    },
+    "supabase_bimonthly": {
+      "secret_name": "SUPABASE_KEY",
+      "cron_expression": "0 4 1,15 * *",
+      "description": "Rotate SUPABASE_KEY on 1st and 15th of each month at 04:00 UTC",
+      "enabled": true,
+      "retry_on_failure": true,
+      "max_retries": 3,
+      "retry_delay_seconds": 120
+    },
+    "mantabase_quarterly": {
+      "secret_name": "MANTABASE_PASSWORD",
+      "cron_expression": "0 5 1 */3 *",
+      "description": "Rotate MANTABASE_PASSWORD on 1st of every 3rd month at 05:00 UTC",
+      "enabled": true,
+      "retry_on_failure": true,
+      "max_retries": 5,
+      "retry_delay_seconds": 180
+    },
+    "expiry_check_daily": {
+      "script": "rotate_secrets.py check-expiry",
+      "cron_expression": "0 7 * * *",
+      "description": "Daily check for secrets expiring within 7-21 days at 07:00 UTC",
+      "enabled": true,
+      "notify_slack": true,
+      "slack_channel": "#agent-ops"
+    }
+  },
+
+  "// ====== PRE-ROTATION & POST-ROTATION HOOKS ======": "",
+  "hooks": {
+    "pre_rotation": {
+      "steps": [
+        {
+          "name": "validate_current_secret",
+          "description": "Verify current secret is valid and in use",
+          "script": "validate_secret.py"
+        },
+        {
+          "name": "backup_rotation_log",
+          "description": "Create backup of rotation_log.json before changes",
+          "script": "cp rotation_log.json rotation_log.backup.json"
+        },
+        {
+          "name": "notify_rotation_start",
+          "description": "Alert ops team that rotation is starting",
+          "slack": true,
+          "channel": "#agent-ops"
+        }
+      ]
+    },
+    "post_rotation": {
+      "steps": [
+        {
+          "name": "verify_new_secret",
+          "description": "Test connectivity/auth with new secret",
+          "script": "verify_secret.py"
+        },
+        {
+          "name": "update_documentation",
+          "description": "Log rotation timestamp and version in audit log",
+          "script": "update_audit_log.py"
+        },
+        {
+          "name": "notify_rotation_complete",
+          "description": "Alert ops team of successful rotation",
+          "slack": true,
+          "channel": "#agent-ops"
+        },
+        {
+          "name": "archive_old_version",
+          "description": "Archive old secret version in Key Vault (immutable)",
+          "script": "archive_secret_version.py"
+        }
+      ]
+    }
+  },
+
+  "// ====== SYNC TARGETS & INTEGRATIONS ======": "",
+  "sync_targets": {
+    "azure-keyvault": {
+      "type": "Azure Key Vault",
+      "enabled": true,
+      "vault_name": "${AZURE_KEYVAULT_NAME}",
+      "description": "Primary secrets store with versioning",
+      "api_version": "7.3",
+      "timeout_seconds": 30,
+      "retry_on_failure": true
+    },
+    "env-production": {
+      "type": "Environment Variables",
+      "enabled": true,
+      "scope": "production",
+      "description": "Update env vars in running services (requires deployment)",
+      "method": "kubernetes-secret-patch"
+    },
+    "supabase-dashboard": {
+      "type": "Supabase Console",
+      "enabled": false,
+      "description": "Manual sync to Supabase dashboard (API key rotation only)",
+      "note": "Requires manual update in Supabase dashboard; consider enabling API-based rotation"
+    },
+    "db-connection-string": {
+      "type": "Application Config",
+      "enabled": true,
+      "config_file": ".env.production",
+      "description": "Update MANTABASE connection string in app config",
+      "requires_deployment": true
+    }
+  },
+
+  "// ====== NOTIFICATIONS & ALERTS ======": "",
+  "notifications": {
+    "slack": {
+      "enabled": true,
+      "webhook_url": "${SLACK_WEBHOOK_URL}",
+      "channel": "#agent-ops",
+      "mentions": [
+        "@devops-team",
+        "@security-team"
+      ],
+      "events": [
+        "rotation_started",
+        "rotation_success",
+        "rotation_failed",
+        "expiring_soon",
+        "manual_rotation_required"
+      ]
+    },
+    "email": {
+      "enabled": true,
+      "recipients": [
+        "devops@mantaassociados.com",
+        "security@mantaassociados.com"
+      ],
+      "events": [
+        "rotation_failed",
+        "critical_secret_expired"
+      ]
+    }
+  },
+
+  "// ====== COMPLIANCE & AUDIT ======": "",
+  "compliance": {
+    "audit_enabled": true,
+    "audit_table": "secret_rotation_audit",
+    "audit_database": "supabase",
+    "retention_days": 365,
+    "immutable_log": true,
+    "required_fields": [
+      "secret_name",
+      "rotation_timestamp",
+      "old_version_hash",
+      "new_version_hash",
+      "rotated_by",
+      "keyvault_sync_status",
+      "status"
+    ],
+    "compliance_frameworks": [
+      "SOC2",
+      "ISO27001",
+      "GDPR"
+    ]
+  },
+
+  "// ====== ROLLBACK & RECOVERY ======": "",
+  "rollback": {
+    "enabled": true,
+    "max_versions_to_keep": 10,
+    "version_retention_days": 90,
+    "rollback_procedure": "scripts/rollback_secret.py",
+    "description": "Restore previous secret version from Key Vault if rotation fails",
+    "requires_approval": true,
+    "approval_timeout_hours": 1
+  },
+
+  "// ====== MONITORING & OBSERVABILITY ======": "",
+  "monitoring": {
+    "enabled": true,
+    "metrics": [
+      "rotation_duration_seconds",
+      "rotation_success_rate",
+      "keyvault_sync_latency_ms",
+      "slack_notification_latency_ms",
+      "secret_expiry_days"
+    ],
+    "dashboard": {
+      "grafana": {
+        "enabled": true,
+        "dashboard_id": "secrets-rotation-v5"
+      }
+    },
+    "alerts": {
+      "rotation_timeout": {
+        "condition": "rotation_duration_seconds > 300",
+        "severity": "warning"
+      },
+      "rotation_failure": {
+        "condition": "rotation_status == 'failed'",
+        "severity": "critical",
+        "notify": ["slack", "email"]
+      },
+      "keyvault_sync_failed": {
+        "condition": "keyvault_sync == false AND status == 'success'",
+        "severity": "critical",
+        "notify": ["slack", "email"]
+      }
+    }
+  },
+
+  "// ====== VERSION & HISTORY ======": "",
+  "versions": {
+    "v5.0": {
+      "created_at": "2026-07-25T02:00:00Z",
+      "changes": [
+        "Added MANTABASE_PASSWORD (90-day rotation)",
+        "Integrated Azure Key Vault versioning",
+        "Added pre-rotation validation hooks",
+        "Added Slack notifications with rich formatting",
+        "Added daily expiry check schedule"
+      ]
+    },
+    "v4.2": {
+      "created_at": "2026-06-15T00:00:00Z",
+      "changes": [
+        "Initial rotation policy (3 secrets)",
+        "Basic email notifications"
+      ]
+    }
+  }
+}
