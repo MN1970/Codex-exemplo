@@ -2,16 +2,41 @@
 ## (perfil de cortes/aterros, baliza de uso de material, banco JSON consolidado, QA/QC de sondagens)
 
 **Status:** ✅ **gate humano (MN) aprovado em 2026-09-12** (confirmado em
-sessão de chat). Aplicação técnica ainda **pendente**: a skill
-`rodovias-geotecnia` não foi localizada neste repositório
-(`Codex-exemplo`) nem seu caminho canônico foi confirmado no SharePoint
-nesta sessão. Antes de publicar, localizar o `SKILL.md` de produção de
-`rodovias-geotecnia` (provável local: `04_IA/Manta-Maestro/02-sub-skills/`
-no SharePoint, por analogia ao padrão usado por
-`skill-proposta-comercial-SKILL.md`) e colar o bloco da Seção A abaixo na
-posição indicada — passo bloqueado nesta sessão porque o conector
-`SharePoint_Manta` está desconectado (mesma situação já registrada para o
-addendum de `proposta-comercial`).
+sessão de chat). Aplicação técnica ainda **pendente**, mas o caminho já
+está **confirmado por leitura real** (2026-09-12, `SharePoint_Manta`
+reconectado nesta sessão) — nada mais é suposição por analogia:
+
+- `rodovias-geotecnia` (a skill que este addendum estende) vive em
+  **`04_IA/09_TESTE_SKILLS/rodovias-geotecnia/SKILL.md`** — biblioteca
+  `04_IA`, 37.414 bytes, modificado em 2026-05-11. **Não** é
+  `04_IA/Manta-Maestro/02-sub-skills/...` (esse caminho era só uma
+  suposição por analogia com `proposta-comercial`, nunca confirmada —
+  corrigido aqui). O conteúdo lido bate byte-a-byte, seção por seção,
+  com a skill sincronizada usada como base deste addendum (seções 1–9
+  idênticas, mesmo exemplo `params.json` BR-153/GO) — ou seja, o que
+  segue abaixo **não** é uma extensão de conteúdo fabricado, é aditivo
+  sobre a skill real. O nome da pasta (`09_TESTE_SKILLS`) sinaliza que
+  ela segue em área de teste, não promovida para dentro da árvore
+  `Manta-Maestro/` — confirmar com MN se isso é intencional (skill
+  ainda em staging) antes de tratá-la como produção plena.
+- **Achado colateral relevante**: existe uma skill de produção
+  **diferente e real** para a disciplina Geotecnia em
+  `04_IA/Manta-Maestro/04-disciplinas/D03-geotecnia/SKILL.md` (v2.0.0,
+  2026-07-11, parte do Eixo D formalizado no `CLAUDE.md` atual). Essa
+  skill é uma biblioteca técnica mais ampla (normas, correlações NSPT,
+  RMR/Q/GSI, estabilidade de taludes, recalque, capacidade de carga —
+  cobre S1–S11, não só rodovias) e já **lista `manta-core:rodovias-
+  geotecnia` como uma das skills L1 que consome** para "perfil
+  longitudinal geotécnico por estaqueamento". As normas citadas lá
+  (NBR 6484:2020, NBR 6502:1995, NBR 8036:1983, NBR 9895, DNIT DPT PRO
+  004) são consistentes com o que este addendum verificou
+  independentemente — nenhuma divergência encontrada. Este addendum
+  **não mexe** em `D03-geotecnia/SKILL.md` — é um documento de escopo
+  mais amplo (disciplina inteira, todos os segmentos), enquanto este
+  addendum é específico de rodovias/terraplenagem/pavimentação; MN
+  deve avaliar se as 4 capacidades novas daqui também merecem entrar
+  como referência cruzada em `D03-geotecnia` (ex.: nas seções
+  "Handoffs" ou "Skills L1 consumidas").
 
 **Atualização 2026-09-12:** os números de norma NBR/DNIT citados neste
 addendum foram verificados por pesquisa web (4 pesquisas independentes
@@ -40,13 +65,19 @@ densidade de furos, período/validade).
 
 ## Onde inserir
 
-No arquivo `SKILL.md` de `rodovias-geotecnia`, inserir o bloco da
-**Seção A** como novas seções **10 a 13**, logo depois da atual "## 9.
-Schemas de Dados" (ou renumerando 9→14 se preferir manter Schemas por
-último — nesse caso Schemas vira a seção 14). Nenhuma seção 1–9 existente
-precisa ser alterada; é puramente aditivo. Os scripts referenciados
-(`perfil_corte_aterro.py`, extensão de `ensaios_geotecnicos.py`,
-`qa_qc_sondagem.py`) vão em `scripts/`, ao lado dos já existentes.
+Em **`04_IA/09_TESTE_SKILLS/rodovias-geotecnia/SKILL.md`** (confirmado
+por leitura real em 2026-09-12 — ver "Status" acima), inserir o bloco
+da **Seção A** como novas seções **10 a 13**, logo depois da atual
+"## 9. Schemas de Dados" (ou renumerando 9→14 se preferir manter
+Schemas por último — nesse caso Schemas vira a seção 14). Nenhuma
+seção 1–9 existente precisa ser alterada; é puramente aditivo. Os
+"scripts" referenciados (`scripts/perfil_corte_aterro.py`, extensão de
+`scripts/ensaios_geotecnicos.py`, `scripts/qa_qc_sondagem.py`) são
+comentários de cabeçalho dentro dos blocos de código markdown — **não
+há pasta `scripts/` real no SharePoint** (confirmado: a pasta da skill
+só tem `SKILL.md` + `references/`); o padrão já usado nas seções 1–9
+existentes é código embutido direto no `.md`, e a Seção A segue o
+mesmo padrão.
 
 ---
 
@@ -124,11 +155,13 @@ def gerar_perfil_corte(estaca, sondagem_ref):
                                  if c["profundidade_m"] <= estaca["altura_m"]]
         nspts = [c["nspt"] for c in camadas_superficiais if c["nspt"] is not None]
         nspt_medio = sum(nspts) / len(nspts) if nspts else None
-        # categoria_dnit vem aninhada em camada["classificacao"], não na
-        # raiz da camada (ver schema da seção 12) — ler direto na raiz
-        # sempre cai em "indefinido" silenciosamente e força a inclinação
-        # conservadora de fallback mesmo com dado real disponível.
-        categoria = camadas_superficiais[0].get("classificacao", {}).get("categoria_dnit", "indefinido") \
+        # categoria_dnit já existe no schema real de produção (seção 9,
+        # params.json) direto na raiz da camada, ao lado de nspt/
+        # descricao_solo — NÃO dentro de "classificacao" (esse objeto,
+        # introduzido na seção 12 abaixo, só acrescenta SUCS/AASHTO/
+        # group_index; categoria_dnit não é duplicado lá para não gerar
+        # duas fontes de verdade divergentes no mesmo dado).
+        categoria = camadas_superficiais[0].get("categoria_dnit", "indefinido") \
                     if camadas_superficiais else "indefinido"
 
     (v, h), exige_berma, exige_estudo = definir_inclinacao_talude(
@@ -429,8 +462,8 @@ do skill — objeto original preservado, isto é aditivo):
         "expansao_pct": 1.8,
         "proctor": {"w_otimo_pct": 18.4, "gd_max_kg_m3": 1620}
       },
-      "classificacao": {"SUCS": "CL", "AASHTO": "A-6", "group_index": 9,
-                         "categoria_dnit": "1a_categoria"},
+      "categoria_dnit": "1a_categoria",
+      "classificacao": {"SUCS": "CL", "AASHTO": "A-6", "group_index": 9},
       "baliza_uso": {
         "aterro_corpo": "adequado",
         "aterro_coroamento": "inadequado",
@@ -574,11 +607,23 @@ perfil silenciosamente quando `liberado_para_projeto_executivo` for falso.
 ## Checklist de aplicação (para quem for publicar)
 
 - [x] Gate humano (MN) — **aprovado em 2026-09-12** (sessão de chat).
-- [ ] Confirmar o caminho canônico do `SKILL.md` de `rodovias-geotecnia` em
-      produção (SharePoint ou outro repositório operacional) — não
-      confirmado nesta sessão.
+- [x] Caminho canônico do `SKILL.md` de `rodovias-geotecnia` **confirmado
+      por leitura real** em 2026-09-12:
+      `04_IA/09_TESTE_SKILLS/rodovias-geotecnia/SKILL.md` (SharePoint,
+      biblioteca `04_IA`). Conteúdo real conferido byte-a-byte contra a
+      skill sincronizada usada como base deste addendum — sem
+      divergência.
+- [ ] Confirmar com MN se `09_TESTE_SKILLS` é staging intencional (e
+      se/quando promover para dentro de `Manta-Maestro/`) antes de
+      tratar como aplicação em produção plena.
+- [ ] Avaliar com MN se as 4 capacidades novas também merecem entrar
+      como referência cruzada em `04_IA/Manta-Maestro/04-disciplinas/
+      D03-geotecnia/SKILL.md` (skill de produção real e mais ampla da
+      disciplina Geotecnia, que já lista `rodovias-geotecnia` como
+      skill L1 consumida) — não mexido nesta revisão, fora de escopo.
 - [ ] Colar o bloco da Seção A como novas seções 10–13 (ou 10–14 se
-      Schemas for movido para o final).
+      Schemas for movido para o final) em
+      `04_IA/09_TESTE_SKILLS/rodovias-geotecnia/SKILL.md`.
 - [ ] Estender `references/schema_sondagem.json` com os campos
       `ensaios`, `classificacao`, `baliza_uso`, `rastreabilidade`.
 - [x] Teste de fumaça com dados sintéticos rodado em 2026-09-12: todas as
