@@ -4,7 +4,26 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.15** (2026-09-11) — **correção v3.3.9 aplicada na skill
+Versão: **v5.4.16** (2026-09-12) — **rotina de reconciliação:
+`INDICE-CANONICAL.md` evoluiu para v1.1, taxonomia S1–S14/A1–A11/
+F1–F10/D01–D22 confirmada real mas majoritariamente "a confirmar"**.
+Achado grande, ação pequena: a fonte canônica real do SharePoint tem
+uma nova estrutura de pastas (`01-segmentos/`, `02-atividades/`,
+`03-funcionais/`, `04-disciplinas/`) e um pacote de arquitetura
+"v6.1.0" resgatado de uma biblioteca órfã — mas o próprio índice
+canônico marca a maior parte como não confirmada e afirma
+explicitamente que a v6 **não foi adotada** (v5.0.1 continua vigente).
+Também encontrada uma quarta ocorrência do padrão de fabricação
+`MNT-2026-COM-1183_D`, agora dentro do changelog do próprio índice
+canônico. Único ajuste aplicado: linha A9 (Regulatório) corrigida —
+`rubrica-A9` confirmada ativa (era "TODO"), mais uma numeração
+ANEEL/ANAC desatualizada corrigida na mesma linha. Nenhuma mudança
+estrutural grande — decisão de arquitetura/formalização de segmentos
+segue pendente do MN. Detalhe completo em
+`docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Reconciliação —
+INDICE-CANONICAL.md v1.1 e taxonomia expandida (2026-09-12)").
+
+Consolida v5.4.15 (2026-09-11) — **correção v3.3.9 aplicada na skill
 real** (a pedido explícito do usuário — "pode corrigir"). A correção
 preparada na v5.4.14 (abaixo) foi enviada ao SharePoint: releu a skill
 real antes de escrever (ainda em v3.3.8, 21.083 bytes, idêntica à
@@ -437,7 +456,7 @@ metodologia e handoffs por atividade. Resumo:
 | A6 | Contratual | Manta 02 (contratual) | ✅ Mapeado |
 | A7 | Claims | Manta 01 (claims) | ✅ Mapeado |
 | A8 | Advisory | Manta 15 (advisory) | ✅ Mapeado |
-| A9 | Regulatório | *(sem agente horizontal dedicado)* | 🔴 **Rubrica pendente (TODO)** — hoje distribuído pelos verticais (ANEEL em S9, ANAC em S7 etc.) + suporte pontual de Manta 02/Manta 15. Decisão MN pendente: criar Manta-code dedicado ou manter distribuído. |
+| A9 | Regulatório | *(sem agente horizontal dedicado)* | ⚠️ **Rubrica ativa, agente ainda pendente** (corrigido 2026-09-12) — `INDICE-CANONICAL.md` v1.1 (real, 2026-09-07) confirma `rubrica-A9` ativa (estava pendente na v1.0) e já documenta A9 com keywords reais de roteamento em `02-atividades/A9-regulatorio/`. A rubrica (auto-juiz de saída) não implica agente dedicado — hoje segue distribuído pelos verticais (ANEEL em S10, ANAC em S8 etc. — numeração corrigida nesta mesma revisão) + suporte pontual de Manta 02/Manta 15. Decisão MN pendente: criar Manta-code dedicado ou manter distribuído. Ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` (achado 2026-09-12). |
 | A10 | Risco | Manta 15 (advisory) coordena consolidação; conteúdo vem de A1-A9 e S1-S13 | ⚠️ Processo transversal sem Manta-code próprio — **não interpretar como confirmação de um "Manta 17"** até registro formal aqui |
 
 ---
@@ -995,6 +1014,28 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 - **Cor institucional da Motiva não confirmada** — ver seção 5 de
   `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
   até confirmação do cliente.
+- **🟡 `INDICE-CANONICAL.md` real evoluiu para v1.1 (2026-09-07),
+  taxonomia expandida ainda "a confirmar"** (achado 2026-09-12): a
+  árvore real do SharePoint agora tem `01-segmentos/` (S1–S14),
+  `02-atividades/` (A1–A11), `03-funcionais/` (F1–F10) e
+  `04-disciplinas/` (D01–D22) — confirmado por `list_folders` real.
+  S12-tuneis (segmento novo, nunca mencionado antes neste
+  repositório), S13-mineracao, S14-oleogas, A11-fiscalizacao,
+  D21-topografia-geodesia, D22-tuneis, F9-meta e F10-pesquisa-
+  evolutiva existem como pastas mas estão marcados "a confirmar" pela
+  própria fonte canônica (conteúdo/keywords não auditados). Não
+  contradiz a postura atual deste repositório sobre Óleo & Gás/
+  Mineração — só dá números tentativos ainda não confirmados. Também
+  encontrado um pacote de arquitetura "v6.1.0" resgatado de uma
+  biblioteca SharePoint órfã (`04_IA`), **explicitamente ainda não
+  adotado** segundo o próprio `INDICE-CANONICAL.md` (v5.0.1 continua
+  vigente) — e uma quarta ocorrência do padrão de fabricação
+  `MNT-2026-COM-1183_D`, desta vez dentro do changelog do próprio
+  índice canônico. Nenhuma mudança estrutural feita — ver
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Reconciliação —
+  INDICE-CANONICAL.md v1.1 e taxonomia expandida") para o detalhe
+  completo. Decisão MN pendente sobre adoção da v6 e formalização dos
+  itens "a confirmar".
 
 ---
 
@@ -1131,6 +1172,52 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.16** (2026-09-12) — **rotina de reconciliação: `INDICE-
+  CANONICAL.md` v1.1, taxonomia S1–S14/A1–A11/F1–F10/D01–D22**. A
+  rotina periódica GitHub↔SharePoint releu os documentos canônicos e
+  encontrou que `INDICE-CANONICAL.md` evoluiu de v1.0 (2026-07-11,
+  única versão até então conhecida por este repositório) para **v1.1**
+  (2026-09-07), documentando um saneamento estrutural real: nova
+  árvore de pastas `01-segmentos/` (S1–S14), `02-atividades/`
+  (A1–A11), `03-funcionais/` (F1–F10), `04-disciplinas/` (D01–D22),
+  confirmada por `list_folders` real nesta sessão. S1–S11 estão
+  populados de verdade; S12-tuneis (segmento novo, nunca mencionado
+  antes neste repositório), S13-mineracao, S14-oleogas, A11-
+  fiscalizacao, D21-topografia-geodesia, D22-tuneis, F9-meta e F10-
+  pesquisa-evolutiva existem só como pastas — o próprio índice
+  canônico os marca "a confirmar" (conteúdo/keywords não auditados).
+  Não contradiz a postura já existente deste repositório sobre Óleo &
+  Gás/Mineração ("sem segmento real confirmado") — só mostra que o
+  SharePoint já reservou números tentativos (diferentes da numeração
+  informal antiga deste repositório). Também encontrado um pacote de
+  arquitetura "v6.1.0" (`SKILL-MANTA-MAESTRO-v6.1.0.md` e mais dois
+  arquivos) resgatado em 2026-09-07 de uma biblioteca SharePoint órfã
+  chamada `04_IA` (confirmada como biblioteca real e distinta de
+  "Documentos Compartilhados" via `list_libraries`) — mas o próprio
+  `INDICE-CANONICAL.md` afirma explicitamente que essa arquitetura
+  "v6" **ainda não foi reconciliada/adotada como substituta da v5.0.1
+  vigente" — decisão de arquitetura em aberto, não uma mudança de
+  fato. As referências já existentes neste repositório a
+  `manta-maestro-arquitetura-v5.0.md` como fonte vigente permanecem
+  corretas, sem necessidade de mudança. Sinal de cautela registrado
+  (não confirmado como fabricação): `SKILL-MANTA-MAESTRO-v6.1.0.md`
+  cita textualmente uma seção `Codex-exemplo/CLAUDE.md
+  §RECONCILIAÇÃO COM MAESTRO OPERACIONAL` que **não existe** em
+  nenhuma versão real deste arquivo. Também encontrada uma **quarta
+  ocorrência** do padrão de fabricação `MNT-2026-COM-1183_D` (após as
+  três já documentadas nas v5.4.7/v5.4.12/v5.4.14-15) — desta vez
+  dentro do próprio changelog (§13) do `INDICE-CANONICAL.md` v1.1,
+  que narra o saneamento de 2026-09-07 citando essa mesma referência
+  fabricada como se fosse fato verificado. Não corrigido (é histórico
+  do SharePoint, fora do mandato desta rotina) — registrado para
+  explicar a origem da propagação. **Única ação aplicada nesta
+  execução**: linha A9 (Regulatório) em "Eixo A — Atividades"
+  corrigida — `INDICE-CANONICAL.md` v1.1 confirma `rubrica-A9` ativa
+  (estava pendente na v1.0), e uma numeração ANEEL/ANAC desatualizada
+  na mesma linha (S9/S7, deveria ser S10/S8 pela tabela "Eixo S" já
+  corrigida em 2026-09-07) foi corrigida junto. Detalhe completo em
+  `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` ("Reconciliação —
+  INDICE-CANONICAL.md v1.1 e taxonomia expandida (2026-09-12)").
 - **v5.4.15** (2026-09-11) — **correção v3.3.9 aplicada na skill real**,
   a pedido explícito do usuário ("pode corrigir"). A correção
   preparada na v5.4.14 foi enviada ao SharePoint: releu a skill real

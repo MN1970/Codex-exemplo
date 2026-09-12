@@ -1,5 +1,22 @@
 # Gap — Reconciliação entre este repositório e o Manta Maestro real (SharePoint)
 
+> 🟡 **Atualização 2026-09-12 (rotina de reconciliação)** —
+> `INDICE-CANONICAL.md` evoluiu para **v1.1** (2026-09-07), substituindo
+> a v1.0/2026-07-11 que este repositório vinha referenciando: nova
+> taxonomia de pastas real (`01-segmentos/`, `02-atividades/`,
+> `03-funcionais/`, `04-disciplinas/`) com S1–S14, A1–A11, F1–F10,
+> D01–D22 — a maioria ainda marcada "a confirmar" pela própria fonte
+> canônica. Também descoberto: um pacote de arquitetura "v6.1.0"
+> resgatado de uma biblioteca SharePoint órfã, **explicitamente ainda
+> não adotado** (v5.0.1 continua vigente), e uma **quarta ocorrência**
+> do padrão de fabricação `MNT-2026-COM-1183_D`, desta vez dentro do
+> próprio changelog do `INDICE-CANONICAL.md`. Nenhuma mudança
+> estrutural grande foi feita — ver seção "Reconciliação —
+> INDICE-CANONICAL.md v1.1 e taxonomia expandida (2026-09-12)" no fim
+> deste documento para o detalhe completo. Único ajuste aplicado no
+> repositório: correção pontual da linha A9 (Regulatório) em
+> `CLAUDE.md`, que já estava desatualizada.
+
 **Status:** 🟡 parcialmente investigado e parcialmente resolvido em
 2026-09-07/08 (numeração de segmento corrigida; gap do embedder G010
 resolvido com decisão real; Supabase confirmado real; risco de edição
@@ -479,3 +496,136 @@ produção.
    uma proposta real específica sem citar o resultado literal de uma
    busca (`find_item`/`search_files`) que a confirme, no mesmo turno
    em que a afirmação é escrita.**
+
+---
+
+## Reconciliação — INDICE-CANONICAL.md v1.1 e taxonomia expandida (2026-09-12)
+
+Rotina periódica de reconciliação. `SharePoint_Manta` MCP confirmado
+disponível e funcional (`get_site_info` → site "Engenharia", última
+modificação 2026-09-12T06:00:15Z).
+
+### O que mudou desde a última leitura
+
+`INDICE-CANONICAL.md` evoluiu para **v1.1** (gerado 2026-09-07) — este
+repositório vinha referenciando a v1.0 (2026-07-11). A v1.1 documenta
+um saneamento estrutural real ocorrido em 2026-09-07 (§13 do próprio
+índice), com uma nova taxonomia de pastas confirmada por
+`list_folders` real nesta sessão:
+
+| Eixo | Path real | Contagem real (confirmada por `list_folders`) |
+|---|---|---|
+| Segmentos | `01-segmentos/` | 14 pastas (S1–S14) — S1–S11 populadas (child_count 10–13 cada); **S12-tuneis, S13-mineracao, S14-oleogas existem só como placeholder quase vazio (child_count: 1 cada)** |
+| Atividades | `02-atividades/` | 12 itens (A1–A11 + 1 extra) |
+| Funcionais | `03-funcionais/` | 12 itens (F1–F10 + 2 extra) |
+| Disciplinas | `04-disciplinas/` | 23 itens (D01–D22 + 1 extra) |
+
+O próprio `INDICE-CANONICAL.md` v1.1 marca S12–S14, A11, D21–D22, F9–F10
+e 29 células de exemplares como **"a confirmar"** — pastas existem
+fisicamente, conteúdo/keywords não auditados. Isso **não contradiz**
+a postura atual deste repositório (que já trata Óleo & Gás e Mineração
+como "sem segmento real confirmado") — só acrescenta que o SharePoint
+real já reservou números tentativos (S12=Túneis **[segmento novo, não
+mencionado antes neste repositório]**, S13=Mineração, S14=Óleo & Gás —
+note que a numeração informal antiga deste repositório usava "S11" e
+"S12" respectivamente para esses dois; a numeração real, quando/se
+confirmada, será S13/S14) e criou as pastas, sem ainda confirmar
+conteúdo. **Nenhuma mudança de numeração foi feita neste repositório**
+— o item já está corretamente sinalizado como pendente de decisão MN
+(ver "Questionário de decisão para MN" #2 em `CLAUDE.md`).
+
+### A9 (Regulatório) — rubrica confirmada ativa (correção aplicada)
+
+`INDICE-CANONICAL.md` v1.1 confirma **`rubrica-A9` ativa** (estava
+pendente na v1.0) e documenta A9 com keywords reais de roteamento
+("consulta pública, reg-diff, comentários a norma" →
+`A9-regulatorio/`). `CLAUDE.md` (`Eixo A — Atividades`) descrevia A9
+como "Rubrica pendente (TODO)" — desatualizado. **Corrigido nesta
+execução**: linha A9 atualizada para refletir a rubrica ativa,
+mantendo claro que isso **não** resolve a pergunta em aberto (Manta-
+code horizontal dedicado vs. distribuído pelos verticais) — a rubrica
+é só o auto-juiz de saída, não um agente. Aproveitado para corrigir
+também um erro de numeração pré-existente na mesma linha (referências
+a "ANEEL em S9" e "ANAC em S7" — deveriam ser S10 e S8 pela própria
+tabela "Eixo S" já corrigida em 2026-09-07; ficou desatualizado quando
+essa correção foi aplicada).
+
+### Pacote de arquitetura "v6.1.0" — resgatado, mas NÃO adotado
+
+Encontrados (via `find_item` + `read_document`) três documentos com
+metadado `version: 6.1.0` / `supersedes: manta-router@v1.1.0,
+manta-maestro@v5.1.0`: `SKILL-MANTA-MAESTRO-v6.1.0.md`,
+`ARQUITETURA-AGENTES-IA-v6.1.0.md`, `CLAUDE.md-v6.1.0-CONSOLIDATED.md`,
+em `00-arquitetura/`. O próprio `INDICE-CANONICAL.md` v1.1 (§13)
+explica a origem: esses arquivos foram **resgatados em 2026-09-07 de
+uma biblioteca SharePoint órfã chamada `04_IA`** (confirmada nesta
+sessão como uma biblioteca de documentos real e separada de
+"Documentos Compartilhados" — `list_libraries` retorna ambas como
+bibliotecas distintas no mesmo site) e copiados para a árvore
+canônica, mas o índice afirma explicitamente:
+
+> "A arquitetura v6 em si ainda não foi reconciliada/adotada como
+> substituta da v5.0.1 vigente — isso é uma decisão de arquitetura em
+> aberto, fora do escopo deste saneamento estrutural."
+
+**Conclusão: a arquitetura vigente continua sendo v5.0.1** — as
+referências já existentes neste repositório
+(`manta-maestro-arquitetura-v5.0.md`) permanecem corretas e **não
+precisam mudar**. Nenhuma ação tomada sobre o conteúdo "v6" em si.
+
+**Sinal de cautela, não confirmado**: `SKILL-MANTA-MAESTRO-v6.1.0.md`
+cita textualmente `"Ver Codex-exemplo/CLAUDE.md §RECONCILIAÇÃO COM
+MAESTRO OPERACIONAL"` — uma seção que **não existe** em nenhuma versão
+real deste `CLAUDE.md`. Dado o histórico já extensamente documentado
+neste arquivo de conteúdo fabricado se propagando entre sessões/
+pacotes, isso não deveria ser tratado como confirmado sem revisão
+humana antes de qualquer adoção futura da arquitetura v6 — registrado
+aqui só como sinal de alerta, não como acusação de fabricação (o
+conteúdo estrutural do pacote v6 — os folders S1-S14/A1-A11/F1-F10
+reais — bateu com a árvore real do SharePoint quando verificado por
+`list_folders`, então pelo menos essa parte não é inventada).
+
+A biblioteca órfã `04_IA` (distinta da biblioteca "Documentos") ainda
+retém ~15 itens legados não migrados nem arquivados, por decisão
+explícita de não automatizar isso (§13 do índice) — item de limpeza
+do SharePoint, não deste repositório, não acionado aqui.
+
+### Quarta ocorrência do padrão de fabricação MNT-2026-COM-1183_D
+
+O §13 do próprio `INDICE-CANONICAL.md` v1.1, ao narrar o saneamento de
+2026-09-07, afirma que a variante "Tipo A / Concessão de Infraestrutura
+de Grande Porte" foi "validada contra a proposta real
+**MNT-2026-COM-1183_D** (Concessão Rota 2 de Julho)" — a **mesma**
+referência já estabelecida como fabricada nas três ocorrências
+anteriores documentadas neste arquivo (só `MNT-2026-COM-1183_C`/`_C_3`
+é localizável no SharePoint real). Ou seja: a alegação fabricada não
+está só na skill (já corrigida na v3.3.7) — está **também** narrada
+como fato no changelog do próprio índice canônico, a fonte que este
+repositório trata como mais confiável. Isso explica a origem: o
+pacote externo fundido em 2026-09-07 já continha essa alegação, e
+quem escreveu o §13 do índice a repetiu sem verificar. **Não corrigido
+nesta execução** — é o histórico do próprio SharePoint (não deste
+repositório) e corrigi-lo está fora do mandato desta rotina (que só
+mantém o GitHub honesto e propaga mudanças já aprovadas); registrado
+aqui para constar e para reforçar a recomendação já feita acima de uma
+regra permanente contra esse padrão.
+
+### Ação tomada nesta execução
+
+- `CLAUDE.md`: linha A9 corrigida (rubrica ativa + numeração ANEEL/
+  ANAC corrigida). Nenhuma outra mudança estrutural.
+- Este documento atualizado com o achado completo.
+- Nenhuma escrita feita no SharePoint (rotina não encontrou nenhuma
+  mudança aprovada do lado GitHub pendente de propagação).
+
+### Ainda não resolvido / decisão MN pendente
+
+- Adotar ou não a arquitetura "v6.1.0" (e revisar a referência
+  suspeita a uma seção inexistente de `CLAUDE.md` antes de adotar).
+- Confirmar conteúdo/keywords de S12-tuneis, S13-mineracao,
+  S14-oleogas, A11-fiscalizacao, D21-topografia-geodesia, D22-tuneis,
+  F9-meta, F10-pesquisa-evolutiva (todos "a confirmar" na fonte real).
+- Decidir sobre a numeração final de Túneis/Mineração/Óleo & Gás caso
+  esses segmentos sejam formalizados neste repositório (a numeração
+  real tentativa do SharePoint — S12/S13/S14 — difere da numeração
+  informal antiga deste repositório).
