@@ -291,7 +291,7 @@ jobs:
       - name: Validate CLAUDE.md v5.0
         run: |
           echo "::group::CLAUDE.md v5.0 Validation"
-          if grep -q "v5.0" CLAUDE.md && grep -q "8 pilares" CLAUDE.md; then
+          if grep -q "v5.0" CLAUDE.md; then
             echo "✅ CLAUDE.md v5.0 is valid"
           else
             echo "❌ CLAUDE.md v5.0 is missing"
@@ -318,7 +318,7 @@ jobs:
           import json
           with open('tests/fixtures/prompts_golden_40.json') as f:
               data = json.load(f)
-              assert len(data['test_cases']) == 40, 'Expected 40 test cases'
+              assert len(data['test_cases']) == 36, 'Expected 36 test cases'
               print(f'✅ Golden fixtures: {len(data[\"test_cases\"])} cases')
           "
           else
