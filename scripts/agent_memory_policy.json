@@ -86,7 +86,7 @@
   "agent_state_policy": {
     "description": "Política para tabela agent_state (persistente, embeddings)",
     "retention_days": 30,
-    "comment": "Agent_state não é auto-deletado (retenção indefinida)",
+    "comment": "CORRIGIDO 2026-09-13 (D4, ver docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md): este campo (retention_days=30) e o comentário anterior ('retenção indefinida') se contradiziam. Fonte de verdade é este valor numérico — 30 dias é a política pretendida para agent_state. Nota de honestidade: nenhum job real aplica essa purga hoje — agent_state não tem coluna de expiração no schema (supabase/migrations/2026_07_25_v5_0_agent_memory_cache.sql) e agent_memory_cleanup.py/agent_memory_purge.py nunca deletam desta tabela (só leem, via get_high_rating_for_r9). Tratar 30 como política de design ainda não implementada, não como comportamento em produção, até um job de purga de agent_state ser escrito.",
     "feedback_aggregation": {
       "enabled": true,
       "window_days": 7,
