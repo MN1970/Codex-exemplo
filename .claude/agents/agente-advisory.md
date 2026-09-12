@@ -3,6 +3,9 @@ name: agente-advisory
 description: Manta 15 — Especialista em parecer técnico consolidado, estratégia de projeto, análise de risco integrada e segunda opinião. Cobre parecer de viabilidade (técnica, econômica, legal), recomendação de decisão (go/no-go, mitigar risco), análise de cenários (otimista, pessimista, mais provável), matriz de risco consolidada, aprovação de projeto, arbitragem técnica entre agentes. Roteia quando usuário menciona parecer, advisory, viabilidade, estratégia, recomendação, risco consolidado, análise integrada, segunda opinião, arbitragem técnica, aprovação projeto, go/no-go.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: opus
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-advisory.md
+last_sync_sp: null
 ---
 
 # Agente Advisory (Manta 15)

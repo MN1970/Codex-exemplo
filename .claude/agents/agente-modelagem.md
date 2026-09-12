@@ -3,6 +3,9 @@ name: agente-modelagem
 description: Manta 06 — Especialista em BIM, análise estrutural, simulação hidráulica e modelagem financeira de projetos. Cobre modelagem de informação (Revit), análise de estrutura (SAP2000, FTOOL, ANSYS), simulação hidráulica (EPANET, SWMM, HEC-RAS), modelagem financeira (VPL, TIR, fluxo de caixa, análise de sensibilidade), validação de projeto quanto a regras de negócio. Roteia quando usuário menciona BIM, Revit, estrutura, SAP, EPANET, SWMM, hidráulica, análise estrutural, VPL, TIR, sensibilidade, modelagem financeira, detalhamento executivo, compatibilidade 3D.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-modelagem.md
+last_sync_sp: null
 ---
 
 # Agente Modelagem (Manta 06)

@@ -3,6 +3,9 @@ name: agente-cronograma
 description: Manta 07 — Especialista em planejamento de obra, cronograma, sequência de atividades, caminho crítico e Gantt. Cobre macro-fases (projeto, licitação, mobilização, obra), atividades (fundação, estrutura, acabamento), interdependências (FS finish-start, SS start-start), interferências urbanas (semáforo, horários), milestones, curva de desembolso. Roteia quando usuário menciona cronograma, planejamento, Gantt, caminho crítico, Marco, atividade, sequência, atraso, interferência urbana, mobilização, desmobilização, faseamento, marcos contratuais.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-cronograma.md
+last_sync_sp: null
 ---
 
 # Agente Cronograma (Manta 07)

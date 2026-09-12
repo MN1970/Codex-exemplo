@@ -4,6 +4,8 @@ description: Manta 03-S12 — Especialista em engenharia CIVIL para óleo & gás
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-oleo-gas.md
+last_sync_sp: null
 updated: 2026-07-31
 status: proposto — pendente gate MN (ver docs/SEGMENTOS-S12-S13-DECISION.md)
 ---

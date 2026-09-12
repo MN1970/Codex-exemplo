@@ -1,9 +1,11 @@
 # ADR D1–D4 — Decisões arquiteturais pendentes do Manta Maestro
 
-- **Status**: proposta — aguardando gate humano (MN)
-- **Data**: 2026-09-08
+- **Status**: **aprovado por MN (2026-09-13)** — implementação em
+  andamento, corrigida contra o código real do repositório (ver
+  "Correção de diagnóstico 2026-09-13" abaixo)
+- **Data**: 2026-09-08 (diagnóstico original) / 2026-09-13 (correção)
 - **Autor**: Manta 16 (arquiteto-ia), via sessão Claude Code
-- **Referências**: `CLAUDE.md` (registro mestre v4.2.1),
+- **Referências**: `CLAUDE.md` (registro mestre v5.4.7),
   `sharepoint/00-arquitetura/ARQUITETURA-AGENTES-IA.md` (v2.0.0),
   `docs/COWORK-INTEGRATION.md`, `docs/DEPLOY-v4.2.md`
 
@@ -12,8 +14,74 @@ Portal (`portal-manta-maestro`): **D1 multi-tenancy**, **D2 versionamento
 de agentes**, **D3 fallback de modelo**, **D4 retenção de logs**. Segue o
 workflow de revisão de 4 etapas da skill `manta-arquiteto-ia`: diagnóstico
 → propostas → implementação (patch de referência) → registro (gate
-humano). Nenhuma mudança aqui é aplicada em produção — é recomendação para
-aprovação MN.
+humano).
+
+## ⚠️ Correção de diagnóstico — 2026-09-13
+
+O diagnóstico original (2026-09-08, seções abaixo) foi escrito **sem
+checar o código real** de `src/maestro/`, `infra/agent-registry/`,
+`scripts/` e `supabase/migrations/` — um repositório muito maior do que
+o `CLAUDE.md` documentava até então. Uma reconciliação com 4 sessões
+paralelas (read-only) encontrou que boa parte das premissas de "nada
+disso existe" estava **desatualizada ou errada**. Resumo (ver PR de
+implementação para o detalhe completo por arquivo):
+
+- **D1**: falso que "nenhuma política RLS está documentada" — já
+  existem 13 policies reais, isolando por `agent_id`/`user_id` (nunca
+  por tenant). Achado novo e mais urgente: `rag_chunks` tem **duas
+  definições de schema conflitantes** no repo
+  (`2026_07_27_barragens_rag_chunks.sql` vs.
+  `2026_08_02_rag_hierarchy_v5.sql`), e a produção real audita para
+  `manta_rag_chunks`/`manta_rag_documents`, nomes diferentes dos usados
+  nas migrações deste repo. A migração de tenant precisa resolver isso
+  antes de assumir um schema único. `aysa`/`regis-dd` seguem como
+  tenants **propostos**, sem lastro em código — não tratar como já
+  confirmados.
+- **D2**: falso que nenhum agente tem campo de versão — 7 dos 17
+  agentes registrados já têm `version:` (semver) no frontmatter, e o
+  schema Supabase já tem `agents.version` + `agent_registry_history`
+  (audit genérico). O gap real é **inconsistência** (10/17 sem o
+  campo, uma ordem de frontmatter divergente em
+  `agente-saneamento.md`) e a ausência de `source_of_truth`/
+  `last_sync_sp` (esses sim não existem em lugar nenhum) — não criar
+  tabela `agent_versions` nova, reaproveitar o que já existe.
+- **D3**: existe um protótipo `scripts/fallback_strategy.py` com
+  auto-escalonamento para Opus (cadeia de Markov, estado
+  `OPUS_ESCALATION`) — mas ele (a) atua sobre segmento vertical, não
+  sobre os 4 agentes horizontais alvo do D3; (b) é treinado só com
+  dados sintéticos; (c) está desconectado do `orchestrator.py`; (d) faz
+  o **oposto** do D3 (escala para Opus automaticamente, sem gate
+  humano). Não reaproveitar sem revisão. Também: `agente-modelagem.md`
+  usa `model: sonnet` no frontmatter real, não `opus` como a v0 deste
+  ADR assumia — a lista de agentes "sem fallback automático para Opus"
+  precisa ser conferida contra o frontmatter real de cada agente, não
+  assumida.
+- **D4**: existe sistema real de retenção para `agent_memory`
+  (`scripts/agent_memory_cleanup.py`, SQL real via `psycopg2`,
+  migrações de tiering com `purge_cold_tier()`), mas o job
+  "agendado" oficial (`scripts/agent_memory_purge.py` +
+  `agent_memory_purge_job.py`, chamado por `apscheduler_setup.py`) é
+  **mockado** — nunca executa DELETE real contra o Supabase
+  (`# Real execution would go here`). Routing/RAG/claims/advisory/
+  artefato/Cowork **não têm nenhuma tabela de retenção hoje** — esses
+  sim precisam ser desenhados do zero, estendendo o padrão já real de
+  `agent_memory_cleanup.py` em vez de duplicá-lo.
+
+**Gate humano**: aprovado por MN para prosseguir com a implementação
+corrigida acima (não com o diagnóstico original de "nada existe").
+Pontos que ainda dependem de confirmação humana específica ficam
+marcados como TODO/comentário no código, não bloqueiam a implementação
+do que é seguro e não-destrutivo (novas colunas com default, novo
+módulo isolado, nova tabela) — mudanças que alterariam dado existente
+(ex.: escolher entre as 2 definições conflitantes de `rag_chunks`,
+incluir `agente-modelagem` na lista de no-fallback-Opus) permanecem
+sinalizadas para decisão MN antes de aplicar em produção real.
+
+---
+
+Nenhuma mudança deste ADR é aplicada diretamente em produção Supabase —
+o que segue é o diagnóstico original (2026-09-08) mantido como
+histórico; a implementação real segue a correção acima.
 
 ---
 

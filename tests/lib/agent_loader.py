@@ -34,6 +34,12 @@ CLAUDE_MD = REPO_ROOT / "CLAUDE.md"
 
 FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---\n(.*)$", re.DOTALL)
 
+# D2 (versionamento de agentes, ver docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md):
+# quando um agente declara `version` no frontmatter, ela deve ser semver
+# estrito (MAJOR.MINOR.PATCH, só dígitos). O campo continua opcional — não
+# validar sua ausência aqui, só o formato quando presente.
+VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
+
 # Conjunto de tools reconhecidas pelo Claude Code para subagentes.
 # Atualizar aqui se um novo agente precisar de uma tool ainda não usada.
 ALLOWED_TOOLS = {
@@ -107,6 +113,10 @@ class AgentDef:
     def model_tier(self) -> str | None:
         return self.frontmatter.get("model")
 
+    @property
+    def version(self) -> str | None:
+        return self.frontmatter.get("version")
+
 
 class AgentParseError(ValueError):
     pass
@@ -128,6 +138,13 @@ def parse_agent_file(path: Path) -> AgentDef:
 
     if not isinstance(frontmatter, dict):
         raise AgentParseError(f"{path}: frontmatter deve ser um mapeamento YAML.")
+
+    version = frontmatter.get("version")
+    if version is not None and not VERSION_RE.match(str(version)):
+        raise AgentParseError(
+            f"{path.name}: campo `version` inválido ({version!r}) — "
+            "esperado semver MAJOR.MINOR.PATCH (ex: 1.0.0)."
+        )
 
     return AgentDef(
         slug=path.stem,

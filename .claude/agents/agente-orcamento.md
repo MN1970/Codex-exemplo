@@ -3,6 +3,9 @@ name: agente-orcamento
 description: Manta 05 — Especialista em orçamentação, SINAPI, SICRO, composições de custo e análise de viabilidade econômica. Cobre orçamento detalhado (CUB, SINAPI, composições regionais), BDI (lucro, despesa indireta, tributo, risco), licitação orçamentária (preço global vs. unitário), reajuste de preço, revisão por extraordinariedade, parecer de viabilidade. Roteia quando usuário menciona orçamento, SINAPI, SICRO, BDI, composição, custo unitário, planilha, preço, custo/benefício, viabilidade econômica, licitação orçamentária, reajuste, custo-padrão, fator de fricção.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-orcamento.md
+last_sync_sp: null
 ---
 
 # Agente Orçamento (Manta 05)
