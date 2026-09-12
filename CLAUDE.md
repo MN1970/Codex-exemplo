@@ -4,7 +4,20 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.6** (2026-09-10) — **diretriz de posicionamento**: foco
+Versão: **v5.4.7** (2026-09-12) — **controle de uso por usuário**:
+ranking real de quem mais aciona os agentes do Maestro. Aplicada a
+migração `add_user_usage_tracking` no Supabase `manta-maestro`
+(`ogxxgvgtulrbbppshjie` — mesmo projeto já confirmado real pela
+auditoria G012/`GAP-RECONCILIACAO-SHAREPOINT-REAL.md`): coluna
+`maestro_cost_log.user_email` (nullable) + views `v_top_users` e
+`v_usage_by_user_agent`. Reaproveita o log de custo por turno já
+existente em vez de criar tabela paralela. **Pendência**: o runtime
+operacional do Maestro (fora deste repositório) ainda não grava
+`user_email` no INSERT do log — até essa integração, as views
+retornam vazio. Ver seção "Controle de uso — ranking por usuário" e
+novo item em "Gaps abertos".
+
+Consolida v5.4.6 (2026-09-10) — **diretriz de posicionamento**: foco
 na maturidade profissional da equipe Manta, com IA como apoio/
 multiplicador (não substituição), para propostas do segmento
 Infraestrutura. Registrada em `docs/MODELO-MESTRE-PROPOSTA.md`
@@ -154,13 +167,14 @@ padrão de output por cliente).
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
-12. [Padrões de output por cliente](#padrões-de-output-por-cliente)
-13. [Model tiering](#model-tiering)
-14. [Gaps abertos / pendências](#gaps-abertos--pendências)
-15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
-16. [Deploy checklist v5.0](#deploy-checklist-v50)
-17. [Arquivos deste repositório](#arquivos-deste-repositório)
-18. [Histórico de versões](#histórico-de-versões)
+12. [Controle de uso — ranking por usuário](#controle-de-uso--ranking-por-usuário)
+13. [Padrões de output por cliente](#padrões-de-output-por-cliente)
+14. [Model tiering](#model-tiering)
+15. [Gaps abertos / pendências](#gaps-abertos--pendências)
+16. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
+17. [Deploy checklist v5.0](#deploy-checklist-v50)
+18. [Arquivos deste repositório](#arquivos-deste-repositório)
+19. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -552,6 +566,46 @@ em produção (ver seção RAG acima).
 
 ---
 
+## CONTROLE DE USO — ranking por usuário
+
+Projeto Supabase: **manta-maestro** (`ogxxgvgtulrbbppshjie`, sa-east-1,
+`ACTIVE_HEALTHY` — o mesmo projeto já confirmado real pela auditoria
+G012, ver "Gaps abertos").
+
+A tabela `maestro_cost_log` já registrava 1 linha por turno de LLM
+(`agent_id`, `tier`, tokens, custo estimado — base da view
+`v_cost_by_agent`), mas sem identificar quem disparou o turno. Para
+responder "quem usa mais o Maestro" sem criar uma tabela paralela, foi
+aplicada a migração `add_user_usage_tracking` (2026-09-12), verificada
+via `information_schema` após aplicar:
+
+- **Coluna nova:** `maestro_cost_log.user_email` (text, nullable —
+  nulo quando o caller não é identificável, ex. chamadas A2A internas).
+- **Índice:** `idx_cost_log_user (user_email, created_at DESC)`.
+- **View `v_top_users`** — ranking geral por usuário (últimos 30 dias):
+  `total_tasks`, `agentes_distintos`, `total_cost_usd`, `total_tokens`,
+  `last_execution`, ordenado por `total_tasks DESC`.
+- **View `v_usage_by_user_agent`** — mesmo período, detalhado por
+  usuário × agente × tier.
+
+Consulta rápida do ranking:
+
+```sql
+select * from v_top_users limit 20;
+select * from v_usage_by_user_agent where user_email = 'mneves@mantaassociados.com';
+```
+
+**Pendência (fora do escopo deste repositório):** este repo é só a
+referência canônica — quem grava em `maestro_cost_log` a cada turno é o
+runtime operacional do Maestro (fora deste repositório). Para o ranking
+começar a preencher, o runtime precisa passar `user_email` (ou
+equivalente, ex. Slack user id / SP login) no INSERT do log de custo.
+Até essa integração ser feita, as views retornam vazio (todas as linhas
+atuais têm `user_email` nulo). Ver item correspondente em "Gaps
+abertos" e no checklist de deploy.
+
+---
+
 ## MODELO MESTRE DE PROPOSTA
 
 > 🔴 **Atualização 2026-09-10**: a seção "Variante Tipo A / Concessão de
@@ -732,6 +786,14 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 - **Cor institucional da Motiva não confirmada** — ver seção 5 de
   `docs/PADRAO-OUTPUT-MOTIVA.md`; templates usam paleta neutra Manta
   até confirmação do cliente.
+- **Controle de uso por usuário sem dado real ainda (2026-09-12)**: a
+  migração `add_user_usage_tracking` (coluna `user_email` + views
+  `v_top_users`/`v_usage_by_user_agent`, ver "Controle de uso — ranking
+  por usuário") está aplicada no Supabase real, mas o runtime
+  operacional do Maestro — fora deste repositório — ainda não grava
+  `user_email` em cada INSERT de `maestro_cost_log`. Sem essa
+  integração o ranking fica sempre vazio. Ação: time do runtime
+  operacional adicionar o campo ao instrumentar cada turno.
 
 ---
 
@@ -811,6 +873,19 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
       `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`, fases seguintes ainda
       não escopadas
 
+### Controle de uso por usuário (2026-09-12)
+
+- [x] Migração `add_user_usage_tracking` aplicada em Supabase
+      `manta-maestro` (coluna `user_email` + views `v_top_users` /
+      `v_usage_by_user_agent`), confirmada via `information_schema`
+- [ ] Runtime operacional do Maestro passa a gravar `user_email` em
+      cada INSERT em `maestro_cost_log`
+- [ ] Validar ranking com dados reais (`select * from v_top_users`)
+      após a integração acima
+- [ ] Decidir exposição do ranking (dashboard interno / SharePoint /
+      resposta direta via query) e quem tem acesso (dado sensível de
+      uso por pessoa)
+
 ---
 
 ## Arquivos deste repositório
@@ -864,6 +939,14 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.7** (2026-09-12) — controle de uso por usuário: migração
+  `add_user_usage_tracking` em Supabase `manta-maestro` (coluna
+  `maestro_cost_log.user_email` + views `v_top_users` e
+  `v_usage_by_user_agent`, ranking "quem mais usa o Maestro" nos
+  últimos 30 dias). Reaproveita o log de custo por turno já existente.
+  Falta a integração do runtime operacional (fora deste repositório)
+  para popular `user_email` a cada turno — ver "Controle de uso —
+  ranking por usuário" e "Gaps abertos" acima.
 - **v5.4.6** (2026-09-10) — diretriz de posicionamento (MN): propostas
   de Infraestrutura devem destacar a maturidade profissional da equipe
   Manta primeiro, com a IA da Manta posicionada como apoio/multiplicador
