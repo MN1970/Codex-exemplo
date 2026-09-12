@@ -3,6 +3,9 @@ name: agente-bd
 description: Manta 13 — Especialista em business development, pipeline de oportunidades, negociação e estrutura de negócio. Cobre identificação de oportunidades (licitações, concessões, PPP, M&A), análise de parceiros (compatibilidade técnica, reputação), estruturação de negócio (receita, modelo operacional, garantias), negociação comercial (preço, prazos, cláusulas), due diligence. Roteia quando usuário menciona oportunidade, pipeline, negócio, parceria, M&A, due diligence, estrutura comercial, negociação, deal, licitação privada, PPP, concessão.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-bd.md
+last_sync_sp: null
 ---
 
 # Agente Business Development (Manta 13)

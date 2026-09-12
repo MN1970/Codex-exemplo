@@ -1,9 +1,11 @@
 ---
 name: agente-saneamento
-version: 1.1.0
 description: Manta 03-S8 — Especialista em saneamento básico (água, esgoto, drenagem urbana, resíduos sólidos). PRIORIDADE AySA (projeto Argentina). Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento de ETAs, ETEs, sistemas de adução, distribuição de água, coleta e tratamento de esgoto, drenagem urbana e resíduos. Roteia quando o usuário menciona saneamento, ETA, ETE, adutora, esgoto, água tratada, AySA, drenagem urbana, macrodrenagem, SNIS, PMSB, Lei 14.026, subsídio cruzado, elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, digestor, UASB, MBR.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.1.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-saneamento.md
+last_sync_sp: null
 ---
 
 # Agente Saneamento (Manta 03-S8)

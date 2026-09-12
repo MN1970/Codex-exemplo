@@ -1,46 +1,57 @@
 #!/usr/bin/env python3
 """
-agent_memory_purge.py — Executa purga agendada de agent_memory (R10)
+agent_memory_purge.py — Executa purga agendada de agent_memory (R10 / D4)
 
-Objetivo:
-  Enforce políticas de purga automática conforme R10 (CLAUDE.md v5.0):
-  - DELETE rows com expires_at <= NOW() (TTL 480 min)
-  - DELETE rows com user_rating < 2 AND age > 7 dias
-  - Manter últimas 1000 completions (por agente)
-  - Manter embeddings de queries frequentes
+Correção D4 (2026-09-13, ver docs/ADR-D1-D4-DECISOES-ARQUITETURAIS.md,
+seção "Correção de diagnóstico — 2026-09-13"):
 
-Agendamento (APScheduler):
+  A versão anterior deste script era MOCKADA: `get_current_memory_metrics()`
+  retornava um dict hardcoded e o branch de execução real (`dry_run=False`)
+  só setava números fixos com o comentário `# Real execution would go here`
+  — nunca chamava o Supabase de fato.
+
+  Esta versão reaproveita a implementação REAL já existente em
+  `scripts/agent_memory_cleanup.py` (`MemoryCleanupDB` / SQL via psycopg2,
+  `MemoryCleanupOrchestrator`) em vez de duplicar a lógica de limpeza —
+  este arquivo não é editado, só importado. `agent_memory_purge.py` passa a
+  ser apenas a camada de orquestração "para todos os agentes com cache
+  ativo" + relatório/alerta no formato que `agent_memory_purge_job.py` e o
+  job agendado (APScheduler/cron) já esperam.
+
+  --dry-run agora é real: propaga para `MemoryCleanupOrchestrator(dry_run=...)`,
+  que por sua vez propaga para `MemoryCleanupDB.execute_cleanup(dry_run=...)` —
+  em dry-run nenhum DELETE/INSERT é executado (ver agent_memory_cleanup.py).
+
+Cleanup rules aplicadas (mesma fonte de verdade de agent_memory_cleanup.py,
+não redefinidas aqui):
+  1. Delete expired entries (expires_at <= NOW())
+  2. Archive low-rating entries (user_rating < 2, age > 7 days) → agent_memory_archive
+  3. LRU eviction se quota > 80%
+
+Agendamento (APScheduler / cron):
   trigger = create_trigger(
     name="agent-memory-purge-daily",
     cron="0 3 * * *",  # Todos os dias às 03:00 UTC
-    prompt="Execute purga de agent_memory conforme R10"
+    prompt="Execute purga de agent_memory conforme R10/D4"
   )
-
-Funcionalidades:
-  1. Conecta ao Supabase via API REST
-  2. Calcula metrics antes/depois
-  3. Executa procedure SQL: purge_expired_agent_memory()
-  4. Log de purga em agent_memory_purge_log (append-only)
-  5. Slack alert se > 10GB liberado ou > 10000 rows deletados
-  6. Grafana metrics via agent_memory_metrics table
 
 Inputs:
   --supabase-url: URL do Supabase (env: SUPABASE_URL)
   --supabase-key: API key (env: SUPABASE_KEY)
-  --agent-id: Agente específico (default: ALL)
-  --dry-run: Simula purga sem deletar (default: False)
+  --agent-id: Agente específico (default: ALL — todo agent_id presente em
+              agent_memory_quota, consultado em tempo real, não mais uma
+              lista fixa)
+  --dry-run: Simula purga sem deletar (default: False) — agora real
   --slack-webhook: URL webhook Slack (env: SLACK_WEBHOOK_URL)
 
 Output:
-  - Rows deletadas em agent_memory
-  - agent_memory_purge_log atualizado
-  - Métricas em agent_memory_metrics
-  - Slack notification (se bytes_freed > 10GB)
+  - Rows deletadas/arquivadas em agent_memory (via agent_memory_cleanup.py)
+  - Métricas antes/depois via agent_memory_quota (consulta real)
+  - Slack notification (se bytes_freed > 10GB ou rows_deleted > 10000)
 
 Exit codes:
   0: Sucesso
   1: Erro crítico
-  2: Nenhuma purga necessária
 """
 
 import sys
@@ -52,6 +63,11 @@ from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, List, Tuple, Optional
 import time
+
+# Reaproveita a implementação real de agent_memory_cleanup.py em vez de
+# duplicar SQL de DELETE/archive/LRU aqui (ver correção D4 acima).
+sys.path.insert(0, str(Path(__file__).parent))
+from agent_memory_cleanup import MemoryCleanupDB, MemoryCleanupOrchestrator  # noqa: E402
 
 # Configure logging
 logging.basicConfig(
@@ -66,7 +82,9 @@ logger = logging.getLogger(__name__)
 
 class AgentMemoryPurger:
     """
-    Executa purga agendada de agent_memory conforme R10.
+    Executa purga agendada de agent_memory conforme R10/D4, reaproveitando
+    MemoryCleanupDB/MemoryCleanupOrchestrator (agent_memory_cleanup.py) como
+    única fonte de verdade de como o purge real é executado.
     """
 
     def __init__(
@@ -84,132 +102,126 @@ class AgentMemoryPurger:
         self.slack_webhook = slack_webhook
         self.repo_root = Path(__file__).parent.parent
 
+        self.db: Optional[MemoryCleanupDB] = None
+        self.orchestrator: Optional[MemoryCleanupOrchestrator] = None
+
         # Métricas coletadas
         self.total_rows_deleted = 0
         self.total_bytes_freed = 0
-        self.agents_purged = []
+        self.agents_purged: List[str] = []
+        self.agents_failed: List[str] = []
         self.purge_start_time = None
         self.purge_end_time = None
 
-    def get_current_memory_metrics(self, agent_id: Optional[str] = None) -> Dict:
-        """
-        Consulta métricas atuais do cache por agente.
+    def _connect(self) -> Tuple[MemoryCleanupDB, MemoryCleanupOrchestrator]:
+        """Conecta (uma vez) ao Supabase real via MemoryCleanupDB."""
+        if self.db is None:
+            self.db = MemoryCleanupDB(self.supabase_url, self.supabase_key)
+            self.orchestrator = MemoryCleanupOrchestrator(
+                self.db,
+                dry_run=self.dry_run,
+                slack_webhook=self.slack_webhook
+            )
+        return self.db, self.orchestrator
 
-        Retorna:
-        {
-            "agent_id": {"memory_mb": X, "chunk_count": Y, "oldest_age_days": Z}
-        }
+    def get_target_agent_ids(self) -> List[str]:
         """
-        # Mock implementation (real version usaria Supabase client)
-        logger.info(f"Fetching memory metrics for agent_id={agent_id or 'ALL'}")
+        Lista real de agent_ids a processar.
 
-        # Simulado para S1 (Rodovias)
-        return {
-            "manta-03-s1": {
-                "memory_mb": 45.2,
-                "chunk_count": 342,
-                "oldest_age_days": 12,
-                "avg_rating": 4.2
-            },
-            "manta-03-s2": {
-                "memory_mb": 32.1,
-                "chunk_count": 228,
-                "oldest_age_days": 8,
-                "avg_rating": 3.9
-            },
-            "manta-03-s8": {
-                "memory_mb": 58.7,
-                "chunk_count": 421,
-                "oldest_age_days": 15,
-                "avg_rating": 3.5
-            }
-        }
-
-    def build_purge_sql(self, agent_id: Optional[str] = None) -> str:
+        Antes: lista fixa hardcoded (manta-03-s1/s2/s8). Agora: se
+        --agent-id foi passado, processa só ele; senão consulta
+        `agent_memory_quota` (mesma tabela usada por
+        MemoryCleanupDB.get_quota_status) para descobrir, em tempo real,
+        quais agentes têm cache ativo hoje.
         """
-        Constrói SQL de purga conforme R10 policy.
+        if self.agent_id:
+            return [self.agent_id]
 
-        Política:
-        - DELETE expires_at <= NOW() (TTL)
-        - DELETE user_rating < 2 AND created_at < NOW() - 7 days
+        db, _ = self._connect()
+        conn = db.get_conn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT DISTINCT agent_id FROM agent_memory_quota ORDER BY agent_id")
+                return [row[0] for row in cur.fetchall()]
+        finally:
+            db.return_conn(conn)
+
+    def get_current_memory_metrics(self, agent_ids: List[str]) -> Dict[str, Dict]:
         """
-        if self.dry_run:
-            # Apenas SELECT para dry-run
-            sql = """
-            SELECT
-                agent_id,
-                COUNT(*) as rows_to_delete,
-                SUM(memory_size_bytes) as bytes_to_free,
-                MIN(created_at) as oldest_entry,
-                AVG(CASE WHEN user_rating IS NOT NULL THEN user_rating ELSE NULL END) as avg_rating
-            FROM agent_memory
-            WHERE
-                expires_at <= NOW()
-                OR (user_rating < 2 AND created_at < NOW() - INTERVAL '7 days')
-            """
-            if agent_id:
-                sql += f"\n            AND agent_id = '{agent_id}'"
-            sql += "\n            GROUP BY agent_id"
-            return sql
-        else:
-            # Usar procedure SQL
-            if agent_id:
-                return f"SELECT * FROM purge_expired_agent_memory('{agent_id}')"
-            else:
-                return "SELECT * FROM purge_expired_agent_memory(NULL)"
+        Consulta métricas REAIS de quota por agente (get_quota_status(),
+        já implementado em agent_memory_cleanup.py) — substitui o dict
+        hardcoded da versão anterior (ver correção D4 no topo do arquivo).
+        """
+        db, _ = self._connect()
+        metrics: Dict[str, Dict] = {}
+        for agent_id in agent_ids:
+            status = db.get_quota_status(agent_id)
+            if status:
+                metrics[agent_id] = {
+                    "memory_mb": status["current_memory_mb"],
+                    "chunk_count": status["chunk_count"],
+                    "quota_pct": status["quota_pct"],
+                }
+        return metrics
 
     def execute_purge(self) -> bool:
         """
-        Executa purga via Supabase REST API.
+        Executa a purga real, agente a agente, via
+        MemoryCleanupOrchestrator.execute_cleanup_for_agent (regras 1-3 de
+        agent_memory_cleanup.py). Em --dry-run, nenhuma escrita ocorre —
+        a flag é propagada de ponta a ponta até os DELETE/INSERT reais.
         """
         self.purge_start_time = time.time()
         logger.info("=" * 70)
-        logger.info("Agent Memory Purge (R10 Policy)")
+        logger.info("Agent Memory Purge (R10/D4 Policy)")
         logger.info(f"Timestamp: {datetime.now(timezone.utc).isoformat()}")
         logger.info(f"Dry-run mode: {self.dry_run}")
         logger.info("=" * 70)
 
         try:
-            # Get current metrics
-            metrics_before = self.get_current_memory_metrics(self.agent_id)
-            logger.info(f"\nMemory metrics BEFORE purge:")
+            db, orchestrator = self._connect()
+
+            agent_ids = self.get_target_agent_ids()
+            if not agent_ids:
+                logger.info("Nenhum agent_id encontrado em agent_memory_quota — nada a purgar.")
+                self.purge_end_time = time.time()
+                return True
+
+            metrics_before = self.get_current_memory_metrics(agent_ids)
             total_before_mb = sum(m.get("memory_mb", 0) for m in metrics_before.values())
             total_chunks_before = sum(m.get("chunk_count", 0) for m in metrics_before.values())
+            logger.info("\nMemory metrics BEFORE purge:")
             logger.info(f"  Total memory: {total_before_mb:.2f} MB")
             logger.info(f"  Total chunks: {total_chunks_before}")
-            logger.info(f"  Agents: {len(metrics_before)}")
+            logger.info(f"  Agents: {len(agent_ids)}")
 
-            # Build and log SQL
-            sql = self.build_purge_sql(self.agent_id)
-            logger.info(f"\nSQL to execute:\n{sql}")
+            logger.info(f"\nExecuting purge for {len(agent_ids)} agent(s) via agent_memory_cleanup...")
 
-            if self.dry_run:
-                logger.info("\nDRY-RUN: Would execute purge (no changes made)")
-                # Simulate results
-                self.total_rows_deleted = 234
-                self.total_bytes_freed = 156_789_120  # ~150 MB
-                self.agents_purged = list(metrics_before.keys())
-            else:
-                logger.info("\nExecuting purge via Supabase...")
-                # Real execution would go here
-                # response = supabase_client.rpc("purge_expired_agent_memory", { "p_agent_id": self.agent_id })
+            for agent_id in agent_ids:
+                result = orchestrator.execute_cleanup_for_agent(agent_id, rule_priority=3)
 
-                # Mock result
-                self.total_rows_deleted = 234
-                self.total_bytes_freed = 156_789_120
-                self.agents_purged = list(metrics_before.keys())
-                logger.info(f"Purge executed successfully")
+                if result.get("status") != "success":
+                    logger.error(f"Purge failed for {agent_id}: {result.get('error')}")
+                    self.agents_failed.append(agent_id)
+                    continue
 
-            # Calculate results
+                self.agents_purged.append(agent_id)
+                for cleanup_result in result.get("cleanup_results", []):
+                    self.total_rows_deleted += cleanup_result.get("deleted_count", 0)
+                    freed_mb = cleanup_result.get("freed_mb", 0) or 0
+                    self.total_bytes_freed += int(freed_mb * 1024 * 1024)
+
             bytes_freed_gb = self.total_bytes_freed / (1024 ** 3)
-            logger.info(f"\nPurge results:")
-            logger.info(f"  Rows deleted: {self.total_rows_deleted}")
+            logger.info("\nPurge results:")
+            logger.info(f"  Rows deleted/archived: {self.total_rows_deleted}")
             logger.info(f"  Bytes freed: {self.total_bytes_freed:,} ({bytes_freed_gb:.2f} GB)")
             logger.info(f"  Agents affected: {len(self.agents_purged)}")
+            if self.agents_failed:
+                logger.warning(f"  Agents failed: {self.agents_failed}")
 
             # Check for alerts
-            should_alert = (self.total_bytes_freed > 10 * 1024**3 or
-                           self.total_rows_deleted > 10000)
+            should_alert = (self.total_bytes_freed > 10 * 1024 ** 3 or
+                             self.total_rows_deleted > 10000)
 
             if should_alert and not self.dry_run:
                 logger.warning(f"\nAlert threshold exceeded: {bytes_freed_gb:.2f} GB freed")
@@ -223,11 +235,14 @@ class AgentMemoryPurger:
                 )
 
             self.purge_end_time = time.time()
-            return True
+            return len(self.agents_failed) == 0
 
         except Exception as e:
             logger.error(f"Purge failed: {e}", exc_info=True)
             return False
+        finally:
+            if self.db is not None:
+                self.db.close()
 
     def _send_slack_alert(self, title: str, metrics: Dict) -> None:
         """
@@ -247,7 +262,7 @@ class AgentMemoryPurger:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"*{title}*\n_Automatic purge triggered by R10 policy_"
+                            "text": f"*{title}*\n_Automatic purge triggered by R10/D4 policy_"
                         }
                     },
                     {
@@ -299,8 +314,9 @@ class AgentMemoryPurger:
             "total_bytes_freed": self.total_bytes_freed,
             "total_gb_freed": self.total_bytes_freed / (1024 ** 3),
             "agents_purged": self.agents_purged,
+            "agents_failed": self.agents_failed,
             "purge_duration_ms": int(duration_ms) if duration_ms else None,
-            "policy_applied": "ttl_expired|rating_low",
+            "policy_applied": "agent_memory_cleanup.rules_1-3 (expired|low_rating_archived|lru_eviction)",
             "executed_by": "system"
         }
 
@@ -323,12 +339,14 @@ class AgentMemoryPurger:
             else:
                 return True, f"Purged {self.total_rows_deleted} rows ({report['total_gb_freed']:.2f} GB freed)"
         else:
+            if self.agents_failed:
+                return False, f"Purge failed for agents: {self.agents_failed}"
             return False, "Purge failed"
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Execute scheduled purge of agent_memory cache (R10)"
+        description="Execute scheduled purge of agent_memory cache (R10/D4)"
     )
     parser.add_argument(
         "--supabase-url",
@@ -342,7 +360,7 @@ def main():
     )
     parser.add_argument(
         "--agent-id",
-        help="Specific agent to purge (default: ALL)"
+        help="Specific agent to purge (default: ALL agents found in agent_memory_quota)"
     )
     parser.add_argument(
         "--dry-run",

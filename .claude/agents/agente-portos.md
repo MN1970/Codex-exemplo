@@ -4,6 +4,8 @@ description: Manta 03-S6 — Especialista em projetos portuários e hidroviário
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 version: 1.1.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-portos.md
+last_sync_sp: null
 updated: 2026-07-31
 ---
 
