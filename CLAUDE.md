@@ -146,7 +146,7 @@ padrão de output por cliente).
 >    todos os agentes em produção
 > 2. **v5.0 (branch, 31/07)** — formalização de arquitetura com gaps
 >    investigados e decisões explicitadas
-> 
+>
 > Diferenças encontradas durante merge (numeração segmentos, status de
 > produção) estão documentadas neste arquivo. Decisões divergentes foram
 > preservadas em notas explícitas (ver "Eixo S", "Gaps abertos") em vez
@@ -156,14 +156,14 @@ padrão de output por cliente).
 
 ## Sumário
 
-1. [Modelo de 4 eixos (S×A×F×D)](#modelo-de-4-eixos-saf%C3%97d)
+1. [Modelo de 4 eixos (S×A×F×D)](#modelo-de-4-eixos-safd)
 2. [Eixo S — Segmentos](#eixo-s--segmentos)
 3. [Eixo A — Atividades](#eixo-a--atividades)
 4. [Eixo F — Funcionais](#eixo-f--funcionais)
 5. [Eixo D — Disciplinas](#eixo-d--disciplinas)
 6. [Eixo temporal — Ciclo de vida](#eixo-temporal--ciclo-de-vida-8-fases)
 7. [Modelo de composição S.A.D](#modelo-de-composição-sad)
-8. [Mapa completo de agentes — 20 operacionais + 2 propostos](#mapa-completo-de-agentes--20-operacionais--2-propostos)
+8. [Mapa completo de agentes — 21 operacionais + 2 sem segmento confirmado](#mapa-completo-de-agentes--21-operacionais--2-sem-segmento-confirmado)
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
@@ -617,6 +617,8 @@ abertos" e no checklist de deploy.
 > feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
 > ("Recorrência confirmada — Variante Tipo A") para a evidência
 > completa e a recomendação ao MN.
+
+<!-- -->
 
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
@@ -1091,10 +1093,10 @@ Codex-exemplo/
   confirmada em duas varreduras do SharePoint (geral e pastas
   "Material Recebido" de 10 projetos) — nenhum brandbook localizado.
   Ticket `MNT-2026-MOTIVA-258-PATTERN`.
-- **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
-  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
-  (ambiental, social, governança, integração), integração co-agente com 
-  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap. 
+- **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo
+  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões
+  (ambiental, social, governança, integração), integração co-agente com
+  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap.
   Tier: Sonnet. Status: v1.0 operacional. Agentes totais: 21 (12 h + 9 v).
   Ticket `MNT-2026-P3-04-ESG-AGENT`.
 - **v5.0.1** (2026-07-31) — **UNIFICADA**: merge de v5.0.0 operacional

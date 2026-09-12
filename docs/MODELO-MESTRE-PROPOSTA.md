@@ -9,6 +9,8 @@
 > confirmada — Variante Tipo A"). Nenhuma escrita foi feita na skill —
 > recomendação registrada para o MN corrigir diretamente na fonte.
 
+<!-- -->
+
 > ⚠️ **Correção (2026-09-07)**: a versão original deste documento (ver
 > histórico no fim do arquivo) validava a skill `proposta-comercial`
 > contra uma proposta **"MNT-2026-COM-1183_D"** e descrevia a skill como
