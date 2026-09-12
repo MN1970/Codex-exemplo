@@ -581,9 +581,15 @@ perfil silenciosamente quando `liberado_para_projeto_executivo` for falso.
       Schemas for movido para o final).
 - [ ] Estender `references/schema_sondagem.json` com os campos
       `ensaios`, `classificacao`, `baliza_uso`, `rastreabilidade`.
-- [ ] Validar `avaliar_baliza_uso` e `qa_qc_sondagem` com um projeto real
-      antes de liberar para uso em projeto executivo (dados de teste
-      ainda não rodados nesta sessão).
+- [x] Teste de fumaça com dados sintéticos rodado em 2026-09-12: todas as
+      funções das seções 10-13 executam sem exceção com casos-limite
+      (NSPT ausente, cbr_min=None, sondagem sem prof_total, sem sondagem
+      associada). Achou e corrigiu 3 bugs reais (categoria_dnit lido no
+      campo errado do schema, checagem de profundidade que pulava
+      sondagens sem cota_greide_m, "adequado" por omissão de dado em
+      avaliar_fundacao_aterro) — ver histórico de commits.
+- [ ] Ainda falta validar com dados de um projeto real (não sintéticos)
+      antes de liberar para uso em projeto executivo.
 - [x] Números de norma NBR/DNIT verificados por pesquisa web em
       2026-09-12 (3 agentes independentes, ver nota no início da
       seção 11) — confiança alta para números/títulos de norma,
