@@ -2,15 +2,21 @@
 ## (perfil de cortes/aterros, baliza de uso de material, banco JSON consolidado, QA/QC de sondagens)
 
 **Status:** 🟡 **proposta técnica — aguardando gate humano (MN) antes de aplicar.**
-Ainda **não aplicada** à skill de produção. Diferente do addendum de
-`proposta-comercial`, a skill `rodovias-geotecnia` **não vive neste
-repositório** (`Codex-exemplo` só versiona os agentes verticais S6–S10 e o
-registro mestre — ver `CLAUDE.md`, seção "Arquivos deste repositório") nem
-foi confirmado seu caminho canônico no SharePoint nesta sessão. Antes de
-publicar, localizar o `SKILL.md` de produção de `rodovias-geotecnia`
-(provável local: `04_IA/Manta-Maestro/02-sub-skills/` no SharePoint, por
-analogia ao padrão usado por `skill-proposta-comercial-SKILL.md`) e colar o
-bloco da Seção A abaixo na posição indicada.
+Ainda **não aplicada** à skill de produção. A skill `rodovias-geotecnia`
+não foi localizada neste repositório (`Codex-exemplo`) nem seu caminho
+canônico foi confirmado no SharePoint nesta sessão. Antes de publicar,
+localizar o `SKILL.md` de produção de `rodovias-geotecnia` (provável
+local: `04_IA/Manta-Maestro/02-sub-skills/` no SharePoint, por analogia
+ao padrão usado por `skill-proposta-comercial-SKILL.md`) e colar o bloco
+da Seção A abaixo na posição indicada.
+
+**Atualização 2026-09-12:** os números de norma NBR/DNIT citados neste
+addendum foram verificados por pesquisa web (3 pesquisas independentes)
+após a primeira versão — ver nota no início da seção 11 e a marcação de
+confiança por linha em `BALIZA_PADRAO_DNIT` (seção 11.3). Números/títulos
+de norma têm confiança alta; valores numéricos de CBR/expansão/IP em
+`aterro_corpo`/`aterro_coroamento` continuam como placeholder não
+confirmado — ver checklist de aplicação no fim deste documento.
 
 Motivação: pedido de MN (2026-09-12) para complementar a capacidade de
 geotecnia rodoviária em 4 frentes — (1) modelagem do perfil dos cortes e do
@@ -184,8 +190,34 @@ def avaliar_fundacao_aterro(estaca, sondagem_ref, peso_especifico_aterro_kn_m3=1
 Estende `scripts/ensaios_geotecnicos.py` (seção 7) com limites de
 Atterberg, SUCS/AASHTO completos e a tabela de adequação de material por
 camada, cruzada com a especificação de terraplenagem/pavimentação do
-projeto (DNIT 108/2009-ES, DNIT 141/2010-ES, ou a especificação
-particular do edital/contrato quando informada).
+projeto (DNIT 108/2009-ES — aterros, DNIT 138/2010-ES — reforço do
+subleito, DNIT 139/2010-ES — sub-base, DNIT 141/2022-ES — base, ou a
+especificação particular do edital/contrato quando informada).
+
+> **Normas verificadas nesta revisão (2026-09-12), por pesquisa web com
+> triangulação de múltiplas fontes — não por leitura direta do PDF
+> oficial (acesso bloqueado pelo proxy de rede desta sessão):**
+> DNIT 106/2009-ES (cortes), DNIT 107/2009-ES (empréstimos),
+> DNIT 108/2009-ES (aterros, corrigida 2025), DNIT 137/2010-ES
+> (regularização do subleito), DNIT 138/2010-ES (reforço do subleito),
+> DNIT 139/2010-ES (sub-base estabilizada granulometricamente),
+> DNIT 141/2022-ES (base estabilizada granulometricamente — **não**
+> 141/2010, que foi revisada), DNIT 172/2016-ME (CBR, substitui
+> DNER-ME 049/94 e 050/64), DNIT 164/2013-ME (Proctor, substitui
+> DNER-ME 047/64, 048/64, 129/89/94), DNIT 459/2025-ME (granulometria,
+> substitui DNER-ME 080/94 e 051/94), DNER-ME 122/94 (limite de
+> liquidez) e DNER-ME 082/94 (limite de plasticidade) — estes dois
+> últimos com título/ano confirmados mas sem confirmação de que não
+> foram substituídos por norma DNIT mais recente. **Os valores
+> numéricos de CBR/expansão/IP abaixo têm confiança média** (fontes
+> secundárias convergentes, não o texto integral da norma) — conferir
+> contra o PDF oficial do DNIT/IPR antes de uso em documento normativo
+> formal ou em disputa contratual. Não existe norma ABNT equivalente ao
+> sistema SUCS/USCS (ver nota na função `classificar_sucs_completo`
+> abaixo) nem uma especificação DNIT/DNER numerada isolada para
+> classificação AASHTO — ambas são de uso corrente no Brasil por
+> adoção direta (ASTM D2487 / AASHTO M 145 e Manual de Pavimentação
+> DNIT — IPR-719), não por norma nacional própria.
 
 ```python
 # ─── LIMITES DE ATTERBERG ─────────────────────────────────────────────────
@@ -199,7 +231,12 @@ def calcular_limites_atterberg(ll_pct, lp_pct):
     faixa = ("baixa" if ip < 15 else "média" if ip < 30 else "alta")
     return {"LL": ll_pct, "LP": lp_pct, "IP": ip, "classificacao": f"plasticidade {faixa}"}
 
-# ─── SUCS COMPLETO (USCS — ASTM D2487, correspondência NBR 6502/7250) ─────
+# ─── SUCS COMPLETO (USCS — ASTM D2487) ────────────────────────────────────
+# Não existe norma ABNT equivalente ao SUCS/USCS — a prática brasileira usa
+# a ASTM D2487 diretamente. NBR 6502 é só terminologia de solos/rochas (não
+# um sistema de classificação); NBR 7250 trata de identificação/descrição
+# tátil-visual de amostras, mas sua vigência não foi confirmada nesta
+# revisão — não citar como fonte normativa da classificação SUCS em si.
 def classificar_sucs_completo(finos_pct, pedregulho_pct, cu=None, cc=None, ll=None, ip=None):
     """Classificação SUCS de 2 letras. Requer processar_granulometria()
     (seção 7) para finos_pct/pedregulho_pct/Cu/Cc, e calcular_limites_atterberg()
@@ -252,15 +289,36 @@ def classificar_aashto(passante_200_pct, ll=None, ip=None):
     return {"grupo_aashto": grupo, "group_index": max(0, gi)}
 
 # ─── BALIZA GEOTÉCNICA DE USO EM ATERROS E PAVIMENTAÇÃO ───────────────────
-# Critérios de referência DNIT 108/2009-ES (aterros) e DNIT 141/2010-ES
-# (pavimentação) — sobrepor pela especificação particular do projeto
-# (`especificacao_projeto`) quando o edital/contrato definir valores próprios.
+# Sobrepor por `especificacao_projeto` sempre que o edital/contrato definir
+# valores próprios — nunca editar este dicionário-base por projeto.
+#
+# Confiança por linha (ver nota de normas verificadas acima):
+#   - sub_base e base: valores confirmados (DNIT 139/2010-ES, DNIT 141/2022-ES),
+#     exceto cbr_min de "base", que a norma varia por faixa de tráfego N
+#     (60% é um piso conservador; pode exigir até ~80% para N>5x10^6 —
+#     conferir a tabela completa do DNIT 141/2022-ES por N antes de aplicar).
+#   - reforco_subleito: DNIT 138/2010-ES não fixa um CBR mínimo absoluto —
+#     exige CBR do material > CBR do subleito local do projeto. cbr_min=None
+#     aqui de propósito: SEMPRE passar especificacao_projeto com o CBR do
+#     subleito real para esta camada, nunca usar um número fixo genérico.
+#     expansao_max=1.0 tem confiança média (uma fonte cita 2%, possível
+#     mistura com DNIT 137/2010-ES — regularização do subleito).
+#   - aterro_corpo / aterro_coroamento: cbr_min/expansao_max são valores de
+#     prática comum de mercado, NÃO confirmados no texto do DNIT 108/2009-ES
+#     nesta revisão (o agente de pesquisa confirmou título/escopo da norma,
+#     não os valores numéricos de aceitação) — tratar como placeholder até
+#     validação contra o PDF oficial ou o memorial de cálculo do projeto.
 BALIZA_PADRAO_DNIT = {
-    "aterro_corpo":        {"cbr_min": 2,  "expansao_max": 4.0, "ip_max": None,  "gi_max": None},
-    "aterro_coroamento":   {"cbr_min": 6,  "expansao_max": 2.0, "ip_max": None,  "gi_max": None},
-    "reforco_subleito":    {"cbr_min": 8,  "expansao_max": 1.0, "ip_max": None,  "gi_max": None},
-    "sub_base":            {"cbr_min": 20, "expansao_max": 1.0, "ip_max": 6,     "gi_max": 4},
-    "base":                {"cbr_min": 60, "expansao_max": 0.5, "ip_max": 6,     "gi_max": 0},
+    "aterro_corpo":        {"cbr_min": 2,    "expansao_max": 4.0, "ip_max": None, "gi_max": None,
+                             "confianca": "não confirmado — placeholder de mercado"},
+    "aterro_coroamento":   {"cbr_min": 6,    "expansao_max": 2.0, "ip_max": None, "gi_max": None,
+                             "confianca": "não confirmado — placeholder de mercado"},
+    "reforco_subleito":    {"cbr_min": None, "expansao_max": 1.0, "ip_max": None, "gi_max": None,
+                             "confianca": "CBR é relativo ao subleito do projeto — usar especificacao_projeto"},
+    "sub_base":            {"cbr_min": 20,   "expansao_max": 1.0, "ip_max": None, "gi_max": 0,
+                             "confianca": "confirmado — DNIT 139/2010-ES"},
+    "base":                {"cbr_min": 60,   "expansao_max": 0.5, "ip_max": 6,    "gi_max": None,
+                             "confianca": "confirmado (piso) — DNIT 141/2022-ES; pode exigir até 80% conforme N"},
 }
 
 def avaliar_baliza_uso(material, camada_alvo, especificacao_projeto=None):
@@ -275,7 +333,12 @@ def avaliar_baliza_uso(material, camada_alvo, especificacao_projeto=None):
 
     pendencias, motivos_reprovacao = [], []
     cbr = material.get("cbr_pct")
-    if cbr is None:
+    if limites.get("cbr_min") is None:
+        # ex.: reforço do subleito — sem mínimo absoluto na norma padrão;
+        # exige especificacao_projeto com o CBR do subleito local do projeto.
+        pendencias.append("cbr_min não definido no padrão para esta camada — "
+                           "informar especificacao_projeto com o CBR relativo do projeto")
+    elif cbr is None:
         pendencias.append("CBR não informado")
     elif cbr < limites["cbr_min"]:
         motivos_reprovacao.append(f"CBR {cbr}% < mínimo {limites['cbr_min']}%")
@@ -313,6 +376,7 @@ def avaliar_baliza_uso(material, camada_alvo, especificacao_projeto=None):
         "motivos_reprovacao": motivos_reprovacao,
         "pendencias": pendencias,
         "fonte_especificacao": "projeto (override)" if especificacao_projeto else "DNIT (padrão)",
+        "confianca_do_padrao": limites.get("confianca", "n/a — especificacao_projeto"),
     }
 ```
 
@@ -364,17 +428,25 @@ documentado, sem remover nenhuma chave existente.
 
 ## 13. QA/QC de Sondagens — Controle de Qualidade Manta Maestro
 
-Checklist normativo (NBR 6484:2020, NBR 8036:1983, DNIT) executado
-automaticamente sobre o conjunto de sondagens de um projeto, antes de
-liberar o perfil geotécnico composto (seção 6) para uso em projeto
-executivo.
+Checklist normativo (NBR 6484:2020 — método de ensaio SPT; NBR 8036:1983 —
+programação/malha/profundidade de sondagens para fundações; NBR 9604:2024 —
+abertura de poço/trincheira com amostra deformada/indeformada, quando
+aplicável) executado automaticamente sobre o conjunto de sondagens de um
+projeto, antes de liberar o perfil geotécnico composto (seção 6) para uso
+em projeto executivo. Números confirmados por pesquisa web nesta revisão
+(2026-09-12) — sem leitura direta do texto integral da norma.
 
 ```python
 # Script: scripts/qa_qc_sondagem.py
 
 REGRAS_QA_QC_PADRAO = {
-    "espacamento_max_m": 300,        # malha padrão em greenfield (NBR 6484 sugere
-                                       # revisar para 100–150 m em cortes altos/OAE)
+    # espacamento_max_m: NBR 6484 é método de ensaio (não fixa malha) e
+    # NBR 8036 trata de fundações de edifícios, não de investigação
+    # rodoviária — 300 m é referência de prática de mercado para
+    # rodovias em fase de projeto básico, não um valor normativo. Ajustar
+    # sempre pelo termo de referência do contrato ou norma interna Manta;
+    # reduzir para 100-150 m em cortes altos, OAE e trechos críticos.
+    "espacamento_max_m": 300,
     "profundidade_min_relativa_greide": 6.0,  # m abaixo da cota de greide, mínimo
     "validade_laudo_anos": 2,
     "exige_na_medido": True,
@@ -476,6 +548,18 @@ perfil silenciosamente quando `liberado_para_projeto_executivo` for falso.
 - [ ] Validar `avaliar_baliza_uso` e `qa_qc_sondagem` com um projeto real
       antes de liberar para uso em projeto executivo (dados de teste
       ainda não rodados nesta sessão).
+- [x] Números de norma NBR/DNIT verificados por pesquisa web em
+      2026-09-12 (3 agentes independentes, ver nota no início da
+      seção 11) — confiança alta para números/títulos de norma,
+      confiança média para os valores numéricos de CBR/expansão/IP
+      (fontes secundárias, PDF oficial não acessível nesta sessão).
+      `BALIZA_PADRAO_DNIT` já marca por linha quais valores são
+      confirmados vs. placeholder de mercado.
+- [ ] Confirmar contra o PDF oficial do DNIT/IPR os valores numéricos
+      ainda com confiança média/placeholder (aterro_corpo,
+      aterro_coroamento, expansão do reforço do subleito, tabela de
+      CBR por faixa de tráfego N da base) antes de uso em documento
+      normativo formal ou disputa contratual.
 - [ ] Confirmar se a especificação de terraplenagem/pavimentação do
       projeto em uso diverge da tabela `BALIZA_PADRAO_DNIT` (edital ou
       contrato podem definir CBR/IP mínimos próprios) — usar
