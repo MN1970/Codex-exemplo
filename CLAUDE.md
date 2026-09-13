@@ -4,9 +4,10 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
-Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+Versão: **v4.2.3** (2026-09-13) — v4.2 expansão S6–S10 (Portos,
+Aeroportos, Saneamento, Energia, Barragens) + variante de proposta
+técnico-comercial para concessões de grande porte, confirmada como já
+implementada na skill de produção (ver "MODELO MESTRE DE PROPOSTA").
 
 ---
 
@@ -119,32 +120,46 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ## MODELO MESTRE DE PROPOSTA
 
-Análise de referência sobre uso da proposta MNT-2026-COM-1183_D (Concessão
-Rota 2 de Julho) como modelo mestre de propostas técnico-comerciais do
-Manta Maestro, validada contra a skill `proposta-comercial` (agente
-A7-bd/Manta 13-bd — 18 seções canônicas). Ver `docs/MODELO-MESTRE-PROPOSTA.md`.
+**✅ Status: já implementado na skill de produção — nenhuma publicação
+pendente.**
 
-Recomendação: adotar como variante especializada "PTC-Infraestrutura/
-Concessão de grande porte" (modo **M6**), incorporando ao padrão os blocos
-de dados oficiais rastreáveis, cenários com success fee opcional, método
-do paramétrico em etapas, infraestrutura incluída e ficha técnica de
-fechamento — sem substituir o modo genérico M1 da skill. O texto pronto
-para colar na skill de produção está em
-`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`.
+Análise original (2026-09-01) sobre usar a proposta MNT-2026-COM-1183_D
+(Concessão Rota 2 de Julho) como modelo mestre de propostas
+técnico-comerciais, validada contra a skill então chamada
+`proposta-comercial` (agente A7-bd/Manta 13-bd — 18 seções canônicas). Ver
+`docs/MODELO-MESTRE-PROPOSTA.md` e o addendum de deploy em
+`docs/PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md` (histórico — conteúdo já
+superado pela skill em produção, mantidos apenas como registro).
 
-**Gate humano: ✅ aprovado por MN em 2026-09-10.** Falta só a aplicação
-técnica: colar o bloco da Seção A do addendum em
-`skill-proposta-comercial-SKILL.md` no SharePoint. Essa etapa está
-bloqueada nesta sessão porque o conector `SharePoint_Manta` caiu
-(MCP server disconnected) — precisa ser feita numa sessão com esse
-conector ativo, ou manualmente por quem tem acesso ao SharePoint.
+**O que mudou (confirmado em 2026-09-13):** a skill de produção foi
+reorganizada. `skill-proposta-comercial-SKILL.md` é hoje um stub
+"DEPRECATED"; a fonte de verdade passou a ser
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (atividade A1,
+camada L1.7). Essa skill **já contém** a variante equivalente ao "M6"
+proposto aqui — lá chamada **"Tipo A / Concessão de Infraestrutura de
+Grande Porte"** — com os mesmos 5 blocos recomendados (Dados Oficiais do
+Empreendimento, Cenários de Contratação, Método do Paramétrico em Etapas,
+Infraestrutura e Ferramentas Incluídas, Ficha Técnica), como perfil do
+"Tipo A" genérico (a numeração de modos mudou de M1–M6 para
+Tipo A / Tipo B / PRC).
 
-**Pendência a resolver antes de publicar:** a fonte de validação citada
-(MNT-2026-COM-1183_**D**, 27 páginas) não foi localizada no SharePoint em
-levantamento de 2026-09-10 — só existe a revisão **_C** (21 páginas,
-24/08/2026), cujo controle de revisão interno não menciona uma `_D`.
-Confirmar se a `_D` existe em outro local antes de publicar o addendum
-citando-a como fonte, ou atualizar a referência para `_C`.
+**A pendência _C/_D já foi resolvida na fonte, de forma independente
+desta análise:** o changelog da skill (v3.3.7, 2026-09-10) registra que a
+alegação de validação contra "MNT-2026-COM-1183_D" foi removida por não
+corresponder a nenhum documento real no SharePoint (só existe
+`MNT-2026-COM-1183_C_3.pdf`) — a mesma divergência identificada no
+levantamento do acervo desta sessão. A skill hoje é mais conservadora que
+a proposta original deste repositório: marca a variante como **"pendente
+de validação contra uma proposta real específica antes de uso em
+cliente"**, em vez de alegar uma validação que não existe.
+
+**Achado adicional (v3.3.9, 2026-09-11):** o mesmo padrão de fabricação
+se repetiu — uma citação a "MNT-2026-COM-1301 (Rota da Liberdade, Lote
+07)" como fonte de validação do template `template-ptc-tipo-a-v1.html`
+também não correspondia a documento real; foi encontrada e corrigida do
+mesmo jeito. Vale atenção redobrada a citações de "proposta real X"
+como fonte de validação em qualquer skill — confirmar contra o SharePoint
+antes de aceitar.
 
 ---
 
@@ -186,6 +201,14 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.3** (2026-09-13) — confirmado que a variante de proposta para
+  concessões de grande porte (antigo "M6") já está implementada na skill
+  de produção, sob nova estrutura/local (`02-atividades/A1-proposta/
+  SKILL.md`, "Tipo A / Concessão de Infraestrutura de Grande Porte",
+  v3.3.9). A divergência _C/_D já havia sido corrigida na fonte de forma
+  independente (changelog v3.3.7), com achado adicional de uma segunda
+  citação fabricada (v3.3.9, MNT-2026-COM-1301) também corrigida. Nenhuma
+  ação de publicação restante — ver "MODELO MESTRE DE PROPOSTA" acima.
 - **v4.2.2** (2026-09-10) — gate humano MN aprovado para a variante M6
   (addendum de proposta técnico-comercial). Aplicação no SharePoint
   pendente (conector `SharePoint_Manta` indisponível na sessão de
