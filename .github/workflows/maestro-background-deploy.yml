@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install schedule requests prometheus-client python-dotenv pydantic
+          pip install schedule requests prometheus-client python-dotenv pydantic APScheduler pytz
 
       - name: Validate scheduler configuration
         run: |
@@ -164,7 +164,7 @@ jobs:
 
       - name: Install test dependencies
         run: |
-          pip install schedule requests prometheus-client python-dotenv pydantic pytest pytest-asyncio
+          pip install schedule requests prometheus-client python-dotenv pydantic pytest pytest-asyncio APScheduler pytz
 
       - name: Run unit tests
         run: |
@@ -349,6 +349,7 @@ jobs:
           echo "color=$COLOR" >> $GITHUB_OUTPUT
 
       - name: Send Slack notification
+        if: ${{ always() && secrets.SLACK_WEBHOOK != '' }}
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ steps.slack-notification.outputs.status }}
@@ -357,6 +358,6 @@ jobs:
             Commit: ${{ github.sha }}
             Branch: ${{ github.ref }}
             Author: ${{ github.actor }}
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
           fields: repo,message,commit,author,action,eventName,ref
-        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
