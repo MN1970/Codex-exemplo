@@ -4,7 +4,19 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-11) — **reconciliação de conhecimento por
+Versão: **v5.4.8** (2026-09-13) — proposta de evolução do RAG (busca
+híbrida vetor+texto e metadado de versão/vigência por chunk), a partir
+de discussão sobre RAG vs. CAG e uso simultâneo dos agentes por
+múltiplas pessoas. Registrada em `docs/RAG-EMBEDDING-HIBRIDO.md` e
+`supabase/migrations/2026_09_13_rag_busca_hibrida.sql` (candidata, não
+aplicada). **Não reabre** a decisão de embedder (gap G010, já resolvida
+em 2026-09-07 — ver seção RAG abaixo): a versão inicial desta proposta
+recomendava trocar para um embedder multilíngue sem saber que essa
+mesma troca já tinha sido avaliada e rejeitada com uma decisão real;
+corrigido antes de expor a análise, mantendo só a busca híbrida e o
+metadado de versão, que são contribuição nova.
+
+Consolida v5.4.7 (2026-09-11) — **reconciliação de conhecimento por
 agente/segmento/disciplina**. Releitura ao vivo do `INDICE-CANONICAL.md`
 real (v1.1) mostrou que o eixo S vai até **S14** (Túneis, Mineração,
 Óleo e Gás), o eixo D até **D22** e o eixo A até **A11** — mais do que
@@ -171,14 +183,16 @@ padrão de output por cliente).
 8. [Mapa completo de agentes — 20 operacionais + 2 propostos](#mapa-completo-de-agentes--20-operacionais--2-propostos)
 9. [Routing — Maestro (Manta 00)](#routing--maestro-manta-00)
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
-11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
-12. [Padrões de output por cliente](#padrões-de-output-por-cliente)
-13. [Model tiering](#model-tiering)
-14. [Gaps abertos / pendências](#gaps-abertos--pendências)
-15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
-16. [Deploy checklist v5.0](#deploy-checklist-v50)
-17. [Arquivos deste repositório](#arquivos-deste-repositório)
-18. [Histórico de versões](#histórico-de-versões)
+11. [RAG — Evolução v5.4.8 (busca híbrida + versionamento)](#rag--evolução-v548-busca-híbrida--versionamento-proposta-não-aplicada)
+12. [Deploy checklist v5.4.8 (RAG)](#deploy-checklist-v548-rag--busca-híbrida)
+13. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
+14. [Padrões de output por cliente](#padrões-de-output-por-cliente)
+15. [Model tiering](#model-tiering)
+16. [Gaps abertos / pendências](#gaps-abertos--pendências)
+17. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
+18. [Deploy checklist v5.0](#deploy-checklist-v50)
+19. [Arquivos deste repositório](#arquivos-deste-repositório)
+20. [Histórico de versões](#histórico-de-versões)
 
 ---
 
@@ -553,6 +567,69 @@ Migração candidata das 5 coleções v4.2:
 
 ---
 
+## RAG — Evolução v5.4.8: busca híbrida + versionamento (proposta, não aplicada)
+
+Análise feita a partir de discussão sobre RAG vs. CAG e sobre uso
+simultâneo dos agentes por múltiplas pessoas. Ver
+`docs/RAG-EMBEDDING-HIBRIDO.md` para a análise completa e
+`supabase/migrations/2026_09_13_rag_busca_hibrida.sql` para a migração
+candidata.
+
+> ⚠️ **Nota de correção desta própria proposta**: a versão inicial
+> deste documento recomendava trocar o embedder para um modelo
+> multilíngue (mesmo argumento monolíngue-em-inglês vs. corpus PT/ES
+> que motivou originalmente a avaliação do `bge-m3`). Antes de propagar
+> essa recomendação, confirmamos contra a seção "RAG — Coleções em
+> Supabase" (acima, neste mesmo arquivo) que **essa exata troca já foi
+> avaliada em 24/07/2026 e formalmente rejeitada** — gap G010, ver
+> `docs/EMBEDDER-DECISION.md`. Reabrir essa decisão sem novo argumento
+> técnico seria repetir uma análise já feita. Removida; mantidas só as
+> duas frentes abaixo, que não dependem do embedder.
+
+**Diagnóstico**: o RAG atual (`bge-small-en-v1.5`, 384-d, confirmado
+canônico) faz busca puramente vetorial — sem componente textual para
+códigos de norma, número de lei e siglas exatas (`NBR 12211`, `RAP`,
+`TSF`) — e não guarda metadado de versão/vigência por chunk.
+
+**Recomendação (2 frentes, não CAG, não mexe no embedder)**:
+1. Busca híbrida (vetorial + full-text `tsvector`, fusão por RRF) sobre
+   `manta_rag_chunks` — sem dependência de re-embedding, ganho
+   imediato de precisão para termos exatos.
+2. Metadado `documento_revisao` / `documento_data` / `status_vigencia`
+   por chunk, com `superado` excluído da busca por padrão. Motivação:
+   este repositório tem um histórico real de **citação fabricada** de
+   revisão de documento (`MNT-2026-COM-1183_D`, nunca existiu — ver
+   seção "Modelo Mestre de Proposta" acima) — metadado de versão não
+   teria impedido a fabricação em si (isso é território do
+   `aluci-guard`), mas teria dado ao RAG uma forma de **não amplificar**
+   uma citação de revisão inexistente ao responder, e de sinalizar
+   revisões conhecidas como superadas.
+
+**Gate humano: pendente.** Nenhuma parte desta proposta foi aplicada em
+produção — esta sessão não tem acesso ao Supabase de produção nem
+confirmação do schema real de `manta_rag_chunks` (a migração candidata
+assume um schema aproximado e precisa ser conferida antes de rodar).
+
+**Relacionado a um gap já rastreado**: RLS está desabilitado hoje em
+`rag_collections`, `sp_agent_routing` e `maestro_routing_keywords` (ver
+"GAPS ABERTOS / PENDÊNCIAS", achado de segurança da auditoria G012) —
+filtro de permissão por usuário/cliente antes da busca deveria ser
+resolvido junto com essa remediação de RLS já pendente, não como item
+novo separado.
+
+## DEPLOY CHECKLIST v5.4.8 (RAG — busca híbrida)
+
+- [x] Documento de análise (`docs/RAG-EMBEDDING-HIBRIDO.md`)
+- [x] Migração SQL candidata (`supabase/migrations/2026_09_13_rag_busca_hibrida.sql`)
+- [ ] Confirmar schema real de `manta_rag_chunks` em produção
+- [ ] Ajustar migração ao schema real, se divergir
+- [ ] Gate humano: aprovação MN antes de aplicar
+- [ ] Aplicar migração (busca híbrida + metadado de versão)
+- [ ] Habilitar RLS nas 3 tabelas já sinalizadas (junto, não em separado)
+- [ ] Retestar `tests/routing/prompts.md` pós-deploy
+
+---
+
 ## SHAREPOINT — Routing rules (sp_agent_routing)
 
 Confirmado por auditoria real: tabela `sp_agent_routing` tem 9 linhas
@@ -714,6 +791,17 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md` e
   `docs/SEGMENTOS-S12-S13-DECISION.md` mantidos como histórico do
   raciocínio anterior (usavam códigos que não correspondem aos reais).
+- **RAG sem busca híbrida nem metadado de versão por chunk (G016, novo)**:
+  `manta_rag_chunks` hoje só suporta busca vetorial (sem componente
+  full-text para códigos de norma/lei/sigla exatos) e não guarda
+  `documento_revisao`/`status_vigencia` por chunk. Proposta e migração
+  candidata em `docs/RAG-EMBEDDING-HIBRIDO.md` e
+  `supabase/migrations/2026_09_13_rag_busca_hibrida.sql` — não reabre o
+  G010 (embedder), só adiciona busca textual e versionamento. Autor:
+  Sonnet (sessão 2026-09-13). Status: aguardando confirmação do schema
+  real de `manta_rag_chunks` e gate humano MN. Relacionado à
+  remediação de RLS já pendente logo abaixo (ambos deveriam ser
+  aplicados juntos, já que envolvem as mesmas tabelas).
 - **D03-Geotecnia — confirmado maduro em produção, proposta de agente
   "Manta 17/geotecnia" descartada (2026-09-11)**: uma sessão anterior
   chegou a rascunhar um agente horizontal dedicado a geotecnia partindo
@@ -929,6 +1017,18 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.8** (2026-09-13) — proposta de evolução do RAG: busca híbrida
+  (vetorial + textual, RRF) e metadado de versão/vigência por chunk.
+  Ver `docs/RAG-EMBEDDING-HIBRIDO.md` e migração candidata
+  `supabase/migrations/2026_09_13_rag_busca_hibrida.sql`. Rascunho
+  inicial desta análise também recomendava trocar o embedder para um
+  modelo multilíngue — removido antes de publicar, ao descobrir (pela
+  seção "RAG — Coleções em Supabase" deste mesmo arquivo) que essa
+  troca já tinha sido avaliada em 24/07/2026 e formalmente rejeitada
+  (gap G010, ver `docs/EMBEDDER-DECISION.md`); manter só as duas
+  frentes que não reabrem essa decisão. Nenhuma parte aplicada em
+  produção — gate humano MN pendente, assim como confirmação do schema
+  real de `manta_rag_chunks`.
 - **v5.4.7** (2026-09-11) — reconciliação de conhecimento por
   agente/segmento/disciplina (`docs/PLANEJAMENTO-MANTA-MAESTRO.md`).
   Re-verificação ao vivo do `INDICE-CANONICAL.md` real (v1.1) corrige
