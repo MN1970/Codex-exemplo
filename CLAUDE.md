@@ -243,7 +243,7 @@ Documento de referência canônico e mais detalhado deste modelo:
 | S2 | OAE (pontes, viadutos) | agente-infraestrutura (S2) | ✅ Operacional |
 | S3 | Ferrovia | agente-infraestrutura (S3) | ✅ Operacional |
 | S4 | Metrô | agente-infraestrutura (S4) | ✅ Operacional |
-| S5 | Imobiliário | `agente-S5-imobiliario` (real, SharePoint) | ✅ **Corrigido em 2026-09-11** — leitura ao vivo confirma que o vertical S5 já existe e é maduro (v3.0.0, 5 sub-agentes: viabilidade, incorporação/patrimônio de afetação, avaliação, gestão de empreendimento, exit/securitização). A frase anterior ("sem agente vertical dedicado... decisão MN pendente") estava desatualizada. Este repositório ainda não tem o arquivo espelhado localmente. **Questão real, ainda aberta**: nenhum documento de S5 menciona ou reconcilia com Manta 04 (horizontal de negócio imobiliário) — sobreposição de escopo entre os dois não resolvida, não ausência de conteúdo. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §2. |
+| S5 | Imobiliário | `agente-S5-imobiliario` (real, SharePoint) | ✅ **Corrigido em 2026-09-11** — leitura ao vivo confirma que o vertical S5 já existe e é maduro (v3.0.0, 5 sub-agentes: viabilidade, incorporação/patrimônio de afetação, avaliação, gestão de empreendimento, exit/securitização). A frase anterior ("sem agente vertical dedicado... decisão MN pendente") estava desatualizada. Este repositório ainda não tem o arquivo espelhado localmente. **Decisão MN (2026-09-13)**: manter S5 (vertical) e Manta 04 (horizontal) coexistindo como estão hoje — sem reconciliação de escopo por enquanto. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §2. |
 | S6 | Edificações (residencial, comercial, galpão, hospitalar, institucional, data center) | agente-edificacoes | Renumerado de "S13" para **S6** (era tratado como "proposto"; no índice real não há essa distinção — ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` para o que ainda falta reconciliar em status/RAG/routing) |
 | S7 | Portos | agente-portos | Renumerado de "S6" para **S7** |
 | S8 | Aeroportos | agente-aeroportos | Renumerado de "S7" para **S8** |
@@ -682,14 +682,16 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   renumerar frontmatter dos agentes, corrigir specs de Supabase/RAG, e
   decidir o destino do que não tem lastro real — ainda não escopadas).
 - ~~**S5 (Imobiliário) sem vertical dedicado**~~ — **corrigido em
-  2026-09-11**: leitura ao vivo confirma que `agente-S5-imobiliario`
-  já existe no SharePoint real, maduro (v3.0.0, 5 sub-agentes:
-  viabilidade, incorporação/patrimônio de afetação, avaliação, gestão
-  de empreendimento, exit/securitização). A pergunta "criar vertical ou
-  não" está respondida — já existe. **Questão nova, ainda aberta**:
-  nenhum dos documentos de S5 menciona ou reconcilia com Manta 04
-  (horizontal de negócio imobiliário) — sobreposição de escopo entre
-  os dois não resolvida. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §2.
+  2026-09-11, decisão fechada em 2026-09-13**: leitura ao vivo confirma
+  que `agente-S5-imobiliario` já existe no SharePoint real, maduro
+  (v3.0.0, 5 sub-agentes: viabilidade, incorporação/patrimônio de
+  afetação, avaliação, gestão de empreendimento, exit/securitização).
+  A pergunta "criar vertical ou não" está respondida — já existe. A
+  sobreposição de escopo com Manta 04 (horizontal de negócio
+  imobiliário) foi levada ao MN, que decidiu **manter os dois
+  coexistindo como estão hoje, sem reconciliação de escopo por
+  enquanto** — não é uma pendência ativa. Ver
+  `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §2.
 - **`agente-oleo-gas` (S14) e `agente-mineracao` (S13) — confirmados
   reais e maduros em 2026-09-11, mas com um bug de metadado sério**:
   releitura direta de `INDICE-CANONICAL.md` v1.1 e dos próprios
@@ -800,18 +802,24 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
    misroteamento ativo, não só uma inconsistência documental — MN
    confirmar com quem opera o Maestro real qual campo o routing
    efetivamente consome. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §3.
-3. ~~**S5 Imobiliário**~~ — **respondido em 2026-09-11**: o vertical
-   S5 já existe, maduro (v3.0.0, 5 sub-agentes), no SharePoint real.
-   Pergunta que sobra: como reconciliar/dividir escopo entre S5
-   (vertical) e Manta 04 (horizontal) — nenhum documento real trata
-   disso hoje.
-4. **Embedder**: antes de decidir bge-small vs. bge-m3, confirmar a
+3. ~~**S5 Imobiliário**~~ — **respondido em 2026-09-11, fechado em
+   2026-09-13**: o vertical S5 já existe, maduro (v3.0.0, 5
+   sub-agentes), no SharePoint real. MN decidiu manter S5 (vertical) e
+   Manta 04 (horizontal) coexistindo como estão hoje, sem reconciliação
+   de escopo por enquanto.
+4. ~~**D21 — taxonomia**~~ — **decidido em 2026-09-13**: prevalece a
+   numeração D01–D22 já usada neste repositório. O candidato real do
+   SharePoint (rotulado internamente "D21/Manta 51") precisa ser
+   renumerado ou descontinuado para bater com essa decisão — ação
+   ainda não executada na fonte real, pendente de quem mantém aquele
+   candidato. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §2.
+5. **Embedder**: antes de decidir bge-small vs. bge-m3, confirmar a
    dimensão real da coluna de vetor em produção — a decisão atual
    (`docs/EMBEDDER-DECISION.md`) parte de uma premissa não verificada
    contra o achado da auditoria Supabase.
-5. **Projeto Supabase `xgluoaa...`**: autorizar confirmação manual via
+6. **Projeto Supabase `xgluoaa...`**: autorizar confirmação manual via
    dashboard (AI-1) antes de remover a referência do SKILL.md?
-6. **Timeline de merge**: em qual sprint este v5.0 vai para `main`?
+7. **Timeline de merge**: em qual sprint este v5.0 vai para `main`?
 
 ---
 

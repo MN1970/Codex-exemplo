@@ -117,19 +117,26 @@ como hipótese a validar, não como fato confirmado.
 
 ## 6. Recomendações finais
 
-1. **Não publicar nenhum dos 6 briefs originais** — já removidos deste PR.
-2. **Corrigir `CLAUDE.md`**: a entrada de S5-Imobiliário como "sem
-   vertical, decisão MN pendente" está desatualizada — o vertical já
-   existe. A pergunta real é a sobreposição S5 × Manta 04, não a
-   criação de um vertical.
+1. ~~**Não publicar nenhum dos 6 briefs originais**~~ — feito, já
+   removidos deste PR.
+2. ~~**Corrigir `CLAUDE.md`**~~ — feito: a entrada de S5-Imobiliário
+   como "sem vertical, decisão MN pendente" foi corrigida. **Decisão MN
+   (2026-09-13)**: manter S5 (vertical) e Manta 04 (horizontal)
+   coexistindo como estão hoje — sem reconciliação de escopo por
+   enquanto.
 3. **Levar a colisão de `manta_code`** (Seção 3) para quem administra o
    routing real de produção — prioridade alta, risco de misroteamento.
-4. **D21**: decisão humana sobre qual taxonomia adotar (a numeração
-   `D21/Manta 51` já usada no candidato real, ou a numeração D01-D22
-   deste repositório) antes de mesclar qualquer conteúdo novo.
+   **Ainda pendente** — não é algo que este repositório resolve
+   sozinho, precisa confirmação de quem opera o Maestro real.
+4. ~~**D21**~~ — **decidido pelo MN em 2026-09-13**: prevalece a
+   numeração D01-D22 deste repositório. O candidato real do SharePoint
+   (rotulado "D21/Manta 51") precisa ser renumerado ou descontinuado
+   para bater com essa decisão — ação na fonte real ainda não
+   executada, pendente de quem mantém aquele candidato.
 5. **D03 × S12**: verificar se a classificação RMR/Q/GSI está de fato
    duplicada/divergente entre a disciplina D03 e o D01 interno do
-   `agente-tuneis` — não é urgente, mas é dívida técnica real.
+   `agente-tuneis` — não é urgente, mas é dívida técnica real. **Ainda
+   pendente.**
 
 ---
 
