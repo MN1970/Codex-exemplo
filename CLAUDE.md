@@ -4,9 +4,10 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
+Versão: **v4.3-candidata** (2026-09-13) — v4.2 expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+proposta técnico-comercial + proposta de evolução do RAG (busca híbrida
++ metadado de versão/vigência).
 
 ---
 
@@ -105,6 +106,43 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## RAG — Evolução v4.3 (proposta, não aplicada)
+
+Análise feita a partir de discussão sobre RAG vs. CAG e sobre uso
+simultâneo dos agentes por múltiplas pessoas. Ver
+`docs/RAG-EMBEDDING-HIBRIDO.md` para a análise completa e
+`supabase/migrations/2026_09_13_rag_busca_hibrida.sql` para a migração
+candidata.
+
+**Diagnóstico**: o RAG atual usa embedding `BAAI/bge-small-en-v1.5`
+(modelo em inglês, para conteúdo majoritariamente em português/espanhol),
+busca puramente vetorial (sem componente textual para códigos de norma,
+leis e siglas exatas), e nenhum metadado de versão/vigência por chunk —
+esta última lacuna é a mesma causa raiz do caso já registrado nesta
+seção do arquivo, em "MODELO MESTRE DE PROPOSTA" (fonte `_D` citada sem
+confirmação, só `_C` localizada).
+
+**Recomendação (3 frentes, não CAG)**:
+1. Busca híbrida (vetorial + full-text `tsvector`, fusão por RRF) —
+   sem dependência de re-embedding, ganho imediato.
+2. Metadado `documento_revisao` / `documento_data` / `status_vigencia`
+   por chunk, com `superado` excluído da busca por padrão.
+3. Troca do modelo de embedding para multilíngue (`BAAI/bge-m3` ou
+   `intfloat/multilingual-e5-large`) — projeto separado, pois muda a
+   dimensão do vetor (384→1024) e exige re-embedding completo das 5
+   coleções (janela de manutenção, custo de API; decisão de negócio,
+   não só técnica).
+
+**Gate humano: pendente.** Nenhuma parte desta proposta foi aplicada em
+produção — esta sessão não tem acesso ao Supabase de produção nem
+confirmação do schema real de `rag_chunks` (a migração candidata assume
+um schema aproximado e precisa ser conferida antes de rodar). Filtro de
+permissão por usuário/cliente (RLS) antes da busca fica registrado como
+pendência separada, fora desta migração — depende de como o Maestro
+operacional modela usuário/cliente hoje.
+
+---
+
 ## SHAREPOINT — Routing rules (sp_agent_routing)
 
 | Agente | Pasta SP sugerida | Pattern |
@@ -148,6 +186,19 @@ citando-a como fonte, ou atualizar a referência para `_C`.
 
 ---
 
+## DEPLOY CHECKLIST v4.3 (RAG — busca híbrida)
+
+- [x] Documento de análise (`docs/RAG-EMBEDDING-HIBRIDO.md`)
+- [x] Migração SQL candidata (`supabase/migrations/2026_09_13_rag_busca_hibrida.sql`)
+- [ ] Confirmar schema real de `rag_chunks` em produção
+- [ ] Ajustar migração ao schema real, se divergir
+- [ ] Gate humano: aprovação MN antes de aplicar
+- [ ] Aplicar migração (busca híbrida + metadado de versão)
+- [ ] Retestar `tests/routing/prompts.md` pós-deploy
+- [ ] (Projeto separado) Planejar janela de re-embedding para modelo multilíngue
+
+---
+
 ## DEPLOY CHECKLIST v4.2
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
@@ -186,6 +237,13 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3-candidata** (2026-09-13) — proposta de evolução do RAG: busca
+  híbrida (vetorial + textual), metadado de versão/vigência por chunk, e
+  recomendação de troca futura do modelo de embedding para multilíngue
+  (bge-small-en-v1.5 → bge-m3/multilingual-e5-large). Migração SQL
+  candidata escrita; nenhuma parte aplicada em produção — gate humano
+  MN pendente, assim como confirmação do schema real de `rag_chunks`.
+  Ver `docs/RAG-EMBEDDING-HIBRIDO.md`.
 - **v4.2.2** (2026-09-10) — gate humano MN aprovado para a variante M6
   (addendum de proposta técnico-comercial). Aplicação no SharePoint
   pendente (conector `SharePoint_Manta` indisponível na sessão de
