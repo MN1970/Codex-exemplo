@@ -4,7 +4,27 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-11) — **reconciliação de conhecimento por
+Versão: **v5.4.8** (2026-09-13) — **primeiras escritas reais no
+SharePoint desde o achado da v5.4.7**, com autorização explícita do
+usuário para escrever em SharePoint/GitHub/Supabase. Duas ações
+concluídas: (1) a decisão MN sobre a taxonomia D21 (numeração D01–D22
+prevalece sobre "D21/Manta 51") foi aplicada no arquivo real
+(`04_IA/Manta-Maestro/04-disciplinas/D21-topografia-geodesia/SKILL.md`),
+tocando só a nota de proveniência e a seção 8.2, com o conteúdo técnico
+preservado — upload verificado byte a byte antes do envio e por
+releitura pós-gravação; (2) investigação direta no Supabase real
+(`ogxxgvgtulrbbppshjie`) confirmou que a colisão de `manta_code`
+(S12/S13/S14, ver v5.4.7) **não é um bug de misroteamento ativo hoje**
+— nenhum dos três agentes está registrado nas tabelas de routing/RAG
+reais, então o campo errado não é lido por nada em produção ainda; a
+correção do próprio `manta_code` nos 3 arquivos reais segue pendente
+(registrada como ação recomendada, não executada nesta sessão — ver
+"GAPS ABERTOS" e `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §3 para o porquê).
+Nenhuma escrita foi feita ou necessária no Supabase para este achado
+específico. Ver seções "Eixo D", "GAPS ABERTOS" e "QUESTIONÁRIO DE
+DECISÃO PARA MN" para o detalhe.
+
+Consolida v5.4.7 (2026-09-11) — **reconciliação de conhecimento por
 agente/segmento/disciplina**. Releitura ao vivo do `INDICE-CANONICAL.md`
 real (v1.1) mostrou que o eixo S vai até **S14** (Túneis, Mineração,
 Óleo e Gás), o eixo D até **D22** e o eixo A até **A11** — mais do que
@@ -705,11 +725,23 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   real de Túneis), S12 diz "Manta 03-S5" (código antigo de si mesmo).
   Segmentos mais antigos (S9, S11) não têm esse campo legado — é
   isolado aos 3 mais novos, herdado do template `agente-infraestrutura
-  v1.0.0` nunca migrado. **Se o routing de produção real ainda ler
-  `manta_code` em vez de `sp_operational_segment`, isso é um bug de
-  misroteamento ativo** (pergunta sobre óleo e gás → agente de túneis).
-  Ação: MN confirmar com quem opera o Maestro real qual campo o
-  routing efetivamente consome — prioridade alta. Detalhe completo em
+  v1.0.0` nunca migrado. **✅ Gravidade confirmada em 2026-09-13**: consulta
+  direta ao Supabase real (`ogxxgvgtulrbbppshjie`, tabelas
+  `manta_agent_capabilities`, `sp_agent_routing`, `maestro_routing_keywords`,
+  `rag_collections`) mostra que nenhum dos três agentes (`agente-tuneis`,
+  `agente-mineracao`, `agente-oleo-gas`) está registrado no backend de
+  routing real — existem só como documento no SharePoint, nunca
+  ativados. O routing de produção roteia por `agent_slug`/`agent_id`
+  (string), nunca por `manta_code` ou `sp_operational_segment`. **Não é
+  um bug de misroteamento ativo hoje** — é um risco latente que vira bug
+  real no dia em que alguém registrar esses três agentes usando o campo
+  errado. Ação recomendada, ainda pendente: corrigir o `manta_code` de
+  cada um dos 3 arquivos reais (`S12-tuneis`, `S13-mineracao`,
+  `S14-oleogas`, em `04_IA/Manta-Maestro/01-segmentos/`) para bater com
+  o `sp_operational_segment` antes da ativação — não executado nesta
+  sessão (edição de arquivo grande via upload base64 tem risco de
+  transcrição não desprezível; ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md`
+  §3 para o detalhe e a recomendação de método). Detalhe completo em
   `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §3.
   `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md` e
   `docs/SEGMENTOS-S12-S13-DECISION.md` mantidos como histórico do
@@ -793,26 +825,36 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
    grande parte respondido em 2026-09-11**: leitura ao vivo confirma
    `agente-oleo-gas` (S14) e `agente-mineracao` (S13) já existem,
    maduros, em produção — não precisam ser formalizados, só espelhados
-   neste repositório. **Nova questão aberta, mais séria**: os três
-   segmentos mais novos (S12/S13/S14) carregam um campo `manta_code`
-   legado que colide com o código real de OUTRO segmento (S13 diz
-   internamente "Manta 03-S11", que é Barragens; S14 diz "Manta
-   03-S12", que é Túneis). Se o routing de produção real ainda ler
-   `manta_code` em vez de `sp_operational_segment`, isso é um bug de
-   misroteamento ativo, não só uma inconsistência documental — MN
-   confirmar com quem opera o Maestro real qual campo o routing
-   efetivamente consome. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §3.
+   neste repositório. **Colisão de `manta_code` — gravidade confirmada
+   em 2026-09-13**: os três segmentos mais novos (S12/S13/S14) carregam
+   um campo `manta_code` legado que colide com o código real de OUTRO
+   segmento (S13 diz internamente "Manta 03-S11", que é Barragens; S14
+   diz "Manta 03-S12", que é Túneis). Consulta direta ao Supabase real
+   confirmou que **nenhum dos três está registrado no backend de
+   routing hoje** (ausentes de `manta_agent_capabilities`,
+   `sp_agent_routing`, `maestro_routing_keywords`, `rag_collections`) e
+   que o routing usa `agent_slug`/`agent_id`, nunca `manta_code` — não é
+   mais um bug ativo, é um risco latente. Ação que segue pendente:
+   corrigir o `manta_code` nos 3 arquivos reais antes de qualquer
+   ativação futura. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §3.
 3. ~~**S5 Imobiliário**~~ — **respondido em 2026-09-11, fechado em
    2026-09-13**: o vertical S5 já existe, maduro (v3.0.0, 5
    sub-agentes), no SharePoint real. MN decidiu manter S5 (vertical) e
    Manta 04 (horizontal) coexistindo como estão hoje, sem reconciliação
    de escopo por enquanto.
-4. ~~**D21 — taxonomia**~~ — **decidido em 2026-09-13**: prevalece a
-   numeração D01–D22 já usada neste repositório. O candidato real do
-   SharePoint (rotulado internamente "D21/Manta 51") precisa ser
-   renumerado ou descontinuado para bater com essa decisão — ação
-   ainda não executada na fonte real, pendente de quem mantém aquele
-   candidato. Ver `docs/PLANEJAMENTO-MANTA-MAESTRO.md` §2.
+4. ~~**D21 — taxonomia**~~ — **decidido em 2026-09-13 e aplicado na
+   fonte real no mesmo dia**: prevalece a numeração D01–D22 já usada
+   neste repositório. O arquivo real
+   (`04_IA/Manta-Maestro/04-disciplinas/D21-topografia-geodesia/SKILL.md`)
+   foi editado via `SharePoint_Manta` MCP: a nota de proveniência agora
+   registra a ratificação MN e a seção 8.2 ("Célula S.A.D") foi
+   corrigida para remover o rótulo "Manta 51" e a regra de offset "+30"
+   não ratificados, junto com a afirmação não confirmada de que a
+   extensão já teria sido propagada para `CLAUDE.md`/`manta-kb/*`. Só a
+   nota de proveniência e a seção 8.2 foram tocadas — o conteúdo técnico
+   (seções 1–7, normas, fórmulas) ficou intacto. Upload verificado por
+   leitura pós-gravação (19.762 bytes, conteúdo conferido byte a byte
+   contra a fonte local antes do envio).
 5. **Embedder**: antes de decidir bge-small vs. bge-m3, confirmar a
    dimensão real da coluna de vetor em produção — a decisão atual
    (`docs/EMBEDDER-DECISION.md`) parte de uma premissa não verificada

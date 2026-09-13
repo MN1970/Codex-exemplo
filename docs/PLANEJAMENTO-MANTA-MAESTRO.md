@@ -80,9 +80,43 @@ o agente de barragens. Comparação com S9-Saneamento e S11-Barragens
 sobras do template `agente-infraestrutura v1.0.0` nunca migrado para o
 schema mínimo usado pelos segmentos mais novos.
 
-**Ação recomendada**: MN confirmar com quem opera o Maestro real qual
-campo o routing de produção efetivamente usa — se for `manta_code`,
-isso é um bug ativo, não só uma inconsistência documental.
+**✅ Gravidade confirmada em 2026-09-13** — investigação direta no
+Supabase real (`ogxxgvgtulrbbppshjie`, MCP `Supabase`), com autorização
+explícita do usuário para escrever/consultar produção:
+
+- `manta_agent_capabilities`, `sp_agent_routing`,
+  `maestro_routing_keywords` e `rag_collections` **não têm nenhuma
+  linha** para `agente-tuneis`, `agente-mineracao` ou `agente-oleo-gas`
+  — os três existem apenas como documento no SharePoint, nunca foram
+  ativados no backend real.
+- As tabelas de routing reais roteiam por `agent_slug`/`agent_id`
+  (string), nunca por `manta_code` nem por `sp_operational_segment`.
+
+**Conclusão**: a colisão **não é um bug de misroteamento ativo hoje** —
+não há nada em produção lendo o campo errado, porque não há nada lendo
+os três agentes ainda. É um **risco latente**: vira bug real no dia em
+que alguém registrar um desses três agentes usando `manta_code` como
+chave de segmento. Nenhuma escrita foi necessária no Supabase para essa
+verificação (só leitura).
+
+**Ação recomendada, ainda pendente**: corrigir o `manta_code` nos 3
+arquivos reais (`01-segmentos/S12-tuneis/SKILL.md`,
+`S13-mineracao/SKILL.md`, `S14-oleogas/SKILL.md`) para bater com o
+`sp_operational_segment` de cada um, antes de qualquer ativação futura
+no routing. **Não executado nesta sessão**, apesar da autorização de
+escrita: a correção da taxonomia D21 (Seção 4 abaixo), feita na mesma
+sessão, exigiu reescrever um arquivo real de ~19 KB inteiro via upload
+base64 do MCP `SharePoint_Manta` (que não aceita caminho de arquivo
+local, só conteúdo em base64 embutido na própria chamada) — processo
+que, na prática, expôs risco real de erro de transcrição em textos
+longos (dois caracteres divergentes foram detectados e corrigidos por
+diff byte a byte antes do envio bem-sucedido). Repetir esse processo
+3 vezes para editar um único valor de frontmatter em arquivos de
+16–20 KB cada tem custo/risco desproporcional ao benefício, dado que o
+achado já foi rebaixado de "ativo" para "latente". Recomendação: a
+correção do `manta_code` deve ser feita por quem edita esses arquivos
+diretamente na origem (não via reescrita completa por este canal), ou
+revisitada nesta sessão só se o usuário priorizar explicitamente.
 
 ---
 
@@ -124,15 +158,25 @@ como hipótese a validar, não como fato confirmado.
    (2026-09-13)**: manter S5 (vertical) e Manta 04 (horizontal)
    coexistindo como estão hoje — sem reconciliação de escopo por
    enquanto.
-3. **Levar a colisão de `manta_code`** (Seção 3) para quem administra o
-   routing real de produção — prioridade alta, risco de misroteamento.
-   **Ainda pendente** — não é algo que este repositório resolve
-   sozinho, precisa confirmação de quem opera o Maestro real.
-4. ~~**D21**~~ — **decidido pelo MN em 2026-09-13**: prevalece a
-   numeração D01-D22 deste repositório. O candidato real do SharePoint
-   (rotulado "D21/Manta 51") precisa ser renumerado ou descontinuado
-   para bater com essa decisão — ação na fonte real ainda não
-   executada, pendente de quem mantém aquele candidato.
+3. ~~**Levar a colisão de `manta_code`** para quem administra o routing
+   real de produção~~ — **investigado diretamente em 2026-09-13** (não
+   precisou de intermediário: consulta direta ao Supabase real via MCP
+   `Supabase`, com autorização do usuário). Achado: os 3 agentes não
+   estão registrados no routing/RAG real hoje, então não é um bug ativo
+   — é risco latente (Seção 3). **Ainda pendente**: corrigir o
+   `manta_code` nos 3 arquivos reais do SharePoint — não executado
+   nesta sessão por custo/risco de transcrição em 3 reescritas de
+   arquivo grande (ver justificativa na Seção 3); fica como ação para
+   quem edita esses arquivos na origem, ou para retomar aqui se o
+   usuário priorizar.
+4. ~~**D21**~~ — **decidido pelo MN em 2026-09-13 e aplicado na fonte
+   real no mesmo dia**: prevalece a numeração D01-D22 deste
+   repositório. O arquivo real (`04-disciplinas/D21-topografia-geodesia/
+   SKILL.md`) foi corrigido via MCP `SharePoint_Manta` — nota de
+   proveniência e seção 8.2 atualizadas para remover o rótulo "Manta 51"
+   e a regra de offset "+30" não ratificados; conteúdo técnico (seções
+   1–7) preservado. Upload verificado byte a byte contra a fonte local
+   antes do envio e por releitura pós-gravação (19.762 bytes).
 5. **D03 × S12**: verificar se a classificação RMR/Q/GSI está de fato
    duplicada/divergente entre a disciplina D03 e o D01 interno do
    `agente-tuneis` — não é urgente, mas é dívida técnica real. **Ainda
