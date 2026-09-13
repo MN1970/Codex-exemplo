@@ -1,5 +1,25 @@
 # Modelo Mestre de Proposta — Validação contra MNT-2026-COM-1183_D
 
+> **Status (2026-09-13): recomendação já implementada na skill de
+> produção, por caminho independente.** A fonte de verdade da proposta
+> técnico-comercial deixou de ser `skill-proposta-comercial-SKILL.md`
+> (hoje um stub DEPRECATED) e passou a ser
+> `04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.9,
+> 2026-09-11), que já traz a variante equivalente ao "M6" proposto
+> abaixo sob o nome "Tipo A / Concessão de Infraestrutura de Grande
+> Porte". A referência a `MNT-2026-COM-1183_D` citada nesta análise
+> **não corresponde a um documento real no SharePoint** — um
+> levantamento completo do acervo (2026-09-10) só encontrou
+> `MNT-2026-COM-1183_C_3.pdf` (revisão `_C`); a própria skill de produção
+> já removeu essa alegação de validação (changelog v3.3.7), de forma
+> independente desta análise, e hoje marca a variante como "pendente de
+> validação contra uma proposta real específica antes de uso em
+> cliente". Ler o texto abaixo como registro do racional original, não
+> como estado atual do sistema — ver `CLAUDE.md` (seção "Modelo Mestre
+> de Proposta") para o resumo do estado atual.
+
+---
+
 Este documento registra a análise solicitada pela Diretoria (MN) sobre se a
 proposta técnico-comercial **MNT-2026-COM-1183_D** (Concessão Rota 2 de
 Julho — BR-116/324/BA, cliente Nova Infra Invest) pode servir de **modelo
