@@ -28,14 +28,21 @@ VALUES
   ('saneamento',  'Saneamento',  'san:', jsonb_build_array(
      'SNIS',
      'IWA',
-     'NBR 12211-12218',
+     'NBR 12211 — Abastecimento de Água (Concepção)',
+     'NBR 12212 — Poço Tubular',
+     'NBR 12213 — Adução de Água',
+     'NBR 12214 — Bombeamento de Água',
+     'NBR 12215 — Adução e Distribuição de Água',
+     'NBR 12216 — ETA (Estação de Tratamento de Água)',
+     'NBR 12217 — Reservatório de Distribuição',
+     'NBR 12218 — Rede de Distribuição de Água',
      'Lei 14.026/2020',
      'Editais BNDES saneamento',
      'ERAS/AySA (Argentina)'
    )),
   ('energia',     'Energia',     'ene:', jsonb_build_array(
      'ANEEL editais',
-     'EPE R1-R5',
+     'EPE (Empresa de Pesquisa Energética) — R1-R5 (Relatórios de Planejamento)',
      'ONS relatórios de operação',
      'IEEE standards (738, 80, 60826)',
      'NBR 5422'

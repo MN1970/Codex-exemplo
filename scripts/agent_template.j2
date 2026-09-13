@@ -1,0 +1,141 @@
+{#
+agent_template.j2
+
+Template Jinja2 reutilizável para gerar documentação de agentes individuais.
+
+Contexto esperado:
+- agent: Agent dataclass com campos (codigo, nome, descricao, aliases, tier_default, etc.)
+- phase_descriptions: Dict com 8 fases do ciclo de vida
+
+Uso (Python):
+  from jinja2 import Template, FileSystemLoader, Environment
+  env = Environment(loader=FileSystemLoader('scripts'))
+  template = env.get_template('agent_template.j2')
+  rendered = template.render(agent=agent_obj, phase_descriptions=phases_dict)
+#}
+
+## {{ agent.codigo }} — {{ agent.nome | upper }}
+
+**Categoria:** {{ agent.category }} | **Status:** {{ agent.status }} | **Tier default:** {{ agent.tier_default }}
+
+{{ agent.descricao }}
+
+### Aliases & Roteamento
+
+Roteia automaticamente para este agente se o usuário menciona:
+- **Aliases principais:** {{ ', '.join(agent.aliases) if agent.aliases else 'N/A' }}
+- **Confidence score:** Maestro calcula via keyword matching + embedding similarity
+- **RAG collection:** {% if agent.rag_collection %}{{ agent.rag_collection }}{% else %}N/A (horizontal){% endif %}
+
+### Skill & Versionamento
+
+- **Skill file:** `{{ agent.skill_file }}`
+- **Checksum v5.0:** `{{ agent.checksum }}`
+- **Skill versionamento:** MD5 pinned em `settings.json` → auto-fallback se divergência
+- **Compatibilidade:** Python 3.10+ | Claude API Opus/Sonnet/Haiku
+
+### Capabilities
+
+**Tools disponíveis:**
+- Read (ler arquivos do workspace)
+- Grep (buscar padrões em código/docs)
+- Glob (encontrar arquivos por pattern)
+- Bash (executar comandos — conforme permissão)
+- WebSearch / WebFetch (pesquisa online)
+{% if agent.rag_collection %}
+- RAG Query ({{ agent.rag_collection }})
+{% endif %}
+
+**Skills/Plugins:**
+- autodesk-toolkit (processamento CAD/BIM — conforme segmento)
+- cronograma-toolkit (Gantt/XER/MSP)
+- docx/xlsx/pptx (edição de documentos)
+- sicro-composicoes (SICRO para orçamento — rodovias/OAE)
+- pdf (processamento de PDFs estruturados)
+
+### Ciclo de Vida (8 fases)
+
+{% if agent.ciclo_vida and agent.category == 'vertical' %}
+Este agente suporta as seguintes fases de um projeto:
+
+1. **Estudo prévio / EVTE** — Diagnóstico, benchmarking, análise preliminar
+2. **Projeto básico** — Conceitos, layouts, orçamento order-of-magnitude
+3. **Projeto executivo** — Detalhamento, especificações, cronograma vinculante
+4. **Obra em execução** — Acompanhamento, desvios, revisões de escopo
+5. **Operação & manutenção** — Gestão de ativo, indicadores, OPEX
+6. **Processo competitivo / licitação** — Edital, termo de referência, avaliação
+7. **Due diligence / M&A** — Auditoria financeira, ambiental, legal, riscos
+8. **Encerramento / descomissionamento** — Final de vida útil, passivos, reabilitação
+
+**Declaração de fase (recomendado):**
+```json
+{
+  "phase": "projeto-executivo",
+  "deliverables": ["projeto-estrutural.dwg", "memorial-descritivo.pdf"]
+}
+```
+
+{% else %}
+Este agente é **horizontal** (transversal) e não suporta ciclo de vida específico.
+{% endif %}
+
+### Trigger Phrases (Maestro Routing)
+
+Palavras-chave que acionam este agente automaticamente:
+```
+{{ ' | '.join(agent.trigger_phrases) if agent.trigger_phrases else 'N/A' }}
+```
+
+### Exemplos de Prompts (Golden Set)
+
+**Adequado para este agente:**
+
+{% for prompt in agent.exemplo_prompts %}
+- "{{ prompt }}"
+{% endfor %}
+
+**Não adequado (roteado a outro agente):**
+- Prompts sobre {% if agent.category == 'vertical' %}processos horizontais (contrato, claims, etc.){% else %}projetos de infraestrutura específicos (rodovia, ETA, etc.){% endif %}
+
+### Tiering Automático (R7)
+
+- **Entrada típica:** {% if agent.tier_default == 'Haiku' %}1500{% elif agent.tier_default == 'Sonnet' %}4000{% else %}8000{% endif %} tokens
+- **Complexity score típica:** {% if agent.tier_default == 'Haiku' %}2.0{% elif agent.tier_default == 'Sonnet' %}4.0{% else %}6.0{% endif %}
+- **Fallback:** {{ agent.tier_default }} → Sonnet → Opus (se timeout > 60s)
+- **Custo estimado:** {% if agent.tier_default == 'Haiku' %}~$0.08/1M tokens{% elif agent.tier_default == 'Sonnet' %}~$3/1M tokens{% else %}~$15/1M tokens{% endif %}
+
+### Observabilidade
+
+Todos os runs são tracked em Supabase (`agent_runs` table):
+- `run_id` (UUID único)
+- `input_tokens`, `output_tokens`, `cost_usd`
+- `latency_ms`, `status` (success|timeout|error)
+- `feedback_score` (0–5, coletado pós-run)
+
+Dashboard Grafana: `{{ agent.codigo | lower }}-dashboard` (custo/dia, latência p50/p95/p99, taxa de erro).
+
+### Fallback Inteligente (R8)
+
+Se timeout em {{ agent.tier_default }}:
+1. Log em `agent_runs` com `timeout=true`
+2. Resubmit com próximo tier (Sonnet ou Opus)
+3. Reinjetar contexto (RAG results, partial output)
+4. Max tokens reduzido a 1500 (evitar timeout novamente)
+
+### SharePoint Routing
+
+Este agente roteia automaticamente para pasta no SharePoint:
+- **Site:** Manta.net
+- **Drive:** Projetos
+- **Pasta sugerida:** 03_Projetos/{{ agent.nome | replace('agente-', '') | title }} ou 05_{{ agent.nome | title }}
+- **Tier acesso:** {{ 'Editor' if agent.category == 'vertical' else 'Viewer' }}
+
+### Feedback Loop (R9)
+
+1. Após cada run, coletar `feedback_score` (0–5 estrellas)
+2. Persistir em `agent_feedback` (Supabase)
+3. Semanal: calcular embedding de prompts com score >= 4
+4. Treinar reranker com high-scoring queries
+5. Redeploy checksum atualizado em VERSIONS.json
+
+---

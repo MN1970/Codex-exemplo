@@ -1,0 +1,105 @@
+# AlertManager configuration for Maestro APScheduler v5.0
+global:
+  resolve_timeout: 5m
+  slack_api_url: '${SLACK_WEBHOOK_URL}'
+
+# The root route with all parameters, which are inherited by the child routes
+route:
+  receiver: 'maestro-default'
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  # Child routes for different severity levels
+  routes:
+    # Critical alerts
+    - match:
+        severity: critical
+      receiver: 'maestro-critical'
+      group_wait: 10s
+      repeat_interval: 1h
+      continue: true
+
+    # Warning alerts
+    - match:
+        severity: warning
+      receiver: 'maestro-warning'
+      group_wait: 1m
+      repeat_interval: 6h
+      continue: true
+
+    # Job failure alerts
+    - match:
+        alertname: 'MaestroJobFailure'
+      receiver: 'maestro-jobs'
+      group_wait: 30s
+      repeat_interval: 2h
+
+    # RAG collection alerts
+    - match:
+        alertname: 'RAGCollectionError'
+      receiver: 'maestro-rag'
+      group_wait: 1m
+      repeat_interval: 4h
+
+receivers:
+  # Default receiver
+  - name: 'maestro-default'
+    slack_configs:
+      - channel: '#maestro-alerts'
+        title: 'Maestro Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+
+  # Critical receiver (urgency high)
+  - name: 'maestro-critical'
+    slack_configs:
+      - channel: '#maestro-critical'
+        title: 'CRITICAL: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}\nValue: {{ .Annotations.value }}{{ end }}'
+        color: 'danger'
+        send_resolved: true
+
+  # Warning receiver
+  - name: 'maestro-warning'
+    slack_configs:
+      - channel: '#maestro-alerts'
+        title: 'WARNING: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        color: 'warning'
+        send_resolved: true
+
+  # Job failure receiver
+  - name: 'maestro-jobs'
+    slack_configs:
+      - channel: '#maestro-jobs'
+        title: 'Job Failure: {{ .GroupLabels.job_name }}'
+        text: '{{ range .Alerts }}Job: {{ .Labels.job_name }}\nStatus: {{ .Annotations.status }}\nError: {{ .Annotations.error }}{{ end }}'
+        color: 'danger'
+        send_resolved: true
+
+  # RAG collection receiver
+  - name: 'maestro-rag'
+    slack_configs:
+      - channel: '#maestro-rag'
+        title: 'RAG Error: {{ .GroupLabels.collection_id }}'
+        text: '{{ range .Alerts }}Collection: {{ .Labels.collection_id }}\nError: {{ .Annotations.description }}{{ end }}'
+        color: 'warning'
+        send_resolved: true
+
+# Inhibition rules (prevent noise)
+inhibit_rules:
+  # Don't send warning if critical is already firing
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'cluster', 'service']
+
+  # Don't alert on every job failure if service is down
+  - source_match:
+      alertname: 'MaestroSchedulerDown'
+    target_match:
+      alertname: 'MaestroJobFailure'
+    equal: ['cluster']

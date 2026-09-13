@@ -1,0 +1,576 @@
+{
+  "/**": "Maestro v5.0 MCP Configuration — 4 servers (M365, Supabase, MantaBase, MantaHub)",
+  "schema_version": "v5.0",
+  "revision": "2026-07-25",
+
+  "// ====== MCP SERVERS ======": "",
+  "mcpServers": {
+    "// ====== 1. M365 (Microsoft 365 — SharePoint + Teams) ======": "",
+    "m365-sharepoint-teams": {
+      "enabled": true,
+      "tier": "critical",
+      "displayName": "Microsoft 365 — SharePoint Online + Teams",
+      "description": "Access SharePoint document libraries, Teams chats, calendar, email search, meeting availability",
+      "transport": "http",
+      "url": "${M365_MCP_URL:https://mcp-m365.mantaassociados.com}",
+      "timeout_seconds": 10,
+
+      "authentication": {
+        "method": "oauth2_client_credentials",
+        "tenant_id": "${M365_TENANT_ID}",
+        "client_id": "${M365_CLIENT_ID}",
+        "client_secret": "${M365_CLIENT_SECRET}",
+        "scope": [
+          "https://graph.microsoft.com/.default"
+        ],
+        "comment": "Credentials stored in Key Vault (never hardcoded)"
+      },
+
+      "capabilities": {
+        "read": [
+          "sharepoint:list_sites",
+          "sharepoint:list_libraries",
+          "sharepoint:list_folders",
+          "sharepoint:list_files",
+          "sharepoint:read_document",
+          "sharepoint:find_item",
+          "sharepoint:get_file_metadata",
+          "sharepoint:search_files",
+          "teams:list_chats",
+          "calendar:outlook_search",
+          "calendar:find_availability",
+          "email:outlook_search",
+          "users:get_me"
+        ],
+        "write": [
+          {
+            "operation": "sharepoint:upload_file",
+            "requires_tag": "AuthorizedWrite",
+            "description": "Upload file to SharePoint (requires approval)"
+          },
+          {
+            "operation": "sharepoint:create_folder",
+            "requires_tag": "AuthorizedWrite"
+          },
+          {
+            "operation": "sharepoint:update_metadata",
+            "requires_tag": "AuthorizedWrite"
+          },
+          {
+            "operation": "sharepoint:move_item",
+            "requires_tag": "AuthorizedWrite"
+          },
+          {
+            "operation": "teams:send_message",
+            "requires_tag": "AuthorizedWrite"
+          }
+        ],
+        "deny": [
+          "sharepoint:delete_item",
+          "teams:delete_message"
+        ],
+        "comment": "Write operations require AuthorizedWrite tag + human approval"
+      },
+
+      "rate_limiting": {
+        "enabled": true,
+        "requests_per_minute": 100,
+        "requests_per_hour": 3000,
+        "burst_size": 10,
+        "comment": "M365 Graph API limits: https://docs.microsoft.com/en-us/graph/throttling"
+      },
+
+      "routing": {
+        "path_patterns": {
+          "/sharepoint": "route to SharePoint tools",
+          "/teams": "route to Teams tools",
+          "/calendar": "route to calendar/meeting tools",
+          "/email": "route to email search tools"
+        }
+      },
+
+      "health_check": {
+        "enabled": true,
+        "interval_minutes": 15,
+        "endpoint": "/health",
+        "check_token_ttl_days": 30,
+        "alert_on_failure": true,
+        "comment": "SessionStart hook validates token TTL"
+      }
+    },
+
+    "// ====== 2. SUPABASE (PostgreSQL + Vector Store) ======": "",
+    "supabase-postgres-vectors": {
+      "enabled": true,
+      "tier": "critical",
+      "displayName": "Supabase — PostgreSQL + Vector Store",
+      "description": "Agent memory cache, maestro_runs logs, agent_memory, RAG chunks, version registry",
+      "transport": "http",
+      "url": "${SUPABASE_URL:https://[project-id].supabase.co}",
+      "timeout_seconds": 5,
+
+      "authentication": {
+        "method": "api_key",
+        "api_key": "${SUPABASE_KEY}",
+        "headers": {
+          "Authorization": "Bearer ${SUPABASE_KEY}",
+          "Content-Type": "application/json"
+        },
+        "comment": "Anon key for read; service role key for admin operations"
+      },
+
+      "capabilities": {
+        "read": [
+          "select:agent_memory",
+          "select:maestro_runs",
+          "select:pk_versions",
+          "select:rag_chunks",
+          "select:sp_agent_routing",
+          "select:agent_skills_registry",
+          "search:vector_similarity",
+          "query:custom_sql_read"
+        ],
+        "write": [
+          {
+            "operation": "insert:maestro_runs",
+            "requires_tag": "AutoInsert",
+            "description": "Log run metrics (no approval needed, append-only)"
+          },
+          {
+            "operation": "insert:agent_memory",
+            "requires_tag": "AutoInsert"
+          },
+          {
+            "operation": "update:agent_memory",
+            "requires_tag": "AuthorizedWrite",
+            "description": "Update agent memory state (requires approval)"
+          },
+          {
+            "operation": "insert:rag_chunks",
+            "requires_tag": "AuthorizedWrite",
+            "description": "Insert RAG vector chunks (requires approval)"
+          }
+        ],
+        "deny": [
+          "drop:maestro_runs",
+          "delete:maestro_runs",
+          "truncate:maestro_runs",
+          "drop:pk_versions",
+          "delete:pk_versions",
+          "comment": "Audit logs and version table are immutable"
+        ]
+      },
+
+      "rate_limiting": {
+        "enabled": true,
+        "requests_per_minute": 50,
+        "requests_per_hour": 2000,
+        "storage_gb_limit": 10,
+        "comment": "Supabase Free tier: 500MB. Adjust based on plan."
+      },
+
+      "tables": [
+        {
+          "name": "maestro_runs",
+          "description": "Audit log: session, agent, skill, model, tokens, cost",
+          "retention_days": 90,
+          "immutable": true,
+          "schema": {
+            "id": "uuid primary key",
+            "session_id": "uuid",
+            "user_email": "text",
+            "agent_id": "text",
+            "agent_name": "text",
+            "skill_used": "text",
+            "model_used": "text",
+            "input_tokens": "integer",
+            "output_tokens": "integer",
+            "total_tokens": "integer",
+            "estimated_cost_usd": "numeric",
+            "duration_seconds": "integer",
+            "status": "text (success|error|timeout)",
+            "error_message": "text nullable",
+            "timestamp": "timestamptz"
+          }
+        },
+        {
+          "name": "agent_memory",
+          "description": "Ephemeral agent state (conversation history, context window)",
+          "ttl_minutes": 480,
+          "indexed": ["agent_id", "session_id"],
+          "schema": {
+            "id": "uuid",
+            "agent_id": "text",
+            "session_id": "uuid",
+            "memory_type": "text (conversation|context|decision)",
+            "payload": "jsonb",
+            "created_at": "timestamptz",
+            "expires_at": "timestamptz"
+          }
+        },
+        {
+          "name": "pk_versions",
+          "description": "Version registry: agent *.md, skills, agents hashes",
+          "immutable": true,
+          "schema": {
+            "id": "uuid",
+            "component": "text (agent|skill|hook)",
+            "name": "text",
+            "version": "text",
+            "sha256": "text",
+            "deployed_at": "timestamptz"
+          }
+        },
+        {
+          "name": "rag_chunks",
+          "description": "Vector embeddings for semantic search (S6-S10 docs)",
+          "vector_dimension": 1536,
+          "indexed": ["embedding", "segment_id"],
+          "schema": {
+            "id": "uuid",
+            "segment_id": "text (san:|ene:|por:|aer:|bar:)",
+            "content": "text",
+            "embedding": "vector(1536)",
+            "source_url": "text",
+            "created_at": "timestamptz"
+          }
+        },
+        {
+          "name": "sp_agent_routing",
+          "description": "SharePoint routing rules (agent → folder pattern)",
+          "schema": {
+            "id": "uuid",
+            "agent_id": "text",
+            "sp_folder_path": "text",
+            "pattern": "text (glob)",
+            "enabled": "boolean"
+          }
+        },
+        {
+          "name": "agent_skills_registry",
+          "description": "Skill catalog: name, version, aliases, tier",
+          "schema": {
+            "id": "uuid",
+            "skill_name": "text",
+            "version": "text",
+            "aliases": "text[]",
+            "description": "text",
+            "tier": "text (free|pro|enterprise)",
+            "enabled": "boolean"
+          }
+        }
+      ]
+    },
+
+    "// ====== 3. MANTABASE (Custom PostgreSQL — Project Data) ======": "",
+    "mantabase-postgres-custom": {
+      "enabled": true,
+      "tier": "high",
+      "displayName": "MantaBase — PostgreSQL (Custom)",
+      "description": "Project master data, engineering specs, cost basis, schedule baselines",
+      "transport": "http",
+      "url": "${MANTABASE_URL:https://mantabase.mantaassociados.com}",
+      "timeout_seconds": 30,
+
+      "authentication": {
+        "method": "basic_auth",
+        "username": "${MANTABASE_USER}",
+        "password": "${MANTABASE_PASSWORD}",
+        "comment": "Credentials in Key Vault. Rotate every 90 days."
+      },
+
+      "capabilities": {
+        "read": [
+          "select:projects",
+          "select:project_phases",
+          "select:project_costs",
+          "select:project_schedule",
+          "select:engineering_specs",
+          "select:cad_references",
+          "query:custom_sql_read"
+        ],
+        "write": [
+          {
+            "operation": "insert:project_comments",
+            "requires_tag": "AuthorizedWrite",
+            "description": "Add project commentary (requires approval)"
+          },
+          {
+            "operation": "update:project_phases",
+            "requires_tag": "AuthorizedWrite",
+            "description": "Update phase status (requires approval)"
+          }
+        ],
+        "deny": [
+          "drop:projects",
+          "delete:project_costs",
+          "truncate:project_schedule",
+          "comment": "Master data is critical; DDL blocked"
+        ]
+      },
+
+      "rate_limiting": {
+        "enabled": true,
+        "requests_per_minute": 150,
+        "requests_per_hour": 5000,
+        "comment": "Postgres connection pool: 20 connections"
+      },
+
+      "tables": [
+        {
+          "name": "projects",
+          "description": "Master project registry",
+          "indexed": ["project_id", "segment", "client_id"]
+        },
+        {
+          "name": "project_phases",
+          "description": "8-phase lifecycle (estudo prévio → descomissionamento)",
+          "indexed": ["project_id", "phase_id"]
+        },
+        {
+          "name": "project_costs",
+          "description": "Cost basis by phase/activity",
+          "indexed": ["project_id"]
+        },
+        {
+          "name": "project_schedule",
+          "description": "Schedule baselines (Gantt data)",
+          "indexed": ["project_id"]
+        },
+        {
+          "name": "engineering_specs",
+          "description": "Technical specs, norms (NBR, DNIT, ANEEL, etc.)",
+          "indexed": ["project_id"]
+        },
+        {
+          "name": "cad_references",
+          "description": "Pointers to CAD files (DXF, DWG, RVT)",
+          "indexed": ["project_id"]
+        }
+      ]
+    },
+
+    "// ====== 4. MANTAHUB (Internal REST API) ======": "",
+    "mantahub-rest-api": {
+      "enabled": true,
+      "tier": "medium",
+      "displayName": "MantaHub — REST API (Internal)",
+      "description": "Internal Manta APIs: notifications, workflow orchestration, document management",
+      "transport": "http",
+      "url": "${MANTAHUB_API_URL:https://api.mantaassociados.com}",
+      "timeout_seconds": 30,
+
+      "authentication": {
+        "method": "bearer_token",
+        "token": "${MANTAHUB_TOKEN}",
+        "headers": {
+          "Authorization": "Bearer ${MANTAHUB_TOKEN}",
+          "X-API-Version": "v2",
+          "User-Agent": "Maestro/5.0"
+        },
+        "comment": "Token stored in Key Vault. Rotate every 30 days."
+      },
+
+      "capabilities": {
+        "read": [
+          "get:/workflows/{id}",
+          "get:/notifications/list",
+          "get:/documents/{id}",
+          "get:/teams/{id}",
+          "get:/approvals/{id}"
+        ],
+        "write": [
+          {
+            "operation": "post:/workflows/{id}/trigger",
+            "requires_tag": "AuthorizedWrite",
+            "description": "Trigger workflow (requires approval)"
+          },
+          {
+            "operation": "post:/notifications/send",
+            "requires_tag": "AutoInsert",
+            "description": "Send notification (no approval)"
+          },
+          {
+            "operation": "post:/approvals/{id}/approve",
+            "requires_tag": "AuthorizedWrite"
+          }
+        ],
+        "deny": [
+          "delete:/workflows/{id}",
+          "delete:/documents/{id}",
+          "comment": "No deletion of critical resources"
+        ]
+      },
+
+      "rate_limiting": {
+        "enabled": true,
+        "requests_per_minute": 100,
+        "requests_per_hour": 2000,
+        "burst_size": 5
+      },
+
+      "endpoints": [
+        {
+          "path": "/workflows",
+          "description": "Workflow orchestration (trigger, status, logs)",
+          "methods": ["GET", "POST"]
+        },
+        {
+          "path": "/notifications",
+          "description": "Send/receive notifications (Slack, email, Teams)",
+          "methods": ["GET", "POST"]
+        },
+        {
+          "path": "/documents",
+          "description": "Document management (upload, convert, stamp)",
+          "methods": ["GET", "POST", "PUT"]
+        },
+        {
+          "path": "/teams",
+          "description": "Team/user info sync",
+          "methods": ["GET"]
+        },
+        {
+          "path": "/approvals",
+          "description": "Approval routing (claims, contracts, budgets)",
+          "methods": ["GET", "POST", "PUT"]
+        }
+      ]
+    }
+  },
+
+  "// ====== GLOBAL MCP SETTINGS ======": "",
+  "global": {
+    "default_timeout_seconds": 30,
+    "default_rate_limit_rpm": 100,
+    "retry_policy": {
+      "enabled": true,
+      "max_retries": 3,
+      "backoff_multiplier": 2,
+      "initial_delay_ms": 500
+    },
+    "logging": {
+      "enabled": true,
+      "log_level": "info",
+      "destination": "Supabase:maestro_mcp_logs"
+    },
+    "security": {
+      "enforce_https": true,
+      "verify_tls": true,
+      "ca_bundle": "/root/.ccr/ca-bundle.crt",
+      "comment": "Proxy agent CA bundle for outbound HTTPS"
+    }
+  },
+
+  "// ====== HOW TO POPULATE CREDENTIALS (DEV vs PROD) ======": "",
+  "credentials_guide": {
+    "environments": {
+      "development": {
+        "location": ".env.local (git-ignored)",
+        "template_file": ".env.example",
+        "sources": [
+          "M365_TENANT_ID: Azure AD tenant (ask IT)",
+          "M365_CLIENT_ID: App registration (ask IT)",
+          "M365_CLIENT_SECRET: Secret from Azure Portal (ask IT, rotate 90-day)",
+          "SUPABASE_URL: From https://supabase.com/dashboard → [project] → Settings → API",
+          "SUPABASE_KEY: Anon key from same location (or service_role for write ops)",
+          "MANTABASE_URL: From IT (internal PostgreSQL endpoint)",
+          "MANTABASE_USER: PostgreSQL username (ask IT)",
+          "MANTABASE_PASSWORD: PostgreSQL password (ask IT, rotate 90-day)",
+          "MANTAHUB_API_URL: From IT (internal API base URL)",
+          "MANTAHUB_TOKEN: API token (ask IT, rotate 30-day)"
+        ],
+        "how_to_get": [
+          "1. Azure AD (M365): IT → Enterprise Applications → Maestro v5.0",
+          "2. Supabase: Your project dashboard → Settings → API → Grab URL + Anon key",
+          "3. MantaBase: IT credentials (password-protected)",
+          "4. MantaHub: IT API token (password-protected)"
+        ]
+      },
+
+      "production": {
+        "location": "Azure Key Vault (prod-maestro-v5)",
+        "sources": [
+          "M365_TENANT_ID → Key Vault secret 'm365-tenant-id'",
+          "M365_CLIENT_ID → Key Vault secret 'm365-client-id'",
+          "M365_CLIENT_SECRET → Key Vault secret 'm365-client-secret'",
+          "SUPABASE_URL → Key Vault secret 'supabase-url'",
+          "SUPABASE_KEY → Key Vault secret 'supabase-api-key' (service_role for writes)",
+          "MANTABASE_URL → Key Vault secret 'mantabase-url'",
+          "MANTABASE_USER → Key Vault secret 'mantabase-username'",
+          "MANTABASE_PASSWORD → Key Vault secret 'mantabase-password'",
+          "MANTAHUB_API_URL → Key Vault secret 'mantahub-api-url'",
+          "MANTAHUB_TOKEN → Key Vault secret 'mantahub-api-token'"
+        ],
+        "how_to_get": [
+          "1. Azure Key Vault: https://portal.azure.com → Key Vault 'prod-maestro-v5'",
+          "2. Authenticate: az login (requires Contributor role on vault)",
+          "3. Retrieve: az keyvault secret show --vault-name prod-maestro-v5 --name <secret-name>",
+          "4. Or use managed identity (app service) with Key Vault RBAC"
+        ],
+        "rotation_schedule": [
+          "M365_CLIENT_SECRET: 90 days (IT ticket before expiry)",
+          "MANTABASE_PASSWORD: 90 days (IT ticket before expiry)",
+          "MANTAHUB_TOKEN: 30 days (IT ticket before expiry)"
+        ]
+      }
+    },
+
+    "4_critical_variables": [
+      {
+        "var": "M365_TENANT_ID",
+        "example": "12345678-1234-1234-1234-123456789012",
+        "source": "Azure AD",
+        "rotation": "Manual (no expiry)",
+        "required_for": "SharePoint, Teams, Calendar, Email"
+      },
+      {
+        "var": "SUPABASE_KEY",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "source": "Supabase Dashboard → Settings → API",
+        "rotation": "Manual (no expiry, but revoke on compromise)",
+        "required_for": "Agent memory cache, maestro_runs logs, RAG"
+      },
+      {
+        "var": "MANTABASE_URL",
+        "example": "postgresql://mantabase.mantaassociados.com:5432/maestro",
+        "source": "IT (internal PostgreSQL)",
+        "rotation": "Manual (no expiry)",
+        "required_for": "Project master data, engineering specs"
+      },
+      {
+        "var": "MANTAHUB_TOKEN",
+        "example": "mnh_live_1234567890abcdef1234567890abcd",
+        "source": "IT (internal API)",
+        "rotation": "Every 30 days (ask IT for refresh)",
+        "required_for": "Workflow triggers, notifications, approvals"
+      }
+    ],
+
+    "setup_checklist": [
+      "[ ] Copy .env.example → .env.local",
+      "[ ] Contact IT for: M365 (tenant/client/secret), MantaBase credentials, MantaHub token",
+      "[ ] Log into Supabase → grab URL + Anon key",
+      "[ ] Fill .env.local with 4 critical variables",
+      "[ ] Test: `npx claude mcp test m365-sharepoint-teams`",
+      "[ ] Test: `npx claude mcp test supabase-postgres-vectors`",
+      "[ ] Test: `npx claude mcp test mantabase-postgres-custom`",
+      "[ ] Test: `npx claude mcp test mantahub-rest-api`",
+      "[ ] Commit .env.example (no secrets); never commit .env.local",
+      "[ ] For production: Set secrets in Key Vault via Azure Portal or CLI"
+    ],
+
+    "security_best_practices": [
+      "1. NEVER hardcode secrets in .mcp.json or .env or source code",
+      "2. ALWAYS use env vars (${VAR_NAME}) for credentials",
+      "3. ALWAYS .gitignore .env.local and Key Vault backups",
+      "4. ROTATE M365_CLIENT_SECRET every 90 days (IT ticket)",
+      "5. ROTATE MANTAHUB_TOKEN every 30 days (IT ticket)",
+      "6. ROTATE MANTABASE_PASSWORD every 90 days (IT ticket)",
+      "7. Revoke compromised tokens IMMEDIATELY (ask IT)",
+      "8. Use service_role Supabase key for write ops (more restrictive)",
+      "9. Log all MCP calls to maestro_runs for audit trail",
+      "10. Monitor Key Vault access logs (Azure Portal → Key Vault → Access Policies)"
+    ]
+  }
+}

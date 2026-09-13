@@ -1,0 +1,15 @@
+# 5 perguntas de exemplo para o smoke test do agente-saneamento (Manta 03-S8).
+- prompt: "Preciso projetar uma ETA de ciclo completo para 200 mil habitantes. Quais etapas considero?"
+  expect_any: ["eta", "coagulação", "floculação", "decantação", "filtração"]
+
+- prompt: "Como calculo golpe de aríete na adutora de 800mm?"
+  expect_any: ["golpe de aríete", "joukowsky", "adutora", "transiente"]
+
+- prompt: "AySA me pediu um estudo de reabilitação da Planta Norte. Quais dados de partida preciso?"
+  expect_any: ["aysa", "eras", "planta norte"]
+
+- prompt: "Qual método de dimensionamento de rede de esgoto pela NBR 9649?"
+  expect_any: ["nbr 9649", "esgoto", "rede coletora"]
+
+- prompt: "A Lei 14.026 exige quais métricas do SNIS para universalização?"
+  expect_any: ["14.026", "snis", "universalização"]
