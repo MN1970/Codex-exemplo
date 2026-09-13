@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manta Associados · Brand Guidelines — Portal IA</title>
+<style>
+:root{
+  --manta-accent:#E07B3D;
+  --manta-accent-dark:#C45A2B;
+  --manta-title:#8B4A2D;
+  --manta-heading:#5D3A1A;
+  --manta-text:#374151;
+  --manta-muted:#6B7280;
+  --manta-border:#E5E7EB;
+  --manta-bg-alt:#F9FAFB;
+  --manta-bg:#FFFFFF;
+
+  /* Portal IA — cores documentadas neste guia */
+  --pia-900:#0d1f2d;
+  --pia-800:#14293a;
+  --pia-700:#1a3a52; /* PRIMARY */
+  --pia-600:#235272;
+  --pia-500:#2d6b91;
+  --pia-400:#4a8bb0;
+  --pia-300:#7bacc9;
+  --pia-200:#b3d2e3;
+  --pia-100:#dceaf1;
+  --pia-50:#f2f7fa;
+
+  --pia-success:#1F8A5F;
+  --pia-warning:#C97A1D;
+  --pia-error:#B23B3B;
+  --pia-info:#2D6B91;
+
+  --font-ui: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-serif: ui-serif,Georgia,"Times New Roman",serif;
+  --font-mono: ui-monospace,"SFMono-Regular","Cascadia Code","Consolas",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font-ui);
+  color:var(--manta-text);
+  background:var(--manta-bg);
+  font-size:14.5px;
+  line-height:1.6;
+  position:relative;
+}
+img,svg{max-width:100%}
+
+/* ---------- watermark ---------- */
+.watermark{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.watermark span{
+  font-family:var(--font-ui);font-weight:800;font-size:9vw;letter-spacing:.08em;
+  color:var(--manta-title);opacity:.055;transform:rotate(-45deg);white-space:nowrap;
+}
+@media (prefers-color-scheme: dark){
+  .watermark span{opacity:.08;color:#fff}
+}
+
+/* ---------- header ---------- */
+.topbar{height:4px;background:var(--manta-accent);width:100%}
+header.masthead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 28px;border-bottom:1px solid var(--manta-border);
+  background:var(--manta-bg);position:relative;z-index:2;flex-wrap:wrap;gap:10px;
+}
+.masthead-left{display:flex;align-items:center;gap:14px;min-width:0}
+.masthead-left .logo-mark{flex-shrink:0;width:40px;height:40px}
+.masthead-title{min-width:0}
+.masthead-title h1{
+  margin:0;font-size:16.5px;font-weight:700;color:var(--manta-heading);
+  letter-spacing:.01em;
+}
+.masthead-title p{margin:2px 0 0;font-size:12.5px;color:var(--manta-muted)}
+.masthead-right{text-align:right;font-size:12px;color:var(--manta-muted);flex-shrink:0}
+.masthead-right b{color:var(--manta-heading);display:block;font-size:12.5px}
+
+/* ---------- layout ---------- */
+.layout{display:flex;position:relative;z-index:1}
+.sidenav{
+  width:240px;flex-shrink:0;border-right:1px solid var(--manta-border);
+  position:sticky;top:0;align-self:flex-start;height:100vh;overflow-y:auto;
+  background:var(--manta-bg);
+}
+.sidenav .group-label{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--manta-muted);
+  padding:16px 18px 6px;
+}
+.sidenav button{
+  display:block;width:100%;text-align:left;background:none;border:none;
+  border-left:3px solid transparent;padding:10px 18px;font-size:13.5px;
+  color:var(--manta-muted);cursor:pointer;font-family:inherit;
+}
+.sidenav button .n{color:var(--manta-muted);font-variant-numeric:tabular-nums;margin-right:6px}
+.sidenav button.active{
+  border-left-color:var(--manta-accent);color:var(--manta-heading);
+  font-weight:600;background:var(--manta-bg-alt);
+}
+.sidenav button.active .n{color:var(--manta-accent)}
+.sidenav button:hover{background:var(--manta-bg-alt)}
+
+main{flex:1;min-width:0;padding:30px 40px 60px}
+.tab{display:none}
+.tab.active{display:block}
+
+.scope-box{
+  border-left:3px solid var(--manta-accent);background:var(--manta-bg-alt);
+  padding:16px 20px;margin:18px 0 26px;font-size:13.5px;
+}
+.scope-box b{color:var(--manta-heading)}
+
+h2.sec-title{
+  font-size:22px;font-weight:700;color:var(--manta-title);margin:0 0 6px;
+}
+h2.sec-title .num{color:var(--manta-accent);margin-right:8px}
+.sec-sub{color:var(--manta-muted);font-size:13px;margin:0 0 24px}
+h3.sub-title{
+  font-size:16.5px;font-weight:600;color:var(--manta-text);
+  margin:34px 0 4px;border-bottom:1px solid var(--manta-border);padding-bottom:8px;
+}
+h3.sub-title .num{color:var(--manta-accent-dark);margin-right:6px;font-weight:700}
+p.lead{color:var(--manta-text);max-width:760px}
+
+table{width:100%;border-collapse:collapse;margin:14px 0 24px;font-size:13.5px}
+thead tr{border-bottom:2px solid var(--manta-border)}
+th{text-align:left;padding:10px 12px;font-size:11.5px;font-weight:600;color:var(--manta-muted);
+  text-transform:uppercase;letter-spacing:.05em}
+tbody tr{border-bottom:1px solid #F3F4F6}
+tbody tr:nth-child(even){background:var(--manta-bg-alt)}
+td{padding:10px 12px;vertical-align:middle}
+code, .mono{font-family:var(--font-mono);font-size:12.5px;background:var(--manta-bg-alt);
+  padding:1px 6px;border-radius:3px;color:var(--manta-heading)}
+
+/* ---------- swatches ---------- */
+.swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0;
+  border:1px solid var(--manta-border);border-radius:4px;overflow:hidden;margin:14px 0 28px}
+.swatch{padding:0;border-right:1px solid rgba(255,255,255,.15)}
+.swatch .fill{height:74px;display:flex;align-items:flex-end;padding:8px}
+.swatch .fill span{font-size:10.5px;font-family:var(--font-mono);
+  background:rgba(255,255,255,.85);color:#111;padding:1px 5px;border-radius:2px}
+.swatch .meta{padding:8px 10px;background:var(--manta-bg)}
+.swatch .meta .name{font-size:12.5px;font-weight:600;color:var(--manta-text)}
+.swatch .meta .hex{font-size:11.5px;color:var(--manta-muted);font-family:var(--font-mono)}
+
+/* ---------- KPI ---------- */
+.kpi-row{display:flex;gap:0;margin:20px 0 6px;flex-wrap:wrap}
+.kpi{text-align:center;padding:14px 30px;border-right:1px solid var(--manta-border)}
+.kpi:last-child{border-right:none}
+.kpi .num{font-size:32px;font-weight:700;color:var(--manta-accent)}
+.kpi .lbl{font-size:12px;color:var(--manta-muted);margin-top:2px}
+
+/* ---------- type specimens ---------- */
+.type-spec{border:1px solid var(--manta-border);border-radius:4px;padding:22px 24px;margin:16px 0 26px}
+.type-spec .role{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--manta-muted);
+  margin-bottom:10px}
+.type-spec .sample{color:var(--pia-700);margin:0 0 8px}
+.type-spec .stack{font-family:var(--font-mono);font-size:11.5px;color:var(--manta-muted)}
+.scale-row{display:flex;align-items:baseline;gap:16px;border-bottom:1px dashed var(--manta-border);
+  padding:10px 0}
+.scale-row .px{width:70px;flex-shrink:0;font-family:var(--font-mono);font-size:11.5px;color:var(--manta-muted)}
+
+/* ---------- components demo (light/dark panels) ---------- */
+.demo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:16px 0 30px}
+@media(max-width:900px){.demo-wrap{grid-template-columns:1fr}}
+.panel{border:1px solid var(--manta-border);border-radius:6px;overflow:hidden}
+.panel .panel-head{font-size:11px;text-transform:uppercase;letter-spacing:.08em;
+  padding:8px 16px;border-bottom:1px solid var(--manta-border)}
+.panel.light{background:#fff}
+.panel.light .panel-head{background:var(--manta-bg-alt);color:var(--manta-muted)}
+.panel.dark{background:var(--pia-900)}
+.panel.dark .panel-head{background:var(--pia-800);color:var(--pia-200)}
+.panel-body{padding:22px 20px;display:flex;flex-direction:column;gap:16px}
+
+.btn{
+  font-family:var(--font-ui);font-size:13.5px;font-weight:600;padding:9px 18px;
+  border-radius:5px;border:1px solid transparent;cursor:pointer;display:inline-block;
+  width:max-content;
+}
+.btn-primary{background:var(--pia-700);color:#fff}
+.btn-secondary{background:transparent;color:var(--pia-700);border-color:var(--pia-700)}
+.btn-ghost{background:transparent;color:var(--pia-600);border:none;text-decoration:underline}
+.panel.dark .btn-primary{background:var(--pia-300);color:var(--pia-900)}
+.panel.dark .btn-secondary{background:transparent;color:var(--pia-200);border-color:var(--pia-400)}
+.panel.dark .btn-ghost{color:var(--pia-200)}
+
+.card-demo{border:1px solid var(--manta-border);border-radius:6px;padding:16px 18px;background:#fff}
+.card-demo .card-title{font-weight:600;color:var(--pia-700);font-size:13.5px;margin-bottom:4px}
+.card-demo .card-body{font-size:12.5px;color:var(--manta-muted)}
+.panel.dark .card-demo{background:var(--pia-800);border-color:var(--pia-600)}
+.panel.dark .card-demo .card-title{color:var(--pia-100)}
+.panel.dark .card-demo .card-body{color:var(--pia-300)}
+
+.form-demo label{display:block;font-size:11.5px;color:var(--manta-muted);margin-bottom:4px;
+  text-transform:uppercase;letter-spacing:.04em}
+.form-demo input{
+  width:100%;padding:8px 10px;font-size:13.5px;border:1px solid var(--manta-border);
+  border-radius:4px;font-family:var(--font-ui);color:var(--manta-text);background:#fff;
+}
+.form-demo input:focus{outline:2px solid var(--pia-400);outline-offset:1px;border-color:var(--pia-500)}
+.panel.dark .form-demo label{color:var(--pia-300)}
+.panel.dark .form-demo input{background:var(--pia-800);border-color:var(--pia-600);color:var(--pia-50)}
+
+.status-row{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.panel.dark .status-row{color:var(--pia-200)}
+
+/* ---------- elevation / spacing swatches ---------- */
+.elev-row{display:flex;gap:22px;flex-wrap:wrap;margin:16px 0 28px}
+.elev-box{width:100px;height:70px;background:#fff;border-radius:6px;
+  display:flex;align-items:flex-end;justify-content:center;font-size:11px;color:var(--manta-muted);
+  padding-bottom:8px;border:1px solid var(--manta-border)}
+.sp-row{display:flex;align-items:center;gap:14px;padding:8px 0;border-bottom:1px dashed var(--manta-border)}
+.sp-bar{background:var(--pia-500);height:14px}
+.sp-label{width:110px;font-family:var(--font-mono);font-size:11.5px;color:var(--manta-muted)}
+
+/* ---------- tone of voice ---------- */
+.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0 26px}
+@media(max-width:760px){.voice-grid{grid-template-columns:1fr}}
+.voice-col{border:1px solid var(--manta-border);border-radius:6px;padding:16px 18px}
+.voice-col.do{border-top:3px solid var(--pia-success)}
+.voice-col.dont{border-top:3px solid var(--manta-accent)}
+.voice-col h4{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.voice-col.do h4{color:var(--pia-success)}
+.voice-col.dont h4{color:var(--manta-accent-dark)}
+.voice-col ul{margin:0;padding-left:18px;font-size:13px}
+.voice-col li{margin-bottom:8px}
+
+blockquote{
+  border-left:3px solid var(--pia-500);margin:16px 0;padding:8px 18px;
+  font-style:italic;color:var(--manta-text);background:var(--manta-bg-alt);
+}
+
+.ficha{border:1px solid var(--manta-border);border-radius:6px;padding:20px 26px;
+  font-family:var(--font-mono);font-size:12.5px;max-width:640px;background:var(--manta-bg-alt)}
+.ficha .rule{border-top:1px solid var(--manta-border);margin:10px 0}
+.ficha .center{text-align:center;font-weight:700;color:var(--manta-heading);letter-spacing:.06em}
+
+footer.pagefoot{
+  border-top:1px solid var(--manta-border);padding:16px 40px;font-size:11.5px;
+  color:var(--manta-muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;
+}
+
+/* ---------- responsive nav ---------- */
+@media(max-width:760px){
+  .layout{flex-direction:column}
+  .sidenav{width:100%;height:auto;position:relative;display:flex;flex-wrap:wrap;
+    border-right:none;border-bottom:1px solid var(--manta-border)}
+  .sidenav .group-label{display:none}
+  main{padding:22px 18px 50px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  .tab{display:block!important;page-break-after:always}
+  .sidenav{display:none}
+  .watermark{display:none}
+}
+
+/* ---------- dark mode for the page chrome itself ---------- */
+@media (prefers-color-scheme: dark){
+  body{background:#12181d;color:#dfe6ea}
+  header.masthead,.sidenav,main,footer.pagefoot{background:#12181d}
+  header.masthead,.sidenav,footer.pagefoot{border-color:#2a3641}
+  .masthead-title h1{color:#f2b98a}
+  .sidenav button{color:#9aa7ae}
+  .sidenav button.active{background:#1a2229;color:#f2b98a}
+  h2.sec-title{color:#f0a86c}
+  h3.sub-title{color:#e8edf0;border-color:#2a3641}
+  .sec-sub,.masthead-right,td,.kpi .lbl,.type-spec .role{color:#9aa7ae}
+  .scope-box{background:#1a2229}
+  table thead tr{border-color:#2a3641}
+  tbody tr{border-color:#232d35}
+  tbody tr:nth-child(even){background:#171f25}
+  code,.mono{background:#1a2229;color:#f0a86c}
+  .type-spec,.panel,.elev-box,.voice-col,.ficha,.kpi{border-color:#2a3641}
+  .card-demo{background:#171f25;border-color:#2a3641}
+  blockquote{background:#1a2229}
+  .swatch-grid{border-color:#2a3641}
+  .elev-box{background:#1a2229}
+  .ficha{background:#171f25}
+}
+</style>
+</head>
+<body>
+
+<div class="watermark"><span>MANTA ASSOCIADOS · MANTA ASSOCIADOS · MANTA ASSOCIADOS</span></div>
+
+<div class="topbar"></div>
+<header class="masthead">
+  <div class="masthead-left">
+    <svg class="logo-mark" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Manta Associados">
+      <rect x="1" y="1" width="46" height="46" rx="8" fill="#E07B3D"/>
+      <path d="M10 36 L10 12 L17 12 L24 26 L31 12 L38 12 L38 36 L31.5 36 L31.5 21.5 L26 33 L22 33 L16.5 21.5 L16.5 36 Z" fill="#FFFFFF"/>
+    </svg>
+    <div class="masthead-title">
+      <h1>MANTA ASSOCIADOS · Brand Guidelines — Portal IA</h1>
+      <p>Sistema de identidade visual do Portal IA · uso interno e para fornecedores de desenvolvimento</p>
+    </div>
+  </div>
+  <div class="masthead-right">
+    <b>v1.0 · 27/07/2026</b>
+    Classificação: Interno
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidenav" id="sidenav">
+    <div class="group-label">Índice</div>
+    <button class="tab-btn active" data-tab="t1"><span class="n">1.</span>Visão Geral</button>
+    <button class="tab-btn" data-tab="t2"><span class="n">2.</span>Logo</button>
+    <button class="tab-btn" data-tab="t3"><span class="n">3.</span>Paleta de Cores</button>
+    <button class="tab-btn" data-tab="t4"><span class="n">4.</span>Tipografia</button>
+    <button class="tab-btn" data-tab="t5"><span class="n">5.</span>Componentes</button>
+    <button class="tab-btn" data-tab="t6"><span class="n">6.</span>Uso &amp; Espaçamento</button>
+    <button class="tab-btn" data-tab="t7"><span class="n">7.</span>Tom de Voz</button>
+    <button class="tab-btn" data-tab="t8"><span class="n">8.</span>Fontes &amp; Ficha Técnica</button>
+  </nav>
+
+  <main>
+
+    <!-- 1. VISÃO GERAL -->
+    <section class="tab active" id="t1">
+      <h2 class="sec-title"><span class="num">1.</span>Visão Geral</h2>
+      <p class="sec-sub">Objeto do artefato, princípios e como usar este guia</p>
+
+      <div class="scope-box">
+        <b>O que é:</b> Guia de Marca (Brand Guidelines) do Portal IA.<br>
+        <b>Para que serve:</b> padronizar logo, cores, tipografia, componentes de interface e tom de
+        voz de todo material digital do Portal IA (telas, relatórios gerados, e-mails automatizados,
+        apresentações internas).<br>
+        <b>Destinatário:</b> equipe de produto, desenvolvimento e parceiros de implementação do
+        Portal IA na Manta Associados.
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="num">10</div><div class="lbl">Tons na paleta primária</div></div>
+        <div class="kpi"><div class="num">3</div><div class="lbl">Famílias tipográficas</div></div>
+        <div class="kpi"><div class="num">2</div><div class="lbl">Modos: claro e escuro</div></div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">1.1</span>Princípios de marca</h3>
+      <table>
+        <thead><tr><th>Princípio</th><th>O que significa na prática</th></tr></thead>
+        <tbody>
+          <tr><td><b>Precisão de engenheiro</b></td><td>hierarquia visual clara, números alinhados, nada decorativo sem função.</td></tr>
+          <tr><td><b>Sobriedade técnica</b></td><td>paleta contida, sem gradientes nem excesso de cor; o dado é o protagonista.</td></tr>
+          <tr><td><b>Confiança institucional</b></td><td>azul profundo (#1a3a52) como base — a mesma cor que sustenta laudos e pareceres.</td></tr>
+          <tr><td><b>Legibilidade acima de tudo</b></td><td>contraste testado em claro e escuro; tipografia de sistema, sem dependências externas.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="sub-title"><span class="num">1.2</span>Estrutura deste documento</h3>
+      <p class="lead">As seções seguem a ordem de decisão de um projeto: identidade (logo, cor,
+      tipografia) → construção de interface (componentes) → regras de aplicação (espaçamento,
+      elevação, movimento) → comunicação (tom de voz) → rastreabilidade.</p>
+    </section>
+
+    <!-- 2. LOGO -->
+    <section class="tab" id="t2">
+      <h2 class="sec-title"><span class="num">2.</span>Logo</h2>
+      <p class="sec-sub">Conceito geométrico do M — construção, variações e área de proteção</p>
+
+      <h3 class="sub-title"><span class="num">2.1</span>Conceito</h3>
+      <p class="lead">O monograma é um "M" construído sobre uma grade geométrica de três hastes —
+      referência direta ao nome Manta e à leitura estrutural de um projeto de engenharia (eixos,
+      cotas, apoios). O traço é reto, sem curvas decorativas, reforçando o princípio de precisão.</p>
+
+      <div class="demo-wrap">
+        <div class="panel light">
+          <div class="panel-head">Sobre fundo claro</div>
+          <div class="panel-body" style="align-items:center">
+            <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="116" height="116" rx="20" fill="#E07B3D"/>
+              <path d="M26 92 L26 30 L40 30 L60 62 L80 30 L94 30 L94 92 L82 92 L82 52 L64 80 L56 80 L38 52 L38 92 Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
+        </div>
+        <div class="panel dark">
+          <div class="panel-head">Sobre fundo escuro (Portal IA)</div>
+          <div class="panel-body" style="align-items:center">
+            <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="116" height="116" rx="20" fill="#1a3a52" stroke="#4a8bb0" stroke-width="2"/>
+              <path d="M26 92 L26 30 L40 30 L60 62 L80 30 L94 30 L94 92 L82 92 L82 52 L64 80 L56 80 L38 52 L38 92 Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">2.2</span>Variações e monograma reduzido</h3>
+      <table>
+        <thead><tr><th>Variação</th><th>Uso</th><th>Tamanho mínimo</th></tr></thead>
+        <tbody>
+          <tr><td>Logotipo completo (símbolo + "MANTA ASSOCIADOS")</td><td>capas, cabeçalhos de documento, tela de login</td><td>120px de largura</td></tr>
+          <tr><td>Símbolo M isolado</td><td>favicon, avatar, ícone de app, marca d'água</td><td>16px</td></tr>
+          <tr><td>Monocromático (branco ou #1a3a52 sólido)</td><td>impressão P&amp;B, sobreposição em fotos/telas escuras</td><td>24px</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="sub-title"><span class="num">2.3</span>Área de proteção e uso incorreto</h3>
+      <table>
+        <thead><tr><th>Regra</th><th>Detalhe</th></tr></thead>
+        <tbody>
+          <tr><td>Espaço de respiro mínimo</td><td>equivalente à altura do próprio símbolo, em todos os lados</td></tr>
+          <tr><td style="color:var(--manta-accent-dark)">Não fazer</td><td>não distorcer, não rotacionar, não aplicar gradiente, não recolorir fora da paleta aprovada, não adicionar sombra ou brilho</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 3. PALETA DE CORES -->
+    <section class="tab" id="t3">
+      <h2 class="sec-title"><span class="num">3.</span>Paleta de Cores</h2>
+      <p class="sec-sub">Cor primária <code>#1a3a52</code> e escala funcional do Portal IA</p>
+
+      <h3 class="sub-title"><span class="num">3.1</span>Primária — Azul Profundo Portal IA</h3>
+      <p class="lead">O tom <code>#1a3a52</code> é a cor de identidade do Portal IA: usado em
+      cabeçalhos de aplicação, navegação principal e superfícies de destaque no modo escuro
+      (base nativa da interface). É deliberadamente distinto do laranja institucional da Manta
+      (<code>#E07B3D</code>), que permanece reservado para documentos corporativos e relatórios de cliente.</p>
+
+      <div class="swatch-grid">
+        <div class="swatch"><div class="fill" style="background:var(--pia-900)"><span>#0d1f2d</span></div><div class="meta"><div class="name">900 · Base escura</div><div class="hex">rgb(13,31,45)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-800)"><span>#14293a</span></div><div class="meta"><div class="name">800 · Superfície dark</div><div class="hex">rgb(20,41,58)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-700)"><span style="background:rgba(255,255,255,.9)">#1a3a52</span></div><div class="meta"><div class="name">700 · Primária ★</div><div class="hex">rgb(26,58,82)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-600)"><span>#235272</span></div><div class="meta"><div class="name">600 · Hover primária</div><div class="hex">rgb(35,82,114)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-500)"><span>#2d6b91</span></div><div class="meta"><div class="name">500 · Interativo/link</div><div class="hex">rgb(45,107,145)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-400)"><span>#4a8bb0</span></div><div class="meta"><div class="name">400 · Foco/borda ativa</div><div class="hex">rgb(74,139,176)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-300)"><span>#7bacc9</span></div><div class="meta"><div class="name">300 · Ícone secundário</div><div class="hex">rgb(123,172,201)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-200)"><span>#b3d2e3</span></div><div class="meta"><div class="name">200 · Fundo destacado</div><div class="hex">rgb(179,210,227)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-100)"><span>#dceaf1</span></div><div class="meta"><div class="name">100 · Fundo alt. claro</div><div class="hex">rgb(220,234,241)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-50);border-bottom:1px solid #eee"><span>#f2f7fa</span></div><div class="meta"><div class="name">50 · Fundo página</div><div class="hex">rgb(242,247,250)</div></div></div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">3.2</span>Cores semânticas</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="fill" style="background:var(--pia-success)"><span>#1F8A5F</span></div><div class="meta"><div class="name">Sucesso / Concluído</div><div class="hex">status positivo</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-warning)"><span>#C97A1D</span></div><div class="meta"><div class="name">Atenção / Em andamento</div><div class="hex">requer revisão</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-error)"><span>#B23B3B</span></div><div class="meta"><div class="name">Erro / Atrasado</div><div class="hex">bloqueante</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--pia-info)"><span>#2D6B91</span></div><div class="meta"><div class="name">Informativo</div><div class="hex">neutro do sistema</div></div></div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">3.3</span>Referência institucional Manta</h3>
+      <p class="lead" style="margin-bottom:10px">Reservada para materiais corporativos, dossiês e relatórios de cliente — não usar como cor primária de interface do Portal IA.</p>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="fill" style="background:#E07B3D"><span>#E07B3D</span></div><div class="meta"><div class="name">Laranja Manta</div><div class="hex">destaque institucional</div></div></div>
+        <div class="swatch"><div class="fill" style="background:#8B4A2D"><span>#8B4A2D</span></div><div class="meta"><div class="name">Marrom quente</div><div class="hex">títulos corporativos</div></div></div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">3.4</span>Regras de contraste</h3>
+      <table>
+        <thead><tr><th>Combinação</th><th>Contraste (WCAG)</th><th>Uso permitido</th></tr></thead>
+        <tbody>
+          <tr><td>Branco sobre #1a3a52</td><td>9.8:1 — AAA</td><td>texto de qualquer tamanho</td></tr>
+          <tr><td>#1a3a52 sobre branco</td><td>9.8:1 — AAA</td><td>texto de qualquer tamanho</td></tr>
+          <tr><td>#7bacc9 sobre #0d1f2d</td><td>5.1:1 — AA</td><td>texto ≥14px, labels</td></tr>
+          <tr><td>#E07B3D sobre branco</td><td>2.9:1 — reprovado para texto</td><td>somente elementos gráficos ≥3px ou ícones grandes</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 4. TIPOGRAFIA -->
+    <section class="tab" id="t4">
+      <h2 class="sec-title"><span class="num">4.</span>Tipografia</h2>
+      <p class="sec-sub">Pilhas de fontes de sistema — sem dependência de CDN, funcionam offline</p>
+
+      <div class="scope-box">
+        Todas as famílias abaixo usam <b>font stacks nativos do sistema operacional</b> (não são
+        arquivos hospedados). Isso garante renderização correta mesmo sem acesso à internet, em
+        e-mails automatizados e em ambientes restritos de rede.
+      </div>
+
+      <h3 class="sub-title"><span class="num">4.1</span>Portal Serif — títulos institucionais</h3>
+      <div class="type-spec">
+        <div class="role">Uso: capas de relatório, H1 de documentos formais</div>
+        <p class="sample" style="font-family:var(--font-serif);font-size:34px;font-weight:700;margin:0 0 10px">Estudo de Viabilidade Técnica</p>
+        <p class="sample" style="font-family:var(--font-serif);font-size:20px;font-weight:400;margin:0 0 10px">Aa Bb Cc 0123456789</p>
+        <div class="stack">font-family: ui-serif, Georgia, "Times New Roman", serif;</div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">4.2</span>Portal Sans — interface e corpo de texto</h3>
+      <div class="type-spec">
+        <div class="role">Uso: UI do Portal IA, corpo de texto, tabelas, formulários</div>
+        <p class="sample" style="font-family:var(--font-ui);font-size:26px;font-weight:700;margin:0 0 6px">Aa Bb Cc 0123456789</p>
+        <p class="sample" style="font-family:var(--font-ui);font-size:15px;font-weight:400;margin:0 0 10px">O corpo de texto usa peso regular a 14–15px com entrelinha 1.6 para leitura confortável em relatórios longos e telas de dados.</p>
+        <div class="stack">font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;</div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">4.3</span>Portal Mono — dados, código e identificadores</h3>
+      <div class="type-spec">
+        <div class="role">Uso: códigos SICRO, IDs de documento, blocos de dados/JSON, coordenadas</div>
+        <p class="sample" style="font-family:var(--font-mono);font-size:15px;margin:0 0 10px">MANTA-PORTALIA-20260727-01 · 26 58 82</p>
+        <div class="stack">font-family: ui-monospace, "SFMono-Regular", "Cascadia Code", "Consolas", monospace;</div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">4.4</span>Escala tipográfica</h3>
+      <div class="scale-row"><span class="px">34 / 700</span><span style="font-family:var(--font-serif);font-weight:700;font-size:22px">H1 — Título de documento</span></div>
+      <div class="scale-row"><span class="px">22 / 700</span><span style="font-family:var(--font-ui);font-weight:700;font-size:20px;color:var(--manta-title)">H2 — Seção numerada</span></div>
+      <div class="scale-row"><span class="px">16.5 / 600</span><span style="font-family:var(--font-ui);font-weight:600;font-size:16.5px">H3 — Subseção</span></div>
+      <div class="scale-row"><span class="px">14.5 / 400</span><span style="font-family:var(--font-ui);font-size:14.5px">Body — texto corrido</span></div>
+      <div class="scale-row"><span class="px">12.5 / 400</span><span style="font-family:var(--font-ui);font-size:12.5px;color:var(--manta-muted)">Caption / label</span></div>
+    </section>
+
+    <!-- 5. COMPONENTES -->
+    <section class="tab" id="t5">
+      <h2 class="sec-title"><span class="num">5.</span>Componentes Base</h2>
+      <p class="sec-sub">Botões, cartões e formulários — modo claro e modo escuro lado a lado</p>
+
+      <h3 class="sub-title"><span class="num">5.1</span>Botões</h3>
+      <div class="demo-wrap">
+        <div class="panel light">
+          <div class="panel-head">Light mode</div>
+          <div class="panel-body">
+            <button class="btn btn-primary">Enviar para revisão</button>
+            <button class="btn btn-secondary">Salvar rascunho</button>
+            <button class="btn btn-ghost">Cancelar</button>
+          </div>
+        </div>
+        <div class="panel dark">
+          <div class="panel-head">Dark mode</div>
+          <div class="panel-body">
+            <button class="btn btn-primary">Enviar para revisão</button>
+            <button class="btn btn-secondary">Salvar rascunho</button>
+            <button class="btn btn-ghost">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">5.2</span>Cartões (uso restrito — preferir tabelas)</h3>
+      <p class="lead" style="margin-bottom:10px">No Portal IA, cartões são reservados a resumos de
+      status (máx. 3–4 por tela); listas e dados tabulares devem usar tabelas, nunca grades de cartões.</p>
+      <div class="demo-wrap">
+        <div class="panel light">
+          <div class="panel-head">Light mode</div>
+          <div class="panel-body">
+            <div class="card-demo">
+              <div class="card-title">Agente 03-S8 · Saneamento</div>
+              <div class="card-body">Status: operacional · última execução há 4 min</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel dark">
+          <div class="panel-head">Dark mode</div>
+          <div class="panel-body">
+            <div class="card-demo">
+              <div class="card-title">Agente 03-S8 · Saneamento</div>
+              <div class="card-body">Status: operacional · última execução há 4 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">5.3</span>Formulários</h3>
+      <div class="demo-wrap">
+        <div class="panel light">
+          <div class="panel-head">Light mode</div>
+          <div class="panel-body form-demo">
+            <div><label>Nome do projeto</label><input type="text" placeholder="Ex.: Nova Ponte Rio Tocantins"></div>
+            <div><label>Código do contrato</label><input type="text" placeholder="CT5500097701"></div>
+          </div>
+        </div>
+        <div class="panel dark">
+          <div class="panel-head">Dark mode</div>
+          <div class="panel-body form-demo">
+            <div><label>Nome do projeto</label><input type="text" placeholder="Ex.: Nova Ponte Rio Tocantins"></div>
+            <div><label>Código do contrato</label><input type="text" placeholder="CT5500097701"></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">5.4</span>Indicadores de status</h3>
+      <div class="demo-wrap">
+        <div class="panel light">
+          <div class="panel-head">Light mode</div>
+          <div class="panel-body">
+            <div class="status-row"><span class="dot" style="background:var(--pia-success)"></span>Concluído</div>
+            <div class="status-row"><span class="dot" style="background:var(--manta-accent)"></span>Em andamento</div>
+            <div class="status-row"><span class="dot" style="background:var(--pia-error)"></span>Atrasado</div>
+            <div class="status-row"><span class="dot" style="background:#9CA3AF"></span>Não iniciado</div>
+          </div>
+        </div>
+        <div class="panel dark">
+          <div class="panel-head">Dark mode</div>
+          <div class="panel-body">
+            <div class="status-row"><span class="dot" style="background:var(--pia-success)"></span>Concluído</div>
+            <div class="status-row"><span class="dot" style="background:var(--manta-accent)"></span>Em andamento</div>
+            <div class="status-row"><span class="dot" style="background:var(--pia-error)"></span>Atrasado</div>
+            <div class="status-row"><span class="dot" style="background:#5b6b73"></span>Não iniciado</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. USAGE GUIDELINES -->
+    <section class="tab" id="t6">
+      <h2 class="sec-title"><span class="num">6.</span>Uso &amp; Espaçamento</h2>
+      <p class="sec-sub">Escala de espaçamento, elevação e movimento</p>
+
+      <h3 class="sub-title"><span class="num">6.1</span>Escala de espaçamento (base 4px)</h3>
+      <div class="sp-row"><span class="sp-label">--space-1 · 4px</span><span class="sp-bar" style="width:4px"></span><span>micro-ajuste entre ícone e label</span></div>
+      <div class="sp-row"><span class="sp-label">--space-2 · 8px</span><span class="sp-bar" style="width:8px"></span><span>espaçamento interno de botão pequeno</span></div>
+      <div class="sp-row"><span class="sp-label">--space-3 · 12px</span><span class="sp-bar" style="width:12px"></span><span>espaço entre campos de formulário relacionados</span></div>
+      <div class="sp-row"><span class="sp-label">--space-4 · 16px</span><span class="sp-bar" style="width:16px"></span><span>padding padrão de card / painel</span></div>
+      <div class="sp-row"><span class="sp-label">--space-6 · 24px</span><span class="sp-bar" style="width:24px"></span><span>separação entre blocos de conteúdo</span></div>
+      <div class="sp-row"><span class="sp-label">--space-8 · 32px</span><span class="sp-bar" style="width:32px"></span><span>margem entre seções</span></div>
+      <div class="sp-row"><span class="sp-label">--space-12 · 48px</span><span class="sp-bar" style="width:48px"></span><span>espaço entre módulos de página</span></div>
+
+      <h3 class="sub-title"><span class="num">6.2</span>Elevação (sombras)</h3>
+      <p class="lead" style="margin-bottom:6px">Sombras discretas, máximo 2px de espalhamento — o
+      Portal IA evita profundidade artificial; hierarquia vem de contraste e borda, não de sombra pesada.</p>
+      <div class="elev-row">
+        <div class="elev-box" style="box-shadow:none">nível 0<br>flat</div>
+        <div class="elev-box" style="box-shadow:0 1px 2px rgba(26,58,82,.12)">nível 1<br>card</div>
+        <div class="elev-box" style="box-shadow:0 2px 6px rgba(26,58,82,.16)">nível 2<br>dropdown</div>
+        <div class="elev-box" style="box-shadow:0 4px 12px rgba(26,58,82,.20)">nível 3<br>modal</div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">6.3</span>Movimento (motion)</h3>
+      <table>
+        <thead><tr><th>Token</th><th>Duração</th><th>Easing</th><th>Uso</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">--motion-fast</td><td>120ms</td><td>ease-out</td><td>hover, foco, toggle</td></tr>
+          <tr><td class="mono">--motion-base</td><td>200ms</td><td>ease-in-out</td><td>abrir/fechar painel, transição de aba</td></tr>
+          <tr><td class="mono">--motion-slow</td><td>320ms</td><td>ease-in-out</td><td>modais, mudança de tela inteira</td></tr>
+          <tr><td class="mono">--motion-none</td><td>0ms</td><td>—</td><td><code>prefers-reduced-motion: reduce</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="sub-title"><span class="num">6.4</span>Raio de borda e traço</h3>
+      <table>
+        <thead><tr><th>Elemento</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Botões, inputs</td><td>4–5px</td></tr>
+          <tr><td>Cards, painéis</td><td>6px</td></tr>
+          <tr><td>Máximo permitido em qualquer componente</td><td>8px — nunca "pill" nem circular exceto avatares/dots</td></tr>
+          <tr><td>Bordas de tabela</td><td>1px sólido <code>#E5E7EB</code> (light) / <code>#2a3641</code> (dark) — sem bordas externas pesadas</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 7. TOM DE VOZ -->
+    <section class="tab" id="t7">
+      <h2 class="sec-title"><span class="num">7.</span>Tom de Voz</h2>
+      <p class="sec-sub">Como o Portal IA fala em contexto de engenharia de projetos</p>
+
+      <p class="lead">A voz do Portal IA é a de um <b>engenheiro sênior revisando o próprio
+      trabalho</b>: direta, tecnicamente precisa, sem floreio comercial. Toda comunicação — mensagens
+      de sistema, relatórios gerados, e-mails automáticos — deve soar como algo que um engenheiro
+      assinaria, não como marketing.</p>
+
+      <blockquote>"Terraplenagem: volume de corte 42.300 m³ excede o balanço de massa em 8,4%.
+      Recomenda-se revisão do traçado entre est. 120+00 e 145+00 antes de aprovar o orçamento."</blockquote>
+
+      <h3 class="sub-title"><span class="num">7.1</span>Princípios de escrita</h3>
+      <table>
+        <thead><tr><th>Princípio</th><th>Aplicação</th></tr></thead>
+        <tbody>
+          <tr><td><b>Precisão sobre entusiasmo</b></td><td>números e unidades sempre explícitos; nunca "muito melhor", sempre "23% mais rápido".</td></tr>
+          <tr><td><b>Causa antes de recomendação</b></td><td>explicar o porquê técnico antes de sugerir ação.</td></tr>
+          <tr><td><b>Terminologia normativa correta</b></td><td>usar nomenclatura de norma (DNIT, ABNT, SICRO) sem simplificar incorretamente.</td></tr>
+          <tr><td><b>Neutralidade em incerteza</b></td><td>declarar o que não foi verificado em vez de arredondar para uma resposta confiante.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="sub-title"><span class="num">7.2</span>Exemplos — fazer / evitar</h3>
+      <div class="voice-grid">
+        <div class="voice-col do">
+          <h4>Fazer</h4>
+          <ul>
+            <li>"Divergência de 6,2% entre o quantitativo do edital e o levantamento em campo."</li>
+            <li>"3 pendências bloqueiam a aprovação do GR-04: fundação, drenagem e cronograma."</li>
+            <li>"Dado não disponível na base SICRO local — verificar tabela vigente antes de orçar."</li>
+          </ul>
+        </div>
+        <div class="voice-col dont">
+          <h4>Evitar</h4>
+          <ul>
+            <li>"Ótimas notícias! O projeto está praticamente pronto! 🎉"</li>
+            <li>"Isso deve estar certo, parece razoável."</li>
+            <li>Adjetivos vazios ("robusto", "de ponta") sem métrica que os sustente.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title"><span class="num">7.3</span>Registro por canal</h3>
+      <table>
+        <thead><tr><th>Canal</th><th>Registro</th></tr></thead>
+        <tbody>
+          <tr><td>Relatórios técnicos / laudos</td><td>formal, terceira pessoa, cita norma e fonte</td></tr>
+          <tr><td>Notificações de sistema (Portal IA)</td><td>direto, imperativo curto: "Revisar antes de enviar."</td></tr>
+          <tr><td>E-mails automáticos a cliente</td><td>formal, sem gírias, sempre com próximo passo claro</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 8. FONTES & FICHA TÉCNICA -->
+    <section class="tab" id="t8">
+      <h2 class="sec-title"><span class="num">8.</span>Fontes &amp; Ficha Técnica</h2>
+      <p class="sec-sub">Rastreabilidade completa deste documento</p>
+
+      <h3 class="sub-title"><span class="num">8.1</span>Fontes e referências</h3>
+      <table>
+        <thead><tr><th>Referência</th><th>Uso neste guia</th></tr></thead>
+        <tbody>
+          <tr><td>CLAUDE.md — Manta Maestro (Agent Registry) v5.0.0</td><td>contexto do Portal IA e nomenclatura de agentes citada nos exemplos</td></tr>
+          <tr><td>Padrão visual Manta Associados (skill interna <code>padrao-manta</code>)</td><td>estrutura de abas, rastreabilidade, marca d'água e paleta institucional de referência (seção 3.3)</td></tr>
+          <tr><td>WCAG 2.1 — critério 1.4.3 (contraste mínimo)</td><td>tabela de contraste da seção 3.4</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="sub-title"><span class="num">8.2</span>Ficha técnica do documento</h3>
+      <div class="ficha">
+        <div class="center">FICHA TÉCNICA DO DOCUMENTO</div>
+        <div class="rule"></div>
+        Cliente:&nbsp;&nbsp;&nbsp;&nbsp;Interno<br>
+        Projeto:&nbsp;&nbsp;&nbsp;&nbsp;Portal IA — Manta Maestro<br>
+        Documento:&nbsp;&nbsp;Brand Guidelines — Portal IA<br>
+        Objeto:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guia de Marca — identidade visual do Portal IA<br>
+        Versão:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1.0 (criação inicial)
+        <div class="rule"></div>
+        Data Criação:&nbsp;27/07/2026<br>
+        Gerado por:&nbsp;&nbsp;Claude AI — Manta Associados<br>
+        Ferramenta:&nbsp;&nbsp;Claude AI
+        <div class="rule"></div>
+        Classificação:&nbsp;Interno<br>
+        ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MANTA-BRANDGUIDE-PORTALIA-20260727-01
+        <div class="rule"></div>
+        <div class="center">MANTA ASSOCIADOS</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="pagefoot">
+  <span>Manta Associados | Interno | Brand Guidelines — Portal IA</span>
+  <span>v1.0 · 27/07/2026 · Desenvolvido por Manta Associados</span>
+</footer>
+
+<script>
+  const METADATA = {
+    cliente: "Interno",
+    projeto: "Portal IA — Manta Maestro",
+    documento: "Brand Guidelines — Portal IA",
+    objeto: "Guia de Marca — identidade visual do Portal IA",
+    versao: "v1.0",
+    data_criacao: "2026-07-27",
+    gerado_por: "Claude AI — Manta Associados",
+    classificacao: "Interno",
+    id: "MANTA-BRANDGUIDE-PORTALIA-20260727-01"
+  };
+
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

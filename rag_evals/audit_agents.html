@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manta Maestro — Agent Audit Report v5.0</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: #1a1a1a; color: white; padding: 30px 20px; margin-bottom: 30px; border-radius: 8px; }
+        h1 { margin-bottom: 10px; }
+        .metadata { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .metadata-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 4px; }
+        .metadata-item strong { display: block; font-size: 0.9em; color: #aaa; }
+        .metadata-item span { display: block; font-size: 1.1em; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 30px 0; }
+        .summary-card { background: white; padding: 20px; border-radius: 8px; border-left: 4px solid; text-align: center; }
+        .summary-card.synced { border-left-color: #27ae60; }
+        .summary-card.drift { border-left-color: #e74c3c; }
+        .summary-card.warning { border-left-color: #f39c12; }
+        .summary-card .number { font-size: 2em; font-weight: bold; }
+        .summary-card .label { font-size: 0.9em; color: #666; margin-top: 5px; }
+        .table-wrapper { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 30px 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f9f9f9; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #eee; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        tr:last-child td { border-bottom: none; }
+        .status-synced { color: #27ae60; font-weight: 600; }
+        .status-drift { color: #e74c3c; font-weight: 600; }
+        .status-warning { color: #f39c12; font-weight: 600; }
+        .checksum { font-family: monospace; font-size: 0.85em; color: #666; }
+        .divergences { background: #fff3cd; padding: 8px 12px; border-radius: 4px; font-size: 0.9em; }
+        .divergence-item { margin: 4px 0; padding: 4px 0; }
+        .remediation { background: #d4edda; padding: 8px 12px; border-radius: 4px; font-size: 0.85em; font-family: monospace; color: #155724; }
+        footer { text-align: center; padding: 20px; color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Manta Maestro — Agent Audit Report v5.0</h1>
+        <div class="metadata">
+            <div class="metadata-item">
+                <strong>Report Generated</strong>
+                <span>2026-07-25T02:20:21.039705+00:00</span>
+            </div>
+            <div class="metadata-item">
+                <strong>CLAUDE.md Version</strong>
+                <span>v5.0</span>
+            </div>
+            <div class="metadata-item">
+                <strong>Agents Scanned</strong>
+                <span>5/20</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Audit Summary</h2>
+        <div class="summary-grid">
+            <div class="summary-card synced">
+                <div class="number">0</div>
+                <div class="label">Synced</div>
+            </div>
+            <div class="summary-card drift">
+                <div class="number">5</div>
+                <div class="label">Drift Detected</div>
+            </div>
+            <div class="summary-card warning">
+                <div class="number">0</div>
+                <div class="label">Not in Registry</div>
+            </div>
+            <div class="summary-card warning">
+                <div class="number">0</div>
+                <div class="label">Missing v5.0 Spec</div>
+            </div>
+        </div>
+
+        <h2>Agent Details</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Agent ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Model</th>
+                        <th>Divergences</th>
+                        <th>Checksum (MD5)</th>
+                        <th>Remediation</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td><code>agente-aeroportos</code></td>
+                        <td>agente-aeroportos</td>
+                        <td><span class="status-drift">drift</span></td>
+                        <td>sonnet</td>
+                        <td>
+                            <div class="divergences">
+                <div class="divergence-item">• CHECKSUM_MISMATCH (expected=a8e1f3c2, actual=b392e63c)</div>
+            </div>
+                        </td>
+                        <td><span class="checksum">b392e63c...</span></td>
+                        <td><div class="remediation">Run: python scripts/regenerate_skill.py --agent agente-aeroportos</div></td>
+                    </tr>
+
+                    <tr>
+                        <td><code>agente-barragens</code></td>
+                        <td>agente-barragens</td>
+                        <td><span class="status-drift">drift</span></td>
+                        <td>sonnet</td>
+                        <td>
+                            <div class="divergences">
+                <div class="divergence-item">• CHECKSUM_MISMATCH (expected=d3c4a2f5, actual=13c5e3ed)</div>
+            </div>
+                        </td>
+                        <td><span class="checksum">13c5e3ed...</span></td>
+                        <td><div class="remediation">Run: python scripts/regenerate_skill.py --agent agente-barragens</div></td>
+                    </tr>
+
+                    <tr>
+                        <td><code>agente-energia</code></td>
+                        <td>agente-energia</td>
+                        <td><span class="status-drift">drift</span></td>
+                        <td>sonnet</td>
+                        <td>
+                            <div class="divergences">
+                <div class="divergence-item">• CHECKSUM_MISMATCH (expected=e2b5c3a1, actual=d8ca1b2b)</div>
+            </div>
+                        </td>
+                        <td><span class="checksum">d8ca1b2b...</span></td>
+                        <td><div class="remediation">Run: python scripts/regenerate_skill.py --agent agente-energia</div></td>
+                    </tr>
+
+                    <tr>
+                        <td><code>agente-portos</code></td>
+                        <td>agente-portos</td>
+                        <td><span class="status-drift">drift</span></td>
+                        <td>sonnet</td>
+                        <td>
+                            <div class="divergences">
+                <div class="divergence-item">• CHECKSUM_MISMATCH (expected=b7d3e5a2, actual=de56705e)</div>
+            </div>
+                        </td>
+                        <td><span class="checksum">de56705e...</span></td>
+                        <td><div class="remediation">Run: python scripts/regenerate_skill.py --agent agente-portos</div></td>
+                    </tr>
+
+                    <tr>
+                        <td><code>agente-saneamento</code></td>
+                        <td>agente-saneamento</td>
+                        <td><span class="status-drift">drift</span></td>
+                        <td>sonnet</td>
+                        <td>
+                            <div class="divergences">
+                <div class="divergence-item">• CHECKSUM_MISMATCH (expected=f1a3d2b4, actual=3435f9cb)</div>
+            </div>
+                        </td>
+                        <td><span class="checksum">3435f9cb...</span></td>
+                        <td><div class="remediation">Run: python scripts/regenerate_skill.py --agent agente-saneamento</div></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>Generated by audit_agents.py v2 — Manta Maestro Agent Registry v5.0</p>
+    </footer>
+</body>
+</html>
