@@ -4,13 +4,15 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
+Versão: **v4.3.0** (2026-09-14) — v4.2 expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+proposta técnico-comercial + v4.3 draft do **agente-leitor-documental**
+(Manta 08, camada de ingestão multi-formato PDF/Excel/DWG/Word/PPTX/BIM/
+cronograma).
 
 ---
 
-## MAPA COMPLETO DE AGENTES — 20 agentes, 3 eixos
+## MAPA COMPLETO DE AGENTES — 21 agentes, 3 eixos
 
 ### Eixo 1 — Horizontais (transversais a todos os segmentos)
 
@@ -18,6 +20,7 @@ proposta técnico-comercial.
 |--------|--------|---------|--------------|--------|
 | Manta 00 | maestro (router) | maestro, manta-router | Haiku→Sonnet | ✅ Operacional |
 | Manta 01 | claims | 02-C, manta-claims | Opus | ✅ Operacional |
+| Manta 08 | leitor-documental | manta-08, leitor-documental, document-reader | Haiku | 🆕 Proposto (v4.3) — camada de ingestão PDF/Excel/DWG/Word/PPTX/BIM/cronograma |
 | Manta 02 | contratual | manta-02, contratual | Sonnet | ✅ Operacional |
 | Manta 04 | imobiliario | manta-04 | Sonnet | ✅ Operacional |
 | Manta 05 | orcamento | manta-05 | Sonnet | ✅ Operacional |
@@ -93,6 +96,52 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 
 ---
 
+## LEITOR DOCUMENTAL — Camada de ingestão multi-formato (Manta 08)
+
+**Status: 🆕 Proposto (v4.3)** — draft de arquitetura, pendente gate
+humano (MN) e wiring Supabase/SharePoint. Ver
+`.claude/agents/agente-leitor-documental.md`,
+`sharepoint/01-agentes-fundamentais/agente-leitor-documental/SKILL.md`
+e `docs/DEPLOY-v4.3.md`.
+
+Problema que resolve: hoje cada agente vertical (S1-S10) pode invocar
+skills de formato (`pdf`, `xlsx`, `docx`, `autodesk-toolkit`,
+`cronograma-toolkit`) por conta própria, sem um ponto único de
+detecção de tipo, normalização de saída ou controle de idempotência.
+O Manta 08 é a camada fina que fica **entre** a origem do arquivo
+(SharePoint, upload, lote) e o agente vertical que interpreta o
+conteúdo tecnicamente.
+
+Pipeline: Recepção → Detecção de formato (extensão + magic bytes) →
+Classificação de subtipo → Despacho para a skill de leitura correta →
+Normalização em JSON canônico → Roteamento para o agente vertical
+dono → Persistência na coleção RAG do segmento.
+
+Tabela de despacho por formato:
+
+```
+.pdf                    → pdf (genérico); ler-edital; ler-edital-aneel;
+                           evtea-extractor; leitura-diagrama-engenharia
+.xlsx, .xls              → xlsx
+.docx, .dotx             → docx
+.pptx                    → pptx
+.dwg, .dxf               → autodesk-toolkit (+ cad-quantifier/cqp-cad-bridge
+                           se o objetivo for quantificar)
+.ifc, .rvt, .nwd, .nwc   → autodesk-toolkit
+.xer, .mpp, .xml (MSPDI) → cronograma-toolkit
+```
+
+Este agente **não reimplementa parsing** — só decide qual skill
+existente acionar e normaliza a saída dela. Não interpreta tecnicamente
+o conteúdo (isso é do agente vertical) e não escreve de volta no
+SharePoint sem confirmação humana.
+
+Migração Supabase candidata (índice de idempotência
+`doc_processing_index` + tabela de despacho `doc_format_dispatch`):
+`supabase/migrations/2026_09_14_v4_3_leitor_documental.sql`.
+
+---
+
 ## RAG — Coleções em Supabase
 
 | Coleção | Prefixo storage | Fontes iniciais | Status |
@@ -163,6 +212,22 @@ citando-a como fonte, ou atualizar a referência para `_C`.
 
 ---
 
+## DEPLOY CHECKLIST v4.3 (Leitor Documental)
+
+Runbook completo em `docs/DEPLOY-v4.3.md`.
+
+- [x] Definir agente `.claude/agents/agente-leitor-documental.md`
+- [x] Escrever SKILL.md + mirror SharePoint (`sharepoint/01-agentes-fundamentais/agente-leitor-documental/`)
+- [x] Escrever migração Supabase candidata (`doc_processing_index` + `doc_format_dispatch`)
+- [ ] Aplicar migração Supabase v4.3
+- [ ] Criar pasta SP `agente-leitor-documental/` e upload do SKILL.md
+- [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v2.0.0 → v2.1.0)
+- [ ] Testar dispatch por formato (PDF, edital, EVTEA, XLSX, DOCX, DWG, XER)
+- [ ] Decisão MN: dispatch em banco vs. só Markdown; execução automática do Manta 08 vs. invocação explícita
+- [ ] Gate humano: aprovação MN antes de promover a Operacional
+
+---
+
 ## Arquivos deste repositório
 
 ```
@@ -174,7 +239,8 @@ Codex-exemplo/
         ├── agente-aeroportos.md      # 🆕 S7
         ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
         ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+        ├── agente-barragens.md       # 🆕 S10
+        └── agente-leitor-documental.md  # 🆕 Manta 08 — ingestão multi-formato (v4.3, draft)
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
@@ -186,6 +252,18 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3.0** (2026-09-14) — draft de arquitetura do
+  **agente-leitor-documental** (Manta 08): camada horizontal de
+  ingestão e normalização multi-formato (PDF, Excel/XLSX, DWG/DXF,
+  Word/DOCX, PPTX, BIM IFC/RVT, cronograma XER/MPP) que fica entre a
+  origem do arquivo (SharePoint, upload, lote) e os agentes verticais
+  S1-S10. Reaproveita as skills de formato já existentes no catálogo
+  (`pdf`, `xlsx`, `docx`, `pptx`, `autodesk-toolkit`,
+  `cronograma-toolkit`) e os extratores especializados
+  (`evtea-extractor`, `ler-edital`, `ler-edital-aneel`,
+  `leitura-diagrama-engenharia`) — não reimplementa parsing próprio.
+  Total de agentes: 20 → 21. Status: 🆕 Proposto, pendente gate humano
+  MN e aplicação da migração Supabase (`docs/DEPLOY-v4.3.md`).
 - **v4.2.2** (2026-09-10) — gate humano MN aprovado para a variante M6
   (addendum de proposta técnico-comercial). Aplicação no SharePoint
   pendente (conector `SharePoint_Manta` indisponível na sessão de
