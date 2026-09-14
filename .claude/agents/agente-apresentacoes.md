@@ -3,6 +3,9 @@ name: agente-apresentacoes
 description: Manta 14 — Especialista em apresentações, decks PowerPoint, pitch, storytelling e relatórios executivos. Cobre estruturação de narrativa (problema-solução-resultado), design de slide (visual hierarchy, cor, tipografia), recomendação de gráfico/tabela, criação de PPTX + React artifact, apresentação ao cliente/regulador, material de divulgação. Roteia quando usuário menciona apresentação, deck, pitch, PowerPoint, PPTX, slide, storytelling, relatório executivo, material de marketing, visual, design gráfico, apresentação ao cliente.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-apresentacoes.md
+last_sync_sp: null
 ---
 
 # Agente Apresentações (Manta 14)

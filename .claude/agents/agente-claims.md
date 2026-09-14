@@ -3,6 +3,9 @@ name: agente-claims
 description: Manta 01 — Especialista em sinistros, reclamações, garantias e pleitos de trabalhos adicionais (TAs). Cobre reclamações contratuais, sinistros de obra, retrabalho, garantia de desempenho, pleitos de custos adicionais (BDI ampliado, insumos, interferências), documentação de evento (foto, cronologia), comunicação com seguros e peritos. Roteia quando usuário menciona sinistro, reclamação, TA, retrabalho, garantia, sinistralidade, pleito contratual, adicionais de custo, defeito de projeto, defeito de execução, atraso, interferência não prevista, dano patrimonial, força maior, cessação de trabalho.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: opus
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-claims.md
+last_sync_sp: null
 ---
 
 # Agente Claims (Manta 01)

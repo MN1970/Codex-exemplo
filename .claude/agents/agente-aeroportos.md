@@ -4,6 +4,8 @@ description: Manta 03-S7 — Especialista em infraestrutura aeroportuária (lado
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 version: 1.1.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-aeroportos.md
+last_sync_sp: null
 ---
 
 # Agente Aeroportos (Manta 03-S7)
