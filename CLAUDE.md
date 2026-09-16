@@ -10,6 +10,41 @@ proposta técnico-comercial.
 
 ---
 
+## ⚠️ RECONCILIACAO — este registro está desatualizado
+
+**Levantamento de 2026-09-16:** o mapa de agentes abaixo (v4.2.1,
+`Manta 00-16` horizontais + `03-S1..S10` verticais) **não reflete mais
+o sistema operacional real.** O SharePoint — declarado como fonte
+autoritativa pelo próprio playbook interno (`F9-meta`, "fonte de
+verdade sobre a própria infraestrutura", "SharePoint é autoritativo,
+não o cache local") — já está na **v6.1.0** desde 2026-08-01, com
+taxonomia unificada **S1-S14 + A1-A11 + F1-F10 + D01-D23**. Ver a cópia
+fiel em `sharepoint/00-arquitetura/ARQUITETURA-AGENTES-IA-v6.1.0.md`.
+
+Pontos concretos da divergência:
+- O prefixo `Manta 03-S{n}` usado neste arquivo foi **aposentado** na
+  v6.1.0. Os códigos dos 5 agentes deste repo mudaram: Portos
+  `S6→S7`, Aeroportos `S7→S8`, Saneamento `S8→S9`, Energia `S9→S10`,
+  Barragens `S10→S11` (a renumeração **não foi aplicada** aos arquivos
+  `.claude/agents/*.md` deste repo nesta rodada — só documentada aqui).
+- Os commits de reconciliação citados na v6.1.0 (`ad98925`, `48412d1`)
+  **não existem no histórico deste repositório** — foram aplicados em
+  outro lugar (provável candidato: o repo espelho `manta-hub`, fora do
+  escopo de sessões recentes) ou só localmente.
+- Existe um serviço transversal **F4-Extração** (leitura de
+  PDF/DOCX/XLSX/DWG-DXF/PPTX/imagens em JSON canônico, já operacional
+  desde 2026-07-09) que cobre o que qualquer novo "agente leitor de
+  documentos" precisaria fazer — ver
+  `sharepoint/03-funcionais/F4-extracao/SKILL.md` (cópia fiel). Não
+  reinventar.
+
+**Não editar a tabela de agentes abaixo como se fosse a verdade atual
+sem antes confirmar contra o SharePoint.** Esta nota substitui uma
+tentativa anterior (revertida) de adicionar um "Manta 08 —
+leitor-documental" que duplicava o F4-Extração.
+
+---
+
 ## MAPA COMPLETO DE AGENTES — 20 agentes, 3 eixos
 
 ### Eixo 1 — Horizontais (transversais a todos os segmentos)
