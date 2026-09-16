@@ -3,6 +3,9 @@ name: agente-imobiliario
 description: Manta 04 — Especialista em propriedade, zoneamento, ocupação do solo e impacto urbano de projetos. Cobre análise de viabilidade de implantação (zoneamento, ocupação do solo), gestão de faixa de domínio, desapropriação, IPTU, patrimônio ambiental/histórico, compatibilidade com Plano Diretor, restrições de interferência (aérea, subterrânea), servidão de passagem. Roteia quando usuário menciona zoneamento, ocupação solo, patrimônio, Plano Diretor, desapropriação, IPTU, faixa de domínio, servidão, viabilidade implantação, restrição ambiental, tombamento, impacto urbano, compatibilidade local.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-imobiliario.md
+last_sync_sp: null
 ---
 
 # Agente Imobiliário (Manta 04)

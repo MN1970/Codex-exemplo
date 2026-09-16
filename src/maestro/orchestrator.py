@@ -11,7 +11,16 @@ from datetime import datetime
 from .detector import ComplexityDetector, DetectionResult
 from .queue_executor import QueueExecutor, Task, TaskResult
 from .consensus import ConsensusEngine, Candidate, Vote, ConsensusResult
-from .parser import WorkflowDSL, Phase
+from .parser import WorkflowDSL, Phase, AgentDeclaration
+from .model_fallback import ModelTierPolicy, FallbackDecision
+
+# D3 (ADR-D1-D4): agentes cujo frontmatter `.claude/agents/*.md` declara
+# `model: opus` — confirmado em 2026-09-13 lendo o frontmatter real
+# (agente-modelagem.md usa `sonnet`, não entra aqui). Passado como
+# config explícita ao ModelTierPolicy em vez de reler os .md em
+# runtime; manter sincronizado com o frontmatter é responsabilidade de
+# D2 (versionamento de agentes).
+DEFAULT_OPUS_REQUIRED_AGENTS = ["agente-claims", "agente-advisory", "agente-arquiteto-ia"]
 
 
 @dataclass
@@ -37,6 +46,10 @@ class WorkflowExecution:
     # Auditoria
     errors: List[str] = None
 
+    # D3 — decisões de fallback de tier de modelo, uma por agente
+    # invocado no fan-out (ver ModelTierPolicy em model_fallback.py).
+    model_fallback_decisions: Dict[str, FallbackDecision] = None
+
     def __post_init__(self):
         if self.phase_1_fan_out_results is None:
             self.phase_1_fan_out_results = {}
@@ -44,6 +57,8 @@ class WorkflowExecution:
             self.phase_2_consensus_results = {}
         if self.errors is None:
             self.errors = []
+        if self.model_fallback_decisions is None:
+            self.model_fallback_decisions = {}
         if self.started_at is None:
             self.started_at = datetime.utcnow().isoformat()
 
@@ -62,7 +77,8 @@ class MaestroOrchestrator:
     def __init__(
         self,
         escalation_email: Optional[str] = None,
-        token_budget: Optional[int] = None
+        token_budget: Optional[int] = None,
+        opus_required_agents: Optional[List[str]] = None
     ):
         """
         Inicializa orquestrador.
@@ -70,10 +86,16 @@ class MaestroOrchestrator:
         Args:
             escalation_email: Email para escalações (default: maestro@manta.local)
             token_budget: Budget de tokens total (calculado dinamicamente se None)
+            opus_required_agents: slugs de agente com `model: opus` no
+                frontmatter (D3 — sem fallback automático de tier).
+                Default: agente-claims, agente-advisory, agente-arquiteto-ia.
         """
         self.detector = ComplexityDetector()
         self.queue_executor = QueueExecutor(escalation_email)
         self.consensus_engine = ConsensusEngine(escalation_email)
+        self.model_tier_policy = ModelTierPolicy(
+            opus_required_agents=opus_required_agents or DEFAULT_OPUS_REQUIRED_AGENTS
+        )
         self.escalation_email = escalation_email or "maestro@manta.local"
         self.token_budget = token_budget
 
@@ -110,7 +132,9 @@ class MaestroOrchestrator:
                 print(f"\n[MAESTRO] Fase 1b: Fan-out ({len(workflow.phase_1_fan_out.agents)} agentes)")
                 fan_out_results = await self._execute_fan_out(
                     workflow.phase_1_fan_out,
-                    detection
+                    detection,
+                    agents=workflow.agents,
+                    execution=execution
                 )
                 execution.phase_1_fan_out_results = fan_out_results
 
@@ -146,7 +170,9 @@ class MaestroOrchestrator:
     async def _execute_fan_out(
         self,
         fan_out_phase,
-        detection: DetectionResult
+        detection: DetectionResult,
+        agents: Optional[List[AgentDeclaration]] = None,
+        execution: Optional["WorkflowExecution"] = None
     ) -> Dict[str, TaskResult]:
         """
         Executa Phase 1: Fan-out (invocar 8-16 agentes em paralelo).
@@ -154,6 +180,11 @@ class MaestroOrchestrator:
         Args:
             fan_out_phase: FanOutPhase com agentes e prompts
             detection: Resultado da detecção
+            agents: AgentDeclaration do workflow (para resolver `tier`
+                declarado por agente — D3). Opcional, mantém
+                compatibilidade com chamadas existentes sem esse dado.
+            execution: WorkflowExecution em andamento, para registrar as
+                decisões de fallback de tier (D3). Opcional.
 
         Returns:
             Dict {agent_name: TaskResult}
@@ -168,6 +199,8 @@ class MaestroOrchestrator:
         for agent in agents_to_invoke:
             print(f"  - {agent}")
 
+        tier_by_agent = {a.name: a.tier for a in (agents or [])}
+
         # Criar tarefas
         tasks = []
         for i, agent_name in enumerate(agents_to_invoke):
@@ -175,6 +208,24 @@ class MaestroOrchestrator:
                 agent_name,
                 f"Analisar projeto conforme especialidade: {agent_name}"
             )
+
+            # D3 — resolver tier de modelo antes de despachar (fallback
+            # Haiku<->Sonnet livre; Opus para agentes críticos nunca
+            # degrada automaticamente — ver model_fallback.py).
+            tier_requested = tier_by_agent.get(agent_name, "sonnet")
+            fallback_decision = await self.model_tier_policy.resolve(
+                agent_slug=agent_name,
+                tier_requested=tier_requested
+            )
+            if execution is not None:
+                execution.model_fallback_decisions[agent_name] = fallback_decision
+
+            if fallback_decision.status == "awaiting_human_decision":
+                print(f"[D3] ⏸ {agent_name}: aguardando decisão humana "
+                      f"({fallback_decision.reason})")
+            elif fallback_decision.status == "degraded":
+                print(f"[D3] ⚠ {agent_name}: tier degradado "
+                      f"{fallback_decision.tier_requested} → {fallback_decision.tier_used}")
 
             task = Task(
                 task_id=f"task-{i+1}",
@@ -351,6 +402,16 @@ class MaestroOrchestrator:
                 f"  Sections: {execution.phase_3_aggregate_output.get('sections', 0)}",
                 f"  Path: {execution.phase_3_aggregate_output.get('path', 'N/A')}",
             ])
+
+        if execution.model_fallback_decisions:
+            degraded_or_waiting = [
+                d for d in execution.model_fallback_decisions.values()
+                if d.status != "ok"
+            ]
+            if degraded_or_waiting:
+                lines.extend(["", "D3: Model tier fallback"])
+                for d in degraded_or_waiting:
+                    lines.append(f"  - {d.agent_slug}: {d.status} ({d.reason})")
 
         if execution.errors:
             lines.append(f"\nERRORS: {len(execution.errors)}")

@@ -4,6 +4,8 @@ description: Manta 03-S9 — Especialista em setor elétrico (geração, transmi
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 version: 1.1.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-energia.md
+last_sync_sp: null
 ---
 
 # Agente Energia (Manta 03-S9)

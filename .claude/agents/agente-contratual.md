@@ -3,6 +3,9 @@ name: agente-contratual
 description: Manta 02 — Especialista em contratos, regulação de infraestrutura e licitação. Cobre RDC, concessões, PPP, cláusulas comerciais (preço fixo vs. reajuste), cláusulas de risco (força maior, revisão de preços), marcos regulatórios (Lei 8.666, Lei 14.133, Lei 11.079 PPP), estrutura de licitação, análise de editais. Roteia quando usuário menciona contrato, RDC, concessão, PPP, licitação, edital, cláusula, reajuste, revisão de preços, força maior, lei 8.666, lei 14.133, lei 11.079, termo aditivo, rescisão contratual.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
+version: 1.0.0
+source_of_truth: MN1970/Codex-exemplo@.claude/agents/agente-contratual.md
+last_sync_sp: null
 ---
 
 # Agente Contratual (Manta 02)
