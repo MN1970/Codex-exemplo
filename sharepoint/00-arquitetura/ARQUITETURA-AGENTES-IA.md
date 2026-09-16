@@ -2,12 +2,11 @@
 
 **Sistema Manta Maestro — Arquitetura de Agentes IA**
 
-- **Versão**: 2.1.0 (draft)
-- **Data**: 2026-09-14
+- **Versão**: 2.0.0
+- **Data**: 2026-07-05
 - **Autor**: Manta Associados
-- **Substitui**: v2.0.0 (2026-07-05)
-- **Ticket**: MNT-2026-LEITOR-DOCUMENTAL (draft — v2.0.0 permanece
-  vigente até gate humano MN aprovar esta revisão)
+- **Substitui**: v1.0.0 (2026-06-24)
+- **Ticket**: MNT-2026-UPGRADE-AGENTS-S6S10
 
 ## Sumário
 
@@ -59,7 +58,6 @@ disciplina não-técnica ou meta-função.
 | Manta 14 | apresentacoes | manta-14-pptx | Sonnet |
 | Manta 15 | advisory | manta-15, advisory | Sonnet/Opus |
 | Manta 16 | arquiteto-ia | manta-15-arq | Opus |
-| **Manta 08** | **leitor-documental** | manta-08, leitor-documental | Haiku | 🆕 **v2.1.0 draft** — ingestão multi-formato (PDF/Excel/DWG/Word/PPTX/BIM/cronograma), pendente gate humano |
 
 ### Eixo 2 — Verticais por segmento (9 agentes operacionais)
 
@@ -112,11 +110,7 @@ Todos os agentes verticais suportam as 8 fases via Q2 do intake:
 │ C1 — Skills reutilizáveis                                  │
 │      SKILL.md registrados no catálogo, invocáveis por      │
 │      qualquer agente. Ex.: aluci-guard, consist-guard,     │
-│      padrao-manta, mk-manta, cad-quantifier, pdf, xlsx,    │
-│      docx, autodesk-toolkit, cronograma-toolkit.           │
-│      Manta 08 (leitor-documental, 🆕 v2.1.0 draft) orquestra│
-│      estas skills de formato antes do agente vertical (C3) │
-│      assumir — ver seção "LEITOR DOCUMENTAL" no CLAUDE.md. │
+│      padrao-manta, mk-manta, cad-quantifier.               │
 ├────────────────────────────────────────────────────────────┤
 │ C0 — Dados                                                 │
 │      Supabase (RAG chunks + routing tables), SharePoint    │
@@ -253,13 +247,6 @@ Usuário ─────► Maestro (Manta 00)
                    │
                    │ 1. Triagem (Haiku): identifica segmento (Q1),
                    │    fase (Q2), objetivo (Q3), formato dados (Q4)
-                   │
-                   │ 1.5 [🆕 v2.1.0 draft] Se houver arquivo anexado,
-                   │     Manta 08 (leitor-documental) detecta formato,
-                   │     despacha para a skill de leitura (pdf, xlsx,
-                   │     docx, autodesk-toolkit, cronograma-toolkit) e
-                   │     normaliza em JSON canônico antes do próximo
-                   │     passo.
                    ▼
               Agente vertical (ex.: agente-saneamento)
                    │
@@ -280,25 +267,6 @@ Usuário ─────► Maestro (Manta 00)
                    ▼
               Usuário ← resposta com fontes, quantitativos, risco
 ```
-
-## 10a. Changelog v2.0 → v2.1 (draft)
-
-### Adicionado
-- **Manta 08 — agente-leitor-documental**: camada horizontal de
-  ingestão e normalização multi-formato (PDF, Excel/XLSX, DWG/DXF,
-  Word/DOCX, PPTX, BIM IFC/RVT, cronograma XER/MPP). Fica entre a
-  origem do arquivo e o agente vertical (C3), na camada C1/C2.
-- Tabela de despacho por formato → skill (`doc_format_dispatch`
-  candidato em Supabase).
-- Índice de idempotência de processamento (`doc_processing_index`
-  candidato em Supabase).
-
-### Status
-- 🆕 **Draft — pendente gate humano MN.** Não reimplementa nenhuma
-  skill de leitura existente; só formaliza um pipeline de despacho e
-  normalização que hoje é implícito em cada agente vertical.
-- Ver `docs/DEPLOY-v4.3.md` e `CLAUDE.md` (seção "LEITOR DOCUMENTAL")
-  no repo `Codex-exemplo`.
 
 ## 10. Changelog v1.0 → v2.0
 
@@ -332,8 +300,6 @@ Usuário ─────► Maestro (Manta 00)
   `claude/manta-agents-s6-s10-7qklcw`).
 - **Mirror operacional**: `viniciusmagnos/manta-hub` (mesma branch,
   PR #3).
-- **v2.1.0 draft (leitor-documental)**: `MN1970/Codex-exemplo` branch/PR
-  `claude/pdf-excel-dwg-reader-galg55`.
 - **Registro completo dos 20 agentes**: `CLAUDE.md` no repo mestre.
 - **Definições canônicas dos verticais**: `.claude/agents/*.md` no repo mestre.
 - **SKILL.md em SP**: `Documentos Compartilhados/04_IA/Manta-Maestro/

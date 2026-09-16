@@ -3,16 +3,12 @@
 Repositório de referência do sistema **Manta Maestro** de agentes IA da
 Manta Associados. Versiona:
 
-- `CLAUDE.md` — registro mestre dos 21 agentes (horizontais + verticais
+- `CLAUDE.md` — registro mestre dos 20 agentes (horizontais + verticais
   por segmento + ciclo de vida).
 - `.claude/agents/*.md` — definições canônicas dos agentes verticais
-  novos (S6–S10 adicionados na v4.2) e do agente horizontal
-  leitor-documental (Manta 08, draft v4.3).
+  novos (S6–S10 adicionados na v4.2).
 - `docs/MODELO-MESTRE-PROPOSTA.md` — análise e recomendação sobre modelo
   mestre de proposta técnico-comercial (v4.2.1).
-- `docs/DEPLOY-v4.3.md` — runbook do draft de arquitetura do
-  leitor-documental (ingestão multi-formato PDF/Excel/DWG/Word/PPTX/
-  BIM/cronograma).
 
 ## Estrutura
 
@@ -25,14 +21,12 @@ Manta Associados. Versiona:
         ├── agente-aeroportos.md      # S7
         ├── agente-saneamento.md      # S8 — PRIORIDADE AySA
         ├── agente-energia.md         # S9 — ANEEL/State Grid
-        ├── agente-barragens.md       # S10
-        └── agente-leitor-documental.md  # Manta 08 — ingestão multi-formato (draft v4.3)
+        └── agente-barragens.md       # S10
 ```
 
 ## Versão atual
 
-**v4.3.0** — 2026-09-14 — draft do agente-leitor-documental (v4.3),
-sobre a expansão S6–S10 (v4.2) + modelo mestre de proposta (v4.2.x).
+**v4.2.1** — 2026-09-01 — expansão S6–S10 (v4.2) + modelo mestre de proposta.
 
 ## Como usar
 

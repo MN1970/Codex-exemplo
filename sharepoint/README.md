@@ -12,8 +12,7 @@ mnassociados.sharepoint.com/sites/Engenharia
                   ├── agente-aeroportos/   ← este mirror
                   ├── agente-saneamento/   ← este mirror
                   ├── agente-energia/      ← este mirror
-                  ├── agente-barragens/    ← este mirror
-                  └── agente-leitor-documental/  ← este mirror (draft v4.3)
+                  └── agente-barragens/    ← este mirror
 ```
 
 Cada subpasta aqui contém o `SKILL.md` pronto para upload. Ao concluir
