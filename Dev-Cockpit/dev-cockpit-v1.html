@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dev Cockpit — Manta Maestro (Codex-exemplo)</title>
+<style>
+  :root{
+    --bg:#f7f6f4; --surface:#ffffff; --border:#e2ded8; --text:#231f1c; --muted:#6b645c;
+    --accent:#8c3a2b; --accent-2:#5b2a3d; --ok:#3a7a4e; --warn:#b8862c; --crit:#b3402f;
+    --chip-bg:#f0ece6; --code-bg:#f2efe9; --shadow:0 1px 2px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1c1a18; --surface:#262320; --border:#3a352f; --text:#ece7e0; --muted:#a79d90;
+      --accent:#e08a6f; --accent-2:#d98fae; --ok:#6fbf85; --warn:#e0b25c; --crit:#e0796a;
+      --chip-bg:#332f2a; --code-bg:#231f1c; --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5}
+  header{padding:20px 24px 12px;border-bottom:1px solid var(--border)}
+  header h1{margin:0 0 4px;font-size:19px}
+  header p{margin:0;color:var(--muted);font-size:13px}
+  .meta-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--muted)}
+  .meta-row b{color:var(--text)}
+  nav.tabs{display:flex;gap:4px;padding:0 24px;border-bottom:1px solid var(--border);overflow-x:auto;background:var(--surface)}
+  nav.tabs button{appearance:none;border:none;background:none;padding:12px 14px;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  nav.tabs button.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+  main{padding:20px 24px 60px;max-width:1180px;margin:0 auto}
+  .panel{display:none}
+  .panel.active{display:block}
+  h2{font-size:15px;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+  .badge.ok{background:rgba(58,122,78,.15);color:var(--ok)}
+  .badge.warn{background:rgba(184,134,44,.15);color:var(--warn)}
+  .badge.crit{background:rgba(179,64,47,.15);color:var(--crit)}
+  .badge.muted{background:var(--chip-bg);color:var(--muted)}
+  table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:nth-child(even) td{background:rgba(0,0,0,.015)}
+  th{background:var(--chip-bg);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 6px;font-size:13.5px}
+  .card p{margin:0 0 8px;color:var(--muted);font-size:12.5px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+  .progress{height:6px;background:var(--chip-bg);border-radius:3px;overflow:hidden;margin:6px 0}
+  .progress > div{height:100%;background:var(--accent)}
+  textarea.notes{width:100%;min-height:44px;border:1px solid var(--border);border-radius:6px;background:var(--code-bg);color:var(--text);padding:6px 8px;font-size:12px;font-family:inherit;resize:vertical}
+  code{background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:12px}
+  .suggest-panel{background:var(--surface);border:1px dashed var(--accent);border-radius:10px;padding:12px 14px;margin-bottom:16px}
+  .suggest-panel h3{margin:0 0 8px;font-size:13px;color:var(--accent)}
+  .suggest-item{padding:8px 0;border-top:1px solid var(--border)}
+  .suggest-item:first-child{border-top:none}
+  .suggest-item .tgt{font-weight:600;font-size:12.5px}
+  .suggest-item .why{color:var(--muted);font-size:12px}
+  svg{width:100%;height:auto;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+  .node-rect{fill:var(--surface);stroke:var(--border);stroke-width:1.4;cursor:pointer}
+  .node-rect:hover{stroke:var(--accent)}
+  .node-label{font-size:11px;fill:var(--text);pointer-events:none}
+  .edge{stroke:var(--muted);stroke-width:1.3;fill:none;marker-end:url(#arrow)}
+  .detail{margin-top:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:12.5px;display:none}
+  .detail.show{display:block}
+  .todo-empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:8px}
+  .filters{display:flex;gap:8px;margin-bottom:12px}
+  .filters button{border:1px solid var(--border);background:var(--surface);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--text)}
+  .filters button.on{border-color:var(--accent);color:var(--accent)}
+  footer{padding:16px 24px;color:var(--muted);font-size:11px;border-top:1px solid var(--border)}
+  .count-badge{background:var(--accent);color:#fff;border-radius:9px;padding:0 6px;font-size:10px;margin-left:6px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧭 Dev Cockpit — Manta Maestro (Codex-exemplo)</h1>
+  <p>Gerado pela varredura real do repositório · Fase 1 (Cockpit local) · nenhum dado fictício</p>
+  <div class="meta-row" id="metaRow"></div>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+<main id="main"></main>
+<footer>Dev-Cockpit/dev-cockpit-v1.html · gerado por PROMPT — Dev Cockpit Generator v3.0 · estado editável fica em localStorage do seu navegador</footer>
+
+<script id="data-model" type="application/json">
+{
+  "meta": {
+    "projeto": "Codex-exemplo — Manta Maestro (Agent Registry)",
+    "stack": "indefinida (registro de agentes IA + documentação; sem app executável detectado)",
+    "gerado_em": "2026-09-15",
+    "formato": "html",
+    "versao": "dev-cockpit-v1.html"
+  },
+  "workflow": {
+    "nodes": [
+      { "id": "maestro", "nome": "Manta 00 — Maestro (Router)", "descricao": "Roteador Q1 do intake; decide qual agente vertical responde com base nas regras if-then do CLAUDE.md.", "tecnologias": ["Claude Code", "Regras if-then (CLAUDE.md)"], "inputs": ["Prompt do usuário (Q1)"], "outputs": ["Agente vertical selecionado"] },
+      { "id": "portos", "nome": "Manta 03-S6 — agente-portos", "descricao": "Especialista em portos/hidrovias; ativado por porto|ANTAQ|dragagem|berço|calado|contêiner.", "tecnologias": [".claude/agents/agente-portos.md"], "inputs": ["Rota do Maestro"], "outputs": ["Resposta técnica", "Query RAG (coleção portos)"] },
+      { "id": "aeroportos", "nome": "Manta 03-S7 — agente-aeroportos", "descricao": "Especialista aeroportuário; ativado por aeroporto|pista|ANAC|ICAO|TPS|TECA.", "tecnologias": [".claude/agents/agente-aeroportos.md"], "inputs": ["Rota do Maestro"], "outputs": ["Resposta técnica", "Query RAG (coleção aeroportos)"] },
+      { "id": "saneamento", "nome": "Manta 03-S8 — agente-saneamento", "descricao": "Prioridade AySA; ativado por saneamento|ETA|ETE|adutora|esgoto|SNIS.", "tecnologias": [".claude/agents/agente-saneamento.md"], "inputs": ["Rota do Maestro"], "outputs": ["Resposta técnica", "Query RAG (coleção saneamento)"] },
+      { "id": "energia", "nome": "Manta 03-S9 — agente-energia", "descricao": "ANEEL/State Grid; ativado por transmissão|LT|subestação|ANEEL|ONS|EPE.", "tecnologias": [".claude/agents/agente-energia.md"], "inputs": ["Rota do Maestro"], "outputs": ["Resposta técnica", "Query RAG (coleção energia)"] },
+      { "id": "barragens", "nome": "Manta 03-S10 — agente-barragens", "descricao": "Barragens/rejeitos; ativado por barragem|vertedouro|CFRD|ICOLD|CBDB.", "tecnologias": [".claude/agents/agente-barragens.md"], "inputs": ["Rota do Maestro"], "outputs": ["Resposta técnica", "Query RAG (coleção barragens)"] },
+      { "id": "rag", "nome": "RAG — Supabase pgvector", "descricao": "5 coleções (san:/ene:/por:/aer:/bar:) definidas no CLAUDE.md; migration SQL criada em supabase/migrations/.", "tecnologias": ["Supabase", "pgvector", "SQL migration"], "inputs": ["Query dos 5 agentes verticais"], "outputs": ["Chunks de fontes técnicas (SNIS, ANEEL, ANTAQ, ANAC, ICOLD...)"] },
+      { "id": "sharepoint", "nome": "SharePoint — Routing & Storage", "descricao": "sp_agent_routing mapeia agente → pasta SP; checklist indica que as 5 regras e as pastas ainda não foram criadas.", "tecnologias": ["SharePoint_Manta (MCP)", "sp_agent_routing"], "inputs": ["Documentos por segmento"], "outputs": ["Arquivos roteados por padrão de pasta"] }
+    ],
+    "edges": [
+      {"de":"maestro","para":"portos"}, {"de":"maestro","para":"aeroportos"}, {"de":"maestro","para":"saneamento"},
+      {"de":"maestro","para":"energia"}, {"de":"maestro","para":"barragens"},
+      {"de":"portos","para":"rag"}, {"de":"aeroportos","para":"rag"}, {"de":"saneamento","para":"rag"},
+      {"de":"energia","para":"rag"}, {"de":"barragens","para":"rag"},
+      {"de":"portos","para":"sharepoint"}, {"de":"aeroportos","para":"sharepoint"}, {"de":"saneamento","para":"sharepoint"},
+      {"de":"energia","para":"sharepoint"}, {"de":"barragens","para":"sharepoint"}
+    ]
+  },
+  "pipeline": [
+    { "id":"p1","nome":"5 agentes .md em .claude/agents/","descricao":"Definições dos agentes verticais S6–S10 presentes no repo.","progresso":100,"status":"funcional","prioridade":"alta","notas":"","refs":{"workflow":["portos","aeroportos","saneamento","energia","barragens"],"stack":[]} },
+    { "id":"p2","nome":"Patch no CLAUDE.md master","descricao":"Seção de agentes e routing Q1 atualizada com os 5 novos verticais.","progresso":100,"status":"funcional","prioridade":"alta","notas":"","refs":{"workflow":["maestro"],"stack":[]} },
+    { "id":"p3","nome":"Coleções RAG em Supabase (rag_chunks)","descricao":"Migration SQL existe (supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql); checklist do CLAUDE.md marca a criação das 5 coleções como pendente.","progresso":50,"status":"em desenvolvimento","prioridade":"alta","notas":"","refs":{"workflow":["rag"],"stack":["banco"]} },
+    { "id":"p4","nome":"Routing rules em sp_agent_routing","descricao":"Pendente conforme Deploy Checklist v4.2.","progresso":0,"status":"planejado","prioridade":"media","notas":"","refs":{"workflow":["sharepoint"],"stack":[]} },
+    { "id":"p5","nome":"Pastas SharePoint para novos segmentos","descricao":"Pendente conforme Deploy Checklist v4.2.","progresso":0,"status":"planejado","prioridade":"media","notas":"","refs":{"workflow":["sharepoint"],"stack":[]} },
+    { "id":"p6","nome":"Testar routing do Maestro por segmento","descricao":"tests/routing/prompts.md existe com prompts de teste; execução/validação formal não confirmada no checklist.","progresso":50,"status":"em desenvolvimento","prioridade":"media","notas":"","refs":{"workflow":["maestro"],"stack":[]} },
+    { "id":"p7","nome":"Modelo Mestre de Proposta (addendum M6)","descricao":"Gate humano MN aprovado em 2026-09-10. Aplicação técnica no SharePoint bloqueada — conector SharePoint_Manta indisponível na sessão de aprovação. Pendência adicional: fonte MNT-2026-COM-1183_D citada como referência não foi localizada (só existe revisão _C).","progresso":80,"status":"em revisão","prioridade":"alta","notas":"Bloqueado por dependência externa (conector) + divergência de fonte a confirmar antes de publicar.","refs":{"workflow":[],"stack":[]} }
+  ],
+  "arquitetura": [
+    { "camada":"agentes-ia","tecnologia_principal":"5 agentes verticais (.claude/agents/*.md) + Maestro router","libs":["Claude Code","Dynamic Workflows"],"status":"operacional (detectado)" },
+    { "camada":"integracoes","tecnologia_principal":"SharePoint_Manta (MCP) — sp_agent_routing","libs":[],"status":"parcial (regras e pastas pendentes no checklist)" },
+    { "camada":"banco","tecnologia_principal":"Supabase (pgvector) — RAG collections","libs":["pgvector"],"status":"parcial (migration criada; aplicação não confirmada)" },
+    { "camada":"frontend","tecnologia_principal":"—","libs":[],"status":"ausente" },
+    { "camada":"backend","tecnologia_principal":"—","libs":[],"status":"ausente" },
+    { "camada":"deploy","tecnologia_principal":"—","libs":[],"status":"ausente (distribuição via git + SharePoint; sem pipeline de deploy de app)" }
+  ],
+  "dependencias": {
+    "nodes": [
+      {"id":"claude_md","modulo":"CLAUDE.md (master registry)","acoplamento":"critico"},
+      {"id":"portos","modulo":"agente-portos","acoplamento":"moderado"},
+      {"id":"aeroportos","modulo":"agente-aeroportos","acoplamento":"moderado"},
+      {"id":"saneamento","modulo":"agente-saneamento","acoplamento":"moderado"},
+      {"id":"energia","modulo":"agente-energia","acoplamento":"moderado"},
+      {"id":"barragens","modulo":"agente-barragens","acoplamento":"moderado"},
+      {"id":"rag","modulo":"RAG Supabase","acoplamento":"moderado"},
+      {"id":"sharepoint","modulo":"SharePoint routing","acoplamento":"moderado"}
+    ],
+    "edges": [
+      {"de":"claude_md","para":"portos"},{"de":"claude_md","para":"aeroportos"},{"de":"claude_md","para":"saneamento"},
+      {"de":"claude_md","para":"energia"},{"de":"claude_md","para":"barragens"},
+      {"de":"portos","para":"rag"},{"de":"aeroportos","para":"rag"},{"de":"saneamento","para":"rag"},
+      {"de":"energia","para":"rag"},{"de":"barragens","para":"rag"},
+      {"de":"portos","para":"sharepoint"},{"de":"aeroportos","para":"sharepoint"},{"de":"saneamento","para":"sharepoint"},
+      {"de":"energia","para":"sharepoint"},{"de":"barragens","para":"sharepoint"}
+    ]
+  },
+  "todo": [],
+  "monitoramento": [
+    {"camada":"erros-apm","ferramenta":"","status_projeto":"nao-configurado","mcp_claude":"nenhum","evidencia":"Não aplicável — repositório é registro/documentação, sem app em execução.","plano_free":"","acao_sugerida":"Instrumentar apenas se este repo evoluir para um app real (ex.: Portal Manta)."},
+    {"camada":"infra-logs","ferramenta":"","status_projeto":"nao-configurado","mcp_claude":"nenhum","evidencia":"Idem.","plano_free":"","acao_sugerida":"Idem."},
+    {"camada":"analytics-produto","ferramenta":"","status_projeto":"nao-configurado","mcp_claude":"nenhum","evidencia":"Idem.","plano_free":"","acao_sugerida":"Idem."},
+    {"camada":"observabilidade-full","ferramenta":"","status_projeto":"nao-configurado","mcp_claude":"nenhum","evidencia":"Idem.","plano_free":"","acao_sugerida":"Idem."}
+  ],
+  "stack": [
+    {"camada":"framework","atual":"ausente","recomendado_2026":"Next.js 16 + React 19","aderencia":"ausente","sugestao":"Só se aplica se este repo virar o Portal Manta."},
+    {"camada":"ui","atual":"ausente","recomendado_2026":"Shadcn UI","aderencia":"ausente","sugestao":""},
+    {"camada":"estilo","atual":"ausente","recomendado_2026":"Tailwind 4","aderencia":"ausente","sugestao":""},
+    {"camada":"orm","atual":"ausente","recomendado_2026":"Drizzle","aderencia":"ausente","sugestao":""},
+    {"camada":"banco","atual":"Supabase (migration presente, aplicação não confirmada)","recomendado_2026":"Supabase (Postgres + Auth + RLS)","aderencia":"ok","sugestao":"Confirmar aplicação da migration e considerar RLS multi-tenant se este banco vier a servir um app real."},
+    {"camada":"auth","atual":"ausente","recomendado_2026":"Better Auth / Supabase Auth","aderencia":"ausente","sugestao":""},
+    {"camada":"pagamentos","atual":"ausente","recomendado_2026":"Stripe","aderencia":"ausente","sugestao":"Não aplicável ao escopo atual."},
+    {"camada":"deploy","atual":"ausente","recomendado_2026":"Vercel","aderencia":"ausente","sugestao":"Só se aplica se este repo virar o Portal Manta."},
+    {"camada":"monorepo","atual":"ausente","recomendado_2026":"Turborepo","aderencia":"ausente","sugestao":""}
+  ],
+  "sugestoes": [
+    {"origem":"pipeline","tipo":"melhoria","alvo":"RAG Collections Supabase (p3)","motivo":"Progresso 50% mas é pré-requisito de todos os 5 agentes verticais no Workflow — atraso aqui bloqueia toda a cadeia de RAG.","prioridade":"alta"},
+    {"origem":"pipeline","tipo":"melhoria","alvo":"Modelo Mestre de Proposta (p7)","motivo":"Gate humano aprovado mas aplicação bloqueada por dependência externa (conector SharePoint indisponível); sem mecanismo de retomada automática quando o conector voltar.","prioridade":"alta"},
+    {"origem":"workflow","tipo":"melhoria","alvo":"SharePoint routing (nó)","motivo":"O nó existe no fluxo mas seu output real (routing rules + pastas) ainda não está implementado — ver p4/p5.","prioridade":"media"},
+    {"origem":"stack","tipo":"troca-de-conceito","alvo":"Camada deploy","motivo":"Ausente porque não há app hoje; se o Portal Manta avançar, adotar Vercel conforme stack de referência 2026.","prioridade":"baixa"}
+  ]
+}
+</script>
+
+<script>
+const DM = JSON.parse(document.getElementById('data-model').textContent);
+const LS_KEY = 'devcockpit_v1_state';
+function loadState(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)) || {}; }catch(e){ return {}; } }
+function saveState(s){ try{ localStorage.setItem(LS_KEY, JSON.stringify(s)); }catch(e){} }
+let state = loadState();
+state.activeTab = state.activeTab || 'workflow';
+state.notes = state.notes || {};
+state.todoText = state.todoText || '';
+state.todoFilter = state.todoFilter || 'todos';
+
+const TABS = [
+  {id:'workflow', label:'1 · Workflow'},
+  {id:'pipeline', label:'2 · Pipeline'},
+  {id:'arquitetura', label:'3 · Arquitetura'},
+  {id:'dependencias', label:'4 · Dependências'},
+  {id:'todo', label:'5 · TODO'},
+  {id:'monitoramento', label:'6 · Monitoramento'},
+  {id:'stack', label:'7 · Stack'}
+];
+
+function el(tag, attrs={}, children=[]){
+  const e = document.createElement(tag);
+  for(const k in attrs){
+    if(k === 'class') e.className = attrs[k];
+    else if(k === 'html') e.innerHTML = attrs[k];
+    else e.setAttribute(k, attrs[k]);
+  }
+  (Array.isArray(children)?children:[children]).forEach(c=>{ if(c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+  return e;
+}
+function badge(text, kind){ return el('span',{class:'badge '+kind}, text); }
+function statusBadge(status){
+  const map = {
+    'funcional':'ok','em desenvolvimento':'warn','em revisão':'warn','planejado':'muted',
+    'configurado':'ok','nao-configurado':'crit','recomendado':'muted',
+    'ok':'ok','divergente':'warn','ausente':'crit'
+  };
+  return badge(status, map[status] || 'muted');
+}
+function prioIcon(p){ return p==='alta' ? '🔴' : p==='media' ? '🟡' : '🟢'; }
+
+function renderMeta(){
+  const row = document.getElementById('metaRow');
+  row.innerHTML = '';
+  const items = [
+    ['Projeto', DM.meta.projeto], ['Stack', DM.meta.stack],
+    ['Gerado em', DM.meta.gerado_em], ['Arquivo', DM.meta.versao]
+  ];
+  items.forEach(([k,v])=> row.appendChild(el('span',{},[el('b',{},k+': '), v])));
+}
+
+function suggestionsFor(origem){ return DM.sugestoes.filter(s=>s.origem===origem); }
+function suggestPanel(origem){
+  const list = suggestionsFor(origem);
+  if(!list.length) return null;
+  const panel = el('div',{class:'suggest-panel'});
+  panel.appendChild(el('h3',{},'💡 Sugestões'+ (list.length?` (${list.length})`:'')));
+  list.forEach(s=>{
+    panel.appendChild(el('div',{class:'suggest-item'},[
+      el('div',{class:'tgt'}, `${prioIcon(s.prioridade)} ${s.alvo} — ${s.tipo}`),
+      el('div',{class:'why'}, s.motivo)
+    ]));
+  });
+  return panel;
+}
+
+function layoutWorkflowPositions(){
+  const pos = {};
+  pos.maestro = {x:480, y:40};
+  const row2 = ['portos','aeroportos','saneamento','energia','barragens'];
+  row2.forEach((id,i)=> pos[id] = {x: 60 + i*190, y: 180});
+  pos.rag = {x:280, y:320};
+  pos.sharepoint = {x:680, y:320};
+  return pos;
+}
+
+function renderWorkflow(container){
+  container.appendChild(el('h2',{},'1 · Workflow'));
+  const sp = suggestPanel('workflow'); if(sp) container.appendChild(sp);
+  const pos = layoutWorkflowPositions();
+  const W = 960, H = 400, BW = 170, BH = 46;
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS,'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = `<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>`;
+  DM.workflow.edges.forEach(e=>{
+    const a = pos[e.de], b = pos[e.para];
+    if(!a||!b) return;
+    const x1=a.x+BW/2, y1=a.y+BH, x2=b.x+BW/2, y2=b.y;
+    const path = document.createElementNS(svgNS,'path');
+    const midY = (y1+y2)/2;
+    path.setAttribute('d', `M${x1},${y1} C ${x1},${midY} ${x2},${midY} ${x2},${y2}`);
+    path.setAttribute('class','edge');
+    svg.appendChild(path);
+  });
+  DM.workflow.nodes.forEach(n=>{
+    const p = pos[n.id]; if(!p) return;
+    const g = document.createElementNS(svgNS,'g');
+    g.setAttribute('transform', `translate(${p.x},${p.y})`);
+    g.innerHTML = `<rect class="node-rect" width="${BW}" height="${BH}" rx="8"></rect>
+      <text class="node-label" x="10" y="20">${n.nome.length>26? n.nome.slice(0,24)+'…':n.nome}</text>
+      <text class="node-label" x="10" y="34" fill="var(--muted)" font-size="9">${n.id}</text>`;
+    g.style.cursor='pointer';
+    g.addEventListener('click', ()=> showNodeDetail(n));
+    svg.appendChild(g);
+  });
+  container.appendChild(svg);
+  const detail = el('div',{class:'detail', id:'wfDetail'});
+  container.appendChild(detail);
+  function showNodeDetail(n){
+    detail.innerHTML = `<b>${n.nome}</b><p style="color:var(--muted);margin:6px 0">${n.descricao}</p>
+      <div><b>Tecnologias:</b> ${n.tecnologias.map(t=>`<code>${t}</code>`).join(' ')}</div>
+      <div style="margin-top:6px"><b>Inputs:</b> ${n.inputs.join(', ')}</div>
+      <div style="margin-top:4px"><b>Outputs:</b> ${n.outputs.join(', ')}</div>`;
+    detail.classList.add('show');
+  }
+}
+
+function renderPipeline(container){
+  container.appendChild(el('h2',{},'2 · Pipeline'));
+  const sp = suggestPanel('pipeline'); if(sp) container.appendChild(sp);
+  const grid = el('div',{class:'grid'});
+  DM.pipeline.forEach(m=>{
+    const card = el('div',{class:'card'});
+    card.appendChild(el('h3',{}, `${prioIcon(m.prioridade)} ${m.nome}`));
+    card.appendChild(el('p',{}, m.descricao));
+    card.appendChild(statusBadge(m.status));
+    const prog = el('div',{class:'progress'}, el('div',{style:`width:${m.progresso}%`}));
+    card.appendChild(prog);
+    card.appendChild(el('div',{style:'font-size:11px;color:var(--muted);margin-top:2px'}, `${m.progresso}%`));
+    const ta = el('textarea',{class:'notes',placeholder:'notas...'});
+    ta.value = state.notes['pipeline_'+m.id] ?? m.notas ?? '';
+    ta.addEventListener('input', ()=>{ state.notes['pipeline_'+m.id]=ta.value; saveState(state); });
+    card.appendChild(ta);
+    grid.appendChild(card);
+  });
+  container.appendChild(grid);
+}
+
+function renderArquitetura(container){
+  container.appendChild(el('h2',{},'3 · Arquitetura'));
+  const grid = el('div',{class:'grid'});
+  DM.arquitetura.forEach(a=>{
+    const card = el('div',{class:'card'});
+    card.appendChild(el('h3',{}, a.camada));
+    card.appendChild(el('p',{}, a.tecnologia_principal));
+    if(a.libs.length) card.appendChild(el('div',{style:'margin-bottom:8px'}, a.libs.map(l=>`<code>${l}</code>`).join(' ')));
+    card.appendChild(el('div',{style:'font-size:12px;color:var(--muted)'}, a.status));
+    grid.appendChild(card);
+  });
+  container.appendChild(grid);
+}
+
+function renderDependencias(container){
+  container.appendChild(el('h2',{},'4 · Dependências'));
+  const colorMap = {independente:'var(--ok)', moderado:'var(--warn)', critico:'var(--crit)'};
+  const svgNS='http://www.w3.org/2000/svg';
+  const nodes = DM.dependencias.nodes;
+  const W=960,H=340,R=6;
+  const cx=480,cy=170,radius=130;
+  const pos={};
+  nodes.forEach((n,i)=>{
+    const angle = (i/nodes.length)*2*Math.PI - Math.PI/2;
+    pos[n.id] = { x: cx+radius*Math.cos(angle), y: cy+radius*Math.sin(angle) };
+  });
+  const svg = document.createElementNS(svgNS,'svg');
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML = `<defs><marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>`;
+  DM.dependencias.edges.forEach(e=>{
+    const a=pos[e.de], b=pos[e.para]; if(!a||!b) return;
+    const line = document.createElementNS(svgNS,'line');
+    line.setAttribute('x1',a.x); line.setAttribute('y1',a.y);
+    line.setAttribute('x2',b.x); line.setAttribute('y2',b.y);
+    line.setAttribute('stroke','var(--border)'); line.setAttribute('stroke-width','1.2');
+    line.setAttribute('marker-end','url(#arrow2)');
+    svg.appendChild(line);
+  });
+  nodes.forEach(n=>{
+    const p = pos[n.id];
+    const g = document.createElementNS(svgNS,'g');
+    g.style.cursor='pointer';
+    g.innerHTML = `<circle cx="${p.x}" cy="${p.y}" r="18" fill="var(--surface)" stroke="${colorMap[n.acoplamento]}" stroke-width="2.5"></circle>
+      <text x="${p.x}" y="${p.y+32}" text-anchor="middle" class="node-label" font-size="10">${n.modulo.length>18? n.modulo.slice(0,16)+'…':n.modulo}</text>`;
+    g.addEventListener('click', ()=> showDepDetail(n));
+    svg.appendChild(g);
+  });
+  container.appendChild(svg);
+  const legend = el('div',{style:'display:flex;gap:16px;margin-top:8px;font-size:12px;color:var(--muted)'},[
+    el('span',{},'🟢 independente'), el('span',{},'🟡 moderado'), el('span',{},'🔴 crítico')
+  ]);
+  container.appendChild(legend);
+  const detail = el('div',{class:'detail',id:'depDetail'});
+  container.appendChild(detail);
+  function showDepDetail(n){
+    const dependeDele = DM.dependencias.edges.filter(e=>e.de===n.id).map(e=>e.para);
+    const eleDependeDe = DM.dependencias.edges.filter(e=>e.para===n.id).map(e=>e.de);
+    detail.innerHTML = `<b>${n.modulo}</b> — acoplamento <b>${n.acoplamento}</b>
+      <div style="margin-top:6px"><b>Depende dele:</b> ${dependeDele.join(', ') || '—'}</div>
+      <div style="margin-top:4px"><b>Ele depende de:</b> ${eleDependeDe.join(', ') || '—'}</div>`;
+    detail.classList.add('show');
+  }
+}
+
+function parseTodoText(text){
+  return text.split('\n').filter(l=>l.trim()).map(line=>{
+    let status='a fazer';
+    if(line.includes('[x]')) status='concluído';
+    else if(line.includes('[~]')) status='em andamento';
+    let prioridade='sem prioridade';
+    if(line.includes('🔴')) prioridade='alta';
+    else if(line.includes('🟡')) prioridade='media';
+    else if(line.includes('🟢')) prioridade='baixa';
+    return {texto:line.replace(/\[[ x~]\]/,'').trim(), status, prioridade};
+  });
+}
+
+function renderTodo(container){
+  container.appendChild(el('h2',{},'5 · TODO'));
+  if(!DM.todo.length && !state.todoText){
+    container.appendChild(el('div',{class:'todo-empty'},
+      'TODO.md não encontrado na raiz do repositório. Cole abaixo os itens (formato "[ ] texto", "[~] texto", "[x] texto", com 🔴🟡🟢 opcional) para popular esta aba — sem parsear automaticamente nada que não venha da varredura real.'));
+  }
+  const ta = el('textarea',{class:'notes',style:'min-height:100px;width:100%'});
+  ta.value = state.todoText;
+  ta.placeholder = '[ ] 🔴 exemplo de item a fazer\n[~] 🟡 exemplo em andamento\n[x] exemplo concluído';
+  const list = el('div',{style:'margin-top:12px'});
+  function refresh(){
+    const items = parseTodoText(ta.value);
+    list.innerHTML='';
+    const order = {alta:0, media:1, baixa:2, 'sem prioridade':3};
+    items.sort((a,b)=> order[a.prioridade]-order[b.prioridade]);
+    const filtered = state.todoFilter==='todos' ? items : items.filter(i=>i.status===state.todoFilter);
+    if(!filtered.length){ list.appendChild(el('div',{class:'todo-empty'}, 'Nenhum item para este filtro.')); return; }
+    filtered.forEach(i=>{
+      const borderColor = i.status==='em andamento' ? 'var(--warn)' : 'var(--border)';
+      const row = el('div',{style:`padding:8px 10px;border-left:3px solid ${borderColor};background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;font-size:13px`});
+      row.innerHTML = `${prioIcon(i.prioridade==='sem prioridade'?'baixa':i.prioridade)} ${i.texto} `;
+      row.appendChild(statusBadge(i.status==='concluído'?'ok':i.status==='em andamento'?'warn':'muted'));
+      list.appendChild(row);
+    });
+  }
+  ta.addEventListener('input', ()=>{ state.todoText = ta.value; saveState(state); refresh(); });
+  container.appendChild(ta);
+  const filters = el('div',{class:'filters'});
+  ['todos','a fazer','em andamento','concluído'].forEach(f=>{
+    const b = el('button',{}, f);
+    if(state.todoFilter===f) b.classList.add('on');
+    b.addEventListener('click', ()=>{
+      state.todoFilter=f; saveState(state);
+      filters.querySelectorAll('button').forEach(btn=>btn.classList.remove('on'));
+      b.classList.add('on');
+      renderTodo.__refresh();
+    });
+    filters.appendChild(b);
+  });
+  container.appendChild(filters);
+  container.appendChild(list);
+  refresh();
+  renderTodo.__refresh = refresh;
+}
+
+function renderMonitoramento(container){
+  container.appendChild(el('h2',{},'6 · Monitoramento'));
+  container.appendChild(el('h3',{style:'font-size:13px;margin:0 0 8px'},'(a) Detectado no projeto'));
+  const t = el('table');
+  t.innerHTML = `<tr><th>Camada</th><th>Ferramenta</th><th>Status</th><th>MCP Claude</th><th>Evidência</th><th>Ação sugerida</th></tr>`;
+  DM.monitoramento.forEach(m=>{
+    const tr = el('tr');
+    tr.innerHTML = `<td>${m.camada}</td><td>${m.ferramenta||'—'}</td><td></td><td>${m.mcp_claude}</td><td style="color:var(--muted)">${m.evidencia}</td><td style="color:var(--muted)">${m.acao_sugerida}</td>`;
+    tr.children[2].appendChild(statusBadge(m.status_projeto));
+    t.appendChild(tr);
+  });
+  container.appendChild(t);
+  container.appendChild(el('h3',{style:'font-size:13px;margin:18px 0 8px'},'(b) Catálogo de recomendação (2026)'));
+  container.appendChild(el('div',{class:'card',html:`
+    <p><b>Regra de ouro:</b> priorize ferramentas com MCP/API limpa para o Claude Code ler logs e depurar em tempo real.</p>
+    <table style="margin-top:8px">
+      <tr><th>Estágio</th><th>Stack sugerida</th><th>MCP Claude</th></tr>
+      <tr><td>MVP / early</td><td>Sentry (free) + Vercel logs</td><td>✅</td></tr>
+      <tr><td>Growing SaaS</td><td>Sentry + PostHog + Railway</td><td>✅</td></tr>
+      <tr><td>Scale-up</td><td>Sentry + PostHog + Grafana</td><td>Parcial</td></tr>
+      <tr><td>Enterprise</td><td>Datadog</td><td>✅</td></tr>
+    </table>
+    <p style="margin-top:10px">MCPs essenciais do ciclo full-stack: Supabase · Sentry · GitHub · Stripe · Vercel · Context7.</p>
+  `}));
+}
+
+function renderStack(container){
+  container.appendChild(el('h2',{},'7 · Stack'));
+  const sp = suggestPanel('stack'); if(sp) container.appendChild(sp);
+  const t = el('table');
+  t.innerHTML = `<tr><th>Camada</th><th>Atual</th><th>Recomendado 2026</th><th>Aderência</th><th>Sugestão</th></tr>`;
+  DM.stack.forEach(s=>{
+    const tr = el('tr');
+    tr.innerHTML = `<td>${s.camada}</td><td>${s.atual}</td><td>${s.recomendado_2026}</td><td></td><td style="color:var(--muted)">${s.sugestao||'—'}</td>`;
+    tr.children[3].appendChild(statusBadge(s.aderencia));
+    t.appendChild(tr);
+  });
+  container.appendChild(t);
+}
+
+const RENDERERS = {
+  workflow: renderWorkflow, pipeline: renderPipeline, arquitetura: renderArquitetura,
+  dependencias: renderDependencias, todo: renderTodo, monitoramento: renderMonitoramento, stack: renderStack
+};
+
+function render(){
+  renderMeta();
+  const tabsNav = document.getElementById('tabs');
+  tabsNav.innerHTML = '';
+  TABS.forEach(t=>{
+    const b = el('button',{}, t.label);
+    if(t.id===state.activeTab) b.classList.add('active');
+    b.addEventListener('click', ()=>{ state.activeTab=t.id; saveState(state); render(); });
+    tabsNav.appendChild(b);
+  });
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  const panel = el('div',{class:'panel active'});
+  RENDERERS[state.activeTab](panel);
+  main.appendChild(panel);
+}
+render();
+</script>
+</body>
+</html>
