@@ -30,7 +30,14 @@ Uma plataforma escalável de **20 agentes IA** (11 horizontais + 9 verticais S1�
 | **docs/ARQUITETURA-v5.0.md** | Detalhe dos 8 pilares (P1–P8) |
 | **docs/DEPLOYMENT-GUIDE.md** | Step-by-step deploy (8 fases, 48h → go-live) |
 | **docs/ROUTING-REFERENCE.md** | Especificação completa R1 (3-stage pipeline, keywords) |
+| **docs/ONDE-GUARDAR-ATIVOS.md** | Onde guardar apresentações/PDFs e ativos binários do ecossistema (SharePoint vs Supabase vs GitHub vs base64) |
 | **DEPLOY-CHECKLIST.md** | Quick reference checklist (imprimir e marcar) |
+
+### Ativos
+
+| Caminho | Propósito |
+|---------|-----------|
+| **assets/branding/** | Ativos de marca pequenos e reutilizáveis por código (logo Manta Associados) |
 
 ### Scripts
 
