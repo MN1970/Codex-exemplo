@@ -1,0 +1,42 @@
+{
+  "description": "Example Claude Code settings with sp_healthcheck.py integrated",
+  "version": "2026-07-25",
+  "hooks": {
+    "SessionStart": {
+      "description": "Run M365 healthcheck on every session start",
+      "enabled": true,
+      "command": "python scripts/sp_healthcheck.py --verbose",
+      "working_directory": ".",
+      "capture_output": true,
+      "output_file": ".healthcheck.json",
+      "on_exit_code": {
+        "0": "silent",
+        "1": "warn"
+      },
+      "timeout_seconds": 60,
+      "environment": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    "SessionEnd": {
+      "description": "Log healthcheck status to console on session end",
+      "enabled": false,
+      "command": "bash -c 'if [ -f .healthcheck.json ]; then echo \"Last healthcheck:\"; cat .healthcheck.json | jq -r \".status, .errors[]\"; fi'",
+      "timeout_seconds": 5
+    }
+  },
+  "permissions": {
+    "bash": ["allow"],
+    "read": ["scripts/", ".healthcheck.json"],
+    "write": [".healthcheck.json"],
+    "network": ["login.microsoftonline.com", "*.sharepoint.com", "*.vault.azure.net"]
+  },
+  "healthcheck": {
+    "enabled": true,
+    "interval_minutes": 60,
+    "alert_on_warning": false,
+    "alert_on_error": true,
+    "slack_webhook": null,
+    "log_file": ".healthcheck.log"
+  }
+}
