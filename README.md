@@ -9,12 +9,19 @@ Manta Associados. Versiona:
   novos (S6–S10 adicionados na v4.2).
 - `docs/MODELO-MESTRE-PROPOSTA.md` — análise e recomendação sobre modelo
   mestre de proposta técnico-comercial (v4.2.1).
+- `docs/ONDE-GUARDAR-ATIVOS.md` — onde guardar apresentações/PDFs e ativos
+  binários do ecossistema (SharePoint vs Supabase vs GitHub vs base64).
+- `assets/branding/` — ativos de marca pequenos e reutilizáveis por
+  código (logo Manta Associados).
 
 ## Estrutura
 
 ```
 .
 ├── CLAUDE.md                         # master registry
+├── assets/
+│   └── branding/
+│       └── manta-logo.png            # logo extraída da apresentação institucional
 └── .claude/
     └── agents/
         ├── agente-portos.md          # S6
