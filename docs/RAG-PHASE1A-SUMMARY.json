@@ -1,0 +1,457 @@
+{
+  "title": "Manta Maestro v4.2 — RAG Phase 1a Tier 1 Consolidated Summary",
+  "date": "2026-07-15",
+  "ticket": "MNT-2026-UPGRADE-AGENTS-S6S10",
+  "status": "READY FOR IMPLEMENTATION",
+  "phase": "Phase 1a (Weeks 3-8: 2026-07-21 to 2026-09-01)",
+
+  "executive_summary": {
+    "total_volume_gb": 79.778,
+    "total_documents": 50000,
+    "total_chunks": 4500,
+    "embedding_storage_mb": 246,
+    "timeline_weeks": 6,
+    "budget_tier2_usd": 1025,
+    "critical_blockers": 0,
+    "go_decision": true
+  },
+
+  "segments": {
+    "s6_portos": {
+      "name": "Portos",
+      "prefix": "por:",
+      "volume_gb": 2.8,
+      "documents": 825,
+      "weeks": 6,
+      "status": "GO",
+      "sources": [
+        {
+          "name": "ANTAQ Resoluções",
+          "volume": "150 docs",
+          "access": "público",
+          "blocker": null,
+          "week": 3
+        },
+        {
+          "name": "BNDES Editais",
+          "volume": "85 docs",
+          "access": "público",
+          "blocker": null,
+          "week": 4
+        },
+        {
+          "name": "DNIT Manuais",
+          "volume": "12 docs",
+          "access": "público",
+          "blocker": null,
+          "week": 3
+        },
+        {
+          "name": "Teses USP/UFRJ/UFBA",
+          "volume": "550 docs",
+          "access": "público (OAI-PMH)",
+          "blocker": null,
+          "week": "5-6"
+        },
+        {
+          "name": "ATP Relatórios",
+          "volume": "25 docs",
+          "access": "público",
+          "blocker": null,
+          "week": 4
+        }
+      ]
+    },
+
+    "s7_aeroportos": {
+      "name": "Aeroportos",
+      "prefix": "aer:",
+      "volume_gb": 1.478,
+      "documents": 182,
+      "weeks": 6,
+      "status": "GO",
+      "sources": [
+        {
+          "name": "ANAC RBAC 154",
+          "volume": "25 MB (14 PDFs)",
+          "access": "público",
+          "blocker": null,
+          "week": 3
+        },
+        {
+          "name": "FAA AC 150/5300-13B",
+          "volume": "45 MB (324 págs)",
+          "access": "público",
+          "blocker": null,
+          "week": 4
+        },
+        {
+          "name": "MPor Manual",
+          "volume": "5 MB",
+          "access": "público",
+          "blocker": null,
+          "week": 3
+        },
+        {
+          "name": "Teses ITA/COPPE/UFRJ",
+          "volume": "1.3 GB (165 docs)",
+          "access": "público (BDTD)",
+          "blocker": null,
+          "week": "5-8"
+        },
+        {
+          "name": "ICAO Annex 14 Vol 1",
+          "volume": "80 MB",
+          "access": "paywall USD 200",
+          "blocker": "licença",
+          "phase": "Phase 2",
+          "fallback": "FAA AC 150/5300-13B (85% cobertura)"
+        }
+      ]
+    },
+
+    "s8_saneamento": {
+      "name": "Saneamento",
+      "prefix": "san:",
+      "volume_gb": 55.38,
+      "documents": 11668,
+      "weeks": 6,
+      "status": "PRONTO (com blockers técnicos)",
+      "sources": [
+        {
+          "name": "SNIS 2024",
+          "volume": "0.85 GB (16.7K registros)",
+          "access": "público (CKAN)",
+          "blocker": "Transição SINISA",
+          "week": 3
+        },
+        {
+          "name": "Lei 14.026/2020",
+          "volume": "3 docs",
+          "access": "público",
+          "blocker": null,
+          "week": 3
+        },
+        {
+          "name": "ANA PMSB",
+          "volume": "2.1 GB (5.5K docs)",
+          "access": "público (WFS)",
+          "blocker": "30% sem OCR",
+          "week": "4-5"
+        },
+        {
+          "name": "BNDES Editais",
+          "volume": "0.5 GB (280 docs)",
+          "access": "público (CKAN)",
+          "blocker": "PDFs scaneados",
+          "week": 4
+        },
+        {
+          "name": "Teses COPPE/UFRJ",
+          "volume": "37.5 GB (5K docs)",
+          "access": "público (OAI-PMH)",
+          "blocker": "15% deduplicação",
+          "week": "6-7"
+        },
+        {
+          "name": "AySA Argentina",
+          "volume": "0.2 GB (85 docs)",
+          "access": "público (portal JS)",
+          "blocker": null,
+          "week": 6
+        }
+      ]
+    },
+
+    "s9_energia": {
+      "name": "Energia",
+      "prefix": "ene:",
+      "volume_gb": 17.5,
+      "documents": 200,
+      "weeks": 6,
+      "status": "PRONTO (com blockers críticos)",
+      "sources": [
+        {
+          "name": "ANEEL Editais",
+          "volume": "2.5 GB (25 editais)",
+          "access": "público (API)",
+          "blocker": null,
+          "week": 3
+        },
+        {
+          "name": "EPE PDE/PNE",
+          "volume": "1.8 GB (70 docs)",
+          "access": "público",
+          "blocker": null,
+          "week": 4
+        },
+        {
+          "name": "ONS Operação",
+          "volume": "8.0 GB (histórico 2024-26)",
+          "access": "público (API)",
+          "blocker": "Atualização diária",
+          "week": 5
+        },
+        {
+          "name": "IEEE 738",
+          "volume": "0.05 GB",
+          "access": "paywall USD 200",
+          "blocker": "Licença",
+          "phase": "Phase 2",
+          "fallback": "ANEEL Submódulo 2.4 nativo"
+        },
+        {
+          "name": "NBR 5422:2024",
+          "volume": "0.08 GB",
+          "access": "paywall ABNT",
+          "blocker": "COMPRA OBRIGATÓRIA R$ 400-600",
+          "severity": "CRÍTICO",
+          "week": 6,
+          "mitigation": "Aprovação MN Week 6"
+        },
+        {
+          "name": "Teses COPPE/IEE",
+          "volume": "5.0 GB (150 docs)",
+          "access": "público (OAI-PMH)",
+          "blocker": null,
+          "week": 7
+        }
+      ]
+    },
+
+    "s10_barragens": {
+      "name": "Barragens",
+      "prefix": "bar:",
+      "volume_gb": 2.7,
+      "documents": 26000,
+      "weeks": 6,
+      "status": "GO",
+      "sources": [
+        {
+          "name": "Lei 12.334/2010",
+          "volume": "15 págs",
+          "access": "público",
+          "blocker": null,
+          "week": 3
+        },
+        {
+          "name": "Lei 14.066/2020",
+          "volume": "10 págs",
+          "access": "público",
+          "blocker": null,
+          "week": 3
+        },
+        {
+          "name": "ANA SNISB",
+          "volume": "50 MB (23K registros)",
+          "access": "público (CSV)",
+          "blocker": null,
+          "week": 4
+        },
+        {
+          "name": "ANM SIGBM",
+          "volume": "150 MB (3K registros)",
+          "access": "público (Excel/CSV/PDF)",
+          "blocker": "CloudFlare?",
+          "week": 4,
+          "mitigation": "Selenium early test"
+        },
+        {
+          "name": "CNRH/ANM Regulações",
+          "volume": "~8 docs",
+          "access": "público",
+          "blocker": null,
+          "week": 5
+        },
+        {
+          "name": "Teses Acadêmicas",
+          "volume": "2.0 GB (350 docs)",
+          "access": "público (OAI-PMH)",
+          "blocker": null,
+          "week": "6-7"
+        },
+        {
+          "name": "CBDB Cadernos",
+          "volume": "500 MB (120 docs)",
+          "access": "público",
+          "blocker": "Autenticação possível",
+          "week": "6-7",
+          "fallback": "ICOLD bulletins (100% open)"
+        }
+      ]
+    }
+  },
+
+  "blockers": {
+    "tier1_phase1a": [
+      {
+        "blocker": "SNIS Transição 2023→2024",
+        "segment": "S8",
+        "risk": "alto",
+        "week": "3-4",
+        "mitigation": "Validar overlaps com checksum; manter ambos marcados"
+      },
+      {
+        "blocker": "PMSB 30% sem OCR",
+        "segment": "S8",
+        "risk": "alto",
+        "week": "4-5",
+        "mitigation": "Tesseract PT-BR + LLM vision piloto para 100 scans"
+      },
+      {
+        "blocker": "SIGBM CloudFlare",
+        "segment": "S10",
+        "risk": "médio",
+        "week": 4,
+        "mitigation": "Selenium early test; contato ANM para API fallback"
+      },
+      {
+        "blocker": "Teses 15% deduplicação",
+        "segment": "S8",
+        "risk": "médio",
+        "week": 7,
+        "mitigation": "MD5 + DOI + URL cross-reference"
+      }
+    ],
+
+    "tier2_negotiation": [
+      {
+        "blocker": "NBR 5422:2024 compra",
+        "segment": "S9",
+        "risk": "CRÍTICO",
+        "cost_brl": "400-600",
+        "week": 6,
+        "mitigation": "Aprovação MN tech/finance; fallback resumos ABNT",
+        "status": "EXIGE AÇÃO IMEDIATA"
+      },
+      {
+        "blocker": "ICAO Annex 14 Vol 1",
+        "segment": "S7",
+        "risk": "médio",
+        "cost_usd": 200,
+        "phase": "Phase 2",
+        "fallback": "FAA AC 150/5300-13B (85% cobertura)"
+      },
+      {
+        "blocker": "IEEE 738 licença",
+        "segment": "S9",
+        "risk": "médio",
+        "cost_usd": 200,
+        "phase": "Phase 2",
+        "fallback": "ANEEL Submódulo 2.4 nativo"
+      },
+      {
+        "blocker": "CBDB autenticação",
+        "segment": "S10",
+        "risk": "baixo",
+        "week": "5-6",
+        "fallback": "ICOLD bulletins (100% open)"
+      }
+    ]
+  },
+
+  "timeline": {
+    "week_3": {
+      "description": "Bootstrap — S6,S7,S8,S9,S10 ingestão inicial",
+      "deliverables": [
+        "S6: ANTAQ + DNIT (160 docs)",
+        "S7: ANAC RBAC 154 + MPor (20 docs)",
+        "S8: SNIS + Lei 14.026 (16.7K registros)",
+        "S9: ANEEL Editais (2.5 GB)",
+        "S10: Lei 12.334 + Lei 14.066 (25 págs)"
+      ]
+    },
+    "week_4": {
+      "description": "Consolidação — Tier 1 aberto",
+      "deliverables": [
+        "S6: BNDES + ATP (110 docs)",
+        "S7: FAA AC download (45 MB)",
+        "S8: PMSB + BNDES discovery (2.6 GB)",
+        "S9: EPE PDE/PNE (1.8 GB)",
+        "S10: SNISB + SIGBM (26K registros)"
+      ]
+    },
+    "week_5": {
+      "description": "Teses — OAI-PMH harvest",
+      "deliverables": [
+        "S6: UFRJ OAI-PMH (250 docs)",
+        "S7: BDTD (165 docs)",
+        "S8: PMSB crawler + teses (2.1 GB + 5K)",
+        "S9: ONS histórico (8 GB)",
+        "S10: CNRH regulações (8 docs)"
+      ]
+    },
+    "week_6": {
+      "description": "CRÍTICA — NBR 5422 compra + teses finais",
+      "deliverables": [
+        "S6: UFBA+USP dedup (550 docs)",
+        "S7: Final QA (182 docs)",
+        "S8: PMSB 80% + OCR",
+        "S9: **NBR 5422 RECEBIDA** + IEEE 738 decisão",
+        "S10: Teses início (350 docs)"
+      ]
+    },
+    "week_7": {
+      "description": "QA + dedup — Embedding início",
+      "deliverables": [
+        "S6: Final QA (825 total)",
+        "S7: Final QA (182 docs)",
+        "S8: Teses dedup + AySA (50K final)",
+        "S9: Teses COPPE (200+ docs)",
+        "S10: Teses + CBDB (26K+ registros)"
+      ]
+    },
+    "week_8": {
+      "description": "LAUNCH — pgvector indexing + Phase 1b planning",
+      "deliverables": [
+        "ALL: Chunking (3500 chunks)",
+        "ALL: pgvector embedding",
+        "ALL: Supabase indexing + QA final",
+        "Phase 1a: COMPLETO",
+        "Phase 1b: Tier 2 roadmap pronto"
+      ]
+    }
+  },
+
+  "budget": {
+    "tier2_negotiation": {
+      "icao_annex14": 60,
+      "iata_handling": 555,
+      "ieee_738": 150,
+      "abnt_normas_brl": 900,
+      "contingency_pct": 10,
+      "total_usd": 1025,
+      "economy_vs_direct": "21% savings"
+    }
+  },
+
+  "success_metrics": [
+    {
+      "metric": "Completude",
+      "target": ">95%",
+      "validation": "Count ingested vs expected"
+    },
+    {
+      "metric": "Qualidade OCR",
+      "target": "TPS ≥0.85",
+      "validation": "Tesseract confidence"
+    },
+    {
+      "metric": "Deduplicação",
+      "target": ">99%",
+      "validation": "MD5/DOI cross-check"
+    },
+    {
+      "metric": "Latência RAG",
+      "target": "<500ms p99",
+      "validation": "Supabase query latency"
+    },
+    {
+      "metric": "Relevância semântica",
+      "target": "NDCG ≥0.68",
+      "validation": "10 queries teste + manual"
+    }
+  ],
+
+  "recommendation": "✅ READY FOR IMPLEMENTATION — Proceder com Phase 1a kickoff Week 3 (Jul 21)"
+}
