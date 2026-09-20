@@ -1,0 +1,38 @@
+# Registro canônico das coleções RAG — espelha a tabela "RAG — Coleções
+# em Supabase" do CLAUDE.md. Mantido como YAML (em vez de re-parsear a
+# tabela markdown) para o teste ficar legível; test_rag_collections.py
+# valida que os dois nunca divergem.
+#
+# `min_chunks`: quantidade mínima de chunks esperada na tabela
+# `rag_chunks` (filtrando por `storage_prefix`) quando o teste roda
+# contra um Supabase real. 0 = coleção ainda não populada (ver
+# checklist "DEPLOY CHECKLIST v4.2" no CLAUDE.md) — o teste então só
+# valida que a coleção existe/é consultável, não que tem conteúdo.
+collections:
+  - name: rodovias
+    storage_prefix: "rod:"
+    min_chunks: 0
+  - name: oae
+    storage_prefix: "oae:"
+    min_chunks: 0
+  - name: ferrovia
+    storage_prefix: "fer:"
+    min_chunks: 0
+  - name: metro
+    storage_prefix: "mtr:"
+    min_chunks: 0
+  - name: saneamento
+    storage_prefix: "san:"
+    min_chunks: 0
+  - name: energia
+    storage_prefix: "ene:"
+    min_chunks: 0
+  - name: portos
+    storage_prefix: "por:"
+    min_chunks: 0
+  - name: aeroportos
+    storage_prefix: "aer:"
+    min_chunks: 0
+  - name: barragens
+    storage_prefix: "bar:"
+    min_chunks: 0

@@ -1,0 +1,72 @@
+# otel-collector-config.datadog.yaml
+# Manta Maestro — pipeline com fan-out para Jaeger (local) + Datadog (SaaS).
+#
+# Usado apenas quando o overlay Datadog está ativo:
+#   DD_API_KEY=xxxx DD_SITE=datadoghq.com \
+#     docker compose -f docker-compose.yml -f docker-compose.datadog.yml up
+#
+# Requer a env var DD_API_KEY setada no host (nunca commitar a chave real —
+# usar .env local, ignorado pelo git, ou secret manager em CI/CD).
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  memory_limiter:
+    check_interval: 5s
+    limit_mib: 400
+    spike_limit_mib: 100
+
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+
+  resource:
+    attributes:
+      - key: manta.stack
+        value: "observability-datadog"
+        action: upsert
+
+exporters:
+  otlp/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+
+  # Exporter nativo `datadog` do opentelemetry-collector-contrib — envia
+  # traces + metrics diretamente para a API da Datadog (não precisa do
+  # Datadog Agent como intermediário).
+  datadog:
+    api:
+      key: ${env:DD_API_KEY}
+      site: ${env:DD_SITE:-datadoghq.com}
+    traces:
+      trace_buffer: 500
+    metrics:
+      resource_attributes_as_tags: true
+    host_metadata:
+      enabled: true
+
+  debug:
+    verbosity: basic
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [otlp/jaeger, datadog, debug]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [datadog, debug]
