@@ -4,9 +4,10 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
+Versão: **v4.2.3** (2026-09-20) — v4.2 expansão S6–S10 (Portos,
 Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+proposta técnico-comercial + verificação ao vivo (Supabase/SharePoint) e
+correção do checklist de deploy + achados do `scripts/test_routing.py`.
 
 ---
 
@@ -91,6 +92,25 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
    → agente-infraestrutura S4
 ```
 
+> ⚠️ **Achado do `scripts/test_routing.py` (2026-09-20):** rodando os 28
+> prompts testáveis de `tests/routing/prompts.md` contra estas regras
+> literais (correspondência por substring), **10 de 28 falharam**. Causa
+> raiz: keywords curtos casam por substring dentro de palavras não
+> relacionadas — `ETA` casa com "proj**eta**r", `LT` casa com "fi**lt**rados",
+> `porto` casa com "aero**porto**" — e isso desvia prompts de barragens/
+> aeroportos para saneamento/energia/portos. Uma implementação real
+> **precisa casar por palavra inteira**, não substring. Keywords também
+> faltantes nas listas abaixo e já adicionadas: PIANC (portos), RBAC 154 e
+> PCN (aeroportos), PMSB (saneamento), ampacidade/ACSR (energia), SIGBM e
+> "dam breach" (barragens). Ver as 10 falhas completas no script.
+
+Atualização das listas de keywords (mesmas regras acima, completadas):
+- saneamento: ... `PMSB`
+- energia: ... `ampacidade`, `ACSR`
+- portos: ... `PIANC`
+- aeroportos: ... `RBAC 154`, `PCN`
+- barragens: ... `SIGBM`, `dam breach`
+
 ---
 
 ## RAG — Coleções em Supabase
@@ -102,6 +122,14 @@ IF menção a metrô|estação|NATM|PSD|linha 4|linha 5|VLT
 | portos | por: | ANTAQ, PIANC, editais BNDES/ANTAQ | 🆕 v4.2 |
 | aeroportos | aer: | ANAC/RBAC, ICAO Annex 14, FAA ACs | 🆕 v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, Lei 12.334 | 🆕 v4.2 |
+
+> ✅ **Verificado ao vivo em 2026-09-20:** as 5 coleções acima existem de
+> fato no Supabase (projeto `manta-maestro`, `ogxxgvgtulrbbppshjie`) desde
+> 30/07/2026 — junto com **6 outras** não listadas aqui (rodovias, oae,
+> ferrovia, metro, orcamento, institucional), total de 11. A tabela
+> principal de produção do RAG é `ke_embeddings` (embeddings 384d
+> bge-small-en-v1.5, 86 registros) + `manta_rag_chunks` (292 registros) —
+> **não** `rag_chunks` (27 registros, tabela legada desta migração v4.2).
 
 ---
 
@@ -152,14 +180,42 @@ citando-a como fonte, ou atualizar a referência para `_C`.
 
 - [x] Copiar 5 agent .md para `.claude/agents/`
 - [x] Aplicar patch no CLAUDE.md master (seção Agentes)
-- [ ] Criar 5 coleções RAG em Supabase (`rag_chunks`)
-- [ ] Inserir 5 routing rules em `sp_agent_routing`
-- [ ] Criar pastas SP para novos segmentos
+- [x] Criar 5 coleções RAG em Supabase (`rag_chunks`) — ✅ confirmado ao vivo 2026-09-20, feito em 30/07/2026 (11 coleções reais, ver seção RAG)
+- [x] Inserir 5 routing rules em `sp_agent_routing` — ✅ confirmado ao vivo 2026-09-20 (9 linhas reais)
+- [x] Criar pastas SP para novos segmentos — ✅ confirmado ao vivo 2026-09-20 (5 pastas em `03_Projetos/`)
 - [ ] Registrar skills no catálogo (skill registry)
-- [ ] Testar routing do Maestro com prompts de cada segmento
+- [x] Testar routing do Maestro com prompts de cada segmento — ✅ `scripts/test_routing.py` criado e rodado em 2026-09-20: 28/28 prompts testáveis executados, 18 passaram, 10 falharam (ver nota na seção ROUTING)
 - [ ] Upload dos SKILL.md para SP em `01-agentes-fundamentais/`
 - [ ] Atualizar `ARQUITETURA-AGENTES-IA.md` no SP (v1.0.0 → v2.0.0)
 - [ ] Gate humano: aprovação MN antes de merge
+
+---
+
+## PROPOSTAS DA IA — aguardando confirmação MN
+
+Geradas automaticamente pela rotina noturna do Manta Maestro Control Room
+em 2026-09-20 e registradas em `agent_change_requests` (Supabase, projeto
+`manta-maestro`, status `pending`) — **nenhuma numeração ou dado de
+produção foi alterado**, apenas propostas para revisão humana.
+
+- **`CR-2026-09-20-TAXONOMY-01`** — recomenda manter a numeração S6–S10
+  já usada tanto por este repo quanto pelo registry ao vivo
+  `manta_agent_capabilities` (registrado em 12/07, antes do SKILL.md
+  v5.0.1) como canônica, e corrigir/depreciar a numeração deslocada do
+  SKILL.md v5.0.1 (que insere Edificações em S6 e empurra Portos–Barragens
+  para S7–S11) em vez do inverso.
+- **`CR-2026-09-20-SEGMENTS-01`** — recomenda uma decisão formal sobre
+  Mineração (`03-S11`) e Óleo & Gás (`03-S12`), ativos no registry ao vivo
+  desde 12/07 mas não documentados em nenhum lugar (oficializar ou
+  descontinuar); e recomenda atualizar a referência de
+  MNT-2026-COM-1183_**D** para a revisão **_C**, já que a _D não foi
+  localizada no SharePoint.
+
+**KE-068 (barragens):** verificado ao vivo em 2026-09-20 — o erro factual
+de prazo legal (fusão de dois regimes) **já foi corrigido** em
+2026-07-28 (`aluci_status: pass` em `knowledge_extractions`), mas o campo
+`approved_by` segue nulo — falta só a aprovação humana formal do
+conteúdo já corrigido.
 
 ---
 
@@ -186,6 +242,15 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.2.3** (2026-09-20) — rotina noturna automatizada (catch-up de 3
+  execuções pendentes, 18–20/09): checklist de deploy corrigido a partir
+  de verificação ao vivo do Supabase/SharePoint (RAG, routing e pastas SP
+  já existiam, só não estavam documentados); `scripts/test_routing.py`
+  criado, 10/28 falhas encontradas nas regras de routing por substring
+  (ver seção ROUTING); KE-068 confirmado corrigido desde 28/07 (aprovação
+  humana ainda pendente); duas propostas de reconciliação registradas em
+  `agent_change_requests` (`CR-2026-09-20-TAXONOMY-01`,
+  `CR-2026-09-20-SEGMENTS-01`), aguardando confirmação MN.
 - **v4.2.2** (2026-09-10) — gate humano MN aprovado para a variante M6
   (addendum de proposta técnico-comercial). Aplicação no SharePoint
   pendente (conector `SharePoint_Manta` indisponível na sessão de
