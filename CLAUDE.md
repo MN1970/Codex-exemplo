@@ -4,9 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.1** (2026-09-01) — v4.2 expansão S6–S10 (Portos,
-Aeroportos, Saneamento, Energia, Barragens) + análise de modelo mestre de
-proposta técnico-comercial.
+Versão: **v4.2.3** (2026-09-20) — novo guardião transversal `dedup-guard`
+(anti-duplicação de dados em artefato/telas) + sanitização do `consist-guard`
+(removida referência ao caso Huatanay/CRH-PNSU).
 
 ---
 
@@ -169,23 +169,52 @@ citando-a como fonte, ou atualizar a referência para `_C`.
 Codex-exemplo/
 ├── CLAUDE.md                         # este arquivo (master registry)
 └── .claude/
-    └── agents/
-        ├── agente-portos.md          # 🆕 S6
-        ├── agente-aeroportos.md      # 🆕 S7
-        ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
-        ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
-        └── agente-barragens.md       # 🆕 S10
+    ├── agents/
+    │   ├── agente-portos.md          # 🆕 S6
+    │   ├── agente-aeroportos.md      # 🆕 S7
+    │   ├── agente-saneamento.md      # 🆕 S8 — prioridade AySA
+    │   ├── agente-energia.md         # 🆕 S9 — ANEEL/State Grid
+    │   └── agente-barragens.md       # 🆕 S10
+    └── skills/
+        ├── dedup-guard/              # 🆕 v4.2.3 — anti-duplicação transversal
+        │   ├── SKILL.md
+        │   └── dedup_guard.py
+        └── consist-guard/            # 🆕 v4.2.3 — versão sanitizada (sem Huatanay/CRH-PNSU)
+            ├── SKILL.md
+            └── consist_guard.py
 ```
 
 Os agentes existentes (Manta 00, 01, 02, 04-07, 13-16, 03-S1..S4) vivem
 no repositório operacional do Maestro. Este repositório (`Codex-exemplo`)
-serve como referência canônica versionada dos agentes verticais e do
-mapa de routing.
+serve como referência canônica versionada dos agentes verticais, das
+skills transversais (guardiões) e do mapa de routing.
+
+## GUARDIÕES — anti-duplicação e consistência
+
+| Skill | Escopo | Config | Status |
+|-------|--------|--------|--------|
+| `consist-guard` | consistência interna de UM documento específico (quantum, datas, capítulos) contra valores canônicos que o usuário preenche por caso | `.claude/skills/consist-guard/` — CONFIG nasce vazio, sem dado de negócio | ✅ Sanitizado v4.2.3 |
+| `dedup-guard` | duplicação/redundância de dado, tabela ou rótulo entre abas/telas de QUALQUER artefato (não amarrado a nenhum caso) | `.claude/skills/dedup-guard/` — só thresholds de detecção, sem CONFIG por caso | 🆕 Criado v4.2.3 |
+| `context-guardian` | preservação de contexto de sessão longa (evita perda por compactação) | plugin próprio no catálogo Manta | ✅ Operacional |
+
+Também registrados em `manta_agent_capabilities` (Supabase `manta-maestro`,
+projeto `ogxxgvgtulrbbppshjie`) como `agent_id` = `consist-guard` /
+`dedup-guard`, capability `validar-consistencia` / `validar-duplicacao`.
 
 ---
 
 ## Histórico de versões
 
+- **v4.2.3** (2026-09-20) — criado o guardião transversal `dedup-guard`
+  (detecta tabela/bloco/rótulo duplicado ou divergente entre abas/telas de
+  qualquer artefato Manta, sem valores de negócio fixos) e sanitizado o
+  `consist-guard` (removida toda referência ao caso Huatanay/CRH-PNSU —
+  nomes, valores financeiros reais, datas e siglas do caso; CONFIG agora
+  nasce vazio, preenchido por documento). Ambos versionados em
+  `.claude/skills/` neste repo e registrados em `manta_agent_capabilities`
+  no Supabase (projeto `manta-maestro`, `ogxxgvgtulrbbppshjie`). Aplicação
+  como plugin no catálogo Manta (cada skill com seu `backingPluginId`)
+  continua pendente — fora do escopo do que esta sessão consegue publicar.
 - **v4.2.2** (2026-09-10) — gate humano MN aprovado para a variante M6
   (addendum de proposta técnico-comercial). Aplicação no SharePoint
   pendente (conector `SharePoint_Manta` indisponível na sessão de
