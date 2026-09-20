@@ -1,29 +1,38 @@
 # Addendum pronto para deploy — Variante "PTC-Infraestrutura/Concessão de Grande Porte"
 
-**Status:** ✅ **gate humano (MN) aprovado em 2026-09-10.** Ainda **não
-aplicado** na skill de produção — falta só o passo mecânico: colar o
-bloco da Seção A abaixo dentro de
-`Engenharia/Documentos Compartilhados/04_IA/Manta-Maestro/02-sub-skills/
-skill-proposta-comercial-SKILL.md`, na posição indicada. Bloqueado nesta
-sessão porque o conector `SharePoint_Manta` está desconectado (MCP
-server disconnected) — precisa ser feito por uma sessão/pessoa com
-acesso de escrita ao SharePoint.
+**Status: ✅ SUPERSEDIDO — já implementado na skill de produção, por
+caminho independente.** Este arquivo vira registro histórico; nenhuma
+ação de publicação resta.
 
-**⚠️ Confirmar antes de publicar:** a "Fonte de validação" abaixo cita
-`MNT-2026-COM-1183_D`. Um levantamento completo do SharePoint em
-2026-09-10 (118 propostas catalogadas + leitura integral do documento)
-**não encontrou nenhum arquivo `_D`** — apenas a revisão `_C`
-(`MNT-2026-COM-1183_C_3.pdf`, 21 páginas, 24/08/2026), cujo próprio
-controle de revisão interno diz substituir a `_B`, sem mencionar uma
-`_D`. Antes de colar este addendum na skill de produção, confirmar se a
-`_D` existe em algum outro lugar (ex.: rascunho local, e-mail, versão
-ainda não subida) ou corrigir a referência de fonte para `_C` nos dois
-lugares abaixo (nesta seção e na "Fonte de validação" dentro do bloco a
-colar).
+Confirmado em 2026-09-13: `skill-proposta-comercial-SKILL.md` (caminho
+citado abaixo) é hoje um stub "DEPRECATED". A fonte de verdade da
+proposta técnico-comercial passou a ser
+`04_IA/Manta-Maestro/02-atividades/A1-proposta/SKILL.md` (v3.3.9,
+2026-09-11), que já contém uma variante equivalente aos 5 blocos deste
+addendum, sob o nome **"Tipo A / Concessão de Infraestrutura de Grande
+Porte"** (a numeração de modos mudou de M1–M6 para Tipo A/B/PRC — não é
+uma seção "M6" separada, é um perfil do Tipo A).
 
-Este addendum implementa a recomendação de `docs/MODELO-MESTRE-PROPOSTA.md`
+A pendência `_C`/`_D` sinalizada abaixo **também já foi resolvida na
+fonte, de forma independente**: o changelog da skill nova (v3.3.7,
+2026-09-10) removeu a alegação de validação contra "MNT-2026-COM-1183_D"
+por não corresponder a documento real (só existe `_C_3`) — mesma
+divergência encontrada no levantamento do acervo desta sessão. A versão
+em produção é mais conservadora que o texto abaixo: marca a variante
+como "pendente de validação contra uma proposta real específica antes de
+uso em cliente", em vez de alegar uma validação inexistente. Um segundo
+caso do mesmo padrão (citação a "MNT-2026-COM-1301" não encontrada no
+SharePoint) foi achado e corrigido na v3.3.9.
+
+O conteúdo abaixo (Seção A e checklist) fica mantido **apenas como
+registro do racional original** — não deve mais ser colado em lugar
+nenhum; a skill em produção já superou este texto.
+
+---
+
+Este addendum implementava a recomendação de `docs/MODELO-MESTRE-PROPOSTA.md`
 (validada contra MNT-2026-COM-1183_D) sem alterar nenhuma seção existente da
-skill `proposta-comercial` — é puramente aditivo.
+skill `proposta-comercial` — era puramente aditivo.
 
 ---
 
@@ -90,14 +99,18 @@ BR-116/324/BA, Nova Infra Invest, 26/08/2026). Análise completa em
 
 ---
 
-## Checklist de aplicação (para quem for publicar no SharePoint)
+## Checklist de aplicação (histórico — já superado, ver status no topo)
 
 - [x] Gate humano (MN) — aprovado em 2026-09-10.
-- [ ] Confirmar fonte de validação (_C vs. _D — ver aviso acima) antes de
-      colar o bloco.
-- [ ] Colar o bloco da Seção A no arquivo de produção, na posição indicada.
-- [ ] Confirmar que M1–M5 permanecem inalterados.
-- [ ] Registrar a mudança no changelog da skill (nova versão da
-      `skill-proposta-comercial-SKILL.md`).
-- [ ] Atualizar `04_IA/Manta-Maestro/00-arquitetura/` se a variante M6 for
-      referenciada na arquitetura canônica do Manta Maestro.
+- [x] Fonte de validação corrigida — resolvido na skill de produção
+      (v3.3.7), independentemente deste addendum.
+- [x] Conteúdo equivalente já publicado — como variante "Tipo A /
+      Concessão de Infraestrutura de Grande Porte" em
+      `02-atividades/A1-proposta/SKILL.md`.
+- [x] M1–M5 (hoje Tipo A/B/PRC) permanecem inalterados como estrutura
+      genérica — a variante é um perfil adicional, não substituição.
+- [x] Mudança registrada no changelog da skill de produção (v3.3.0,
+      v3.3.7, v3.3.9).
+- [ ] Atualizar `04_IA/Manta-Maestro/00-arquitetura/` se a variante ainda
+      não estiver referenciada na arquitetura canônica do Manta Maestro
+      (não verificado nesta sessão).
