@@ -4,7 +4,18 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-11) — **reconciliação de conhecimento por
+Versão: **v5.4.8** (2026-09-22) — **auditoria do sistema (repo +
+SharePoint + Supabase)**. Plano em `docs/PLANO-AUDITORIA-v1.md` (decisões
+D1–D4 de MN), resultado em `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md`.
+Numeração oficial de segmentos é a do SharePoint, **S1–S14** (D2), aplicada
+nos agentes, no espelho, nos testes e em `manta_agent_capabilities`; router
+de referência em `src/maestro/keyword_router.py`; 18 documentos sem lastro
+real marcados com aviso (E9); `03-exemplares/` descontinuado no SP; RLS e
+views corrigidas no Supabase. **Achado crítico P-21**: o repositório é
+público e branches antigas publicam dado comercial — nenhum arquivo com
+tarifa, dado bancário, contato ou nome de cliente/profissional entra aqui.
+
+Consolida v5.4.7 (2026-09-11) — **reconciliação de conhecimento por
 agente/segmento/disciplina**. Releitura ao vivo do `INDICE-CANONICAL.md`
 real (v1.1) mostrou que o eixo S vai até **S14** (Túneis, Mineração,
 Óleo e Gás), o eixo D até **D22** e o eixo A até **A11** — mais do que
@@ -191,7 +202,7 @@ composição:
 
 | Eixo | Pergunta que responde | Cardinalidade | Exemplos |
 |------|------------------------|---------------|----------|
-| **S** — Segmento | Qual o domínio de infraestrutura? | S1–S11 (numeração real do SharePoint, corrigida 2026-09-07; Óleo&Gás e Mineração sem S confirmado — ver "Eixo S") | Rodovias, Portos, Saneamento |
+| **S** — Segmento | Qual o domínio de infraestrutura? | S1–S14 (numeração oficial do SharePoint, decisão D2 de 2026-09-22; antes: S1–S11, corrigida 2026-09-07 — ver "Eixo S") | Rodovias, Portos, Saneamento |
 | **A** — Atividade | Qual o tipo de entrega/trabalho? | A1–A10 | Orçamento, Cronograma, Claims |
 | **F** — Funcional | Qual capacidade técnica transversal é usada? | F1–F8 | RAG/routing, SharePoint, Guardrails |
 | **D** — Disciplina | Qual disciplina de engenharia/negócio? | D01–D20 | Hidráulica, Estrutural, Jurídico |
@@ -250,18 +261,19 @@ Documento de referência canônico e mais detalhado deste modelo:
 | S9 | Saneamento | agente-saneamento | Renumerado de "S8" para **S9** — PRIORIDADE AySA |
 | S10 | Energia | agente-energia | Renumerado de "S9" para **S10** — ANEEL/State Grid |
 | S11 | Barragens | agente-barragens | Renumerado de "S10" para **S11** |
+| S12 | Túneis | `agente-tuneis` (real, SharePoint, v1.0.0) | Sem arquivo espelhado neste repo |
+| S13 | Mineração | `agente-mineracao` (real, SharePoint, v1.0.0) | Sem arquivo espelhado neste repo |
+| S14 | Óleo e Gás | agente-oleo-gas | Renumerado de "S12" para **S14** (2026-09-22) |
 
-**Sem correspondência confirmada na numeração real** (índice canônico
-vai só até S11): `agente-oleo-gas.md` (antigo "S12") e a "Mineração"
-antes listada como "S11" neste arquivo. Nenhum dos dois aparece em
-`INDICE-CANONICAL.md`. Não foram renumerados nem removidos — ficam
-sinalizados como **sem segmento real confirmado**, aguardando decisão
-MN (podem ser: (a) capacidades futuras ainda não formalizadas no
-SharePoint, (b) conteúdo específico deste repositório sem
-correspondência real, a descontinuar). `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md`
-e `docs/SEGMENTOS-S12-S13-DECISION.md` documentam o raciocínio anterior
-(hoje sabemos que a "fonte de verdade" que usavam — Supabase — não
-estava confirmada) e são mantidos como histórico.
+> ✅ **Atualização 2026-09-22 (decisão D2 de MN)**: a numeração oficial vai
+> até **S14** (`INDICE-CANONICAL.md` v1.2 §2). A nota anterior que tratava
+> Óleo & Gás e Mineração como "sem segmento real confirmado" (leitura de um
+> índice que parecia ir só até S11) está superada. `manta_agent_capabilities`
+> no Supabase foi renumerada para esta tabela na mesma data
+> (`supabase/migrations/2026_09_22_auditoria_w8_seguranca_renumeracao.sql`).
+> `docs/SEGMENTO-S11-MINERACAO-GAP-G015.md` e
+> `docs/SEGMENTOS-S12-S13-DECISION.md` ficam como histórico — usam códigos
+> antigos.
 
 ---
 
@@ -436,7 +448,7 @@ ver "Eixo S — Segmentos" para a explicação completa.
 | S9 | Saneamento | agente-saneamento | Renumerado de "S8" — PRIORIDADE AySA |
 | S10 | Energia | agente-energia | Renumerado de "S9" — ANEEL/State Grid |
 | S11 | Barragens | agente-barragens | Renumerado de "S10" |
-| *(sem S confirmado)* | Óleo & Gás | agente-oleo-gas | Sem segmento real confirmado — ver "Eixo S" |
+| S14 | Óleo & Gás | agente-oleo-gas | Renumerado de "S12" (D2, 2026-09-22) |
 
 ---
 
@@ -491,7 +503,7 @@ IF menção a Motiva|CCR Rodovias|SP-258|SP-330|Contorno Apucarana
      agente-contratual).
 ```
 
-**Edificações (S6) e Óleo & Gás (sem S confirmado) ainda NÃO têm
+**Edificações (S6) e Óleo & Gás (S14) ainda NÃO têm
 keyword de routing** (confirmado em `agente-edificacoes.md` e
 `agente-oleo-gas.md`, seção "Ferramentas e integrações" de cada um) —
 o Maestro não consegue despachar para esses dois agentes hoje, mesmo
@@ -512,13 +524,13 @@ sem alteração):
 
 ## RAG — Coleções em Supabase
 
-**9 coleções confirmadas por auditoria real** (não apenas por arquivo
-de migração candidata) — ver `docs/SUPABASE-PROJECT-AUDIT.md`, que
-executou `list_tables` no projeto `ogxxgvgtulrbbppshjie`
-(`manta-maestro`, `sa-east-1`, `ACTIVE_HEALTHY`) e confirmou
-`rag_collections` com 9 linhas, `sp_agent_routing` com 9 linhas,
-`maestro_routing_keywords` com 50 linhas, `manta_rag_chunks` com 204
-linhas e `manta_rag_documents` com 111 linhas.
+**Contagem exata em 2026-09-22** (auditoria, projeto `ogxxgvgtulrbbppshjie`
+`manta-maestro`): `rag_collections` 11 linhas, `sp_agent_routing` 9,
+`maestro_routing_keywords` 61, `manta_rag_chunks` 316,
+`manta_rag_documents` 126. Os números antigos desta seção (9 coleções,
+50 keywords, 204 chunks, 111 documentos) vinham de
+`docs/SUPABASE-PROJECT-AUDIT.md` (julho) e estão superados. Nenhuma edge
+function publicada; tabelas de ML (`manta_rag_ml_*`) vazias.
 
 | Coleção | Prefixo storage | Fontes iniciais | Status |
 |---------|-----------------|-----------------|--------|
@@ -531,7 +543,7 @@ linhas e `manta_rag_documents` com 111 linhas.
 | saneamento | san: | SNIS, IWA, NBR 12211-12218, Lei 14.026, ERAS/AySA | ✅ v4.2 |
 | energia | ene: | ANEEL editais, R1-R5 EPE, ONS, IEEE, IEC, NBR 5422 | ✅ v4.2 |
 | barragens | bar: | ICOLD, CBDB, SIGBM, SNISB, Lei 12.334/14.066, NBR 13028/8681 | ✅ v4.2 |
-| óleo-gás | og: *(sugerido)* | ANP, API 650/653, ASME B31.3/4/8, NFPA 30, HAZOP | 🔲 Não criada — segmento sem numeração real confirmada (ver "Eixo S") |
+| óleo-gás | og: *(sugerido)* | ANP, API 650/653, ASME B31.3/4/8, NFPA 30, HAZOP | 🔲 Não criada — segmento S14 (D2, 2026-09-22) |
 | edificações | edi: *(sugerido)* | NBR 15575, LEED, BIM | 🔲 Não criada — segmento renumerado para S6, depende do gate MN |
 
 Sub-prefixos de contexto (mantidos do v4.2):
@@ -565,7 +577,7 @@ em produção (ver seção RAG acima).
 | agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
 | agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
 | agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
-| agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento sem numeração real confirmada |
+| agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento S14 (D2, 2026-09-22) |
 | agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento renumerado para S6, pendente gate MN |
 
 ---
@@ -751,12 +763,19 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   organização Supabase ativa da conta corporativa). **Confirmação
   humana (dashboard) ainda pendente** antes de remover a referência —
   ver action items AI-1 a AI-10 nesse documento.
-- **RLS desabilitado em 3 tabelas públicas** (`rag_collections`,
-  `sp_agent_routing`, `maestro_routing_keywords`) — achado de segurança
-  correlato da auditoria G012, com SQL de remediação já redigido mas
-  **não aplicado** (requer policies de leitura corretas antes de
-  habilitar RLS, para não quebrar o acesso do próprio Maestro em
-  runtime). Ver AI-6 em `docs/SUPABASE-PROJECT-AUDIT.md`.
+- ~~**RLS desabilitado em 3 tabelas públicas**~~ — **resolvido**: em
+  2026-09-22 as três (`rag_collections`, `sp_agent_routing`,
+  `maestro_routing_keywords`) já estavam com RLS e policy de leitura. A
+  auditoria de 2026-09-22 corrigiu o que restava nos advisors: RLS em
+  `manta_artefatos`, 13 views para `security_invoker`, `search_path` de
+  `r2j_un_norm` (migração `2026_09_22_auditoria_w8_seguranca_renumeracao.sql`).
+- **🔴 P-21 — repositório público com dado comercial em branches antigas**
+  (2026-09-22): duas branches de sessões anteriores publicam dados
+  bancários, contato pessoal e tabela tarifária. Branches informadas a MN
+  fora do repo. Ação: tornar o repositório privado ou apagar/reescrever
+  as branches. Até lá, a importação completa do SP para o repo (onda W2)
+  está suspensa e a Routine de sync GitHub ↔ SP fica pausada. Ver
+  `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` §2 e §6.
 - **3 projetos Supabase `INACTIVE`** (`manta-tocantins`,
   `manta-rodovias`, `manta-portal-piloto`) — decisão de consolidar,
   arquivar ou manter pendente MN (ver AI-7/AI-8 no mesmo documento).
@@ -837,7 +856,7 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
       errada; a real (SharePoint) é a que este item chamava de
       "Convenção B". Ver checklist de correção logo abaixo.
 - [x] Corrigir tabela de coleções RAG com dados de auditoria real (9 confirmadas — nota: fonte dessa "auditoria" é parte da infraestrutura Supabase ainda não confirmada como real, ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`)
-- [x] ~~Registrar S12 (Óleo & Gás) e S13 (Edificações) como propostos~~ — Edificações renumerado para S6 (real); Óleo & Gás segue sem S confirmado
+- [x] ~~Registrar S12 (Óleo & Gás) e S13 (Edificações) como propostos~~ — Edificações renumerado para S6 (real); Óleo & Gás = S14 (D2, 2026-09-22)
 - [x] ~~Identificar S11 (Mineração) a partir de `manta_agent_capabilities`~~ — fonte não confirmada como real; S11 real é Barragens
 - [x] Linkar Eixo A/F/D aos documentos dedicados já produzidos
 - [x] ~~Corrigir numeração de segmento em `docs/DISCIPLINAS-D01-D20.md`, `docs/ATIVIDADES-A1-A10.md` e `agente-aeroportos.v5.0.md` (Convenção B → A)~~ — **não era necessário**: esses arquivos já usavam a numeração correta (real)
@@ -881,18 +900,18 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.2)
+├── CLAUDE.md                              # este arquivo (master registry, v5.4.8)
 ├── README.md
 ├── .claude/
 │   └── agents/
-│       ├── agente-portos.md               # S7 real (frontmatter interno ainda diz S6 — renumeração pendente, ver Deploy checklist)
-│       ├── agente-aeroportos.md           # S8 real (frontmatter interno ainda diz S7 — renumeração pendente)
-│       ├── agente-saneamento.md           # S9 real (frontmatter interno ainda diz S8 — renumeração pendente) — prioridade AySA
-│       ├── agente-energia.md              # S10 real (frontmatter interno ainda diz S9 — renumeração pendente) — ANEEL/State Grid
-│       ├── agente-barragens.md            # S11 real (frontmatter interno ainda diz S10 — renumeração pendente)
+│       ├── agente-portos.md               # S7 (renumerado em 2026-09-22)
+│       ├── agente-aeroportos.md           # S8 (renumerado em 2026-09-22)
+│       ├── agente-saneamento.md           # S9 (renumerado em 2026-09-22) — prioridade AySA
+│       ├── agente-energia.md              # S10 (renumerado em 2026-09-22) — ANEEL/State Grid
+│       ├── agente-barragens.md            # S11 (renumerado em 2026-09-22)
 │       ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
-│       ├── agente-oleo-gas.md             # sem segmento real confirmado (frontmatter interno ainda diz S12)
-│       └── agente-edificacoes.md          # S6 real (frontmatter interno ainda diz S13 — renumeração pendente)
+│       ├── agente-oleo-gas.md             # S14 (renumerado em 2026-09-22)
+│       └── agente-edificacoes.md          # S6 (renumerado em 2026-09-22)
 ├── docs/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
@@ -913,15 +932,22 @@ Codex-exemplo/
 │   ├── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
 │   ├── PLANEJAMENTO-MANTA-MAESTRO.md      # 🆕 2026-09-11 — relatório de reconciliação (achados reais vs. suposições, ver §1-3)
 │   ├── D03-GEOTECNIA-APLICACAO-PROJETOS-MANTA.md # 🆕 2026-09-11 — guia prático (D03 real, não um agente novo)
-│   └── MATRIZ-CONHECIMENTO-POR-AGENTE.md  # 🆕 2026-09-11 — conhecimento essencial dos 21+ agentes (hipótese, não cruzada linha a linha com o real)
+│   ├── MATRIZ-CONHECIMENTO-POR-AGENTE.md  # 🆕 2026-09-11 — conhecimento essencial dos 21+ agentes (hipótese, não cruzada linha a linha com o real)
+│   ├── PLANO-AUDITORIA-v1.md              # 🆕 2026-09-22 — plano da auditoria + decisões D1–D4 de MN
+│   └── auditoria/
+│       └── RELATORIO-AUDITORIA-2026-09-22.md # 🆕 resultado: ondas W0–W8, matrizes E9 (lastro) e de duplicatas, P-21
 ├── sharepoint/
-│   ├── README.md
+│   ├── README.md                          # regras de espelho (repo público — ver P-21)
+│   ├── Manta-Maestro/                     # 🆕 espelho parcial sanitizado da árvore canônica (INDICE-CANONICAL v1.2 etc.)
+│   ├── avisos-drive-b/                    # 🆕 _DEPRECATED.md publicados na biblioteca 04_IA
 │   └── 00-arquitetura/
 │       └── ARQUITETURA-AGENTES-IA.md      # v3.0.0 — documento de arquitetura de referência (4 eixos)
 ├── supabase/
 │   └── migrations/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
-│       └── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
+│       ├── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (numeração antiga)
+│       └── 2026_09_22_auditoria_w8_seguranca_renumeracao.sql # 🆕 aplicada: RLS/views + renumeração D2
+├── src/maestro/keyword_router.py         # 🆕 router determinístico de referência (usado pelos testes E2E)
 └── tests/
     └── routing/
         └── prompts.md                     # smoke tests de routing por segmento
@@ -931,6 +957,18 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.8** (2026-09-22) — auditoria do sistema Manta Maestro (repo +
+  SharePoint + Supabase), plano `docs/PLANO-AUDITORIA-v1.md`, relatório
+  `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md`, PR #123. Numeração
+  D2 (S1–S14 do SharePoint) aplicada em agentes, espelho, scripts,
+  registry, testes e `manta_agent_capabilities`; testes E2E passam a usar
+  `src/maestro/keyword_router.py` em vez de mocks internos; CI (lint
+  Markdown, `pytest` path, workflow Docker/Slack) corrigido; 18 docs sem
+  lastro real com aviso E9; `03-exemplares/` descontinuado no SP;
+  duplicatas SICRO removidas; avisos `_DEPRECATED.md` no Drive B; RLS e
+  views corrigidas no Supabase. Achado P-21 (repositório público com dado
+  comercial em branches antigas) suspendeu a importação completa do SP e
+  mantém as Routines de sync e noturna pausadas até decisão de MN.
 - **v5.4.7** (2026-09-11) — reconciliação de conhecimento por
   agente/segmento/disciplina (`docs/PLANEJAMENTO-MANTA-MAESTRO.md`).
   Re-verificação ao vivo do `INDICE-CANONICAL.md` real (v1.1) corrige

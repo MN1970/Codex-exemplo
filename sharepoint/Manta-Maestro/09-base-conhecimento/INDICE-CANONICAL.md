@@ -372,10 +372,14 @@ Auditoria do sistema Manta Maestro (repositório + SharePoint + banco),
 com decisões de MN registradas no plano de auditoria do repositório
 (`docs/PLANO-AUDITORIA-v1.md`, §7). O que mudou aqui:
 
-1. **Fonte de edição = repositório (decisão D1).** Este índice, a skill
-   A1-proposta e o template PRT rodovias passam a ter a cópia de edição no
-   repositório GitHub (`sharepoint/Manta-Maestro/…`) e são publicados aqui
-   por espelho. Ver §11 item 8.
+1. **Fonte de edição = repositório (decisão D1), com exceção.** Este índice
+   e o template PRT rodovias passam a ter a cópia de edição no repositório
+   GitHub (`sharepoint/Manta-Maestro/…`) e são publicados aqui por espelho
+   (ver §11 item 8). **Exceção:** `02-atividades/A1-proposta/SKILL.md`
+   continua com edição **aqui no SharePoint** — contém dados comerciais
+   (tabela tarifária, dados bancários, contato) e o repositório é público.
+   Até decisão de MN, nenhum arquivo com dado comercial ou nome de
+   cliente/pessoa vai para o repositório.
 2. **Numeração de segmentos confirmada (decisão D2).** A numeração deste
    índice (§2, S1–S14) é a oficial. A tabela `manta_agent_capabilities` do
    banco foi renumerada para ela (túneis 03-S5→03-S12, portos 03-S6→03-S7,
