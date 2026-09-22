@@ -240,6 +240,10 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      # dorny/test-reporter roda `git ls-files` — sem checkout falha com
+      # "not a git repository".
+      - uses: actions/checkout@v4
+
       - name: Download all test reports
         uses: actions/download-artifact@v4
         with:
