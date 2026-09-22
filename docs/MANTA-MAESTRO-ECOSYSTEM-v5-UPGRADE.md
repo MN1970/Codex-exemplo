@@ -1,5 +1,7 @@
 # MANTA MAESTRO ECOSYSTEM — v5.0 Grand Upgrade
 
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada.** Proposta de ecossistema; tabelas de "Status/Evidência" não foram verificadas contra o sistema real. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Versão do Documento**: 0.1-draft  
 **Data**: 2026-07-29  
 **Autores**: Claude AI + Manta Associados  

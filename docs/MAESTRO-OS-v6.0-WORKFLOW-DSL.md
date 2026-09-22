@@ -1,5 +1,7 @@
 # Maestro OS v6.0 — Workflow DSL Specification
 
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada.** DSL de workflow sem execução real comprovada. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Versão:** 0.1 (draft)  
 **Data:** 2026-07-26  
 **Objetivo:** Linguagem de scripting para orquestração de 8 agentes em paralelo com consenso 3/5

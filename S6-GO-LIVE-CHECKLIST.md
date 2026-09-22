@@ -1,4 +1,6 @@
 # S6 Go-Live Checklist — Agente-Portos (Manta 03-S6)
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada · numeração anterior à D2.** Go-live planejado para 2026-07-25 sem evidência de ter ocorrido. "S6" aqui é Portos na numeração antiga — na numeração oficial (D2) Portos é **S7** e S6 é Edificações. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Version: v5.0 | Target Launch: 2026-07-25 | Owner: mneves@mantaassociados.com**
 
 Checklist executável para lançamento de produção do Agente-Portos com 20 fases em 8–16 horas.

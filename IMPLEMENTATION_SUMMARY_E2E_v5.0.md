@@ -1,5 +1,7 @@
 # Suite E2E Maestro Router v5.0 — Sumário de Implementação
 
+> **Auditoria 2026-09-22 (E9 — lastro real): 🟡 real, mas descrito errado.** Os testes E2E existiam, mas exercitavam um mock definido dentro do próprio arquivo de teste, não um router real. Desde 2026-09-22 delegam a `src/maestro/keyword_router.py` (router determinístico de referência). Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Data:** 2026-07-25  
 **Status:** ✅ Completo e testável  
 **Proprietário:** mneves@mantaassociados.com  

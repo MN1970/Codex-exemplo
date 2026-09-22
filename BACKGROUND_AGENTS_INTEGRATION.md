@@ -1,5 +1,7 @@
 # Background Agents Integration Guide (v5.0)
 
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada.** Framework em código (`scripts/background_agent_framework.py`) sem uso em produção comprovado. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Status:** Complete Framework Implementation  
 **Date:** 2026-07-25  
 **Segments:** S5 (Túneis) + Horizontais (Claims, Advisory, etc.)

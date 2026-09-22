@@ -1,4 +1,6 @@
 # S6 Launch Documentation Index
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada · numeração anterior à D2.** Índice de um lançamento sem evidência de ter ocorrido. "S6" = Portos na numeração antiga; oficial (D2): Portos = **S7**. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Version: v5.0 | Agent: Manta 03-S6 (Portos) | Launch Date: 2026-07-25**
 
 Complete guide to all S6 go-live and post-launch documentation. **Start here.**
