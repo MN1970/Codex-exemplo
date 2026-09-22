@@ -24,7 +24,7 @@ A biblioteca solta `04_IA` (Drive B) tem cópias antigas: `Manta-Maestro/` e
 
 | Caminho | O que é | Direção |
 |---|---|---|
-| `Manta-Maestro/` | Espelho **parcial** da árvore canônica: só arquivos sem dado comercial nem nome de cliente/pessoa (hoje `INDICE-CANONICAL.md`, `template-prt-rodovias-v1.md` e `03-exemplares/_DEPRECATED.md`) | repo → SP |
+| `Manta-Maestro/` | Espelho **parcial** da árvore canônica: só arquivos sem dado comercial nem nome de cliente/pessoa (hoje `INDICE-CANONICAL.md`, `PENDENTE-SHAREPOINT.md`, `template-prt-rodovias-v1.md` e `03-exemplares/_DEPRECATED.md`) | repo → SP |
 | `avisos-drive-b/` | Avisos `_DEPRECATED.md` publicados na biblioteca `04_IA` | repo → SP |
 | `00-arquitetura/`, `ARQUITETURA-AGENTES-IA-v5.0.0.md`, `CONSOLIDACAO-SHAREPOINT-v5.0.1.md`, `UPLOAD-MANUAL-v5.0.1.md` | Documentos históricos da v5.0 | — (histórico) |
 | `01-agentes-fundamentais/` | Espelho antigo (v4.2) dos agentes verticais, usado pela Routine de sync de julho–agosto | histórico; numeração de agente já corrigida para D2, mas o destino no SP (`04_IA/01-agentes-fundamentais/`) está descontinuado |
