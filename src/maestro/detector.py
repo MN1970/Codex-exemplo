@@ -250,6 +250,26 @@ ACTIVITY_PATTERNS = {
 
 BASE_HORIZONTAL_AGENTS = ["manta-01-claims", "manta-05-orcamento", "manta-07-cronograma", "manta-15-advisory"]
 
+# Ordem de preenchimento dos horizontais até o tamanho-alvo do pool
+# (os 11 horizontais do registro, base primeiro).
+HORIZONTAL_FILL_ORDER = BASE_HORIZONTAL_AGENTS + [
+    "manta-02-contratual",
+    "manta-06-modelagem",
+    "manta-13-bd",
+    "manta-14-apresentacoes",
+    "manta-04-imobiliario",
+    "manta-16-arquiteto-ia",
+    "manta-20-esg",
+]
+
+# Tamanho-alvo do pool (verticais + horizontais + router), conforme o
+# docstring de _calculate_complexity: simples 8, médio 12, complexo 16.
+TARGET_POOL_SIZE = {
+    "simple": 8,
+    "medium": 12,
+    "complex": 16,
+}
+
 # ============================================
 # 3. DETECTOR LOGIC
 # ============================================
@@ -389,11 +409,20 @@ class ComplexityDetector:
                 "manta-13-bd"
             ])
 
-        # Deduplicate and limit
-        selected = list(set(selected))
+        # Deduplica preservando a ordem de prioridade (list(set(...)) deixava a
+        # ordem — e portanto o corte abaixo — dependente do hash de strings).
+        selected = list(dict.fromkeys(selected))
 
-        # Ensure we don't exceed max agents
-        max_horizontal = 11
+        # Completa até o tamanho-alvo do pool (verticais + horizontais + router)
+        max_horizontal = len(HORIZONTAL_FILL_ORDER)
+        target = TARGET_POOL_SIZE[complexity.value] - num_segments - 1
+        target = max(0, min(target, max_horizontal))
+        for agent in HORIZONTAL_FILL_ORDER:
+            if len(selected) >= target:
+                break
+            if agent not in selected:
+                selected.append(agent)
+
         return selected[:max_horizontal]
 
     def _calculate_token_budget(self, num_agents: int) -> int:

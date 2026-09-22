@@ -265,5 +265,26 @@ class TestConsensusEscalation(unittest.TestCase):
         self.assertIn(result.status.value, ["escalated", "tied"])
 
 
+class TestSandboxImports(unittest.TestCase):
+    """O sandbox libera só os módulos da whitelist."""
+
+    def _run(self, code):
+        from src.maestro.code_executor import SafePythonSandbox, ExecutionRequest
+        return SafePythonSandbox().execute(ExecutionRequest(code, {}))
+
+    def test_whitelisted_import_works(self):
+        result = self._run("import math\nresult = round(math.sqrt(16), 1)")
+        self.assertTrue(result.success, result.error)
+        self.assertEqual(result.output, 4.0)
+
+    def test_non_whitelisted_imports_blocked(self):
+        for code in ("import os", "import subprocess", "from os import path",
+                     "import importlib", "__import__('os')"):
+            with self.subTest(code=code):
+                result = self._run(code)
+                self.assertFalse(result.success)
+                self.assertIn("ImportError", result.error)
+
+
 if __name__ == "__main__":
     unittest.main()

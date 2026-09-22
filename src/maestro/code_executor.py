@@ -146,9 +146,21 @@ class SafePythonSandbox:
         }
 
         # Adicionar módulos whitelistados
+        allowed = {}
         for module_name in (allow_imports or []):
-            if module_name in self.SAFE_MODULES:
-                globals_dict[module_name] = self.SAFE_MODULES[module_name]
+            module = self.SAFE_MODULES.get(module_name)
+            if module is not None:
+                globals_dict[module_name] = module
+                allowed[module_name] = module
+
+        # Sem __import__ nos builtins, qualquer `import` falhava — inclusive
+        # dos módulos da whitelist. Import restrito: só o que está liberado.
+        def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
+            if level != 0 or name.split(".")[0] not in allowed:
+                raise ImportError(f"import de '{name}' não permitido no sandbox")
+            return __import__(name, globals, locals, fromlist, level)
+
+        globals_dict["__builtins__"]["__import__"] = _restricted_import
 
         return globals_dict
 

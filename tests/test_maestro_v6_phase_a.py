@@ -292,7 +292,7 @@ class TestPhaseAIntegration:
         from src.maestro.detector import ComplexityDetector
         detector = ComplexityDetector()
         detection = detector.detect(workflow.project.title)
-        assert detection.total_agents >= 8
+        assert detection.agents_needed >= 8
 
         # 4. Queue & Execute
         executor = QueueExecutor()

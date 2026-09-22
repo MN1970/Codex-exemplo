@@ -122,8 +122,24 @@ Documentos marcados com aviso no topo: `DEPLOYMENT-REPORT-v5-0-PRODUCTION.md`,
 - 2ª rodada: `01_BIBLIOTECA`, `02_CLIENTE`, `03_APOIO`, `ABDIB`, conteúdo
   pessoal/de teste (P-11), nomenclatura de `02_CLIENTE` (P-13), retenção de
   backups (P-14).
-- Suítes `tests/test_maestro_v6_*` com 12 falhas antigas, não cobertas por
-  nenhum job de CI.
+- ~~Suítes `tests/test_maestro_v6_*` com 12 falhas antigas~~ — **corrigidas
+  em 2026-09-22** (decisão de MN: corrigir, não isolar). Bugs de código em
+  `src/maestro/`: `WorkflowExecution` criado sem `status`; atributos
+  inexistentes `total_agents`/`agents_selected` no orquestrador; detector sem
+  aplicar o tamanho de pool documentado (8/12/16) e com ordem aleatória
+  (`list(set(...))`); `DurationEstimate` sem `estimated_hours`; sandbox sem
+  `__import__` (nenhum import funcionava, nem da whitelist). Erros de teste:
+  YAML inválido, campo com nome errado, modelo de ML não treinado, dados de
+  métricas fora das próprias metas. Novo teste garante que o sandbox continua
+  bloqueando imports fora da whitelist. A camada v6 segue 📐 (não implantada).
+- **Endpoint `/health` e `/metrics` do agendador (pendência):** o CI
+  "Test in Container" esperava esses endpoints em `:8080`, mas
+  `scripts/apscheduler_setup.py` não abre servidor HTTP. Decisão de MN: o CI
+  passa a verificar o que existe (`--status` e `--list-jobs`, os 4 jobs
+  registrados); implementar o endpoint só se o agendador for de fato
+  implantado — hoje o agendamento real é `cron`. Na mesma correção, `--status`
+  e `--list-jobs`, que quebravam com `AttributeError` antes de o agendador
+  iniciar, passaram a funcionar.
 
 ---
 
