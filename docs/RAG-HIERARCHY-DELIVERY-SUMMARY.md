@@ -344,7 +344,7 @@ npm test -- tests/rag-hierarchy.test.ts --coverage
 
 **Comprehensive technical reference:**
 
-#### Sections:
+#### Sections
 
 1. **Overview** (features, architecture)
 2. **Five Collections** (table of collections, sources, weights)

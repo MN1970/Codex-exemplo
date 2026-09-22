@@ -29,6 +29,7 @@ Aprofundar conhecimento do agente em **agregados para pavimentação**, cobrindo
 **Agregado** é o material granular que forma a matriz do pavimento, representando **85-95%** do volume total. Em rodovias brasileiras, agregados são classificados por:
 
 #### Por Origem Geológica
+
 | Tipo | Origem | Exemplo | Durabilidade | Custo |
 |------|--------|---------|--------------|-------|
 | **Pétreos Naturais** | Depósitos sedimentares | Areia, seixo | Média a boa | Baixo |
@@ -156,6 +157,7 @@ Onde:
 - Recomendação DNIT: **IRC ≥ 80%** para sub-base
 
 ##### Valores Típicos por Tipo (Basalto região Sul)
+
 | Material | IRC (%) | Aplicação Recomendada |
 |----------|---------|----------------------|
 | Basalto fresco | 98-100 | CBUQ, binder, base |
@@ -172,6 +174,7 @@ Onde:
 - Recomendação DNIT: **CPA ≥ 55** para camada de rolamento (CBUQ)
 
 ##### Valores Típicos
+
 | Agregado | CPA | Aplicação |
 |----------|-----|-----------|
 | Basalto | 55-65 | Recomendado para CBUQ |

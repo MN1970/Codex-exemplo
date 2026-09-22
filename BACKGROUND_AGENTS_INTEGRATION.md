@@ -562,7 +562,7 @@ WHERE expires_at < NOW();
 **Diagnosis:**
 
 ```bash
-$ echo $SUPABASE_URL $SUPABASE_KEY | grep -v "^$"
+echo $SUPABASE_URL $SUPABASE_KEY | grep -v "^$"
 ```
 
 **Solution:**

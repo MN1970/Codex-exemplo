@@ -275,8 +275,8 @@ local     |       |      |              | trabalhadores de porto
 SOCIAL LICENSE SCORE: 35/100 (CRÍTICO — risco de contestação)
 ```
 
-**Intepretação**: 
-- Score < 50 = **high conflict risk** 
+**Intepretação**:
+- Score < 50 = **high conflict risk**
 - Recomendação: co-design obrigatório antes de projeto executivo
 
 #### 3.2.3 Cenários de Engajamento

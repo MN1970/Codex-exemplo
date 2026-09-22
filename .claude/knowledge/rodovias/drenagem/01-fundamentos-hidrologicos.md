@@ -64,7 +64,7 @@ Onde:
 - **I_a** = Retenção inicial / infiltração inicial (mm)
 - **ΔS** = Variação de armazenamento no solo (mm)
 
-### Em regime permanente (simplificado):
+### Em regime permanente (simplificado)
 
 $$Q = P - ET - f$$
 

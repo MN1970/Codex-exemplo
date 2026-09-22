@@ -45,7 +45,7 @@ The Phase 2 composition orchestrator adds four key capabilities to Phase 1:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Key classes:
+### Key classes
 
 - **ResourcePool**: Caches shared RAG chunks (edital, normativa, Lei 14.026) across agents to avoid redundant queries.
 - **CostTracker**: Estimates and tracks token consumption per-agent and globally; enforces budget limits.

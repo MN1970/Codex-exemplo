@@ -29,6 +29,8 @@ uma sessão só. Documentado aqui conforme combinado com o usuário em
 > recomendada: MN revisar e corrigir a skill real diretamente antes de
 > usá-la em proposta de cliente.
 
+<!-- -->
+
 > ⚠️ **Atualização 2026-09-07 (mesma sessão, investigação mais
 > profunda)**: a primeira versão deste documento concluía que a
 > infraestrutura Supabase/RAG era "nunca confirmada como real". Isso
@@ -304,6 +306,8 @@ texto real da skill hoje:
 > concessões de infraestrutura de grande porte (rodovias, ferrovias,
 > portos, aeroportos, saneamento, energia, barragens). Validada contra
 > a proposta real MNT-2026-COM-1183_D (Concessão Rota 2 de Julho)."
+
+<!-- -->
 
 > Skill real, hoje (v3.3.5): "Extensao do **Tipo A** para propostas de
 > avaliacao tecnica, parametrico de CAPEX/OPEX e gestao integrada em

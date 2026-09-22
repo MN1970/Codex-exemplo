@@ -95,6 +95,7 @@ e = (V² - 127 × R × f) / (127 × R)
 ```
 
 **Valores Típicos** (DNIT):
+
 | V (km/h) | f | e (%) |
 |----------|---|-------|
 | 40 | 0.20 | 2-4 |
@@ -171,6 +172,7 @@ Onde:
 ### 4.2 Faixa de Rolamento
 
 **Largura de faixa** (DNIT):
+
 | Classe | Velocidade | Largura Faixa |
 |--------|-----------|---------------|
 | BR (Federal) | 100 km/h | 3.60 m |
@@ -190,6 +192,7 @@ Onde:
 - Suporte estrutural (efeito de borda)
 
 **Largura** (DNIT):
+
 | Classe | Acostamento |
 |--------|-----------|
 | BR | 2.5-3.0 m |
@@ -245,6 +248,7 @@ Total: d_parada = V × 0.7 + V² / (254 × f)
 ```
 
 **Exemplos**:
+
 | V (km/h) | d_parada (m) |
 |----------|--------------|
 | 40 | 28 |

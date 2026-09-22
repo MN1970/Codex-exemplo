@@ -408,12 +408,12 @@ improves to ~22 months.
 
 | Category | Actual | Projected | Notes |
 |----------|--------|-----------|-------|
-| **Development** |
+| **Development** | | | |
 | R1-R7 core | $18,000 | $20,000 | +10% for QA |
 | R8-R10 advanced | $12,000 | $10,000 | Faster than expected |
 | Testing & validation | $3,000 | $4,800 | Load testing |
 | Documentation | $2,000 | $3,000 | Runbooks |
-| **Deployment** |
+| **Deployment** | | | |
 | Infrastructure (1 month) | $2,000 | $2,000 | Supabase, Qdrant |
 | Training (40 hours) | $6,000 | $3,000 | Reduced scope |
 | **Total Investment** | **$43,000** | **$42,800** | — |

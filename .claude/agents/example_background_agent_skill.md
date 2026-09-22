@@ -538,13 +538,13 @@ avg_duration_seconds (FLOAT8)
 **Check:** Is job queue processor running?
 
 ```bash
-$ python scripts/agent_job_queue.py status
+python scripts/agent_job_queue.py status
 ```
 
 If not, start it:
 
 ```bash
-$ python scripts/agent_job_queue.py start &
+python scripts/agent_job_queue.py start &
 ```
 
 ### Job times out on first attempt
@@ -566,7 +566,7 @@ Retry happens automatically (max 2x).
 **Check:** Expired memories are not purged. Trigger cleanup:
 
 ```bash
-$ python scripts/agent_state_manager.py purge --agent-id manta-03-s5
+python scripts/agent_state_manager.py purge --agent-id manta-03-s5
 ```
 
 Or configure cron job (APScheduler):

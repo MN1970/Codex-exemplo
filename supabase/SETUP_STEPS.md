@@ -202,7 +202,7 @@ psql $SUPABASE_DB_URL -c "DROP EXTENSION IF NOT EXISTS vector;"
 
 ---
 
-## 🎉 Pronto!
+## 🎉 Pronto
 
 Se todos os checks passaram, o banco de dados está pronto para:
 1. ✅ Skill `sicro-similaridade` operacional

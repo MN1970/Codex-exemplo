@@ -367,7 +367,7 @@ pip install jinja2
 
 **Symptom:** Nenhuma saída de sucesso
 
-**Fix:** 
+**Fix:**
 1. Verificar CLAUDE.md existe: `ls -la /home/user/Codex-exemplo/CLAUDE.md`
 2. Verificar diretório de output: `mkdir -p manta-maestro/`
 3. Verificar permissões de escrita: `touch manta-maestro/test.txt`
