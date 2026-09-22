@@ -26,7 +26,7 @@ pytestmark = pytest.mark.unit
 AGENTS = load_all_agents()
 
 # Casa linhas de tabela markdown tipo:
-# | Manta 03-S6 | Portos | agente-portos | 🆕 Criado 2026-07-05 |
+# | Manta 03-S7 | Portos | agente-portos | 🆕 Criado 2026-07-05 |
 TABLE_ROW_RE = re.compile(r"^\|\s*Manta [\w-]+\s*\|.*?\|\s*(agente-[\w-]+)\s*\|", re.MULTILINE)
 
 

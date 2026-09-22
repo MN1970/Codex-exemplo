@@ -9,7 +9,7 @@
 ## SCENARIO 1: Transmission Tower Procurement (S9 — Energy)
 
 **Project:** Linha de Transmissão 345 kV (LT-MG-SP-001)  
-**Segment:** S9 — Energia (ANEEL regulated)  
+**Segment:** S10 — Energia (ANEEL regulated)  
 **Sponsor:** State Grid Brasil  
 **Procurement Officer:** Maria da Silva (msilva@stategrid.com.br)
 
@@ -220,10 +220,10 @@ Agent Value-Add:
 
 ---
 
-## SCENARIO 2: Dredge Equipment Sourcing (S6 — Ports)
+## SCENARIO 2: Dredge Equipment Sourcing (S7 — Ports)
 
 **Project:** Dragagem do Porto de Santos — Berço 7 (MODERNIZAÇÃO-2026)  
-**Segment:** S6 — Portos (ANTAQ regulated)  
+**Segment:** S7 — Portos (ANTAQ regulated)  
 **Sponsor:** Porto Autoridade de Santos  
 **Procurement Officer:** Carlos Mendes (cmendes@portodesantos.gov.br)
 
@@ -260,7 +260,7 @@ Trigger: "Vamos fazer dragagem no Porto Santos. Berço 7.
 
 Commodity Identification:
   Template T-002: Dredge Equipment (CSE rental)
-  Segment: S6 — Portos
+  Segment: S7 — Portos
   Equipment type: Cutter-suction dredge (not capital purchase, rental)
   Regulatory: ANTAQ pre-clearance required
 
@@ -431,10 +431,10 @@ Agent Value:
 
 ---
 
-## SCENARIO 3: SCADA System Procurement (S8 — Saneamento)
+## SCENARIO 3: SCADA System Procurement (S9 — Saneamento)
 
 **Project:** ETA Guarapiranga — Upgrade SCADA (SÃO PAULO SANEAMENTO)  
-**Segment:** S8 — Saneamento (water treatment, SNIS regulated)  
+**Segment:** S9 — Saneamento (water treatment, SNIS regulated)  
 **Sponsor:** SABESP (Companhia de Saneamento Básico do Estado de São Paulo)  
 **Procurement Officer:** Ana Costa (acosta@sabesp.sp.gov.br)
 
@@ -476,7 +476,7 @@ Trigger: "Precisamos atualizar SCADA na ETA Guarapiranga.
 
 Commodity: SCADA System (control + cloud integration)
 Template: T-003 (water treatment specialized)
-Segment: S8 — Saneamento
+Segment: S9 — Saneamento
 Regulatory: SNIS + LGPD
 
 Vendor Search Criteria:

@@ -479,7 +479,7 @@ export function escalateTier(tier: ModelTier): ModelTier | null {
  * for them yet since they live in the operational Maestro repo).
  */
 export const DEFAULT_ROUTING_KEYWORDS: RoutingKeyword[] = [
-  // --- Saneamento (S8) — supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql
+  // --- Saneamento (S9) — supabase/migrations/2026_07_05_v4_2_agents_s6_s10.sql
   { agentId: 'agente-saneamento', keyword: 'saneamento', priority: 100 },
   { agentId: 'agente-saneamento', keyword: 'eta', priority: 100 },
   { agentId: 'agente-saneamento', keyword: 'ete', priority: 100 },
@@ -490,7 +490,7 @@ export const DEFAULT_ROUTING_KEYWORDS: RoutingKeyword[] = [
   { agentId: 'agente-saneamento', keyword: 'snis', priority: 100 },
   { agentId: 'agente-saneamento', keyword: 'pmsb', priority: 90 },
   { agentId: 'agente-saneamento', keyword: 'lei 14.026', priority: 100 },
-  // --- Energia (S9)
+  // --- Energia (S10)
   { agentId: 'agente-energia', keyword: 'transmissão', priority: 100 },
   { agentId: 'agente-energia', keyword: 'lt', priority: 90 },
   { agentId: 'agente-energia', keyword: 'subestação', priority: 100 },
@@ -502,7 +502,7 @@ export const DEFAULT_ROUTING_KEYWORDS: RoutingKeyword[] = [
   { agentId: 'agente-energia', keyword: 'kv', priority: 70 },
   { agentId: 'agente-energia', keyword: 'geração', priority: 65 },
   { agentId: 'agente-energia', keyword: 'uhe', priority: 60 }, // low weight alone — UHE is a composite trigger, see COMPOSITION_PATTERNS
-  // --- Portos (S6)
+  // --- Portos (S7)
   { agentId: 'agente-portos', keyword: 'porto', priority: 80 },
   { agentId: 'agente-portos', keyword: 'terminal', priority: 70 },
   { agentId: 'agente-portos', keyword: 'antaq', priority: 100 },
@@ -512,7 +512,7 @@ export const DEFAULT_ROUTING_KEYWORDS: RoutingKeyword[] = [
   { agentId: 'agente-portos', keyword: 'calado', priority: 90 },
   { agentId: 'agente-portos', keyword: 'contêiner', priority: 80 },
   { agentId: 'agente-portos', keyword: 'granel', priority: 80 },
-  // --- Aeroportos (S7)
+  // --- Aeroportos (S8)
   { agentId: 'agente-aeroportos', keyword: 'aeroporto', priority: 100 },
   { agentId: 'agente-aeroportos', keyword: 'pista pouso', priority: 100 },
   { agentId: 'agente-aeroportos', keyword: 'anac', priority: 100 },
@@ -521,7 +521,7 @@ export const DEFAULT_ROUTING_KEYWORDS: RoutingKeyword[] = [
   { agentId: 'agente-aeroportos', keyword: 'teca', priority: 90 },
   { agentId: 'agente-aeroportos', keyword: 'balizamento', priority: 100 },
   { agentId: 'agente-aeroportos', keyword: 'pista de carga', priority: 90 },
-  // --- Barragens (S10)
+  // --- Barragens (S11)
   { agentId: 'agente-barragens', keyword: 'barragem', priority: 100 },
   { agentId: 'agente-barragens', keyword: 'vertedouro', priority: 100 },
   { agentId: 'agente-barragens', keyword: 'cfrd', priority: 100 },

@@ -188,14 +188,14 @@ Trigger: "Ativar agente procurement" OR "Preciso fazer RFQ"
 - **Output:** 40-page RFQ document, vendor scorecard (5 suppliers ranked)
 - **Timeline:** 5 business days (RFQ generation + vendor post + response window)
 
-### 7.2 Use Case: Porto Dredge Equipment Sourcing (S6)
+### 7.2 Use Case: Porto Dredge Equipment Sourcing (S7)
 - **Trigger:** "Vamos fazer dragagem do berço. Qual equipamento preciso?"
 - **Scope:** Cutter-suction dredge, 500 m³/hr capacity, PIANC compliance
 - **Agent Flow:** Retrieve dredge equipment specs → Query ANTAQ approved suppliers → Generate RFQ (equipment rental vs. purchase, insurance, crew) → Evaluate 3+ quotes → Flag geographic risk (import lead time 90+ days) → Suggest alternative local supplier with higher cost but faster delivery
 - **Output:** RFQ, risk heat map (supply chain concentration), 2-year rental vs. purchase analysis
 - **Timeline:** 7 business days
 
-### 7.3 Use Case: Saneamento SCADA Vendor Selection (S8)
+### 7.3 Use Case: Saneamento SCADA Vendor Selection (S9)
 - **Trigger:** "Preciso de um fornecedor de SCADA para ETA. Temos R$1.2M de budget."
 - **Scope:** Supervisory control (50+ sensors), cloud integration, ABNT compliance, SLA 99.5% uptime
 - **Agent Flow:** Extract ETA specs → Filter vendors by INMETRO certification + cloud security (ISO 27001) → Generate RFQ (hardware, software license, 5-year maintenance) → Score 4 vendors (Himatsingka, ABB, Siemens, local integrators) → Recommend based on weighted criteria (quality 40%, cost 30%, local support 20%, risk 10%)

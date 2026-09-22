@@ -1,4 +1,4 @@
-# 5 perguntas de exemplo para o smoke test do agente-energia (Manta 03-S9).
+# 5 perguntas de exemplo para o smoke test do agente-energia (Manta 03-S10).
 - prompt: "Estamos avaliando um leilão de transmissão da ANEEL, pode me ajudar a estruturar a análise?"
   expect_any: ["aneel", "leilão", "transmissão", "rap"]
 

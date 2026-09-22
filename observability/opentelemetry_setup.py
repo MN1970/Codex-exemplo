@@ -30,8 +30,8 @@ Uso mínimo (Maestro):
     telemetry = configure_telemetry("manta-maestro", agent_id="manta-00")
 
     with telemetry.routing_span("edital de saneamento AySA") as span:
-        with telemetry.agent_span("manta-03-s8", segment="saneamento") as aspan:
-            with telemetry.skill_span("ler-edital", "manta-03-s8"):
+        with telemetry.agent_span("manta-03-s9", segment="saneamento") as aspan:
+            with telemetry.skill_span("ler-edital", "manta-03-s9"):
                 ...  # trabalho da skill
 
 Variáveis de ambiente relevantes:
@@ -434,7 +434,7 @@ def configure_telemetry(
         service_name: nome do serviço OTel (ex.: "manta-maestro",
             "agente-saneamento"). Vira `service.name` no Resource.
         agent_id: ID canônico do agente no registry Manta (ex.: "manta-00",
-            "manta-03-s8"). Default: igual a `service_name`.
+            "manta-03-s9"). Default: igual a `service_name`.
         environment: "local" | "staging" | "prod". Default: env
             MANTA_ENV ou "local".
         exporter_target: "otlp_collector" | "jaeger_local" | "datadog" |
@@ -552,11 +552,11 @@ if __name__ == "__main__":
         trace_id = format(rspan.get_span_context().trace_id, "032x")
         print(f"trace_id={trace_id}  (procure em http://localhost:16686/trace/{trace_id})")
 
-        with telemetry.agent_span("manta-03-s8", segment="saneamento") as _aspan:
+        with telemetry.agent_span("manta-03-s9", segment="saneamento") as _aspan:
             time.sleep(0.05)
-            with telemetry.skill_span("ler-edital", "manta-03-s8"):
+            with telemetry.skill_span("ler-edital", "manta-03-s9"):
                 time.sleep(0.08)
-            with telemetry.skill_span("aluci-guard", "manta-03-s8"):
+            with telemetry.skill_span("aluci-guard", "manta-03-s9"):
                 time.sleep(0.02)
 
     shutdown_telemetry()

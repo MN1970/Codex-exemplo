@@ -1,12 +1,12 @@
 # Exemplo: Usando Background Agents em Skills (S5 + Horizontais)
 
 **Status:** Reference implementation v5.0  
-**Segmento:** S5 (Túneis) + horizontais (Claims, Advisory, etc.)  
+**Segmento:** S12 (Túneis) + horizontais (Claims, Advisory, etc.)  
 **Foco:** Long-running tasks sem bloquear user
 
 ---
 
-## Cenário: Análise Geotécnica Completa de Túnel (S5)
+## Cenário: Análise Geotécnica Completa de Túnel (S12)
 
 Usuário submete projeto de túnel de 5 km. Análise exige:
 - Processamento de modelo CAD (1.5 MB) → 45s
@@ -631,6 +631,6 @@ supabase/migrations/
 ---
 
 **Versão:** v5.0  
-**Status:** Ready for S5 (Túneis) + horizontais  
+**Status:** Ready for S12 (Túneis) + horizontais  
 **Segmento Piloto:** Manta 03-S5, Claims (Manta 01)  
 **Próximos passos:** Integrar em agentes verticais; monitorar latência, sucesso, custo

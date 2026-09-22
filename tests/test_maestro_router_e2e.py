@@ -5,7 +5,7 @@ Maestro Router E2E Tests (v5.0)
 40 golden test cases for routing accuracy, context injection, and tiering.
 
 Cobertura:
-  - S1–S10 (9 verticais): rodovias, OAE, ferrovia, metrô, portos, aeroportos, saneamento, energia, barragens
+  - S1–S11 (9 verticais): rodovias, OAE, ferrovia, metrô, portos, aeroportos, saneamento, energia, barragens
   - Horizontais 00–16: maestro, claims, contratual, imobiliário, orçamento, modelagem, cronograma, BD, apresentações, advisory, arquiteto-IA
   - Cross-agent flows: 3 cenários
   - Ambiguity resolution: 2 casos
@@ -20,7 +20,7 @@ Assertions validadas:
 
 Uso:
   pytest tests/test_maestro_router_e2e.py -v
-  pytest tests/test_maestro_router_e2e.py::TestMaestroRouterS8 -v  # Apenas S8
+  pytest tests/test_maestro_router_e2e.py::TestMaestroRouterS9 -v  # Apenas S8
   pytest tests/test_maestro_router_e2e.py -k "cross_agent" -v
 """
 
@@ -49,21 +49,6 @@ class ModelTier(str, Enum):
 
 
 @dataclass
-class RoutingResult:
-    """Resultado de routing do Maestro."""
-    agent_id: str
-    skill_id: str
-    model_tier: str
-    complexity_score: float
-    routing_confidence: float
-    phase: Optional[str] = None
-    rag_collection: Optional[str] = None
-    rag_reranker_score: Optional[float] = None
-    fallback_agent: Optional[str] = None
-    context_injection: Optional[Dict] = None
-
-
-@dataclass
 class TestCase:
     """Caso de teste baseado em fixture JSON."""
     id: str
@@ -82,184 +67,22 @@ class TestCase:
 
 
 # ============================================================================
-# MOCK MAESTRO ROUTER (Simulação R1)
+# ROUTER SOB TESTE
 # ============================================================================
+# Até 2026-09-22 este arquivo trazia um MockMaestroRouter inline (casamento
+# por substring, numeração antiga S6=Portos…S10=Barragens). Os testes agora
+# exercitam o router de referência real, compartilhado com
+# tests/test_cross_agent_flows.py — ver docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md.
 
-class MockMaestroRouter:
-    """
-    Simulação simplificada do Maestro Router v5.0 para testes.
-    Em produção, seria uma chamada RPC ao Maestro via Supabase ou HTTP.
-    """
+from src.maestro import keyword_router
 
-    def __init__(self):
-        """Carrega regras de routing."""
-        self.routing_rules = self._build_routing_rules()
-        self.agent_configs = self._build_agent_configs()
 
-    def _build_routing_rules(self) -> Dict[str, List[str]]:
-        """Constrói regras de routing por agente vertical."""
-        return {
-            "manta-03-s8": ["saneamento", "ETA", "ETE", "adutora", "esgoto", "água",
-                           "AySA", "drenagem", "SNIS", "PMSB", "Lei 14.026", "elevatória",
-                           "reservatório", "UASB", "MBR", "reuso"],
-            "manta-03-s9": ["energia", "transmissao", "LT", "subestacao", "ANEEL", "RAP",
-                           "leilao", "ONS", "EPE", "PDE", "geração", "eólica", "PV",
-                           "hidraulica", "PCH", "UHE", "usina", "termica", "nuclear"],
-            "manta-03-s6": ["porto", "terminal", "ANTAQ", "dragagem", "molhe", "quebra-mar",
-                           "berço", "calado", "contêiner", "granel", "cais", "píer",
-                           "retroarea", "patio", "TUP", "TPS", "PIANC", "hidrovia"],
-            "manta-03-s7": ["aeroporto", "pista", "RWY", "taxiway", "TWY", "patio", "TPS",
-                           "TECA", "ANAC", "RBAC", "ICAO", "Annex 14", "FAA", "balizamento",
-                           "PAPI", "ILS", "PCN", "gate", "jetway", "ponte", "embarque"],
-            "manta-03-s10": ["barragem", "vertedouro", "CFRD", "CCR", "RCC", "rejeitos", "TSF",
-                            "PNSB", "ICOLD", "CBDB", "dique", "SIGBM", "ANM", "ANA", "Lei 12.334"],
-            "manta-03-s1": ["rodovia", "pavimento", "CBUQ", "BGS", "terraplenagem", "SICRO",
-                           "DNIT", "asfalto", "concreto", "base", "sub-base", "corte", "aterro"],
-            "manta-03-s2": ["ponte", "viaduto", "OAE", "NBR 7187", "túnel", "fundacao",
-                           "pilares", "aparelhos-apoio", "junta", "elastômero", "vão", "laje"],
-            "manta-03-s3": ["ferrovia", "trilho", "AMV", "dormente", "via-permanente", "bitola",
-                           "pantografo", "catenaria", "estacao", "ptv", "ramal", "desvio"],
-            "manta-03-s4": ["metro", "estacao", "NATM", "PSD", "linha", "VLT", "subterraneo",
-                           "elevado", "superficial", "portal", "tunél-metro", "trem", "ATO"],
-            "manta-01": ["claims", "indenizacao", "sinistro", "seguro", "prejuizo"],
-            "manta-02": ["contrato", "legal", "clausula", "jurisdicao", "litigancia", "forca-maior"],
-            "manta-04": ["imobiliario", "real-estate", "terreno", "avaliacao", "propriedade"],
-            "manta-05": ["orcamento", "budget", "custo", "estimativa", "SICRO", "preço"],
-            "manta-06": ["modelagem", "modelo", "financeiro", "PPP", "viabilidade", "VPL", "TIR"],
-            "manta-07": ["cronograma", "schedule", "planejamento", "projeto", "recursos", "MS Project"],
-            "manta-13": ["bd", "negocio", "oportunidade", "mercado", "comercial"],
-            "manta-14": ["apresentacao", "pptx", "slides", "executiva", "comunicacao"],
-            "manta-15": ["advisory", "parecer", "opiniao", "tecnico", "consultoria"],
-            "manta-16": ["arquitetura", "ia", "design", "agente", "sistema"],
-        }
-
-    def _build_agent_configs(self) -> Dict[str, Dict]:
-        """Constrói configurações padrão dos agentes."""
-        return {
-            "manta-03-s8": {"default_model_tier": "sonnet-5", "rag_collection": "san:v5.0:*"},
-            "manta-03-s9": {"default_model_tier": "sonnet-5", "rag_collection": "ene:v5.0:*"},
-            "manta-03-s6": {"default_model_tier": "sonnet-5", "rag_collection": "por:v5.0:*"},
-            "manta-03-s7": {"default_model_tier": "sonnet-5", "rag_collection": "aer:v5.0:*"},
-            "manta-03-s10": {"default_model_tier": "sonnet-5", "rag_collection": "bar:v5.0:*"},
-            "manta-03-s1": {"default_model_tier": "sonnet-5", "rag_collection": "rod:v5.0:*"},
-            "manta-03-s2": {"default_model_tier": "sonnet-5", "rag_collection": "oae:v5.0:*"},
-            "manta-03-s3": {"default_model_tier": "sonnet-5", "rag_collection": "fer:v5.0:*"},
-            "manta-03-s4": {"default_model_tier": "sonnet-5", "rag_collection": "met:v5.0:*"},
-            "manta-01": {"default_model_tier": "opus", "rag_collection": None},
-            "manta-02": {"default_model_tier": "sonnet-5", "rag_collection": None},
-            "manta-04": {"default_model_tier": "sonnet-5", "rag_collection": None},
-            "manta-05": {"default_model_tier": "sonnet-5", "rag_collection": None},
-            "manta-06": {"default_model_tier": "opus", "rag_collection": None},
-            "manta-07": {"default_model_tier": "sonnet-5", "rag_collection": None},
-            "manta-13": {"default_model_tier": "sonnet-5", "rag_collection": None},
-            "manta-14": {"default_model_tier": "sonnet-5", "rag_collection": None},
-            "manta-15": {"default_model_tier": "sonnet-5", "rag_collection": None},
-            "manta-16": {"default_model_tier": "opus", "rag_collection": None},
-        }
+class MaestroRouter:
+    """Adaptador fino sobre src/maestro/keyword_router.py."""
 
     def route(self, prompt: str, context_hints: Optional[List[str]] = None,
-              complexity_score: Optional[float] = None) -> RoutingResult:
-        """
-        Simula R1 — Routing Determinístico.
-
-        Estágios:
-          1. Keyword matching × BM25
-          2. Context + phase inference
-          3. Tiering + config
-        """
-        prompt_lower = prompt.lower()
-        context_hints = context_hints or []
-
-        # Stage 1: Keyword matching
-        best_agent = None
-        best_score = 0.0
-
-        for agent_id, keywords in self.routing_rules.items():
-            matches = sum(1 for kw in keywords if kw.lower() in prompt_lower)
-            score = matches / len(keywords) if keywords else 0
-
-            # Boost score se keyword está em context_hints
-            for hint in context_hints:
-                if hint.lower() in keywords:
-                    score += 0.15
-
-            if score > best_score:
-                best_score = score
-                best_agent = agent_id
-
-        if not best_agent:
-            # Fallback: maestro (00)
-            best_agent = "manta-00"
-
-        # Stage 2: Phase inference
-        phase = self._infer_phase(prompt_lower)
-
-        # Stage 3: Tiering
-        if complexity_score is None:
-            complexity_score = len([h for h in context_hints if h.lower() in prompt_lower])
-
-        model_tier = self._compute_tiering(best_agent, complexity_score, len(prompt))
-
-        # Construct routing confidence
-        routing_confidence = min(0.95, best_score + 0.05)
-
-        # Get agent config
-        agent_config = self.agent_configs.get(best_agent, {})
-        skill_id = f"{best_agent.replace('manta-', '').replace('-', '_')}.v5.0"
-
-        return RoutingResult(
-            agent_id=best_agent,
-            skill_id=skill_id,
-            model_tier=model_tier,
-            complexity_score=complexity_score,
-            routing_confidence=routing_confidence,
-            phase=phase,
-            rag_collection=agent_config.get('rag_collection'),
-            rag_reranker_score=0.85,  # Mock
-            fallback_agent="manta-00",
-            context_injection={
-                "phase": phase,
-                "file_processing": False,
-                "rag_collection": agent_config.get('rag_collection'),
-            }
-        )
-
-    def _infer_phase(self, prompt: str) -> Optional[str]:
-        """Infere phase (ciclo de vida) baseado em keywords."""
-        phases_map = {
-            "estudo-previo": ["estudo prévio", "diagnóstico", "benchmarking", "baseline"],
-            "projeto-basico": ["projeto básico", "conceito", "layout", "viabilidade"],
-            "projeto-executivo": ["projeto executivo", "detalh", "especificação", "técnico"],
-            "obra": ["obra", "execução", "construção", "implantação"],
-            "operacao": ["operação", "manutenção", "O&M", "gestão", "OPEX"],
-            "licitacao": ["licitação", "edital", "concorrência", "processo competitivo"],
-            "due-diligence": ["due diligence", "auditoria", "DD", "M&A"],
-            "encerramento": ["encerramento", "descomissionamento", "final"],
-        }
-
-        for phase, keywords in phases_map.items():
-            if any(kw in prompt for kw in keywords):
-                return phase
-
-        # Default: projeto-basico se ambíguo
-        return "projeto-basico"
-
-    def _compute_tiering(self, agent_id: str, complexity_score: float, prompt_len: int) -> str:
-        """Implementa R7 — Tiering Automático."""
-        # Mock: prompt_len < 500 = Haiku, 500-2000 = Sonnet, > 2000 = Opus
-
-        # Prefer agent's default tier
-        agent_default = self.agent_configs.get(agent_id, {}).get("default_model_tier", "sonnet-5")
-
-        if agent_default == "opus":
-            return "opus"  # Claims, Modeling, Architecture sempre Opus
-
-        if complexity_score < 3.0 and prompt_len < 1500:
-            return "haiku-4-5"
-        elif complexity_score >= 4.5 or prompt_len > 3000:
-            return "opus"
-        else:
-            return "sonnet-5"
+              complexity_score: Optional[float] = None) -> "keyword_router.RoutingResult":
+        return keyword_router.route(prompt, context_hints, complexity_score)
 
 
 # ============================================================================
@@ -268,13 +91,13 @@ class MockMaestroRouter:
 
 @pytest.fixture(scope="session")
 def maestro_router():
-    """Instancia mock maestro router."""
-    return MockMaestroRouter()
+    """Router de referência (src/maestro/keyword_router.py)."""
+    return MaestroRouter()
 
 
 @pytest.fixture(scope="session")
 def golden_test_cases() -> List[TestCase]:
-    """Carrega 40 golden test cases do JSON."""
+    """Carrega 40 golden test cases do JSON (numeração D2)."""
     fixtures_path = Path(__file__).parent / "fixtures" / "prompts_golden_40.json"
 
     if not fixtures_path.exists():
@@ -309,12 +132,12 @@ def golden_test_cases() -> List[TestCase]:
 # TEST CLASSES
 # ============================================================================
 
-class TestMaestroRouterS8:
-    """Testes para S8 — Saneamento."""
+class TestMaestroRouterS9:
+    """Testes para S9 — Saneamento."""
 
-    def test_s8_eta_buenos_aires(self, maestro_router, golden_test_cases):
-        """S8-001: ETA em Buenos Aires — routing correto."""
-        tc = next(t for t in golden_test_cases if t.id == "s8_001")
+    def test_s9_eta_buenos_aires(self, maestro_router, golden_test_cases):
+        """S9-001: ETA em Buenos Aires — routing correto."""
+        tc = next(t for t in golden_test_cases if t.id == "s9_001")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id, \
@@ -323,18 +146,18 @@ class TestMaestroRouterS8:
         assert result.model_tier == "haiku-4-5"
         assert result.complexity_score <= 3.0
 
-    def test_s8_esgoto_500k(self, maestro_router, golden_test_cases):
-        """S8-002: Tratamento esgoto 500k hab — cross-agent com orçamento."""
-        tc = next(t for t in golden_test_cases if t.id == "s8_002")
+    def test_s9_esgoto_500k(self, maestro_router, golden_test_cases):
+        """S9-002: Tratamento esgoto 500k hab — cross-agent com orçamento."""
+        tc = next(t for t in golden_test_cases if t.id == "s9_002")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
         assert result.routing_confidence >= tc.routing_confidence_min
         assert tc.cross_agent_references == ["manta-05"]
 
-    def test_s8_adutora_projeto_executivo(self, maestro_router, golden_test_cases):
-        """S8-003: Adutora 45km projeto executivo — tiering Sonnet."""
-        tc = next(t for t in golden_test_cases if t.id == "s8_003")
+    def test_s9_adutora_projeto_executivo(self, maestro_router, golden_test_cases):
+        """S9-003: Adutora 45km projeto executivo — tiering Sonnet."""
+        tc = next(t for t in golden_test_cases if t.id == "s9_003")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
@@ -342,94 +165,94 @@ class TestMaestroRouterS8:
         assert result.phase == "projeto-executivo"
         assert result.complexity_score >= 4.0
 
-    def test_s8_lei_14026_subsídio(self, maestro_router, golden_test_cases):
-        """S8-004: Lei 14.026 subsídio cruzado — fase licitação."""
-        tc = next(t for t in golden_test_cases if t.id == "s8_004")
+    def test_s9_lei_14026_subsídio(self, maestro_router, golden_test_cases):
+        """S9-004: Lei 14.026 subsídio cruzado — fase licitação."""
+        tc = next(t for t in golden_test_cases if t.id == "s9_004")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
         assert result.phase == "licitacao"
 
 
-class TestMaestroRouterS9:
-    """Testes para S9 — Energia."""
+class TestMaestroRouterS10:
+    """Testes para S10 — Energia."""
 
-    def test_s9_rap_lt_765kv(self, maestro_router, golden_test_cases):
-        """S9-001: RAP LT 765kV ANEEL — projeto executivo."""
-        tc = next(t for t in golden_test_cases if t.id == "s9_001")
+    def test_s10_rap_lt_765kv(self, maestro_router, golden_test_cases):
+        """S10-001: RAP LT 765kV ANEEL — projeto executivo."""
+        tc = next(t for t in golden_test_cases if t.id == "s10_001")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
         assert result.model_tier == "sonnet-5"
         assert result.phase == "projeto-executivo"
 
-    def test_s9_subestacao_omm(self, maestro_router, golden_test_cases):
-        """S9-002: O&M subestação 500 MVA."""
-        tc = next(t for t in golden_test_cases if t.id == "s9_002")
+    def test_s10_subestacao_omm(self, maestro_router, golden_test_cases):
+        """S10-002: O&M subestação 500 MVA."""
+        tc = next(t for t in golden_test_cases if t.id == "s10_002")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
         assert result.phase == "operacao"
 
-    def test_s9_uhe_50mw(self, maestro_router, golden_test_cases):
-        """S9-003: UHE 50MW — licenciamento ambiental."""
-        tc = next(t for t in golden_test_cases if t.id == "s9_003")
-        result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
-
-        assert result.agent_id == tc.expected_agent_id
-
-
-class TestMaestroRouterS6:
-    """Testes para S6 — Portos."""
-
-    def test_s6_terminal_conteineres(self, maestro_router, golden_test_cases):
-        """S6-001: Terminal contêineres em dragagem -15m."""
-        tc = next(t for t in golden_test_cases if t.id == "s6_001")
-        result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
-
-        assert result.agent_id == tc.expected_agent_id
-        assert result.routing_confidence >= 0.90
-
-    def test_s6_ampliacao_pier(self, maestro_router, golden_test_cases):
-        """S6-002: Ampliação píer 2 berços."""
-        tc = next(t for t in golden_test_cases if t.id == "s6_002")
+    def test_s10_uhe_50mw(self, maestro_router, golden_test_cases):
+        """S10-003: UHE 50MW — licenciamento ambiental."""
+        tc = next(t for t in golden_test_cases if t.id == "s10_003")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
 
 
 class TestMaestroRouterS7:
-    """Testes para S7 — Aeroportos."""
+    """Testes para S7 — Portos."""
 
-    def test_s7_aeroporto_regional(self, maestro_router, golden_test_cases):
-        """S7-001: Aeroporto regional — pista 2500m."""
+    def test_s7_terminal_conteineres(self, maestro_router, golden_test_cases):
+        """S7-001: Terminal contêineres em dragagem -15m."""
         tc = next(t for t in golden_test_cases if t.id == "s7_001")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
+        assert result.routing_confidence >= 0.90
 
-    def test_s7_terminal_5m_pax(self, maestro_router, golden_test_cases):
-        """S7-002: Terminal 5M passageiros/ano."""
+    def test_s7_ampliacao_pier(self, maestro_router, golden_test_cases):
+        """S7-002: Ampliação píer 2 berços."""
         tc = next(t for t in golden_test_cases if t.id == "s7_002")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
 
 
-class TestMaestroRouterS10:
-    """Testes para S10 — Barragens."""
+class TestMaestroRouterS8:
+    """Testes para S8 — Aeroportos."""
 
-    def test_s10_barragem_rcc_80m(self, maestro_router, golden_test_cases):
-        """S10-001: Barragem RCC 80m."""
-        tc = next(t for t in golden_test_cases if t.id == "s10_001")
+    def test_s8_aeroporto_regional(self, maestro_router, golden_test_cases):
+        """S8-001: Aeroporto regional — pista 2500m."""
+        tc = next(t for t in golden_test_cases if t.id == "s8_001")
+        result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
+
+        assert result.agent_id == tc.expected_agent_id
+
+    def test_s8_terminal_5m_pax(self, maestro_router, golden_test_cases):
+        """S8-002: Terminal 5M passageiros/ano."""
+        tc = next(t for t in golden_test_cases if t.id == "s8_002")
+        result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
+
+        assert result.agent_id == tc.expected_agent_id
+
+
+class TestMaestroRouterS11:
+    """Testes para S11 — Barragens."""
+
+    def test_s11_barragem_rcc_80m(self, maestro_router, golden_test_cases):
+        """S11-001: Barragem RCC 80m."""
+        tc = next(t for t in golden_test_cases if t.id == "s11_001")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
         assert result.complexity_score >= 4.0
 
-    def test_s10_tsf_rejeitos_150m(self, maestro_router, golden_test_cases):
-        """S10-002: TSF rejeitos dry-stack 150m."""
-        tc = next(t for t in golden_test_cases if t.id == "s10_002")
+    def test_s11_tsf_rejeitos_150m(self, maestro_router, golden_test_cases):
+        """S11-002: TSF rejeitos dry-stack 150m."""
+        tc = next(t for t in golden_test_cases if t.id == "s11_002")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
         assert result.agent_id == tc.expected_agent_id
@@ -598,7 +421,7 @@ class TestMaestroRouterAmbiguity:
         tc = next(t for t in golden_test_cases if t.id == "ambiguity_002")
         result = maestro_router.route(tc.prompt, tc.context_hints, tc.complexity_score_expected)
 
-        assert result.agent_id == tc.expected_agent_id == "manta-03-s6"
+        assert result.agent_id == tc.expected_agent_id == "manta-03-s7"
 
 
 class TestMaestroRouterMetrics:

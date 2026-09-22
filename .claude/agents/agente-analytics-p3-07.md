@@ -113,7 +113,7 @@
 | **VIBRACOES_VIADUTO** | m/s² (plataforma estação) | > 0.1 g (NBR 7187) | Anomaly + RUL |
 | **CONSUMO_ENERGIA** | kWh / pass.km | > +5% baseline | ARIMA + Optimization |
 
-### **S6 — Portos**
+### **S7 — Portos**
 
 | KPI | Métrica | Threshold alerta | Modelo associado |
 |-----|---------|-------------------|------------------|
@@ -123,7 +123,7 @@
 | **TEMPO_NAVIOS_FILA** | horas médias na fila | > 8 h | ARIMA + Optimization |
 | **TAXA_PARADA_IMPREVISTA** | % downtime equipamento | > 10% | Health Score + RUL |
 
-### **S7 — Aeroportos**
+### **S8 — Aeroportos**
 
 | KPI | Métrica | Threshold alerta | Modelo associado |
 |-----|---------|-------------------|------------------|
@@ -133,7 +133,7 @@
 | **QUALIDADE_ASFALTO_PISTA** | PCI (Pavement Cond. Index) | < 50 | RUL + Maintenance |
 | **DELAY_MEDIO** | min / voo (A-CDM) | > baseline +15% | ARIMA + Optimization |
 
-### **S8 — Saneamento (Prioridade AySA)**
+### **S9 — Saneamento (Prioridade AySA)**
 
 | KPI | Métrica | Threshold alerta | Modelo associado |
 |-----|---------|-------------------|------------------|
@@ -143,7 +143,7 @@
 | **TEMPO_RESPOSTA_FALHA** | horas até reparo (adutora) | > 6 h SLA | Health Score |
 | **CAPACIDADE_RESIDUAL_ETE** | % carga média vs pico | > 85% (saturação) | ARIMA + Capacity |
 
-### **S9 — Energia (ANEEL/State Grid)**
+### **S10 — Energia (ANEEL/State Grid)**
 
 | KPI | Métrica | Threshold alerta | Modelo associado |
 |-----|---------|-------------------|------------------|
@@ -153,7 +153,7 @@
 | **CARREGAMENTO_SUBESTACAO** | % nominal (MVA) | > 90% (limite) | ARIMA + Forecasting |
 | **PERDAS_TECNICAS_TRANSMISSAO** | % perdas vs transferência | > 2.5% (limite técnico) | ARIMA + Optimization |
 
-### **S10 — Barragens**
+### **S11 — Barragens**
 
 | KPI | Métrica | Threshold alerta | Modelo associado |
 |-----|---------|-------------------|------------------|
@@ -474,11 +474,11 @@ Dados históricos: temperatura, ciclos, manutenções.
 Retorna: RUL dias, confiança, data recomendada para manutenção."
 ```
 
-### 7.2 Output Dashboard KPIs (Example: S9 Energia)
+### 7.2 Output Dashboard KPIs (Example: S10 Energia)
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│ SEGMENT: S9 ENERGIA — Performance Dashboard        │
+│ SEGMENT: S10 ENERGIA — Performance Dashboard        │
 ├─────────────────────────────────────────────────────┤
 │ KPI 1: TAXA_FALHA_LT                               │
 │   Current: 0.38 / 100km.ano ✓ (↓ 12% vs mês)     │

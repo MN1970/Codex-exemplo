@@ -300,11 +300,11 @@ def add_descriptions(agents: Dict[str, Agent], content: str) -> Dict[str, Agent]
         'agente-oae': 'Especialista em obras de arte especiais (pontes, viadutos, túneis) — OAE, estruturas metálicas, fundações, protensão.',
         'agente-ferrovia': 'Especialista em infraestrutura ferroviária (Manta 03-S3) — via permanente, trilho, bitola, catenária, AMV.',
         'agente-metro': 'Especialista em transporte metroviário e VLT (Manta 03-S4) — metrô, estações, sinalização, NATM, PSD.',
-        'agente-portos': 'Especialista em infraestrutura portuária (Manta 03-S6) — terminais, dragagem, ANTAQ, PIANC, hidrovias.',
-        'agente-aeroportos': 'Especialista em infraestrutura aeroportuária (Manta 03-S7) — pistas, taxiways, TPS, ANAC, RBAC, balizamento.',
-        'agente-saneamento': 'Especialista em saneamento básico (Manta 03-S8) — ETAs, ETEs, adução, drenagem urbana, SNIS, Lei 14.026. PRIORIDADE AySA.',
-        'agente-energia': 'Especialista em setor elétrico (Manta 03-S9) — transmissão, geração, subestações, ANEEL, RAP, leilões. PRIORIDADE State Grid.',
-        'agente-barragens': 'Especialista em barragens e estruturas hidráulicas (Manta 03-S10) — CFRD, CCR, rejeitos, ICOLD, Lei 12.334, descomissionamento.',
+        'agente-portos': 'Especialista em infraestrutura portuária (Manta 03-S7) — terminais, dragagem, ANTAQ, PIANC, hidrovias.',
+        'agente-aeroportos': 'Especialista em infraestrutura aeroportuária (Manta 03-S8) — pistas, taxiways, TPS, ANAC, RBAC, balizamento.',
+        'agente-saneamento': 'Especialista em saneamento básico (Manta 03-S9) — ETAs, ETEs, adução, drenagem urbana, SNIS, Lei 14.026. PRIORIDADE AySA.',
+        'agente-energia': 'Especialista em setor elétrico (Manta 03-S10) — transmissão, geração, subestações, ANEEL, RAP, leilões. PRIORIDADE State Grid.',
+        'agente-barragens': 'Especialista em barragens e estruturas hidráulicas (Manta 03-S11) — CFRD, CCR, rejeitos, ICOLD, Lei 12.334, descomissionamento.',
     }
 
     # Adicionar ciclo de vida e trigger phrases para verticais

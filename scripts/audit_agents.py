@@ -86,11 +86,11 @@ CANONICAL_20_AGENTS = {
     "agente-oae": {"codigo": "Manta 03-S2", "tier": "vertical", "segment": "S2", "version": "v5.0"},
     "agente-ferrovia": {"codigo": "Manta 03-S3", "tier": "vertical", "segment": "S3", "version": "v5.0"},
     "agente-metro": {"codigo": "Manta 03-S4", "tier": "vertical", "segment": "S4", "version": "v5.0"},
-    "agente-portos": {"codigo": "Manta 03-S6", "tier": "vertical", "segment": "S6", "version": "v5.0"},
-    "agente-aeroportos": {"codigo": "Manta 03-S7", "tier": "vertical", "segment": "S7", "version": "v5.0"},
-    "agente-saneamento": {"codigo": "Manta 03-S8", "tier": "vertical", "segment": "S8", "version": "v5.0"},
-    "agente-energia": {"codigo": "Manta 03-S9", "tier": "vertical", "segment": "S9", "version": "v5.0"},
-    "agente-barragens": {"codigo": "Manta 03-S10", "tier": "vertical", "segment": "S10", "version": "v5.0"},
+    "agente-portos": {"codigo": "Manta 03-S7", "tier": "vertical", "segment": "S6", "version": "v5.0"},
+    "agente-aeroportos": {"codigo": "Manta 03-S8", "tier": "vertical", "segment": "S7", "version": "v5.0"},
+    "agente-saneamento": {"codigo": "Manta 03-S9", "tier": "vertical", "segment": "S8", "version": "v5.0"},
+    "agente-energia": {"codigo": "Manta 03-S10", "tier": "vertical", "segment": "S9", "version": "v5.0"},
+    "agente-barragens": {"codigo": "Manta 03-S11", "tier": "vertical", "segment": "S10", "version": "v5.0"},
 }
 
 

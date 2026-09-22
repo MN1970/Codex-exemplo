@@ -1,7 +1,7 @@
 ---
 name: agente-portos
 manta_code: "Manta 03-S6"
-aliases: ["manta-03-s6", "manta 03 s6", "portos", "porto", "hidroviário"]
+aliases: ["manta-03-s7", "manta 03 s6", "portos", "porto", "hidroviário"]
 version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados
@@ -23,7 +23,7 @@ description: >
   contêiner, granel, hidrovia, arrendamento portuário, retroárea, defensa.
 ---
 
-# AGENTE-PORTOS — Manta 03-S6
+# AGENTE-PORTOS — Manta 03-S7
 
 ## 1. PERGUNTA OBRIGATÓRIA INICIAL
 

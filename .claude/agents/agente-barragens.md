@@ -122,7 +122,7 @@ DD e descomissionamento / descaracterização.
 
 ## Composição S.A.D (Segmento × Agente × Disciplina)
 
-O agente-barragens (S10) não opera isolado nas frentes de custo e
+O agente-barragens (S11) não opera isolado nas frentes de custo e
 prazo: para cada deliverable ele **compõe** com o agente horizontal
 correspondente (numeração A1-A10 do Manta Maestro v5.0.1), aplicando o
 contexto de domínio de barragens sobre a estrutura genérica do agente
@@ -131,7 +131,7 @@ específica`.
 
 | Composição | Agente horizontal | Adaptação específica de barragens |
 |---|---|---|
-| **S10.A3** | Orçamento | **SICRO barragem** — como o SICRO/SINAPI não cobre nativamente serviços de barragem, o composto adapta composições análogas (terraplenagem em massa, concreto CCR/RCC, injeção de calda, cortina de estanqueidade, enrocamento lançado, geomembrana) e insere composições específicas de mercado (dry stack, filtro-prensa de rejeitos) quando não há SICRO equivalente. |
+| **S11.A3** | Orçamento | **SICRO barragem** — como o SICRO/SINAPI não cobre nativamente serviços de barragem, o composto adapta composições análogas (terraplenagem em massa, concreto CCR/RCC, injeção de calda, cortina de estanqueidade, enrocamento lançado, geomembrana) e insere composições específicas de mercado (dry stack, filtro-prensa de rejeitos) quando não há SICRO equivalente. |
 | **S10.A5** | Cronograma | **Fases alteamento/construção/enchimento** — WBS estruturado por: (1) desvio do rio / ensecadeira, (2) fundação e tratamento (injeção, cut-off), (3) construção do corpo da barragem (por alteamento, quando aplicável, em camadas/etapas anuais condicionadas a licenciamento), (4) órgãos vertedores e tomada d'água, (5) instrumentação e comissionamento, (6) enchimento do reservatório (janela sazonal, vazão ecológica, cota de operação). |
 
 > Nota: esta composição segue o mesmo padrão aplicado pelos demais
@@ -168,17 +168,17 @@ específica`.
   de desvio.
 - **agente-infraestrutura S1 (rodovias)** — acessos ao canteiro, obras
   de desvio.
-- **agente-energia (S9)** — barragens de geração hidrelétrica: handoff
+- **agente-energia (S10)** — barragens de geração hidrelétrica: handoff
   bidirecional obrigatório sempre que houver PCH ou UHE associada.
-  S10 entrega barragem + vertedor + tomada d'água + estudo hidrológico
+  S11 entrega barragem + vertedor + tomada d'água + estudo hidrológico
   (PMP, regularização Rippl); S9 assume turbina + gerador + casa de
   força + subestação elevadora + **LT de evacuação** (linha de
   transmissão que escoa a energia gerada até o ponto de conexão à
   rede — dimensionamento, traçado, faixa de servidão e licenciamento
-  tratados por S9, ainda que a barragem seja o objeto de S10). Também
+  tratados por S9, ainda que a barragem seja o objeto de S11). Também
   aplicável a barragens de contenção com aproveitamento hidrelétrico
   reversível (PCH a fio d'água em barragem de regularização).
-- **agente-saneamento (S8)** — barragem de abastecimento, monitoramento
+- **agente-saneamento (S9)** — barragem de abastecimento, monitoramento
   de qualidade do reservatório.
 - **claims (Manta 01)** — pleitos por atraso, mudança de sítio,
   imprevistos geológicos.
@@ -200,7 +200,7 @@ específica`.
   disciplina ambiental (licenciamento LP/LI/LO, vazão ecológica,
   qualidade da água, PBA/PRAD); adição da seção "Composição S.A.D"
   (S10.A3 orçamento, S10.A5 cronograma); expansão do handoff com
-  agente-energia (S9) para cobrir PCH/UHE + LT de evacuação
+  agente-energia (S10) para cobrir PCH/UHE + LT de evacuação
   explicitamente; definição dos sub-prefixos da coleção RAG `bar:`
   (`bar:c:` compliance, `bar:t:` técnico, `bar:e:` estrutural,
   `bar:r:` rejeitos).

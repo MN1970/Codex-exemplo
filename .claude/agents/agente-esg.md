@@ -64,7 +64,7 @@ Realizar avaliação e mitigação de riscos ambientais, sociais e de governanç
 
 ## 4. INTEGRAÇÃO COM VERTICAIS (S6–S10)
 
-### 4.1 Energia (S9 — Transmissão ANEEL)
+### 4.1 Energia (S10 — Transmissão ANEEL)
 ```
 Entrada:
   • Linha de transmissão: 138 kV, São Paulo → Minas Gerais, 250 km
@@ -85,7 +85,7 @@ Integração S9:
   → Agente-energia recebe scorecard ESG → ajusta timeline orçamento
 ```
 
-### 4.2 Portos (S6 — Terminal ANTAQ)
+### 4.2 Portos (S7 — Terminal ANTAQ)
 ```
 Entrada:
   • Expansão de terminal de contêineres em mangue (Atlântico Sul)
@@ -106,7 +106,7 @@ Integração S6:
   → Agente-portos recebe ESG scorecard → refina layout terminal
 ```
 
-### 4.3 Saneamento (S8 — ETA/AySA)
+### 4.3 Saneamento (S9 — ETA/AySA)
 ```
 Entrada:
   • Estação de Tratamento de Água (ETA) em bacia Paraná, 500.000 m³/dia
@@ -127,7 +127,7 @@ Integração S8:
   → Agente-saneamento recebe ESG scorecard → alinha cronograma
 ```
 
-### 4.4 Barragens (S10) & Aeroportos (S7)
+### 4.4 Barragens (S11) & Aeroportos (S8)
 - **S10**: Impacto de reservatório (assentamento 2.500 famílias, perda habitat 80 km²), carbon = -80 tCO₂e/ano (geração renovável)
 - **S7**: Pista de pouso (supressão Cerrado 600 ha), social = comunidade indígena + urbana adjacente, carbono = aviação (Escopo 3 complexo)
 
@@ -158,7 +158,7 @@ Integração S8:
 
 ## 6. CASOS DE USO
 
-### Caso 1: Linha de Transmissão 138 kV (Energia S9)
+### Caso 1: Linha de Transmissão 138 kV (Energia S10)
 **Contexto**: CEMIG propõe nova LT conectando hidrelétrica Furnas → Triângulo Mineiro, 180 km
 
 **Fluxo**:
@@ -166,10 +166,10 @@ Integração S8:
 2. manta-20-esg recebe traçado preliminar, consulta INPE + IBAMA
 3. Resultado: rota atual = 68/100 ESG score (16 km em Cerrado sentido restritivo)
 4. Proposta: desvio 8 km adicional = 82/100 score (reduz offset 40%, social +10)
-5. Integração S9: agente-energia ajusta capex +R$12M, timeline +6 meses
+5. Integração S10: agente-energia ajusta capex +R$12M, timeline +6 meses
 6. Output: ESG scorecard + revised route + licenciamento timeline
 
-### Caso 2: Terminal Portuário (Portos S6)
+### Caso 2: Terminal Portuário (Portos S7)
 **Contexto**: Operador portuário (TECON) expande terminal em Paranaguá (PR), área com mangue adjacente
 
 **Fluxo**:
@@ -178,19 +178,19 @@ Integração S8:
 3. Social license score: 38/100 (risco alto de contestação)
 4. Recomendação: co-design com comunidade pesqueira (16 mês, +R$4M)
 5. Cenário alternativo: layout reduzido (45 ha) → offset menor, social +20 pontos
-6. Integration S6: agente-portos escolhe cenário 2 → ativa manta-20-esg para monitor 36 meses
+6. Integration S7: agente-portos escolhe cenário 2 → ativa manta-20-esg para monitor 36 meses
 
-### Caso 3: Estação de Tratamento de Esgoto (Saneamento S8 — AySA)
+### Caso 3: Estação de Tratamento de Esgoto (Saneamento S9 — AySA)
 **Contexto**: AySA (Buenos Aires) planeja ETE em Matanza–Riachuelo com tecnologia BRM, impacto hídrico em zona de vulnerabilidade social
 
 **Fluxo**:
 1. Manta 05 (Orçamento) estima capex; Manta 07 (Cronograma) propõe timeline
-2. Maestro roteia para S8 + manta-20-esg (saneamento + social risk)
+2. Maestro roteia para S9 + manta-20-esg (saneamento + social risk)
 3. manta-20-esg mapeia: 2.800 hab. informais 500 m jusante, histór. conflito água
 4. Social license inicial = 34/100; compliance issues com Lei 26.220 (env. Argentina)
 5. Proposta: "Saneamiento Inclusivo" → ativismo comunitário, co-gestão, benefício local
 6. Resultado: social score +35 pontos (→ 69/100), viabilidade política garantida
-7. Integration S8: agente-saneamento prioriza social plan + busca financing DEV banks
+7. Integration S9: agente-saneamento prioriza social plan + busca financing DEV banks
 
 ---
 

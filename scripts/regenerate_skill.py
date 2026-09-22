@@ -64,7 +64,7 @@ logger = logging.getLogger(__name__)
 CANONICAL_AGENT_SPECS = {
     "agente-saneamento": {
         "name": "agente-saneamento",
-        "description": "Manta 03-S8 — Especialista em saneamento básico (água, esgoto, drenagem urbana, resíduos sólidos). PRIORIDADE AySA (projeto Argentina). Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento de ETAs, ETEs, sistemas de adução, distribuição de água, coleta e tratamento de esgoto, drenagem urbana e resíduos. Roteia quando o usuário menciona saneamento, ETA, ETE, adutora, esgoto, água tratada, AySA, drenagem urbana, macrodrenagem, SNIS, PMSB, Lei 14.026, subsídio cruzado, elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, digestor, UASB, MBR.",
+        "description": "Manta 03-S9 — Especialista em saneamento básico (água, esgoto, drenagem urbana, resíduos sólidos). PRIORIDADE AySA (projeto Argentina). Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento de ETAs, ETEs, sistemas de adução, distribuição de água, coleta e tratamento de esgoto, drenagem urbana e resíduos. Roteia quando o usuário menciona saneamento, ETA, ETE, adutora, esgoto, água tratada, AySA, drenagem urbana, macrodrenagem, SNIS, PMSB, Lei 14.026, subsídio cruzado, elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, digestor, UASB, MBR.",
         "tools": ["Read", "Grep", "Glob", "Bash", "WebSearch", "WebFetch"],
         "model": "sonnet",
         "tier": "vertical",
@@ -72,7 +72,7 @@ CANONICAL_AGENT_SPECS = {
     },
     "agente-energia": {
         "name": "agente-energia",
-        "description": "Manta 03-S9 — Especialista em setor elétrico (geração, transmissão, distribuição). Prioridade transmissão (ANEEL/State Grid). Cobre estudo prévio, projeto básico, executivo, obra, O&M, leilão, DD e descomissionamento de linhas de transmissão, subestações, usinas (hidro, eólica, solar, térmica), sistemas de distribuição. Roteia quando o usuário menciona transmissão, LT, subestação, ANEEL, RAP, leilão transmissão, ONS, EPE, PDE, R1-R5, torre estaiada, cabo condutor, ACSR, CAA, ATSR, ONS, MRE, ACR, ACL, WEG, State Grid, ISA CTEEP, Alupar, Taesa, geração eólica, PV, hidráulica, PCH, UHE.",
+        "description": "Manta 03-S10 — Especialista em setor elétrico (geração, transmissão, distribuição). Prioridade transmissão (ANEEL/State Grid). Cobre estudo prévio, projeto básico, executivo, obra, O&M, leilão, DD e descomissionamento de linhas de transmissão, subestações, usinas (hidro, eólica, solar, térmica), sistemas de distribuição. Roteia quando o usuário menciona transmissão, LT, subestação, ANEEL, RAP, leilão transmissão, ONS, EPE, PDE, R1-R5, torre estaiada, cabo condutor, ACSR, CAA, ATSR, ONS, MRE, ACR, ACL, WEG, State Grid, ISA CTEEP, Alupar, Taesa, geração eólica, PV, hidráulica, PCH, UHE.",
         "tools": ["Read", "Grep", "Glob", "Bash", "WebSearch", "WebFetch"],
         "model": "sonnet",
         "tier": "vertical",
@@ -80,7 +80,7 @@ CANONICAL_AGENT_SPECS = {
     },
     "agente-portos": {
         "name": "agente-portos",
-        "description": "Manta 03-S6 — Especialista em projetos portuários e hidroviários. Cobre estudos prévios, projetos básico/executivo, obra e operação de terminais marítimos, fluviais e hidroviários. Roteia automaticamente quando o usuário menciona porto, terminal, ANTAQ, dragagem, molhe, quebra-mar, berço, calado, contêiner, granel sólido/líquido, cais, píer, retroárea, pátio de estocagem, TUP, TPS, PIANC, arrendamento portuário ou hidrovia.",
+        "description": "Manta 03-S7 — Especialista em projetos portuários e hidroviários. Cobre estudos prévios, projetos básico/executivo, obra e operação de terminais marítimos, fluviais e hidroviários. Roteia automaticamente quando o usuário menciona porto, terminal, ANTAQ, dragagem, molhe, quebra-mar, berço, calado, contêiner, granel sólido/líquido, cais, píer, retroárea, pátio de estocagem, TUP, TPS, PIANC, arrendamento portuário ou hidrovia.",
         "tools": ["Read", "Grep", "Glob", "Bash", "WebSearch", "WebFetch"],
         "model": "sonnet",
         "tier": "vertical",
@@ -88,7 +88,7 @@ CANONICAL_AGENT_SPECS = {
     },
     "agente-aeroportos": {
         "name": "agente-aeroportos",
-        "description": "Manta 03-S7 — Especialista em infraestrutura aeroportuária (lado ar + lado terra). Cobre pistas de pouso e decolagem, taxiways, pátios, TPS (terminal de passageiros), TECA (terminal de cargas), balizamento e sistemas visuais, torre de controle e apoio ao aeroporto. Roteia quando o usuário menciona aeroporto, pista, RWY, taxiway, TWY, pátio, TPS, TECA, ANAC, RBAC 154, ICAO Annex 14, FAA AC, balizamento, PAPI, ILS, PCN, gate, ponte de embarque, jetway, aviação geral, aviação regional, concessão aeroportuária.",
+        "description": "Manta 03-S8 — Especialista em infraestrutura aeroportuária (lado ar + lado terra). Cobre pistas de pouso e decolagem, taxiways, pátios, TPS (terminal de passageiros), TECA (terminal de cargas), balizamento e sistemas visuais, torre de controle e apoio ao aeroporto. Roteia quando o usuário menciona aeroporto, pista, RWY, taxiway, TWY, pátio, TPS, TECA, ANAC, RBAC 154, ICAO Annex 14, FAA AC, balizamento, PAPI, ILS, PCN, gate, ponte de embarque, jetway, aviação geral, aviação regional, concessão aeroportuária.",
         "tools": ["Read", "Grep", "Glob", "Bash", "WebSearch", "WebFetch"],
         "model": "sonnet",
         "tier": "vertical",
@@ -96,7 +96,7 @@ CANONICAL_AGENT_SPECS = {
     },
     "agente-barragens": {
         "name": "agente-barragens",
-        "description": "Manta 03-S10 — Especialista em barragens (concreto, terra, enrocamento, rejeitos). Cobre estudo prévio, projeto básico, executivo, obra, O&M, DD, descomissionamento e descaracterização. Roteia quando o usuário menciona barragem, vertedouro, CFRD, CCR, RCC, rejeitos, TSF, PNSB, ICOLD, CBDB, dique, SIGBM, ANM, ANA, Lei 12.334, Fundão, Brumadinho, descomissionamento, alteamento a montante/jusante/linha de centro, filtragem de rejeitos, dry stack, PAE, PAEBM, ZAS, ZSS, HHP.",
+        "description": "Manta 03-S11 — Especialista em barragens (concreto, terra, enrocamento, rejeitos). Cobre estudo prévio, projeto básico, executivo, obra, O&M, DD, descomissionamento e descaracterização. Roteia quando o usuário menciona barragem, vertedouro, CFRD, CCR, RCC, rejeitos, TSF, PNSB, ICOLD, CBDB, dique, SIGBM, ANM, ANA, Lei 12.334, Fundão, Brumadinho, descomissionamento, alteamento a montante/jusante/linha de centro, filtragem de rejeitos, dry stack, PAE, PAEBM, ZAS, ZSS, HHP.",
         "tools": ["Read", "Grep", "Glob", "Bash", "WebSearch", "WebFetch"],
         "model": "sonnet",
         "tier": "vertical",

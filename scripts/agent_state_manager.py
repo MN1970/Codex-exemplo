@@ -14,7 +14,7 @@ Componentes:
   5. Feedback loop: agregar ratings para fine-tuning (R9)
 
 Fluxo:
-  job_id = background_spawn("manta-03-s5", "...")
+  job_id = background_spawn("manta-03-s12", "...")
   # Agent processa
   background_store_result(job_id, result="...", rating=5)
   # StateManager:
@@ -154,7 +154,7 @@ class AgentStateManager:
         Store a memory entry (R10).
 
         Args:
-          agent_id: Agent ID (e.g., "manta-03-s5")
+          agent_id: Agent ID (e.g., "manta-03-s12")
           session_id: Session ID
           memory_key: Key (e.g., "query:embedding", "result:geotecnia")
           memory_value: Value (JSON dict)
@@ -535,7 +535,7 @@ def store_result(
 
     Usage:
       store_result(
-        agent_id="manta-03-s5",
+        agent_id="manta-03-s12",
         session_id="sess_abc",
         result_text="Análise geotécnica completa...",
         source_prompt="Analise viabilidade do túnel",

@@ -59,9 +59,9 @@ function seedAgent(id: string) {
 /** Builds a synthetic candidate pool without touching the real registry/embeddings. */
 function fakeCandidates(): SearchCandidate[] {
   return [
-    { agent: seedAgent('manta-03-s8'), bm25Raw: 8.2, semanticRaw: 0.81 }, // saneamento
-    { agent: seedAgent('manta-03-s9'), bm25Raw: 1.1, semanticRaw: 0.35 }, // energia
-    { agent: seedAgent('manta-03-s6'), bm25Raw: 0.2, semanticRaw: 0.1 }, // portos
+    { agent: seedAgent('manta-03-s9'), bm25Raw: 8.2, semanticRaw: 0.81 }, // saneamento
+    { agent: seedAgent('manta-03-s10'), bm25Raw: 1.1, semanticRaw: 0.35 }, // energia
+    { agent: seedAgent('manta-03-s7'), bm25Raw: 0.2, semanticRaw: 0.1 }, // portos
   ];
 }
 
@@ -92,8 +92,8 @@ describe('Bm25Index', () => {
   it('scores an agent higher when the query hits its keywords', () => {
     const bm25 = new Bm25Index(AGENT_REGISTRY_SEED);
     const queryTokens = tokenize('preciso projetar uma barragem CFRD de 80m');
-    const barragensScore = bm25.score(queryTokens, 'manta-03-s10');
-    const portosScore = bm25.score(queryTokens, 'manta-03-s6');
+    const barragensScore = bm25.score(queryTokens, 'manta-03-s11');
+    const portosScore = bm25.score(queryTokens, 'manta-03-s7');
     assert.ok(barragensScore > portosScore);
   });
 

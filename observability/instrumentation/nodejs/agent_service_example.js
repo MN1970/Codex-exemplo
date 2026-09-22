@@ -27,7 +27,7 @@
  * Testar (simula o handoff do Maestro; troque o traceparent por um trace_id
  * real gerado pelo maestro_routing_example.py se quiser ver o link no Jaeger):
  *
- *   curl -X POST http://localhost:8090/agents/manta-03-s8/invoke \
+ *   curl -X POST http://localhost:8090/agents/manta-03-s9/invoke \
  *     -H 'Content-Type: application/json' \
  *     -H 'traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01' \
  *     -d '{"query": "Analisar edital de saneamento AySA"}'
@@ -45,7 +45,7 @@ process.on('unhandledRejection', (reason) => {
   console.error('[otel] falha ao exportar telemetria (collector indisponível?):', reason && reason.message ? reason.message : reason);
 });
 
-const AGENT_ID = process.env.MANTA_AGENT_ID || 'manta-03-s8';
+const AGENT_ID = process.env.MANTA_AGENT_ID || 'manta-03-s9';
 const SEGMENT = process.env.MANTA_SEGMENT || 'saneamento';
 const PORT = Number(process.env.PORT || 8090);
 

@@ -32,15 +32,15 @@ Registro consolidado de capabilities, routing, tiering e exemplos para todos os 
 
 | # | Segmento | Agente | Tier default | RAG | Status |
 |----|----|--------|--------------|-----|--------|
-| Manta 03-S7 | aeroportos | agente-aeroportos | Sonnet | aer:v5.0:* | Prod |
-| Manta 03-S10 | barragens | agente-barragens | Sonnet | bar:v5.0:* | Prod |
-| Manta 03-S9 | energia | agente-energia | Sonnet | ene:v5.0:* | Prod |
+| Manta 03-S8 | aeroportos | agente-aeroportos | Sonnet | aer:v5.0:* | Prod |
+| Manta 03-S11 | barragens | agente-barragens | Sonnet | bar:v5.0:* | Prod |
+| Manta 03-S10 | energia | agente-energia | Sonnet | ene:v5.0:* | Prod |
 | Manta 03-S3 | ferrovia | agente-ferrovia | Sonnet | fer:v5.0:* | Prod |
 | Manta 03-S4 | metro | agente-metro | Sonnet | met:v5.0:* | Prod |
 | Manta 03-S2 | oae | agente-oae | Sonnet | oae:v5.0:* | Prod |
-| Manta 03-S6 | portos | agente-portos | Sonnet | por:v5.0:* | Prod |
+| Manta 03-S7 | portos | agente-portos | Sonnet | por:v5.0:* | Prod |
 | Manta 03-S1 | rodovias | agente-rodovias | Sonnet | rod:v5.0:* | Prod |
-| Manta 03-S8 | saneamento | agente-saneamento | Sonnet | san:v5.0:* | Prod |
+| Manta 03-S9 | saneamento | agente-saneamento | Sonnet | san:v5.0:* | Prod |
 
 
 ---
@@ -1731,11 +1731,11 @@ Este agente roteia automaticamente para pasta no SharePoint:
 ---
 
 
-## Manta 03-S6 — AGENTE-PORTOS
+## Manta 03-S7 — AGENTE-PORTOS
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
 
-Especialista em infraestrutura portuária (Manta 03-S6) — terminais, dragagem, ANTAQ, PIANC, hidrovias.
+Especialista em infraestrutura portuária (Manta 03-S7) — terminais, dragagem, ANTAQ, PIANC, hidrovias.
 
 ### Aliases & Roteamento
 
@@ -1862,7 +1862,7 @@ Este agente roteia automaticamente para pasta no SharePoint:
 ---
 
 
-## Manta 03-S7 — AGENTE-AEROPORTOS
+## Manta 03-S8 — AGENTE-AEROPORTOS
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
 
@@ -1993,11 +1993,11 @@ Este agente roteia automaticamente para pasta no SharePoint:
 ---
 
 
-## Manta 03-S8 — AGENTE-SANEAMENTO
+## Manta 03-S9 — AGENTE-SANEAMENTO
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
 
-Especialista em saneamento básico (Manta 03-S8) — ETAs, ETEs, adução, drenagem urbana, SNIS, Lei 14.026. PRIORIDADE AySA.
+Especialista em saneamento básico (Manta 03-S9) — ETAs, ETEs, adução, drenagem urbana, SNIS, Lei 14.026. PRIORIDADE AySA.
 
 ### Aliases & Roteamento
 
@@ -2124,7 +2124,7 @@ Este agente roteia automaticamente para pasta no SharePoint:
 ---
 
 
-## Manta 03-S9 — AGENTE-ENERGIA
+## Manta 03-S10 — AGENTE-ENERGIA
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
 
@@ -2255,11 +2255,11 @@ Este agente roteia automaticamente para pasta no SharePoint:
 ---
 
 
-## Manta 03-S10 — AGENTE-BARRAGENS
+## Manta 03-S11 — AGENTE-BARRAGENS
 
 **Categoria:** vertical | **Status:** Prod | **Tier default:** Sonnet
 
-Especialista em barragens e estruturas hidráulicas (Manta 03-S10) — CFRD, CCR, rejeitos, ICOLD, Lei 12.334, descomissionamento.
+Especialista em barragens e estruturas hidráulicas (Manta 03-S11) — CFRD, CCR, rejeitos, ICOLD, Lei 12.334, descomissionamento.
 
 ### Aliases & Roteamento
 

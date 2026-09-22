@@ -253,16 +253,16 @@ describe('CollectionRegistry', () => {
     expect(energiaMeta.handoff_hints).toBeDefined();
   });
 
-  test('S8 (saneamento) is mapped to agente-saneamento', () => {
+  test('S9 (saneamento) is mapped to agente-saneamento', () => {
     const saneamentoMeta = COLLECTION_REGISTRY.saneamento;
     expect(saneamentoMeta.agent_id).toBe('agente-saneamento');
-    expect(saneamentoMeta.segment_codes).toContain('S8');
+    expect(saneamentoMeta.segment_codes).toContain('S9');
   });
 
-  test('S9 (energia) is mapped to agente-energia', () => {
+  test('S10 (energia) is mapped to agente-energia', () => {
     const energiaMeta = COLLECTION_REGISTRY.energia;
     expect(energiaMeta.agent_id).toBe('agente-energia');
-    expect(energiaMeta.segment_codes).toContain('S9');
+    expect(energiaMeta.segment_codes).toContain('S10');
   });
 
   test('editais collection is cross-segmento', () => {
@@ -361,10 +361,10 @@ describe('Test Queries for S6-S10 Domains', () => {
       }
     });
 
-    expect(segmentsCovered).toContain('S8'); // Saneamento
-    expect(segmentsCovered).toContain('S9'); // Energia
-    expect(segmentsCovered).toContain('S6'); // Portos
-    expect(segmentsCovered).toContain('S10'); // Barragens
+    expect(segmentsCovered).toContain('S9'); // Saneamento
+    expect(segmentsCovered).toContain('S10'); // Energia
+    expect(segmentsCovered).toContain('S7'); // Portos
+    expect(segmentsCovered).toContain('S11'); // Barragens
   });
 
   test('test queries include lifecycle phases 1-8', () => {
@@ -467,7 +467,7 @@ describe('Collection Weight Configuration', () => {
 // ============================================================================
 
 describe('Integration: Multi-Collection Query Scenario', () => {
-  test('simulates S8 (saneamento) agent query with handoff', async () => {
+  test('simulates S9 (saneamento) agent query with handoff', async () => {
     /**
      * Scenario: User asks agente-saneamento about edital prazos.
      * Expected flow:
@@ -496,7 +496,7 @@ describe('Integration: Multi-Collection Query Scenario', () => {
     // if saneamento score is too low
   });
 
-  test('simulates S10 (barragens) cross-domain query (hydroelectric)', async () => {
+  test('simulates S11 (barragens) cross-domain query (hydroelectric)', async () => {
     /**
      * Scenario: User asks agente-barragens about hydroelectric generation.
      * Expected: query barragens → low score → handoff to energia

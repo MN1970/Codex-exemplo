@@ -136,11 +136,11 @@ python scripts/eval_routing.py --output-format csv
 
 | Segmento | Exemplo | Agente Esperado |
 |----------|---------|-----------------|
-| S6 Portos | "Dragagem para terminal de contêineres" | agente-portos |
-| S7 Aeroportos | "Dimensionar pista para A320neo" | agente-aeroportos |
-| S8 Saneamento | "Projetar ETA para 200k hab" | agente-saneamento |
-| S9 Energia | "RAP para leilão de transmissão" | agente-energia |
-| S10 Barragens | "CFRD de 80m altura" | agente-barragens |
+| S7 Portos | "Dragagem para terminal de contêineres" | agente-portos |
+| S8 Aeroportos | "Dimensionar pista para A320neo" | agente-aeroportos |
+| S9 Saneamento | "Projetar ETA para 200k hab" | agente-saneamento |
+| S10 Energia | "RAP para leilão de transmissão" | agente-energia |
+| S11 Barragens | "CFRD de 80m altura" | agente-barragens |
 
 **Métricas de Output**:
 ```json
@@ -210,11 +210,11 @@ qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",
 **Distribuição de QA Pairs** (por padrão, 10 por segmento):
 | Segmento | Questões | Domínios |
 |----------|----------|----------|
-| Saneamento (S8) | 10 | water_treatment, wastewater, regulation, hydraulics, etc. |
-| Energia (S9) | 10 | transmission, substation, renewable_energy, standards, etc. |
-| Portos (S6) | 10 | terminal_design, dredging, port_operation, standards, etc. |
-| Aeroportos (S7) | 10 | airfield_design, navigation_aids, pavement_design, etc. |
-| Barragens (S10) | 10 | dam_engineering, tailings_management, hazard_assessment, etc. |
+| Saneamento (S9) | 10 | water_treatment, wastewater, regulation, hydraulics, etc. |
+| Energia (S10) | 10 | transmission, substation, renewable_energy, standards, etc. |
+| Portos (S7) | 10 | terminal_design, dredging, port_operation, standards, etc. |
+| Aeroportos (S8) | 10 | airfield_design, navigation_aids, pavement_design, etc. |
+| Barragens (S11) | 10 | dam_engineering, tailings_management, hazard_assessment, etc. |
 
 **Métricas de Validação RAG** (schema JSON):
 ```json

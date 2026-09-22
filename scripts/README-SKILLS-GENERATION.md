@@ -136,7 +136,7 @@ class Agent:
 ```python
 descriptions = {
     'maestro': 'Router canônico do Maestro (Manta 00) — orquestra roteamento determinístico...',
-    'agente-saneamento': 'Especialista em saneamento básico (Manta 03-S8) — ETAs, ETEs...',
+    'agente-saneamento': 'Especialista em saneamento básico (Manta 03-S9) — ETAs, ETEs...',
     # ... (20 agentes)
 }
 ```

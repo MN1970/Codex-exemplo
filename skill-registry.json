@@ -47,7 +47,7 @@
         "manta-06 (modelagem)",
         "manta-07 (cronograma)",
         "agente-infraestrutura-S1",
-        "agente-energia-S9",
+        "agente-energia-S10",
         "manta-01 (claims)",
         "manta-15 (advisory)"
       ]
@@ -87,7 +87,7 @@
         "manta-05 (orcamento)",
         "manta-07 (cronograma)",
         "agente-infraestrutura-S1",
-        "agente-saneamento-S8",
+        "agente-saneamento-S9",
         "manta-01 (claims)"
       ]
     },
@@ -125,7 +125,7 @@
         "manta-05 (orcamento)",
         "manta-07 (cronograma)",
         "agente-infraestrutura-S2",
-        "agente-saneamento-S8",
+        "agente-saneamento-S9",
         "manta-01 (claims)"
       ]
     },
@@ -163,8 +163,8 @@
         "manta-05 (orcamento)",
         "manta-07 (cronograma)",
         "agente-infraestrutura-S1",
-        "agente-saneamento-S8",
-        "agente-energia-S9",
+        "agente-saneamento-S9",
+        "agente-energia-S10",
         "manta-01 (claims)"
       ]
     },
@@ -202,7 +202,7 @@
       "handoffs": [
         "manta-05 (orcamento)",
         "manta-07 (cronograma)",
-        "agente-saneamento-S8",
+        "agente-saneamento-S9",
         "manta-01 (claims)"
       ]
     }

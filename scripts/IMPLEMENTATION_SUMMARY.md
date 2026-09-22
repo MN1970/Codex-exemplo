@@ -71,11 +71,11 @@
 - `update_settings_json()` — Version pinning
 
 **Supported Agents (Templates):**
-- agente-saneamento (S8) ⭐ PRIORITY
-- agente-energia (S9)
-- agente-portos (S6)
-- agente-aeroportos (S7)
-- agente-barragens (S10)
+- agente-saneamento (S9) ⭐ PRIORITY
+- agente-energia (S10)
+- agente-portos (S7)
+- agente-aeroportos (S8)
+- agente-barragens (S11)
 
 ---
 

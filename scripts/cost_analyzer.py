@@ -239,7 +239,7 @@ class CostAnalyzer:
         Analyze costs for a specific segment (S6-S10).
 
         Args:
-            segment_name: Segment name (e.g., "S6-Portos")
+            segment_name: Segment name (e.g., "S7-Portos")
             complexity_profile: "low", "medium", "high", "mixed"
             monthly_runs: Estimated monthly runs for segment
 
@@ -419,11 +419,11 @@ def main():
         {"name": "S2-OAE", "profile": "high", "monthly_runs": 1200},
         {"name": "S3-Ferrovia", "profile": "medium", "monthly_runs": 800},
         {"name": "S4-Metrô", "profile": "high", "monthly_runs": 1000},
-        {"name": "S6-Portos", "profile": "medium", "monthly_runs": 1500},
-        {"name": "S7-Aeroportos", "profile": "high", "monthly_runs": 1200},
-        {"name": "S8-Saneamento", "profile": "medium", "monthly_runs": 2000},
-        {"name": "S9-Energia", "profile": "high", "monthly_runs": 1800},
-        {"name": "S10-Barragens", "profile": "high", "monthly_runs": 1000},
+        {"name": "S7-Portos", "profile": "medium", "monthly_runs": 1500},
+        {"name": "S8-Aeroportos", "profile": "high", "monthly_runs": 1200},
+        {"name": "S9-Saneamento", "profile": "medium", "monthly_runs": 2000},
+        {"name": "S10-Energia", "profile": "high", "monthly_runs": 1800},
+        {"name": "S11-Barragens", "profile": "high", "monthly_runs": 1000},
     ]
 
     try:

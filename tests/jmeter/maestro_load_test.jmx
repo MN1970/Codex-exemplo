@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Maestro Load Test (S6 Portos)" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Maestro Load Test (S7 Portos)" enabled="true">
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments">
           <elementProp name="BASE_URL" elementType="Argument">
@@ -32,7 +32,7 @@
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.comments">
-Load test para Maestro router com S6 (Portos) como foco.
+Load test para Maestro router com S7 (Portos) como foco.
 - 100 concurrent users
 - 30 minutos de duração
 - Simula workflow: routing → RAG retrieval → reranking → agent execution
@@ -259,8 +259,8 @@ Load test para Maestro router com S6 (Portos) como foco.
           <hashTree/>
         </hashTree>
 
-        <!-- Agent Execution (S6: Portos) -->
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="S6-Portos: Execute Agent" enabled="true">
+        <!-- Agent Execution (S7: Portos) -->
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="S7-Portos: Execute Agent" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="agent_id" elementType="HTTPArgument">

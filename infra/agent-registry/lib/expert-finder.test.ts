@@ -10,16 +10,16 @@
  * - Explainability: reasoning JSON per agent
  *
  * Test queries:
- * 1. S8 (Saneamento): ETA para 200k hab
- * 2. S8 (Saneamento): Sistema de esgotamento sanitário AySA
- * 3. S9 (Energia): LT de transmissão 345kV ANEEL
- * 4. S9 (Energia): Leilão de transmissão ONS
- * 5. S6 (Portos): Dragagem de berço portuário ANTAQ
- * 6. S6 (Portos): Terminal de contêineres 50k TEU
- * 7. S7 (Aeroportos): Dimensionamento de pista ANAC
- * 8. S7 (Aeroportos): Sistema de balizamento ICAO
- * 9. S10 (Barragens): Barragem CFRD 120m altura
- * 10. S10 (Barragens): Gestão de rejeitos TSF
+ * 1. S9 (Saneamento): ETA para 200k hab
+ * 2. S9 (Saneamento): Sistema de esgotamento sanitário AySA
+ * 3. S10 (Energia): LT de transmissão 345kV ANEEL
+ * 4. S10 (Energia): Leilão de transmissão ONS
+ * 5. S7 (Portos): Dragagem de berço portuário ANTAQ
+ * 6. S7 (Portos): Terminal de contêineres 50k TEU
+ * 7. S8 (Aeroportos): Dimensionamento de pista ANAC
+ * 8. S8 (Aeroportos): Sistema de balizamento ICAO
+ * 9. S11 (Barragens): Barragem CFRD 120m altura
+ * 10. S11 (Barragens): Gestão de rejeitos TSF
  *
  * Run via Node.js built-in test runner:
  *   node --test infra/agent-registry/lib/expert-finder.test.ts
@@ -92,7 +92,7 @@ test('ExpertRanker: default weights & thresholds', () => {
 // Test Suite 2: Sample Query Tests (S6-S10)
 // =====================================================================
 
-test('Sample Query 1: S8 (Saneamento) — ETA para 200k hab', async () => {
+test('Sample Query 1: S9 (Saneamento) — ETA para 200k hab', async () => {
   const ranker = new ExpertRanker();
   const query = 'ETA para população de 200 mil habitantes, sistema de abastecimento de água';
   const embedding = mockQueryEmbedding(query);
@@ -100,7 +100,7 @@ test('Sample Query 1: S8 (Saneamento) — ETA para 200k hab', async () => {
   const result = await ranker.findExperts(AGENT_REGISTRY_SEED, query, embedding);
 
   assert.ok(result.ranked.length > 0, 'Should have ranked agents');
-  // saneamento (S8) should rank in top 3
+  // saneamento (S9) should rank in top 3
   const top3Ids = result.ranked.slice(0, 3).map((r) => r.agent.id);
   assert.ok(
     top3Ids.includes('agente-saneamento'),
@@ -112,7 +112,7 @@ test('Sample Query 1: S8 (Saneamento) — ETA para 200k hab', async () => {
   }
 });
 
-test('Sample Query 2: S8 (Saneamento) — Sistema AySA', async () => {
+test('Sample Query 2: S9 (Saneamento) — Sistema AySA', async () => {
   const ranker = new ExpertRanker();
   const query =
     'Sistema de esgotamento sanitário na Argentina (AySA), tratamento terciário, SNIS';
@@ -131,7 +131,7 @@ test('Sample Query 2: S8 (Saneamento) — Sistema AySA', async () => {
   }
 });
 
-test('Sample Query 3: S9 (Energia) — LT de transmissão 345kV', async () => {
+test('Sample Query 3: S10 (Energia) — LT de transmissão 345kV', async () => {
   const ranker = new ExpertRanker();
   const query = 'Linha de transmissão 345kV, ANEEL, RAP (Receita Anual Permitida), leilão';
   const embedding = mockQueryEmbedding(query);
@@ -148,7 +148,7 @@ test('Sample Query 3: S9 (Energia) — LT de transmissão 345kV', async () => {
   }
 });
 
-test('Sample Query 4: S9 (Energia) — Leilão transmissão ONS', async () => {
+test('Sample Query 4: S10 (Energia) — Leilão transmissão ONS', async () => {
   const ranker = new ExpertRanker();
   const query = 'Análise econômica de leilão de transmissão (transmissão), ONS, EPE, estruturação';
   const embedding = mockQueryEmbedding(query);
@@ -164,7 +164,7 @@ test('Sample Query 4: S9 (Energia) — Leilão transmissão ONS', async () => {
   }
 });
 
-test('Sample Query 5: S6 (Portos) — Dragagem de berço', async () => {
+test('Sample Query 5: S7 (Portos) — Dragagem de berço', async () => {
   const ranker = new ExpertRanker();
   const query = 'Dragagem de berço portuário, ANTAQ, calado, terminal de contêineres';
   const embedding = mockQueryEmbedding(query);
@@ -181,7 +181,7 @@ test('Sample Query 5: S6 (Portos) — Dragagem de berço', async () => {
   }
 });
 
-test('Sample Query 6: S6 (Portos) — Terminal contêineres', async () => {
+test('Sample Query 6: S7 (Portos) — Terminal contêineres', async () => {
   const ranker = new ExpertRanker();
   const query = 'Terminal de contêineres 50k TEU/ano, molhe, PIANC, granel (carga geral)';
   const embedding = mockQueryEmbedding(query);
@@ -197,7 +197,7 @@ test('Sample Query 6: S6 (Portos) — Terminal contêineres', async () => {
   }
 });
 
-test('Sample Query 7: S7 (Aeroportos) — Dimensionamento pista', async () => {
+test('Sample Query 7: S8 (Aeroportos) — Dimensionamento pista', async () => {
   const ranker = new ExpertRanker();
   const query = 'Dimensionamento de pista pouso aterrado, ANAC, RBAC, ICAO Annex 14';
   const embedding = mockQueryEmbedding(query);
@@ -214,7 +214,7 @@ test('Sample Query 7: S7 (Aeroportos) — Dimensionamento pista', async () => {
   }
 });
 
-test('Sample Query 8: S7 (Aeroportos) — Sistema balizamento', async () => {
+test('Sample Query 8: S8 (Aeroportos) — Sistema balizamento', async () => {
   const ranker = new ExpertRanker();
   const query = 'Sistema de balizamento e sinalização ICAO, TPS (throughput), TECA';
   const embedding = mockQueryEmbedding(query);
@@ -230,7 +230,7 @@ test('Sample Query 8: S7 (Aeroportos) — Sistema balizamento', async () => {
   }
 });
 
-test('Sample Query 9: S10 (Barragens) — Barragem CFRD', async () => {
+test('Sample Query 9: S11 (Barragens) — Barragem CFRD', async () => {
   const ranker = new ExpertRanker();
   const query = 'Barragem CFRD 120 metros altura, vertedouro, fundações, ICOLD, CBDB';
   const embedding = mockQueryEmbedding(query);
@@ -247,7 +247,7 @@ test('Sample Query 9: S10 (Barragens) — Barragem CFRD', async () => {
   }
 });
 
-test('Sample Query 10: S10 (Barragens) — Gestão rejeitos TSF', async () => {
+test('Sample Query 10: S11 (Barragens) — Gestão rejeitos TSF', async () => {
   const ranker = new ExpertRanker();
   const query =
     'Gestão de rejeitos e Tailings Storage Facility (TSF), descaracterização, Lei 12.334, PNSB';

@@ -1,4 +1,4 @@
-# Extensão do registry aluci-guard — Saneamento (Manta 03-S8)
+# Extensão do registry aluci-guard — Saneamento (Manta 03-S9)
 
 Fonte: `sharepoint/01-agentes-fundamentais/agente-saneamento/SKILL.md` (v1.0.0, 2026-07-05).
 Todas as referências abaixo foram extraídas literalmente do texto do SKILL.md — nenhuma

@@ -79,8 +79,8 @@ class HealthCheckJobExecutor:
         # Mock: simulate checking agent_memory table
         mock_sizes = {
             "manta-03-s1": 45.2,
-            "manta-03-s8": 58.7,
-            "manta-03-s9": 32.1
+            "manta-03-s9": 58.7,
+            "manta-03-s10": 32.1
         }
 
         total_mb = sum(mock_sizes.values())

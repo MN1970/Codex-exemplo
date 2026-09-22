@@ -1,7 +1,7 @@
 ---
 name: agente-barragens
 manta_code: "Manta 03-S10"
-aliases: ["manta-03-s10", "manta 03 s10", "barragens", "barragem", "TSF"]
+aliases: ["manta-03-s11", "manta 03 s10", "barragens", "barragem", "TSF"]
 version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados
@@ -25,7 +25,7 @@ description: >
   Fundão, Brumadinho, descaracterização, PAE, PAEBM, ZAS, ZSS, HHP.
 ---
 
-# AGENTE-BARRAGENS — Manta 03-S10
+# AGENTE-BARRAGENS — Manta 03-S11
 
 ## 1. PERGUNTA OBRIGATÓRIA INICIAL
 

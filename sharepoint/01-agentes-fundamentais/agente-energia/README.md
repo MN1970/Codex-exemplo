@@ -1,4 +1,4 @@
-# agente-energia (Manta 03-S9)
+# agente-energia (Manta 03-S10)
 
 Agente vertical do setor elétrico brasileiro, com foco em **transmissão
 (ANEEL/State Grid)** e cobertura de geração (hidro, eólica, solar,

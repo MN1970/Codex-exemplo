@@ -106,7 +106,7 @@ class MaestroRunsSetup:
         mock_run = {
             'user_id': '00000000-0000-0000-0000-000000000000',  # placeholder
             'session_id': 'test-session-001',
-            'agent_id': 'manta-03-s8',
+            'agent_id': 'manta-03-s9',
             'skill_id': 'agente-saneamento.v5.0',
             'model_tier': 'haiku-4-5',
             'input_tokens': 1200,

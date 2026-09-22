@@ -153,7 +153,7 @@ SET app.is_admin = false;
 ```
 
 This ensures:
-- Agent S1 (Rodovias) cannot see S8 (Saneamento) cache
+- Agent S1 (Rodovias) cannot see S9 (Saneamento) cache
 - Only admin can bypass RLS for auditing
 - Multi-tenant isolation by design
 

@@ -211,7 +211,7 @@ This output is injected into the skill execution context.
 
 ## Keyword Rules — Complete Specification
 
-### S8 — SANEAMENTO
+### S9 — SANEAMENTO
 
 **Keywords (partial list):**
 ```
@@ -231,7 +231,7 @@ IF keywords.count >= 2 AND "ETA|ETE|AySA" in keywords:
 
 ---
 
-### S9 — ENERGIA
+### S10 — ENERGIA
 
 **Keywords (partial list):**
 ```
@@ -252,7 +252,7 @@ IF "leilão" AND "transmissão" in keywords:
 
 ---
 
-### S6 — PORTOS
+### S7 — PORTOS
 
 **Keywords (partial list):**
 ```
@@ -265,7 +265,7 @@ operador portuário, bunkering, cabotagem, cabos submarinos
 
 ---
 
-### S7 — AEROPORTOS
+### S8 — AEROPORTOS
 
 **Keywords (partial list):**
 ```
@@ -277,7 +277,7 @@ corredor, aproximação, decolagem, sinalização, radar, beacon, DME
 
 ---
 
-### S10 — BARRAGENS
+### S11 — BARRAGENS
 
 **Keywords (partial list):**
 ```

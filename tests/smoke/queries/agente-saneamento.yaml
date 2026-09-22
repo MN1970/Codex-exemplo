@@ -1,4 +1,4 @@
-# 5 perguntas de exemplo para o smoke test do agente-saneamento (Manta 03-S8).
+# 5 perguntas de exemplo para o smoke test do agente-saneamento (Manta 03-S9).
 - prompt: "Preciso projetar uma ETA de ciclo completo para 200 mil habitantes. Quais etapas considero?"
   expect_any: ["eta", "coagulação", "floculação", "decantação", "filtração"]
 

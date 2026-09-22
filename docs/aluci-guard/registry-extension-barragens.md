@@ -1,4 +1,4 @@
-# Extensão do registry aluci-guard — Barragens (Manta 03-S10)
+# Extensão do registry aluci-guard — Barragens (Manta 03-S11)
 
 Fonte: `/home/user/Codex-exemplo/sharepoint/01-agentes-fundamentais/agente-barragens/SKILL.md`
 (agente-barragens v1.0.0, 2026-07-05).

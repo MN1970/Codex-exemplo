@@ -176,8 +176,8 @@ def agent_list() -> list:
     """Lista de 20 agentes esperados."""
     return [
         "manta-00", "manta-01", "manta-02", "manta-03-s1", "manta-03-s2",
-        "manta-03-s3", "manta-03-s4", "manta-03-s6", "manta-03-s7", "manta-03-s8",
-        "manta-03-s9", "manta-03-s10", "manta-04", "manta-05", "manta-06",
+        "manta-03-s3", "manta-03-s4", "manta-03-s7", "manta-03-s8", "manta-03-s9",
+        "manta-03-s10", "manta-03-s11", "manta-04", "manta-05", "manta-06",
         "manta-07", "manta-13", "manta-14", "manta-15", "manta-16",
     ]
 

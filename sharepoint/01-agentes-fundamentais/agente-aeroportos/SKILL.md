@@ -1,7 +1,7 @@
 ---
 name: agente-aeroportos
 manta_code: "Manta 03-S7"
-aliases: ["manta-03-s7", "manta 03 s7", "aeroportos", "aeroporto", "aviação"]
+aliases: ["manta-03-s8", "manta 03 s7", "aeroportos", "aeroporto", "aviação"]
 version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados

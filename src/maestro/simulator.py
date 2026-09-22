@@ -67,7 +67,7 @@ class DelayAnalyzer:
     # Mapeamento de dependências entre segmentos
     SEGMENT_DEPENDENCIES = {
         "S7": ["S10"],  # Portos → precisa estar pronto para energia
-        "S10": ["S9"],  # Energia → precisa cais/obra para ligar
+        "S10": ["S10"],  # Energia → precisa cais/obra para ligar
         "S9": ["S7"],   # Saneamento → usa captação próxima ao porto
     }
 

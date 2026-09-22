@@ -6,16 +6,16 @@ Cross-Agent Flows E2E Tests (v5.0)
 RAG coordination, and aggregated results.
 
 Cenários:
-  1. ETA + Orçamento (S8 → S5)
-  2. Porto + Cronograma + Orçamento (S6 → S7 + S5)
-  3. Energia + Modelagem (S9 → S6)
-  4. Barragem + DD + Contratual (S10 → Claims + Legal)
-  5. Metro + OAE + Cronograma (S4 + S2 → S7)
-  6. Rodovia + Ferrovia + Energia (S1 + S3 + S9)
-  7. Saneamento + Ambiental + Advisory (S8 → Legal + Advisory)
-  8. Aeroporto + Landside (S7 + S4)
-  9. Rejeitos + Geotecnia + Contratual (S10 + Imobiliário)
-  10. Projeto integrado: Rio + Metro + Saneamento (S4 + S8 + S1)
+  1. ETA + Orçamento (S9 → Manta 05)
+  2. Porto + Cronograma + Orçamento (S7 → Manta 07 + Manta 05)
+  3. Energia + Modelagem (S10 → Manta 06)
+  4. Barragem + DD + Contratual (S11 → Claims + Legal)
+  5. Metro + OAE + Cronograma (S4 + S2 → Manta 07)
+  6. Rodovia + Ferrovia + Energia (S1 + S3 + S10)
+  7. Saneamento + Ambiental + Advisory (S9 → Legal + Advisory)
+  8. Aeroporto + Landside (S8 + S4)
+  9. Rejeitos + Geotecnia + Contratual (S11 + Imobiliário)
+  10. Projeto integrado: Rio + Metro + Saneamento (S4 + S9 + S1)
 
 Assertions validadas:
   - Primary agent routing correto
@@ -35,6 +35,8 @@ from dataclasses import dataclass
 from typing import Optional, List, Dict, Set
 from enum import Enum
 import logging
+
+from src.maestro import keyword_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -137,105 +139,32 @@ class CrossAgentCoordinator:
             logger.error(f"Failed job {job_id}: {reason}")
 
 
-class MockMaestroWithCrossAgent:
+class MaestroWithCrossAgent:
     """
-    Maestro Router com suporte a cross-agent flows.
+    Maestro com cross-agent flows sobre o router de referência
+    (src/maestro/keyword_router.py): o primário vem de route() e os
+    secundários de cross_agent_calls(), que só aciona handoffs permitidos
+    em CROSS_AGENT_RULES e mencionados no prompt.
     """
 
     def __init__(self, coordinator: CrossAgentCoordinator):
         self.coordinator = coordinator
-        self.cross_agent_rules = self._build_cross_agent_rules()
-
-    def _build_cross_agent_rules(self) -> Dict[str, List[str]]:
-        """Define quais agentes podem chamar quem."""
-        return {
-            "manta-03-s8": ["manta-05"],  # Saneamento chama Orçamento
-            "manta-03-s6": ["manta-05", "manta-07"],  # Porto chama Orçamento + Cronograma
-            "manta-03-s9": ["manta-06"],  # Energia chama Modelagem
-            "manta-03-s10": ["manta-02", "manta-01"],  # Barragem chama Contratual + Claims
-            "manta-03-s4": ["manta-03-s2", "manta-07"],  # Metro chama OAE + Cronograma
-            "manta-03-s1": ["manta-03-s3", "manta-03-s9"],  # Rodovia chama Ferrovia + Energia
-            "manta-03-s2": ["manta-07"],  # OAE chama Cronograma
-        }
+        self.cross_agent_rules = keyword_router.CROSS_AGENT_RULES
 
     def route_with_cross_agents(self, prompt: str) -> Dict:
-        """
-        Roteia e identifica cross-agent calls.
-        Retorna dicionário com resultado de routing e jobs despachados.
-        """
-        # Simples heurística: detecta keywords para determinar agent + calls
-        prompt_lower = prompt.lower()
-
-        routing_result = {
-            "primary_agent": None,
+        routed = keyword_router.route(prompt)
+        primary = routed.agent_id
+        result = {
+            "primary_agent": primary,
             "prompt": prompt,
+            "complexity_score": routed.complexity_score,
+            "model_tier": routed.model_tier,
             "cross_agent_jobs": [],
         }
-
-        # Determine primary agent
-        if any(w in prompt_lower for w in ["eta", "ete", "esgoto", "saneamento", "adutora"]):
-            routing_result["primary_agent"] = "manta-03-s8"
-            if "custo" in prompt_lower or "orçamento" in prompt_lower:
-                job_id = self.coordinator.dispatch_job(
-                    "manta-03-s8", "manta-05",
-                    {"input": "Orçamento para ETA", "phase": "projeto-basico"}
-                )
-                routing_result["cross_agent_jobs"].append({
-                    "job_id": job_id,
-                    "called_agent": "manta-05",
-                })
-
-        elif any(w in prompt_lower for w in ["porto", "terminal", "berço", "cais", "dragagem"]):
-            routing_result["primary_agent"] = "manta-03-s6"
-            if "cronograma" in prompt_lower or "custo" in prompt_lower:
-                # Dispatch múltiplos jobs
-                for called in ["manta-05", "manta-07"]:
-                    job_id = self.coordinator.dispatch_job(
-                        "manta-03-s6", called,
-                        {"input": f"Dados para {called}", "project": "terminal"}
-                    )
-                    routing_result["cross_agent_jobs"].append({
-                        "job_id": job_id,
-                        "called_agent": called,
-                    })
-
-        elif any(w in prompt_lower for w in ["energia", "lt", "transmissão", "geração", "usina"]):
-            routing_result["primary_agent"] = "manta-03-s9"
-            if "modelo" in prompt_lower or "ppp" in prompt_lower:
-                job_id = self.coordinator.dispatch_job(
-                    "manta-03-s9", "manta-06",
-                    {"input": "Modelo financeiro para projeto de energia"}
-                )
-                routing_result["cross_agent_jobs"].append({
-                    "job_id": job_id,
-                    "called_agent": "manta-06",
-                })
-
-        elif any(w in prompt_lower for w in ["barragem", "rejeitos", "tsf", "vertedouro"]):
-            routing_result["primary_agent"] = "manta-03-s10"
-            if "contrato" in prompt_lower or "legal" in prompt_lower:
-                job_id = self.coordinator.dispatch_job(
-                    "manta-03-s10", "manta-02",
-                    {"input": "Análise contratual para barragem"}
-                )
-                routing_result["cross_agent_jobs"].append({
-                    "job_id": job_id,
-                    "called_agent": "manta-02",
-                })
-
-        elif any(w in prompt_lower for w in ["metro", "vlt", "estação", "metrô"]):
-            routing_result["primary_agent"] = "manta-03-s4"
-            if "estrutura" in prompt_lower or "fundação" in prompt_lower:
-                job_id = self.coordinator.dispatch_job(
-                    "manta-03-s4", "manta-03-s2",
-                    {"input": "Análise estrutural para estação"}
-                )
-                routing_result["cross_agent_jobs"].append({
-                    "job_id": job_id,
-                    "called_agent": "manta-03-s2",
-                })
-
-        return routing_result
+        for called in keyword_router.cross_agent_calls(primary, prompt):
+            job_id = self.coordinator.dispatch_job(primary, called, {"input": prompt})
+            result["cross_agent_jobs"].append({"job_id": job_id, "called_agent": called})
+        return result
 
 
 # ============================================================================
@@ -251,7 +180,7 @@ def coordinator():
 @pytest.fixture(scope="session")
 def maestro_cross_agent(coordinator):
     """Instancia maestro com suporte cross-agent."""
-    return MockMaestroWithCrossAgent(coordinator)
+    return MaestroWithCrossAgent(coordinator)
 
 
 @pytest.fixture(scope="session")
@@ -261,13 +190,13 @@ def cross_agent_scenarios() -> List[CrossAgentScenario]:
         CrossAgentScenario(
             id="ca_001",
             name="ETA + Orçamento",
-            description="Saneamento (S8) chama Orçamento (S5) para estimativa de custo",
+            description="Saneamento (S9) chama Orçamento (Manta 05) para estimativa de custo",
             prompt="Qual o custo de uma ETA para 1 milhão de habitantes com tecnologia MBR?",
-            expected_primary_agent="manta-03-s8",
+            expected_primary_agent="manta-03-s9",
             expected_called_agents={"manta-05"},
             expected_rag_collections={"san:v5.0:*", "orcamento:v5.0:*"},
             validation_rules=[
-                "primary_agent == manta-03-s8",
+                "primary_agent == manta-03-s9",
                 "cross_agent_jobs.length == 1",
                 "cross_agent_jobs[0].called_agent == manta-05",
                 "rag_collections contains san:v5.0",
@@ -277,13 +206,13 @@ def cross_agent_scenarios() -> List[CrossAgentScenario]:
         CrossAgentScenario(
             id="ca_002",
             name="Porto + Cronograma + Orçamento",
-            description="Portos (S6) chama Cronograma (S7) + Orçamento (S5)",
+            description="Portos (S7) chama Cronograma (Manta 07) + Orçamento (Manta 05)",
             prompt="Cronograma e orçamento para ampliação de terminal portuário de 2M TEU/ano",
-            expected_primary_agent="manta-03-s6",
+            expected_primary_agent="manta-03-s7",
             expected_called_agents={"manta-05", "manta-07"},
             expected_rag_collections={"por:v5.0:*", "orcamento:v5.0:*", "cronograma:v5.0:*"},
             validation_rules=[
-                "primary_agent == manta-03-s6",
+                "primary_agent == manta-03-s7",
                 "cross_agent_jobs.length == 2",
                 "cross_agent_jobs[*].called_agent in [manta-05, manta-07]",
             ]
@@ -291,33 +220,33 @@ def cross_agent_scenarios() -> List[CrossAgentScenario]:
         CrossAgentScenario(
             id="ca_003",
             name="Energia + Modelagem",
-            description="Energia (S9) chama Modelagem (S6) para PPP",
+            description="Energia (S10) chama Modelagem (Manta 06) para PPP",
             prompt="Model PPP para usina solar de 200 MW com financiamento BNDES",
-            expected_primary_agent="manta-03-s9",
+            expected_primary_agent="manta-03-s10",
             expected_called_agents={"manta-06"},
             expected_rag_collections={"ene:v5.0:*", "modelagem:v5.0:*"},
             validation_rules=[
-                "primary_agent == manta-03-s9",
+                "primary_agent == manta-03-s10",
                 "cross_agent_jobs[0].called_agent == manta-06",
             ]
         ),
         CrossAgentScenario(
             id="ca_004",
             name="Barragem + DD + Contratual",
-            description="Barragens (S10) chama Contratual (S2) + Claims (S1) para DD",
+            description="Barragens (S11) chama Contratual (Manta 02) + Claims (Manta 01) para DD",
             prompt="Due diligence de barragem — análise contratual e riscos de sinistro",
-            expected_primary_agent="manta-03-s10",
+            expected_primary_agent="manta-03-s11",
             expected_called_agents={"manta-02"},
             expected_rag_collections={"bar:v5.0:*", "contratual:v5.0:*"},
             validation_rules=[
-                "primary_agent == manta-03-s10",
+                "primary_agent == manta-03-s11",
                 "cross_agent_jobs[0].called_agent == manta-02",
             ]
         ),
         CrossAgentScenario(
             id="ca_005",
             name="Metro + OAE + Cronograma",
-            description="Metro (S4) chama OAE (S2) + Cronograma (S7)",
+            description="Metro (S4) chama OAE (S2) + Cronograma (Manta 07)",
             prompt="Estação de metrô em NATM com análise estrutural e cronograma",
             expected_primary_agent="manta-03-s4",
             expected_called_agents={"manta-03-s2"},
@@ -330,10 +259,10 @@ def cross_agent_scenarios() -> List[CrossAgentScenario]:
         CrossAgentScenario(
             id="ca_006",
             name="Rodovia + Ferrovia + Energia",
-            description="Rodovia (S1) chama Ferrovia (S3) + Energia (S9) para interconexão",
+            description="Rodovia (S1) chama Ferrovia (S3) + Energia (S10) para interconexão",
             prompt="Rodovia paralela a ferrovia com subestação de energia a 500m",
             expected_primary_agent="manta-03-s1",
-            expected_called_agents={"manta-03-s3", "manta-03-s9"},
+            expected_called_agents={"manta-03-s3", "manta-03-s10"},
             expected_rag_collections={"rod:v5.0:*", "fer:v5.0:*", "ene:v5.0:*"},
             validation_rules=[
                 "primary_agent == manta-03-s1",
@@ -343,26 +272,26 @@ def cross_agent_scenarios() -> List[CrossAgentScenario]:
         CrossAgentScenario(
             id="ca_007",
             name="Saneamento + Ambiental + Advisory",
-            description="Saneamento (S8) chama Advisory + Contratual para licença ambiental",
+            description="Saneamento (S9) chama Advisory + Contratual para licença ambiental",
             prompt="ETA com requisitos ambientais Lei 14.026 — parecer técnico e contratação",
-            expected_primary_agent="manta-03-s8",
+            expected_primary_agent="manta-03-s9",
             expected_called_agents={"manta-02"},
             expected_rag_collections={"san:v5.0:*", "contratual:v5.0:*"},
             validation_rules=[
-                "primary_agent == manta-03-s8",
+                "primary_agent == manta-03-s9",
                 "cross_agent_jobs[0].called_agent == manta-02",
             ]
         ),
         CrossAgentScenario(
             id="ca_008",
             name="Aeroporto + Landside",
-            description="Aeroporto (S7) inclui análise de vias de acesso (S1)",
+            description="Aeroporto (S8) inclui análise de vias de acesso (S1)",
             prompt="Aeroporto novo com pista e vias de acesso — rodovia de 15 km",
-            expected_primary_agent="manta-03-s7",
+            expected_primary_agent="manta-03-s8",
             expected_called_agents=set(),  # Pode chamar S1 lateralmente
             expected_rag_collections={"aer:v5.0:*"},
             validation_rules=[
-                "primary_agent == manta-03-s7",
+                "primary_agent == manta-03-s8",
             ]
         ),
         CrossAgentScenario(
@@ -370,11 +299,11 @@ def cross_agent_scenarios() -> List[CrossAgentScenario]:
             name="Rejeitos + Geotecnia + Contratual",
             description="Barragem de rejeitos com fundação especial",
             prompt="TSF com foundação em rocha — geotecnia complexa e contrato com empresa especializada",
-            expected_primary_agent="manta-03-s10",
+            expected_primary_agent="manta-03-s11",
             expected_called_agents={"manta-02"},
             expected_rag_collections={"bar:v5.0:*", "contratual:v5.0:*"},
             validation_rules=[
-                "primary_agent == manta-03-s10",
+                "primary_agent == manta-03-s11",
             ]
         ),
         CrossAgentScenario(
@@ -383,7 +312,7 @@ def cross_agent_scenarios() -> List[CrossAgentScenario]:
             description="Mega-projeto: Metro cruza com adutora + rodovia de acesso",
             prompt="Projeto integrado Rio: metro linha 6 + ampliação ETA Sabesp + via de acesso",
             expected_primary_agent="manta-03-s4",
-            expected_called_agents={"manta-03-s8"},
+            expected_called_agents={"manta-03-s9"},
             expected_rag_collections={"met:v5.0:*", "san:v5.0:*", "rod:v5.0:*"},
             validation_rules=[
                 "primary_agent == manta-03-s4",
@@ -399,10 +328,10 @@ def cross_agent_scenarios() -> List[CrossAgentScenario]:
 # ============================================================================
 
 class TestCrossAgentETA:
-    """S8 + S5: ETA + Orçamento."""
+    """S9 + Manta 05: ETA + Orçamento."""
 
     def test_eta_orcamento_dispatch(self, maestro_cross_agent, coordinator, cross_agent_scenarios):
-        """Dispatch job: S8 → S5."""
+        """Dispatch job: S9 → Manta 05."""
         scenario = next(s for s in cross_agent_scenarios if s.id == "ca_001")
         result = maestro_cross_agent.route_with_cross_agents(scenario.prompt)
 
@@ -413,7 +342,7 @@ class TestCrossAgentETA:
     def test_eta_orcamento_job_lifecycle(self, coordinator):
         """Job lifecycle: PENDING → COMPLETED."""
         job_id = coordinator.dispatch_job(
-            "manta-03-s8",
+            "manta-03-s9",
             "manta-05",
             {"input": "ETA 1M hab", "technology": "MBR"}
         )
@@ -431,7 +360,7 @@ class TestCrossAgentETA:
 
 
 class TestCrossAgentPorto:
-    """S6 + S5 + S7: Porto + Cronograma + Orçamento."""
+    """S7 + Manta 05 + Manta 07: Porto + Cronograma + Orçamento."""
 
     def test_porto_multiple_jobs(self, maestro_cross_agent, cross_agent_scenarios):
         """Dispatch múltiplos jobs simultâneos."""
@@ -451,7 +380,7 @@ class TestCrossAgentPorto:
 
 
 class TestCrossAgentEnergia:
-    """S9 + S6: Energia + Modelagem (PPP)."""
+    """S10 + Manta 06: Energia + Modelagem (PPP)."""
 
     def test_energia_modelagem(self, maestro_cross_agent, cross_agent_scenarios):
         """Energia PPP chama Modelagem."""
@@ -465,7 +394,7 @@ class TestCrossAgentEnergia:
 
 
 class TestCrossAgentBarragem:
-    """S10 + S2: Barragem + Contratual."""
+    """S11 + Manta 02: Barragem + Contratual."""
 
     def test_barragem_dd_contrato(self, maestro_cross_agent, cross_agent_scenarios):
         """Barragem DD chama Contratual."""
@@ -527,7 +456,7 @@ class TestCrossAgentIntegration:
     def test_cross_agent_job_failure_handling(self, coordinator):
         """Failure handling para jobs."""
         job_id = coordinator.dispatch_job(
-            "manta-03-s8",
+            "manta-03-s9",
             "manta-05",
             {"input": "Budget estimation"}
         )

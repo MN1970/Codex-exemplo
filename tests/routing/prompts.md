@@ -14,7 +14,7 @@ arquivo serve como fonte manual para QA humano.)
 
 ---
 
-## S6 — Portos
+## S7 — Portos
 
 - [ ] `Preciso de um preliminar de dragagem para o terminal de contêineres do Porto do Itaqui.` → **agente-portos**
 - [ ] `Como dimensiono a defensa de um berço para navio Panamax?` → **agente-portos**
@@ -22,7 +22,7 @@ arquivo serve como fonte manual para QA humano.)
 - [ ] `Qual PIANC bulletin cobre projeto de quebra-mar em enrocamento?` → **agente-portos**
 - [ ] `Estamos com calado insuficiente no canal — preciso de plano de dragagem.` → **agente-portos**
 
-## S7 — Aeroportos
+## S8 — Aeroportos
 
 - [ ] `Quero dimensionar a pista de pouso do aeroporto regional (código 3C).` → **agente-aeroportos**
 - [ ] `Qual RBAC cobre projeto de pátio de aeronaves?` → **agente-aeroportos**
@@ -30,7 +30,7 @@ arquivo serve como fonte manual para QA humano.)
 - [ ] `Como projeto o balizamento CAT II para operação noturna?` → **agente-aeroportos**
 - [ ] `ICAO Annex 14 permite offset lateral de RWY na minha configuração?` → **agente-aeroportos**
 
-## S8 — Saneamento (prioridade AySA)
+## S9 — Saneamento (prioridade AySA)
 
 - [ ] `Preciso projetar uma ETA de ciclo completo para 200 mil hab.` → **agente-saneamento**
 - [ ] `Como calculo golpe de aríete na adutora de 800mm?` → **agente-saneamento**
@@ -39,7 +39,7 @@ arquivo serve como fonte manual para QA humano.)
 - [ ] `Estou preparando o PMSB do município; por onde começar?` → **agente-saneamento**
 - [ ] `A Lei 14.026 exige quais métricas do SNIS para universalização?` → **agente-saneamento**
 
-## S9 — Energia (prioridade transmissão)
+## S10 — Energia (prioridade transmissão)
 
 - [ ] `Estamos avaliando um leilão de transmissão da ANEEL em 2027, pode me ajudar?` → **agente-energia**
 - [ ] `Preciso da RAP referencial para uma LT de 500kV, 250km.` → **agente-energia**
@@ -48,7 +48,7 @@ arquivo serve como fonte manual para QA humano.)
 - [ ] `ONS pede um estudo de fluxo — pode revisar minha modelagem?` → **agente-energia**
 - [ ] `EPE liberou o R3 do projeto; preciso conferir contra o edital.` → **agente-energia**
 
-## S10 — Barragens
+## S11 — Barragens
 
 - [ ] `Preciso projetar uma barragem CFRD de 80m de altura.` → **agente-barragens**
 - [ ] `Como faço dam breach analysis pós-Brumadinho?` → **agente-barragens**

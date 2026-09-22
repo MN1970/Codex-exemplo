@@ -1,7 +1,7 @@
-# Extensão do registry aluci-guard — Energia (Manta 03-S9)
+# Extensão do registry aluci-guard — Energia (Manta 03-S10)
 
 Fonte: `/home/user/Codex-exemplo/sharepoint/01-agentes-fundamentais/agente-energia/SKILL.md`
-(agente-energia, Manta 03-S9, v1.0.0, 2026-07-05)
+(agente-energia, Manta 03-S10, v1.0.0, 2026-07-05)
 
 ## Compatível com schema atual (normas_abnt.py / leis_federais.py)
 

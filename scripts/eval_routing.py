@@ -108,7 +108,7 @@ def parse_routing_prompts(filepath: Path) -> List[Dict[str, str]]:
     """
     Parse routing test prompts from prompts.md.
     Expected format:
-      ## S6 — Portos
+      ## S7 — Portos
       - [ ] `Preciso de um preliminar...` → **agente-portos**
       - [ ] `Como dimensiono...` → **agente-portos**
     """
