@@ -1,0 +1,63 @@
+{
+  "analise_padroes": {
+    "contaminador_principal": "S10 (Barragens)",
+    "frequencia_contaminacao": {
+      "S10_contaminando_outros": 3,
+      "S9_contaminando": 1,
+      "S7_contaminando": 1,
+      "S3_contaminando": 1
+    },
+    "palavras_chave_problema": [
+      "terraplenagem",
+      "estrutura",
+      "fundação",
+      "drenagem",
+      "tratamento água",
+      "via permanente"
+    ],
+    "hipotese_raiz": "4 problemas entrelaçados: (1) prefixos com overlap semântico não filtrado; (2) embedding_model genérico não captura nuances de domínio; (3) corpus sem suficiente contexto diferenciador; (4) falta de negative embeddings"
+  },
+  "estrategias": [
+    {
+      "ordem": 1,
+      "nome": "Normalização de prefixos + reweighting + stop-terms específicos",
+      "descricao": "Ajustar pesos dos prefixos (diminuir S10 de 1.0 para 0.85), adicionar termos de exclusão cross-domain",
+      "esforco": "BAIXO (1-2h)",
+      "impacto_esperado": "Recall@1 +5-8% → 74-77%, contaminação -30-40%",
+      "timeline": "HOJE"
+    },
+    {
+      "ordem": 2,
+      "nome": "Expansão de corpus com contexto diferenciador",
+      "descricao": "Enriquecer chunks com context_tag e synthetic examples de disambiguação",
+      "esforco": "MÉDIO (4-6h)",
+      "impacto_esperado": "Recall@1 +8-12%, contaminação -50-70%",
+      "timeline": "ESTA SEMANA"
+    },
+    {
+      "ordem": 3,
+      "nome": "Troca de embedding_model + semantic layer",
+      "descricao": "Upgrade para text-embedding-3-large ou multilingual-E5-large",
+      "esforco": "ALTO (8-12h)",
+      "impacto_esperado": "Recall@1 +12-18%, contaminação -70-90%",
+      "timeline": "FALLBACK"
+    }
+  ],
+  "metricas_target": {
+    "apos_strategy_1": {
+      "recall_at_1": "74-77%",
+      "recall_at_3": "87-88%",
+      "contaminacao": "12-14%"
+    },
+    "apos_strategy_1_2": {
+      "recall_at_1": "77-82%",
+      "recall_at_3": "88-90%",
+      "contaminacao": "6-10%"
+    },
+    "apos_strategy_1_2_3": {
+      "recall_at_1": "82-88%",
+      "recall_at_3": "90-92%",
+      "contaminacao": "2-5%"
+    }
+  }
+}

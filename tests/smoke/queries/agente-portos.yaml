@@ -1,0 +1,18 @@
+# 5 perguntas de exemplo para o smoke test do agente-portos (Manta 03-S6).
+# `expect_any`: pelo menos um destes termos (case-insensitive) deve
+# aparecer na resposta — checagem de relevância mínima, não de
+# corretude técnica completa (isso é responsabilidade de QA humano).
+- prompt: "Preciso de um preliminar de dragagem para o terminal de contêineres do Porto do Itaqui. Por onde começo?"
+  expect_any: ["dragagem", "calado", "batimetria", "draga"]
+
+- prompt: "Como dimensiono a defensa de um berço para navio Panamax?"
+  expect_any: ["defensa", "berço", "atracação", "energia de atracação"]
+
+- prompt: "A ANTAQ pede um cronograma de arrendamento para o TUP; quais entregáveis preciso considerar?"
+  expect_any: ["antaq", "arrendamento", "tup"]
+
+- prompt: "Qual PIANC bulletin cobre projeto de quebra-mar em enrocamento?"
+  expect_any: ["pianc", "quebra-mar", "enrocamento"]
+
+- prompt: "Estamos com calado insuficiente no canal de acesso — preciso montar um plano de dragagem de manutenção."
+  expect_any: ["dragagem", "canal", "calado"]

@@ -1,0 +1,236 @@
+{
+  "evaluation_metadata": {
+    "timestamp": "2026-07-25T02:18:24.553297+00:00",
+    "golden_set_size": 50,
+    "evaluation_type": "A/B test (P4 RAG embedding models) \u2014 MOCK",
+    "methodology": "Simulated metrics (for CI/CD validation)"
+  },
+  "models": {
+    "bge_small": {
+      "name": "bge-small-en-v1.5",
+      "dimension": 384,
+      "language": "English",
+      "characteristics": "Small, fast, efficient",
+      "recall_at_5": 0.52,
+      "mrr": 0.272,
+      "ndcg_at_5": 0.36042,
+      "latency_ms": 5.2
+    },
+    "e5_large": {
+      "name": "intfloat/multilingual-e5-large-instruct",
+      "dimension": 1024,
+      "language": "Multilingual (Portuguese native)",
+      "characteristics": "Large, accurate, multilingual",
+      "recall_at_5": 0.76,
+      "mrr": 0.33199999999999996,
+      "ndcg_at_5": 0.4756799999999999,
+      "latency_ms": 24.8
+    }
+  },
+  "comparison": {
+    "winner": "intfloat/multilingual-e5-large-instruct",
+    "improvement_recall_pct": 46.15384615384615,
+    "improvement_mrr_pct": 22.058823529411743,
+    "improvement_ndcg_pct": 31.979357416347554,
+    "confidence_score": 0.95
+  },
+  "qa_details_sample": [
+    {
+      "qa_id": "qa_001",
+      "question": "Qual m\u00e9todo para calcular golpe de ar\u00edete em aduto...",
+      "difficulty": "hard",
+      "bge_small": {
+        "rank": 6,
+        "in_top5": false,
+        "score": 0.495,
+        "rrr": 0.0,
+        "ndcg_at_5": 0
+      },
+      "e5_large": {
+        "rank": 6,
+        "in_top5": false,
+        "score": 0.647,
+        "rrr": 0.0,
+        "ndcg_at_5": 0
+      }
+    },
+    {
+      "qa_id": "qa_002",
+      "question": "Como dimensionar uma ETA de ciclo completo para 15...",
+      "difficulty": "medium",
+      "bge_small": {
+        "rank": 2,
+        "in_top5": true,
+        "score": 0.659,
+        "rrr": 0.5,
+        "ndcg_at_5": 0.707
+      },
+      "e5_large": {
+        "rank": 1,
+        "in_top5": true,
+        "score": 0.777,
+        "rrr": 1.0,
+        "ndcg_at_5": 1.0
+      }
+    },
+    {
+      "qa_id": "qa_003",
+      "question": "O que \u00e9 subs\u00eddio cruzado na Lei 14.026 de saneamen...",
+      "difficulty": "easy",
+      "bge_small": {
+        "rank": 1,
+        "in_top5": true,
+        "score": 0.776,
+        "rrr": 1.0,
+        "ndcg_at_5": 1.0
+      },
+      "e5_large": {
+        "rank": 5,
+        "in_top5": true,
+        "score": 0.837,
+        "rrr": 0.2,
+        "ndcg_at_5": 0.447
+      }
+    },
+    {
+      "qa_id": "qa_004",
+      "question": "Como dimensionar um reservat\u00f3rio de reten\u00e7\u00e3o para ...",
+      "difficulty": "hard",
+      "bge_small": {
+        "rank": 1,
+        "in_top5": true,
+        "score": 0.859,
+        "rrr": 1.0,
+        "ndcg_at_5": 1.0
+      },
+      "e5_large": {
+        "rank": 6,
+        "in_top5": false,
+        "score": 0.568,
+        "rrr": 0.0,
+        "ndcg_at_5": 0
+      }
+    },
+    {
+      "qa_id": "qa_005",
+      "question": "Qual a diferen\u00e7a entre EPANET e SWMM para modelage...",
+      "difficulty": "easy",
+      "bge_small": {
+        "rank": 6,
+        "in_top5": false,
+        "score": 0.469,
+        "rrr": 0.0,
+        "ndcg_at_5": 0
+      },
+      "e5_large": {
+        "rank": 4,
+        "in_top5": true,
+        "score": 0.94,
+        "rrr": 0.25,
+        "ndcg_at_5": 0.5
+      }
+    },
+    {
+      "qa_id": "qa_006",
+      "question": "Como avaliar a colmata\u00e7\u00e3o de filtro de areias em E...",
+      "difficulty": "medium",
+      "bge_small": {
+        "rank": 1,
+        "in_top5": true,
+        "score": 0.687,
+        "rrr": 1.0,
+        "ndcg_at_5": 1.0
+      },
+      "e5_large": {
+        "rank": 5,
+        "in_top5": true,
+        "score": 0.96,
+        "rrr": 0.2,
+        "ndcg_at_5": 0.447
+      }
+    },
+    {
+      "qa_id": "qa_007",
+      "question": "O que significa RAP no contexto de concess\u00f5es de s...",
+      "difficulty": "easy",
+      "bge_small": {
+        "rank": 5,
+        "in_top5": true,
+        "score": 0.916,
+        "rrr": 0.2,
+        "ndcg_at_5": 0.447
+      },
+      "e5_large": {
+        "rank": 5,
+        "in_top5": true,
+        "score": 0.814,
+        "rrr": 0.2,
+        "ndcg_at_5": 0.447
+      }
+    },
+    {
+      "qa_id": "qa_008",
+      "question": "AySA me pediu um estudo de reabilita\u00e7\u00e3o da Planta ...",
+      "difficulty": "medium",
+      "bge_small": {
+        "rank": 2,
+        "in_top5": true,
+        "score": 0.882,
+        "rrr": 0.5,
+        "ndcg_at_5": 0.707
+      },
+      "e5_large": {
+        "rank": 2,
+        "in_top5": true,
+        "score": 0.976,
+        "rrr": 0.5,
+        "ndcg_at_5": 0.707
+      }
+    },
+    {
+      "qa_id": "qa_009",
+      "question": "Qual \u00e9 o m\u00e9todo para dimensionar rede coletora de ...",
+      "difficulty": "medium",
+      "bge_small": {
+        "rank": 6,
+        "in_top5": false,
+        "score": 0.577,
+        "rrr": 0.0,
+        "ndcg_at_5": 0
+      },
+      "e5_large": {
+        "rank": 4,
+        "in_top5": true,
+        "score": 0.815,
+        "rrr": 0.25,
+        "ndcg_at_5": 0.5
+      }
+    },
+    {
+      "qa_id": "qa_010",
+      "question": "Como calcular a altura manom\u00e9trica de uma esta\u00e7\u00e3o ...",
+      "difficulty": "medium",
+      "bge_small": {
+        "rank": 4,
+        "in_top5": true,
+        "score": 0.833,
+        "rrr": 0.25,
+        "ndcg_at_5": 0.5
+      },
+      "e5_large": {
+        "rank": 1,
+        "in_top5": true,
+        "score": 0.764,
+        "rrr": 1.0,
+        "ndcg_at_5": 1.0
+      }
+    }
+  ],
+  "recommendations": [
+    "WINNER: intfloat/multilingual-e5-large-instruct",
+    "Recall@5 improvement: +46.2%",
+    "Confidence: 95%",
+    "Run actual eval_embeddings_ab.py with real models for production decisions"
+  ],
+  "note": "This is a MOCK evaluation. Run eval_embeddings_ab.py with actual models for production."
+}

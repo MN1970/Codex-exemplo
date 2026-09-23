@@ -1,0 +1,229 @@
+{
+  "version": "v5.0",
+  "deployment_date": "2026-07-25T14:32:00Z",
+  "environment": "production",
+
+  "maestro_config": {
+    "routing_strategy": "R1-deterministic",
+    "routing_rules": "keyword-matching + embedding + context-inference",
+    "ambiguity_threshold": 0.1,
+    "fallback_on_ambiguity": true
+  },
+
+  "skill_version_pin": {
+    "maestro": "v5.0",
+    "agente-saneamento": "v5.0",
+    "agente-energia": "v5.0",
+    "agente-portos": "v5.0",
+    "agente-aeroportos": "v5.0",
+    "agente-barragens": "v5.0",
+    "agente-rodovias": "v5.0",
+    "agente-oae": "v5.0",
+    "agente-ferrovia": "v5.0",
+    "agente-metro": "v5.0",
+    "agente-claims": "v5.0",
+    "agente-contratual": "v5.0",
+    "agente-imobiliario": "v5.0",
+    "agente-orcamento": "v5.0",
+    "agente-modelagem": "v5.0",
+    "agente-cronograma": "v5.0",
+    "agente-bd": "v5.0",
+    "agente-apresentacoes": "v5.0",
+    "agente-advisory": "v5.0",
+    "agente-arquiteto-ia": "v5.0"
+  },
+
+  "routing_rules": {
+    "s8_saneamento": ["saneamento", "ETA", "ETE", "adutora", "esgoto", "água", "AySA", "drenagem", "SNIS", "PMSB"],
+    "s9_energia": ["transmissão", "LT", "subestação", "ANEEL", "RAP", "leilão", "ONS", "EPE", "PDE"],
+    "s6_portos": ["porto", "terminal", "ANTAQ", "dragagem", "molhe", "quebra-mar", "berço", "contêiner"],
+    "s7_aeroportos": ["aeroporto", "pista", "RWY", "taxiway", "TPS", "TECA", "ANAC", "RBAC"],
+    "s10_barragens": ["barragem", "vertedouro", "CFRD", "CCR", "rejeitos", "TSF", "PNSB", "ICOLD"],
+    "s1_rodovias": ["rodovia", "pavimento", "CBUQ", "BGS", "terraplenagem", "SICRO", "DNIT"],
+    "s2_oae": ["ponte", "viaduto", "OAE", "NBR 7187", "túnel", "fundação", "pilares"],
+    "s3_ferrovia": ["ferrovia", "trilho", "AMV", "dormente", "via-permanente", "bitola"],
+    "s4_metro": ["metrô", "estação", "NATM", "PSD", "linha", "VLT", "veículo-leve"]
+  },
+
+  "tiering_strategy": "R7-complexity-based",
+  "tiering_config": {
+    "haiku": {
+      "max_input_tokens": 2000,
+      "max_complexity_score": 3.0,
+      "cost_per_1m_tokens": 0.08
+    },
+    "sonnet": {
+      "max_input_tokens": 10000,
+      "max_complexity_score": 6.0,
+      "cost_per_1m_tokens": 3.0
+    },
+    "opus": {
+      "max_input_tokens": null,
+      "max_complexity_score": null,
+      "cost_per_1m_tokens": 15.0
+    }
+  },
+
+  "fallback_policy": "R8-cascade",
+  "fallback_config": {
+    "timeout_seconds": 60,
+    "cascade_sequence": ["haiku-4-5", "sonnet-5", "opus-5"],
+    "max_tokens_on_fallback": 1500,
+    "alert_threshold_timeouts_per_hour": 3,
+    "alert_channel": "slack:#agent-ops"
+  },
+
+  "feedback_loop": "R9-weekly-retraining",
+  "feedback_config": {
+    "enabled": true,
+    "schedule": "0 3 * * 0",
+    "min_rating_threshold": 4,
+    "feedback_table": "agent_feedback",
+    "retrainer_model": "cross-encoder-manta-v5",
+    "retraining_strategy": "fine-tune on high-scoring queries"
+  },
+
+  "memory_purge_policy": "R10-daily-cleanup",
+  "memory_config": {
+    "enabled": true,
+    "schedule": "0 4 * * *",
+    "purge_strategy": "keep last 1000 completions, delete age > 7d AND rating < 2",
+    "max_agent_memory_mb": 100,
+    "keep_frequent_embeddings": true
+  },
+
+  "observability": {
+    "run_tracking": true,
+    "run_tracking_table": "agent_runs",
+    "cost_tracking": true,
+    "latency_percentiles": [50, 95, 99],
+    "dashboard_tool": "grafana",
+    "audit_logging": "immutable-append-only"
+  },
+
+  "rag_config": {
+    "strategy": "hybrid-bm25-vector-reranker",
+    "bm25_engine": "elasticsearch",
+    "vector_db": "qdrant-or-pinecone",
+    "embedding_model": "intfloat/multilingual-e5-large-instruct",
+    "reranker_model": "cross-encoder-manta-v5.0",
+    "cache_ttl_days": 7,
+    "collections": {
+      "san:v5.0:chunks": {
+        "segment": "s8_saneamento",
+        "target_chunks": 2500,
+        "status": "active"
+      },
+      "ene:v5.0:chunks": {
+        "segment": "s9_energia",
+        "target_chunks": 3000,
+        "status": "active"
+      },
+      "por:v5.0:chunks": {
+        "segment": "s6_portos",
+        "target_chunks": 2000,
+        "status": "active"
+      },
+      "aer:v5.0:chunks": {
+        "segment": "s7_aeroportos",
+        "target_chunks": 1800,
+        "status": "active"
+      },
+      "bar:v5.0:chunks": {
+        "segment": "s10_barragens",
+        "target_chunks": 2200,
+        "status": "active"
+      },
+      "rod:v5.0:chunks": {
+        "segment": "s1_rodovias",
+        "target_chunks": 4000,
+        "status": "active"
+      },
+      "oae:v5.0:chunks": {
+        "segment": "s2_oae",
+        "target_chunks": 2000,
+        "status": "active"
+      },
+      "fer:v5.0:chunks": {
+        "segment": "s3_ferrovia",
+        "target_chunks": 1500,
+        "status": "active"
+      },
+      "met:v5.0:chunks": {
+        "segment": "s4_metro",
+        "target_chunks": 2000,
+        "status": "active"
+      }
+    }
+  },
+
+  "supabase_config": {
+    "database_url": "${SUPABASE_URL}",
+    "api_key": "${SUPABASE_KEY}",
+    "tables": {
+      "agent_runs": "run_id, agent_id, skill_id, model_tier, input_tokens, output_tokens, cost_usd, latency_ms, status, feedback_score, timestamp",
+      "agent_feedback": "feedback_id, run_id, user_id, rating, comment, timestamp",
+      "agent_triggers": "trigger_id, name, cron_expression, prompt, enabled, created_at, last_run_at, next_run_at",
+      "rag_chunks": "chunk_id, collection, document_id, text, embedding, metadata, version, checksum",
+      "rag_metadata": "metadata_id, collection, source, version, checksum, ingestão_timestamp, lineage"
+    }
+  },
+
+  "apscheduler_config": {
+    "enabled": true,
+    "triggers": [
+      {
+        "name": "rag-reindex-daily",
+        "cron": "0 2 * * *",
+        "prompt": "Reindex RAG collections (S6–S10) e valide checksums"
+      },
+      {
+        "name": "embedding-retraining",
+        "cron": "0 3 * * 0",
+        "prompt": "Fetch user_ratings > 4, retrain embedding model"
+      },
+      {
+        "name": "memory-purge",
+        "cron": "0 4 * * *",
+        "prompt": "Purge agent memory (keep 1000 last completions, delete old low-rating chunks)"
+      }
+    ]
+  },
+
+  "lifecycle_phases": [
+    "estudo-previo",
+    "projeto-basico",
+    "projeto-executivo",
+    "obra",
+    "operacao",
+    "licitacao",
+    "due-diligence",
+    "encerramento"
+  ],
+
+  "default_context_window_tokens": 4000,
+  "max_context_window_tokens": 16000,
+  "default_temperature": 0.7,
+  "default_max_tokens": 2048,
+
+  "logging": {
+    "level": "INFO",
+    "format": "json",
+    "output": ["stdout", "file://logs/maestro.log"],
+    "retention_days": 90
+  },
+
+  "security": {
+    "audit_logging": true,
+    "api_key_rotation_days": 90,
+    "skill_checksum_validation": true,
+    "immutable_run_logs": true
+  },
+
+  "deployment_gates": {
+    "regression_gate_enabled": true,
+    "regression_accuracy_threshold": 0.81,
+    "latency_p95_threshold_ms": 5000,
+    "cross_agent_success_rate_threshold": 0.90
+  }
+}
