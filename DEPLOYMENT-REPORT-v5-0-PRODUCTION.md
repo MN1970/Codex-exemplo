@@ -1,5 +1,7 @@
 # Manta Maestro v5.0 — Production Deployment Report
 
+> **Auditoria 2026-09-22 (E9 — lastro real): ❌ sem lastro.** A afirmação "DEPLOYED TO PRODUCTION — 21 agentes" não tem evidência real. Não há evidência de implantação: nenhuma função edge no Supabase, tabelas de ML (`manta_rag_ml_models`/`_predictions`/`_training_runs`) e `maestro_cost_log` vazias, o agendamento real registrado em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` é `cron` Linux, não APScheduler. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Date:** 2026-08-02  
 **Approval:** MN (mneves@mantaassociados.com)  
 **Status:** ✅ **DEPLOYED TO PRODUCTION**

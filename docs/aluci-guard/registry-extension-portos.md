@@ -1,7 +1,7 @@
-# Extensão do registry aluci-guard — Portos (Manta 03-S6)
+# Extensão do registry aluci-guard — Portos (Manta 03-S7)
 
 Fonte extraída: `sharepoint/01-agentes-fundamentais/agente-portos/SKILL.md`
-(agente vertical de Portos, Manta 03-S6, v1.0.0, 2026-07-05).
+(agente vertical de Portos, Manta 03-S7, v1.0.0, 2026-07-05).
 
 ## Compatível com schema atual (normas_abnt.py / leis_federais.py)
 

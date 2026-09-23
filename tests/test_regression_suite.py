@@ -50,11 +50,11 @@ EXPECTED_AGENTS = [
     "manta-03-s2",  # OAE
     "manta-03-s3",  # Ferrovia
     "manta-03-s4",  # Metrô
-    "manta-03-s6",  # Portos
-    "manta-03-s7",  # Aeroportos
-    "manta-03-s8",  # Saneamento
-    "manta-03-s9",  # Energia
-    "manta-03-s10",  # Barragens
+    "manta-03-s7",  # Portos
+    "manta-03-s8",  # Aeroportos
+    "manta-03-s9",  # Saneamento
+    "manta-03-s10",  # Energia
+    "manta-03-s11",  # Barragens
     "manta-04",  # Imobiliário
     "manta-05",  # Orçamento
     "manta-06",  # Modelagem
@@ -66,11 +66,11 @@ EXPECTED_AGENTS = [
 ]
 
 REGRESSION_PROMPTS = {
-    "s8": "ETA para 500 mil habitantes — qual é o custo?",
-    "s9": "Análise de RAP para LT 765 kV",
-    "s6": "Terminal de contêineres em dragagem",
-    "s7": "Pista de aeroporto regional",
-    "s10": "Barragem de concreto compactado",
+    "s9": "ETA para 500 mil habitantes — qual é o custo?",
+    "s10": "Análise de RAP para LT 765 kV",
+    "s7": "Terminal de contêineres em dragagem",
+    "s8": "Pista de aeroporto regional",
+    "s11": "Barragem de concreto compactado",
     "s1": "Pavimento asfáltico CBUQ",
     "claims": "Indenização por sinistro",
     "budget": "Orçamento de infraestrutura",
@@ -172,16 +172,16 @@ class TestRegressionAgentRegistry:
             f"Expected {len(EXPECTED_AGENTS)} agents, got {len(available_agents)}"
 
     def test_s8_saneamento_available(self, available_agents):
-        """S8 — Saneamento disponível (prioridade AySA)."""
-        assert "manta-03-s8" in available_agents
-
-    def test_s9_energia_available(self, available_agents):
-        """S9 — Energia disponível (ANEEL)."""
+        """S9 — Saneamento disponível (prioridade AySA)."""
         assert "manta-03-s9" in available_agents
 
+    def test_s9_energia_available(self, available_agents):
+        """S10 — Energia disponível (ANEEL)."""
+        assert "manta-03-s10" in available_agents
+
     def test_s6_portos_available(self, available_agents):
-        """S6 — Portos disponível."""
-        assert "manta-03-s6" in available_agents
+        """S7 — Portos disponível."""
+        assert "manta-03-s7" in available_agents
 
 
 @pytest.mark.ci
@@ -191,7 +191,7 @@ class TestRegressionCrossAgent:
     def test_cross_agent_dispatch(self):
         """Cross-agent dispatch sem erro."""
         # Mock: simulate dispatch
-        job_id = "job_manta-03-s8_manta-05_001"
+        job_id = "job_manta-03-s9_manta-05_001"
         assert job_id is not None
         assert "job_" in job_id
 
@@ -236,19 +236,19 @@ class TestRegressionSmokeTests:
 
     def test_smoke_s8_routing(self):
         """Smoke: S8 routing funciona."""
-        prompt = REGRESSION_PROMPTS["s8"]
+        prompt = REGRESSION_PROMPTS["s9"]
         assert prompt is not None
         assert "ETA" in prompt
 
     def test_smoke_s9_routing(self):
         """Smoke: S9 routing funciona."""
-        prompt = REGRESSION_PROMPTS["s9"]
+        prompt = REGRESSION_PROMPTS["s10"]
         assert prompt is not None
         assert "RAP" in prompt
 
     def test_smoke_s6_routing(self):
         """Smoke: S6 routing funciona."""
-        prompt = REGRESSION_PROMPTS["s6"]
+        prompt = REGRESSION_PROMPTS["s7"]
         assert prompt is not None
         assert "terminal" in prompt.lower()
 
@@ -399,11 +399,11 @@ class TestRegressionSegments:
     """Parametrized tests por segmento."""
 
     @pytest.mark.parametrize("agent_id,keyword", [
-        ("manta-03-s8", "saneamento"),
-        ("manta-03-s9", "energia"),
-        ("manta-03-s6", "porto"),
-        ("manta-03-s7", "aeroporto"),
-        ("manta-03-s10", "barragem"),
+        ("manta-03-s9", "saneamento"),
+        ("manta-03-s10", "energia"),
+        ("manta-03-s7", "porto"),
+        ("manta-03-s8", "aeroporto"),
+        ("manta-03-s11", "barragem"),
         ("manta-03-s1", "rodovia"),
     ])
     def test_segment_routing(self, agent_id, keyword):

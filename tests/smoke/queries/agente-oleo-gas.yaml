@@ -1,4 +1,4 @@
-# 5 perguntas de exemplo para o smoke test do agente-oleo-gas (Manta 03-S12).
+# 5 perguntas de exemplo para o smoke test do agente-oleo-gas (Manta 03-S14).
 # `expect_any`: pelo menos um destes termos (case-insensitive) deve
 # aparecer na resposta — checagem de relevância mínima, não de
 # corretude técnica completa (isso é responsabilidade de QA humano).

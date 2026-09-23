@@ -1,7 +1,7 @@
 ---
 name: agente-saneamento
 manta_code: "Manta 03-S8"
-aliases: ["manta-03-s8", "manta 03 s8", "saneamento", "san", "AySA"]
+aliases: ["manta-03-s9", "manta 03 s8", "saneamento", "san", "AySA"]
 version: 1.0.0
 updated: 2026-07-05
 author: Manta Associados
@@ -22,7 +22,7 @@ description: >
   Lei 14.026, elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, UASB, MBR.
 ---
 
-# AGENTE-SANEAMENTO — Manta 03-S8
+# AGENTE-SANEAMENTO — Manta 03-S9
 
 ## 1. PERGUNTA OBRIGATÓRIA INICIAL
 

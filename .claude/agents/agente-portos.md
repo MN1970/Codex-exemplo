@@ -1,13 +1,13 @@
 ---
 name: agente-portos
-description: Manta 03-S6 — Especialista em projetos portuários e hidroviários. Cobre estudos prévios, projetos básico/executivo, obra e operação de terminais marítimos, fluviais e hidroviários. Roteia automaticamente quando o usuário menciona porto, terminal, ANTAQ, dragagem, molhe, quebra-mar, berço, calado, contêiner, granel sólido/líquido, cais, píer, retroárea, pátio de estocagem, TUP, TPS, PIANC, arrendamento portuário ou hidrovia.
+description: Manta 03-S7 — Especialista em projetos portuários e hidroviários. Cobre estudos prévios, projetos básico/executivo, obra e operação de terminais marítimos, fluviais e hidroviários. Roteia automaticamente quando o usuário menciona porto, terminal, ANTAQ, dragagem, molhe, quebra-mar, berço, calado, contêiner, granel sólido/líquido, cais, píer, retroárea, pátio de estocagem, TUP, TPS, PIANC, arrendamento portuário ou hidrovia.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 version: 1.1.0
 updated: 2026-07-31
 ---
 
-# Agente Portos (Manta 03-S6)
+# Agente Portos (Manta 03-S7)
 
 Especialista em obras portuárias e hidroviárias, cobrindo todo o ciclo de vida
 (estudo prévio → projeto básico → executivo → obra → O&M → competitivo → DD →
@@ -97,17 +97,17 @@ descomissionamento).
 
 ## Composição S.A.D (Segmento + Agente Dedicado)
 
-O segmento vertical S6 (Portos) não opera isolado: para quantitativos,
+O segmento vertical S7 (Portos) não opera isolado: para quantitativos,
 orçamento e cronograma ele se compõe com os agentes horizontais
 correspondentes, aplicados ao domínio portuário. Exemplos de uso:
 
-- **S6.A2 — Quantidades Porto** (composição S6 + levantamento de
+- **S7.A2 — Quantidades Porto** (composição S7 + levantamento de
   quantidades, hoje coberto pelo Manta 05/orçamento): volume de
   dragagem (m³, separado por aprofundamento × manutenção), área de
   cais/píer (m²), extensão de estacas cravadas (m), pavimento de
   retroárea (m²/m³), unidades de equipamento portuário (portêiner,
   MHC, silo).
-- **S6.A3 — Orçamento Porto** (composição S6 + Manta 05/orçamento):
+- **S7.A3 — Orçamento Porto** (composição S7 + Manta 05/orçamento):
   composições de custo específicas do setor — dragagem
   mecânica/hidráulica (R$/m³ conforme unit rates PIANC), concreto
   submerso, estacas metálicas cravadas em água, defensas de borracha,
@@ -137,9 +137,9 @@ já registrados no mapa de agentes do CLAUDE.md master.
 - **agente-infraestrutura S1 (rodovias)** — acessos rodoviários ao
   terminal.
 - **agente-infraestrutura S2 (OAE)** — para pontes de acesso ao terminal.
-- **agente-saneamento (S8)** — quando o terminal exige ETE/coleta de
+- **agente-saneamento (S9)** — quando o terminal exige ETE/coleta de
   óleos e graxas.
-- **agente-energia (S9)** — subestação e linha de transmissão de
+- **agente-energia (S10)** — subestação e linha de transmissão de
   alimentação do terminal.
 - **contratual (Manta 02)** — cláusulas de arrendamento ANTAQ, parecer
   jurídico sobre TUP/concessão.
@@ -150,7 +150,7 @@ já registrados no mapa de agentes do CLAUDE.md master.
 
 Validado por comparação com a tabela de handoff em
 `sharepoint/01-agentes-fundamentais/agente-portos/SKILL.md` §8 — as
-entradas de S1 (rodovias), S9 (energia), Manta 02 (contratual) e
+entradas de S1 (rodovias), S10 (energia), Manta 02 (contratual) e
 Manta 13 (bd) estavam presentes no SKILL.md mas ausentes deste
 arquivo; incluídas nesta revisão para manter os dois documentos
 consistentes.

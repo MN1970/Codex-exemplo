@@ -292,16 +292,16 @@ Distribution:
 
 | Dimension | v4.2 | v5.0 | Change |
 |-----------|------|------|--------|
-| **Latency** |
+| **Latency** | | | |
 | p95 | 2500 ms | 1500 ms | -40% ✅ |
-| **Cost** |
+| **Cost** | | | |
 | Per run | $0.10 | $0.00883 | -91% ✅ |
 | Monthly (10k runs) | $1,400 | $488.30 | -65% ✅ |
-| **Throughput** |
+| **Throughput** | | | |
 | Req/s (100 users) | 10 | 15 | +50% ✅ |
-| **Memory** |
+| **Memory** | | | |
 | Peak | 330 MB | 470 MB | +42% (acceptable) |
-| **Error rate** |
+| **Error rate** | | | |
 | — | 0.5% | 0.2% | -60% ✅ |
 
 ### 7.2 Key Drivers of Improvement

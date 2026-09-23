@@ -208,6 +208,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     needs: [regression-gate, router-e2e, cross-agent-flows]
+    permissions:
+      contents: read
+      issues: write         # o comentário de cobertura usa a API de issues
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -221,6 +225,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest pytest-cov pytest-timeout
           pip install -q -r requirements-test.txt 2>/dev/null || echo "No requirements-test.txt"
+          # A cobertura roda tests/ inteiro — precisa das dependências da suíte
+          # (PyYAML, requests, anthropic), que não estão em requirements-test.txt.
+          pip install -q -r tests/requirements.txt
 
       - name: Run tests with coverage
         run: |

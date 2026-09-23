@@ -99,6 +99,7 @@ python scripts/audit_agents.py --output-format json --divergence-threshold 1
 - `rag_evals/audit_agents.json` — Estruturado para CI/CD
 
 **Colunas do report**:
+
 | Campo | Descrição |
 |-------|-----------|
 | `agent_id` | Nome arquivo (agente-saneamento) |
@@ -136,11 +137,11 @@ python scripts/eval_routing.py --output-format csv
 
 | Segmento | Exemplo | Agente Esperado |
 |----------|---------|-----------------|
-| S6 Portos | "Dragagem para terminal de contêineres" | agente-portos |
-| S7 Aeroportos | "Dimensionar pista para A320neo" | agente-aeroportos |
-| S8 Saneamento | "Projetar ETA para 200k hab" | agente-saneamento |
-| S9 Energia | "RAP para leilão de transmissão" | agente-energia |
-| S10 Barragens | "CFRD de 80m altura" | agente-barragens |
+| S7 Portos | "Dragagem para terminal de contêineres" | agente-portos |
+| S8 Aeroportos | "Dimensionar pista para A320neo" | agente-aeroportos |
+| S9 Saneamento | "Projetar ETA para 200k hab" | agente-saneamento |
+| S10 Energia | "RAP para leilão de transmissão" | agente-energia |
+| S11 Barragens | "CFRD de 80m altura" | agente-barragens |
 
 **Métricas de Output**:
 ```json
@@ -208,13 +209,14 @@ qa_002,"Qual método calcular golpe de aríete...","Usar fórmula Joukowsky...",
 ```
 
 **Distribuição de QA Pairs** (por padrão, 10 por segmento):
+
 | Segmento | Questões | Domínios |
 |----------|----------|----------|
-| Saneamento (S8) | 10 | water_treatment, wastewater, regulation, hydraulics, etc. |
-| Energia (S9) | 10 | transmission, substation, renewable_energy, standards, etc. |
-| Portos (S6) | 10 | terminal_design, dredging, port_operation, standards, etc. |
-| Aeroportos (S7) | 10 | airfield_design, navigation_aids, pavement_design, etc. |
-| Barragens (S10) | 10 | dam_engineering, tailings_management, hazard_assessment, etc. |
+| Saneamento (S9) | 10 | water_treatment, wastewater, regulation, hydraulics, etc. |
+| Energia (S10) | 10 | transmission, substation, renewable_energy, standards, etc. |
+| Portos (S7) | 10 | terminal_design, dredging, port_operation, standards, etc. |
+| Aeroportos (S8) | 10 | airfield_design, navigation_aids, pavement_design, etc. |
+| Barragens (S11) | 10 | dam_engineering, tailings_management, hazard_assessment, etc. |
 
 **Métricas de Validação RAG** (schema JSON):
 ```json
@@ -399,7 +401,7 @@ python scripts/eval_reranker_impact.py \
 
 ## Ordem de Execução Recomendada
 
-### Startup (quando novo agente é deployado):
+### Startup (quando novo agente é deployado)
 ```bash
 # 1. Healthcheck M365
 python scripts/sp_healthcheck.py > /tmp/health.json
@@ -420,7 +422,7 @@ python scripts/eval_reranker_impact.py
 # Verifica se improvement > 5% antes de ativar em produção
 ```
 
-### RAG + Reranking Pipeline (novo v5.0):
+### RAG + Reranking Pipeline (novo v5.0)
 ```bash
 # Teste de reranker com exemplo
 python scripts/rag_reranker.py \
@@ -438,7 +440,7 @@ python scripts/rag_reranker.py \
 python scripts/eval_reranker_impact.py --verbose
 ```
 
-### CI/CD Integration:
+### CI/CD Integration
 ```yaml
 # .github/workflows/observability.yml (exemplo)
 name: Observability Checks
@@ -460,7 +462,7 @@ jobs:
         run: python scripts/eval_routing.py --timeout 10
 ```
 
-### SessionStart hook (`.claude/settings.json`):
+### SessionStart hook (`.claude/settings.json`)
 ```json
 {
   "hooks": {
@@ -477,7 +479,7 @@ jobs:
 
 ## Help e Troubleshooting
 
-### Cada script tem `--help`:
+### Cada script tem `--help`
 ```bash
 python scripts/sp_healthcheck.py --help
 python scripts/audit_agents.py --help
@@ -485,7 +487,7 @@ python scripts/eval_routing.py --help
 python scripts/init_rag_golden_set.py --help
 ```
 
-### Logging:
+### Logging
 ```bash
 # Verbose mode (DEBUG level)
 python scripts/audit_agents.py --verbose 2>&1 | tee audit.log
@@ -494,7 +496,7 @@ python scripts/audit_agents.py --verbose 2>&1 | tee audit.log
 python scripts/sp_healthcheck.py 2>&1 | grep "azure_ad"
 ```
 
-### Comuns Issues:
+### Comuns Issues
 
 **`sp_healthcheck.py` falha com "Missing AZURE_CLIENT_ID"**
 ```bash

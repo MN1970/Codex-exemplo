@@ -24,7 +24,7 @@
 - [6. Routing do Maestro](#6-routing-do-maestro-manta-00)
 - [7. Knowledge Engine (RAG)](#7-knowledge-engine-rag)
 - [8. SharePoint routing](#8-sharepoint-routing)
-- [9. Diagrama de fluxo](#9-diagrama-de-fluxo-agente-vertical)
+- [9. Diagrama de fluxo](#9-diagrama-de-fluxo--agente-vertical)
 - [10. Matriz de composição — casos de uso](#10-matriz-de-composição--casos-de-uso)
 - [11. Changelog v2.0 → v3.0](#11-changelog-v20--v30)
 - [12. Referências](#12-referências)
@@ -559,5 +559,5 @@ Exemplos de sessão completa, com as 4 coordenadas explícitas:
 
 ---
 
-_Documento vivo. Alterações via pull request no repo `MN1970/Codex-exemplo`,
-aprovação MN, e re-upload aqui no SharePoint como nova versão._
+*Documento vivo. Alterações via pull request no repo `MN1970/Codex-exemplo`,
+aprovação MN, e re-upload aqui no SharePoint como nova versão.*

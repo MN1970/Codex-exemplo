@@ -9,11 +9,11 @@ fabricada, AL-02 URL/DOI inventado, AL-03 código SICRO inexistente).
 
 Arquivos individuais:
 
-- `registry-extension-portos.md` (Manta 03-S6)
+- `registry-extension-portos.md` (Manta 03-S7)
 - `registry-extension-aeroportos.md` (Manta 03-S7)
-- `registry-extension-saneamento.md` (Manta 03-S8)
-- `registry-extension-energia.md` (Manta 03-S9)
-- `registry-extension-barragens.md` (Manta 03-S10)
+- `registry-extension-saneamento.md` (Manta 03-S9)
+- `registry-extension-energia.md` (Manta 03-S10)
+- `registry-extension-barragens.md` (Manta 03-S11)
 
 ## Achado principal
 
@@ -27,11 +27,11 @@ ICAO, FAA, DECEA, USACE/FEMA, IWA, e as argentinas ERAS/PIRHA/AySA).
 
 | Segmento | Compatível (ABNT/lei federal) | Fora do schema (setorial/intl) |
 |---|---|---|
-| Portos (S6) | 2 (NBR 9782, NBR 6122) | 9 (ANTAQ, PIANC, ROM 0.2/2.0, NORMAM, IBAMA, DHN, EIA/RIMA...) |
-| Aeroportos (S7) | 1 (NBR 10151) | 9 (RBAC 154, ICAO Annex 14 Vol I/II, ICAO Doc 9157, FAA ACs, DECEA...) |
-| Saneamento (S8) | 3 (NBR 12211-12218, NBR 9648-9651, Lei 14.026/2020) | 7 (SNIS, PRC 05/2017, CONAMA 357/430, IWA, AySA, ERAS, PIRHA) |
-| Energia (S9) | 4 (NBR 5422, 6118, 6122, 6123) | 9 (IEEE 738/80, IEC 60826/61850, ANEEL, EPE, ONS, CCEE, CIGRÉ) |
-| Barragens (S10) | 5 (Lei 12.334/2010, Lei 14.066/2020, NBR 13028, 8681, 6122) | 8 (ICOLD 194/164/72, CBDB, ANM Res. 95/2022, SNISB, SIGBM, USACE/FEMA) |
+| Portos (S7) | 2 (NBR 9782, NBR 6122) | 9 (ANTAQ, PIANC, ROM 0.2/2.0, NORMAM, IBAMA, DHN, EIA/RIMA...) |
+| Aeroportos (S8) | 1 (NBR 10151) | 9 (RBAC 154, ICAO Annex 14 Vol I/II, ICAO Doc 9157, FAA ACs, DECEA...) |
+| Saneamento (S9) | 3 (NBR 12211-12218, NBR 9648-9651, Lei 14.026/2020) | 7 (SNIS, PRC 05/2017, CONAMA 357/430, IWA, AySA, ERAS, PIRHA) |
+| Energia (S10) | 4 (NBR 5422, 6118, 6122, 6123) | 9 (IEEE 738/80, IEC 60826/61850, ANEEL, EPE, ONS, CCEE, CIGRÉ) |
+| Barragens (S11) | 5 (Lei 12.334/2010, Lei 14.066/2020, NBR 13028, 8681, 6122) | 8 (ICOLD 194/164/72, CBDB, ANM Res. 95/2022, SNISB, SIGBM, USACE/FEMA) |
 | **Total** | **15** | **42** |
 
 Duas ressalvas que os agentes sinalizaram e que valem revisão humana:

@@ -1,5 +1,7 @@
 # Maestro OS v6.0 — Production Deployment Guide
 
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada.** O código existe em `src/maestro/`, mas não foi implantado. Não há evidência de implantação: nenhuma função edge no Supabase, tabelas de ML (`manta_rag_ml_models`/`_predictions`/`_training_runs`) e `maestro_cost_log` vazias, o agendamento real registrado em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` é `cron` Linux, não APScheduler. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Status:** Ready for production deployment  
 **Version:** v6.0 (stable)  
 **Release Date:** 2026-07-26  

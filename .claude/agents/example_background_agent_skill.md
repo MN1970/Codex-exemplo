@@ -1,12 +1,12 @@
 # Exemplo: Usando Background Agents em Skills (S5 + Horizontais)
 
 **Status:** Reference implementation v5.0  
-**Segmento:** S5 (Túneis) + horizontais (Claims, Advisory, etc.)  
+**Segmento:** S12 (Túneis) + horizontais (Claims, Advisory, etc.)  
 **Foco:** Long-running tasks sem bloquear user
 
 ---
 
-## Cenário: Análise Geotécnica Completa de Túnel (S5)
+## Cenário: Análise Geotécnica Completa de Túnel (S12)
 
 Usuário submete projeto de túnel de 5 km. Análise exige:
 - Processamento de modelo CAD (1.5 MB) → 45s
@@ -538,13 +538,13 @@ avg_duration_seconds (FLOAT8)
 **Check:** Is job queue processor running?
 
 ```bash
-$ python scripts/agent_job_queue.py status
+python scripts/agent_job_queue.py status
 ```
 
 If not, start it:
 
 ```bash
-$ python scripts/agent_job_queue.py start &
+python scripts/agent_job_queue.py start &
 ```
 
 ### Job times out on first attempt
@@ -566,7 +566,7 @@ Retry happens automatically (max 2x).
 **Check:** Expired memories are not purged. Trigger cleanup:
 
 ```bash
-$ python scripts/agent_state_manager.py purge --agent-id manta-03-s5
+python scripts/agent_state_manager.py purge --agent-id manta-03-s5
 ```
 
 Or configure cron job (APScheduler):
@@ -631,6 +631,6 @@ supabase/migrations/
 ---
 
 **Versão:** v5.0  
-**Status:** Ready for S5 (Túneis) + horizontais  
+**Status:** Ready for S12 (Túneis) + horizontais  
 **Segmento Piloto:** Manta 03-S5, Claims (Manta 01)  
 **Próximos passos:** Integrar em agentes verticais; monitorar latência, sucesso, custo

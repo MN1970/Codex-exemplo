@@ -88,9 +88,9 @@ regulamentação local.
 
 - **agente-infraestrutura (S1–S4)** — compatibilidade com traçado,
   interferências com rede existente.
-- **agente-saneamento (S8)** — restrição de ocupação em APA, mata ciliar,
+- **agente-saneamento (S9)** — restrição de ocupação em APA, mata ciliar,
   drenagem urbana, elevatória.
-- **agente-energia (S9)** — interferência com linha de transmissão,
+- **agente-energia (S10)** — interferência com linha de transmissão,
   subestação, acessibilidade de canteiro.
 - **manta-01 (claims)** — pleito por restrição ambiental não prevista,
   atraso por arqueologia.

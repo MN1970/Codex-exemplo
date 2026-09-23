@@ -278,7 +278,7 @@
 
 ## Phase 10: Pre-Deployment Tasks
 
-### Before deploying to production:
+### Before deploying to production
 
 - [ ] **Credentials Setup**
   - [ ] Create Azure AD App Registration

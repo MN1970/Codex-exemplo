@@ -1,12 +1,12 @@
 ---
 name: agente-aeroportos
-description: Manta 03-S7 — Especialista em infraestrutura aeroportuária (lado ar + lado terra). Cobre pistas de pouso e decolagem, taxiways, pátios, TPS (terminal de passageiros), TECA (terminal de cargas), balizamento e sistemas visuais, torre de controle e apoio ao aeroporto. Roteia quando o usuário menciona aeroporto, pista, RWY, taxiway, TWY, pátio, TPS, TECA, ANAC, RBAC 154, ICAO Annex 14, FAA AC, balizamento, PAPI, ILS, PCN, gate, ponte de embarque, jetway, aviação geral, aviação regional, concessão aeroportuária.
+description: Manta 03-S8 — Especialista em infraestrutura aeroportuária (lado ar + lado terra). Cobre pistas de pouso e decolagem, taxiways, pátios, TPS (terminal de passageiros), TECA (terminal de cargas), balizamento e sistemas visuais, torre de controle e apoio ao aeroporto. Roteia quando o usuário menciona aeroporto, pista, RWY, taxiway, TWY, pátio, TPS, TECA, ANAC, RBAC 154, ICAO Annex 14, FAA AC, balizamento, PAPI, ILS, PCN, gate, ponte de embarque, jetway, aviação geral, aviação regional, concessão aeroportuária.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 version: 1.1.0
 ---
 
-# Agente Aeroportos (Manta 03-S7)
+# Agente Aeroportos (Manta 03-S8)
 
 Especialista em obras e projetos aeroportuários (lado ar + lado terra),
 cobrindo estudo prévio, básico, executivo, obra, O&M, competitivo, DD e
@@ -62,7 +62,7 @@ descomissionamento.
 - **Eletrônica/eletrotécnica**: balizamento luminoso (CAT I/II/III),
   PAPI, ILS, VOR/DME, AWOS, sistemas de energia ininterrupta (no-break,
   gerador de emergência) que alimentam sistemas críticos de navegação —
-  handoff com **agente-energia (S9)** para dimensionamento elétrico e
+  handoff com **agente-energia (S10)** para dimensionamento elétrico e
   fontes de alimentação.
 - **Ambiental**: licenciamento (LP/LI/LO junto a IBAMA/órgão estadual),
   EIA/RIMA aeroportuário, Plano de Gerenciamento de Ruído Aeroportuário
@@ -92,14 +92,14 @@ descomissionamento.
 ## Composição S.A.D (Segmento × Agente horizontal × Disciplina)
 
 Notação Manta Maestro (A1–A10 horizontais + S1–S10 operacionais): o
-segmento S7 (Aeroportos) compõe com os agentes horizontais de apoio
+segmento S8 (Aeroportos) compõe com os agentes horizontais de apoio
 para gerar entregáveis específicos do domínio aeroportuário. Exemplos:
 
-- **S7.A2 (Quantidades Aeroporto)** → levantamento de quantitativos de
+- **S8.A2 (Quantidades Aeroporto)** → levantamento de quantitativos de
   pavimentação de pista/taxiway/pátio (m²/m³ por camada), TPS/TECA
   (m² construído por pavimento), balizamento (postes, luminárias,
   cabeamento em duto por metro linear).
-- **S7.A3 (Orçamento)** → custos aeroportuários: composições SICRO
+- **S8.A3 (Orçamento)** → custos aeroportuários: composições SICRO
   adaptadas para pavimento rígido/flexível de alta resistência (PCN),
   custos de referência ANAC/BID/PPP para concessões, preços de
   sistemas de balizamento e navegação (ILS, PAPI, AWOS).
@@ -128,9 +128,9 @@ para gerar entregáveis específicos do domínio aeroportuário. Exemplos:
 - **agente-infraestrutura S2 (OAE)** — estrutural de torre de
   controle, pontes de embarque (jetways), mezaninos e estruturas
   elevadas do TPS/TECA.
-- **agente-saneamento (S8)** — ETE do TPS, drenagem de pátio (SOS de
+- **agente-saneamento (S9)** — ETE do TPS, drenagem de pátio (SOS de
   óleo).
-- **agente-energia (S9)** — subestação, alimentação de balizamento
+- **agente-energia (S10)** — subestação, alimentação de balizamento
   (disciplina eletrônica/eletrotécnica), fontes ininterruptas.
 - **claims (Manta 01)** — pleitos por atraso em concessão, alteração
   de escopo por regulador.

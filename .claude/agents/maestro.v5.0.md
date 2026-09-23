@@ -105,7 +105,7 @@ Phase inference:
   "memorial-descritivo.pdf" + "projeto-executivo" mention
   → phase = "projeto-executivo"
   → context_window = 8000 tokens (file + context)
-  → rag_collection = "san:v5.0:chunks" (S8 saneamento)
+  → rag_collection = "san:v5.0:chunks" (S9 saneamento)
 ```
 
 ### Stage 3 — Model Tiering (R7) + Config Injection
@@ -258,19 +258,19 @@ Se score_top1 - score_top2 < 0.1:
 
 ## Keywords por Segmento (Routing Lookup Table)
 
-### S8 — SANEAMENTO
+### S9 — SANEAMENTO
 `saneamento|ETA|ETE|adutora|esgoto|água|AySA|drenagem|SNIS|PMSB|Lei 14.026|RAP|reúso|lodo|UASB|MBR`
 
-### S9 — ENERGIA
+### S10 — ENERGIA
 `transmissão|LT|subestação|ANEEL|RAP|leilão|ONS|EPE|PDE|torre|cabo|ACSR|CAA|geração|eólica|solar|hidráulica|PCH|UHE`
 
-### S6 — PORTOS
+### S7 — PORTOS
 `porto|terminal|ANTAQ|dragagem|molhe|quebra-mar|berço|calado|contêiner|granel|cais|píer|TUP|TPS|PIANC|arrendamento|hidrovia`
 
-### S7 — AEROPORTOS
+### S8 — AEROPORTOS
 `aeroporto|pista|RWY|taxiway|TWY|TPS|TECA|ANAC|RBAC|ICAO|Annex 14|FAA|balizamento|PAPI|ILS|PCN|gate|jetway|concessão`
 
-### S10 — BARRAGENS
+### S11 — BARRAGENS
 `barragem|vertedouro|CFRD|CCR|RCC|rejeitos|TSF|PNSB|ICOLD|CBDB|SIGBM|ANM|ANA|Lei 12.334|Fundão|Brumadinho|alteamento|PAE|PAEBM`
 
 ### S1 — RODOVIAS

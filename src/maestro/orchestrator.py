@@ -94,7 +94,8 @@ class MaestroOrchestrator:
         """
         execution = WorkflowExecution(
             project_id=workflow.project.id,
-            workflow_id=f"{workflow.project.id}-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+            workflow_id=f"{workflow.project.id}-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}",
+            status="running",
         )
 
         try:
@@ -103,7 +104,7 @@ class MaestroOrchestrator:
             detection = self.detector.detect(project_description)
             execution.phase_1_detection = detection
             print(f"[MAESTRO] Detectado: {detection.complexity_level.value} "
-                  f"({detection.total_agents} agentes, {detection.token_budget}k tokens)")
+                  f"({detection.agents_needed} agentes, {detection.token_budget}k tokens)")
 
             # Phase 1: Fan-out (paralelo)
             if workflow.phase_1_fan_out:
@@ -159,8 +160,9 @@ class MaestroOrchestrator:
             Dict {agent_name: TaskResult}
         """
         # Selecionar agentes: usar detecção + fase declarada
-        agents_to_invoke = list(set(
-            detection.agents_selected +
+        # dict.fromkeys deduplica mantendo a ordem de prioridade do detector
+        agents_to_invoke = list(dict.fromkeys(
+            detection.agents_pool +
             fan_out_phase.agents
         ))
 
@@ -316,7 +318,7 @@ class MaestroOrchestrator:
             d = execution.phase_1_detection
             lines.extend([
                 f"  Complexity: {d.complexity_level.value}",
-                f"  Agents detected: {d.total_agents}",
+                f"  Agents detected: {d.agents_needed}",
                 f"  Token budget: {d.token_budget}k",
             ])
 

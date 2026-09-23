@@ -995,7 +995,7 @@ CREATE INDEX idx_rag_chunks_text_fts ON rag_chunks USING GIN (text_fts);
  * Test suite: 15 realistic queries covering all 5 collections and S6-S10 domains
  */
 export const TEST_QUERIES: QueryContext[] = [
-  // S8 - Saneamento (SNIS)
+  // S9 - Saneamento (SNIS)
   {
     query_text: 'ETA com adução de 500 km: qual é a norma NBR para dimensionamento de adutoras?',
     segment_code: 'S8',
@@ -1018,7 +1018,7 @@ export const TEST_QUERIES: QueryContext[] = [
     include_reasoning: true,
   },
 
-  // S9 - Energia (ANEEL)
+  // S10 - Energia (ANEEL)
   {
     query_text: 'Licitação transmissão ANEEL: qual é o processo para autorização de linha de transmissão (LT) em 765 kV?',
     segment_code: 'S9',
@@ -1041,7 +1041,7 @@ export const TEST_QUERIES: QueryContext[] = [
     include_reasoning: true,
   },
 
-  // S6 - Portos (ANTAQ)
+  // S7 - Portos (ANTAQ)
   {
     query_text: 'ANTAQ regulação: quais são os critérios de capacidade de berço para terminal de contêineres?',
     segment_code: 'S6',
@@ -1064,7 +1064,7 @@ export const TEST_QUERIES: QueryContext[] = [
     include_reasoning: true,
   },
 
-  // S10 - Barragens (ICOLD)
+  // S11 - Barragens (ICOLD)
   {
     query_text: 'Lei 12.334 segurança barragens: quais são as exigências para barragem de rejeitos em zona urbana?',
     segment_code: 'S10',
@@ -1102,7 +1102,7 @@ export const TEST_QUERIES: QueryContext[] = [
     include_reasoning: true,
   },
 
-  // Cross-domain (S9 + S10): barragem hidrelétrica
+  // Cross-domain (S9 + S11): barragem hidrelétrica
   {
     query_text: 'Barragem de geração hidroelétrica: como integrar requisitos ICOLD (barragens) + EPE (energia)?',
     segment_code: 'S10',
@@ -1111,7 +1111,7 @@ export const TEST_QUERIES: QueryContext[] = [
     include_reasoning: true,
   },
 
-  // Cross-domain (S8 + S6): porto com saneamento
+  // Cross-domain (S8 + S7): porto com saneamento
   {
     query_text: 'Porto com terminais e sistema de tratamento de água: normas de saneamento + ANTAQ?',
     segment_code: 'S6',
@@ -1122,7 +1122,7 @@ export const TEST_QUERIES: QueryContext[] = [
 ];
 
 // ============================================================================
-// 7. INTEGRATION EXAMPLE: AGENT S8 (Saneamento) HANDOFF FLOW
+// 7. INTEGRATION EXAMPLE: AGENT S9 (Saneamento) HANDOFF FLOW
 // ============================================================================
 
 /**

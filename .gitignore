@@ -6,3 +6,8 @@ __pycache__/
 htmlcov/
 .venv/
 venv/
+tests/test_run.log
+
+# Saídas de execução de scripts/audit_agents.py e scripts/regenerate_skill.py
+audit.log
+divergence_fix.log

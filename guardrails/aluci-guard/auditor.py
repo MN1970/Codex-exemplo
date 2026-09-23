@@ -91,6 +91,19 @@ def validar_norma_abnt(codigo: str) -> Dict[str, Any]:
                 "url": entry.get("url", ""),
             }
 
+    # Parte ou faixa ("5356-1", "12211-12218"): tenta o número-base da norma.
+    base = re.split(r"[-./]", codigo)[0]
+    if base != codigo:
+        for entry in NORMAS_ABNT:
+            if re.sub(r"\D", "", entry["codigo"]) == base:
+                return {
+                    "verdict": "OK",
+                    "norma": entry.get("titulo", ""),
+                    "data_publicacao": entry.get("data", ""),
+                    "url": entry.get("url", ""),
+                    "nota": f"validada pelo número-base NBR {base}",
+                }
+
     # Não encontrado
     return {
         "verdict": "INEXISTENTE",

@@ -36,9 +36,9 @@ módulo:
      que reproduz um padrão de handoff plausível, alinhado com os
      pares de handoff documentados em `tests/routing/prompts.md`
      ("Casos ambíguos/desafiadores": S8↔S9, S8↔S10, S6↔S7), incluindo
-     o cenário citado na especificação: S8 (saneamento) falhando numa
-     consulta de ETA cai ~60% das vezes em S6 (portos), com o resto
-     distribuído entre S10 (barragens, também "água/infra pesada") e
+     o cenário citado na especificação: S9 (saneamento) falhando numa
+     consulta de ETA cai ~60% das vezes em S7 (portos), com o resto
+     distribuído entre S11 (barragens, também "água/infra pesada") e
      escalonamento Opus.
 
 Uso rápido
@@ -90,7 +90,7 @@ OPUS_ESCALATION = "OPUS_ESCALATION"
 ABSORBING_STATES = (MAESTRO_REVIEW, OPUS_ESCALATION)
 
 VERTICAL_AGENTS: List[str] = [
-    "S1", "S2", "S3", "S4",  # túnel (S5) é coberto por S2/S4, sem estado próprio
+    "S1", "S2", "S3", "S4",  # túnel (S12) é coberto por S2/S4, sem estado próprio
     "S6", "S7", "S8", "S9", "S10",
 ]
 
@@ -99,11 +99,11 @@ AGENT_LABELS: Dict[str, str] = {
     "S2": "agente-infraestrutura (OAE)",
     "S3": "agente-infraestrutura (Ferrovia)",
     "S4": "agente-infraestrutura (Metrô)",
-    "S6": "agente-portos",
-    "S7": "agente-aeroportos",
-    "S8": "agente-saneamento",
-    "S9": "agente-energia",
-    "S10": "agente-barragens",
+    "S7": "agente-portos",
+    "S8": "agente-aeroportos",
+    "S9": "agente-saneamento",
+    "S10": "agente-energia",
+    "S11": "agente-barragens",
     MAESTRO_REVIEW: "Manta 00 — devolve p/ triagem manual",
     OPUS_ESCALATION: "mesma vertical, tier Opus",
 }
@@ -251,8 +251,8 @@ def load_logs_jsonl(path: str | Path) -> List[FallbackEvent]:
 # eventos amostrados, exatamente como faria sobre logs reais.
 #
 # Alinhada com os pares de handoff em tests/routing/prompts.md ("Casos
-# ambíguos"): S8<->S9 (ETE+subestação), S6<->S7 (porto+pista de carga
-# aérea), S8<->S10 (adutora atravessando barragem de rejeitos). O caso
+# ambíguos"): S8<->S9 (ETE+subestação), S7<->S7 (porto+pista de carga
+# aérea), S8<->S11 (adutora atravessando barragem de rejeitos). O caso
 # S8 -> S6 60% é o exemplo citado na especificação deste módulo.
 _SYNTHETIC_GROUND_TRUTH: Dict[str, Dict[str, float]] = {
     "S1": {"S2": 0.30, MAESTRO_REVIEW: 0.45, OPUS_ESCALATION: 0.25},
@@ -280,7 +280,7 @@ _SAMPLE_QUERIES: Dict[str, List[str]] = {
            "PSD da linha 5 precisa de qual gabarito?"],
     "S6": ["Preciso de um preliminar de dragagem para o terminal de contêineres.",
            "ANTAQ pede cronograma de arrendamento para o TUP."],
-    "S7": ["Quero dimensionar a pista de pouso do aeroporto regional (código 3C).",
+    "S8": ["Quero dimensionar a pista de pouso do aeroporto regional (código 3C).",
            "Como projeto o balizamento CAT II para operação noturna?"],
     "S8": ["Preciso projetar uma ETA de ciclo completo para 200 mil hab.",
            "AySA pediu estudo de reabilitação da Planta Norte, vazão baixa.",

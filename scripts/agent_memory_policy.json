@@ -201,21 +201,21 @@
       "enabled": true
     },
     "s6_portos": {
-      "agent_id": "manta-03-s6",
-      "ttl_minutes": 480,
-      "memory_limit_mb": 100,
-      "chunk_limit": 10000,
-      "enabled": true
-    },
-    "s7_aeroportos": {
       "agent_id": "manta-03-s7",
       "ttl_minutes": 480,
       "memory_limit_mb": 100,
       "chunk_limit": 10000,
       "enabled": true
     },
-    "s8_saneamento": {
+    "s7_aeroportos": {
       "agent_id": "manta-03-s8",
+      "ttl_minutes": 480,
+      "memory_limit_mb": 100,
+      "chunk_limit": 10000,
+      "enabled": true
+    },
+    "s8_saneamento": {
+      "agent_id": "manta-03-s9",
       "ttl_minutes": 480,
       "memory_limit_mb": 100,
       "chunk_limit": 10000,
@@ -223,7 +223,7 @@
       "comment": "PRIORIDADE AySA"
     },
     "s9_energia": {
-      "agent_id": "manta-03-s9",
+      "agent_id": "manta-03-s10",
       "ttl_minutes": 480,
       "memory_limit_mb": 100,
       "chunk_limit": 10000,
@@ -231,7 +231,7 @@
       "comment": "ANEEL focus"
     },
     "s10_barragens": {
-      "agent_id": "manta-03-s10",
+      "agent_id": "manta-03-s11",
       "ttl_minutes": 480,
       "memory_limit_mb": 100,
       "chunk_limit": 10000,

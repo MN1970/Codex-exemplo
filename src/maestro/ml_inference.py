@@ -234,6 +234,7 @@ class MLInferenceEngine:
 
         return DurationEstimate(
             estimated_minutes=estimated_mins,
+            estimated_hours=estimated_mins / 60.0,
             confidence=0.85
         )
 

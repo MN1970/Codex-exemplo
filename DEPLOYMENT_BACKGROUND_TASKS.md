@@ -1,5 +1,7 @@
 # Maestro APScheduler v5.0 — Deployment Guide
 
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada.** "Production-ready" não comprovado. Não há evidência de implantação: nenhuma função edge no Supabase, tabelas de ML (`manta_rag_ml_models`/`_predictions`/`_training_runs`) e `maestro_cost_log` vazias, o agendamento real registrado em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` é `cron` Linux, não APScheduler. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Background Tasks Orchestration for Manta Associados**
 
 **Version:** 5.0  
@@ -15,9 +17,9 @@
 2. [Architecture](#architecture)
 3. [Pre-Deployment](#pre-deployment)
 4. [Installation](#installation)
-   - [Linux Systemd](#linux-systemd)
-   - [Docker Compose](#docker-compose)
-   - [Kubernetes (Advanced)](#kubernetes-advanced)
+   - [Linux Systemd](#option-1-linux-systemd-single-server)
+   - [Docker Compose](#option-2-docker-compose-devstaging)
+   - [Kubernetes (Advanced)](#option-3-kubernetes-advanced)
 5. [Configuration](#configuration)
 6. [Monitoring & Alerts](#monitoring--alerts)
 7. [Testing & Validation](#testing--validation)

@@ -244,7 +244,7 @@ git revert <commit>
 ### Quando ajustar o prompt
 
 **Problema**: Scores muito baixos (mean < 0.5)
-**Solução**: 
+**Solução**:
 1. Verificar qualidade chunks BM25
 2. Simplificar prompt (remover exemplos)
 3. Aumentar contexto da query no prompt
@@ -324,7 +324,7 @@ python scripts/compare_reranker_variants.py results_a.json results_b.json
 
 **Sintoma**: Scores clustered (todos > 0.9 ou todos < 0.3)
 
-**Causa**: 
+**Causa**:
 - Chunks muito curtos (< 50 tokens)
 - BM25 scores já muito altos/baixos
 - Prompt criteria pouco discriminador

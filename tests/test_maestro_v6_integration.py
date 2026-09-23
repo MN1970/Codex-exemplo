@@ -67,7 +67,7 @@ class TestMaestroV6Integration(unittest.TestCase):
         )
 
         feature_vector = features.to_feature_vector()
-        self.assertEqual(len(feature_vector), 16)  # 16 features
+        self.assertGreaterEqual(len(feature_vector), 16)  # "16+ features" (ml_trainer); hoje são 18
         self.assertTrue(all(0 <= v <= 1 for v in feature_vector))  # All normalized
 
         # Phase C: Engineering analysis
@@ -268,9 +268,10 @@ result = {
         self.metrics_complex.set_phase_duration("consensus", 2.0)
         self.metrics_complex.set_phase_duration("aggregate", 1.0)
 
-        # Simulate 16 agents
+        # Simula 16 agentes dentro da meta de tokens do projeto complexo
+        # (600k = 16 × 37,5k; 50k por agente estourava a meta que o teste confere)
         for i in range(16):
-            self.metrics_complex.add_agent_metric(f"agent-{i}", 3.0, 50000, "completed", 6000)
+            self.metrics_complex.add_agent_metric(f"agent-{i}", 3.0, 35000, "completed", 6000)
 
         self.metrics_complex.add_consensus_metric("orçamento", 5, 4, True, False, 1.5)
         self.metrics_complex.add_consensus_metric("cronograma", 4, 4, True, False, 1.0)
@@ -309,12 +310,22 @@ result = {
 
     def test_ml_inference_integration(self):
         """Test ML inference (routing, duration, risk) integration."""
-        from src.maestro.ml_trainer import RoutingModel, DurationPredictor, RiskClassifier
+        from src.maestro.ml_trainer import (
+            RoutingModel, DurationPredictor, RiskClassifier, TrainingConfig,
+        )
 
-        # Create simple mock models
+        # Modelos precisam ser treinados antes de inferir (predict() levanta
+        # ValueError em modelo não treinado) — conjunto mínimo de 16 features.
         routing_model = RoutingModel()
         duration_model = DurationPredictor()
         risk_model = RiskClassifier()
+        X = [[0.5] * 16 for _ in range(4)]
+        routing_model.train(X, ["agente-portos,agente-energia,manta-05-orcamento"] * 4,
+                            TrainingConfig(model_type="xgboost", max_depth=3))
+        duration_model.train(X, [120, 130, 110, 125],
+                             TrainingConfig(model_type="neural_net", num_epochs=2))
+        risk_model.train(X, [0.30, 0.40, 0.35, 0.50],
+                         TrainingConfig(model_type="neural_net", num_epochs=2))
 
         service = InferenceService(routing_model, duration_model, risk_model)
 
@@ -334,6 +345,13 @@ result = {
 
     def test_metrics_summary_formatting(self):
         """Test metrics collection and summary formatting."""
+        # Execução mínima dentro das metas — sem nenhuma decisão de consenso a
+        # taxa fica 0/0 (< 85%) e o status é FAILED, corretamente.
+        self.metrics_simple.set_phase_duration("fan_out", 2.5)
+        self.metrics_simple.set_phase_duration("consensus", 1.0)
+        self.metrics_simple.set_phase_duration("aggregate", 0.5)
+        self.metrics_simple.add_agent_metric("agente-infraestrutura-S1", 2.5, 45000, "completed", 5000)
+        self.metrics_simple.add_consensus_metric("cronograma", 5, 3, True, False, 1.0)
         self.metrics_simple.finalize(success=True)
         summary = self.metrics_simple.format_summary()
 

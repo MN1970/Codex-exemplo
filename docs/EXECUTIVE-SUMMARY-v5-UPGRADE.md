@@ -1,5 +1,7 @@
 # EXECUTIVE SUMMARY — Manta Maestro v5.0 Ecosystem Upgrade
 
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada.** Roadmap/plano, não relato de estado. Itens marcados ✅ não foram verificados contra o sistema real. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Para**: Liderança Manta Associados (MN, CTO, PM)  
 **De**: Claude AI Agent + Pesquisa Industry 2026  
 **Data**: 2026-07-29  

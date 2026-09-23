@@ -117,7 +117,7 @@ class AgentMemoryPurger:
                 "oldest_age_days": 8,
                 "avg_rating": 3.9
             },
-            "manta-03-s8": {
+            "manta-03-s9": {
                 "memory_mb": 58.7,
                 "chunk_count": 421,
                 "oldest_age_days": 15,

@@ -49,7 +49,7 @@ export type AgentHealthStatus = 'healthy' | 'degraded' | 'down';
  * from either source are interchangeable.
  */
 export interface AgentRecord {
-  /** Stable slug, e.g. "agente-saneamento" or "manta-03-s8". */
+  /** Stable slug, e.g. "agente-saneamento" or "manta-03-s9". */
   id: string;
   name: string;
   description: string;
@@ -511,7 +511,7 @@ export const AGENT_REGISTRY_SEED: AgentRecord[] = [
     rag_collections: ['met:'], handoffs_to: [], lifecycle: 'prod', version: 'v4.2', tier: 2,
   },
   {
-    id: 'manta-03-s6', name: 'agente-portos',
+    id: 'manta-03-s7', name: 'agente-portos',
     description: 'Portos e terminais — dragagem, molhes, berços, ANTAQ, PIANC.',
     expertise_primary: ['porto', 'terminal', 'ANTAQ', 'dragagem', 'molhe'],
     expertise_secondary: ['berço', 'calado', 'contêiner', 'granel'],
@@ -520,7 +520,7 @@ export const AGENT_REGISTRY_SEED: AgentRecord[] = [
     rag_collections: ['por:'], handoffs_to: ['manta-03-s7'], lifecycle: 'prod', version: 'v4.2', tier: 2,
   },
   {
-    id: 'manta-03-s7', name: 'agente-aeroportos',
+    id: 'manta-03-s8', name: 'agente-aeroportos',
     description: 'Aeroportos — dimensionamento de pista, ANAC/RBAC, ICAO, balizamento.',
     expertise_primary: ['aeroporto', 'pista pouso', 'ANAC', 'ICAO'],
     expertise_secondary: ['TPS', 'TECA', 'balizamento'],
@@ -529,7 +529,7 @@ export const AGENT_REGISTRY_SEED: AgentRecord[] = [
     rag_collections: ['aer:'], handoffs_to: ['manta-03-s6'], lifecycle: 'prod', version: 'v4.2', tier: 2,
   },
   {
-    id: 'manta-03-s8', name: 'agente-saneamento',
+    id: 'manta-03-s9', name: 'agente-saneamento',
     description: 'Saneamento — ETA/ETE, adutoras, esgoto, SNIS, prioridade AySA. Lei 14.026/2020.',
     expertise_primary: ['saneamento', 'ETA', 'ETE', 'adutora', 'esgoto'],
     expertise_secondary: ['AySA', 'drenagem urbana', 'SNIS'],
@@ -538,7 +538,7 @@ export const AGENT_REGISTRY_SEED: AgentRecord[] = [
     rag_collections: ['san:'], handoffs_to: ['manta-03-s9', 'manta-03-s10'], lifecycle: 'prod', version: 'v4.2', tier: 2,
   },
   {
-    id: 'manta-03-s9', name: 'agente-energia',
+    id: 'manta-03-s10', name: 'agente-energia',
     description: 'Energia — transmissão, subestações, ANEEL/ONS/EPE, leilões de transmissão.',
     expertise_primary: ['transmissão', 'LT', 'subestação', 'ANEEL'],
     expertise_secondary: ['RAP', 'leilão transmissão', 'ONS', 'EPE'],
@@ -547,7 +547,7 @@ export const AGENT_REGISTRY_SEED: AgentRecord[] = [
     rag_collections: ['ene:'], handoffs_to: ['manta-03-s8', 'manta-03-s10'], lifecycle: 'prod', version: 'v4.2', tier: 2,
   },
   {
-    id: 'manta-03-s10', name: 'agente-barragens',
+    id: 'manta-03-s11', name: 'agente-barragens',
     description: 'Barragens — CFRD/CCR, rejeitos, PNSB, ICOLD/CBDB, descaracterização de TSF.',
     expertise_primary: ['barragem', 'vertedouro', 'CFRD', 'CCR'],
     expertise_secondary: ['rejeitos', 'PNSB', 'ICOLD', 'CBDB', 'TSF'],

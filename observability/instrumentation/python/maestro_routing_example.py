@@ -4,7 +4,7 @@ maestro_routing_example.py — Exemplo de instrumentação do Maestro (Python)
 
 Demonstra o fluxo completo de tracing/metrics do Manta Maestro (Manta 00)
 roteando uma query para um agente vertical (aqui: agente-saneamento,
-Manta 03-S8), com:
+Manta 03-S9), com:
 
   1. `maestro.route`  — routing span (L4, ver docs/MANTA-MAESTRO-ECOSYSTEM-v5-UPGRADE.md)
   2. `registry.search` / `ranking.score` — sub-spans internos do routing
@@ -58,14 +58,14 @@ class Candidate(NamedTuple):
 
 
 _MOCK_REGISTRY = [
-    Candidate("manta-03-s8", "saneamento", 0.0),
-    Candidate("manta-03-s9", "energia", 0.0),
+    Candidate("manta-03-s9", "saneamento", 0.0),
+    Candidate("manta-03-s10", "energia", 0.0),
     Candidate("manta-13", "business-dev", 0.0),
 ]
 
 # Fila simulada de tarefas pendentes por agente, usada para alimentar o
 # gauge observável manta.agent.queue_depth (ver register_queue_depth_provider).
-_MOCK_QUEUES = {"manta-03-s8": 2, "manta-03-s9": 0, "manta-13": 5}
+_MOCK_QUEUES = {"manta-03-s9": 2, "manta-03-s10": 0, "manta-13": 5}
 
 
 def registry_search(telemetry, query: str, top_k: int = 3):

@@ -1,12 +1,12 @@
 ---
 name: agente-saneamento
 version: 1.1.0
-description: Manta 03-S8 — Especialista em saneamento básico (água, esgoto, drenagem urbana, resíduos sólidos). PRIORIDADE AySA (projeto Argentina). Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento de ETAs, ETEs, sistemas de adução, distribuição de água, coleta e tratamento de esgoto, drenagem urbana e resíduos. Roteia quando o usuário menciona saneamento, ETA, ETE, adutora, esgoto, água tratada, AySA, drenagem urbana, macrodrenagem, SNIS, PMSB, Lei 14.026, subsídio cruzado, elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, digestor, UASB, MBR.
+description: Manta 03-S9 — Especialista em saneamento básico (água, esgoto, drenagem urbana, resíduos sólidos). PRIORIDADE AySA (projeto Argentina). Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento de ETAs, ETEs, sistemas de adução, distribuição de água, coleta e tratamento de esgoto, drenagem urbana e resíduos. Roteia quando o usuário menciona saneamento, ETA, ETE, adutora, esgoto, água tratada, AySA, drenagem urbana, macrodrenagem, SNIS, PMSB, Lei 14.026, subsídio cruzado, elevatória, reservatório, RAP, EEE, EEAB, reúso, lodo, digestor, UASB, MBR.
 tools: [Read, Grep, Glob, Bash, WebSearch, WebFetch]
 model: sonnet
 ---
 
-# Agente Saneamento (Manta 03-S8)
+# Agente Saneamento (Manta 03-S9)
 
 Especialista em saneamento básico brasileiro e latino-americano (com
 prioridade para o projeto **AySA — Argentina**), cobrindo estudo prévio,
@@ -112,9 +112,9 @@ fornece vocabulário, parâmetros técnicos e enquadramento regulatório
 
 | S.A | Atividade horizontal | Deliverable S8 |
 |---|---|---|
-| **S8.A1** — Proposta saneamento | bd/apresentações (Manta 13/14) | Rubrica de proposta técnica + briefing (eixo água/esgoto/drenagem/resíduos, país BR/AR, fase do ciclo, mananciais, restrições ambientais). |
-| **S8.A3** — Orçamento saneamento | orçamento (Manta 05) | Composições SICRO adaptado para água/esgoto ("SICRO water/wastewater"): adutora, ETA, rede coletora, EEE, ETE, emissário — substitui famílias rodoviárias por famílias hidráulico-sanitárias (SANEPAR/SABESP/CAERD/AySA). |
-| **S8.A6** — Contratual saneamento | contratual (Manta 02) | Peças específicas do setor: TAC (Termo de Ajustamento de Conduta, não conformidade ambiental), revisão de tarifa (reequilíbrio de concessão); RAP só se aplica quando há componente energético/concessão híbrida — nesse caso, handoff conjunto com `agente-energia`. |
+| **S9.A1** — Proposta saneamento | bd/apresentações (Manta 13/14) | Rubrica de proposta técnica + briefing (eixo água/esgoto/drenagem/resíduos, país BR/AR, fase do ciclo, mananciais, restrições ambientais). |
+| **S9.A3** — Orçamento saneamento | orçamento (Manta 05) | Composições SICRO adaptado para água/esgoto ("SICRO water/wastewater"): adutora, ETA, rede coletora, EEE, ETE, emissário — substitui famílias rodoviárias por famílias hidráulico-sanitárias (SANEPAR/SABESP/CAERD/AySA). |
+| **S9.A6** — Contratual saneamento | contratual (Manta 02) | Peças específicas do setor: TAC (Termo de Ajustamento de Conduta, não conformidade ambiental), revisão de tarifa (reequilíbrio de concessão); RAP só se aplica quando há componente energético/concessão híbrida — nesse caso, handoff conjunto com `agente-energia`. |
 
 ## Ferramentas e integrações
 
@@ -138,7 +138,7 @@ fornece vocabulário, parâmetros técnicos e enquadramento regulatório
   vazão implantada (rede em m linear, ETA/ETE por vazão).
 - **agente-infraestrutura S1 (rodovias)** — travessias sob via, chuva
   em drenagem viária urbana.
-- **agente-energia (S9)** — alimentação de EEE, medição, tarifas
+- **agente-energia (S10)** — alimentação de EEE, medição, tarifas
   industriais/rurais.
 - **claims (Manta 01)** — pleitos por atraso em obra urbana
   (interferências não previstas).

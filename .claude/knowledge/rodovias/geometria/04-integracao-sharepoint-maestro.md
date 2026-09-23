@@ -283,7 +283,7 @@ Após consolidação, validar contra documentos no SharePoint:
 
 ### Teste 1: Recuperar Norma DNIT
 
-**Prompt**: 
+**Prompt**:
 ```
 "Qual é a fórmula de raio mínimo segundo DNIT ES 101/97? 
 Cite a página específica da norma."

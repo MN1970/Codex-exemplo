@@ -19,7 +19,7 @@ BEGIN;
 -- =====================================================================
 -- VALIDAÇÃO 1: Query "terraplenagem" (esperado: S1, baseline captura S10)
 -- =====================================================================
--- Esperado: Top resultado deve ser S1 (Rodovias), não S10 (Barragens)
+-- Esperado: Top resultado deve ser S1 (Rodovias), não S11 (Barragens)
 -- Anti-termo aplicado: S10 NÃO contém "terraplenagem rodoviária" como anti-termo
 --   → precisa ser penalizado por incluir "aterro" ou "terraplenagem"
 

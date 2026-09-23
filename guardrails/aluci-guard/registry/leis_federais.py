@@ -21,4 +21,10 @@ LEIS_FEDERAIS = [
     {"codigo": "9.985/2000", "titulo": "Lei do SNUC", "data_sancao": "2000-07-18", "url": "http://www.planalto.gov.br/ccivil_03/leis/l9985.htm"},
     # Ferrovias
     {"codigo": "14.273/2021", "titulo": "Marco Legal Ferroviário", "data_sancao": "2021-12-14", "url": "http://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14273.htm"},
+    # Acrescentadas em 2026-09-23 (testes T3: citadas pelos agentes e ausentes do registro)
+    {"codigo": "12.815/2013", "titulo": "Lei dos Portos", "data_sancao": "2013-06-05", "url": "http://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12815.htm"},
+    {"codigo": "9.433/1997", "titulo": "Política Nacional de Recursos Hídricos", "data_sancao": "1997-01-08", "url": "http://www.planalto.gov.br/ccivil_03/leis/l9433.htm"},
+    {"codigo": "12.305/2010", "titulo": "Política Nacional de Resíduos Sólidos", "data_sancao": "2010-08-02", "url": "http://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm"},
+    {"codigo": "10.257/2001", "titulo": "Estatuto da Cidade", "data_sancao": "2001-07-10", "url": "http://www.planalto.gov.br/ccivil_03/leis/leis_2001/l10257.htm"},
+    {"codigo": "13.303/2016", "titulo": "Lei das Estatais", "data_sancao": "2016-06-30", "url": "http://www.planalto.gov.br/ccivil_03/_ato2015-2018/2016/lei/l13303.htm"},
 ]

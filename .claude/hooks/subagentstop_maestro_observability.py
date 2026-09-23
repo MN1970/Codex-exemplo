@@ -300,7 +300,7 @@ def on_subagent_stop(event: Dict[str, Any]) -> Dict[str, Any]:
 if __name__ == '__main__':
     # Teste local: rodar hook com event mock
     mock_event = {
-        'agent_id': 'manta-03-s8',
+        'agent_id': 'manta-03-s9',
         'skill_id': 'agente-saneamento.v5.0',
         'session_id': 'test-session-001',
         'user_id': '550e8400-e29b-41d4-a716-446655440000',

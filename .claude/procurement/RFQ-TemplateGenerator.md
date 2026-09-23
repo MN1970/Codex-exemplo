@@ -13,9 +13,9 @@
 | ID | Template Name | Commodity | Segment(s) | Lead Fields |
 |----|---------------|-----------|-----------|------------|
 | T-001 | Transmission Tower | Steel structures, galvanizing, transport | S9 (Energy) | Weight, paint code, delivery address |
-| T-002 | Dredge Equipment | Cutter-suction, split hopper, crew | S6 (Ports) | Capacity m³/hr, fuel type, rental term |
-| T-003 | SCADA System | Controllers, sensors, software, cloud | S8 (Saneamento) | Sensor count, uptime SLA, integration |
-| T-004 | PVC Pipes | Pipe, fittings, jointing materials | S8 (Saneamento) | DN size, pressure rating, meter quantity |
+| T-002 | Dredge Equipment | Cutter-suction, split hopper, crew | S7 (Ports) | Capacity m³/hr, fuel type, rental term |
+| T-003 | SCADA System | Controllers, sensors, software, cloud | S9 (Saneamento) | Sensor count, uptime SLA, integration |
+| T-004 | PVC Pipes | Pipe, fittings, jointing materials | S9 (Saneamento) | DN size, pressure rating, meter quantity |
 | T-005 | Concrete Bulk | Ready-mix delivery, strength class | S1-S4 (General) | Volume m³, Fck, slump, distance |
 | T-006 | Reinforcing Steel | Rebars, mesh, couplers | S1-S4 (General) | Nominal diameter, total mass, delivery |
 | T-007 | Power Transformer | Oil-filled, capacity, cooling | S9 (Energy) | kVA, voltage levels, location, installation |
@@ -302,7 +302,7 @@ End of RFQ-2026-08-LT345-TOWERS-001
 
 ```
 Commodity:        SCADA System (supervisory control + cloud)
-Segment:          S8 — Saneamento
+Segment:          S9 — Saneamento
 Project Context:  Estação de Tratamento de Água (ETA) — 5,000 m³/day
 
 [AUTO-FILL]

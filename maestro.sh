@@ -83,9 +83,9 @@ settings_path = "settings.json"
 # In production: BM25 lookup + embedding similarity + reranker score
 keywords = ["saneamento", "ETA", "água", "projeto", "executivo"]
 agent_scores = {
-    "manta-03-s8": 0.92,  # Saneamento (best match)
-    "manta-03-s6": 0.15,  # Portos
-    "manta-03-s9": 0.10,  # Energia
+    "manta-03-s9": 0.92,  # Saneamento (best match)
+    "manta-03-s7": 0.15,  # Portos
+    "manta-03-s10": 0.10,  # Energia
 }
 
 best_agent = max(agent_scores, key=agent_scores.get)

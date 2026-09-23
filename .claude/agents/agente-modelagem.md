@@ -92,7 +92,7 @@ de projeto.
 
 ## Handoff com outros agentes
 
-- **agente-infraestrutura (S1–S4), saneamento (S8), energia (S9)** —
+- **agente-infraestrutura (S1–S4), saneamento (S9), energia (S10)** —
   modelagem técnica do projeto, compatibilidade.
 - **manta-07 (cronograma)** — cronograma de detalhamento em BIM,
   compatibilidade com faseamento.

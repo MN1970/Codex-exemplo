@@ -136,7 +136,7 @@ class Agent:
 ```python
 descriptions = {
     'maestro': 'Router canônico do Maestro (Manta 00) — orquestra roteamento determinístico...',
-    'agente-saneamento': 'Especialista em saneamento básico (Manta 03-S8) — ETAs, ETEs...',
+    'agente-saneamento': 'Especialista em saneamento básico (Manta 03-S9) — ETAs, ETEs...',
     # ... (20 agentes)
 }
 ```
@@ -367,7 +367,7 @@ pip install jinja2
 
 **Symptom:** Nenhuma saída de sucesso
 
-**Fix:** 
+**Fix:**
 1. Verificar CLAUDE.md existe: `ls -la /home/user/Codex-exemplo/CLAUDE.md`
 2. Verificar diretório de output: `mkdir -p manta-maestro/`
 3. Verificar permissões de escrita: `touch manta-maestro/test.txt`

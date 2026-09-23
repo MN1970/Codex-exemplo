@@ -43,7 +43,7 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 
 #### **Core Project Entities (Type: PROJECT_*)**
 1. **PROJECT** — Infrastructure project (id, name, location, segment, phase, status, owner)
-2. **SEGMENT** — Vertical category (S1:Rodovia, S2:OAE, S3:Ferrovia, S4:Metrô, S5:Túnel, S6:Porto, S7:Aeroporto, S8:Saneamento, S9:Energia, S10:Barragem)
+2. **SEGMENT** — Vertical category (S1:Rodovia, S2:OAE, S3:Ferrovia, S4:Metrô, S12:Túnel, S7:Porto, S8:Aeroporto, S9:Saneamento, S10:Energia, S11:Barragem)
 3. **PHASE** — Lifecycle stage (Estudo Prévio, Projeto Básico, Projeto Executivo, Obra, Operação, Licitação, Due Diligence, Encerramento)
 4. **PROJECT_LOCATION** — Geographic scope (region, state, city, coordinates, basin, transmission zone)
 
@@ -112,7 +112,7 @@ Build and query a domain-aware knowledge graph across all Manta infrastructure p
 | **INVOLVES_SPECIALIST** | PROJECT/PHASE | EXPERT_PROFILE | N:M | Geotechnist_John involved in Fundation phase |
 | **REFERENCES** | PROJECT_DOCUMENT | REGULATION | N:M | Environmental report cites Lei 14.026 |
 | **TRIGGERS** | COST_OVERRUN | RISK_INSTANCE | N:M | Weather delay triggered $2M cost overrun |
-| **DEFINES** | DOMAIN_CONCEPT | SEGMENT | N:M | "Tidal regime" concept used in S6 (ports) |
+| **DEFINES** | DOMAIN_CONCEPT | SEGMENT | N:M | "Tidal regime" concept used in S7 (ports) |
 
 ---
 
@@ -183,7 +183,7 @@ EXPECTED RESULT:
 
 ### Query 2: Cross-Segment Knowledge Transfer
 ```
-QUERY: What lessons learned from ports projects (S6) could apply to our new saneamento (S8) 
+QUERY: What lessons learned from ports projects (S7) could apply to our new saneamento (S9) 
        project if we use the same contractor?
 
 SEMANTIC STEPS:
@@ -248,7 +248,7 @@ EXPECTED RESULT:
 
 ### Query 5: Expertise Matching for New Phase
 ```
-QUERY: We're entering the construction phase of our largest saneamento project (S8).
+QUERY: We're entering the construction phase of our largest saneamento project (S9).
        Recommend contractors and consultants with proven expertise in this phase + segment combo.
 
 SEMANTIC STEPS:
@@ -496,8 +496,8 @@ PROJECT DOCUMENT                AGENT OUTPUT               EXTERNAL DATA
   "headquarters": "São Paulo, SP",
   "expertise": {
     "S1_rodovia": { "project_count": 8, "avg_success_rate": 0.95, "regions": ["SP", "MG", "GO"] },
-    "S8_saneamento": { "project_count": 3, "avg_success_rate": 0.92, "regions": ["SP", "RJ"] },
-    "S9_energia": { "project_count": 2, "avg_success_rate": 0.88, "regions": ["SP"] }
+    "S9_saneamento": { "project_count": 3, "avg_success_rate": 0.92, "regions": ["SP", "RJ"] },
+    "S10_energia": { "project_count": 2, "avg_success_rate": 0.88, "regions": ["SP"] }
   },
   "financials": {
     "last_revenue_usd": 150000000,

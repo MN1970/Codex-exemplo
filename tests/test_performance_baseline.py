@@ -187,7 +187,7 @@ class MockMaestroPerformance:
             self.monitor.record_success("routing")
 
         return {
-            "agent_id": "manta-03-s8",
+            "agent_id": "manta-03-s9",
             "skill_id": "agente-saneamento.v5.0",
             "routing_confidence": 0.88,
         }
@@ -378,11 +378,11 @@ class TestMemory:
     def test_agent_memory_baseline(self, monitor):
         """Memória base por agente: < 50MB."""
         agents = [
-            "manta-03-s8",
             "manta-03-s9",
-            "manta-03-s6",
-            "manta-03-s7",
             "manta-03-s10",
+            "manta-03-s7",
+            "manta-03-s8",
+            "manta-03-s11",
         ]
 
         # Simular amostras de memória
@@ -399,7 +399,7 @@ class TestMemory:
 
     def test_agent_memory_under_load(self, monitor):
         """Memória sob carga: < 100MB."""
-        agent = "manta-03-s8"
+        agent = "manta-03-s9"
 
         # Simular carga: mais amostras
         for i in range(20):
@@ -414,7 +414,7 @@ class TestMemory:
     def test_no_memory_leak(self, monitor):
         """Sem memory leak: memória estável após 100+ operações."""
         # Simular 100 operações
-        agent = "manta-03-s8"
+        agent = "manta-03-s9"
 
         for i in range(100):
             # Simular memória crescente mas controlada
@@ -482,7 +482,7 @@ class TestRobustness:
         """Error handling: timeout retorna fallback gracefully."""
         # Em produção, simular timeout
         result = maestro_perf.route("timeout test prompt")
-        assert result["agent_id"] == "manta-03-s8"  # Fallback esperado
+        assert result["agent_id"] == "manta-03-s9"  # Fallback esperado
 
     def test_error_handling_invalid_input(self):
         """Error handling: input inválido tratado."""

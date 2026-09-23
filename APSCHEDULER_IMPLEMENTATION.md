@@ -1,5 +1,7 @@
 # APScheduler Implementation — P7 Background Orchestration (v5.0)
 
+> **Auditoria 2026-09-22 (E9 — lastro real): 📐 proposta, não implementada.** O código (`scripts/apscheduler_setup.py`) existe; "Production Ready" não foi comprovado. Não há evidência de implantação: nenhuma função edge no Supabase, tabelas de ML (`manta_rag_ml_models`/`_predictions`/`_training_runs`) e `maestro_cost_log` vazias, o agendamento real registrado em `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md` é `cron` Linux, não APScheduler. Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Author:** Claude Code Agent  
 **Date:** 2026-07-25  
 **Status:** Production Ready

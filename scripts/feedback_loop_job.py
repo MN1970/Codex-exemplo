@@ -59,7 +59,7 @@ class FeedbackLoopExecutor:
             {
                 "query": "Estudo prévio para ETA com 500k habitantes",
                 "rating": 5,
-                "agent_id": "manta-03-s8",
+                "agent_id": "manta-03-s9",
                 "skill_id": "agente-saneamento.v5.0",
                 "rag_reranker_score": 0.92,
                 "created_at": (now - timedelta(days=3)).isoformat()
@@ -67,7 +67,7 @@ class FeedbackLoopExecutor:
             {
                 "query": "Projeto executivo de transmissão ANEEL com cabo ACSR",
                 "rating": 5,
-                "agent_id": "manta-03-s9",
+                "agent_id": "manta-03-s10",
                 "skill_id": "agente-energia.v5.0",
                 "rag_reranker_score": 0.88,
                 "created_at": (now - timedelta(days=2)).isoformat()
@@ -75,7 +75,7 @@ class FeedbackLoopExecutor:
             {
                 "query": "Porto marítimo com dragagem e molhe quebra-mar",
                 "rating": 4,
-                "agent_id": "manta-03-s6",
+                "agent_id": "manta-03-s7",
                 "skill_id": "agente-portos.v5.0",
                 "rag_reranker_score": 0.85,
                 "created_at": (now - timedelta(days=5)).isoformat()
@@ -83,7 +83,7 @@ class FeedbackLoopExecutor:
             {
                 "query": "Barragem CFRD com descaracterização e TSF",
                 "rating": 4,
-                "agent_id": "manta-03-s10",
+                "agent_id": "manta-03-s11",
                 "skill_id": "agente-barragens.v5.0",
                 "rag_reranker_score": 0.81,
                 "created_at": (now - timedelta(days=4)).isoformat()

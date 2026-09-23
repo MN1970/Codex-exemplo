@@ -1,215 +1,146 @@
 #!/usr/bin/env python3
 """
-Teste de roteamento Maestro v4.2
-Valida que os prompts de teste disparam o roteamento correto para cada agente.
+Teste de roteamento do Maestro (camada T1 de docs/PLANO-TESTES-MAESTRO-v1.md).
+
+Lê os prompts de tests/routing/prompts.md e confere o agente primário
+escolhido por:
+  (a) o router de referência (src/maestro/keyword_router.py) — sempre;
+  (b) as palavras-chave do banco (tabela maestro_routing_keywords), quando
+      um export JSON for passado em --db-json (lista de objetos com
+      agent_slug, keyword, priority). O export não é versionado: o banco
+      traz nomes de cliente e o repositório é público (achado P-21).
+
+Regra de match do banco (não documentada no Supabase; reproduzida aqui):
+soma das prioridades das palavras-chave presentes no prompt, vence a maior.
+Dois modos: "palavra" (fronteira de palavra, sem acento — igual ao router
+de referência) e "substring" (ILIKE ingênuo, o que um consumidor SQL
+simples faria). A diferença entre os dois mostra o risco de misroteamento
+por substring ("ETA" em "projetar", "LT" em "filtrados").
+
+Uso:
+  python scripts/test_routing.py [tests/routing/prompts.md] [--db-json F] [--json]
+Saída não-zero se o router de referência errar algum caso não marcado
+como lacuna conhecida.
 """
 
+from __future__ import annotations
+
+import argparse
+import json
 import re
 import sys
+from collections import defaultdict
 from pathlib import Path
 
-# Regras de roteamento baseadas em CLAUDE.md
-ROUTING_RULES = {
-    "agente-saneamento": [
-        r"\bsaneamento\b",
-        r"\bETA\b",
-        r"\bETE\b",
-        r"\badutora\b",
-        r"\besgoto\b",
-        r"\bAySA\b",
-        r"drenagem urbana",
-        r"\bSNIS\b",
-        r"\bPMSB\b",
-        r"Lei 14\.026",
-        r"\bEEE\b",
-        r"\bEEAB\b",
-    ],
-    "agente-energia": [
-        r"\btransmissão\b",
-        r"\bLT\b",
-        r"\bsubestação\b",
-        r"\bANEEL\b",
-        r"\bRAP\b",
-        r"leilão transmissão",
-        r"\bONS\b",
-        r"\bEPE\b",
-        r"\bACsr\b",
-        r"\bkV\b",
-    ],
-    "agente-portos": [
-        r"\bporto\b",
-        r"\bterminal\b",
-        r"\bANTAQ\b",
-        r"\bdragagem\b",
-        r"\bmolhe\b",
-        r"\bberço\b",
-        r"\bcalado\b",
-        r"\bcontêiner\b",
-        r"\bgranel\b",
-        r"\bPIANC\b",
-        r"quebra-mar",
-    ],
-    "agente-aeroportos": [
-        r"\baeroporto\b",
-        r"pista pouso",
-        r"pista de pouso",
-        r"\bANAC\b",
-        r"\bICAO\b",
-        r"\bTPS\b",
-        r"\bTECA\b",
-        r"\bbalizamento\b",
-        r"\bRWY\b",
-        r"\bPCN\b",
-        r"\bCAT II\b",
-        r"\brbac\b",
-    ],
-    "agente-barragens": [
-        r"\bbarragem\b",
-        r"\bvertedouro\b",
-        r"\bCFRD\b",
-        r"\bCCR\b",
-        r"\brejeitos\b",
-        r"\bPNSB\b",
-        r"\bICOLD\b",
-        r"\bCBDB\b",
-        r"\bTSF\b",
-        r"\bdam breach\b",
-        r"\bSIGBM\b",
-        r"\bANM\b",
-    ],
-}
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
-def match_prompt_to_agent(prompt):
-    """
-    Match um prompt contra as regras de roteamento.
-    Retorna lista de agentes que fazem match (em ordem de especificidade).
-    """
-    matches = {}
+from src.maestro import keyword_router as kr  # noqa: E402
 
-    for agent, patterns in ROUTING_RULES.items():
-        match_count = 0
-        for pattern in patterns:
-            if re.search(pattern, prompt, re.IGNORECASE):
-                match_count += 1
-        if match_count > 0:
-            matches[agent] = match_count
+LINE_RE = re.compile(r"^- \[[ x]\] `(?P<prompt>[^`]+)`(?:\s*→\s*\*\*(?P<exp>[^*]+)\*\*)?")
+EXPECT_RE = re.compile(r"Esperado:[^*]*\*\*(?P<exp>[^*]+)\*\*")
+SECTION_RE = re.compile(r"^##\s+(?P<name>.+)$")
+KNOWN_GAP = "(lacuna)"
 
-    # Ordenar por número de matches (descendente)
-    if matches:
-        return sorted(matches.items(), key=lambda x: x[1], reverse=True)
-    return []
 
-def parse_test_file(file_path):
-    """Parse prompts.md e extrai os testes."""
-    tests = {}
-    current_section = None
-
-    with open(file_path, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.rstrip()
-
-            # Detectar seções (S6, S7, etc.)
-            match = re.match(r"## (S\d+) — (\w+)", line)
-            if match:
-                current_section = match.group(2).lower()
-                tests[current_section] = []
-                continue
-
-            # Detectar items de teste
-            if current_section and line.strip().startswith("- [ ]"):
-                # Extrair prompt e agente esperado
-                match = re.match(r'- \[ \] `(.+?)` → \*\*(\w+(?:-\w+)*)\*\*', line)
-                if match:
-                    prompt = match.group(1)
-                    expected_agent = match.group(2)
-                    tests[current_section].append({
-                        'prompt': prompt,
-                        'expected': expected_agent,
-                    })
-
-    return tests
-
-def run_tests(test_file):
-    """Executa os testes e relata resultados."""
-    tests = parse_test_file(test_file)
-
-    total = 0
-    passed = 0
-    failed_tests = []
-
-    print("=" * 80)
-    print("TESTE DE ROTEAMENTO MAESTRO v4.2")
-    print("=" * 80)
-
-    for section, test_list in tests.items():
-        print(f"\n[{section.upper()}]")
-        print("-" * 80)
-
-        for test in test_list:
-            total += 1
-            prompt = test['prompt']
-            expected = test['expected']
-
-            matches = match_prompt_to_agent(prompt)
-            routed_to = matches[0][0] if matches else "NENHUM"
-
-            # Normalizar nomes para comparação
-            expected_normalized = expected.replace('_', '-')
-            routed_normalized = routed_to.replace('_', '-')
-
-            test_passed = routed_normalized == expected_normalized
-
-            if test_passed:
-                passed += 1
-                status = "PASS"
+def parse_prompts(path: Path):
+    cases, section, pending = [], "", None
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        m = SECTION_RE.match(line)
+        if m:
+            section = m.group("name")
+            continue
+        m = LINE_RE.match(line)
+        if m:
+            if m.group("exp"):
+                cases.append(_case(section, m.group("prompt"), m.group("exp"), raw))
+                pending = None
             else:
-                status = "FAIL"
-                failed_tests.append({
-                    'prompt': prompt,
-                    'expected': expected,
-                    'got': routed_to,
-                    'matches': matches,
-                })
+                pending = m.group("prompt")
+            continue
+        m = EXPECT_RE.search(line)
+        if m and pending:
+            cases.append(_case(section, pending, m.group("exp"), raw))
+            pending = None
+    return cases
 
-            print(f"{status:4s} | {prompt[:60]:60s}")
-            if not test_passed:
-                print(f"       Expected: {expected}, Got: {routed_to}")
-                if matches:
-                    print(f"       Matches: {matches}")
 
-    # Resumo
-    print("\n" + "=" * 80)
-    print(f"RESUMO: {passed}/{total} testes passaram ({100*passed/total if total>0 else 0:.1f}%)")
-    print("=" * 80)
-
-    if failed_tests:
-        print("\nFALHAS DETALHADAS:")
-        print("-" * 80)
-        for failure in failed_tests:
-            print(f"\nPrompt: {failure['prompt']}")
-            print(f"Esperado: {failure['expected']}")
-            print(f"Obtido: {failure['got']}")
-            print(f"Matches encontrados: {failure['matches']}")
-
+def _case(section, prompt, expected, raw):
+    exp = expected.strip()
+    seg = re.search(r"\bS(\d+)\b", exp)
+    slug = exp.split()[0]
+    agent_id = None
+    if slug == "agente-infraestrutura" and seg:
+        agent_id = f"manta-03-s{seg.group(1)}"
     return {
-        'testes_passados': passed,
-        'total_testes': total,
-        'detalhes': [
-            {
-                'prompt': f.get('prompt', '')[:60],
-                'esperado': f.get('expected', ''),
-                'obtido': f.get('got', ''),
-            }
-            for f in failed_tests
-        ]
+        "section": section,
+        "prompt": prompt,
+        "expected_slug": slug,
+        "expected_agent_id": agent_id,
+        "known_gap": KNOWN_GAP in raw,
     }
 
-if __name__ == '__main__':
-    test_file = Path(__file__).parent.parent / 'tests' / 'routing' / 'prompts.md'
 
-    if not test_file.exists():
-        print(f"Arquivo de testes não encontrado: {test_file}")
-        sys.exit(1)
+def db_route(prompt: str, rows, mode: str):
+    scores = defaultdict(int)
+    norm = kr.normalize(prompt)
+    for r in rows:
+        kw = r["keyword"]
+        if mode == "substring":
+            hit = kw.lower() in prompt.lower()
+        else:
+            hit = bool(kr._pattern(kw).search(norm))
+        if hit:
+            scores[r["agent_slug"]] += int(r.get("priority") or 0)
+    if not scores:
+        return None, {}
+    best = max(scores.items(), key=lambda kv: kv[1])[0]
+    return best, dict(scores)
 
-    result = run_tests(test_file)
-    sys.exit(0 if result['testes_passados'] == result['total_testes'] else 1)
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("prompts", nargs="?", default=str(ROOT / "tests/routing/prompts.md"))
+    ap.add_argument("--db-json")
+    ap.add_argument("--json", action="store_true", help="saída detalhada em JSON")
+    args = ap.parse_args(argv)
+
+    cases = parse_prompts(Path(args.prompts))
+    rows = json.loads(Path(args.db_json).read_text(encoding="utf-8")) if args.db_json else None
+
+    results, fails = [], 0
+    for c in cases:
+        r = kr.route(c["prompt"])
+        ok_ref = (r.slug == c["expected_slug"]) and (
+            c["expected_agent_id"] is None or r.agent_id == c["expected_agent_id"])
+        res = dict(c, ref_agent=r.agent_id, ref_slug=r.slug, ref_ok=ok_ref)
+        if rows is not None:
+            for mode in ("palavra", "substring"):
+                best, _ = db_route(c["prompt"], rows, mode)
+                res[f"db_{mode}"] = best
+                res[f"db_{mode}_ok"] = best == c["expected_slug"]
+        if not ok_ref and not c["known_gap"]:
+            fails += 1
+        results.append(res)
+
+    if args.json:
+        print(json.dumps(results, ensure_ascii=False, indent=1))
+    else:
+        for res in results:
+            mark = "OK " if res["ref_ok"] else ("GAP" if res["known_gap"] else "ERR")
+            line = f"[{mark}] {res['expected_slug']:<22} ref={res['ref_slug'] or res['ref_agent']:<22}"
+            if rows is not None:
+                line += (f" db(pal)={res['db_palavra'] or '-':<22}"
+                         f" db(sub)={res['db_substring'] or '-':<22}")
+            print(line + " | " + res["prompt"][:60])
+        n = len(results)
+        print(f"\nReferência: {sum(r['ref_ok'] for r in results)}/{n} corretos")
+        if rows is not None:
+            for mode in ("palavra", "substring"):
+                print(f"Banco ({mode}): {sum(r[f'db_{mode}_ok'] for r in results)}/{n} corretos")
+    return 1 if fails else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

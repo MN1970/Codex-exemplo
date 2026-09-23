@@ -1,5 +1,7 @@
 # Manta Maestro — Operação v5.0.0
 
+> **Auditoria 2026-09-22 (E9 — lastro real): ❌ sem lastro.** A afirmação "20 agentes em produção" não tem evidência real; a estrutura real de agentes é a de `SKILL.md` no SharePoint (`INDICE-CANONICAL.md`). Ver `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md` (matriz E9). Não usar este documento como evidência de estado de produção.
+
 **Sincronização SharePoint:** 2026-07-27  
 **Status:** ✅ Operacional — 20 agentes em produção  
 **Última atualização SP:** 2026-07-22 (ARQUITETURA-AGENTES-IA-v5.0.0.md)

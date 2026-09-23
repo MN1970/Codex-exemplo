@@ -141,8 +141,8 @@ Colunas:
 ## Integração com Agentes Manta
 
 - **agente-infraestrutura (S1-S4):** Rodovias, OAE, Ferrovia, Metrô
-- **agente-saneamento (S8):** Completação de ETA/ETE
-- **agente-energia (S9):** LT, subestações, usinas
+- **agente-saneamento (S9):** Completação de ETA/ETE
+- **agente-energia (S10):** LT, subestações, usinas
 - **manta-orcamento (Manta 05):** Orçamento master
 
 ---

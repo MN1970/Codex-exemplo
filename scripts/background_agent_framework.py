@@ -17,7 +17,7 @@ Fluxo:
   agent_skill.md:
     from scripts.background_agent_framework import background_spawn
     job_id = background_spawn(
-      agent_id="manta-03-s5",
+      agent_id="manta-03-s12",
       prompt="Analise projeto de túnel + viabilidade geotécnica",
       timeout=300
     )
@@ -153,7 +153,7 @@ class BackgroundAgentFramework:
         Spawn a background job.
 
         Args:
-          agent_id: Agent ID (e.g., "manta-03-s5")
+          agent_id: Agent ID (e.g., "manta-03-s12")
           prompt: Task prompt for the agent
           timeout_seconds: Job timeout (default: 300s = 5 min)
           metadata: Additional metadata (dict)
@@ -409,7 +409,7 @@ def background_spawn(
       from scripts.background_agent_framework import background_spawn
 
       job_id = background_spawn(
-        agent_id="manta-03-s5",
+        agent_id="manta-03-s12",
         prompt="Analise geotécnica de túnel",
         timeout_seconds=300
       )
@@ -419,7 +419,7 @@ def background_spawn(
       # Status via background_status(job_id)
 
     Args:
-      agent_id: Agent ID (e.g., "manta-03-s5")
+      agent_id: Agent ID (e.g., "manta-03-s12")
       prompt: Task prompt
       timeout_seconds: Timeout in seconds (default: 300)
       metadata: Optional metadata dict
@@ -458,7 +458,7 @@ def background_list(agent_id: Optional[str] = None, status: Optional[str] = None
     List background jobs (public API).
 
     Usage:
-      jobs = background_list(agent_id="manta-03-s5", status="pending")
+      jobs = background_list(agent_id="manta-03-s12", status="pending")
 
     Args:
       agent_id: Filter by agent

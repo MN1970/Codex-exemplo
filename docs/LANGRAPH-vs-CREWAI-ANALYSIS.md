@@ -262,7 +262,7 @@ Motivos, em ordem de peso:
 
 ---
 
-_Documento gerado sob demanda. Complementa
+*Documento gerado sob demanda. Complementa
 `docs/RESEARCH-MODERN-AGENT-ORCHESTRATION.md` e
 `docs/MANTA-MAESTRO-ECOSYSTEM-v5-UPGRADE.md`. Fecha o item em aberto
-"Escolher LangGraph OU CrewAI via PoC" com recomendação: **LangGraph**._
+"Escolher LangGraph OU CrewAI via PoC" com recomendação: **LangGraph**.*

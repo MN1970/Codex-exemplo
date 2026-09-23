@@ -345,7 +345,8 @@ class APSchedulerManager:
             for job in self.scheduler.get_jobs():
                 logger.info(f"ID: {job.id}")
                 logger.info(f"  Name: {job.name}")
-                logger.info(f"  Next run: {job.next_run_time}")
+                # Job pendente (agendador não iniciado) ainda não tem next_run_time
+                logger.info(f"  Next run: {getattr(job, 'next_run_time', None)}")
                 logger.info(f"  Trigger: {job.trigger}")
                 logger.info("")
 
@@ -371,7 +372,7 @@ class APSchedulerManager:
                 {
                     "id": job.id,
                     "name": job.name,
-                    "next_run": str(job.next_run_time) if job.next_run_time else None,
+                    "next_run": str(getattr(job, "next_run_time", None) or "") or None,
                     "trigger": str(job.trigger)
                 }
                 for job in self.scheduler.get_jobs()

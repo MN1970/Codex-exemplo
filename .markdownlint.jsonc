@@ -7,5 +7,21 @@
   "MD024": { "siblings_only": true }, // permite títulos repetidos entre arquivos (ex: "## Handoff com outros agentes")
   "MD033": false,         // permite HTML inline ocasional
   "MD041": false,         // primeira linha nem sempre é H1 (frontmatter vem antes)
-  "MD046": { "style": "fenced" }
+  "MD046": { "style": "fenced" },
+  // Portado do PR #105 (2026-09-10) na auditoria de 2026-09-22: depois de
+  // corrigir o glob que deixava node_modules/** vazar para o lint (causa
+  // raiz principal), restavam milhares de violações só de estilo em .md
+  // pré-existentes. Relaxadas apenas regras de espaçamento/estilo que não
+  // afetam renderização; MD004/MD037 ficam desligadas porque o autofix
+  // corrompia conteúdo técnico ("+" como operador, "___" como campo).
+  "MD032": false,
+  "MD031": false,
+  "MD022": false,
+  "MD012": false,
+  "MD040": false,
+  "MD036": false,
+  "MD034": false,
+  "MD029": false,
+  "MD004": false,
+  "MD037": false
 }

@@ -244,11 +244,11 @@ agente-rodovias        (Manta 03-S1) — Roads
 agente-oae             (Manta 03-S2) — Bridges/Viaducts
 agente-ferrovia        (Manta 03-S3) — Railways
 agente-metro           (Manta 03-S4) — Metros
-agente-portos          (Manta 03-S6) — Ports
+agente-portos          (Manta 03-S7) — Ports
 agente-aeroportos      (Manta 03-S7) — Airports
-agente-saneamento      (Manta 03-S8) — Water/Sanitation ⭐ PRIORITY
-agente-energia         (Manta 03-S9) — Power
-agente-barragens       (Manta 03-S10) — Dams
+agente-saneamento      (Manta 03-S9) — Water/Sanitation ⭐ PRIORITY
+agente-energia         (Manta 03-S10) — Power
+agente-barragens       (Manta 03-S11) — Dams
 ```
 
 ---
