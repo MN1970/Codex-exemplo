@@ -7,6 +7,26 @@ executável das regras de routing descritas no `CLAUDE.md` contra prompts reais 
 `tests/routing/prompts.md`. Nenhum achado abaixo é baseado em memória ou inferência — cada um
 tem o comando ou diff que o reproduz.
 
+> **Nota de atualização (mesma sessão, logo após a redação abaixo):** o Achado 1 (branch
+> desatualizado) foi corrigido neste mesmo PR — `origin/main` foi mesclado neste branch logo em
+> seguida, com os 3 conflitos reais (`CLAUDE.md`, `MODELO-MESTRE-PROPOSTA.md`,
+> `PROPOSTA-COMERCIAL-SKILL-ADDENDUM.md`) resolvidos a favor de `main` (mais atual e já
+> verificado), seguindo a mesma convenção usada nas PRs #112/#121 deste repositório. O texto do
+> Achado 1 abaixo foi **mantido como estava no momento da análise** (era verdade quando escrito,
+> e documenta o método/diagnóstico); só esta nota foi adicionada depois.
+>
+> Reverifiquei os achados 2-4 contra o `CLAUDE.md` de `main` (agora mesclado neste branch):
+> - **Achado 2 (routing por substring)** — **continua aberto**. O bloco ROUTING de `main` tem a
+>   mesma redação (`ETA|ETE|...`, `LT|subestação|...`, `porto|...`, `aeroporto|...`), sem
+>   fronteira de palavra — os três casos de misroteamento reproduzidos abaixo ainda se aplicam.
+> - **Achado 3 (checklist citando `rag_chunks`)** — **resolvido incidentalmente**. `main`
+>   substituiu o checklist v4.2 por um v5.0 inteiramente reescrito, que já cita as tabelas certas
+>   (`rag_collections`, `manta_rag_chunks`, `sp_agent_routing`). O item específico não existe
+>   mais como estava descrito.
+> - **Achado 4 (keywords de energia sem `ampacidade`/`ACSR`)** — **continua aberto**. As keywords
+>   de `agente-energia` em `main` são as mesmas (`transmissão|LT|subestação|ANEEL|RAP|leilão
+>   transmissão|ONS|EPE`); nenhuma menção a `ampacidade`/`ACSR` em `CLAUDE.md`.
+
 ---
 
 ## Resumo executivo
