@@ -1,7 +1,9 @@
 # Plano de testes funcionais — Manta Maestro (v1)
 
 Data: 2026-09-23 · Autor: sessão Claude Code a pedido de MN · Status:
-**rascunho para aprovação de MN** (nada foi executado ainda).
+**executado em 2026-09-23** — decisões de MN: 6 camadas, custo de API
+liberado, T5 simulado com os agentes, corrigir já os defeitos de baixo
+risco. Resultado em `docs/testes/RELATORIO-TESTES-MAESTRO-2026-09-23.md`.
 
 Complementa a auditoria de 2026-09-22 (`docs/PLANO-AUDITORIA-v1.md`,
 `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md`). A auditoria verificou

@@ -4,7 +4,15 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.8** (2026-09-22) — **auditoria do sistema (repo +
+Versão: **v5.4.9** (2026-09-23) — **testes funcionais T1–T6** (plano
+`docs/PLANO-TESTES-MAESTRO-v1.md`, resultado
+`docs/testes/RELATORIO-TESTES-MAESTRO-2026-09-23.md`): roteamento do banco
+passa de 6 para 20 agentes; 154 vetores faltantes do RAG gerados (316/316);
+R1 por palavra inteira + PII; registro do aluci-guard corrigido (tinha norma
+inexistente); achados estratégicos — três taxonomias concorrentes, busca
+textual com 9% de acerto, coleções RAG sem vínculo com documentos.
+
+Consolida v5.4.8 (2026-09-22) — **auditoria do sistema (repo +
 SharePoint + Supabase)**. Plano em `docs/PLANO-AUDITORIA-v1.md` (decisões
 D1–D4 de MN), resultado em `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md`.
 Numeração oficial de segmentos é a do SharePoint, **S1–S14** (D2), aplicada
@@ -503,11 +511,13 @@ IF menção a Motiva|CCR Rodovias|SP-258|SP-330|Contorno Apucarana
      agente-contratual).
 ```
 
-**Edificações (S6) e Óleo & Gás (S14) ainda NÃO têm
-keyword de routing** (confirmado em `agente-edificacoes.md` e
-`agente-oleo-gas.md`, seção "Ferramentas e integrações" de cada um) —
-o Maestro não consegue despachar para esses dois agentes hoje, mesmo
-que o usuário use as palavras-chave descritas em seus frontmatters.
+**Atualização 2026-09-23 (testes T1)**: S6 Edificações, S12 Túneis, S13
+Mineração, S14 Óleo & Gás, os horizontais e o ESG passaram a ter
+palavras-chave em `maestro_routing_keywords` (61 → 148 linhas) e no router
+de referência (`src/maestro/keyword_router.py`, que também implementa os
+casos ambíguos abaixo). Regressão: `python scripts/test_routing.py`
+(48/48). S1–S4 ainda despacham para o slug legado `agente-infraestrutura`
+(os agentes vivos no SharePoint são `agente-S1-rodovias` … `S4-metro`).
 
 **Casos ambíguos** (documentados em `tests/routing/prompts.md`, mantidos
 sem alteração):
@@ -526,8 +536,8 @@ sem alteração):
 
 **Contagem exata em 2026-09-22** (auditoria, projeto `ogxxgvgtulrbbppshjie`
 `manta-maestro`): `rag_collections` 11 linhas, `sp_agent_routing` 9,
-`maestro_routing_keywords` 61, `manta_rag_chunks` 316,
-`manta_rag_documents` 126. Os números antigos desta seção (9 coleções,
+`maestro_routing_keywords` 61 (148 desde 2026-09-23), `manta_rag_chunks` 316
+(todos com vetor desde 2026-09-23; antes 162), `manta_rag_documents` 126. Os números antigos desta seção (9 coleções,
 50 keywords, 204 chunks, 111 documentos) vinham de
 `docs/SUPABASE-PROJECT-AUDIT.md` (julho) e estão superados. Nenhuma edge
 function publicada; tabelas de ML (`manta_rag_ml_*`) vazias.
@@ -934,6 +944,9 @@ Codex-exemplo/
 │   ├── D03-GEOTECNIA-APLICACAO-PROJETOS-MANTA.md # 🆕 2026-09-11 — guia prático (D03 real, não um agente novo)
 │   ├── MATRIZ-CONHECIMENTO-POR-AGENTE.md  # 🆕 2026-09-11 — conhecimento essencial dos 21+ agentes (hipótese, não cruzada linha a linha com o real)
 │   ├── PLANO-AUDITORIA-v1.md              # 🆕 2026-09-22 — plano da auditoria + decisões D1–D4 de MN
+│   ├── PLANO-TESTES-MAESTRO-v1.md         # 🆕 2026-09-23 — plano dos testes funcionais T1–T6
+│   ├── testes/
+│   │   └── RELATORIO-TESTES-MAESTRO-2026-09-23.md # 🆕 resultado T1–T6 + avaliação de estratégia
 │   └── auditoria/
 │       └── RELATORIO-AUDITORIA-2026-09-22.md # 🆕 resultado: ondas W0–W8, matrizes E9 (lastro) e de duplicatas, P-21
 ├── sharepoint/
@@ -957,6 +970,15 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.9** (2026-09-23) — testes funcionais T1–T6 do Maestro
+  (`docs/testes/RELATORIO-TESTES-MAESTRO-2026-09-23.md`), com correção
+  imediata dos defeitos de baixo risco (decisão de MN): 87 palavras-chave
+  novas no banco; router de referência com ESG, casos ambíguos e handoffs;
+  154 embeddings gerados; R1 com fronteira de palavra e PII; registro do
+  aluci-guard v0.2. Novos testes de regressão: `tests/routing/test_routing_prompts.py`,
+  `tests/test_aluci_guard_registry.py`, `tests/rag/golden_queries.yaml`.
+  Pendentes para MN: taxonomia única, política de dispatch, busca híbrida,
+  leitura anônima do RAG, slug de S1–S4.
 - **v5.4.8** (2026-09-22) — auditoria do sistema Manta Maestro (repo +
   SharePoint + Supabase), plano `docs/PLANO-AUDITORIA-v1.md`, relatório
   `docs/auditoria/RELATORIO-AUDITORIA-2026-09-22.md`, PR #123. Numeração

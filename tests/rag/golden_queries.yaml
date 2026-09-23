@@ -1,0 +1,27 @@
+# Perguntas-ouro do RAG (camada T2 de docs/PLANO-TESTES-MAESTRO-v1.md).
+# Cada pergunta lista um trecho do título do documento que DEVE aparecer
+# entre os 5 primeiros resultados (acerto@5). Só entram documentos que
+# existem na base (manta_rag_documents, 2026-09-23). Sem nome de cliente.
+queries:
+  - {id: san-1, colecao: saneamento, q: "metas de universalização do marco legal do saneamento", espera: "14.026"}
+  - {id: san-2, colecao: saneamento, q: "normas de projeto de sistemas de abastecimento de água", espera: "12211"}
+  - {id: ene-1, colecao: energia, q: "ampacidade e limite térmico de condutores de linha de transmissão", espera: "738"}
+  - {id: ene-2, colecao: energia, q: "distâncias de segurança em linhas aéreas de transmissão", espera: "5422"}
+  - {id: por-1, colecao: portos, q: "profundidade de calado no projeto de berços", espera: "Calado"}
+  - {id: por-2, colecao: portos, q: "regulação de terminais portuários", espera: "ANTAQ"}
+  - {id: aer-1, colecao: aeroportos, q: "projeto geométrico de aeródromos e pistas", espera: "Annex 14"}
+  - {id: aer-2, colecao: aeroportos, q: "planejamento e projeto aeroportuário advisory circular", espera: "FAA"}
+  - {id: bar-1, colecao: barragens, q: "proibição de alteamento a montante em barragem de rejeitos", espera: "14.066"}
+  - {id: bar-2, colecao: barragens, q: "plano de emergência e declaração de estabilidade de barragem de mineração", espera: "ANM Res 95"}
+  - {id: rod-1, colecao: rodovias, q: "dimensionamento de pavimento flexível", espera: "Pavimentação"}
+  - {id: rod-2, colecao: rodovias, q: "drenagem superficial e subsuperficial de rodovias", espera: "Drenagem"}
+  - {id: oae-1, colecao: oae, q: "obras de arte especiais pontes e viadutos", espera: "OAE"}
+  - {id: fer-1, colecao: ferrovia, q: "raios mínimos no projeto geométrico de ferrovias", espera: "IPR-712"}
+  - {id: fer-2, colecao: ferrovia, q: "normas de trilho e dormente de concreto", espera: "ferrovi"}
+  - {id: mtr-1, colecao: metro, q: "sistemas metroviários", espera: "Metrovi"}
+  - {id: orc-1, colecao: orcamentacao, q: "composições analíticas de custo rodoviário", espera: "SICRO"}
+  - {id: orc-2, colecao: orcamentacao, q: "cálculo de overhead prolongado por atraso", espera: "Overhead"}
+  - {id: ins-1, colecao: institucional, q: "regras do kernel R1 a R7", espera: "Kernel"}
+  - {id: ins-2, colecao: institucional, q: "quando usar cada modelo de IA", espera: "Model Tiering"}
+  - {id: ins-3, colecao: institucional, q: "template de proposta comercial", espera: "Template Proposta"}
+  - {id: ene-3, colecao: energia, q: "resoluções normativas da ANEEL para transmissão e receita anual permitida", espera: "ANEEL REN"}

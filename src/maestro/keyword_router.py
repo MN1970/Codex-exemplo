@@ -97,7 +97,8 @@ AGENTS: List[AgentSpec] = [
               True, rag_collection="ene:v5.0:*"),
     AgentSpec("manta-03-s11", "agente-barragens", ("barragem",),
               ("barragem", "vertedouro", "CFRD", "CCR", "RCC", "rejeitos", "TSF",
-               "PNSB", "ICOLD", "CBDB", "dique", "SIGBM", "Lei 12.334", "dry stack"),
+               "PNSB", "ICOLD", "CBDB", "dique", "SIGBM", "Lei 12.334", "dry stack",
+               "dam break", "dam breach", "Brumadinho", "PAEBM", "alteamento"),
               True, rag_collection="bar:v5.0:*"),
     AgentSpec("manta-03-s12", "agente-tuneis", ("tunel",),
               ("tunel", "TBM", "EPB", "cut and cover", "dovela", "emboque"),
@@ -106,7 +107,7 @@ AGENTS: List[AgentSpec] = [
               ("mineracao", "mina", "minerio", "ANM", "NR 22", "JORC", "lavra"),
               True, rag_collection="min:v5.0:*"),
     AgentSpec("manta-03-s14", "agente-oleo-gas", ("oleo e gas",),
-              ("oleo e gas", "petroleo", "gasoduto", "oleoduto", "dutovia", "refinaria",
+              ("oleo e gas", "petroleo", "gasoduto", "oleoduto", "dutovia", "duto", "refinaria",
                "ANP", "API 650", "HAZOP", "tancagem"),
               True, rag_collection="og:v5.0:*"),
     # ---- Horizontais -----------------------------------------------------
@@ -138,6 +139,12 @@ AGENTS: List[AgentSpec] = [
     AgentSpec("manta-16", "agente-arquiteto-ia", ("arquitetura",),
               ("arquitetura", "IA", "design", "agente", "workflow", "MCP", "RAG"),
               False, default_tier="opus"),
+    # Co-agente ESG (CLAUDE.md, ROUTING): só vira primário quando nenhum
+    # vertical pontua mais — nos demais casos entra como handoff.
+    AgentSpec("manta-20", "manta-20-esg", ("esg",),
+              ("ESG", "carbono", "GHG", "escopo 1", "escopo 2", "escopo 3", "TCFD",
+               "SASB", "GRI", "net zero", "biodiversidade", "licenca social",
+               "social license", "consulta previa", "inventario de emissoes"), False),
 ]
 
 BY_ID: Dict[str, AgentSpec] = {a.agent_id: a for a in AGENTS}
@@ -152,12 +159,34 @@ CROSS_AGENT_RULES: Dict[str, List[str]] = {
     "manta-03-s9": ["manta-05", "manta-02", "manta-15"],   # Saneamento
     "manta-03-s7": ["manta-05", "manta-07"],               # Portos
     "manta-03-s10": ["manta-06", "manta-05"],              # Energia
-    "manta-03-s11": ["manta-02", "manta-01"],              # Barragens
+    "manta-03-s11": ["manta-02", "manta-01",               # Barragens
+                     "manta-03-s10", "manta-03-s14"],      # UHE → energia; duto → O&G
     "manta-03-s4": ["manta-03-s2", "manta-07", "manta-03-s9", "manta-03-s1"],  # Metrô
     "manta-03-s1": ["manta-03-s3", "manta-03-s10"],        # Rodovias
     "manta-03-s2": ["manta-07"],                           # OAE
     "manta-03-s8": ["manta-03-s1", "manta-05"],            # Aeroportos
 }
+
+# Casos ambíguos com política definida no CLAUDE.md ("ROUTING", casos
+# ambíguos): quando os dois agentes pontuam e a palavra-gatilho aparece, o
+# primário é fixo — independente de quem somou mais palavras-chave.
+AMBIGUITY_RULES = [
+    # UHE (barragem + LT + SE) → barragens primário, handoff energia
+    ({"manta-03-s11", "manta-03-s10"}, ("UHE", "hidreletrica"), "manta-03-s11"),
+    # Adutora atravessa barragem → saneamento, consulta técnica a barragens
+    ({"manta-03-s9", "manta-03-s11"}, ("adutora",), "manta-03-s9"),
+]
+_AMBIGUITY_PATTERNS = [(agents, [_pattern(t) for t in triggers], primary)
+                       for agents, triggers, primary in AMBIGUITY_RULES]
+
+
+def _apply_ambiguity_rules(scores: Dict[str, float], prompt: str) -> Optional[str]:
+    norm = normalize(prompt)
+    for agents, patterns, primary in _AMBIGUITY_PATTERNS:
+        if agents <= scores.keys() and any(p.search(norm) for p in patterns):
+            return primary
+    return None
+
 
 # Palavras que acionam um handoff (além das palavras-chave do agente).
 _HANDOFF_EXTRA = {
@@ -251,6 +280,9 @@ def route(prompt: str, context_hints: Optional[List[str]] = None,
                         key=lambda kv: (-kv[1], not BY_ID[kv[0]].vertical,
                                         first_hit_position(kv[0], prompt)))
         best, top = ranked[0]
+        forced = _apply_ambiguity_rules(scores, prompt)
+        if forced:
+            best, top = forced, scores[forced]
         second = ranked[1][1] if len(ranked) > 1 else 0.0
         confidence = min(0.95, 0.56 + 0.08 * top + 0.04 * (top - second))
     else:
@@ -284,4 +316,11 @@ def cross_agent_calls(primary: str, prompt: str) -> List[str]:
         extra = any(_pattern(w).search(norm) for w in _HANDOFF_EXTRA.get(called, ()))
         if keyword_hits(called, prompt) or extra:
             calls.append(called)
+    # Primário horizontal (ex.: orçamento de uma ETE): o vertical citado entra
+    # como handoff de contexto, para o segmento não se perder (teste E1, T5).
+    spec = BY_ID.get(primary)
+    if spec and not spec.vertical:
+        for a in AGENTS:
+            if a.vertical and a.agent_id not in calls and keyword_hits(a.agent_id, prompt):
+                calls.append(a.agent_id)
     return calls

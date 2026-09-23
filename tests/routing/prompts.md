@@ -6,11 +6,15 @@ esperado e o **agente-alvo**; um teste passa se o Maestro roteia ao
 agente listado sem passar por horizontais indevidos.
 
 Rodar via:
+
+```text
+python scripts/test_routing.py tests/routing/prompts.md [--db-json export.json]
 ```
-python scripts/test_routing.py tests/routing/prompts.md
-```
-(script a ser criado no repo operacional do Maestro; por ora este
-arquivo serve como fonte manual para QA humano.)
+
+`--db-json` compara também com as palavras-chave do banco
+(`maestro_routing_keywords`, export JSON não versionado). Casos marcados
+`(lacuna)` são lacunas conhecidas: aparecem no relatório mas não quebram
+o script.
 
 ---
 
@@ -78,3 +82,21 @@ match). Anotar o dispatch efetivo em revisão manual.
   - Esperado: **agente-portos** primário + handoff **agente-aeroportos**.
 - [ ] `Adutora atravessa uma barragem de rejeitos existente.`
   - Esperado: **agente-saneamento** com consulta técnica ao **agente-barragens**.
+
+## Cobertura nova (2026-09-23) — S6, S12–S14 e horizontais
+
+Acrescentados na rodada de testes T1 (`docs/PLANO-TESTES-MAESTRO-v1.md`)
+para medir o que o banco ainda não roteia.
+
+- [ ] `Galpão logístico de 40 mil m²: como atender o desempenho da NBR 15575?` → **agente-edificacoes**
+- [ ] `Torre residencial de 30 pavimentos em edificação com subsolo: qual fundação?` → **agente-edificacoes**
+- [ ] `Data center Tier III: requisitos de redundância para o projeto do edifício.` → **agente-edificacoes**
+- [ ] `Túnel com TBM EPB em solo mole: como definir a pressão de face?` → **agente-tuneis**
+- [ ] `Plano de lavra de mina a céu aberto com relatório JORC.` → **agente-mineracao**
+- [ ] `Gasoduto de 24 polegadas cruzando APP: quais exigências da ANP?` → **agente-oleo-gas**
+- [ ] `Monte o orçamento com composições SINAPI e cálculo de BDI para a obra.` → **agente-orcamento**
+- [ ] `Preciso do cronograma com caminho crítico e Gantt da obra.` → **agente-cronograma**
+- [ ] `Pleito de reequilíbrio por atraso na liberação de áreas pelo contratante.` → **agente-claims**
+- [ ] `Revise a cláusula de força maior do aditivo contratual.` → **agente-contratual**
+- [ ] `Estruture a proposta comercial para esta oportunidade de concessão.` → **agente-bd**
+- [ ] `Inventário de emissões Escopo 1, 2 e 3 com relatório GRI para o empreendimento.` → **manta-20-esg**
