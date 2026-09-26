@@ -4,7 +4,25 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.8** (2026-09-20) — novo guardião transversal `dedup-guard`
+Versão: **v5.4.9** (2026-09-26) — novo entrypoint `scripts/manta_maestro_agent_sdk.py`,
+que roda o Maestro via **Claude Agent SDK** (`claude-agent-sdk`) fora do
+Claude Code CLI. Carrega o CLAUDE.md real (não uma cópia) como `append`
+do preset de system prompt, reaproveita `tests/lib/agent_loader.py` para
+registrar todos os subagentes reais de `.claude/agents/*.md` (o mesmo
+parser que os testes do repo usam — nenhuma duplicação de lista), e
+`skills="all"` para os guardiões de `.claude/skills/`. **Não** carrega
+`.mcp.json` automaticamente — achado desta sessão: esse arquivo hoje não
+é JSON válido (chaves `"comment"` dentro de arrays quebram a sintaxe) e,
+mesmo corrigido, seu schema (`enabled`/`tier`/`capabilities`/
+`authentication`/`rate_limiting` por servidor) não é o formato real de
+`.mcp.json` do Claude Code/Agent SDK (`command`/`args`/`env`, ou
+`type`/`url`/`headers`) — ver seção "AGENT SDK" e novo item em "GAPS
+ABERTOS". `claude-agent-sdk` adicionado a `requirements.txt`. Escopo
+desta sessão: só o entrypoint de execução — não migra o orquestrador
+custom de `src/maestro/` (routing determinístico R1, ML/XGBoost etc.),
+que segue existindo em paralelo.
+
+Consolida v5.4.8 (2026-09-20) — novo guardião transversal `dedup-guard`
 (detecta duplicação/redundância de dados entre abas/telas de qualquer
 artefato, sem valor de negócio fixo) + sanitização do `consist-guard`
 (removida toda referência ao caso Huatanay/CRH-PNSU — nomes, valores
@@ -671,6 +689,25 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ## GAPS ABERTOS / PENDÊNCIAS
 
+- **🆕 `.mcp.json` não é JSON válido e usa schema fabricado (achado
+  2026-09-26, ao integrar `scripts/manta_maestro_agent_sdk.py`)**: o
+  arquivo tem chaves `"comment"` dentro de arrays (ex.: dentro de
+  `"deny": [...]` do bloco Supabase), o que quebra o parsing JSON —
+  confirmado com `json.load()` puro, sem depender de nenhuma lib do
+  Claude Code. Mesmo corrigindo a sintaxe, o schema usado por servidor
+  (`enabled`/`tier`/`capabilities`/`authentication` com
+  `client_id`/`client_secret` soltos/`rate_limiting`) não é o formato
+  real de `.mcp.json` do Claude Code/Agent SDK
+  (`command`/`args`/`env` para stdio, ou `type`/`url`/`headers` para
+  http/sse) — é mais um artefato do mesmo padrão já documentado no gap
+  acima (infraestrutura descrita em detalhe mas nunca confirmada/testada
+  contra o mecanismo real que deveria consumi-la). Efeito prático: os 4
+  servidores documentados aqui (M365, Supabase, MantaBase, MantaHub)
+  **nunca poderiam ter sido carregados** por um `.mcp.json` real do
+  Claude Code — se o Maestro em produção de fato usa esses 4 MCPs, é
+  por outro mecanismo (não este arquivo), ou nunca foram testados
+  ponta-a-ponta. Ação: MN/quem opera o Maestro confirmar qual dos dois é
+  o caso, antes de reescrever o arquivo.
 - **🟡 Este repositório diverge do Manta Maestro real no SharePoint
   (encontrado em 2026-09-07 — numeração e embedder já corrigidos,
   resto aberto)**: com acesso real de leitura/escrita ao
@@ -939,7 +976,11 @@ Codex-exemplo/
 │   └── migrations/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
 │       └── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
+├── scripts/
+│   └── manta_maestro_agent_sdk.py         # 🆕 v5.4.9 — entrypoint via Claude Agent SDK (ver seção "AGENT SDK")
 └── tests/
+    ├── lib/
+    │   └── agent_loader.py                # parser compartilhado de .claude/agents/*.md (usado pelos testes E pelo entrypoint SDK acima)
     └── routing/
         └── prompts.md                     # smoke tests de routing por segmento
 ```
@@ -958,8 +999,83 @@ projeto `ogxxgvgtulrbbppshjie`) como `agent_id` = `consist-guard` /
 
 ---
 
+## AGENT SDK — Execução fora do Claude Code CLI
+
+🆕 v5.4.9. `scripts/manta_maestro_agent_sdk.py` roda o Maestro via
+**Claude Agent SDK** (`claude-agent-sdk`, pip) em vez do Claude Code
+CLI/claude.ai — para uso em um serviço interno, cron job, bot etc.
+
+```bash
+pip install claude-agent-sdk   # já em requirements.txt
+
+# Routing completo do CLAUDE.md (equivalente a uma sessão normal do Maestro)
+python3 scripts/manta_maestro_agent_sdk.py "Qual o RAP teto do leilão de transmissão X?"
+
+# Pula o routing e roda direto um subagente (equivalente a Task com subagent_type fixo)
+python3 scripts/manta_maestro_agent_sdk.py --agent agente-saneamento "Resuma o SNIS 2025"
+
+# Libera a tool Bash (necessária para os guardiões dedup-guard/consist-guard rodarem seus .py)
+python3 scripts/manta_maestro_agent_sdk.py --allow-bash --agent agente-arquiteto-ia "rode o dedup-guard em teste.html"
+```
+
+O que o script faz:
+- Carrega o `CLAUDE.md` real (lido do disco, não uma cópia embutida) e
+  injeta como `append` do preset de system prompt `claude_code` — a
+  mesma lógica de routing S/A/F desta sessão vale igual.
+- Registra cada subagente real de `.claude/agents/*.md` como subagente
+  do SDK reaproveitando `tests/lib/agent_loader.py` (o parser que os
+  testes do repo já usam) — a lista de agentes nunca diverge entre o
+  que é testado e o que é executado aqui.
+- Carrega `.claude/skills/*` (`dedup-guard`, `consist-guard`) via
+  `skills="all"`.
+- Restringe as tools por padrão a um conjunto somente-leitura
+  (`Read`/`Grep`/`Glob`/`WebSearch`/`WebFetch`); `Bash` só entra com
+  `--allow-bash` — necessário para os guardiões rodarem seus scripts
+  `.py`, mas fora por padrão porque o script roda sem humano no loop
+  (`permission_mode=bypassPermissions`, seguro aqui porque quem limita
+  o que pode rodar é `allowed_tools`, não aprovação interativa).
+
+**Não carrega `.mcp.json` automaticamente** (`setting_sources=[]`) —
+achado desta sessão, não corrigido: o `.mcp.json` deste repositório (1)
+hoje não é JSON válido (chaves `"comment"` dentro de arrays, ex. dentro
+de `"deny": [...]`, quebram a sintaxe) e (2) mesmo corrigido, usa um
+schema (`enabled`/`tier`/`capabilities`/`authentication`/
+`rate_limiting` por servidor) que não é o formato real de `.mcp.json`
+do Claude Code/Agent SDK — que é `{"nome": {"command", "args", "env"}}`
+(stdio) ou `{"nome": {"type": "http"|"sse", "url", "headers"}}`. Para
+plugar um MCP real (SharePoint_Manta, Supabase) neste script, passe
+`--mcp-config caminho.json` com um arquivo já nesse formato — ver
+`_MCP_JSON_NOTE` no próprio script. Ver também novo item em "GAPS
+ABERTOS".
+
+Fora do escopo desta versão: migrar o orquestrador custom de
+`src/maestro/` (routing determinístico R1, ML/consensus/XGBoost) para
+rodar sobre o Agent SDK — os dois seguem existindo em paralelo; este
+script é um entrypoint alternativo, não substitui o orquestrador
+existente.
+
+---
+
 ## Histórico de versões
 
+- **v5.4.9** (2026-09-26) — novo entrypoint `scripts/manta_maestro_agent_sdk.py`,
+  rodando o Maestro via **Claude Agent SDK** (`claude-agent-sdk`) fora do
+  Claude Code CLI. Carrega o `CLAUDE.md` real como `append` do preset de
+  system prompt `claude_code`; registra os subagentes reais de
+  `.claude/agents/*.md` reaproveitando `tests/lib/agent_loader.py` (o
+  mesmo parser dos testes do repo, sem lista duplicada); carrega
+  `.claude/skills/*` via `skills="all"`; restringe tools a um conjunto
+  somente-leitura por padrão (`Bash` só com `--allow-bash`, necessário
+  para os guardiões). `claude-agent-sdk` adicionado a `requirements.txt`.
+  **Não** carrega `.mcp.json` automaticamente — achado desta sessão: o
+  arquivo não é JSON válido (chaves `"comment"` em arrays quebram a
+  sintaxe) e, mesmo corrigido, usa um schema que não é o formato real
+  esperado pelo Claude Code/Agent SDK; documentado como novo item em
+  "GAPS ABERTOS" em vez de reescrito às cegas (faltam credenciais reais
+  para os 4 servidores ali descritos). Fora do escopo: migrar o
+  orquestrador custom de `src/maestro/` (routing R1, ML/XGBoost) para
+  cima do Agent SDK — os dois seguem em paralelo. Ver seção "AGENT SDK —
+  Execução fora do Claude Code CLI".
 - **v5.4.8** (2026-09-20) — criado o guardião transversal `dedup-guard`
   (detecta tabela/bloco/rótulo duplicado ou divergente entre abas/telas de
   qualquer artefato Manta, sem valores de negócio fixos) e sanitizado o
