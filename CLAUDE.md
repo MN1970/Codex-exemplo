@@ -6,7 +6,7 @@ operacionais no SharePoint.
 
 Versão: **v5.4.8** (2026-09-26) — **auditoria de segurança do
 Supabase `manta-maestro`**: leitura anon aberta em `r2j_*`, RAG e
-`pk_*`; migration candidata de RLS validada em dry-run, não aplicada.
+`pk_*`; migration de RLS **aplicada em produção** (aprovação MN).
 Ver "SEGURANÇA — artefatos e dados".
 
 Consolida v5.4.7 (2026-09-11) — **reconciliação de conhecimento por
@@ -652,7 +652,8 @@ cliente ao gerar output para ele.
 
 ## SEGURANÇA — artefatos e dados
 
-**🔴 Pendente de gate MN.** Levantamento de 2026-09-26 no projeto
+**✅ Correção aplicada em produção em 2026-09-26 (aprovação MN).**
+Levantamento de 2026-09-26 no projeto
 Supabase `manta-maestro` (Security Advisors + `pg_policies` +
 `has_table_privilege`): RLS está ligada em todas as tabelas, mas 19
 tabelas `r2j_*` (~85 mil linhas de preços, receita, EVTEA e parâmetros
@@ -665,10 +666,11 @@ INSERT anônimo.
 A correção candidata é
 `supabase/migrations/2026_09_26_security_rls_hardening.sql`: restringe
 leitura a e-mails @mantaassociados.com via `private.is_manta_member()`.
-Foi validada no banco real com execução abortada (dry-run), sem
-aplicar. **Antes de aplicar**: migrar os portais que usam a chave anon
-para login ou edge function, desativar cadastro aberto no Supabase Auth
-e rotacionar a chave anon. Checklist completo (artefatos, SharePoint,
+Foi validada em dry-run e depois aplicada; o teste pós-aplicação
+confirmou `anon` sem acesso e leitura só para @mantaassociados.com.
+**Pendente**: migrar os portais que usavam a chave anon (hoje recebem
+lista vazia) para login ou edge function, desativar cadastro aberto no
+Supabase Auth e rotacionar a chave anon. Checklist completo (artefatos, SharePoint,
 GitHub, agentes, LGPD) em `docs/SEGURANCA-ARTEFATOS.md`.
 
 Regra para agentes: nenhum artefato para cliente embute credencial ou
@@ -782,8 +784,9 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   organização Supabase ativa da conta corporativa). **Confirmação
   humana (dashboard) ainda pendente** antes de remover a referência —
   ver action items AI-1 a AI-10 nesse documento.
-- **🔴 Leitura anon aberta em dados comerciais (2026-09-26)** — ver
-  "SEGURANÇA — artefatos e dados". Atualiza o item abaixo: a RLS já
+- **✅ Leitura anon aberta em dados comerciais — corrigida em
+  2026-09-26** (ver "SEGURANÇA — artefatos e dados"); pendentes: portais
+  sem login, cadastro aberto no Auth e rotação da chave anon. Atualiza o item abaixo: a RLS já
   está ligada nas 3 tabelas citadas, mas com política `USING (true)`
   para `anon`, o que não restringe nada.
 - **RLS desabilitado em 3 tabelas públicas** (`rag_collections`,
@@ -880,9 +883,11 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 - [ ] Reconciliar `docs/EMBEDDER-DECISION.md` com achado de
       `docs/SUPABASE-PROJECT-AUDIT.md` antes de decidir embedder
 - [ ] Confirmar manualmente o destino do projeto `xgluoaa...` (AI-1)
-- [ ] Aplicar RLS nas 3 tabelas expostas (AI-6) — ampliado pela
-      migration `2026_09_26_security_rls_hardening.sql` (42 tabelas;
-      pendente gate MN e migração dos portais)
+- [x] Aplicar RLS nas 3 tabelas expostas (AI-6) — ampliado e aplicado
+      em 2026-09-26 pela migration `2026_09_26_security_rls_hardening.sql`
+      (42 tabelas, aprovação MN)
+- [ ] Migrar portais que usavam a chave anon para login/edge function,
+      desativar cadastro aberto no Auth e rotacionar a chave anon
 - [ ] Criar RAG + rota SP + routing keywords para Edificações (S6) e Óleo & Gás (se aprovado)
 - [ ] Rodar aluci-guard sobre este documento antes de merge
 - [ ] Rodar consist-guard sobre este documento antes de merge
@@ -960,7 +965,7 @@ Codex-exemplo/
 │   └── migrations/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
 │       ├── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
-│       └── 2026_09_26_security_rls_hardening.sql  # 🆕 v5.4.8 — RLS só para membros Manta (candidata)
+│       └── 2026_09_26_security_rls_hardening.sql  # 🆕 v5.4.8 — RLS só para membros Manta (✅ aplicada 2026-09-26)
 └── tests/
     └── routing/
         └── prompts.md                     # smoke tests de routing por segmento
@@ -974,9 +979,9 @@ Codex-exemplo/
   `manta-maestro`: leitura anon aberta em `r2j_*`, RAG, `pk_*`,
   `manta_trace` e `manta_artefatos`; INSERT anônimo em `pk_queries`/
   `pk_feedback`. Migration candidata
-  `2026_09_26_security_rls_hardening.sql` validada em dry-run e
-  checklist `docs/SEGURANCA-ARTEFATOS.md`. Aplicação pendente de gate
-  MN. Ticket `MNT-2026-SEC-RLS-01`.
+  `2026_09_26_security_rls_hardening.sql` validada em dry-run, aprovada
+  por MN e aplicada em produção no mesmo dia; checklist
+  `docs/SEGURANCA-ARTEFATOS.md`. Ticket `MNT-2026-SEC-RLS-01`.
 - **v5.4.7** (2026-09-11) — reconciliação de conhecimento por
   agente/segmento/disciplina (`docs/PLANEJAMENTO-MANTA-MAESTRO.md`).
   Re-verificação ao vivo do `INDICE-CANONICAL.md` real (v1.1) corrige

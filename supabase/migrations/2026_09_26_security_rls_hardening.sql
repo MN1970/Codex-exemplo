@@ -1,7 +1,8 @@
 -- Manta Maestro — endurecimento de RLS (acesso indevido / vazamento)
 -- Ticket: MNT-2026-SEC-RLS-01
 --
--- MIGRAÇÃO CANDIDATA. Não aplicar em produção sem aprovação MN.
+-- ✅ APLICADA em produção (manta-maestro) em 2026-09-26, com aprovação MN,
+-- como migration `security_rls_hardening_2026_09_26`.
 -- Ver docs/SEGURANCA-ARTEFATOS.md (seção "Achados Supabase 2026-09-26").
 --
 -- Problema: projeto `manta-maestro` expõe ~85 mil linhas de dados

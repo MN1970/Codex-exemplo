@@ -13,7 +13,16 @@ EGTC, ViaQuatro) e dados pessoais.
 ## 1. Achados Supabase — projeto `manta-maestro` (2026-09-26)
 
 Levantamento feito via Security Advisors + consulta a `pg_policies` e
-`has_table_privilege`. Nenhuma alteração foi aplicada em produção.
+`has_table_privilege`.
+
+> ✅ **Aplicada em produção em 2026-09-26** (aprovação MN), como a
+> migration `security_rls_hardening_2026_09_26`. Verificação pós-aplicação:
+> zero políticas para `anon`; 42 políticas `manta_member_read` e 2
+> `manta_member_insert`; políticas de `service_role`/`maestro_core`
+> preservadas (21). Teste simulando os papéis no Postgres: `anon` teve
+> SELECT e INSERT negados em `r2j_*`, RAG, `rag_collections` e
+> `pk_queries`; usuário logado `@mantaassociados.com` leu as 260 linhas
+> de `r2j_receita`; usuário logado de outro domínio leu 0.
 
 | # | Severidade | Achado | Correção |
 |---|-----------|--------|----------|
@@ -34,11 +43,10 @@ A migration foi executada no banco real dentro de uma transação abortada
 o schema `private` e as novas políticas não existiam, o que confirma o
 rollback.
 
-### Antes de aplicar (gate MN)
+### Pendências depois da aplicação
 
 1. **Inventariar os portais que usam a chave anon** (Portal R2J, Portal
-   PK, portais de projeto). Depois da migration eles passam a receber
-   lista vazia.
+   PK, portais de projeto). Desde a aplicação eles recebem lista vazia.
 2. Migrar cada portal para uma destas opções:
    - **Login Supabase Auth**: provedor Azure/Entra ID (SSO Manta) ou
      magic link, com `signInWithOAuth` / `signInWithOtp`; ou
@@ -49,7 +57,8 @@ rollback.
    e-mail no domínio `@mantaassociados.com`.
 4. **Rotacionar a chave anon** depois da migração: as chaves antigas
    estão em HTMLs já distribuídos.
-5. Aplicar com `supabase db push` e rodar os Security Advisors de novo.
+5. ~~Aplicar e rodar os Security Advisors de novo~~ — feito em
+   2026-09-26; os avisos restantes são os itens 5 e 6 da tabela acima.
 
 ---
 
