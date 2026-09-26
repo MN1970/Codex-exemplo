@@ -4,7 +4,42 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-11) — **reconciliação de conhecimento por
+Versão: **v5.4.9** (2026-09-26) — novo entrypoint `scripts/manta_maestro_agent_sdk.py`,
+que roda o Maestro via **Claude Agent SDK** (`claude-agent-sdk`) fora do
+Claude Code CLI. Carrega o CLAUDE.md real (não uma cópia) como `append`
+do preset de system prompt, reaproveita `tests/lib/agent_loader.py` para
+registrar todos os subagentes reais de `.claude/agents/*.md` (o mesmo
+parser que os testes do repo usam — nenhuma duplicação de lista), e
+`skills="all"` para os guardiões de `.claude/skills/`. **Não** carrega
+`.mcp.json` automaticamente — achado desta sessão: esse arquivo hoje não
+é JSON válido (chaves `"comment"` dentro de arrays quebram a sintaxe) e,
+mesmo corrigido, seu schema (`enabled`/`tier`/`capabilities`/
+`authentication`/`rate_limiting` por servidor) não é o formato real de
+`.mcp.json` do Claude Code/Agent SDK (`command`/`args`/`env`, ou
+`type`/`url`/`headers`) — ver seção "AGENT SDK" e novo item em "GAPS
+ABERTOS". `claude-agent-sdk` adicionado a `requirements.txt`. Escopo
+desta sessão: só o entrypoint de execução — não migra o orquestrador
+custom de `src/maestro/` (routing determinístico R1, ML/XGBoost etc.),
+que segue existindo em paralelo. Adicionado também
+`scripts/mcp-config.example.json` — template real de `--mcp-config`
+(Supabase MCP oficial via `npx`, MCP interno de SharePoint) com
+expansão de `${VAR}`/`${VAR:default}` a partir do ambiente (implementada
+em `load_mcp_config()`), para plugar MCPs reais sem versionar segredo
+nenhum.
+
+Consolida v5.4.8 (2026-09-20) — novo guardião transversal `dedup-guard`
+(detecta duplicação/redundância de dados entre abas/telas de qualquer
+artefato, sem valor de negócio fixo) + sanitização do `consist-guard`
+(removida toda referência ao caso Huatanay/CRH-PNSU — nomes, valores
+financeiros reais, datas e siglas do caso; CONFIG agora nasce vazio,
+preenchido por documento). Ambos versionados em `.claude/skills/` neste
+repositório e registrados em `manta_agent_capabilities` no Supabase
+(projeto `manta-maestro`, `ogxxgvgtulrbbppshjie`). Ver seção "GUARDIÕES —
+anti-duplicação e consistência". Publicação como plugin no catálogo Manta
+(cada skill com seu próprio `backingPluginId`) segue pendente — fora do
+alcance desta sessão.
+
+Consolida v5.4.7 (2026-09-11) — **reconciliação de conhecimento por
 agente/segmento/disciplina**. Releitura ao vivo do `INDICE-CANONICAL.md`
 real (v1.1) mostrou que o eixo S vai até **S14** (Túneis, Mineração,
 Óleo e Gás), o eixo D até **D22** e o eixo A até **A11** — mais do que
@@ -659,6 +694,25 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ## GAPS ABERTOS / PENDÊNCIAS
 
+- **🆕 `.mcp.json` não é JSON válido e usa schema fabricado (achado
+  2026-09-26, ao integrar `scripts/manta_maestro_agent_sdk.py`)**: o
+  arquivo tem chaves `"comment"` dentro de arrays (ex.: dentro de
+  `"deny": [...]` do bloco Supabase), o que quebra o parsing JSON —
+  confirmado com `json.load()` puro, sem depender de nenhuma lib do
+  Claude Code. Mesmo corrigindo a sintaxe, o schema usado por servidor
+  (`enabled`/`tier`/`capabilities`/`authentication` com
+  `client_id`/`client_secret` soltos/`rate_limiting`) não é o formato
+  real de `.mcp.json` do Claude Code/Agent SDK
+  (`command`/`args`/`env` para stdio, ou `type`/`url`/`headers` para
+  http/sse) — é mais um artefato do mesmo padrão já documentado no gap
+  acima (infraestrutura descrita em detalhe mas nunca confirmada/testada
+  contra o mecanismo real que deveria consumi-la). Efeito prático: os 4
+  servidores documentados aqui (M365, Supabase, MantaBase, MantaHub)
+  **nunca poderiam ter sido carregados** por um `.mcp.json` real do
+  Claude Code — se o Maestro em produção de fato usa esses 4 MCPs, é
+  por outro mecanismo (não este arquivo), ou nunca foram testados
+  ponta-a-ponta. Ação: MN/quem opera o Maestro confirmar qual dos dois é
+  o caso, antes de reescrever o arquivo.
 - **🟡 Este repositório diverge do Manta Maestro real no SharePoint
   (encontrado em 2026-09-07 — numeração e embedder já corrigidos,
   resto aberto)**: com acesso real de leitura/escrita ao
@@ -882,15 +936,22 @@ Codex-exemplo/
 ├── CLAUDE.md                              # este arquivo (master registry, v5.2)
 ├── README.md
 ├── .claude/
-│   └── agents/
-│       ├── agente-portos.md               # S7 real (frontmatter interno ainda diz S6 — renumeração pendente, ver Deploy checklist)
-│       ├── agente-aeroportos.md           # S8 real (frontmatter interno ainda diz S7 — renumeração pendente)
-│       ├── agente-saneamento.md           # S9 real (frontmatter interno ainda diz S8 — renumeração pendente) — prioridade AySA
-│       ├── agente-energia.md              # S10 real (frontmatter interno ainda diz S9 — renumeração pendente) — ANEEL/State Grid
-│       ├── agente-barragens.md            # S11 real (frontmatter interno ainda diz S10 — renumeração pendente)
-│       ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
-│       ├── agente-oleo-gas.md             # sem segmento real confirmado (frontmatter interno ainda diz S12)
-│       └── agente-edificacoes.md          # S6 real (frontmatter interno ainda diz S13 — renumeração pendente)
+│   ├── agents/
+│   │   ├── agente-portos.md               # S7 real (frontmatter interno ainda diz S6 — renumeração pendente, ver Deploy checklist)
+│   │   ├── agente-aeroportos.md           # S8 real (frontmatter interno ainda diz S7 — renumeração pendente)
+│   │   ├── agente-saneamento.md           # S9 real (frontmatter interno ainda diz S8 — renumeração pendente) — prioridade AySA
+│   │   ├── agente-energia.md              # S10 real (frontmatter interno ainda diz S9 — renumeração pendente) — ANEEL/State Grid
+│   │   ├── agente-barragens.md            # S11 real (frontmatter interno ainda diz S10 — renumeração pendente)
+│   │   ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
+│   │   ├── agente-oleo-gas.md             # sem segmento real confirmado (frontmatter interno ainda diz S12)
+│   │   └── agente-edificacoes.md          # S6 real (frontmatter interno ainda diz S13 — renumeração pendente)
+│   └── skills/
+│       ├── dedup-guard/                   # 🆕 v5.4.8 — anti-duplicação transversal (qualquer artefato)
+│       │   ├── SKILL.md
+│       │   └── dedup_guard.py
+│       └── consist-guard/                 # 🆕 v5.4.8 — versão sanitizada (sem Huatanay/CRH-PNSU)
+│           ├── SKILL.md
+│           └── consist_guard.py
 ├── docs/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
@@ -920,15 +981,128 @@ Codex-exemplo/
 │   └── migrations/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
 │       └── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
+├── scripts/
+│   ├── manta_maestro_agent_sdk.py         # 🆕 v5.4.9 — entrypoint via Claude Agent SDK (ver seção "AGENT SDK")
+│   └── mcp-config.example.json            # 🆕 v5.4.9 — template real de --mcp-config (Supabase + SharePoint), sem segredos
 └── tests/
+    ├── lib/
+    │   └── agent_loader.py                # parser compartilhado de .claude/agents/*.md (usado pelos testes E pelo entrypoint SDK acima)
     └── routing/
         └── prompts.md                     # smoke tests de routing por segmento
 ```
+
+## GUARDIÕES — anti-duplicação e consistência
+
+| Skill | Escopo | Config | Status |
+|-------|--------|--------|--------|
+| `consist-guard` | consistência interna de UM documento específico (quantum, datas, capítulos) contra valores canônicos que o usuário preenche por caso | `.claude/skills/consist-guard/` — CONFIG nasce vazio, sem dado de negócio | ✅ Sanitizado v5.4.8 (removida referência ao caso Huatanay/CRH-PNSU) |
+| `dedup-guard` | duplicação/redundância de dado, tabela ou rótulo entre abas/telas de QUALQUER artefato (não amarrado a nenhum caso) | `.claude/skills/dedup-guard/` — só thresholds de detecção, sem CONFIG por caso | 🆕 Criado v5.4.8 |
+| `context-guardian` | preservação de contexto de sessão longa (evita perda por compactação) | plugin próprio no catálogo Manta | ✅ Operacional |
+
+Também registrados em `manta_agent_capabilities` (Supabase `manta-maestro`,
+projeto `ogxxgvgtulrbbppshjie`) como `agent_id` = `consist-guard` /
+`dedup-guard`, capability `validar-consistencia` / `validar-duplicacao`.
+
+---
+
+## AGENT SDK — Execução fora do Claude Code CLI
+
+🆕 v5.4.9. `scripts/manta_maestro_agent_sdk.py` roda o Maestro via
+**Claude Agent SDK** (`claude-agent-sdk`, pip) em vez do Claude Code
+CLI/claude.ai — para uso em um serviço interno, cron job, bot etc.
+
+```bash
+pip install claude-agent-sdk   # já em requirements.txt
+
+# Routing completo do CLAUDE.md (equivalente a uma sessão normal do Maestro)
+python3 scripts/manta_maestro_agent_sdk.py "Qual o RAP teto do leilão de transmissão X?"
+
+# Pula o routing e roda direto um subagente (equivalente a Task com subagent_type fixo)
+python3 scripts/manta_maestro_agent_sdk.py --agent agente-saneamento "Resuma o SNIS 2025"
+
+# Libera a tool Bash (necessária para os guardiões dedup-guard/consist-guard rodarem seus .py)
+python3 scripts/manta_maestro_agent_sdk.py --allow-bash --agent agente-arquiteto-ia "rode o dedup-guard em teste.html"
+```
+
+O que o script faz:
+- Carrega o `CLAUDE.md` real (lido do disco, não uma cópia embutida) e
+  injeta como `append` do preset de system prompt `claude_code` — a
+  mesma lógica de routing S/A/F desta sessão vale igual.
+- Registra cada subagente real de `.claude/agents/*.md` como subagente
+  do SDK reaproveitando `tests/lib/agent_loader.py` (o parser que os
+  testes do repo já usam) — a lista de agentes nunca diverge entre o
+  que é testado e o que é executado aqui.
+- Carrega `.claude/skills/*` (`dedup-guard`, `consist-guard`) via
+  `skills="all"`.
+- Restringe as tools por padrão a um conjunto somente-leitura
+  (`Read`/`Grep`/`Glob`/`WebSearch`/`WebFetch`); `Bash` só entra com
+  `--allow-bash` — necessário para os guardiões rodarem seus scripts
+  `.py`, mas fora por padrão porque o script roda sem humano no loop
+  (`permission_mode=bypassPermissions`, seguro aqui porque quem limita
+  o que pode rodar é `allowed_tools`, não aprovação interativa).
+
+**Não carrega `.mcp.json` automaticamente** (`setting_sources=[]`) —
+achado desta sessão, não corrigido: o `.mcp.json` deste repositório (1)
+hoje não é JSON válido (chaves `"comment"` dentro de arrays, ex. dentro
+de `"deny": [...]`, quebram a sintaxe) e (2) mesmo corrigido, usa um
+schema (`enabled`/`tier`/`capabilities`/`authentication`/
+`rate_limiting` por servidor) que não é o formato real de `.mcp.json`
+do Claude Code/Agent SDK — que é `{"nome": {"command", "args", "env"}}`
+(stdio) ou `{"nome": {"type": "http"|"sse", "url", "headers"}}`. Para
+plugar um MCP real (SharePoint_Manta, Supabase) neste script, copie
+`scripts/mcp-config.example.json` para fora do git, preencha as env
+vars referenciadas nele (`SUPABASE_ACCESS_TOKEN` para o MCP oficial do
+Supabase via `npx`; `M365_MCP_URL`/`M365_MCP_TOKEN` para o MCP interno
+de SharePoint — confirmar com quem administra, não há URL/token real
+documentado aqui) e passe `--mcp-config caminho/da/sua/copia.json`. As
+placeholders `${VAR}`/`${VAR:default}` são expandidas pelo próprio
+`load_mcp_config()` a partir do ambiente — nada de segredo fica no
+arquivo versionado. Ver `_MCP_JSON_NOTE` no script e novo item em "GAPS
+ABERTOS".
+
+Fora do escopo desta versão: migrar o orquestrador custom de
+`src/maestro/` (routing determinístico R1, ML/consensus/XGBoost) para
+rodar sobre o Agent SDK — os dois seguem existindo em paralelo; este
+script é um entrypoint alternativo, não substitui o orquestrador
+existente.
 
 ---
 
 ## Histórico de versões
 
+- **v5.4.9** (2026-09-26) — novo entrypoint `scripts/manta_maestro_agent_sdk.py`,
+  rodando o Maestro via **Claude Agent SDK** (`claude-agent-sdk`) fora do
+  Claude Code CLI. Carrega o `CLAUDE.md` real como `append` do preset de
+  system prompt `claude_code`; registra os subagentes reais de
+  `.claude/agents/*.md` reaproveitando `tests/lib/agent_loader.py` (o
+  mesmo parser dos testes do repo, sem lista duplicada); carrega
+  `.claude/skills/*` via `skills="all"`; restringe tools a um conjunto
+  somente-leitura por padrão (`Bash` só com `--allow-bash`, necessário
+  para os guardiões). `claude-agent-sdk` adicionado a `requirements.txt`.
+  **Não** carrega `.mcp.json` automaticamente — achado desta sessão: o
+  arquivo não é JSON válido (chaves `"comment"` em arrays quebram a
+  sintaxe) e, mesmo corrigido, usa um schema que não é o formato real
+  esperado pelo Claude Code/Agent SDK; documentado como novo item em
+  "GAPS ABERTOS" em vez de reescrito às cegas (faltam credenciais reais
+  para os 4 servidores ali descritos). Fora do escopo: migrar o
+  orquestrador custom de `src/maestro/` (routing R1, ML/XGBoost) para
+  cima do Agent SDK — os dois seguem em paralelo. Adicionado
+  `scripts/mcp-config.example.json` (template real de `--mcp-config`
+  para Supabase MCP oficial + MCP interno de SharePoint) com expansão
+  de `${VAR}`/`${VAR:default}` a partir do ambiente em
+  `load_mcp_config()`, para plugar MCPs reais sem versionar segredo.
+  Ver seção "AGENT SDK — Execução fora do Claude Code CLI".
+- **v5.4.8** (2026-09-20) — criado o guardião transversal `dedup-guard`
+  (detecta tabela/bloco/rótulo duplicado ou divergente entre abas/telas de
+  qualquer artefato Manta, sem valores de negócio fixos) e sanitizado o
+  `consist-guard` (removida toda referência ao caso Huatanay/CRH-PNSU —
+  nomes, valores financeiros reais, datas e siglas do caso; CONFIG agora
+  nasce vazio, preenchido por documento/caso). Ambos versionados em
+  `.claude/skills/` neste repositório e registrados em
+  `manta_agent_capabilities` no Supabase (projeto `manta-maestro`,
+  `ogxxgvgtulrbbppshjie`). Publicação como plugin no catálogo Manta (cada
+  skill com seu próprio `backingPluginId`) continua pendente — fora do
+  alcance desta sessão.
 - **v5.4.7** (2026-09-11) — reconciliação de conhecimento por
   agente/segmento/disciplina (`docs/PLANEJAMENTO-MANTA-MAESTRO.md`).
   Re-verificação ao vivo do `INDICE-CANONICAL.md` real (v1.1) corrige

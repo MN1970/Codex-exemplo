@@ -1,0 +1,29 @@
+{
+  "_readme": "Exemplo de --mcp-config para scripts/manta_maestro_agent_sdk.py, ja no formato REAL de mcpServers do Claude Code/Agent SDK (diferente do .mcp.json deste repo, que nao e valido - ver GAPS ABERTOS no CLAUDE.md). Copie este arquivo para fora do git (ex.: ~/.manta/mcp-config.json), preencha as env vars abaixo no seu ambiente, e passe --mcp-config caminho/para/sua/copia.json. As placeholders ${VAR} e ${VAR:default} sao expandidas pelo proprio script (load_mcp_config) a partir do ambiente - nao coloque valores reais direto neste arquivo. Este topo (_readme) e ignorado pelo SDK; cada objeto dentro de mcpServers so pode ter os campos reais (command/args/env, ou type/url/headers) - nao adicione outras chaves aqui, e exatamente esse tipo de campo extra que deixou o .mcp.json deste repo incompativel com o formato real.",
+
+  "_notes": {
+    "supabase-manta-maestro": "Servidor MCP oficial do Supabase (@supabase/mcp-server-supabase, via npx/stdio). Projeto manta-maestro confirmado real em docs/SUPABASE-PROJECT-AUDIT.md. Gere o token de acesso em https://supabase.com/dashboard/account/tokens e exporte como SUPABASE_ACCESS_TOKEN.",
+    "sharepoint-manta": "MCP interno da Manta para SharePoint/M365. URL e mecanismo de autenticacao reais dependem de como esse servidor esta hospedado hoje - confirmar com quem administra antes de usar (nao ha URL/token real documentado e confirmado neste repositorio; a config abaixo assume um bearer token estatico, ajuste se o servidor real usar outro esquema). Nao confundir com o conector SharePoint_Manta desta sessao Claude, que e gerenciado pela plataforma e nao expoe URL/token brutos."
+  },
+
+  "mcpServers": {
+    "supabase-manta-maestro": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=ogxxgvgtulrbbppshjie"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}"
+      }
+    },
+    "sharepoint-manta": {
+      "type": "http",
+      "url": "${M365_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer ${M365_MCP_TOKEN}"
+      }
+    }
+  }
+}
