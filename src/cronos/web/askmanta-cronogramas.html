@@ -1,0 +1,487 @@
+  <div id="view-cronos" hidden>
+<style>
+  .crn{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+  .crn-head{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;justify-content:space-between;border-left:3px solid var(--accent);background:var(--bg-alt);padding:12px 16px;border-radius:0 6px 6px 0}
+  .crn-head h3{margin:0;font:600 18px/1.3 Montserrat,Arial,sans-serif;color:var(--heading)}
+  .crn-head p{margin:4px 0 0;font-size:13px;color:var(--muted);max-width:74ch}
+  .crn-head a{color:var(--accent-dark);font-weight:600;font-size:13px}
+  .crn-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .crn-btn{font:500 13px Inter,system-ui,sans-serif;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:7px 12px;cursor:pointer}
+  .crn-btn:hover{border-color:var(--accent);color:var(--accent-dark)}
+  .crn-btn.pri{background:var(--fill-strong);border-color:var(--fill-strong);color:#fff}
+  .crn-btn:focus-visible,.crn-sel:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .crn-btn[disabled]{opacity:.5;cursor:default}
+  .crn-drop{border:1.5px dashed var(--border);border-radius:8px;padding:12px;text-align:center;font-size:13px;color:var(--muted);margin-top:10px}
+  .crn-drop.over{border-color:var(--accent);background:var(--row-hover)}
+  .crn-h{font:600 12px Montserrat,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--title);margin:0 0 6px}
+  .crn-tw{overflow-x:auto}
+  .crn table{width:100%;border-collapse:collapse;font-size:13px}
+  .crn th{text-align:left;padding:7px 9px;font:600 11px Montserrat,Arial,sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+  .crn td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:top}
+  .crn tbody tr:nth-child(odd) td{background:var(--zebra-odd)}
+  .crn tbody tr:nth-child(even) td{background:var(--zebra-even)}
+  .crn td.n,.crn th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .crn-kpis{display:flex;flex-wrap:wrap;gap:6px 28px}
+  .crn-kpis b{display:block;font:700 24px/1.15 Montserrat,Arial,sans-serif;color:var(--accent-dark);font-variant-numeric:tabular-nums}
+  .crn-kpis span{font-size:12px;color:var(--muted)}
+  .crn-alert{color:var(--danger);font-weight:600}
+  .crn-ok{color:var(--success);font-weight:600}
+  .crn-note{font-size:12px;color:var(--muted)}
+  .crn-gantt{border:1px solid var(--border);border-radius:6px;overflow:auto;max-height:540px;background:var(--bg)}
+  .crn-gantt svg{display:block}
+  .crn-sel{font:13px Inter,system-ui,sans-serif;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);max-width:100%}
+  .crn-tag{display:inline-block;font:600 11px Inter,sans-serif;color:var(--accent-dark);border:1px solid var(--accent);border-radius:4px;padding:1px 6px;margin-left:6px}
+  .crn-curva{border:1px solid var(--border);border-radius:6px;overflow-x:auto;background:var(--bg);margin-top:8px}
+  .crn-curva svg{display:block}
+  .crn-leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--muted);margin-top:6px}
+  .crn-leg i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:4px;margin-right:6px}
+  .pv-wrap{position:relative;max-width:100%;border:1px solid var(--border);border-radius:6px;overflow:auto;max-height:640px;background:var(--bg)}
+  .pv{border-collapse:separate;border-spacing:0;table-layout:fixed;font:12px/1.2 Inter,system-ui,sans-serif;width:auto}
+  .pv th,.pv td{text-align:left;padding:0 6px;height:20px;border-bottom:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--bg)}
+  .pv thead th{position:sticky;top:0;z-index:3;height:34px;background:var(--bg-alt);font:600 11px Inter,system-ui,sans-serif;color:var(--heading);text-transform:none;letter-spacing:0;vertical-align:bottom;padding-bottom:4px;white-space:normal;line-height:1.15}
+  .pv .c0{position:sticky;left:0;z-index:2}.pv .c1{position:sticky;left:96px;z-index:2;border-right:1px solid var(--border)}
+  .pv thead .c0,.pv thead .c1{z-index:4}
+  .pv td.n,.pv th.n{text-align:right;font-variant-numeric:tabular-nums}
+  .pv tr.e td{font-weight:600;color:var(--heading)}
+  .pv tr.e0 td{background:color-mix(in srgb,var(--accent) 26%,var(--bg))}.pv tr.e1 td{background:color-mix(in srgb,var(--accent) 17%,var(--bg))}
+  .pv tr.e2 td{background:color-mix(in srgb,var(--accent) 11%,var(--bg))}.pv tr.e3 td{background:color-mix(in srgb,var(--accent) 6%,var(--bg))}
+  .pv tr.crit td.c1{color:var(--danger)}
+  .pv tr[hidden]{display:none}
+  .pv .tg{cursor:pointer;display:inline-block;width:12px;color:var(--accent-dark)}
+  .pv td.g{position:relative;padding:0;overflow:visible;background:transparent}
+  .pv .b{position:absolute;top:5px;height:10px;border-radius:2px;background:var(--accent)}
+  .pv .b.cr{background:var(--danger)}.pv .b.ok{background:var(--muted)}
+  .pv .b.s{top:7px;height:6px;border-radius:0;background:var(--heading)}
+  .pv .b.s::before,.pv .b.s::after{content:"";position:absolute;top:0;border:4px solid transparent;border-top:5px solid var(--heading)}
+  .pv .b.s::before{left:-4px;top:6px}.pv .b.s::after{right:-4px;top:6px}
+  .pv .m{position:absolute;top:5px;width:9px;height:9px;transform:translateX(-4.5px) rotate(45deg);background:var(--accent)}
+  .pv .m.cr{background:var(--danger)}.pv .m.ok{background:var(--muted)}
+  .pv .esc{position:relative;height:30px}.pv .esc span{position:absolute;font-weight:500;color:var(--muted);font-size:10px;padding-left:3px;border-left:1px solid var(--border);height:14px;line-height:14px}
+  .pv-dd{position:absolute;top:0;width:0;border-left:2px dashed var(--accent);z-index:1;pointer-events:none}
+  .crn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+</style>
+<div class="crn" id="crn-root">
+  <div class="crn-head">
+    <div>
+      <h3>Manta Cronos · Visualizador de cronogramas</h3>
+      <p>Abra vários cronogramas ao mesmo tempo (XER do Primavera P6 e XML do MS Project). Leitura, cálculo e exportação acontecem no seu navegador; nenhum arquivo é enviado a servidor. Motor v0.3: calendários do P6 e do MS Project, data de status, datas reais, restrições, DCMA-14 (regra A5), curva S física e financeira, valor agregado e linha do tempo de N versões.</p>
+    </div>
+    <a href="https://claude.ai/artifact/GARM33Qm2i4zLmvUSXGL6C" target="_blank" rel="noopener">Plano completo do Cronos ↗</a>
+  </div>
+
+  <div>
+    <div class="crn-bar">
+      <label class="crn-btn pri" for="crn-file">Abrir cronogramas…</label>
+      <input id="crn-file" type="file" accept=".xer,.xml,.pdf" multiple hidden>
+      <label class="crn-btn" for="crn-dir">Abrir pasta…</label>
+      <input id="crn-dir" type="file" webkitdirectory multiple hidden>
+      <button type="button" class="crn-btn" id="crn-sample">Carregar exemplo</button>
+      <button type="button" class="crn-btn" id="crn-clear">Limpar</button>
+      <label class="crn-note"><input type="checkbox" id="crn-hist"> incluir versões históricas (OBSOLETO, DEPRECATED)</label>
+    </div>
+    <div class="crn-drop" id="crn-drop">Ou arraste arquivos .xer, .xml ou .pdf aqui. PDF: relatório impresso do Primavera (layout com colunas de ID, nome, início e término; texto, não imagem). Para .mpp: no MS Project use Arquivo › Salvar como › XML.</div>
+    <p class="crn-note" id="crn-status" aria-live="polite"></p>
+  </div>
+
+  <div>
+    <div class="crn-h">1. Versões abertas</div>
+    <div class="crn-tw"><table><thead><tr><th>Arquivo</th><th>Projeto</th><th>Data status</th><th class="n">Atividades</th><th class="n">Ligações</th><th>Término</th><th class="n">Custo total</th><th>DCMA-14</th><th></th></tr></thead>
+    <tbody id="crn-versions"></tbody></table></div>
+  </div>
+
+  <div id="crn-detail" hidden>
+    <div class="crn-h" id="crn-dtitle">2. Versão</div>
+    <div class="crn-kpis" id="crn-kpis"></div>
+    <p class="crn-note" id="crn-avisos"></p>
+    <div class="crn-bar" style="margin:10px 0">
+      <button type="button" class="crn-btn" id="crn-mc">Simular Monte Carlo</button>
+      <button type="button" class="crn-btn" id="crn-exp-xer">Exportar XER (.zip)</button>
+      <button type="button" class="crn-btn" id="crn-exp-xml">Exportar MS Project XML (.zip)</button>
+      <button type="button" class="crn-btn" id="crn-exp-csv">Exportar atividades (.csv)</button>
+      <label class="crn-note"><input type="checkbox" id="crn-onlycrit"> só atividades críticas</label>
+    </div>
+    <p class="crn-note" id="crn-mcout" aria-live="polite"></p>
+    <div class="crn-bar" style="margin-bottom:8px">
+      <span class="crn-note">Visão Primavera · níveis da EAP:</span>
+      <button type="button" class="crn-btn" data-pv-nivel="1">1</button><button type="button" class="crn-btn" data-pv-nivel="2">2</button><button type="button" class="crn-btn" data-pv-nivel="3">3</button><button type="button" class="crn-btn" data-pv-nivel="99">Tudo</button>
+      <input class="crn-sel" id="crn-pv-filtro" type="search" placeholder="Filtrar ID ou nome" aria-label="Filtrar atividades">
+      <button type="button" class="crn-btn" id="crn-exp-pv">Exportar visão Primavera (.html em .zip)</button>
+    </div>
+    <div class="pv-wrap" id="crn-gantt"></div>
+    <p class="crn-note" id="crn-pv-nota">Visão no formato do Primavera: EAP em árvore (clique ▸/▾ para abrir e fechar), colunas do P6 e barras. Vermelho: folga total ≤ 0. Cinza: concluída. Barra escura: resumo da EAP. Linha tracejada: data de status.</p>
+    <div class="crn-h" style="margin-top:12px">2.1 Caminho crítico</div>
+    <div class="crn-tw"><table><thead><tr><th>Código</th><th>Atividade</th><th>EAP</th><th>Início</th><th>Término</th><th class="n">Folga (d)</th><th class="n">Custo</th><th>Fonte</th></tr></thead>
+    <tbody id="crn-crit"></tbody></table></div>
+    <div class="crn-h" style="margin-top:12px" id="crn-dcma-t">2.2 DCMA-14</div>
+    <div class="crn-tw"><table><thead><tr><th class="n">Ponto</th><th>Verificação</th><th class="n">Valor</th><th>Limite</th><th>Resultado</th><th>Detalhe</th></tr></thead>
+    <tbody id="crn-dcma"></tbody></table></div>
+    <p class="crn-note">Regra A5: nota ≥ 90% dos pontos aplicáveis e nenhuma reprovação nos pontos 1, 3, 6, 7 e 11. Pontos 11 e 14 usam as datas planejadas do XER como aproximação da linha de base.</p>
+    <div class="crn-h" style="margin-top:12px">2.3 Curva S e valor agregado</div>
+    <div class="crn-kpis" id="crn-evm"></div>
+    <div class="crn-bar" style="margin-top:8px"><select class="crn-sel" id="crn-curva-tipo" aria-label="Tipo de curva"><option value="f">Curva financeira (R$)</option><option value="p">Curva física (%)</option></select></div>
+    <div class="crn-curva" id="crn-curva"></div>
+    <div class="crn-leg"><span><i style="border-color:var(--muted);border-top-style:dashed"></i>Planejado (linha de base)</span><span><i style="border-color:var(--accent)"></i>Previsto (realizado + remanescente)</span><span><i style="border-color:var(--accent);border-top-style:dotted"></i>Data de status</span></div>
+    <p class="crn-note" id="crn-evm-nota">Custo e peso físico distribuídos uniformemente nas horas úteis de cada atividade. Índices conforme ANSI/EIA-748: SPI = EV/PV, CPI = EV/AC, EAC = BAC/CPI, TCPI = (BAC − EV)/(BAC − AC).</p>
+  </div>
+
+  <div id="crn-cmpbox" hidden>
+    <div class="crn-h">3. Linha do tempo das versões</div>
+    <div class="crn-tw"><table><thead><tr><th>Versão</th><th>Data status</th><th>Término</th><th class="n">Δ término (dias corridos)</th><th class="n">Custo total</th><th class="n">Δ custo</th><th class="n">Críticas</th></tr></thead>
+    <tbody id="crn-linha"></tbody></table></div>
+    <div class="crn-h" style="margin-top:12px">3.1 Tendência de marcos</div>
+    <div class="crn-tw" id="crn-marcos"></div>
+    <p class="crn-note">Versões em ordem de data de status; marcos casados pelo código. Deslizamento = término do marco na última versão menos na primeira em que aparece.</p>
+    <div class="crn-h" style="margin-top:12px">3.2 Comparar duas versões</div>
+    <div class="crn-bar"><select class="crn-sel" id="crn-a" aria-label="Versão A"></select><span>×</span><select class="crn-sel" id="crn-b" aria-label="Versão B"></select><button type="button" class="crn-btn" id="crn-cmp">Comparar</button></div>
+    <div id="crn-cmpout" style="margin-top:10px"></div>
+  </div>
+</div>
+<script src="cronos/cronos-engine.js"></script>
+<script>
+(function(){
+  var E = window.CronosEngine;
+  var ST = {v: [], sel: null}, DIA = 86400000;
+  var $ = function(id){ return document.getElementById(id); };
+  if(!E){ $('crn-status').textContent = 'Motor do Cronos não carregou; recarregue a página.'; return; }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function fmt(n, d){ return Number(n).toLocaleString('pt-BR', {minimumFractionDigits: d||0, maximumFractionDigits: d||0}); }
+  var br = E.fmtBR;
+
+  function preparar(p, exemplo){
+    p.exemplo = !!exemplo; p.cs = null; p.va = null;
+    try{ if(p.somenteLeitura){ p.r = E.resultadoDasDatas(p); p.dcma = null; } else { p.r = E.calcular(p); p.dcma = E.dcma14(p, p.r); } p.err = null; }
+    catch(e){ p.r = null; p.err = e.message; p.dcma = null; }
+    ST.v = ST.v.filter(function(x){ return x.chave !== p.chave; }).concat([p]);
+  }
+
+  function lerArquivos(files){
+    var arr = Array.prototype.slice.call(files).filter(function(f){ return /\.(xer|xml|pdf)$/i.test(f.name); });
+    var incluir = $('crn-hist').checked, ignorados = [], erros = [], feitos = 0, ultimo = null;
+    if(!arr.length){ $('crn-status').textContent = 'Nenhum arquivo .xer, .xml ou .pdf encontrado.'; return; }
+    $('crn-status').textContent = 'Lendo ' + arr.length + ' arquivo(s)…';
+    arr.forEach(function(file){
+      var caminho = file.webkitRelativePath || file.name;
+      if(!incluir && E.eHistorico(caminho)){ ignorados.push(file.name); if(++feitos === arr.length) fim(); return; }
+      file.arrayBuffer().then(function(buf){
+        if(/\.pdf$/i.test(file.name)) return textoPDF(buf).then(function(pags){ E.lerRelatorioPDF(pags, file.name).forEach(function(p){ preparar(p); ultimo = p.chave; }); });
+        var xer = /\.xer$/i.test(file.name);
+        var txt = new TextDecoder(xer ? 'latin1' : 'utf-8').decode(buf);
+        var ps = xer ? E.lerXER(txt, file.name) : E.lerMSPDI(txt, file.name);
+        ps.forEach(function(p){ preparar(p); ultimo = p.chave; });
+      }).catch(function(e){ erros.push(file.name + ': ' + e.message); }).then(function(){ if(++feitos === arr.length) fim(); });
+    });
+    function fim(){
+      renderVersoes(); if(ultimo) mostrar(ultimo);
+      var msg = ST.v.length + ' versão(ões) abertas';
+      if(ignorados.length) msg += ' · ' + ignorados.length + ' histórica(s) ignorada(s): ' + ignorados.slice(0, 5).join(', ') + (ignorados.length > 5 ? '…' : '');
+      if(erros.length) msg += ' · erros: ' + erros.join(' · ');
+      $('crn-status').textContent = msg;
+    }
+  }
+
+  /* ---- PDF: pdf.js da mesma versão que o Ask Manta já usa; o worker roda na página ---- */
+  var PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  function script(url){ return new Promise(function(ok, falha){ var s = document.createElement('script'); s.src = url; s.onload = ok; s.onerror = function(){ falha(new Error('não carregou ' + url)); }; document.head.appendChild(s); }); }
+  function carregarPDFjs(){
+    var fila = Promise.resolve();
+    if(!window.pdfjsLib) fila = fila.then(function(){ return script(PDFJS + 'pdf.min.js'); });
+    return fila.then(function(){ if(!(window.pdfjsWorker && window.pdfjsWorker.WorkerMessageHandler)) return script(PDFJS + 'pdf.worker.min.js'); })
+      .then(function(){ if(!window.pdfjsLib.GlobalWorkerOptions.workerSrc) window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; });
+  }
+  async function textoPDF(buf){
+    await carregarPDFjs();
+    var doc = await window.pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise, pags = [];
+    for(var i = 1; i <= doc.numPages; i++){
+      var pg = await doc.getPage(i), vp = pg.getViewport({ scale: 1 }), tc = await pg.getTextContent();
+      pags.push(tc.items.filter(function(it){ return it.str && it.str.trim(); }).map(function(it){ var t = window.pdfjsLib.Util.transform(vp.transform, it.transform); return { x: t[4], y: -t[5], s: it.str }; }));
+      if(i % 10 === 0) $('crn-status').textContent = 'Lendo PDF: página ' + i + ' de ' + doc.numPages + '…';
+    }
+    return pags;
+  }
+
+  function renderVersoes(){
+    var tb = $('crn-versions');
+    if(!ST.v.length){ tb.innerHTML = '<tr><td colspan="9" class="crn-note">Nenhum cronograma aberto. Use “Abrir cronogramas…”, “Abrir pasta…” ou “Carregar exemplo”.</td></tr>'; $('crn-cmpbox').hidden = true; return; }
+    tb.innerHTML = ST.v.map(function(p){
+      var d = p.dcma;
+      return '<tr><td>' + esc(p.arquivo) + (p.exemplo ? '<span class="crn-tag">exemplo</span>' : '') + '</td><td>' + esc(p.nome) + '</td><td>' + br(p.dataStatus) + '</td>' +
+        '<td class="n">' + fmt(Object.keys(p.at).length) + '</td><td class="n">' + fmt(p.lig.length) + '</td>' +
+        '<td>' + (p.r ? br(p.r.termino) : '<span class="crn-alert">' + esc(p.err) + '</span>') + '</td>' +
+        '<td class="n">' + (p.custo ? 'R$ ' + fmt(p.custo, 2) : '<span class="crn-alert">sem custos</span>') + '</td>' +
+        '<td>' + (d ? (d.aprovado ? '<span class="crn-ok">' + fmt(d.nota * 100) + '% aprovado</span>' : '<span class="crn-alert">' + fmt(d.nota * 100) + '% reprovado</span>') : p.somenteLeitura ? '<span class="crn-note">PDF · sem lógica</span>' : '—') + '</td>' +
+        '<td><button type="button" class="crn-btn" data-crn-ver="' + esc(p.chave) + '">Ver</button></td></tr>';
+    }).join('');
+    var opts = ST.v.map(function(p){ return '<option value="' + esc(p.chave) + '">' + esc(p.arquivo + ' · ' + p.nome) + '</option>'; }).join('');
+    $('crn-a').innerHTML = opts; $('crn-b').innerHTML = opts;
+    if(ST.v.length > 1){ $('crn-a').selectedIndex = 0; $('crn-b').selectedIndex = ST.v.length - 1; }
+    $('crn-cmpbox').hidden = ST.v.length < 2;
+    linhaDoTempo();
+  }
+  function porChave(k){ return ST.v.filter(function(p){ return p.chave === k; })[0]; }
+
+  function mostrar(chave){
+    var p = porChave(chave); if(!p) return;
+    ST.sel = chave; $('crn-detail').hidden = false; $('crn-mcout').textContent = '';
+    $('crn-dtitle').textContent = '2. Versão · ' + p.arquivo + ' · ' + p.nome;
+    ['crn-mc','crn-exp-xer','crn-exp-xml','crn-exp-csv'].forEach(function(id){ $(id).disabled = !p.r; });
+    $('crn-exp-xer').disabled = !p.r || !p.origem;
+    if(!p.r){ $('crn-kpis').innerHTML = '<span class="crn-alert">' + esc(p.err) + '</span>'; $('crn-gantt').innerHTML = ''; $('crn-crit').innerHTML = ''; $('crn-dcma').innerHTML = ''; $('crn-avisos').textContent = ''; return; }
+    var r = p.r, d = p.dcma || { nota: 0, aprovado: false, bloqueios: [], pontos: [], aplicaveis: 0 };
+    $('crn-mc').disabled = !!p.somenteLeitura;
+    $('crn-kpis').innerHTML = [
+      [br(r.termino), 'término calculado'], [br(r.dataStatus), 'data de status'], [fmt(r.criticas.length), 'atividades críticas'],
+      [p.custo ? 'R$ ' + fmt(p.custo / 1e6, 2) + ' mi' : '—', p.custo ? 'custo total (cost-loaded)' : 'sem carregamento de custos'],
+      p.somenteLeitura ? ['PDF', 'sem lógica: DCMA-14, CPM e Monte Carlo não se aplicam'] : [fmt(d.nota * 100) + '%', 'DCMA-14 · ' + (d.aprovado ? 'aprovado' : 'reprovado' + (d.bloqueios.length ? ' (bloqueios ' + d.bloqueios.join(', ') + ')' : ''))]
+    ].map(function(k){ return '<div><b>' + k[0] + '</b><span>' + esc(k[1]) + '</span></div>'; }).join('');
+    $('crn-avisos').textContent = r.avisos.concat(p.alertas).join(' · ');
+    gantt(p);
+    var crit = r.criticas.slice().sort(function(a, b){ return r.es[a] - r.es[b]; });
+    $('crn-crit').innerHTML = crit.slice(0, 100).map(function(u){
+      var a = p.at[u];
+      return '<tr><td>' + esc(a.cod) + '</td><td>' + esc(a.nome) + '</td><td>' + esc(a.wbs) + '</td><td>' + br(r.es[u]) + '</td><td>' + br(r.ef[u]) + '</td><td class="n">' + fmt(E.folgaDias(p, r, u), 1) + '</td><td class="n">' + (a.custo ? fmt(a.custo, 2) : '—') + '</td><td class="crn-note">' + esc(a.fonte) + '</td></tr>';
+    }).join('') + (crit.length > 100 ? '<tr><td colspan="8" class="crn-note">… mais ' + (crit.length - 100) + ' atividades críticas</td></tr>' : '') || '<tr><td colspan="8" class="crn-note">Nenhuma atividade crítica aberta.</td></tr>';
+    $('crn-dcma-t').textContent = p.somenteLeitura ? '2.2 DCMA-14 · não aplicável (PDF sem predecessoras)' : '2.2 DCMA-14 · nota ' + fmt(d.nota * 100) + '% (' + d.aplicaveis + ' pontos aplicáveis)';
+    $('crn-dcma').innerHTML = d.pontos.map(function(x){
+      var res = !x.aplicavel ? '<span class="crn-note">não aplicável</span>' : x.passou ? '<span class="crn-ok">passou</span>' : '<span class="crn-alert">reprovado' + ([1,3,6,7,11].indexOf(x.ponto) >= 0 ? ' · bloqueia' : '') + '</span>';
+      return '<tr><td class="n">' + x.ponto + '</td><td>' + esc(x.nome) + '</td><td class="n">' + esc(x.valor) + '</td><td>' + esc(x.limite) + '</td><td>' + res + '</td><td class="crn-note">' + esc(x.detalhe) + (x.exemplos.length ? ' · ex.: ' + esc(x.exemplos.join(', ')) : '') + '</td></tr>';
+    }).join('') || '<tr><td colspan="6" class="crn-note">O PDF não traz as ligações entre atividades. Para DCMA-14, CPM e Monte Carlo, abra o XER da mesma versão.</td></tr>';
+    evm(p);
+  }
+
+  function indice(v){ return v == null ? '—' : fmt(v, 2); }
+  function mi(v){ return v == null ? '—' : 'R$ ' + fmt(v / 1e6, 2) + ' mi'; }
+  function evm(p){
+    p.cs = p.cs || E.curvaS(p, p.r); p.va = p.va || E.valorAgregado(p, p.r);
+    var v = p.va, cls = function(x){ return x == null ? '' : x < 0.95 ? ' style="color:var(--danger)"' : x >= 1 ? ' style="color:var(--success)"' : ''; };
+    $('crn-evm').innerHTML = [
+      [mi(v.BAC), 'BAC · orçamento no término'], [mi(v.PV), 'PV · valor planejado'], [mi(v.EV), 'EV · valor agregado'], [mi(v.AC), 'AC · custo real'],
+      [indice(v.SPI), 'SPI · desempenho de prazo', cls(v.SPI)], [indice(v.CPI), 'CPI · desempenho de custo', cls(v.CPI)],
+      [mi(v.EAC), 'EAC · estimativa no término'], [indice(v.TCPI), 'TCPI · desempenho necessário']
+    ].map(function(k){ return '<div><b' + (k[2] || '') + '>' + k[0] + '</b><span>' + esc(k[1]) + '</span></div>'; }).join('');
+    var av = v.avisos.slice();
+    if(p.cs.linhaDeBaseProxy) av.push('Sem datas planejadas (target) em todas as atividades: a curva planejada usa as datas calculadas como aproximação da linha de base.');
+    if(!v.BAC) av.push('Cronograma sem carregamento de custos: curva financeira vazia.');
+    $('crn-evm-nota').innerHTML = (av.length ? '<span class="crn-alert">' + esc(av.join(' ')) + '</span> ' : '') + 'Custo e peso físico distribuídos uniformemente nas horas úteis de cada atividade. Índices conforme ANSI/EIA-748: SPI = EV/PV, CPI = EV/AC, EAC = BAC/CPI, TCPI = (BAC − EV)/(BAC − AC).';
+    curva(p);
+  }
+  function curva(p){
+    var css = getComputedStyle(document.documentElement), tok = function(n, f){ return css.getPropertyValue(n).trim() || f; };
+    var cT = tok('--text', '#374151'), cM = tok('--muted', '#6B7280'), cB = tok('--border', '#E5DDD3'), cA = tok('--accent', '#E07B3D');
+    var ms = p.cs.meses, fin = $('crn-curva-tipo').value === 'f';
+    if(!ms.length || (fin && !p.cs.bac)){ $('crn-curva').innerHTML = '<p class="crn-note" style="padding:10px">Sem dados para a curva ' + (fin ? 'financeira (sem custos).' : 'física.') + '</p>'; return; }
+    var kP = fin ? 'planejadoCusto' : 'planejadoFisicoPct', kF = fin ? 'previstoCusto' : 'previstoFisicoPct', top = fin ? p.cs.bac : 100;
+    var W = Math.max(640, Math.min(1150, 60 + ms.length * 26)), H = 260, L = 70, R = 14, T = 12, B = 34, sx = (W - L - R) / Math.max(ms.length - 1, 1), sy = (H - T - B) / (top || 1);
+    var X = function(i){ return L + i * sx; }, Y = function(v){ return H - B - v * sy; };
+    var s = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" font-family="Inter,system-ui,sans-serif" font-size="11" role="img" aria-label="Curva S ' + (fin ? 'financeira' : 'física') + '">';
+    for(var g = 0; g <= 4; g++){ var gv = top * g / 4, gy = Y(gv); s += '<line x1="' + L + '" y1="' + gy + '" x2="' + (W - R) + '" y2="' + gy + '" stroke="' + cB + '"/><text x="' + (L - 6) + '" y="' + (gy + 4) + '" text-anchor="end" fill="' + cM + '">' + (fin ? fmt(gv / 1e6, 1) + ' mi' : fmt(gv) + '%') + '</text>'; }
+    var passo = Math.ceil(ms.length / 18);
+    ms.forEach(function(m, i){ if(i % passo === 0) s += '<text x="' + X(i) + '" y="' + (H - B + 16) + '" text-anchor="middle" fill="' + cM + '">' + m.mes.slice(5) + '/' + m.mes.slice(2, 4) + '</text>'; });
+    var dd = new Date(p.r.dataStatus), iD = ms.map(function(m){ return m.mes; }).indexOf(dd.getUTCFullYear() + '-' + ('0' + (dd.getUTCMonth() + 1)).slice(-2));
+    if(iD >= 0){ var fr = (dd.getUTCDate() - 1) / 30, xd = X(Math.max(iD - 1 + fr, 0)); s += '<line x1="' + xd + '" y1="' + T + '" x2="' + xd + '" y2="' + (H - B) + '" stroke="' + cA + '" stroke-dasharray="2 3"><title>Data de status ' + br(p.r.dataStatus) + '</title></line>'; }
+    var linha = function(k, cor, tr){ return '<polyline fill="none" stroke="' + cor + '" stroke-width="2"' + (tr ? ' stroke-dasharray="6 4"' : '') + ' points="' + ms.map(function(m, i){ return X(i).toFixed(1) + ',' + Y(m[k]).toFixed(1); }).join(' ') + '"/>'; };
+    s += linha(kP, cM, true) + linha(kF, cA, false);
+    ms.forEach(function(m, i){ s += '<circle cx="' + X(i) + '" cy="' + Y(m[kF]) + '" r="6" fill="transparent"><title>' + esc(m.mes + ' · planejado ' + (fin ? 'R$ ' + fmt(m[kP], 2) : fmt(m[kP], 1) + '%') + ' · previsto ' + (fin ? 'R$ ' + fmt(m[kF], 2) : fmt(m[kF], 1) + '%')) + '</title></circle>'; });
+    $('crn-curva').innerHTML = s + '</svg>';
+  }
+
+  function linhaDoTempo(){
+    var ok = ST.v.filter(function(p){ return p.r; });
+    if(ok.length < 2){ $('crn-linha').innerHTML = ''; $('crn-marcos').innerHTML = ''; return; }
+    var lt = E.linhaDoTempo(ok), rot = {};
+    ok.forEach(function(p){ rot[p.chave] = p.arquivo + ' · ' + p.nome; });
+    var sinal = function(x, d){ return x == null ? '—' : '<span' + (x > 0 ? ' class="crn-alert"' : '') + '>' + (x > 0 ? '+' : '') + fmt(x, d) + '</span>'; };
+    $('crn-linha').innerHTML = lt.versoes.map(function(v){
+      return '<tr><td>' + esc(rot[v.chave] || v.chave) + '</td><td>' + br(v.dataStatus) + '</td><td>' + (v.termino ? br(v.termino) : '<span class="crn-alert">' + esc(v.erro) + '</span>') + '</td><td class="n">' + sinal(v.deltaTerminoDias, 1) + '</td><td class="n">R$ ' + fmt(v.custoTotal, 2) + '</td><td class="n">' + sinal(v.deltaCusto, 2) + '</td><td class="n">' + (v.criticas == null ? '—' : fmt(v.criticas)) + '</td></tr>';
+    }).join('');
+    var ord = lt.versoes.map(function(v){ return v.chave; }).filter(function(k){ return rot[k]; });
+    $('crn-marcos').innerHTML = lt.tendenciaMarcos.length ? '<table><thead><tr><th>Marco</th>' + ord.map(function(k){ return '<th>' + esc(porChave(k).arquivo) + '</th>'; }).join('') + '<th class="n">Deslizamento (dias corridos)</th></tr></thead><tbody>' +
+      lt.tendenciaMarcos.slice(0, 60).map(function(m){ return '<tr><td>' + esc(m.codigo + ' · ' + m.nome) + '</td>' + ord.map(function(k){ return '<td>' + (m.datas[k] !== undefined ? br(m.datas[k]) : '—') + '</td>'; }).join('') + '<td class="n">' + sinal(m.deslizamentoDias, 1) + '</td></tr>'; }).join('') + '</tbody></table>'
+      : '<p class="crn-note">Nenhum marco em comum entre as versões abertas.</p>';
+  }
+
+  /* ---- Visão Primavera: EAP em árvore + colunas do P6 + Gantt (mesma marcação na aba e no HTML exportado) ---- */
+  var PV = {nivel: 99, filtro: ''};
+  function brc(t){ if(t == null) return ''; var d = new Date(t); return ('0' + d.getUTCDate()).slice(-2) + '/' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '/' + String(d.getUTCFullYear()).slice(2); }
+  function linhasPrimavera(p){
+    var r = p.r, crit = {}, todas = E.arvoreEAP(p, r), q = PV.filtro.trim().toLowerCase(), only = $('crn-onlycrit').checked;
+    r.criticas.forEach(function(u){ crit[u] = 1; });
+    if(!q && !only) return {linhas: todas, crit: crit};
+    var ok = function(u){ var a = p.at[u]; return (!only || crit[u]) && (!q || (a.cod + ' ' + a.nome).toLowerCase().indexOf(q) >= 0); };
+    var out = [], pilha = [];
+    todas.forEach(function(l){
+      if(l.k === 'eap'){ while(pilha.length && pilha[pilha.length - 1].nivel >= l.nivel) pilha.pop(); pilha.push({l: l, nivel: l.nivel, posto: false}); return; }
+      if(!ok(l.u)) return;
+      pilha.forEach(function(x){ if(!x.posto){ out.push(x.l); x.posto = true; } });
+      out.push(l);
+    });
+    return {linhas: out, crit: crit};
+  }
+  function marcacaoPrimavera(p){
+    var r = p.r, L = linhasPrimavera(p), linhas = L.linhas, crit = L.crit;
+    if(!linhas.length) return {html: '<p class="crn-note" style="padding:10px">Nada para mostrar com este filtro.</p>', n: 0};
+    var datas = [r.dataStatus]; linhas.forEach(function(l){ var i = l.k === 'eap' ? l.ini : r.es[l.u], f = l.k === 'eap' ? l.fim : r.ef[l.u]; if(i != null) datas.push(i); if(f != null) datas.push(f); });
+    var d0 = new Date(Math.min.apply(null, datas)), t0 = Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth(), 1), d1 = new Date(Math.max.apply(null, datas)), t1 = Date.UTC(d1.getUTCFullYear(), d1.getUTCMonth() + 1, 1);
+    var meses = (d1.getUTCFullYear() - d0.getUTCFullYear()) * 12 + d1.getUTCMonth() - d0.getUTCMonth() + 1, W = Math.max(700, Math.min(2600, meses * (meses > 48 ? 12 : 28))), X = function(t){ return ((t - t0) / (t1 - t0) * W).toFixed(1); };
+    var esc0 = '', passo = meses > 48 ? 3 : 1;
+    for(var m = t0; m < t1; ){ var dm = new Date(m), mm = dm.getUTCMonth(); if(mm === 0 || m === t0) esc0 += '<span style="left:' + X(m) + 'px;top:0">' + dm.getUTCFullYear() + '</span>'; if(mm % passo === 0) esc0 += '<span style="left:' + X(m) + 'px;top:15px">' + (passo === 3 ? 'T' + (mm / 3 + 1) : ('0' + (mm + 1)).slice(-2)) + '</span>'; m = Date.UTC(dm.getUTCFullYear(), mm + 1, 1); }
+    var cw = [96, 340, 64, 84, 84, 62, 104], LW = cw.reduce(function(a, b){ return a + b; }, 0), ch = 0;
+    var h = '<table class="pv" style="width:' + (LW + W) + 'px"><colgroup>' + cw.map(function(w){ return '<col style="width:' + w + 'px">'; }).join('') + '<col style="width:' + W + 'px"></colgroup>' +
+      '<thead><tr><th class="c0">ID</th><th class="c1">Nome da atividade</th><th class="n" title="Duração remanescente, em dias">Rem. (d)</th><th>Início</th><th>Término</th><th class="n" title="Folga total, em dias">Folga (d)</th><th class="n">Custo</th><th class="g"><div class="esc">' + esc0 + '</div></th></tr></thead><tbody>';
+    linhas.forEach(function(l){
+      ch++;
+      var pad = 'padding-left:' + (6 + l.nivel * 14) + 'px';
+      if(l.k === 'eap'){
+        var bw = l.ini != null && l.fim != null ? '<div class="b s" style="left:' + X(l.ini) + 'px;width:' + Math.max(2, X(l.fim) - X(l.ini)) + 'px" title="' + esc(l.nome + ' — ' + brc(l.ini) + ' a ' + brc(l.fim)) + '"></div>' : '';
+        h += '<tr class="e e' + Math.min(l.nivel, 3) + '" data-nv="' + l.nivel + '"><td class="c0"><span class="tg" data-pv-t>▾</span>' + esc(l.codigo || '') + '</td><td class="c1" style="' + pad + '" title="' + esc(l.nome) + '">' + esc(l.nome) + '</td><td class="n"></td><td>' + brc(l.ini) + '</td><td>' + brc(l.fim) + '</td><td class="n"></td><td class="n">' + (l.custo ? fmt(l.custo, 0) : '') + '</td><td class="g">' + bw + '</td></tr>';
+        return;
+      }
+      var a = p.at[l.u], i = r.es[l.u], f = r.ef[l.u], cls = a.status === 'concluida' ? 'ok' : crit[l.u] ? 'cr' : '', fol = r.folgaH[l.u];
+      var dica = esc(a.cod + ' ' + a.nome + ' — ' + brc(i) + (a.iniReal != null ? ' A' : '') + ' a ' + brc(f) + (a.fimReal != null ? ' A' : '') + (fol !== undefined ? ', folga ' + fmt(E.folgaDias(p, r, l.u), 1) + ' d' : ''));
+      var barra = f - i < 60000 ? '<div class="m ' + cls + '" style="left:' + X(i) + 'px" title="' + dica + '"></div>' : '<div class="b ' + cls + '" style="left:' + X(i) + 'px;width:' + Math.max(2, X(f) - X(i)) + 'px" title="' + dica + '"></div>';
+      h += '<tr class="' + (crit[l.u] ? 'crit' : '') + '" data-nv="' + l.nivel + '"><td class="c0">' + esc(a.cod) + '</td><td class="c1" style="' + pad + '" title="' + esc(a.nome) + '">' + esc(a.nome) + '</td><td class="n">' + fmt(a.restH / E.calDe(p, a).horasDia, 0) + '</td><td>' + brc(i) + (a.iniReal != null ? ' A' : '') + '</td><td>' + brc(f) + (a.fimReal != null ? ' A' : '') + '</td><td class="n">' + (fol !== undefined ? fmt(E.folgaDias(p, r, l.u), 0) : '') + '</td><td class="n">' + (a.custo ? fmt(a.custo, 0) : '') + '</td><td class="g">' + barra + '</td></tr>';
+    });
+    h += '</tbody></table><div class="pv-dd" style="left:' + (LW + +X(r.dataStatus)) + 'px;height:' + (34 + ch * 21) + 'px" title="Data de status ' + brc(r.dataStatus) + '"></div>';
+    return {html: h, n: ch};
+  }
+  /* Abre/fecha pela ordem e pelo nível das linhas (mesmo algoritmo no HTML exportado). */
+  var VISIB = 'function(tb){var fx=null;Array.prototype.forEach.call(tb.rows,function(tr){var nv=+tr.getAttribute("data-nv");if(fx!==null&&nv<=fx)fx=null;tr.hidden=fx!==null;if(fx===null&&tr.classList.contains("fechado"))fx=nv;var t=tr.querySelector("[data-pv-t]");if(t)t.textContent=tr.classList.contains("fechado")?"\u25b8":"\u25be";});}';
+  var visibilidade = new Function('return ' + VISIB)();
+  function nivelPrimavera(tb, n){ Array.prototype.forEach.call(tb.rows, function(tr){ if(tr.classList.contains('e')) tr.classList.toggle('fechado', +tr.getAttribute('data-nv') >= n - 1); }); visibilidade(tb); }
+  function gantt(p){
+    var m = marcacaoPrimavera(p); $('crn-gantt').innerHTML = m.html;
+    var tb = $('crn-gantt').querySelector('tbody'); if(tb && PV.nivel < 99) nivelPrimavera(tb, PV.nivel);
+  }
+  function htmlPrimavera(p){
+    var css = Array.prototype.map.call(document.querySelectorAll('#crn-root style, #view-cronos style'), function(s){ return s.textContent; }).join('\n');
+    var cs = getComputedStyle(document.documentElement), v = ['--bg','--bg-alt','--text','--muted','--border','--accent','--accent-dark','--heading','--danger'].map(function(k){ return k + ':' + (cs.getPropertyValue(k).trim() || '#888'); }).join(';');
+    var m = marcacaoPrimavera(p), r = p.r;
+    return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(p.nome) + ' · visão Primavera</title><style>:root{' + v + '}body{margin:16px;background:var(--bg);color:var(--text);font:13px Inter,system-ui,sans-serif}h1{font:600 16px Montserrat,Arial,sans-serif;color:var(--heading);margin:0 0 4px}.nt{color:var(--muted);font-size:12px;margin:0 0 10px}.bt{font:12px Inter,sans-serif;border:1px solid var(--border);background:var(--bg);border-radius:5px;padding:4px 9px;cursor:pointer;margin-right:4px}' + css + '.pv-wrap{max-height:none}</style></head><body>' +
+      '<h1>' + esc(p.nome) + '</h1><p class="nt">' + esc(p.arquivo) + ' · data de status ' + brc(r.dataStatus) + ' · término ' + brc(r.termino) + ' · ' + m.n + ' linhas · gerado pelo Manta Cronos em ' + brc(Date.now()) + (p.somenteLeitura ? ' · lido de PDF (sem lógica)' : '') + '</p>' +
+      '<p><span class="nt">Níveis da EAP: </span><button class="bt" data-n="1">1</button><button class="bt" data-n="2">2</button><button class="bt" data-n="3">3</button><button class="bt" data-n="99">Tudo</button></p>' +
+      '<div class="pv-wrap">' + m.html + '</div><script>(function(){var vis=' + VISIB + ',tb=document.querySelector(".pv tbody");document.addEventListener("click",function(e){var t=e.target.closest("[data-pv-t]");if(t){t.closest("tr").classList.toggle("fechado");vis(tb);}var b=e.target.closest("[data-n]");if(b){var n=+b.getAttribute("data-n");Array.prototype.forEach.call(tb.rows,function(tr){if(tr.classList.contains("e"))tr.classList.toggle("fechado",+tr.getAttribute("data-nv")>=n-1);});vis(tb);}});})();<\/script></body></html>';
+  }
+
+  function comparar(){
+    var a = porChave($('crn-a').value), b = porChave($('crn-b').value);
+    if(!a || !b || !a.r || !b.r){ $('crn-cmpout').innerHTML = '<span class="crn-alert">Escolha duas versões calculadas.</span>'; return; }
+    var ca = {}, cb = {};
+    Object.keys(a.at).forEach(function(u){ if(E.noCalculo(a.at[u])) ca[a.at[u].cod] = u; });
+    Object.keys(b.at).forEach(function(u){ if(E.noCalculo(b.at[u])) cb[b.at[u].cod] = u; });
+    var soA = Object.keys(ca).filter(function(c){ return !(c in cb); }), soB = Object.keys(cb).filter(function(c){ return !(c in ca); }), alt = [];
+    var critA = {}, critB = {}; a.r.criticas.forEach(function(u){ critA[u] = 1; }); b.r.criticas.forEach(function(u){ critB[u] = 1; });
+    Object.keys(ca).forEach(function(c){
+      if(!(c in cb)) return;
+      var ua = ca[c], ub = cb[c], xa = a.at[ua], xb = b.at[ub], hd = E.calDe(b, xb).horasDia;
+      var ds = (b.r.es[ub] - a.r.es[ua]) / DIA, dd = (xb.restH - xa.restH) / hd, dc = xb.custo - xa.custo, ka = !!critA[ua], kb = !!critB[ub];
+      if(Math.abs(ds) > 1e-6 || Math.abs(dd) > 1e-6 || Math.abs(dc) > 0.005 || ka !== kb) alt.push({c: c, n: xb.nome, ds: ds, dd: dd, dc: dc, ka: ka, kb: kb});
+    });
+    alt.sort(function(x, y){ return Math.abs(y.ds) - Math.abs(x.ds); });
+    var dT = (b.r.termino - a.r.termino) / DIA;
+    var h = '<div class="crn-kpis"><div><b>' + br(a.r.termino) + ' → ' + br(b.r.termino) + '</b><span>término (Δ ' + fmt(dT, 1) + ' dias corridos)</span></div>' +
+      '<div><b>R$ ' + fmt(a.custo / 1e6, 2) + ' → ' + fmt(b.custo / 1e6, 2) + ' mi</b><span>custo total</span></div>' +
+      '<div><b>' + fmt(soA.length) + ' / ' + fmt(soB.length) + '</b><span>só na A / só na B</span></div><div><b>' + fmt(alt.length) + '</b><span>atividades alteradas</span></div></div>';
+    h += '<div class="crn-tw" style="margin-top:10px"><table><thead><tr><th>Código</th><th>Atividade</th><th class="n">Δ início (dias corridos)</th><th class="n">Δ duração (dias úteis)</th><th class="n">Δ custo</th><th>Crítica A → B</th></tr></thead><tbody>' +
+      alt.slice(0, 150).map(function(x){ return '<tr><td>' + esc(x.c) + '</td><td>' + esc(x.n) + '</td><td class="n">' + fmt(x.ds, 1) + '</td><td class="n">' + fmt(x.dd, 1) + '</td><td class="n">' + fmt(x.dc, 2) + '</td><td>' + (x.ka ? 'sim' : 'não') + ' → ' + (x.kb ? '<b>sim</b>' : 'não') + '</td></tr>'; }).join('') +
+      (alt.length > 150 ? '<tr><td colspan="6" class="crn-note">… mais ' + (alt.length - 150) + ' alteradas</td></tr>' : '') + '</tbody></table></div>';
+    if(soB.length) h += '<p class="crn-note">Só na B (primeiras 30): ' + esc(soB.slice(0, 30).join(', ')) + '</p>';
+    if(soA.length) h += '<p class="crn-note">Só na A (primeiras 30): ' + esc(soA.slice(0, 30).join(', ')) + '</p>';
+    h += '<p class="crn-note">Casamento pelo código da atividade; atividades renumeradas entre versões serão casadas pelo agente A5.2 nas próximas fases.</p>';
+    $('crn-cmpout').innerHTML = h;
+  }
+
+  /* ---- ZIP sem compressão: .xer e .xml não estão na lista de downloads permitidos ---- */
+  var CRC = (function(){ var t = new Uint32Array(256); for(var n = 0; n < 256; n++){ var c = n; for(var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  function crc32(b){ var c = 0xFFFFFFFF; for(var i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+  function zip(nome, bytes){
+    var nm = new TextEncoder().encode(nome), crc = crc32(bytes), n = bytes.length;
+    var lh = new DataView(new ArrayBuffer(30)), ch = new DataView(new ArrayBuffer(46)), fim = new DataView(new ArrayBuffer(22));
+    [[0,0x04034b50,4],[4,20,2],[6,0x0800,2],[8,0,2],[10,0,2],[12,0x21,2],[14,crc,4],[18,n,4],[22,n,4],[26,nm.length,2],[28,0,2]].forEach(function(f){ f[2] === 4 ? lh.setUint32(f[0], f[1], true) : lh.setUint16(f[0], f[1], true); });
+    [[0,0x02014b50,4],[4,20,2],[6,20,2],[8,0x0800,2],[10,0,2],[12,0,2],[14,0x21,2],[16,crc,4],[20,n,4],[24,n,4],[28,nm.length,2],[30,0,2],[32,0,2],[34,0,2],[36,0,2],[38,0,4],[42,0,4]].forEach(function(f){ f[2] === 4 ? ch.setUint32(f[0], f[1], true) : ch.setUint16(f[0], f[1], true); });
+    var off = 30 + nm.length + n;
+    [[0,0x06054b50,4],[4,0,2],[6,0,2],[8,1,2],[10,1,2],[12,46 + nm.length,4],[16,off,4],[20,0,2]].forEach(function(f){ f[2] === 4 ? fim.setUint32(f[0], f[1], true) : fim.setUint16(f[0], f[1], true); });
+    return new Blob([lh.buffer, nm, bytes, ch.buffer, nm, fim.buffer], {type: 'application/zip'});
+  }
+  function latin1(s){ var b = new Uint8Array(s.length); for(var i = 0; i < s.length; i++){ var c = s.charCodeAt(i); b[i] = c < 256 ? c : 63; } return b; }
+  function base(p){ return p.arquivo.replace(/\.(xer|xml|pdf)$/i, '') + '_cronos'; }
+  async function salvar(filename, data){
+    var st = $('crn-mcout');
+    try{
+      var dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+      if(!dl){ st.textContent = 'Download indisponível nesta visualização.'; return; }
+      await dl.save({filename: filename, data: data});
+      st.textContent = 'Arquivo entregue: ' + filename;
+    }catch(e){
+      var c = e && e.code;
+      st.textContent = c === 'declined' ? 'Download cancelado.' : c === 'rate_limited' ? 'Há uma confirmação de download aberta; conclua-a e tente de novo.' : 'Não foi possível baixar: ' + ((e && e.message) || c || 'erro');
+    }
+  }
+  function atual(){ var p = porChave(ST.sel); return p && p.r ? p : null; }
+  $('crn-exp-xer').addEventListener('click', function(){ var p = atual(); if(!p) return; var n = base(p); salvar(n + '.zip', zip(n + '.xer', latin1(E.gravarXER(p, p.r)))); });
+  $('crn-exp-xml').addEventListener('click', function(){ var p = atual(); if(!p) return; var n = base(p); salvar(n + '_msproject.zip', zip(n + '.xml', new TextEncoder().encode(E.gravarMSPDI(p, p.r)))); });
+  $('crn-exp-csv').addEventListener('click', function(){
+    var p = atual(); if(!p) return; var r = p.r, q = function(v){ v = String(v == null ? '' : v); return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var linhas = [['codigo','atividade','eap','status','inicio','termino','inicio_tarde','termino_tarde','folga_dias','critica','custo','fonte'].join(';')];
+    var crit = {}; r.criticas.forEach(function(u){ crit[u] = 1; });
+    r.ordem.forEach(function(u){ var a = p.at[u]; linhas.push([a.cod, a.nome, a.wbs, a.status, E.fmtXER(r.es[u]), E.fmtXER(r.ef[u]), E.fmtXER(r.ls[u]), E.fmtXER(r.lf[u]),
+      r.folgaH[u] === undefined ? '' : E.folgaDias(p, r, u).toFixed(1).replace('.', ','), crit[u] ? 'sim' : 'não', a.custo.toFixed(2).replace('.', ','), a.fonte].map(q).join(';')); });
+    salvar(base(p) + '_atividades.csv', '﻿' + linhas.join('\r\n'));
+  });
+
+  $('crn-mc').addEventListener('click', function(){
+    var p = atual(); if(!p) return;
+    var n = Object.keys(p.at).length > 3000 ? 150 : 400;
+    $('crn-mcout').textContent = 'Simulando ' + n + ' iterações…';
+    setTimeout(function(){ var m = E.monteCarlo(p, n); $('crn-mcout').textContent = n + ' iterações (triangular 0,9 / 1,0 / 1,3 sobre o remanescente): determinístico ' + br(m.deterministico) + ' · P50 ' + br(m.p50) + ' · P80 ' + br(m.p80) + ' · P90 ' + br(m.p90); }, 30);
+  });
+
+  function exemplo(v2){
+    var R = function(t, f, rows){ return '%T\t' + t + '\r\n%F\t' + f.join('\t') + '\r\n' + rows.map(function(r){ return '%R\t' + r.join('\t'); }).join('\r\n') + '\r\n'; };
+    var util = '(0||0(s|08:00|f|12:00)())(0||1(s|13:00|f|17:00)())', sem = '';
+    for(var n = 1; n <= 7; n++) sem += '(0||' + n + '()(' + (n >= 2 && n <= 6 ? util : '') + '))';
+    var cal = '(0||CalendarData()((0||DaysOfWeek()(' + sem + '))(0||Exceptions()((0||0(d|45677)())))))';
+    var tk = [['1','A100','Estaca do apoio 1','160','TK_Complete','2025-01-06 08:00','2025-01-31 17:00','0','TT_Task'],
+              ['2','A110','Bloco do apoio 1','80', v2 ? 'TK_Complete' : 'TK_Active','2025-02-03 08:00', v2 ? '2025-02-21 17:00' : '', v2 ? '0' : '40','TT_Task'],
+              ['3','A120','Pilar do apoio 1','120', v2 ? 'TK_Active' : 'TK_NotStart', v2 ? '2025-02-24 08:00' : '','', v2 ? '72' : '120','TT_Task'],
+              ['4','A130','Sondagem complementar','40','TK_NotStart','','','40','TT_Task'],
+              ['5','A140','Superestrutura do vão 1', v2 ? '280' : '200','TK_NotStart','','', v2 ? '280' : '200','TT_Task'],
+              ['6','M900','Liberação do tráfego','0','TK_NotStart','','','0','TT_FinMile']];
+    if(v2) tk.push(['7','A150','Estaca do apoio 2 (nova)','96','TK_NotStart','','','96','TT_Task']);
+    var pd = [['2','1','PR_FS','0'],['3','2','PR_SS','40'],['5','3','PR_FS','0'],['6','5','PR_FS','0'],['6','4','PR_FS','0']];
+    if(v2) pd.push(['5','7','PR_FS','0']);
+    return 'ERMHDR\t19.12\r\n' + R('CALENDAR',['clndr_id','clndr_name','day_hr_cnt','clndr_data'],[['C1','Padrão 5x8','8',cal]]) +
+      R('PROJECT',['proj_id','proj_short_name','last_recalc_date','plan_start_date','plan_end_date','clndr_id'],[['1','EXEMPLO-OAE', v2 ? '2025-03-10 08:00' : '2025-02-10 08:00','2025-01-06 08:00','','C1']]) +
+      R('PROJWBS',['wbs_id','proj_id','wbs_name'],[['W1','1','Ponte exemplo']]) +
+      R('TASK',['task_id','proj_id','wbs_id','clndr_id','task_code','task_name','target_drtn_hr_cnt','status_code','act_start_date','act_end_date','remain_drtn_hr_cnt','task_type'],
+        tk.map(function(x){ return [x[0],'1','W1','C1',x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]]; })) +
+      R('TASKPRED',['task_pred_id','task_id','pred_task_id','proj_id','pred_type','lag_hr_cnt'], pd.map(function(x, i){ return [String(i + 1), x[0], x[1], '1', x[2], x[3]]; })) +
+      R('TASKRSRC',['taskrsrc_id','task_id','proj_id','target_cost','act_reg_cost'],[['1','1','1', v2 ? '1450000' : '1200000','1310000'],['2','2','1','650000', v2 ? '520000' : '280000'],['3','3','1','900000','0'],['4','5','1','2300000','0']].concat(v2 ? [['5','7','1','800000','0']] : [])) + '%E\r\n';
+  }
+
+  $('crn-file').addEventListener('change', function(e){ lerArquivos(e.target.files); e.target.value = ''; });
+  $('crn-dir').addEventListener('change', function(e){ lerArquivos(e.target.files); e.target.value = ''; });
+  var dz = $('crn-drop');
+  ['dragenter','dragover'].forEach(function(ev){ dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.add('over'); }); });
+  ['dragleave','drop'].forEach(function(ev){ dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove('over'); }); });
+  dz.addEventListener('drop', function(e){ if(e.dataTransfer && e.dataTransfer.files) lerArquivos(e.dataTransfer.files); });
+  $('crn-sample').addEventListener('click', function(){
+    var bl = E.lerXER(exemplo(false), 'exemplo-BL01.xer')[0], at = E.lerXER(exemplo(true), 'exemplo-AT02.xer')[0], rb = E.calcular(bl), pl = {};
+    Object.keys(bl.at).forEach(function(u){ if(rb.es[u] != null) pl[bl.at[u].cod] = [rb.es[u], rb.ef[u]]; });
+    [bl, at].forEach(function(p){ Object.keys(p.at).forEach(function(u){ var j = pl[p.at[u].cod]; if(j){ p.at[u].iniPlan = j[0]; p.at[u].fimPlan = j[1]; } }); preparar(p, true); });
+    renderVersoes(); mostrar('exemplo-AT02.xer#1'); $('crn-status').textContent = 'Exemplo ilustrativo carregado (dados fictícios): linha de base BL01 e atualização AT02.';
+  });
+  $('crn-clear').addEventListener('click', function(){ ST.v = []; ST.sel = null; $('crn-detail').hidden = true; $('crn-cmpout').innerHTML = ''; $('crn-status').textContent = ''; renderVersoes(); });
+  $('crn-versions').addEventListener('click', function(e){ var b = e.target.closest('[data-crn-ver]'); if(b) mostrar(b.getAttribute('data-crn-ver')); });
+  $('crn-onlycrit').addEventListener('change', function(){ var p = atual(); if(p) gantt(p); });
+  $('crn-gantt').addEventListener('click', function(e){ var t = e.target.closest('[data-pv-t]'); if(!t) return; t.closest('tr').classList.toggle('fechado'); visibilidade($('crn-gantt').querySelector('tbody')); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-pv-nivel]'), function(b){ b.addEventListener('click', function(){ PV.nivel = +b.getAttribute('data-pv-nivel'); var tb = $('crn-gantt').querySelector('tbody'); if(tb) nivelPrimavera(tb, PV.nivel); }); });
+  var tFiltro = null; $('crn-pv-filtro').addEventListener('input', function(e){ clearTimeout(tFiltro); tFiltro = setTimeout(function(){ PV.filtro = e.target.value; var p = atual(); if(p) gantt(p); }, 250); });
+  $('crn-exp-pv').addEventListener('click', function(){ var p = atual(); if(!p) return; var n = base(p); salvar(n + '_primavera.zip', zip(n + '_primavera.html', new TextEncoder().encode(htmlPrimavera(p)))); });
+  $('crn-curva-tipo').addEventListener('change', function(){ var p = atual(); if(p) curva(p); });
+  $('crn-cmp').addEventListener('click', comparar);
+  renderVersoes();
+  $('crn-sample').click();
+  comparar();
+})();
+</script>
+  </div>
+
