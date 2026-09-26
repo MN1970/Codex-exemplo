@@ -1,0 +1,16 @@
+2026-07-25 02:19:14,526 [INFO] ================================================================================
+2026-07-25 02:19:14,526 [INFO] Starting Agent Regeneration (CLAUDE.md v5.0)
+2026-07-25 02:19:14,526 [INFO] ================================================================================
+2026-07-25 02:19:14,526 [INFO] 
+======================================================================
+2026-07-25 02:19:14,526 [INFO] Processing agent: agente-saneamento
+2026-07-25 02:19:14,526 [INFO] ======================================================================
+2026-07-25 02:19:14,527 [INFO] Current checksum:  3435f9cb...
+2026-07-25 02:19:14,527 [INFO] Expected checksum: f1a3d2b4...
+2026-07-25 02:19:14,527 [INFO] Has drift: True
+2026-07-25 02:19:14,527 [INFO] Generating canonical content...
+2026-07-25 02:19:14,527 [INFO] New checksum: c1bcebed...
+2026-07-25 02:19:14,527 [INFO] [DRY-RUN] Would apply changes:
+2026-07-25 02:19:14,527 [INFO]   - Write .claude/agents/agente-saneamento.md
+2026-07-25 02:19:14,527 [INFO]   - Update VERSIONS.json: f1a3d2b4... -> c1bcebed...
+2026-07-25 02:19:14,527 [INFO]   - Pin settings.json: agente-saneamento = v5.0
