@@ -3,8 +3,9 @@ from datetime import date, datetime
 
 import pytest
 
-from cronos.engine import (calcular, comparar, dcma14, e_historico, folga_dias, gravar_mspdi, gravar_xer,
-                           ler_arquivo, ler_clndr_data, ler_mspdi, ler_xer, monte_carlo)
+from cronos.engine import (calcular, comparar, curva_s, dcma14, e_historico, folga_dias, gravar_mspdi, gravar_xer,
+                           ler_arquivo, ler_clndr_data, ler_mspdi, ler_xer, linha_do_tempo, monte_carlo,
+                           valor_agregado)
 from cronos.engine.calendar import Calendario
 
 from cronos_xer_sintetico import clndr_5x8, montar_xer, t
@@ -174,7 +175,9 @@ def test_mspdi_exporta_e_reimporta(xer_basico):
     tipos = sorted(l.tipo for l in q.ligacoes)
     assert tipos == ["FS", "FS", "FS", "SS"]
     assert any(abs(l.lag_h - 16) < 1e-6 for l in q.ligacoes)
-    assert calcular(q)["termino"].date() == date(2025, 1, 20)   # MSPDI F1 usa 5×8 sem feriado
+    assert calcular(q)["termino"] == r["termino"]                # calendário e feriado preservados
+    cal = q.cal(next(iter(q.atividades.values())))
+    assert cal.excecoes == {date(2025, 1, 20): []} and cal.semana[5] == []
 
 
 def test_so_dados_vigentes(tmp_path, xer_basico):
@@ -204,3 +207,50 @@ def test_monte_carlo_reprodutivel(xer_basico):
     m1, m2 = monte_carlo(p, n=60), monte_carlo(p, n=60)
     assert m1 == m2
     assert m1["P10"] <= m1["P50"] <= m1["P80"] <= m1["P90"]
+
+
+# ---------------------------------------------------------------- F2: curva S, valor agregado, versões
+def test_curva_s_e_valor_agregado():
+    """A (40h, R$100k) concluída; B (40h, R$50k) com 50% físico; C (40h, R$30k) não iniciada."""
+    txt = montar_xer(
+        [t("1", "A", 40, status="TK_Complete", ini="2025-01-06 08:00", fim="2025-01-10 17:00", rest=0,
+           tini="2025-01-06 08:00", tfim="2025-01-10 17:00"),
+         t("2", "B", 40, status="TK_Active", ini="2025-01-13 08:00", rest=24,
+           tini="2025-01-13 08:00", tfim="2025-01-17 17:00"),
+         t("3", "C", 40, tini="2025-01-21 08:00", tfim="2025-01-27 17:00")],
+        [("1", "2", "PR_FS"), ("2", "3", "PR_FS")],
+        recursos=[("1", 100000), ("2", 50000), ("3", 30000)],
+        projetos=(("1", "TESTE", "2025-01-15 08:00", "", ""),))
+    txt = txt.replace("taskrsrc_id\ttask_id\tproj_id\ttarget_cost",
+                      "taskrsrc_id\ttask_id\tproj_id\ttarget_cost\tact_reg_cost")
+    linhas = txt.split("\r\n")
+    ini = linhas.index("%T\tTASKRSRC")
+    for i, real in zip(range(ini + 2, ini + 5), (110000, 20000, 0)):
+        linhas[i] += f"\t{real}"
+    p = projeto("\r\n".join(linhas))
+    ev = valor_agregado(p)
+    assert ev["BAC"] == 180000
+    assert ev["PV"] == 120000                               # A inteira + 2 de 5 dias de B até 15/01 08h
+    assert ev["EV"] == pytest.approx(100000 + 50000 * 16 / 40)
+    assert ev["AC"] == 130000
+    assert ev["SPI"] == pytest.approx(round(120000 / 120000, 3))
+    assert ev["CPI"] == pytest.approx(round(120000 / 130000, 3))
+    cs = curva_s(p)
+    assert cs["meses"][-1]["planejado_custo"] == 180000 and cs["meses"][-1]["previsto_fisico_pct"] == 100
+    assert cs["meses"][0]["mes"] == "2025-01" and not cs["linha_de_base_proxy"]
+
+
+def test_valor_agregado_sem_custo_real(xer_basico):
+    ev = valor_agregado(projeto(xer_basico))
+    assert ev["AC"] is None and ev["CPI"] is None and ev["avisos"]
+
+
+def test_linha_do_tempo_e_tendencia_de_marcos(xer_basico):
+    v1 = ler_xer(texto=xer_basico, nome="v1.xer")[0]
+    v2 = ler_xer(texto=xer_basico.replace("\tA100\tAtividade A100\t40\t40", "\tA100\tAtividade A100\t56\t56")
+                 .replace("2025-01-06 08:00\t2025-01-06 08:00", "2025-02-03 08:00\t2025-01-06 08:00", 1), nome="v2.xer")[0]
+    lt = linha_do_tempo([v2, v1])
+    assert [v["chave"] for v in lt["versoes"]] == ["v1.xer#1", "v2.xer#1"]     # ordem por data de status
+    assert lt["versoes"][1]["delta_termino_dias_corridos"] > 0
+    m = lt["tendencia_marcos"][0]
+    assert m["codigo"] == "M900" and m["deslizamento_dias_corridos"] > 0

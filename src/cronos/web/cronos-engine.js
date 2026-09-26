@@ -162,8 +162,8 @@
       catch (e) { alertas.push("Calendário " + c.clndr_id + " ilegível, usado o padrão 5×8: " + e.message); }
     });
     var wbs = {}; L("PROJWBS").forEach(function (w) { wbs[w.wbs_id] = w.wbs_name || ""; });
-    var custo = {}, rec = {};
-    L("TASKRSRC").forEach(function (r) { custo[r.task_id] = (custo[r.task_id] || 0) + num(r.target_cost); rec[r.task_id] = true; });
+    var custo = {}, real = {}, rec = {};
+    L("TASKRSRC").forEach(function (r) { custo[r.task_id] = (custo[r.task_id] || 0) + num(r.target_cost); real[r.task_id] = (real[r.task_id] || 0) + num(r.act_reg_cost) + num(r.act_ot_cost); rec[r.task_id] = true; });
     var P = {}, ordem = [];
     L("PROJECT").forEach(function (p) {
       P[p.proj_id] = { id: p.proj_id, nome: p.proj_short_name || p.proj_id, arquivo: arq, chave: arq + "#" + p.proj_id,
@@ -182,7 +182,8 @@
         durH: num(a.target_drtn_hr_cnt), restH: rest, cal: a.clndr_id || "",
         iniReal: dataXER(a.act_start_date), fimReal: dataXER(a.act_end_date),
         iniPlan: dataXER(a.target_start_date), fimPlan: dataXER(a.target_end_date),
-        restricoes: restr, custo: custo[a.task_id] || 0, temRecurso: !!rec[a.task_id],
+        restricoes: restr, custo: custo[a.task_id] || 0, custoReal: real[a.task_id] || 0,
+        pctFisico: a.phys_complete_pct !== undefined && a.phys_complete_pct !== "" ? num(a.phys_complete_pct) : null, temRecurso: !!rec[a.task_id],
         fonte: arq + " › TASK › linha " + a._linha };
     });
     L("TASKPRED").forEach(function (r) {
@@ -198,26 +199,91 @@
 
   /* ---------------- MSPDI ---------------- */
   function horasISO(v) { var m = /PT(\d+(?:\.\d+)?)H(\d+(?:\.\d+)?)M(\d+(?:\.\d+)?)S/.exec(v || ""); return m ? num(m[1]) + num(m[2]) / 60 + num(m[3]) / 3600 : 0; }
+  function filhos(el, n) { var o = []; if (!el) return o; for (var i = 0; i < el.children.length; i++) if (el.children[i].localName === n) o.push(el.children[i]); return o; }
+  function hhmm(v) { var p = String(v || "0:0").split(":"); return +p[0] + (+p[1]) / 60; }
+  function faixasMS(el) {
+    var o = [];
+    filhos(filhos(el, "WorkingTimes")[0], "WorkingTime").forEach(function (w) {
+      var s = hhmm((filhos(w, "FromTime")[0] || {}).textContent), e = hhmm((filhos(w, "ToTime")[0] || {}).textContent);
+      if (e <= s) e = e === 0 ? 24 : e + 24; o.push([s, Math.min(e, 24)]);
+    });
+    return o.sort(function (a, b) { return a[0] - b[0]; });
+  }
+  function diasMS(tp, g) {
+    if (!tp) return [];
+    var a = dataXER(g(tp, "FromDate")), b = dataXER(g(tp, "ToDate")) || a, o = [];
+    if (a == null) return o;
+    for (var d = Math.floor(a / DIA) * DIA; d <= b && o.length < 3660; d += DIA) o.push(d);
+    return o;
+  }
+  function calendariosMSPDI(raiz, g, hd, base) {
+    var cals = { _padrao: new Calendario("_padrao", "Padrão 5×8", null, null, hd, base) }, alertas = [], brutos = {};
+    filhos(filhos(raiz, "Calendars")[0], "Calendar").forEach(function (c) {
+      var sem = {}, exc = {};
+      filhos(filhos(c, "WeekDays")[0], "WeekDay").forEach(function (wd) {
+        var tp = g(wd, "DayType"), fx = g(wd, "DayWorking") === "1" ? faixasMS(wd) : [];
+        if (tp === "0") diasMS(filhos(wd, "TimePeriod")[0], g).forEach(function (d) { exc[d] = fx; });
+        else if (+tp >= 1 && +tp <= 7) sem[(+tp + 5) % 7] = fx;
+      });
+      filhos(filhos(c, "Exceptions")[0], "Exception").forEach(function (ex) {
+        var fx = g(ex, "DayWorking") === "1" ? faixasMS(ex) : [];
+        diasMS(filhos(ex, "TimePeriod")[0], g).forEach(function (d) { exc[d] = fx; });
+      });
+      brutos[g(c, "UID")] = { nome: g(c, "Name") || g(c, "UID"), base: g(c, "BaseCalendarUID"), sem: sem, exc: exc };
+    });
+    Object.keys(brutos).forEach(function (uid) {
+      var b = brutos[uid], h = brutos[b.base], sem = {}, exc = {}, k;
+      for (var d = 0; d < 7; d++) sem[d] = b.sem[d] !== undefined ? b.sem[d] : (h && h.sem[d] !== undefined ? h.sem[d] : cals._padrao.semana[d]);
+      if (h) for (k in h.exc) exc[k] = h.exc[k];
+      for (k in b.exc) exc[k] = b.exc[k];
+      try { cals[uid] = new Calendario(uid, b.nome, sem, exc, hd, base); }
+      catch (e) { alertas.push("Calendário " + uid + " (" + b.nome + ") ignorado: " + e.message); }
+    });
+    return { cals: cals, alertas: alertas };
+  }
+  /* Leitor XML mínimo (Node/testes, sem DOMParser): elementos com localName, children e textContent. */
+  function xmlMin(txt) {
+    var ent = function (v) { return v.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, "&"); };
+    var raiz = { localName: "#doc", children: [], textContent: "" }, pilha = [raiz], re = /<(\/?)([A-Za-z_][\w:.-]*)[^>]*?(\/?)>|([^<]+)|<[!?][^>]*>/g, m, todos = [];
+    while ((m = re.exec(txt))) {
+      var topo = pilha[pilha.length - 1];
+      if (m[4] !== undefined) { var tx = ent(m[4]); pilha.forEach(function (e) { e.textContent += tx; }); continue; }
+      if (!m[2]) continue;
+      var nome = m[2].replace(/^.*:/, "");
+      if (m[1]) { if (pilha.length > 1) pilha.pop(); continue; }
+      var el = { localName: nome, children: [], textContent: "" }; topo.children.push(el); todos.push(el);
+      if (!m[3]) pilha.push(el);
+    }
+    return { documentElement: raiz.children[0], getElementsByTagName: function (n) { return todos.filter(function (e) { return e.localName === n; }); } };
+  }
+  var CT_DE = { "1": "ALAP", "2": "MSO", "3": "MFO", "4": "SNET", "5": "SNLT", "6": "FNET", "7": "FNLT" }, CT_PARA = {};
+  Object.keys(CT_DE).forEach(function (k) { CT_PARA[CT_DE[k]] = k; });
   function lerMSPDI(txt, arq) {
-    var d = new DOMParser().parseFromString(txt, "application/xml");
+    var d = typeof DOMParser !== "undefined" ? new DOMParser().parseFromString(txt, "application/xml") : xmlMin(txt);
     if (d.getElementsByTagName("parsererror").length || !d.getElementsByTagName("Tasks").length) throw new Error("XML não reconhecido como MS Project (MSPDI)");
     var g = function (el, n) { for (var i = 0; i < el.children.length; i++) if (el.children[i].localName === n) return el.children[i].textContent.trim(); return ""; };
     var raiz = d.documentElement, ini = dataXER(g(raiz, "StartDate"));
     var base = Date.UTC((ini ? new Date(ini).getUTCFullYear() : 2000) - 2, 0, 1);
-    var cal = new Calendario("_padrao", "Padrão do MS Project", null, null, num(g(raiz, "MinutesPerDay") || 480) / 60, base);
+    var hd = num(g(raiz, "MinutesPerDay") || 480) / 60, cx = calendariosMSPDI(raiz, g, hd, base), pad = g(raiz, "CalendarUID");
     var pr = { id: "1", nome: g(raiz, "Name") || g(raiz, "Title") || arq, arquivo: arq, chave: arq + "#1",
-      dataStatus: dataXER(g(raiz, "StatusDate")) || ini, inicioPlan: ini, terminoExigido: null, calPadrao: "_padrao",
-      calendarios: { _padrao: cal }, at: {}, lig: [], alertas: ["Calendários do MSPDI ainda não são lidos: usado o padrão 5×8"], origem: null };
+      dataStatus: dataXER(g(raiz, "StatusDate")) || ini, inicioPlan: ini, terminoExigido: null, calPadrao: cx.cals[pad] ? pad : "_padrao",
+      calendarios: cx.cals, at: {}, lig: [], alertas: cx.alertas, origem: null };
     var tasks = d.getElementsByTagName("Tasks")[0].children;
     for (var i = 0; i < tasks.length; i++) {
       var t = tasks[i]; if (g(t, "Summary") === "1" || g(t, "IsNull") === "1" || !g(t, "Name")) continue;
       var uid = g(t, "UID"), pc = num(g(t, "PercentComplete")), dur = horasISO(g(t, "Duration"));
       var rest = g(t, "RemainingDuration") ? horasISO(g(t, "RemainingDuration")) : dur;
+      var fimR = dataXER(g(t, "ActualFinish")), iniR = dataXER(g(t, "ActualStart"));
+      var stt = pc >= 100 || fimR != null ? "concluida" : pc > 0 || iniR != null ? "em_andamento" : "nao_iniciada";
+      var ct = CT_DE[g(t, "ConstraintType")];
       pr.at[uid] = { uid: uid, cod: g(t, "WBS") || g(t, "ID") || uid, nome: g(t, "Name"), wbs: g(t, "OutlineNumber"),
-        tipo: g(t, "Milestone") === "1" ? "marco_fim" : "tarefa", status: pc >= 100 ? "concluida" : pc > 0 ? "em_andamento" : "nao_iniciada",
-        durH: dur, restH: pc >= 100 ? 0 : rest, cal: "", iniReal: dataXER(g(t, "ActualStart")), fimReal: dataXER(g(t, "ActualFinish")),
-        iniPlan: dataXER(g(t, "Start")), fimPlan: dataXER(g(t, "Finish")), restricoes: [], custo: num(g(t, "Cost")),
+        tipo: g(t, "Milestone") === "1" ? "marco_fim" : "tarefa", status: stt,
+        durH: dur, restH: stt === "concluida" ? 0 : rest, cal: "", iniReal: iniR, fimReal: fimR,
+        iniPlan: dataXER(g(t, "Start")), fimPlan: dataXER(g(t, "Finish")),
+        restricoes: ct ? [{ tipo: ct, data: dataXER(g(t, "ConstraintDate")) }] : [], custo: num(g(t, "Cost")),
+        custoReal: num(g(t, "ActualCost")), pctFisico: g(t, "PhysicalPercentComplete") ? num(g(t, "PhysicalPercentComplete")) : null,
         temRecurso: num(g(t, "Cost")) > 0, fonte: arq + " › Task UID " + uid };
+      if (cx.cals[g(t, "CalendarUID")]) pr.at[uid].cal = g(t, "CalendarUID");
     }
     var TD = { "0": "FF", "1": "FS", "2": "SF", "3": "SS" };
     for (var j = 0; j < tasks.length; j++) {
@@ -396,29 +462,47 @@
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c]; }); }
   function iso(t) { return t == null ? "" : fmtXER(t).replace(" ", "T") + ":00"; }
   function durISO(h) { h = Math.max(h, 0); var i = Math.floor(h); return "PT" + i + "H" + Math.round((h - i) * 60) + "M0S"; }
-  function gravarMSPDI(p, r) {
-    var cal = p.calendarios[p.calPadrao] || p.calendarios._padrao, num0 = {}, preds = {};
-    r.ordem.forEach(function (u, i) { num0[u] = i + 1; });
-    r.ligacoes.forEach(function (l) { (preds[l.s] = preds[l.s] || []).push(l); });
-    var TP = { FF: 0, FS: 1, SF: 2, SS: 3 };
-    var hh = function (x) { return p2(Math.floor(x) % 24) + ":" + p2(Math.round((x % 1) * 60)) + ":00"; };
-    var semana = "";
+  function semanaXML(cal) {
+    var hh = function (x) { return p2(Math.floor(x) % 24) + ":" + p2(Math.round((x % 1) * 60)) + ":00"; }, s = "";
     for (var d = 0; d < 7; d++) {
       var iv = cal.semana[d] || [];
-      semana += "<WeekDay><DayType>" + ((d + 1) % 7 + 1) + "</DayType><DayWorking>" + (iv.length ? 1 : 0) + "</DayWorking>" +
+      s += "<WeekDay><DayType>" + ((d + 1) % 7 + 1) + "</DayType><DayWorking>" + (iv.length ? 1 : 0) + "</DayWorking>" +
         (iv.length ? "<WorkingTimes>" + iv.map(function (x) { return "<WorkingTime><FromTime>" + hh(x[0]) + "</FromTime><ToTime>" + hh(x[1]) + "</ToTime></WorkingTime>"; }).join("") + "</WorkingTimes>" : "") + "</WeekDay>";
     }
+    return s;
+  }
+  function excecoesXML(cal) {
+    var hh = function (x) { return p2(Math.floor(x) % 24) + ":" + p2(Math.round((x % 1) * 60)) + ":00"; };
+    var ks = Object.keys(cal.excecoes).map(Number).sort(function (a, b) { return a - b; });
+    if (!ks.length) return "";
+    return "<Exceptions>" + ks.map(function (k) {
+      var fx = cal.excecoes[k], d = fmtXER(k).slice(0, 10);
+      return "<Exception><EnteredByOccurrences>0</EnteredByOccurrences><TimePeriod><FromDate>" + d + "T00:00:00</FromDate><ToDate>" + d + "T23:59:00</ToDate></TimePeriod><Occurrences>1</Occurrences><Type>1</Type><DayWorking>" + (fx.length ? 1 : 0) + "</DayWorking>" +
+        (fx.length ? "<WorkingTimes>" + fx.map(function (x) { return "<WorkingTime><FromTime>" + hh(x[0]) + "</FromTime><ToTime>" + hh(x[1]) + "</ToTime></WorkingTime>"; }).join("") + "</WorkingTimes>" : "") + "</Exception>";
+    }).join("") + "</Exceptions>";
+  }
+  function cstrXML(a) {
+    var c = (a.restricoes || []).filter(function (x) { return CT_PARA[x.tipo]; })[0];
+    return c ? "<ConstraintType>" + CT_PARA[c.tipo] + "</ConstraintType>" + (c.data != null ? "<ConstraintDate>" + iso(c.data) + "</ConstraintDate>" : "") : "";
+  }
+  function gravarMSPDI(p, r) {
+    var padrao = p.calendarios[p.calPadrao] || p.calendarios._padrao, num0 = {}, preds = {}, usados = [padrao];
+    r.ordem.forEach(function (u, i) { num0[u] = i + 1; var c = calDe(p, p.at[u]); if (usados.indexOf(c) < 0) usados.push(c); });
+    r.ligacoes.forEach(function (l) { (preds[l.s] = preds[l.s] || []).push(l); });
+    var TP = { FF: 0, FS: 1, SF: 2, SS: 3 };
+    var cals = usados.map(function (c, i) { return "<Calendar><UID>" + (i + 1) + "</UID><Name>" + esc(c.nome) + "</Name><IsBaseCalendar>1</IsBaseCalendar><WeekDays>" + semanaXML(c) + "</WeekDays>" + excecoesXML(c) + "</Calendar>"; }).join("");
     var ini = r.ordem.length ? Math.min.apply(null, r.ordem.map(function (u) { return r.es[u]; })) : r.dataStatus;
     var x = ['<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', '<Project xmlns="http://schemas.microsoft.com/project">',
       "<Name>" + esc(p.nome) + "</Name><Title>" + esc(p.nome) + "</Title><StartDate>" + iso(ini) + "</StartDate><StatusDate>" + iso(r.dataStatus) + "</StatusDate>",
-      "<MinutesPerDay>" + Math.round(cal.horasDia * 60) + "</MinutesPerDay><CalendarUID>1</CalendarUID>",
-      "<Calendars><Calendar><UID>1</UID><Name>" + esc(cal.nome) + "</Name><IsBaseCalendar>1</IsBaseCalendar><WeekDays>" + semana + "</WeekDays></Calendar></Calendars>", "<Tasks>"];
+      "<MinutesPerDay>" + Math.round(padrao.horasDia * 60) + "</MinutesPerDay><CalendarUID>1</CalendarUID>",
+      "<Calendars>" + cals + "</Calendars>", "<Tasks>"];
     r.ordem.forEach(function (u) {
       var a = p.at[u], pc = a.status === "concluida" ? 100 : (a.status === "nao_iniciada" || a.durH <= 0 ? 0 : Math.max(0, Math.min(99, Math.floor(100 * (1 - a.restH / a.durH)))));
       x.push("<Task><UID>" + num0[u] + "</UID><ID>" + num0[u] + "</ID><Name>" + esc(a.nome) + "</Name><WBS>" + esc(a.cod) + "</WBS><OutlineLevel>1</OutlineLevel>" +
         "<Start>" + iso(r.es[u]) + "</Start><Finish>" + iso(r.ef[u]) + "</Finish><Duration>" + durISO(a.durH) + "</Duration><DurationFormat>7</DurationFormat>" +
         "<RemainingDuration>" + durISO(a.status === "concluida" ? 0 : a.restH) + "</RemainingDuration><Milestone>" + (marco(a) ? 1 : 0) + "</Milestone>" +
-        "<PercentComplete>" + pc + "</PercentComplete><Cost>" + a.custo.toFixed(2) + "</Cost>" +
+        "<PercentComplete>" + pc + "</PercentComplete><Cost>" + a.custo.toFixed(2) + "</Cost><ActualCost>" + (a.custoReal || 0).toFixed(2) + "</ActualCost>" +
+        "<CalendarUID>" + (usados.indexOf(calDe(p, a)) + 1) + "</CalendarUID>" + cstrXML(a) +
         (a.iniReal ? "<ActualStart>" + iso(a.iniReal) + "</ActualStart>" : "") + (a.fimReal ? "<ActualFinish>" + iso(a.fimReal) + "</ActualFinish>" : "") +
         (preds[u] || []).map(function (l) { return "<PredecessorLink><PredecessorUID>" + num0[l.p] + "</PredecessorUID><Type>" + TP[l.t] + "</Type><LinkLag>" + Math.round(l.lag * 600) + "</LinkLag><LagFormat>7</LagFormat></PredecessorLink>"; }).join("") +
         "</Task>");
@@ -427,8 +511,87 @@
     return x.join("\n") + "\n";
   }
 
+  /* ---------------- Curva S e valor agregado (porta de engine/evm.py) ---------------- */
+  function fracao(cal, ini, fim, t) {
+    if (t <= ini) return 0; if (t >= fim) return 1;
+    var tot = cal.entre(ini, fim); return tot <= EPS ? 1 : Math.max(0, Math.min(1, cal.entre(ini, t) / tot));
+  }
+  function pctConcluido(a) {
+    if (a.status === "concluida") return 1; if (a.status === "nao_iniciada") return 0;
+    if (a.pctFisico !== null && a.pctFisico !== undefined && a.pctFisico > 0) return Math.max(0, Math.min(1, a.pctFisico / 100));
+    return a.durH <= EPS ? 0 : Math.max(0, Math.min(1, 1 - a.restH / a.durH));
+  }
+  function janelas(p, r, u) { var a = p.at[u]; return (a.iniPlan != null && a.fimPlan != null) ? [a.iniPlan, a.fimPlan] : [r.es[u], r.ef[u]]; }
+  function r2(x) { return x === null ? null : Math.round(x * 100) / 100; }
+  function r3(x) { return x === null ? null : Math.round(x * 1000) / 1000; }
+  function curvaS(p, r) {
+    r = r || calcular(p);
+    var ids = r.ordem, proxy = ids.some(function (u) { return p.at[u].iniPlan == null || p.at[u].fimPlan == null; }), datas = [];
+    ids.forEach(function (u) { var j = janelas(p, r, u); datas.push(j[0], j[1], r.es[u], r.ef[u]); });
+    if (!datas.length) return { meses: [], bac: 0, linhaDeBaseProxy: proxy };
+    var t0 = Math.min.apply(null, datas), t1 = Math.max.apply(null, datas), bac = 0, peso = 0;
+    ids.forEach(function (u) { bac += p.at[u].custo; peso += p.at[u].durH; }); peso = peso || 1;
+    var meses = [], d0 = new Date(t0), ano = d0.getUTCFullYear(), mes = d0.getUTCMonth();
+    for (;;) {
+      mes++; if (mes === 12) { mes = 0; ano++; }
+      var fim = Date.UTC(ano, mes, 1), cp = 0, cf = 0, fp = 0, ff = 0;
+      ids.forEach(function (u) {
+        var a = p.at[u], cal = calDe(p, a), j = janelas(p, r, u), fP = fracao(cal, j[0], j[1], fim), fF = fracao(cal, r.es[u], r.ef[u], fim);
+        cp += a.custo * fP; cf += a.custo * fF; fp += a.durH * fP; ff += a.durH * fF;
+      });
+      var lab = new Date(fim - DIA);
+      meses.push({ mes: lab.getUTCFullYear() + "-" + p2(lab.getUTCMonth() + 1), planejadoCusto: r2(cp), previstoCusto: r2(cf),
+        planejadoFisicoPct: r2(100 * fp / peso), previstoFisicoPct: r2(100 * ff / peso) });
+      if (fim > t1) break;
+    }
+    return { meses: meses, bac: r2(bac), linhaDeBaseProxy: proxy };
+  }
+  function valorAgregado(p, r) {
+    r = r || calcular(p);
+    var dd = r.dataStatus, bac = 0, pv = 0, ev = 0, ac = 0, real = false;
+    r.ordem.forEach(function (u) {
+      var a = p.at[u], cal = calDe(p, a), j = janelas(p, r, u);
+      bac += a.custo; pv += a.custo * fracao(cal, j[0], j[1], dd); ev += a.custo * pctConcluido(a); ac += a.custoReal || 0;
+      if ((a.custoReal || 0) > EPS) real = true;
+    });
+    var spi = pv > EPS ? ev / pv : null, cpi = real && ac > EPS ? ev / ac : null;
+    return { dataStatus: dd, BAC: r2(bac), PV: r2(pv), EV: r2(ev), AC: real ? r2(ac) : null, SPI: r3(spi), CPI: r3(cpi),
+      EAC: cpi ? r2(bac / cpi) : null, TCPI: real && Math.abs(bac - ac) > EPS ? r3((bac - ev) / (bac - ac)) : null,
+      SV: r2(ev - pv), CV: real ? r2(ev - ac) : null,
+      avisos: real ? [] : ["Sem custos reais (act_reg_cost/act_ot_cost) no cronograma: AC, CPI, EAC e TCPI não calculados"] };
+  }
+
+  /* ---------------- Linha do tempo de versões (porta de engine/versoes.py) ---------------- */
+  function linhaDoTempo(projetos) {
+    var calc = projetos.map(function (p) { try { return { p: p, r: p.r || calcular(p), erro: null }; } catch (e) { return { p: p, r: null, erro: e.message }; } });
+    calc.sort(function (a, b) { return (a.p.dataStatus == null ? Infinity : a.p.dataStatus) - (b.p.dataStatus == null ? Infinity : b.p.dataStatus); });
+    var versoes = [], ant = null, marcos = {};
+    calc.forEach(function (c) {
+      var l = { chave: c.p.chave, projeto: c.p.nome, dataStatus: c.p.dataStatus, atividades: Object.keys(c.p.at).length, custoTotal: r2(c.p.custo || sumCusto(c.p)), erro: c.erro };
+      if (c.r) {
+        l.termino = c.r.termino; l.criticas = c.r.criticas.length;
+        if (ant) { l.deltaTerminoDias = Math.round((c.r.termino - ant.termino) / DIA * 10) / 10; l.deltaCusto = r2(l.custoTotal - ant.custoTotal); }
+        ant = l;
+        c.r.ordem.forEach(function (u) {
+          var a = c.p.at[u]; if (!marco(a)) return;
+          var m = marcos[a.cod] = marcos[a.cod] || { codigo: a.cod, nome: a.nome, datas: {} };
+          m.datas[c.p.chave] = c.r.ef[u];
+        });
+      }
+      versoes.push(l);
+    });
+    var tend = Object.keys(marcos).map(function (k) { return marcos[k]; }).filter(function (m) { return Object.keys(m.datas).length >= 2; });
+    tend.forEach(function (m) {
+      var ord = versoes.filter(function (v) { return m.datas[v.chave] !== undefined; }).map(function (v) { return v.chave; });
+      m.deslizamentoDias = Math.round((m.datas[ord[ord.length - 1]] - m.datas[ord[0]]) / DIA * 10) / 10;
+    });
+    tend.sort(function (a, b) { return Math.abs(b.deslizamentoDias) - Math.abs(a.deslizamentoDias); });
+    return { versoes: versoes, tendenciaMarcos: tend };
+  }
+
   var API = { lerXER: lerXER, lerMSPDI: lerMSPDI, lerClndrData: lerClndrData, Calendario: Calendario, calcular: calcular,
     folgaDias: folgaDias, dcma14: dcma14, monteCarlo: monteCarlo, gravarXER: gravarXER, gravarMSPDI: gravarMSPDI,
-    eHistorico: eHistorico, dataXER: dataXER, fmtXER: fmtXER, fmtBR: fmtBR, calDe: calDe, noCalculo: noCalculo };
+    eHistorico: eHistorico, dataXER: dataXER, fmtXER: fmtXER, fmtBR: fmtBR, calDe: calDe, noCalculo: noCalculo,
+    curvaS: curvaS, valorAgregado: valorAgregado, pctConcluido: pctConcluido, linhaDoTempo: linhaDoTempo };
   if (typeof module !== "undefined" && module.exports) module.exports = API; else root.CronosEngine = API;
 })(this);

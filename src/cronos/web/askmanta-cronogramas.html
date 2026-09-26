@@ -31,13 +31,17 @@
   .crn-gantt svg{display:block}
   .crn-sel{font:13px Inter,system-ui,sans-serif;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);max-width:100%}
   .crn-tag{display:inline-block;font:600 11px Inter,sans-serif;color:var(--accent-dark);border:1px solid var(--accent);border-radius:4px;padding:1px 6px;margin-left:6px}
+  .crn-curva{border:1px solid var(--border);border-radius:6px;overflow-x:auto;background:var(--bg);margin-top:8px}
+  .crn-curva svg{display:block}
+  .crn-leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--muted);margin-top:6px}
+  .crn-leg i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:4px;margin-right:6px}
   .crn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
 </style>
 <div class="crn" id="crn-root">
   <div class="crn-head">
     <div>
       <h3>Manta Cronos · Visualizador de cronogramas</h3>
-      <p>Abra vários cronogramas ao mesmo tempo (XER do Primavera P6 e XML do MS Project). Leitura, cálculo e exportação acontecem no seu navegador; nenhum arquivo é enviado a servidor. Motor v0.2 com calendários do P6, data de status, datas reais, restrições e DCMA-14 (regra A5).</p>
+      <p>Abra vários cronogramas ao mesmo tempo (XER do Primavera P6 e XML do MS Project). Leitura, cálculo e exportação acontecem no seu navegador; nenhum arquivo é enviado a servidor. Motor v0.3: calendários do P6 e do MS Project, data de status, datas reais, restrições, DCMA-14 (regra A5), curva S física e financeira, valor agregado e linha do tempo de N versões.</p>
     </div>
     <a href="https://claude.ai/artifact/GARM33Qm2i4zLmvUSXGL6C" target="_blank" rel="noopener">Plano completo do Cronos ↗</a>
   </div>
@@ -83,10 +87,22 @@
     <div class="crn-tw"><table><thead><tr><th class="n">Ponto</th><th>Verificação</th><th class="n">Valor</th><th>Limite</th><th>Resultado</th><th>Detalhe</th></tr></thead>
     <tbody id="crn-dcma"></tbody></table></div>
     <p class="crn-note">Regra A5: nota ≥ 90% dos pontos aplicáveis e nenhuma reprovação nos pontos 1, 3, 6, 7 e 11. Pontos 11 e 14 usam as datas planejadas do XER como aproximação da linha de base.</p>
+    <div class="crn-h" style="margin-top:12px">2.3 Curva S e valor agregado</div>
+    <div class="crn-kpis" id="crn-evm"></div>
+    <div class="crn-bar" style="margin-top:8px"><select class="crn-sel" id="crn-curva-tipo" aria-label="Tipo de curva"><option value="f">Curva financeira (R$)</option><option value="p">Curva física (%)</option></select></div>
+    <div class="crn-curva" id="crn-curva"></div>
+    <div class="crn-leg"><span><i style="border-color:var(--muted);border-top-style:dashed"></i>Planejado (linha de base)</span><span><i style="border-color:var(--accent)"></i>Previsto (realizado + remanescente)</span><span><i style="border-color:var(--accent);border-top-style:dotted"></i>Data de status</span></div>
+    <p class="crn-note" id="crn-evm-nota">Custo e peso físico distribuídos uniformemente nas horas úteis de cada atividade. Índices conforme ANSI/EIA-748: SPI = EV/PV, CPI = EV/AC, EAC = BAC/CPI, TCPI = (BAC − EV)/(BAC − AC).</p>
   </div>
 
   <div id="crn-cmpbox" hidden>
-    <div class="crn-h">3. Comparar versões</div>
+    <div class="crn-h">3. Linha do tempo das versões</div>
+    <div class="crn-tw"><table><thead><tr><th>Versão</th><th>Data status</th><th>Término</th><th class="n">Δ término (dias corridos)</th><th class="n">Custo total</th><th class="n">Δ custo</th><th class="n">Críticas</th></tr></thead>
+    <tbody id="crn-linha"></tbody></table></div>
+    <div class="crn-h" style="margin-top:12px">3.1 Tendência de marcos</div>
+    <div class="crn-tw" id="crn-marcos"></div>
+    <p class="crn-note">Versões em ordem de data de status; marcos casados pelo código. Deslizamento = término do marco na última versão menos na primeira em que aparece.</p>
+    <div class="crn-h" style="margin-top:12px">3.2 Comparar duas versões</div>
     <div class="crn-bar"><select class="crn-sel" id="crn-a" aria-label="Versão A"></select><span>×</span><select class="crn-sel" id="crn-b" aria-label="Versão B"></select><button type="button" class="crn-btn" id="crn-cmp">Comparar</button></div>
     <div id="crn-cmpout" style="margin-top:10px"></div>
   </div>
@@ -103,7 +119,7 @@
   var br = E.fmtBR;
 
   function preparar(p, exemplo){
-    p.exemplo = !!exemplo;
+    p.exemplo = !!exemplo; p.cs = null; p.va = null;
     try{ p.r = E.calcular(p); p.err = null; p.dcma = E.dcma14(p, p.r); }
     catch(e){ p.r = null; p.err = e.message; p.dcma = null; }
     ST.v = ST.v.filter(function(x){ return x.chave !== p.chave; }).concat([p]);
@@ -149,6 +165,7 @@
     $('crn-a').innerHTML = opts; $('crn-b').innerHTML = opts;
     if(ST.v.length > 1){ $('crn-a').selectedIndex = 0; $('crn-b').selectedIndex = ST.v.length - 1; }
     $('crn-cmpbox').hidden = ST.v.length < 2;
+    linhaDoTempo();
   }
   function porChave(k){ return ST.v.filter(function(p){ return p.chave === k; })[0]; }
 
@@ -177,6 +194,58 @@
       var res = !x.aplicavel ? '<span class="crn-note">não aplicável</span>' : x.passou ? '<span class="crn-ok">passou</span>' : '<span class="crn-alert">reprovado' + ([1,3,6,7,11].indexOf(x.ponto) >= 0 ? ' · bloqueia' : '') + '</span>';
       return '<tr><td class="n">' + x.ponto + '</td><td>' + esc(x.nome) + '</td><td class="n">' + esc(x.valor) + '</td><td>' + esc(x.limite) + '</td><td>' + res + '</td><td class="crn-note">' + esc(x.detalhe) + (x.exemplos.length ? ' · ex.: ' + esc(x.exemplos.join(', ')) : '') + '</td></tr>';
     }).join('');
+    evm(p);
+  }
+
+  function indice(v){ return v == null ? '—' : fmt(v, 2); }
+  function mi(v){ return v == null ? '—' : 'R$ ' + fmt(v / 1e6, 2) + ' mi'; }
+  function evm(p){
+    p.cs = p.cs || E.curvaS(p, p.r); p.va = p.va || E.valorAgregado(p, p.r);
+    var v = p.va, cls = function(x){ return x == null ? '' : x < 0.95 ? ' style="color:var(--danger)"' : x >= 1 ? ' style="color:var(--success)"' : ''; };
+    $('crn-evm').innerHTML = [
+      [mi(v.BAC), 'BAC · orçamento no término'], [mi(v.PV), 'PV · valor planejado'], [mi(v.EV), 'EV · valor agregado'], [mi(v.AC), 'AC · custo real'],
+      [indice(v.SPI), 'SPI · desempenho de prazo', cls(v.SPI)], [indice(v.CPI), 'CPI · desempenho de custo', cls(v.CPI)],
+      [mi(v.EAC), 'EAC · estimativa no término'], [indice(v.TCPI), 'TCPI · desempenho necessário']
+    ].map(function(k){ return '<div><b' + (k[2] || '') + '>' + k[0] + '</b><span>' + esc(k[1]) + '</span></div>'; }).join('');
+    var av = v.avisos.slice();
+    if(p.cs.linhaDeBaseProxy) av.push('Sem datas planejadas (target) em todas as atividades: a curva planejada usa as datas calculadas como aproximação da linha de base.');
+    if(!v.BAC) av.push('Cronograma sem carregamento de custos: curva financeira vazia.');
+    $('crn-evm-nota').innerHTML = (av.length ? '<span class="crn-alert">' + esc(av.join(' ')) + '</span> ' : '') + 'Custo e peso físico distribuídos uniformemente nas horas úteis de cada atividade. Índices conforme ANSI/EIA-748: SPI = EV/PV, CPI = EV/AC, EAC = BAC/CPI, TCPI = (BAC − EV)/(BAC − AC).';
+    curva(p);
+  }
+  function curva(p){
+    var css = getComputedStyle(document.documentElement), tok = function(n, f){ return css.getPropertyValue(n).trim() || f; };
+    var cT = tok('--text', '#374151'), cM = tok('--muted', '#6B7280'), cB = tok('--border', '#E5DDD3'), cA = tok('--accent', '#E07B3D');
+    var ms = p.cs.meses, fin = $('crn-curva-tipo').value === 'f';
+    if(!ms.length || (fin && !p.cs.bac)){ $('crn-curva').innerHTML = '<p class="crn-note" style="padding:10px">Sem dados para a curva ' + (fin ? 'financeira (sem custos).' : 'física.') + '</p>'; return; }
+    var kP = fin ? 'planejadoCusto' : 'planejadoFisicoPct', kF = fin ? 'previstoCusto' : 'previstoFisicoPct', top = fin ? p.cs.bac : 100;
+    var W = Math.max(640, Math.min(1150, 60 + ms.length * 26)), H = 260, L = 70, R = 14, T = 12, B = 34, sx = (W - L - R) / Math.max(ms.length - 1, 1), sy = (H - T - B) / (top || 1);
+    var X = function(i){ return L + i * sx; }, Y = function(v){ return H - B - v * sy; };
+    var s = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" font-family="Inter,system-ui,sans-serif" font-size="11" role="img" aria-label="Curva S ' + (fin ? 'financeira' : 'física') + '">';
+    for(var g = 0; g <= 4; g++){ var gv = top * g / 4, gy = Y(gv); s += '<line x1="' + L + '" y1="' + gy + '" x2="' + (W - R) + '" y2="' + gy + '" stroke="' + cB + '"/><text x="' + (L - 6) + '" y="' + (gy + 4) + '" text-anchor="end" fill="' + cM + '">' + (fin ? fmt(gv / 1e6, 1) + ' mi' : fmt(gv) + '%') + '</text>'; }
+    var passo = Math.ceil(ms.length / 18);
+    ms.forEach(function(m, i){ if(i % passo === 0) s += '<text x="' + X(i) + '" y="' + (H - B + 16) + '" text-anchor="middle" fill="' + cM + '">' + m.mes.slice(5) + '/' + m.mes.slice(2, 4) + '</text>'; });
+    var dd = new Date(p.r.dataStatus), iD = ms.map(function(m){ return m.mes; }).indexOf(dd.getUTCFullYear() + '-' + ('0' + (dd.getUTCMonth() + 1)).slice(-2));
+    if(iD >= 0){ var fr = (dd.getUTCDate() - 1) / 30, xd = X(Math.max(iD - 1 + fr, 0)); s += '<line x1="' + xd + '" y1="' + T + '" x2="' + xd + '" y2="' + (H - B) + '" stroke="' + cA + '" stroke-dasharray="2 3"><title>Data de status ' + br(p.r.dataStatus) + '</title></line>'; }
+    var linha = function(k, cor, tr){ return '<polyline fill="none" stroke="' + cor + '" stroke-width="2"' + (tr ? ' stroke-dasharray="6 4"' : '') + ' points="' + ms.map(function(m, i){ return X(i).toFixed(1) + ',' + Y(m[k]).toFixed(1); }).join(' ') + '"/>'; };
+    s += linha(kP, cM, true) + linha(kF, cA, false);
+    ms.forEach(function(m, i){ s += '<circle cx="' + X(i) + '" cy="' + Y(m[kF]) + '" r="6" fill="transparent"><title>' + esc(m.mes + ' · planejado ' + (fin ? 'R$ ' + fmt(m[kP], 2) : fmt(m[kP], 1) + '%') + ' · previsto ' + (fin ? 'R$ ' + fmt(m[kF], 2) : fmt(m[kF], 1) + '%')) + '</title></circle>'; });
+    $('crn-curva').innerHTML = s + '</svg>';
+  }
+
+  function linhaDoTempo(){
+    var ok = ST.v.filter(function(p){ return p.r; });
+    if(ok.length < 2){ $('crn-linha').innerHTML = ''; $('crn-marcos').innerHTML = ''; return; }
+    var lt = E.linhaDoTempo(ok), rot = {};
+    ok.forEach(function(p){ rot[p.chave] = p.arquivo + ' · ' + p.nome; });
+    var sinal = function(x, d){ return x == null ? '—' : '<span' + (x > 0 ? ' class="crn-alert"' : '') + '>' + (x > 0 ? '+' : '') + fmt(x, d) + '</span>'; };
+    $('crn-linha').innerHTML = lt.versoes.map(function(v){
+      return '<tr><td>' + esc(rot[v.chave] || v.chave) + '</td><td>' + br(v.dataStatus) + '</td><td>' + (v.termino ? br(v.termino) : '<span class="crn-alert">' + esc(v.erro) + '</span>') + '</td><td class="n">' + sinal(v.deltaTerminoDias, 1) + '</td><td class="n">R$ ' + fmt(v.custoTotal, 2) + '</td><td class="n">' + sinal(v.deltaCusto, 2) + '</td><td class="n">' + (v.criticas == null ? '—' : fmt(v.criticas)) + '</td></tr>';
+    }).join('');
+    var ord = lt.versoes.map(function(v){ return v.chave; }).filter(function(k){ return rot[k]; });
+    $('crn-marcos').innerHTML = lt.tendenciaMarcos.length ? '<table><thead><tr><th>Marco</th>' + ord.map(function(k){ return '<th>' + esc(porChave(k).arquivo) + '</th>'; }).join('') + '<th class="n">Deslizamento (dias corridos)</th></tr></thead><tbody>' +
+      lt.tendenciaMarcos.slice(0, 60).map(function(m){ return '<tr><td>' + esc(m.codigo + ' · ' + m.nome) + '</td>' + ord.map(function(k){ return '<td>' + (m.datas[k] !== undefined ? br(m.datas[k]) : '—') + '</td>'; }).join('') + '<td class="n">' + sinal(m.deslizamentoDias, 1) + '</td></tr>'; }).join('') + '</tbody></table>'
+      : '<p class="crn-note">Nenhum marco em comum entre as versões abertas.</p>';
   }
 
   function gantt(p){
@@ -290,8 +359,8 @@
     for(var n = 1; n <= 7; n++) sem += '(0||' + n + '()(' + (n >= 2 && n <= 6 ? util : '') + '))';
     var cal = '(0||CalendarData()((0||DaysOfWeek()(' + sem + '))(0||Exceptions()((0||0(d|45677)())))))';
     var tk = [['1','A100','Estaca do apoio 1','160','TK_Complete','2025-01-06 08:00','2025-01-31 17:00','0','TT_Task'],
-              ['2','A110','Bloco do apoio 1','80','TK_Active','2025-02-03 08:00','','40','TT_Task'],
-              ['3','A120','Pilar do apoio 1','120','TK_NotStart','','','120','TT_Task'],
+              ['2','A110','Bloco do apoio 1','80', v2 ? 'TK_Complete' : 'TK_Active','2025-02-03 08:00', v2 ? '2025-02-21 17:00' : '', v2 ? '0' : '40','TT_Task'],
+              ['3','A120','Pilar do apoio 1','120', v2 ? 'TK_Active' : 'TK_NotStart', v2 ? '2025-02-24 08:00' : '','', v2 ? '72' : '120','TT_Task'],
               ['4','A130','Sondagem complementar','40','TK_NotStart','','','40','TT_Task'],
               ['5','A140','Superestrutura do vão 1', v2 ? '280' : '200','TK_NotStart','','', v2 ? '280' : '200','TT_Task'],
               ['6','M900','Liberação do tráfego','0','TK_NotStart','','','0','TT_FinMile']];
@@ -299,12 +368,12 @@
     var pd = [['2','1','PR_FS','0'],['3','2','PR_SS','40'],['5','3','PR_FS','0'],['6','5','PR_FS','0'],['6','4','PR_FS','0']];
     if(v2) pd.push(['5','7','PR_FS','0']);
     return 'ERMHDR\t19.12\r\n' + R('CALENDAR',['clndr_id','clndr_name','day_hr_cnt','clndr_data'],[['C1','Padrão 5x8','8',cal]]) +
-      R('PROJECT',['proj_id','proj_short_name','last_recalc_date','plan_start_date','plan_end_date','clndr_id'],[['1','EXEMPLO-OAE','2025-02-10 08:00','2025-01-06 08:00','','C1']]) +
+      R('PROJECT',['proj_id','proj_short_name','last_recalc_date','plan_start_date','plan_end_date','clndr_id'],[['1','EXEMPLO-OAE', v2 ? '2025-03-10 08:00' : '2025-02-10 08:00','2025-01-06 08:00','','C1']]) +
       R('PROJWBS',['wbs_id','proj_id','wbs_name'],[['W1','1','Ponte exemplo']]) +
       R('TASK',['task_id','proj_id','wbs_id','clndr_id','task_code','task_name','target_drtn_hr_cnt','status_code','act_start_date','act_end_date','remain_drtn_hr_cnt','task_type'],
         tk.map(function(x){ return [x[0],'1','W1','C1',x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]]; })) +
       R('TASKPRED',['task_pred_id','task_id','pred_task_id','proj_id','pred_type','lag_hr_cnt'], pd.map(function(x, i){ return [String(i + 1), x[0], x[1], '1', x[2], x[3]]; })) +
-      R('TASKRSRC',['taskrsrc_id','task_id','proj_id','target_cost'],[['1','1','1', v2 ? '1450000' : '1200000'],['2','2','1','650000'],['3','3','1','900000'],['4','5','1','2300000']].concat(v2 ? [['5','7','1','800000']] : [])) + '%E\r\n';
+      R('TASKRSRC',['taskrsrc_id','task_id','proj_id','target_cost','act_reg_cost'],[['1','1','1', v2 ? '1450000' : '1200000','1310000'],['2','2','1','650000', v2 ? '520000' : '280000'],['3','3','1','900000','0'],['4','5','1','2300000','0']].concat(v2 ? [['5','7','1','800000','0']] : [])) + '%E\r\n';
   }
 
   $('crn-file').addEventListener('change', function(e){ lerArquivos(e.target.files); e.target.value = ''; });
@@ -314,12 +383,15 @@
   ['dragleave','drop'].forEach(function(ev){ dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove('over'); }); });
   dz.addEventListener('drop', function(e){ if(e.dataTransfer && e.dataTransfer.files) lerArquivos(e.dataTransfer.files); });
   $('crn-sample').addEventListener('click', function(){
-    E.lerXER(exemplo(false), 'exemplo-BL01.xer').concat(E.lerXER(exemplo(true), 'exemplo-BL02.xer')).forEach(function(p){ preparar(p, true); });
-    renderVersoes(); mostrar('exemplo-BL02.xer#1'); $('crn-status').textContent = 'Exemplo ilustrativo carregado (dados fictícios).';
+    var bl = E.lerXER(exemplo(false), 'exemplo-BL01.xer')[0], at = E.lerXER(exemplo(true), 'exemplo-AT02.xer')[0], rb = E.calcular(bl), pl = {};
+    Object.keys(bl.at).forEach(function(u){ if(rb.es[u] != null) pl[bl.at[u].cod] = [rb.es[u], rb.ef[u]]; });
+    [bl, at].forEach(function(p){ Object.keys(p.at).forEach(function(u){ var j = pl[p.at[u].cod]; if(j){ p.at[u].iniPlan = j[0]; p.at[u].fimPlan = j[1]; } }); preparar(p, true); });
+    renderVersoes(); mostrar('exemplo-AT02.xer#1'); $('crn-status').textContent = 'Exemplo ilustrativo carregado (dados fictícios): linha de base BL01 e atualização AT02.';
   });
   $('crn-clear').addEventListener('click', function(){ ST.v = []; ST.sel = null; $('crn-detail').hidden = true; $('crn-cmpout').innerHTML = ''; $('crn-status').textContent = ''; renderVersoes(); });
   $('crn-versions').addEventListener('click', function(e){ var b = e.target.closest('[data-crn-ver]'); if(b) mostrar(b.getAttribute('data-crn-ver')); });
   $('crn-onlycrit').addEventListener('change', function(){ var p = atual(); if(p) gantt(p); });
+  $('crn-curva-tipo').addEventListener('change', function(){ var p = atual(); if(p) curva(p); });
   $('crn-cmp').addEventListener('click', comparar);
   renderVersoes();
   $('crn-sample').click();

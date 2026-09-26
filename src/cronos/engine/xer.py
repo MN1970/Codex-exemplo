@@ -112,9 +112,11 @@ def ler_xer(caminho: str | Path | None = None, texto: str | None = None, nome: s
     cals = _calendarios(tb, base, alertas_gerais)
     wbs = {w["wbs_id"]: w.get("wbs_name", "") for w in tb.linhas.get("PROJWBS", [])}
     custo: dict[str, float] = {}
+    real: dict[str, float] = {}
     com_recurso: set[str] = set()
     for r in tb.linhas.get("TASKRSRC", []):
         custo[r["task_id"]] = custo.get(r["task_id"], 0.0) + _num(r.get("target_cost"))
+        real[r["task_id"]] = real.get(r["task_id"], 0.0) + _num(r.get("act_reg_cost")) + _num(r.get("act_ot_cost"))
         com_recurso.add(r["task_id"])
 
     projetos: dict[str, Projeto] = {}
@@ -147,7 +149,8 @@ def ler_xer(caminho: str | Path | None = None, texto: str | None = None, nome: s
             calendario=a.get("clndr_id", ""),
             inicio_real=data_xer(a.get("act_start_date")), fim_real=data_xer(a.get("act_end_date")),
             inicio_plan=data_xer(a.get("target_start_date")), fim_plan=data_xer(a.get("target_end_date")),
-            restricoes=restr, custo=custo.get(a["task_id"], 0.0),
+            restricoes=restr, custo=custo.get(a["task_id"], 0.0), custo_real=real.get(a["task_id"], 0.0),
+            pct_fisico=_num(a.get("phys_complete_pct")) if a.get("phys_complete_pct") not in (None, "") else None,
             tem_recurso=a["task_id"] in com_recurso,
             fonte=f"{arq} › TASK › linha {a['_linha']}")
 

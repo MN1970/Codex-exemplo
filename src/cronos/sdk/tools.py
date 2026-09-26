@@ -10,8 +10,8 @@ from typing import Any
 
 from claude_agent_sdk import ToolAnnotations, create_sdk_mcp_server, tool
 
-from ..engine import (Projeto, calcular, comparar, dcma14, e_historico, folga_dias, gravar_mspdi, gravar_xer,
-                      ler_arquivo, monte_carlo)
+from ..engine import (Projeto, calcular, comparar, curva_s, dcma14, e_historico, folga_dias, gravar_mspdi,
+                      gravar_xer, ler_arquivo, linha_do_tempo, monte_carlo, valor_agregado)
 
 ESTOQUE: dict[str, Projeto] = {}          # versões carregadas na sessão (F2: Supabase)
 LEITURA = ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False)
@@ -126,12 +126,40 @@ async def exportar(args: dict[str, Any]) -> dict[str, Any]:
     return _ok({"arquivo": args["destino"], "formato": fmt, "termino": r["termino"]})
 
 
+@tool("curva_s_evm", "Curva S física e financeira mensal (planejado × previsto) e valor agregado na data de status: "
+      "BAC, PV, EV, AC, SPI, CPI, EAC, TCPI (ANSI/EIA-748).", {"chave": str}, annotations=LEITURA)
+async def curva_s_evm(args: dict[str, Any]) -> dict[str, Any]:
+    p = _versao(args["chave"])
+    if not p:
+        return _erro(f"Versão não carregada: {args['chave']}")
+    try:
+        r = calcular(p)
+    except ValueError as e:
+        return _erro(str(e))
+    return _ok({"curva_s": curva_s(p, r), "valor_agregado": valor_agregado(p, r),
+                "alertas": [] if p.custo_total else ["SEM CARREGAMENTO DE CUSTOS: curva financeira vazia"]})
+
+
+@tool("linha_do_tempo", "Linha do tempo de N versões (ordem de data de status): término, custo e variação contra a "
+      "anterior, e tendência de marcos (deslizamento por marco).",
+      {"type": "object", "properties": {"chaves": {"type": "array", "items": {"type": "string"}}}},
+      annotations=LEITURA)
+async def linha_do_tempo_versoes(args: dict[str, Any]) -> dict[str, Any]:
+    chaves = args.get("chaves") or list(ESTOQUE)
+    faltam = [c for c in chaves if c not in ESTOQUE]
+    if faltam:
+        return _erro(f"Versões não carregadas: {', '.join(faltam)}")
+    lt = linha_do_tempo([ESTOQUE[c] for c in chaves])
+    lt["tendencia_marcos"] = lt["tendencia_marcos"][:100]
+    return _ok(lt)
+
+
 @tool("listar_versoes", "Lista as versões carregadas na sessão.", {}, annotations=LEITURA)
 async def listar_versoes(args: dict[str, Any]) -> dict[str, Any]:
     return _ok([{"chave": k, "projeto": p.nome, "data_status": p.data_status} for k, p in ESTOQUE.items()])
 
 
-FERRAMENTAS = [importar_lote, calcular_cpm, checar_dcma14, simular_monte_carlo, comparar_versoes, exportar,
-               listar_versoes]
-SERVIDOR = create_sdk_mcp_server(name="cronos", version="0.2.0", tools=FERRAMENTAS)
+FERRAMENTAS = [importar_lote, calcular_cpm, checar_dcma14, simular_monte_carlo, comparar_versoes, curva_s_evm,
+               linha_do_tempo_versoes, exportar, listar_versoes]
+SERVIDOR = create_sdk_mcp_server(name="cronos", version="0.3.0", tools=FERRAMENTAS)
 NOMES = [f"mcp__cronos__{t.name}" for t in FERRAMENTAS]

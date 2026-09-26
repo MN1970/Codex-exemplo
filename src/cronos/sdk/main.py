@@ -9,7 +9,8 @@ from .tools import NOMES, SERVIDOR
 
 SISTEMA = """Você é o agente-A5-cronograma do Manta Maestro (L1.7), usando o motor Cronos.
 1. Delegue a importação ao a5-6-leitor-multiformato e a qualidade (DCMA-14) ao a5-1-baseline-dcma.
-2. Delegue atualização/comparação (a5-2), caminho crítico (a5-4), Monte Carlo (a5-5)
+2. Delegue atualização/comparação e linha do tempo de versões (a5-2), curva S e valor
+   agregado (a5-3), caminho crítico (a5-4), Monte Carlo (a5-5)
    e forense (a7) conforme o pedido; rode subagentes independentes em paralelo.
 3. Antes de responder, peça ao guard-auditor que confira os números.
 4. Regras A5: linha de base aprovada não muda; DCMA-14 >= 90%; confirmação

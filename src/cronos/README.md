@@ -12,12 +12,14 @@ src/cronos/
 │   ├── calendar.py      # clndr_data do P6, feriados, aritmética de horas de trabalho
 │   ├── model.py         # modelo canônico (Projeto, Atividade, Ligacao, Restricao)
 │   ├── xer.py           # leitura/gravação XER (latin-1, vários projetos, só vigentes)
-│   ├── mspdi.py         # leitura/gravação MS Project XML (MSPDI)
+│   ├── mspdi.py         # leitura/gravação MS Project XML (MSPDI, com calendários)
 │   ├── schedule.py      # CPM por datas, Monte Carlo, comparação de versões
-│   └── dcma.py          # DCMA-14 com a regra A5
+│   ├── dcma.py          # DCMA-14 com a regra A5
+│   ├── evm.py           # curva S física e financeira, valor agregado (ANSI/EIA-748)
+│   └── versoes.py       # linha do tempo de N versões e tendência de marcos
 ├── sdk/                 # requer claude-agent-sdk
-│   ├── tools.py         # servidor MCP em processo "cronos" (7 ferramentas)
-│   ├── agents.py        # subagentes A5.1, A5.2, A5.4, A5.5, A5.6, A7, guard
+│   ├── tools.py         # servidor MCP em processo "cronos" (9 ferramentas)
+│   ├── agents.py        # subagentes A5.1–A5.6, A7, guard
 │   └── main.py          # agente-A5 pai (orquestrador)
 └── web/
     ├── cronos-engine.js         # porta do motor para o navegador (paridade testada)
@@ -41,8 +43,20 @@ src/cronos/
 | Cost-loaded | Custo por atividade (TASKRSRC); alerta quando não há custos |
 | Exportação | XER com datas calculadas; MSPDI (o MS Project salva como .mpp) |
 
+## Regras implementadas (F2)
+
+| Tema | Comportamento |
+|---|---|
+| Calendários MSPDI | Semana, exceções (nos dois formatos) e calendário base herdado; calendário por tarefa |
+| MSPDI ida e volta | Exporta todos os calendários usados, restrição (uma por tarefa), custo real; reimportação dá o mesmo término |
+| Curva S | Mensal, planejado (datas target) × previsto (calculado), financeira e física (peso = duração) |
+| Valor agregado | PV, EV, AC, SPI, CPI, EAC, TCPI, SV, CV na data de status; AC de `act_reg_cost` + `act_ot_cost` |
+| Avanço | % físico do P6 quando informado; senão 1 − remanescente/duração |
+| Linha de base proxy | Sem datas target em todas as atividades, a curva planejada usa as calculadas e avisa |
+| N versões | Ordem por data de status, Δ término e Δ custo contra a anterior, deslizamento de marcos |
+
 Ainda não implementado: nivelamento de recursos, LOE e resumo de EAP no
-cálculo, caminho mais longo, calendários do MSPDI, leitura de Excel e PDF.
+cálculo, caminho mais longo, leitura de Excel e PDF, Tempo × Caminho e LOB.
 
 ## Uso
 

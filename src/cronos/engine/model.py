@@ -34,7 +34,9 @@ class Atividade:
     inicio_plan: datetime | None = None   # target_start_date (planejado) — proxy de linha de base
     fim_plan: datetime | None = None      # target_end_date
     restricoes: list[Restricao] = field(default_factory=list)
-    custo: float = 0.0                    # cost-loaded: soma de TASKRSRC.target_cost
+    custo: float = 0.0                    # cost-loaded: soma de TASKRSRC.target_cost (orçado)
+    custo_real: float = 0.0               # TASKRSRC.act_reg_cost + act_ot_cost
+    pct_fisico: float | None = None       # TASK.phys_complete_pct (0–100), se informado
     tem_recurso: bool = False
     fonte: str = ""                       # rastreabilidade: arquivo › tabela › linha
 

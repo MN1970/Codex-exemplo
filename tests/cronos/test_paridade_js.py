@@ -12,7 +12,10 @@ from pathlib import Path
 
 import pytest
 
-from cronos.engine import calcular, dcma14, gravar_xer, ler_xer
+from datetime import timedelta
+
+from cronos.engine import (calcular, curva_s, dcma14, gravar_mspdi, gravar_xer, ler_mspdi, ler_xer, linha_do_tempo,
+                           valor_agregado)
 from cronos_xer_sintetico import montar_xer, t
 
 pytestmark = pytest.mark.unit
@@ -32,6 +35,19 @@ const d = E.dcma14(p, r);
 out.dcma = d.pontos.map(x => [x.ponto, x.passou, String(x.valor)]);
 out.nota = d.nota;
 out.xer_len = E.gravarXER(p, r).length;
+const cs = E.curvaS(p, r);
+out.curva = {bac: cs.bac, proxy: cs.linhaDeBaseProxy,
+  meses: cs.meses.map(m => [m.mes, m.planejadoCusto, m.previstoCusto, m.planejadoFisicoPct, m.previstoFisicoPct])};
+const va = E.valorAgregado(p, r);
+out.evm = ['BAC', 'PV', 'EV', 'AC', 'SPI', 'CPI', 'EAC', 'TCPI', 'SV', 'CV'].map(k => va[k]);
+const x = E.lerMSPDI(E.gravarMSPDI(p, r), 'x.xml')[0];
+out.mspdi_termino = f(E.calcular(x).termino);
+const p2 = E.lerXER(txt, 'y.xer')[0];
+Object.values(p2.at).forEach(a => { if (a.cod === 'A0120') { a.durH += 80; a.restH += 80; } });
+p2.dataStatus += 30 * 86400000;
+const lt = E.linhaDoTempo([p2, p]);
+out.versoes = lt.versoes.map(v => [v.chave, f(v.termino), v.deltaTerminoDias === undefined ? null : v.deltaTerminoDias]);
+out.marcos = lt.tendenciaMarcos.map(m => [m.codigo, m.deslizamentoDias]);
 process.stdout.write(JSON.stringify(out));
 """
 
@@ -54,7 +70,8 @@ def cenario(semente: int, n: int = 120) -> str:
         tarefas.append(t(str(i), f"A{i:04d}", dur, tipo=tipo, status=status, ini=ini, fim=fim, rest=rest,
                          cstr=cstr, cdata=cd, tfim=rnd.choice(["", "2025-02-14 17:00", "2025-01-10 17:00"])))
         if rnd.random() < 0.7:
-            recs.append((str(i), rnd.randint(1000, 90000)))
+            custo = rnd.randint(1000, 90000)
+            recs.append((str(i), custo, round(custo * rnd.uniform(0.8, 1.3), 2) if status != "TK_NotStart" else 0))
     for i in range(2, n + 1):
         for _ in range(rnd.choice([0, 1, 1, 2])):
             j = rnd.randint(max(1, i - 15), i - 1)
@@ -90,3 +107,24 @@ def test_motor_js_igual_ao_python(tmp_path, semente):
     assert [[x[0], x[1]] for x in js["dcma"]] == [[x["ponto"], x["passou"]] for x in d["pontos"]]
     assert js["nota"] == d["nota"]
     assert js["xer_len"] == len(gravar_xer(p, r))
+
+    cs = curva_s(p, r)
+    assert js["curva"]["bac"] == cs["bac"] and js["curva"]["proxy"] == cs["linha_de_base_proxy"]
+    assert js["curva"]["meses"] == [[m["mes"], m["planejado_custo"], m["previsto_custo"], m["planejado_fisico_pct"],
+                                     m["previsto_fisico_pct"]] for m in cs["meses"]]
+    va = valor_agregado(p, r)
+    for k, v in zip(["BAC", "PV", "EV", "AC", "SPI", "CPI", "EAC", "TCPI", "SV", "CV"], js["evm"]):
+        assert v == pytest.approx(va[k], abs=0.011) if va[k] is not None else v is None, k
+
+    x = ler_mspdi(texto=gravar_mspdi(p, r), nome="x.xml")[0]
+    assert js["mspdi_termino"] == fx(calcular(x)["termino"]) == fx(r["termino"])
+
+    p2 = ler_xer(texto=txt, nome="y.xer")[0]
+    for a in p2.atividades.values():
+        if a.codigo == "A0120":
+            a.dur_h += 80
+            a.rest_h += 80
+    p2.data_status += timedelta(days=30)
+    lt = linha_do_tempo([p2, p])
+    assert js["versoes"] == [[v["chave"], fx(v["termino"]), v.get("delta_termino_dias_corridos")] for v in lt["versoes"]]
+    assert js["marcos"] == [[m["codigo"], m["deslizamento_dias_corridos"]] for m in lt["tendencia_marcos"]]

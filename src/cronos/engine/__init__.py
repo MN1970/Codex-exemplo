@@ -1,9 +1,11 @@
 """Motor determinístico do Manta Cronos (sem dependência do Agent SDK)."""
 from .calendar import Calendario, calendario_padrao, ler_clndr_data
 from .dcma import dcma14
+from .evm import curva_s, pct_concluido, valor_agregado
 from .model import Atividade, Ligacao, Projeto, Restricao
 from .mspdi import gravar_mspdi, ler_mspdi
 from .schedule import calcular, comparar, folga_dias, monte_carlo
+from .versoes import linha_do_tempo
 from .xer import e_historico, gravar_xer, ler_xer
 
 
@@ -21,5 +23,6 @@ def ler_arquivo(caminho: str, incluir_historico: bool = False) -> list[Projeto]:
 
 
 __all__ = ["Atividade", "Calendario", "Ligacao", "Projeto", "Restricao", "calcular", "calendario_padrao",
-           "comparar", "dcma14", "e_historico", "folga_dias", "gravar_mspdi", "gravar_xer", "ler_arquivo",
-           "ler_clndr_data", "ler_mspdi", "ler_xer", "monte_carlo"]
+           "comparar", "curva_s", "dcma14", "e_historico", "folga_dias", "gravar_mspdi", "gravar_xer", "ler_arquivo",
+           "ler_clndr_data", "ler_mspdi", "ler_xer", "linha_do_tempo", "monte_carlo", "pct_concluido",
+           "valor_agregado"]

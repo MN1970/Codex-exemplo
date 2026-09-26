@@ -28,8 +28,15 @@ AGENTES = {
         description="Compara N versões de cronograma (linha de base × atualização × impactado).",
         prompt=f"Você compara versões (A5.2) e apresenta, antes de qualquer saída: diferença contra "
                f"a versão anterior, mudança do caminho crítico, drift de marcos, variação de custo. {REGRA}",
-        tools=[f"{M}comparar_versoes", f"{M}calcular_cpm", f"{M}listar_versoes"],
+        tools=[f"{M}comparar_versoes", f"{M}linha_do_tempo", f"{M}calcular_cpm", f"{M}listar_versoes"],
         model="sonnet", maxTurns=12),
+    "a5-3-curva-s-valor-agregado": AgentDefinition(
+        description="Curva S física e financeira e valor agregado (SPI, CPI, EAC) de uma versão cost-loaded.",
+        prompt=f"Você faz o controle de avanço (A5.3): curva S planejado × previsto e valor agregado "
+               f"(ANSI/EIA-748). Interprete SPI/CPI/EAC/TCPI e diga se a linha de base é proxy "
+               f"(sem datas planejadas) ou se faltam custos reais. {REGRA}",
+        tools=[f"{M}curva_s_evm", f"{M}listar_versoes"],
+        model="sonnet", maxTurns=8),
     "a5-4-cpm-caminho-critico": AgentDefinition(
         description="Caminho crítico, folgas e marcos de uma versão.",
         prompt=f"Você é planejador sênior (AACE 49R-06). Identifique e explique o caminho "
@@ -47,7 +54,7 @@ AGENTES = {
         prompt=f"Você é perito em atraso. Escolha o método MIP conforme as evidências "
                f"disponíveis e justifique a escolha. Trate concorrência e folga. Toda "
                f"conclusão é rascunho sujeito à aprovação humana MN. {REGRA}",
-        tools=[f"{M}comparar_versoes", f"{M}calcular_cpm", f"{M}listar_versoes", "Read"],
+        tools=[f"{M}comparar_versoes", f"{M}linha_do_tempo", f"{M}calcular_cpm", f"{M}listar_versoes", "Read"],
         model="opus", maxTurns=20, effort="high"),
     "guard-auditor": AgentDefinition(
         description="Audita o texto final: todo número precisa vir de uma ferramenta.",

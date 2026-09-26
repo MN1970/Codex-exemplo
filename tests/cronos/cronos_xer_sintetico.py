@@ -40,8 +40,8 @@ def montar_xer(tarefas, ligacoes, recursos=(), projetos=(("1", "TESTE", "2025-01
     txt += tabela("TASKPRED", ["task_pred_id", "task_id", "pred_task_id", "proj_id", "pred_type", "lag_hr_cnt"],
                   [[i, l[1], l[0], l[3] if len(l) > 3 else "1", l[2], l[4] if len(l) > 4 else 0]
                    for i, l in enumerate(ligacoes, start=1)])
-    txt += tabela("TASKRSRC", ["taskrsrc_id", "task_id", "proj_id", "target_cost"],
-                  [[i, r[0], "1", r[1]] for i, r in enumerate(recursos, start=1)])
+    txt += tabela("TASKRSRC", ["taskrsrc_id", "task_id", "proj_id", "target_cost", "act_reg_cost"],
+                  [[i, r[0], "1", r[1], r[2] if len(r) > 2 else 0] for i, r in enumerate(recursos, start=1)])
     return txt + "%E\r\n"
 
 
