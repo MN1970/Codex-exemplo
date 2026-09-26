@@ -4,7 +4,38 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-11) — **reconciliação de conhecimento por
+Versão: **v5.4.8** (2026-09-26) — criação da capacidade **MOT —
+Faseamento de Tráfego em Trevos e Interseções**, extensão dos agentes
+**S1-Rodovias** e **S2-OAE** (não é um segmento novo no mapa de
+agentes). Base construída e testada contra **8 casos-teste reais** do
+projeto SP-258 (Motiva/CCR): 4 dispositivos de trevo/rotatória (Parclo,
+Trombeta, Diamante c/ e s/ rotatória) com geometria lida diretamente
+das pranchas reais no SharePoint, e 4 tipologias de duplicação do
+relatório real "Anexo 9 — Desvios de Tráfego e Sinalização Provisória"
+(já entregue à Motiva). Uma sessão de auditoria/QA (10 subagentes)
+encontrou 9 achados, incluindo **2 erros reais** já presentes no
+próprio Anexo 9 entregue ao cliente (erro de digitação "diária" em vez
+de "mensal" numa premissa de produtividade; tabela de custo duplicada
+entre duas seções quase-idênticas) e **1 contradição geométrica** no
+dispositivo do km 282 (planta ainda cita "velocidade na rotatória" num
+dispositivo nomeado "sem rotatória" — pendente de confirmação com a
+equipe de projeto). Entregue: schema Supabase candidato
+(`supabase/migrations/2026_09_26_v5_4_8_mot_fasamento.sql`, **não
+aplicado em produção**), 3 sub-skills de leitura paralela
+(`mot-leitor-edital`, `mot-leitor-projeto-executivo`,
+`mot-leitor-cronograma`, reaproveitando `ler-edital`/
+`autodesk-toolkit`/`cronograma-toolkit`), um classificador
+determinístico de janela viável e um motor de matching adaptado de
+`sicro-similaridade` (ambos testados localmente contra golden sets
+reais), um gerador de planta esquemática SVG por fase + template de
+memorial no padrão do Anexo 9, e o orquestrador do pipeline
+(`.claude/skills/mot-orquestrador/SKILL.md`, 6 subagentes em
+fan-out/fan-in, com **3 gates humanos obrigatórios**). Ver PR #126.
+Status: **aguardando aprovação MN antes de qualquer deploy** — mesmo
+padrão de gate humano já usado para os demais agentes/skills deste
+registro.
+
+Consolida v5.4.7 (2026-09-11) — **reconciliação de conhecimento por
 agente/segmento/disciplina**. Releitura ao vivo do `INDICE-CANONICAL.md`
 real (v1.1) mostrou que o eixo S vai até **S14** (Túneis, Mineração,
 Óleo e Gás), o eixo D até **D22** e o eixo A até **A11** — mais do que
@@ -879,18 +910,29 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 
 ```
 Codex-exemplo/
-├── CLAUDE.md                              # este arquivo (master registry, v5.2)
+├── CLAUDE.md                              # este arquivo (master registry, v5.4.8)
 ├── README.md
 ├── .claude/
-│   └── agents/
-│       ├── agente-portos.md               # S7 real (frontmatter interno ainda diz S6 — renumeração pendente, ver Deploy checklist)
-│       ├── agente-aeroportos.md           # S8 real (frontmatter interno ainda diz S7 — renumeração pendente)
-│       ├── agente-saneamento.md           # S9 real (frontmatter interno ainda diz S8 — renumeração pendente) — prioridade AySA
-│       ├── agente-energia.md              # S10 real (frontmatter interno ainda diz S9 — renumeração pendente) — ANEEL/State Grid
-│       ├── agente-barragens.md            # S11 real (frontmatter interno ainda diz S10 — renumeração pendente)
-│       ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
-│       ├── agente-oleo-gas.md             # sem segmento real confirmado (frontmatter interno ainda diz S12)
-│       └── agente-edificacoes.md          # S6 real (frontmatter interno ainda diz S13 — renumeração pendente)
+│   ├── agents/
+│   │   ├── agente-portos.md               # S7 real (frontmatter interno ainda diz S6 — renumeração pendente, ver Deploy checklist)
+│   │   ├── agente-aeroportos.md           # S8 real (frontmatter interno ainda diz S7 — renumeração pendente)
+│   │   ├── agente-saneamento.md           # S9 real (frontmatter interno ainda diz S8 — renumeração pendente) — prioridade AySA
+│   │   ├── agente-energia.md              # S10 real (frontmatter interno ainda diz S9 — renumeração pendente) — ANEEL/State Grid
+│   │   ├── agente-barragens.md            # S11 real (frontmatter interno ainda diz S10 — renumeração pendente)
+│   │   ├── agente-esg.md                  # Manta 20 — P3-04 Design Agent ESG (v1.0, 2026-08-02)
+│   │   ├── agente-oleo-gas.md             # sem segmento real confirmado (frontmatter interno ainda diz S12)
+│   │   └── agente-edificacoes.md          # S6 real (frontmatter interno ainda diz S13 — renumeração pendente)
+│   └── skills/                            # 🆕 v5.4.8 — sub-skills transversais MOT (extensão S1/S2, não segmento novo)
+│       ├── mot-leitor-edital/SKILL.md
+│       ├── mot-leitor-projeto-executivo/SKILL.md
+│       ├── mot-leitor-cronograma/SKILL.md
+│       └── mot-orquestrador/SKILL.md      # orquestrador do pipeline (6 subagentes, 3 gates humanos)
+├── engine/
+│   └── mot/                               # 🆕 v5.4.8 — código do motor MOT, testado localmente
+│       ├── window-classifier.js           # classificador determinístico de janela viável
+│       ├── matching-engine.js             # motor de matching (BM25+TF-IDF, adaptado de sicro-similaridade)
+│       ├── svg-phase-generator.js         # gerador de planta esquemática SVG por fase
+│       └── memorial-template.md           # template de memorial no padrão do Anexo 9 real
 ├── docs/
 │   ├── PADRAO-OUTPUT-MOTIVA.md            # v5.2 — padrão de output cliente Motiva
 │   ├── templates/
@@ -914,21 +956,36 @@ Codex-exemplo/
 │   └── MATRIZ-CONHECIMENTO-POR-AGENTE.md  # 🆕 2026-09-11 — conhecimento essencial dos 21+ agentes (hipótese, não cruzada linha a linha com o real)
 ├── sharepoint/
 │   ├── README.md
-│   └── 00-arquitetura/
-│       └── ARQUITETURA-AGENTES-IA.md      # v3.0.0 — documento de arquitetura de referência (4 eixos)
+│   ├── 00-arquitetura/
+│   │   └── ARQUITETURA-AGENTES-IA.md      # v3.0.0 — documento de arquitetura de referência (4 eixos)
+│   └── 02-subskills-transversais/         # 🆕 v5.4.8 — primeira sub-skill transversal (não vertical S)
+│       └── sinalizacao-fasamento-mot/
+│           ├── README.md
+│           └── SKILL.md                   # mirror do mot-orquestrador, p/ sync manual com o SharePoint real
 ├── supabase/
 │   └── migrations/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
-│       └── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
+│       ├── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
+│       └── 2026_09_26_v5_4_8_mot_fasamento.sql    # 🆕 migração candidata v5.4.8 (MOT — 8 casos-teste reais, não aplicada)
 └── tests/
     └── routing/
-        └── prompts.md                     # smoke tests de routing por segmento
+        └── prompts.md                     # smoke tests de routing por segmento (inclui seção MOT, v5.4.8)
 ```
 
 ---
 
 ## Histórico de versões
 
+- **v5.4.8** (2026-09-26) — criação da capacidade MOT — Faseamento de
+  Tráfego em Trevos e Interseções, extensão dos agentes S1-Rodovias e
+  S2-OAE (não um segmento novo). 8 casos-teste reais do projeto SP-258
+  (Motiva/CCR); auditoria de 10 subagentes documentou 9 achados,
+  incluindo 2 erros reais já no Anexo 9 entregue ao cliente e 1
+  contradição geométrica (km 282) pendente de confirmação com a
+  equipe de projeto. Schema Supabase candidato, pipeline de 6
+  subagentes com 3 gates humanos, código testado localmente
+  (`engine/mot/`). Ver `.claude/skills/mot-orquestrador/SKILL.md` e
+  PR #126. Status: aguardando aprovação MN antes de qualquer deploy.
 - **v5.4.7** (2026-09-11) — reconciliação de conhecimento por
   agente/segmento/disciplina (`docs/PLANEJAMENTO-MANTA-MAESTRO.md`).
   Re-verificação ao vivo do `INDICE-CANONICAL.md` real (v1.1) corrige

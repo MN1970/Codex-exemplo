@@ -57,6 +57,20 @@ arquivo serve como fonte manual para QA humano.)
 - [ ] `Tenho uma barragem TSF a montante que precisa descaracterizar.` → **agente-barragens**
 - [ ] `O SIGBM da ANM me alertou sobre categoria de risco — o que faço?` → **agente-barragens**
 
+## MOT — Faseamento de Tráfego (extensão S1/S2)
+
+- [ ] `"preciso da sequência executiva de fases para o trevo em obra do km 282"` → **agente-infraestrutura S1** + handoff **mot-orquestrador**
+- [ ] `"como fica o desvio de tráfego da duplicação atravessando a interseção existente?"` → **agente-infraestrutura S1** + handoff **mot-orquestrador**
+- [ ] `"faseamento da rotatória durante a obra do viaduto"` → **agente-infraestrutura S2** + handoff **mot-orquestrador**
+- [ ] `"quais as etapas de manutenção de tráfego para o trevo em desnível durante a execução da OAE?"` → **agente-infraestrutura S2** + handoff **mot-orquestrador**
+- [ ] `"monta o plano de fases (TMP) para o desvio de tráfego no trevo enquanto a obra avança"` → **agente-infraestrutura S1** + handoff **mot-orquestrador**
+- [ ] `"sequência de faseamento do tráfego na interseção com a marginal durante a duplicação"` → **agente-infraestrutura S1** + handoff **mot-orquestrador**
+
+### Casos ambíguos MOT
+
+- [ ] `"qual sinalização usar no desvio provisório da rotatória?"` → **sinalizacao-provisorios-rodovias** (pedido isolado de dispositivo/placa de UMA fase já decidida, não pede sequência/fases — não deve acionar MOT)
+- [ ] `"preciso das fases do desvio de tráfego do trevo, e depois também das placas de cada fase"` → **agente-infraestrutura S1/S2** + handoff **mot-orquestrador** (define as fases) → em seguida **sinalizacao-provisorios-rodovias** (desenha os dispositivos de cada fase já decidida); caso composto, roteamento inicial para MOT por mencionar "fases"
+
 ## Verificações de não-regressão (S1-S4 mantidos)
 
 - [ ] `Preciso do orçamento SICRO para pavimento CBUQ 5cm.` → **agente-infraestrutura S1** (Rodovias) + handoff **manta-05**
