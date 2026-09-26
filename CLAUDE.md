@@ -4,7 +4,12 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v5.4.7** (2026-09-11) — **reconciliação de conhecimento por
+Versão: **v5.4.8** (2026-09-26) — **auditoria de segurança do
+Supabase `manta-maestro`**: leitura anon aberta em `r2j_*`, RAG e
+`pk_*`; migration de RLS **aplicada em produção** (aprovação MN).
+Ver "SEGURANÇA — artefatos e dados".
+
+Consolida v5.4.7 (2026-09-11) — **reconciliação de conhecimento por
 agente/segmento/disciplina**. Releitura ao vivo do `INDICE-CANONICAL.md`
 real (v1.1) mostrou que o eixo S vai até **S14** (Túneis, Mineração,
 Óleo e Gás), o eixo D até **D22** e o eixo A até **A11** — mais do que
@@ -173,6 +178,7 @@ padrão de output por cliente).
 10. [RAG — Coleções em Supabase](#rag--coleções-em-supabase)
 11. [SharePoint — Routing rules](#sharepoint--routing-rules-sp_agent_routing)
 12. [Padrões de output por cliente](#padrões-de-output-por-cliente)
+    - [Segurança — artefatos e dados](#segurança--artefatos-e-dados)
 13. [Model tiering](#model-tiering)
 14. [Gaps abertos / pendências](#gaps-abertos--pendências)
 15. [Questionário de decisão para MN](#questionário-de-decisão-para-mn)
@@ -644,6 +650,35 @@ cliente ao gerar output para ele.
 
 ---
 
+## SEGURANÇA — artefatos e dados
+
+**✅ Correção aplicada em produção em 2026-09-26 (aprovação MN).**
+Levantamento de 2026-09-26 no projeto
+Supabase `manta-maestro` (Security Advisors + `pg_policies` +
+`has_table_privilege`): RLS está ligada em todas as tabelas, mas 19
+tabelas `r2j_*` (~85 mil linhas de preços, receita, EVTEA e parâmetros
+de edital), o RAG (`manta_rag_*`, `rag_chunks`), `manta_trace`,
+`manta_artefatos` e as `pk_*` têm política `SELECT TO anon USING
+(true)`. Como a chave anon fica visível nos portais HTML, na prática
+esses dados são públicos. `pk_queries` e `pk_feedback` também aceitam
+INSERT anônimo.
+
+A correção candidata é
+`supabase/migrations/2026_09_26_security_rls_hardening.sql`: restringe
+leitura a e-mails @mantaassociados.com via `private.is_manta_member()`.
+Foi validada em dry-run e depois aplicada; o teste pós-aplicação
+confirmou `anon` sem acesso e leitura só para @mantaassociados.com.
+**Pendente**: migrar os portais que usavam a chave anon (hoje recebem
+lista vazia) para login ou edge function, desativar cadastro aberto no
+Supabase Auth e rotacionar a chave anon. Checklist completo (artefatos, SharePoint,
+GitHub, agentes, LGPD) em `docs/SEGURANCA-ARTEFATOS.md`.
+
+Regra para agentes: nenhum artefato para cliente embute credencial ou
+dado sensível no HTML; nenhuma tabela nova no Supabase entra com
+política `USING (true)` para `anon`.
+
+---
+
 ## MODEL TIERING
 
 | Tier | Modelo | Uso típico |
@@ -749,6 +784,11 @@ Sonnet ao entrar no vertical → Opus se detectar complexidade).
   organização Supabase ativa da conta corporativa). **Confirmação
   humana (dashboard) ainda pendente** antes de remover a referência —
   ver action items AI-1 a AI-10 nesse documento.
+- **✅ Leitura anon aberta em dados comerciais — corrigida em
+  2026-09-26** (ver "SEGURANÇA — artefatos e dados"); pendentes: portais
+  sem login, cadastro aberto no Auth e rotação da chave anon. Atualiza o item abaixo: a RLS já
+  está ligada nas 3 tabelas citadas, mas com política `USING (true)`
+  para `anon`, o que não restringe nada.
 - **RLS desabilitado em 3 tabelas públicas** (`rag_collections`,
   `sp_agent_routing`, `maestro_routing_keywords`) — achado de segurança
   correlato da auditoria G012, com SQL de remediação já redigido mas
@@ -843,7 +883,11 @@ adiciona a sequência de consolidação/validação da v5.0). Resumo:
 - [ ] Reconciliar `docs/EMBEDDER-DECISION.md` com achado de
       `docs/SUPABASE-PROJECT-AUDIT.md` antes de decidir embedder
 - [ ] Confirmar manualmente o destino do projeto `xgluoaa...` (AI-1)
-- [ ] Aplicar RLS nas 3 tabelas expostas (AI-6)
+- [x] Aplicar RLS nas 3 tabelas expostas (AI-6) — ampliado e aplicado
+      em 2026-09-26 pela migration `2026_09_26_security_rls_hardening.sql`
+      (42 tabelas, aprovação MN)
+- [ ] Migrar portais que usavam a chave anon para login/edge function,
+      desativar cadastro aberto no Auth e rotacionar a chave anon
 - [ ] Criar RAG + rota SP + routing keywords para Edificações (S6) e Óleo & Gás (se aprovado)
 - [ ] Rodar aluci-guard sobre este documento antes de merge
 - [ ] Rodar consist-guard sobre este documento antes de merge
@@ -909,6 +953,7 @@ Codex-exemplo/
 │   ├── DEPLOY-CHECKLIST-v5.0.md           # checklist completo v4.2 + v5.0
 │   ├── DEPLOY-v4.2.md                     # runbook manual (Supabase + SharePoint)
 │   ├── COWORK-INTEGRATION.md              # runbook de integração Maestro ↔ Cowork
+│   ├── SEGURANCA-ARTEFATOS.md             # 🆕 v5.4.8 — achados Supabase + checklist de segurança
 │   ├── PLANEJAMENTO-MANTA-MAESTRO.md      # 🆕 2026-09-11 — relatório de reconciliação (achados reais vs. suposições, ver §1-3)
 │   ├── D03-GEOTECNIA-APLICACAO-PROJETOS-MANTA.md # 🆕 2026-09-11 — guia prático (D03 real, não um agente novo)
 │   └── MATRIZ-CONHECIMENTO-POR-AGENTE.md  # 🆕 2026-09-11 — conhecimento essencial dos 21+ agentes (hipótese, não cruzada linha a linha com o real)
@@ -919,7 +964,8 @@ Codex-exemplo/
 ├── supabase/
 │   └── migrations/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
-│       └── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
+│       ├── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
+│       └── 2026_09_26_security_rls_hardening.sql  # 🆕 v5.4.8 — RLS só para membros Manta (✅ aplicada 2026-09-26)
 └── tests/
     └── routing/
         └── prompts.md                     # smoke tests de routing por segmento
@@ -929,6 +975,13 @@ Codex-exemplo/
 
 ## Histórico de versões
 
+- **v5.4.8** (2026-09-26) — auditoria de segurança do Supabase
+  `manta-maestro`: leitura anon aberta em `r2j_*`, RAG, `pk_*`,
+  `manta_trace` e `manta_artefatos`; INSERT anônimo em `pk_queries`/
+  `pk_feedback`. Migration candidata
+  `2026_09_26_security_rls_hardening.sql` validada em dry-run, aprovada
+  por MN e aplicada em produção no mesmo dia; checklist
+  `docs/SEGURANCA-ARTEFATOS.md`. Ticket `MNT-2026-SEC-RLS-01`.
 - **v5.4.7** (2026-09-11) — reconciliação de conhecimento por
   agente/segmento/disciplina (`docs/PLANEJAMENTO-MANTA-MAESTRO.md`).
   Re-verificação ao vivo do `INDICE-CANONICAL.md` real (v1.1) corrige
