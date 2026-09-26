@@ -208,6 +208,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     needs: [regression-gate, router-e2e, cross-agent-flows]
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4

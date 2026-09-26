@@ -66,7 +66,7 @@
       "context_hints": ["energia", "transmissao", "ANEEL"],
       "expected_agent_id": "manta-03-s9",
       "expected_skill": "agente-energia.v5.0",
-      "expected_phase": "projeto-executivo",
+      "expected_phase": "estudo-previo",
       "expected_model_tier": "sonnet-5",
       "routing_confidence_min": 0.89,
       "keywords": ["RAP", "LT 765kV", "ANEEL", "transmissão"],
