@@ -1,0 +1,330 @@
+  <div id="view-cronos" hidden>
+<style>
+  .crn{display:grid;gap:18px}
+  .crn-head{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;justify-content:space-between;border-left:3px solid var(--accent);background:var(--bg-alt);padding:12px 16px;border-radius:0 6px 6px 0}
+  .crn-head h3{margin:0;font:600 18px/1.3 Montserrat,Arial,sans-serif;color:var(--heading)}
+  .crn-head p{margin:4px 0 0;font-size:13px;color:var(--muted);max-width:74ch}
+  .crn-head a{color:var(--accent-dark);font-weight:600;font-size:13px}
+  .crn-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .crn-btn{font:500 13px Inter,system-ui,sans-serif;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:7px 12px;cursor:pointer}
+  .crn-btn:hover{border-color:var(--accent);color:var(--accent-dark)}
+  .crn-btn.pri{background:var(--fill-strong);border-color:var(--fill-strong);color:#fff}
+  .crn-btn:focus-visible,.crn-sel:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .crn-btn[disabled]{opacity:.5;cursor:default}
+  .crn-drop{border:1.5px dashed var(--border);border-radius:8px;padding:12px;text-align:center;font-size:13px;color:var(--muted);margin-top:10px}
+  .crn-drop.over{border-color:var(--accent);background:var(--row-hover)}
+  .crn-h{font:600 12px Montserrat,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--title);margin:0 0 6px}
+  .crn-tw{overflow-x:auto}
+  .crn table{width:100%;border-collapse:collapse;font-size:13px}
+  .crn th{text-align:left;padding:7px 9px;font:600 11px Montserrat,Arial,sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+  .crn td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:top}
+  .crn tbody tr:nth-child(odd) td{background:var(--zebra-odd)}
+  .crn tbody tr:nth-child(even) td{background:var(--zebra-even)}
+  .crn td.n,.crn th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .crn-kpis{display:flex;flex-wrap:wrap;gap:6px 28px}
+  .crn-kpis b{display:block;font:700 24px/1.15 Montserrat,Arial,sans-serif;color:var(--accent-dark);font-variant-numeric:tabular-nums}
+  .crn-kpis span{font-size:12px;color:var(--muted)}
+  .crn-alert{color:var(--danger);font-weight:600}
+  .crn-ok{color:var(--success);font-weight:600}
+  .crn-note{font-size:12px;color:var(--muted)}
+  .crn-gantt{border:1px solid var(--border);border-radius:6px;overflow:auto;max-height:540px;background:var(--bg)}
+  .crn-gantt svg{display:block}
+  .crn-sel{font:13px Inter,system-ui,sans-serif;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);max-width:100%}
+  .crn-tag{display:inline-block;font:600 11px Inter,sans-serif;color:var(--accent-dark);border:1px solid var(--accent);border-radius:4px;padding:1px 6px;margin-left:6px}
+  .crn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+</style>
+<div class="crn" id="crn-root">
+  <div class="crn-head">
+    <div>
+      <h3>Manta Cronos · Visualizador de cronogramas</h3>
+      <p>Abra vários cronogramas ao mesmo tempo (XER do Primavera P6 e XML do MS Project). Leitura, cálculo e exportação acontecem no seu navegador; nenhum arquivo é enviado a servidor. Motor v0.2 com calendários do P6, data de status, datas reais, restrições e DCMA-14 (regra A5).</p>
+    </div>
+    <a href="https://claude.ai/artifact/GARM33Qm2i4zLmvUSXGL6C" target="_blank" rel="noopener">Plano completo do Cronos ↗</a>
+  </div>
+
+  <div>
+    <div class="crn-bar">
+      <label class="crn-btn pri" for="crn-file">Abrir cronogramas…</label>
+      <input id="crn-file" type="file" accept=".xer,.xml" multiple hidden>
+      <label class="crn-btn" for="crn-dir">Abrir pasta…</label>
+      <input id="crn-dir" type="file" webkitdirectory multiple hidden>
+      <button type="button" class="crn-btn" id="crn-sample">Carregar exemplo</button>
+      <button type="button" class="crn-btn" id="crn-clear">Limpar</button>
+      <label class="crn-note"><input type="checkbox" id="crn-hist"> incluir versões históricas (OBSOLETO, DEPRECATED)</label>
+    </div>
+    <div class="crn-drop" id="crn-drop">Ou arraste arquivos .xer / .xml aqui. Para .mpp: no MS Project use Arquivo › Salvar como › XML. Excel e PDF entram nas próximas fases.</div>
+    <p class="crn-note" id="crn-status" aria-live="polite"></p>
+  </div>
+
+  <div>
+    <div class="crn-h">1. Versões abertas</div>
+    <div class="crn-tw"><table><thead><tr><th>Arquivo</th><th>Projeto</th><th>Data status</th><th class="n">Atividades</th><th class="n">Ligações</th><th>Término</th><th class="n">Custo total</th><th>DCMA-14</th><th></th></tr></thead>
+    <tbody id="crn-versions"></tbody></table></div>
+  </div>
+
+  <div id="crn-detail" hidden>
+    <div class="crn-h" id="crn-dtitle">2. Versão</div>
+    <div class="crn-kpis" id="crn-kpis"></div>
+    <p class="crn-note" id="crn-avisos"></p>
+    <div class="crn-bar" style="margin:10px 0">
+      <button type="button" class="crn-btn" id="crn-mc">Simular Monte Carlo</button>
+      <button type="button" class="crn-btn" id="crn-exp-xer">Exportar XER (.zip)</button>
+      <button type="button" class="crn-btn" id="crn-exp-xml">Exportar MS Project XML (.zip)</button>
+      <button type="button" class="crn-btn" id="crn-exp-csv">Exportar atividades (.csv)</button>
+      <label class="crn-note"><input type="checkbox" id="crn-onlycrit"> só atividades críticas</label>
+    </div>
+    <p class="crn-note" id="crn-mcout" aria-live="polite"></p>
+    <div class="crn-gantt" id="crn-gantt"></div>
+    <p class="crn-note">Gantt por datas calculadas com os calendários do cronograma. Em vermelho: folga total ≤ 0. Cinza: concluída.</p>
+    <div class="crn-h" style="margin-top:12px">2.1 Caminho crítico</div>
+    <div class="crn-tw"><table><thead><tr><th>Código</th><th>Atividade</th><th>EAP</th><th>Início</th><th>Término</th><th class="n">Folga (d)</th><th class="n">Custo</th><th>Fonte</th></tr></thead>
+    <tbody id="crn-crit"></tbody></table></div>
+    <div class="crn-h" style="margin-top:12px" id="crn-dcma-t">2.2 DCMA-14</div>
+    <div class="crn-tw"><table><thead><tr><th class="n">Ponto</th><th>Verificação</th><th class="n">Valor</th><th>Limite</th><th>Resultado</th><th>Detalhe</th></tr></thead>
+    <tbody id="crn-dcma"></tbody></table></div>
+    <p class="crn-note">Regra A5: nota ≥ 90% dos pontos aplicáveis e nenhuma reprovação nos pontos 1, 3, 6, 7 e 11. Pontos 11 e 14 usam as datas planejadas do XER como aproximação da linha de base.</p>
+  </div>
+
+  <div id="crn-cmpbox" hidden>
+    <div class="crn-h">3. Comparar versões</div>
+    <div class="crn-bar"><select class="crn-sel" id="crn-a" aria-label="Versão A"></select><span>×</span><select class="crn-sel" id="crn-b" aria-label="Versão B"></select><button type="button" class="crn-btn" id="crn-cmp">Comparar</button></div>
+    <div id="crn-cmpout" style="margin-top:10px"></div>
+  </div>
+</div>
+<script src="cronos/cronos-engine.js"></script>
+<script>
+(function(){
+  var E = window.CronosEngine;
+  var ST = {v: [], sel: null}, DIA = 86400000;
+  var $ = function(id){ return document.getElementById(id); };
+  if(!E){ $('crn-status').textContent = 'Motor do Cronos não carregou; recarregue a página.'; return; }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function fmt(n, d){ return Number(n).toLocaleString('pt-BR', {minimumFractionDigits: d||0, maximumFractionDigits: d||0}); }
+  var br = E.fmtBR;
+
+  function preparar(p, exemplo){
+    p.exemplo = !!exemplo;
+    try{ p.r = E.calcular(p); p.err = null; p.dcma = E.dcma14(p, p.r); }
+    catch(e){ p.r = null; p.err = e.message; p.dcma = null; }
+    ST.v = ST.v.filter(function(x){ return x.chave !== p.chave; }).concat([p]);
+  }
+
+  function lerArquivos(files){
+    var arr = Array.prototype.slice.call(files).filter(function(f){ return /\.(xer|xml)$/i.test(f.name); });
+    var incluir = $('crn-hist').checked, ignorados = [], erros = [], feitos = 0, ultimo = null;
+    if(!arr.length){ $('crn-status').textContent = 'Nenhum arquivo .xer ou .xml encontrado.'; return; }
+    $('crn-status').textContent = 'Lendo ' + arr.length + ' arquivo(s)…';
+    arr.forEach(function(file){
+      var caminho = file.webkitRelativePath || file.name;
+      if(!incluir && E.eHistorico(caminho)){ ignorados.push(file.name); if(++feitos === arr.length) fim(); return; }
+      file.arrayBuffer().then(function(buf){
+        var xer = /\.xer$/i.test(file.name);
+        var txt = new TextDecoder(xer ? 'latin1' : 'utf-8').decode(buf);
+        var ps = xer ? E.lerXER(txt, file.name) : E.lerMSPDI(txt, file.name);
+        ps.forEach(function(p){ preparar(p); ultimo = p.chave; });
+      }).catch(function(e){ erros.push(file.name + ': ' + e.message); }).then(function(){ if(++feitos === arr.length) fim(); });
+    });
+    function fim(){
+      renderVersoes(); if(ultimo) mostrar(ultimo);
+      var msg = ST.v.length + ' versão(ões) abertas';
+      if(ignorados.length) msg += ' · ' + ignorados.length + ' histórica(s) ignorada(s): ' + ignorados.slice(0, 5).join(', ') + (ignorados.length > 5 ? '…' : '');
+      if(erros.length) msg += ' · erros: ' + erros.join(' · ');
+      $('crn-status').textContent = msg;
+    }
+  }
+
+  function renderVersoes(){
+    var tb = $('crn-versions');
+    if(!ST.v.length){ tb.innerHTML = '<tr><td colspan="9" class="crn-note">Nenhum cronograma aberto. Use “Abrir cronogramas…”, “Abrir pasta…” ou “Carregar exemplo”.</td></tr>'; $('crn-cmpbox').hidden = true; return; }
+    tb.innerHTML = ST.v.map(function(p){
+      var d = p.dcma;
+      return '<tr><td>' + esc(p.arquivo) + (p.exemplo ? '<span class="crn-tag">exemplo</span>' : '') + '</td><td>' + esc(p.nome) + '</td><td>' + br(p.dataStatus) + '</td>' +
+        '<td class="n">' + fmt(Object.keys(p.at).length) + '</td><td class="n">' + fmt(p.lig.length) + '</td>' +
+        '<td>' + (p.r ? br(p.r.termino) : '<span class="crn-alert">' + esc(p.err) + '</span>') + '</td>' +
+        '<td class="n">' + (p.custo ? 'R$ ' + fmt(p.custo, 2) : '<span class="crn-alert">sem custos</span>') + '</td>' +
+        '<td>' + (d ? (d.aprovado ? '<span class="crn-ok">' + fmt(d.nota * 100) + '% aprovado</span>' : '<span class="crn-alert">' + fmt(d.nota * 100) + '% reprovado</span>') : '—') + '</td>' +
+        '<td><button type="button" class="crn-btn" data-crn-ver="' + esc(p.chave) + '">Ver</button></td></tr>';
+    }).join('');
+    var opts = ST.v.map(function(p){ return '<option value="' + esc(p.chave) + '">' + esc(p.arquivo + ' · ' + p.nome) + '</option>'; }).join('');
+    $('crn-a').innerHTML = opts; $('crn-b').innerHTML = opts;
+    if(ST.v.length > 1){ $('crn-a').selectedIndex = 0; $('crn-b').selectedIndex = ST.v.length - 1; }
+    $('crn-cmpbox').hidden = ST.v.length < 2;
+  }
+  function porChave(k){ return ST.v.filter(function(p){ return p.chave === k; })[0]; }
+
+  function mostrar(chave){
+    var p = porChave(chave); if(!p) return;
+    ST.sel = chave; $('crn-detail').hidden = false; $('crn-mcout').textContent = '';
+    $('crn-dtitle').textContent = '2. Versão · ' + p.arquivo + ' · ' + p.nome;
+    ['crn-mc','crn-exp-xer','crn-exp-xml','crn-exp-csv'].forEach(function(id){ $(id).disabled = !p.r; });
+    $('crn-exp-xer').disabled = !p.r || !p.origem;
+    if(!p.r){ $('crn-kpis').innerHTML = '<span class="crn-alert">' + esc(p.err) + '</span>'; $('crn-gantt').innerHTML = ''; $('crn-crit').innerHTML = ''; $('crn-dcma').innerHTML = ''; $('crn-avisos').textContent = ''; return; }
+    var r = p.r, d = p.dcma;
+    $('crn-kpis').innerHTML = [
+      [br(r.termino), 'término calculado'], [br(r.dataStatus), 'data de status'], [fmt(r.criticas.length), 'atividades críticas'],
+      [p.custo ? 'R$ ' + fmt(p.custo / 1e6, 2) + ' mi' : '—', p.custo ? 'custo total (cost-loaded)' : 'sem carregamento de custos'],
+      [fmt(d.nota * 100) + '%', 'DCMA-14 · ' + (d.aprovado ? 'aprovado' : 'reprovado' + (d.bloqueios.length ? ' (bloqueios ' + d.bloqueios.join(', ') + ')' : ''))]
+    ].map(function(k){ return '<div><b>' + k[0] + '</b><span>' + esc(k[1]) + '</span></div>'; }).join('');
+    $('crn-avisos').textContent = r.avisos.concat(p.alertas).join(' · ');
+    gantt(p);
+    var crit = r.criticas.slice().sort(function(a, b){ return r.es[a] - r.es[b]; });
+    $('crn-crit').innerHTML = crit.slice(0, 100).map(function(u){
+      var a = p.at[u];
+      return '<tr><td>' + esc(a.cod) + '</td><td>' + esc(a.nome) + '</td><td>' + esc(a.wbs) + '</td><td>' + br(r.es[u]) + '</td><td>' + br(r.ef[u]) + '</td><td class="n">' + fmt(E.folgaDias(p, r, u), 1) + '</td><td class="n">' + (a.custo ? fmt(a.custo, 2) : '—') + '</td><td class="crn-note">' + esc(a.fonte) + '</td></tr>';
+    }).join('') + (crit.length > 100 ? '<tr><td colspan="8" class="crn-note">… mais ' + (crit.length - 100) + ' atividades críticas</td></tr>' : '') || '<tr><td colspan="8" class="crn-note">Nenhuma atividade crítica aberta.</td></tr>';
+    $('crn-dcma-t').textContent = '2.2 DCMA-14 · nota ' + fmt(d.nota * 100) + '% (' + d.aplicaveis + ' pontos aplicáveis)';
+    $('crn-dcma').innerHTML = d.pontos.map(function(x){
+      var res = !x.aplicavel ? '<span class="crn-note">não aplicável</span>' : x.passou ? '<span class="crn-ok">passou</span>' : '<span class="crn-alert">reprovado' + ([1,3,6,7,11].indexOf(x.ponto) >= 0 ? ' · bloqueia' : '') + '</span>';
+      return '<tr><td class="n">' + x.ponto + '</td><td>' + esc(x.nome) + '</td><td class="n">' + esc(x.valor) + '</td><td>' + esc(x.limite) + '</td><td>' + res + '</td><td class="crn-note">' + esc(x.detalhe) + (x.exemplos.length ? ' · ex.: ' + esc(x.exemplos.join(', ')) : '') + '</td></tr>';
+    }).join('');
+  }
+
+  function gantt(p){
+    var css = getComputedStyle(document.documentElement), tok = function(n, f){ return css.getPropertyValue(n).trim() || f; };
+    var cT = tok('--text', '#374151'), cM = tok('--muted', '#6B7280'), cB = tok('--border', '#E5DDD3'), cA = tok('--accent', '#E07B3D'), cD = tok('--danger', '#B3261E');
+    var r = p.r, only = $('crn-onlycrit').checked, crit = {};
+    r.criticas.forEach(function(u){ crit[u] = 1; });
+    var ids = r.ordem.filter(function(u){ return !only || crit[u]; }).sort(function(a, b){ return r.es[a] - r.es[b]; }).slice(0, 400);
+    if(!ids.length){ $('crn-gantt').innerHTML = '<p class="crn-note" style="padding:10px">Nada para mostrar.</p>'; return; }
+    var t0 = Math.min.apply(null, ids.map(function(u){ return r.es[u]; })), t1 = Math.max.apply(null, ids.map(function(u){ return r.ef[u]; }));
+    t0 = Math.min(t0, r.dataStatus); var span = Math.max(t1 - t0, DIA);
+    var LW = 320, RH = 18, W = 1150, Hh = ids.length * RH + 36, sx = (W - LW - 20) / span;
+    var s = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + Hh + '" font-family="Inter,system-ui,sans-serif" font-size="11">';
+    var d0 = new Date(t0), passoMeses = span / DIA > 900 ? 6 : span / DIA > 300 ? 3 : 1;
+    for(var m = Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth(), 1); m <= t1; ){
+      var x = LW + (m - t0) * sx, dm = new Date(m);
+      if(x >= LW) s += '<line x1="' + x + '" y1="20" x2="' + x + '" y2="' + Hh + '" stroke="' + cB + '"/><text x="' + (x + 3) + '" y="13" fill="' + cM + '">' + ('0' + (dm.getUTCMonth() + 1)).slice(-2) + '/' + String(dm.getUTCFullYear()).slice(2) + '</text>';
+      m = Date.UTC(dm.getUTCFullYear(), dm.getUTCMonth() + passoMeses, 1);
+    }
+    var xs = LW + (r.dataStatus - t0) * sx;
+    s += '<line x1="' + xs + '" y1="18" x2="' + xs + '" y2="' + Hh + '" stroke="' + cA + '" stroke-dasharray="4 3"><title>Data de status ' + br(r.dataStatus) + '</title></line>';
+    ids.forEach(function(u, i){
+      var a = p.at[u], y = 26 + i * RH, x = LW + (r.es[u] - t0) * sx, w = Math.max((r.ef[u] - r.es[u]) * sx, 2);
+      var cor = a.status === 'concluida' ? cM : crit[u] ? cD : cA;
+      var lbl = (a.cod ? a.cod + ' · ' : '') + a.nome; if(lbl.length > 48) lbl = lbl.slice(0, 47) + '…';
+      var dica = esc(a.cod + ' ' + a.nome + ' — ' + br(r.es[u]) + ' a ' + br(r.ef[u]) + (r.folgaH[u] !== undefined ? ', folga ' + fmt(E.folgaDias(p, r, u), 1) + ' d' : ', concluída'));
+      s += '<text x="6" y="' + (y + 10) + '" fill="' + cT + '">' + esc(lbl) + '</text>';
+      s += (r.ef[u] - r.es[u] < 60000) ? '<path d="M' + x + ' ' + (y + 1) + ' l6 6 l-6 6 l-6 -6 z" fill="' + cor + '"><title>' + dica + '</title></path>'
+        : '<rect x="' + x + '" y="' + (y + 2) + '" width="' + w + '" height="11" rx="2" fill="' + cor + '"><title>' + dica + '</title></rect>';
+    });
+    s += '</svg>';
+    $('crn-gantt').innerHTML = s + (r.ordem.length > ids.length && !only ? '<div class="crn-note" style="padding:6px 10px">Mostrando as primeiras 400 atividades por data de início.</div>' : '');
+  }
+
+  function comparar(){
+    var a = porChave($('crn-a').value), b = porChave($('crn-b').value);
+    if(!a || !b || !a.r || !b.r){ $('crn-cmpout').innerHTML = '<span class="crn-alert">Escolha duas versões calculadas.</span>'; return; }
+    var ca = {}, cb = {};
+    Object.keys(a.at).forEach(function(u){ if(E.noCalculo(a.at[u])) ca[a.at[u].cod] = u; });
+    Object.keys(b.at).forEach(function(u){ if(E.noCalculo(b.at[u])) cb[b.at[u].cod] = u; });
+    var soA = Object.keys(ca).filter(function(c){ return !(c in cb); }), soB = Object.keys(cb).filter(function(c){ return !(c in ca); }), alt = [];
+    var critA = {}, critB = {}; a.r.criticas.forEach(function(u){ critA[u] = 1; }); b.r.criticas.forEach(function(u){ critB[u] = 1; });
+    Object.keys(ca).forEach(function(c){
+      if(!(c in cb)) return;
+      var ua = ca[c], ub = cb[c], xa = a.at[ua], xb = b.at[ub], hd = E.calDe(b, xb).horasDia;
+      var ds = (b.r.es[ub] - a.r.es[ua]) / DIA, dd = (xb.restH - xa.restH) / hd, dc = xb.custo - xa.custo, ka = !!critA[ua], kb = !!critB[ub];
+      if(Math.abs(ds) > 1e-6 || Math.abs(dd) > 1e-6 || Math.abs(dc) > 0.005 || ka !== kb) alt.push({c: c, n: xb.nome, ds: ds, dd: dd, dc: dc, ka: ka, kb: kb});
+    });
+    alt.sort(function(x, y){ return Math.abs(y.ds) - Math.abs(x.ds); });
+    var dT = (b.r.termino - a.r.termino) / DIA;
+    var h = '<div class="crn-kpis"><div><b>' + br(a.r.termino) + ' → ' + br(b.r.termino) + '</b><span>término (Δ ' + fmt(dT, 1) + ' dias corridos)</span></div>' +
+      '<div><b>R$ ' + fmt(a.custo / 1e6, 2) + ' → ' + fmt(b.custo / 1e6, 2) + ' mi</b><span>custo total</span></div>' +
+      '<div><b>' + fmt(soA.length) + ' / ' + fmt(soB.length) + '</b><span>só na A / só na B</span></div><div><b>' + fmt(alt.length) + '</b><span>atividades alteradas</span></div></div>';
+    h += '<div class="crn-tw" style="margin-top:10px"><table><thead><tr><th>Código</th><th>Atividade</th><th class="n">Δ início (dias corridos)</th><th class="n">Δ duração (dias úteis)</th><th class="n">Δ custo</th><th>Crítica A → B</th></tr></thead><tbody>' +
+      alt.slice(0, 150).map(function(x){ return '<tr><td>' + esc(x.c) + '</td><td>' + esc(x.n) + '</td><td class="n">' + fmt(x.ds, 1) + '</td><td class="n">' + fmt(x.dd, 1) + '</td><td class="n">' + fmt(x.dc, 2) + '</td><td>' + (x.ka ? 'sim' : 'não') + ' → ' + (x.kb ? '<b>sim</b>' : 'não') + '</td></tr>'; }).join('') +
+      (alt.length > 150 ? '<tr><td colspan="6" class="crn-note">… mais ' + (alt.length - 150) + ' alteradas</td></tr>' : '') + '</tbody></table></div>';
+    if(soB.length) h += '<p class="crn-note">Só na B (primeiras 30): ' + esc(soB.slice(0, 30).join(', ')) + '</p>';
+    if(soA.length) h += '<p class="crn-note">Só na A (primeiras 30): ' + esc(soA.slice(0, 30).join(', ')) + '</p>';
+    h += '<p class="crn-note">Casamento pelo código da atividade; atividades renumeradas entre versões serão casadas pelo agente A5.2 nas próximas fases.</p>';
+    $('crn-cmpout').innerHTML = h;
+  }
+
+  /* ---- ZIP sem compressão: .xer e .xml não estão na lista de downloads permitidos ---- */
+  var CRC = (function(){ var t = new Uint32Array(256); for(var n = 0; n < 256; n++){ var c = n; for(var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  function crc32(b){ var c = 0xFFFFFFFF; for(var i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+  function zip(nome, bytes){
+    var nm = new TextEncoder().encode(nome), crc = crc32(bytes), n = bytes.length;
+    var lh = new DataView(new ArrayBuffer(30)), ch = new DataView(new ArrayBuffer(46)), fim = new DataView(new ArrayBuffer(22));
+    [[0,0x04034b50,4],[4,20,2],[6,0x0800,2],[8,0,2],[10,0,2],[12,0x21,2],[14,crc,4],[18,n,4],[22,n,4],[26,nm.length,2],[28,0,2]].forEach(function(f){ f[2] === 4 ? lh.setUint32(f[0], f[1], true) : lh.setUint16(f[0], f[1], true); });
+    [[0,0x02014b50,4],[4,20,2],[6,20,2],[8,0x0800,2],[10,0,2],[12,0,2],[14,0x21,2],[16,crc,4],[20,n,4],[24,n,4],[28,nm.length,2],[30,0,2],[32,0,2],[34,0,2],[36,0,2],[38,0,4],[42,0,4]].forEach(function(f){ f[2] === 4 ? ch.setUint32(f[0], f[1], true) : ch.setUint16(f[0], f[1], true); });
+    var off = 30 + nm.length + n;
+    [[0,0x06054b50,4],[4,0,2],[6,0,2],[8,1,2],[10,1,2],[12,46 + nm.length,4],[16,off,4],[20,0,2]].forEach(function(f){ f[2] === 4 ? fim.setUint32(f[0], f[1], true) : fim.setUint16(f[0], f[1], true); });
+    return new Blob([lh.buffer, nm, bytes, ch.buffer, nm, fim.buffer], {type: 'application/zip'});
+  }
+  function latin1(s){ var b = new Uint8Array(s.length); for(var i = 0; i < s.length; i++){ var c = s.charCodeAt(i); b[i] = c < 256 ? c : 63; } return b; }
+  function base(p){ return p.arquivo.replace(/\.(xer|xml)$/i, '') + '_cronos'; }
+  async function salvar(filename, data){
+    var st = $('crn-mcout');
+    try{
+      var dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+      if(!dl){ st.textContent = 'Download indisponível nesta visualização.'; return; }
+      await dl.save({filename: filename, data: data});
+      st.textContent = 'Arquivo entregue: ' + filename;
+    }catch(e){
+      var c = e && e.code;
+      st.textContent = c === 'declined' ? 'Download cancelado.' : c === 'rate_limited' ? 'Há uma confirmação de download aberta; conclua-a e tente de novo.' : 'Não foi possível baixar: ' + ((e && e.message) || c || 'erro');
+    }
+  }
+  function atual(){ var p = porChave(ST.sel); return p && p.r ? p : null; }
+  $('crn-exp-xer').addEventListener('click', function(){ var p = atual(); if(!p) return; var n = base(p); salvar(n + '.zip', zip(n + '.xer', latin1(E.gravarXER(p, p.r)))); });
+  $('crn-exp-xml').addEventListener('click', function(){ var p = atual(); if(!p) return; var n = base(p); salvar(n + '_msproject.zip', zip(n + '.xml', new TextEncoder().encode(E.gravarMSPDI(p, p.r)))); });
+  $('crn-exp-csv').addEventListener('click', function(){
+    var p = atual(); if(!p) return; var r = p.r, q = function(v){ v = String(v == null ? '' : v); return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var linhas = [['codigo','atividade','eap','status','inicio','termino','inicio_tarde','termino_tarde','folga_dias','critica','custo','fonte'].join(';')];
+    var crit = {}; r.criticas.forEach(function(u){ crit[u] = 1; });
+    r.ordem.forEach(function(u){ var a = p.at[u]; linhas.push([a.cod, a.nome, a.wbs, a.status, E.fmtXER(r.es[u]), E.fmtXER(r.ef[u]), E.fmtXER(r.ls[u]), E.fmtXER(r.lf[u]),
+      r.folgaH[u] === undefined ? '' : E.folgaDias(p, r, u).toFixed(1).replace('.', ','), crit[u] ? 'sim' : 'não', a.custo.toFixed(2).replace('.', ','), a.fonte].map(q).join(';')); });
+    salvar(base(p) + '_atividades.csv', '﻿' + linhas.join('\r\n'));
+  });
+
+  $('crn-mc').addEventListener('click', function(){
+    var p = atual(); if(!p) return;
+    var n = Object.keys(p.at).length > 3000 ? 150 : 400;
+    $('crn-mcout').textContent = 'Simulando ' + n + ' iterações…';
+    setTimeout(function(){ var m = E.monteCarlo(p, n); $('crn-mcout').textContent = n + ' iterações (triangular 0,9 / 1,0 / 1,3 sobre o remanescente): determinístico ' + br(m.deterministico) + ' · P50 ' + br(m.p50) + ' · P80 ' + br(m.p80) + ' · P90 ' + br(m.p90); }, 30);
+  });
+
+  function exemplo(v2){
+    var R = function(t, f, rows){ return '%T\t' + t + '\r\n%F\t' + f.join('\t') + '\r\n' + rows.map(function(r){ return '%R\t' + r.join('\t'); }).join('\r\n') + '\r\n'; };
+    var util = '(0||0(s|08:00|f|12:00)())(0||1(s|13:00|f|17:00)())', sem = '';
+    for(var n = 1; n <= 7; n++) sem += '(0||' + n + '()(' + (n >= 2 && n <= 6 ? util : '') + '))';
+    var cal = '(0||CalendarData()((0||DaysOfWeek()(' + sem + '))(0||Exceptions()((0||0(d|45677)())))))';
+    var tk = [['1','A100','Estaca do apoio 1','160','TK_Complete','2025-01-06 08:00','2025-01-31 17:00','0','TT_Task'],
+              ['2','A110','Bloco do apoio 1','80','TK_Active','2025-02-03 08:00','','40','TT_Task'],
+              ['3','A120','Pilar do apoio 1','120','TK_NotStart','','','120','TT_Task'],
+              ['4','A130','Sondagem complementar','40','TK_NotStart','','','40','TT_Task'],
+              ['5','A140','Superestrutura do vão 1', v2 ? '280' : '200','TK_NotStart','','', v2 ? '280' : '200','TT_Task'],
+              ['6','M900','Liberação do tráfego','0','TK_NotStart','','','0','TT_FinMile']];
+    if(v2) tk.push(['7','A150','Estaca do apoio 2 (nova)','96','TK_NotStart','','','96','TT_Task']);
+    var pd = [['2','1','PR_FS','0'],['3','2','PR_SS','40'],['5','3','PR_FS','0'],['6','5','PR_FS','0'],['6','4','PR_FS','0']];
+    if(v2) pd.push(['5','7','PR_FS','0']);
+    return 'ERMHDR\t19.12\r\n' + R('CALENDAR',['clndr_id','clndr_name','day_hr_cnt','clndr_data'],[['C1','Padrão 5x8','8',cal]]) +
+      R('PROJECT',['proj_id','proj_short_name','last_recalc_date','plan_start_date','plan_end_date','clndr_id'],[['1','EXEMPLO-OAE','2025-02-10 08:00','2025-01-06 08:00','','C1']]) +
+      R('PROJWBS',['wbs_id','proj_id','wbs_name'],[['W1','1','Ponte exemplo']]) +
+      R('TASK',['task_id','proj_id','wbs_id','clndr_id','task_code','task_name','target_drtn_hr_cnt','status_code','act_start_date','act_end_date','remain_drtn_hr_cnt','task_type'],
+        tk.map(function(x){ return [x[0],'1','W1','C1',x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]]; })) +
+      R('TASKPRED',['task_pred_id','task_id','pred_task_id','proj_id','pred_type','lag_hr_cnt'], pd.map(function(x, i){ return [String(i + 1), x[0], x[1], '1', x[2], x[3]]; })) +
+      R('TASKRSRC',['taskrsrc_id','task_id','proj_id','target_cost'],[['1','1','1', v2 ? '1450000' : '1200000'],['2','2','1','650000'],['3','3','1','900000'],['4','5','1','2300000']].concat(v2 ? [['5','7','1','800000']] : [])) + '%E\r\n';
+  }
+
+  $('crn-file').addEventListener('change', function(e){ lerArquivos(e.target.files); e.target.value = ''; });
+  $('crn-dir').addEventListener('change', function(e){ lerArquivos(e.target.files); e.target.value = ''; });
+  var dz = $('crn-drop');
+  ['dragenter','dragover'].forEach(function(ev){ dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.add('over'); }); });
+  ['dragleave','drop'].forEach(function(ev){ dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove('over'); }); });
+  dz.addEventListener('drop', function(e){ if(e.dataTransfer && e.dataTransfer.files) lerArquivos(e.dataTransfer.files); });
+  $('crn-sample').addEventListener('click', function(){
+    E.lerXER(exemplo(false), 'exemplo-BL01.xer').concat(E.lerXER(exemplo(true), 'exemplo-BL02.xer')).forEach(function(p){ preparar(p, true); });
+    renderVersoes(); mostrar('exemplo-BL02.xer#1'); $('crn-status').textContent = 'Exemplo ilustrativo carregado (dados fictícios).';
+  });
+  $('crn-clear').addEventListener('click', function(){ ST.v = []; ST.sel = null; $('crn-detail').hidden = true; $('crn-cmpout').innerHTML = ''; $('crn-status').textContent = ''; renderVersoes(); });
+  $('crn-versions').addEventListener('click', function(e){ var b = e.target.closest('[data-crn-ver]'); if(b) mostrar(b.getAttribute('data-crn-ver')); });
+  $('crn-onlycrit').addEventListener('change', function(){ var p = atual(); if(p) gantt(p); });
+  $('crn-cmp').addEventListener('click', comparar);
+  renderVersoes();
+  $('crn-sample').click();
+  comparar();
+})();
+</script>
+  </div>
+

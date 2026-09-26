@@ -1,0 +1,434 @@
+/* Manta Cronos — motor no navegador (porta fiel de src/cronos/engine, Python).
+ * Datas são "ingênuas" (sem fuso): milissegundos UTC representando o relógio local do XER.
+ * Exposto como window.CronosEngine (navegador) ou module.exports (Node, para testes). */
+(function (root) {
+  "use strict";
+  var DIA = 86400000, H = 3600000, EPS = 1e-6;
+  var EXCEL_ZERO = Date.UTC(1899, 11, 30);
+
+  function dataXER(v) {
+    if (!v) return null;
+    var m = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/.exec(String(v).trim());
+    return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0)) : null;
+  }
+  function p2(n) { return (n < 10 ? "0" : "") + n; }
+  function fmtXER(t) {
+    if (t == null) return "";
+    var d = new Date(t);
+    return d.getUTCFullYear() + "-" + p2(d.getUTCMonth() + 1) + "-" + p2(d.getUTCDate()) + " " + p2(d.getUTCHours()) + ":" + p2(d.getUTCMinutes());
+  }
+  function fmtBR(t) { if (t == null) return "—"; var d = new Date(t); return p2(d.getUTCDate()) + "/" + p2(d.getUTCMonth() + 1) + "/" + d.getUTCFullYear(); }
+  function num(v) { var n = parseFloat(v); return isFinite(n) ? n : 0; }
+  function diaSemana(t) { return (new Date(t).getUTCDay() + 6) % 7; } // 0 = segunda … 6 = domingo
+
+  /* ---------------- clndr_data ---------------- */
+  function parseNos(txt) {
+    var s = String(txt).replace(/[\x7f\r\n\t]/g, ""), pos = 0;
+    function esp() { while (pos < s.length && s[pos] === " ") pos++; }
+    function no() {
+      pos++; var ini = pos;
+      while (s[pos] !== "(") { if (pos >= s.length) throw new Error("fim inesperado"); pos++; }
+      var nome = s.slice(ini, pos).trim(); pos++; ini = pos;
+      while (s[pos] !== ")") { if (pos >= s.length) throw new Error("fim inesperado"); pos++; }
+      var attrs = s.slice(ini, pos); pos++; esp();
+      var filhos = [];
+      if (s[pos] === "(") { pos++; esp(); while (s[pos] === "(") { filhos.push(no()); esp(); } pos++; }
+      esp(); pos++;
+      return { nome: nome, atributos: attrs, filhos: filhos };
+    }
+    var nos = []; esp();
+    while (pos < s.length && s[pos] === "(") { nos.push(no()); esp(); }
+    return nos;
+  }
+  function hora(t) { var p = t.split(":"); return +p[0] + (+p[1]) / 60; }
+  function intervalos(n) {
+    var out = [];
+    n.filhos.forEach(function (f) {
+      var p = f.atributos.split("|"), kv = {};
+      for (var i = 0; i + 1 < p.length; i += 2) kv[p[i]] = p[i + 1];
+      if (kv.s && kv.f) { var a = hora(kv.s), b = hora(kv.f); if (b <= a) b = b === 0 ? 24 : b + 24; out.push([a, Math.min(b, 24)]); }
+    });
+    return out.sort(function (x, y) { return x[0] - y[0]; });
+  }
+  function procura(nos, suf) {
+    for (var i = 0; i < nos.length; i++) {
+      if (nos[i].nome.slice(-suf.length) === suf) return nos[i];
+      var a = procura(nos[i].filhos, suf); if (a) return a;
+    }
+    return null;
+  }
+  function lerClndrData(txt) {
+    var nos;
+    try { nos = parseNos(txt); } catch (e) { throw new Error("clndr_data inválido: " + e.message); }
+    var dow = procura(nos, "DaysOfWeek");
+    if (!dow) throw new Error("clndr_data sem DaysOfWeek");
+    var semana = {}; for (var d = 0; d < 7; d++) semana[d] = [];
+    dow.filhos.forEach(function (dia) { var n = +dia.nome.split("||").pop(); semana[(n + 5) % 7] = intervalos(dia); });
+    var exc = {}, e = procura(nos, "Exceptions");
+    (e ? e.filhos : []).forEach(function (x) {
+      var p = x.atributos.split("|"), kv = {};
+      for (var i = 0; i + 1 < p.length; i += 2) kv[p[i]] = p[i + 1];
+      if (kv.d) exc[EXCEL_ZERO + Math.floor(num(kv.d)) * DIA] = intervalos(x);
+    });
+    return { semana: semana, excecoes: exc };
+  }
+
+  /* ---------------- Calendário ---------------- */
+  var PADRAO = {}; for (var dd = 0; dd < 7; dd++) PADRAO[dd] = dd < 5 ? [[8, 12], [13, 17]] : [];
+  function Calendario(id, nome, semana, excecoes, horasDia, base) {
+    this.id = id; this.nome = nome; this.semana = semana || PADRAO; this.excecoes = excecoes || {};
+    this.horasDia = horasDia || 8; this.base = base || Date.UTC(1990, 0, 1); this.pref = [0];
+    var algum = false; for (var k in this.semana) if (this.semana[k].length) algum = true;
+    if (!algum) throw new Error("Calendário " + id + " sem nenhum dia de trabalho");
+  }
+  Calendario.prototype.intervalos = function (dia) { var e = this.excecoes[dia]; return e !== undefined ? e : this.semana[diaSemana(dia)]; };
+  Calendario.prototype._garante = function (i) {
+    while (this.pref.length <= i + 1) {
+      var dia = this.base + (this.pref.length - 1) * DIA, soma = 0;
+      this.intervalos(dia).forEach(function (iv) { soma += iv[1] - iv[0]; });
+      this.pref.push(this.pref[this.pref.length - 1] + soma);
+    }
+  };
+  Calendario.prototype.acumulado = function (t) {
+    var dia = Math.floor(t / DIA) * DIA, i = Math.round((dia - this.base) / DIA);
+    if (i < 0) throw new Error("Data anterior à base do calendário");
+    this._garante(i);
+    var h = (t - dia) / H, dentro = 0;
+    this.intervalos(dia).forEach(function (iv) { dentro += Math.max(0, Math.min(iv[1], h) - iv[0]); });
+    return this.pref[i] + dentro;
+  };
+  Calendario.prototype._diaDo = function (Hh, estrito) {
+    var a = this.pref;
+    for (;;) {
+      this._garante(a.length + 400);
+      var lo = 0, hi = a.length;           // bisect_left / bisect_right
+      while (lo < hi) { var mid = (lo + hi) >> 1; if (estrito ? a[mid] <= Hh : a[mid] < Hh) lo = mid + 1; else hi = mid; }
+      var k = lo - 1;
+      if (k < a.length - 2) return Math.max(k, 0);
+    }
+  };
+  Calendario.prototype._noDia = function (i, resto, inicio) {
+    var dia = this.base + i * DIA, ivs = this.intervalos(dia);
+    for (var j = 0; j < ivs.length; j++) {
+      var dur = ivs[j][1] - ivs[j][0];
+      if (resto < dur - 1e-9 || (!inicio && resto <= dur + 1e-9)) return dia + Math.round((ivs[j][0] + Math.max(resto, 0)) * H);
+      resto -= dur;
+    }
+    return null;
+  };
+  Calendario.prototype.instanteFim = function (Hh) {
+    if (Hh <= 0) return this.instanteInicio(0);
+    var i = this._diaDo(Hh, false);
+    for (;;) { var t = this._noDia(i, Hh - this.pref[i], false); if (t !== null) return t; i++; this._garante(i); }
+  };
+  Calendario.prototype.instanteInicio = function (Hh) {
+    Hh = Math.max(Hh, 0);
+    var i = this._diaDo(Hh, true);
+    for (;;) { var t = this._noDia(i, Hh - this.pref[i], true); if (t !== null) return t; i++; this._garante(i); }
+  };
+  Calendario.prototype.proximoInicio = function (t) { return this.instanteInicio(this.acumulado(t)); };
+  Calendario.prototype.ultimoFim = function (t) { return this.instanteFim(this.acumulado(t)); };
+  Calendario.prototype.soma = function (t, h, comoInicio) { var Hh = this.acumulado(t) + h; return comoInicio ? this.instanteInicio(Hh) : this.instanteFim(Hh); };
+  Calendario.prototype.entre = function (a, b) { return this.acumulado(b) - this.acumulado(a); };
+
+  /* ---------------- XER ---------------- */
+  var TL = { PR_FS: "FS", PR_SS: "SS", PR_FF: "FF", PR_SF: "SF" };
+  var TA = { TT_Task: "tarefa", TT_Rsrc: "tarefa", TT_Mile: "marco_inicio", TT_FinMile: "marco_fim", TT_LOE: "loe", TT_WBS: "resumo" };
+  var ST = { TK_NotStart: "nao_iniciada", TK_Active: "em_andamento", TK_Complete: "concluida" };
+  var RS = { CS_MSOA: "SNET", CS_MEOA: "FNET", CS_MSOB: "SNLT", CS_MEOB: "FNLT", CS_MSO: "MSO", CS_MEO: "MFO", CS_MANDSTART: "MSO", CS_MANDFIN: "MFO", CS_ALAP: "ALAP" };
+  var HIST = ["obsoleto", "_deprecated", "deprecated", "99-backup"];
+  function eHistorico(c) { c = String(c || "").toLowerCase(); return HIST.some(function (h) { return c.indexOf(h) >= 0; }); }
+
+  function lerTabelas(txt) {
+    var fim = txt.slice(0, 5000).indexOf("\r\n") >= 0 ? "\r\n" : "\n", linhas = txt.split(fim);
+    var tb = { cabecalho: linhas[0] && linhas[0].indexOf("ERMHDR") === 0 ? linhas[0] : "ERMHDR\t19.12", ordem: [], campos: {}, linhas: {}, fimLinha: fim }, atual = null;
+    for (var n = 0; n < linhas.length; n++) {
+      var p = linhas[n].split("\t"), m = p[0];
+      if (m === "%T") { atual = (p[1] || "").trim(); tb.ordem.push(atual); tb.linhas[atual] = []; }
+      else if (m === "%F" && atual) tb.campos[atual] = p.slice(1);
+      else if (m === "%R" && atual) { var r = { _linha: String(n + 1) }, f = tb.campos[atual] || []; for (var k = 0; k < f.length; k++) r[f[k]] = p[k + 1]; tb.linhas[atual].push(r); }
+    }
+    return tb;
+  }
+  function lerXER(txt, arq) {
+    var tb = lerTabelas(txt), L = function (t) { return tb.linhas[t] || []; };
+    var datas = [];
+    L("PROJECT").forEach(function (p) { var d = dataXER(p.plan_start_date) || dataXER(p.last_recalc_date); if (d) datas.push(d); });
+    L("TASK").slice(0, 5000).forEach(function (a) { var d = dataXER(a.act_start_date) || dataXER(a.target_start_date); if (d) datas.push(d); });
+    var base = datas.length ? Date.UTC(new Date(Math.min.apply(null, datas)).getUTCFullYear() - 2, 0, 1) : Date.UTC(1990, 0, 1);
+    var alertas = [], cals = { _padrao: new Calendario("_padrao", "Padrão 5×8", null, null, 8, base) };
+    L("CALENDAR").forEach(function (c) {
+      try { var x = lerClndrData(c.clndr_data || ""); cals[c.clndr_id] = new Calendario(c.clndr_id, c.clndr_name || c.clndr_id, x.semana, x.excecoes, num(c.day_hr_cnt) || 8, base); }
+      catch (e) { alertas.push("Calendário " + c.clndr_id + " ilegível, usado o padrão 5×8: " + e.message); }
+    });
+    var wbs = {}; L("PROJWBS").forEach(function (w) { wbs[w.wbs_id] = w.wbs_name || ""; });
+    var custo = {}, rec = {};
+    L("TASKRSRC").forEach(function (r) { custo[r.task_id] = (custo[r.task_id] || 0) + num(r.target_cost); rec[r.task_id] = true; });
+    var P = {}, ordem = [];
+    L("PROJECT").forEach(function (p) {
+      P[p.proj_id] = { id: p.proj_id, nome: p.proj_short_name || p.proj_id, arquivo: arq, chave: arq + "#" + p.proj_id,
+        dataStatus: dataXER(p.last_recalc_date) || dataXER(p.plan_start_date), inicioPlan: dataXER(p.plan_start_date),
+        terminoExigido: dataXER(p.plan_end_date), calPadrao: p.clndr_id || "", calendarios: cals, at: {}, lig: [],
+        alertas: alertas.slice(), origem: tb };
+      ordem.push(p.proj_id);
+    });
+    L("TASK").forEach(function (a) {
+      var pr = P[a.proj_id]; if (!pr) return;
+      var restr = [];
+      [["cstr_type", "cstr_date"], ["cstr_type2", "cstr_date2"]].forEach(function (c) { var tp = RS[a[c[0]]]; if (tp) restr.push({ tipo: tp, data: dataXER(a[c[1]]) }); });
+      var rest = a.remain_drtn_hr_cnt !== undefined && a.remain_drtn_hr_cnt !== "" ? num(a.remain_drtn_hr_cnt) : num(a.target_drtn_hr_cnt);
+      pr.at[a.task_id] = { uid: a.task_id, cod: a.task_code || "", nome: a.task_name || "", wbs: wbs[a.wbs_id] || "",
+        tipo: TA[a.task_type || "TT_Task"] || "tarefa", status: ST[a.status_code] || "nao_iniciada",
+        durH: num(a.target_drtn_hr_cnt), restH: rest, cal: a.clndr_id || "",
+        iniReal: dataXER(a.act_start_date), fimReal: dataXER(a.act_end_date),
+        iniPlan: dataXER(a.target_start_date), fimPlan: dataXER(a.target_end_date),
+        restricoes: restr, custo: custo[a.task_id] || 0, temRecurso: !!rec[a.task_id],
+        fonte: arq + " › TASK › linha " + a._linha };
+    });
+    L("TASKPRED").forEach(function (r) {
+      var pr = P[r.proj_id] || P[r.pred_proj_id];
+      if (pr && pr.at[r.task_id] && pr.at[r.pred_task_id]) pr.lig.push({ p: r.pred_task_id, s: r.task_id, t: TL[r.pred_type] || "FS", lag: num(r.lag_hr_cnt) });
+    });
+    return ordem.map(function (k) { var p = P[k]; p.custo = sumCusto(p); return p; });
+  }
+  function sumCusto(p) { var s = 0; for (var u in p.at) s += p.at[u].custo; return s; }
+  function noCalculo(a) { return a.tipo !== "loe" && a.tipo !== "resumo"; }
+  function marco(a) { return a.tipo === "marco_inicio" || a.tipo === "marco_fim"; }
+  function calDe(p, a) { return p.calendarios[a.cal] || p.calendarios[p.calPadrao] || p.calendarios._padrao; }
+
+  /* ---------------- MSPDI ---------------- */
+  function horasISO(v) { var m = /PT(\d+(?:\.\d+)?)H(\d+(?:\.\d+)?)M(\d+(?:\.\d+)?)S/.exec(v || ""); return m ? num(m[1]) + num(m[2]) / 60 + num(m[3]) / 3600 : 0; }
+  function lerMSPDI(txt, arq) {
+    var d = new DOMParser().parseFromString(txt, "application/xml");
+    if (d.getElementsByTagName("parsererror").length || !d.getElementsByTagName("Tasks").length) throw new Error("XML não reconhecido como MS Project (MSPDI)");
+    var g = function (el, n) { for (var i = 0; i < el.children.length; i++) if (el.children[i].localName === n) return el.children[i].textContent.trim(); return ""; };
+    var raiz = d.documentElement, ini = dataXER(g(raiz, "StartDate"));
+    var base = Date.UTC((ini ? new Date(ini).getUTCFullYear() : 2000) - 2, 0, 1);
+    var cal = new Calendario("_padrao", "Padrão do MS Project", null, null, num(g(raiz, "MinutesPerDay") || 480) / 60, base);
+    var pr = { id: "1", nome: g(raiz, "Name") || g(raiz, "Title") || arq, arquivo: arq, chave: arq + "#1",
+      dataStatus: dataXER(g(raiz, "StatusDate")) || ini, inicioPlan: ini, terminoExigido: null, calPadrao: "_padrao",
+      calendarios: { _padrao: cal }, at: {}, lig: [], alertas: ["Calendários do MSPDI ainda não são lidos: usado o padrão 5×8"], origem: null };
+    var tasks = d.getElementsByTagName("Tasks")[0].children;
+    for (var i = 0; i < tasks.length; i++) {
+      var t = tasks[i]; if (g(t, "Summary") === "1" || g(t, "IsNull") === "1" || !g(t, "Name")) continue;
+      var uid = g(t, "UID"), pc = num(g(t, "PercentComplete")), dur = horasISO(g(t, "Duration"));
+      var rest = g(t, "RemainingDuration") ? horasISO(g(t, "RemainingDuration")) : dur;
+      pr.at[uid] = { uid: uid, cod: g(t, "WBS") || g(t, "ID") || uid, nome: g(t, "Name"), wbs: g(t, "OutlineNumber"),
+        tipo: g(t, "Milestone") === "1" ? "marco_fim" : "tarefa", status: pc >= 100 ? "concluida" : pc > 0 ? "em_andamento" : "nao_iniciada",
+        durH: dur, restH: pc >= 100 ? 0 : rest, cal: "", iniReal: dataXER(g(t, "ActualStart")), fimReal: dataXER(g(t, "ActualFinish")),
+        iniPlan: dataXER(g(t, "Start")), fimPlan: dataXER(g(t, "Finish")), restricoes: [], custo: num(g(t, "Cost")),
+        temRecurso: num(g(t, "Cost")) > 0, fonte: arq + " › Task UID " + uid };
+    }
+    var TD = { "0": "FF", "1": "FS", "2": "SF", "3": "SS" };
+    for (var j = 0; j < tasks.length; j++) {
+      var tk = tasks[j], su = g(tk, "UID"); if (!pr.at[su]) continue;
+      for (var k = 0; k < tk.children.length; k++) {
+        var lk = tk.children[k]; if (lk.localName !== "PredecessorLink") continue;
+        var pu = g(lk, "PredecessorUID"); if (pr.at[pu]) pr.lig.push({ p: pu, s: su, t: TD[g(lk, "Type") || "1"] || "FS", lag: num(g(lk, "LinkLag")) / 600 });
+      }
+    }
+    pr.custo = sumCusto(pr);
+    return [pr];
+  }
+
+  /* ---------------- CPM por datas ---------------- */
+  function lag(cal, t, h, ini) { return Math.abs(h) < EPS ? t : cal.soma(t, h, ini); }
+  function calcular(p, restH) {
+    var ids = Object.keys(p.at).filter(function (u) { return noCalculo(p.at[u]); }), conj = {};
+    ids.forEach(function (u) { conj[u] = true; });
+    var ligs = p.lig.filter(function (l) { return conj[l.p] && conj[l.s]; }), Pd = {}, Sc = {}, grau = {};
+    ids.forEach(function (u) { Pd[u] = []; Sc[u] = []; grau[u] = 0; });
+    ligs.forEach(function (l) { Pd[l.s].push(l); Sc[l.p].push(l); grau[l.s]++; });
+    var fila = ids.filter(function (u) { return grau[u] === 0; }), ordem = [], qi = 0;
+    while (qi < fila.length) { var u0 = fila[qi++]; ordem.push(u0); Sc[u0].forEach(function (l) { if (--grau[l.s] === 0) fila.push(l.s); }); }
+    if (ordem.length !== ids.length) {
+      var presas = ids.filter(function (u) { return grau[u] > 0; }).slice(0, 10).map(function (u) { return p.at[u].cod; });
+      throw new Error("Laço lógico (loop) no cronograma, envolvendo: " + presas.join(", "));
+    }
+    var dur = {}; ids.forEach(function (u) { dur[u] = restH && restH[u] !== undefined ? restH[u] : p.at[u].restH; });
+    var dd = p.dataStatus || p.inicioPlan;
+    if (dd == null) { var ds = ids.map(function (u) { return p.at[u].iniPlan; }).filter(Boolean); dd = ds.length ? Math.min.apply(null, ds) : Date.UTC(2000, 0, 3, 8); }
+    var es = {}, ef = {}, avisos = [];
+    ordem.forEach(function (u) {
+      var a = p.at[u], cal = calDe(p, a);
+      if (a.status === "concluida") { var i0 = a.iniReal || a.fimReal || dd; es[u] = i0; ef[u] = a.fimReal || i0; return; }
+      var d = dur[u], cIni = cal.proximoInicio(dd), cFim = null;
+      Pd[u].forEach(function (l) {
+        var pcal = calDe(p, p.at[l.p]);
+        if (a.status === "em_andamento" && (l.t === "SS" || l.t === "SF")) return;
+        var alvo;
+        if (l.t === "FS") cIni = Math.max(cIni, cal.proximoInicio(lag(pcal, ef[l.p], l.lag, true)));
+        else if (l.t === "SS") cIni = Math.max(cIni, cal.proximoInicio(lag(pcal, es[l.p], l.lag, true)));
+        else if (l.t === "FF") { alvo = cal.ultimoFim(lag(pcal, ef[l.p], l.lag, false)); cFim = cFim === null ? alvo : Math.max(cFim, alvo); }
+        else { alvo = cal.ultimoFim(lag(pcal, es[l.p], l.lag, false)); cFim = cFim === null ? alvo : Math.max(cFim, alvo); }
+      });
+      a.restricoes.forEach(function (r) {
+        if (!r.data || a.status === "em_andamento") return;
+        if (r.tipo === "SNET") cIni = Math.max(cIni, cal.proximoInicio(r.data));
+        else if (r.tipo === "MSO") cIni = cal.proximoInicio(r.data);
+        else if (r.tipo === "FNET" || r.tipo === "MFO") { var al = cal.ultimoFim(r.data); cFim = (r.tipo === "MFO" || cFim === null) ? al : Math.max(cFim, al); }
+      });
+      if (cFim !== null) cIni = Math.max(cIni, d > EPS ? cal.soma(cFim, -d, true) : cFim);
+      if (a.tipo === "marco_fim" && d <= EPS) { var f0 = cal.ultimoFim(cIni); if (cFim !== null) f0 = Math.max(f0, cFim); es[u] = ef[u] = f0; return; }
+      var fim = d > EPS ? cal.soma(cIni, d, false) : cIni;
+      if (a.status === "em_andamento") { es[u] = a.iniReal || cIni; ef[u] = fim; } else { es[u] = cIni; ef[u] = fim; }
+    });
+    var fimCedo = ordem.length ? Math.max.apply(null, ordem.map(function (u) { return ef[u]; })) : dd;
+    var fimProj = p.terminoExigido || fimCedo, ls = {}, lf = {};
+    for (var x = ordem.length - 1; x >= 0; x--) {
+      var u = ordem[x], a = p.at[u], cal = calDe(p, a);
+      if (a.status === "concluida") { ls[u] = es[u]; lf[u] = ef[u]; continue; }
+      var d = dur[u], tFim = cal.ultimoFim(fimProj), tIni = null;
+      Sc[u].forEach(function (l) {
+        var sa = p.at[l.s]; if (sa.status === "concluida") return;
+        var alvo;
+        if (l.t === "FS") tFim = Math.min(tFim, cal.ultimoFim(lag(cal, ls[l.s], -l.lag, false)));
+        else if (l.t === "FF") tFim = Math.min(tFim, cal.ultimoFim(lag(cal, lf[l.s], -l.lag, false)));
+        else if (l.t === "SS") { if (sa.status === "em_andamento" || a.status === "em_andamento") return; alvo = cal.proximoInicio(lag(cal, ls[l.s], -l.lag, true)); tIni = tIni === null ? alvo : Math.min(tIni, alvo); }
+        else { if (a.status === "em_andamento") return; alvo = cal.proximoInicio(lag(cal, lf[l.s], -l.lag, true)); tIni = tIni === null ? alvo : Math.min(tIni, alvo); }
+      });
+      a.restricoes.forEach(function (r) {
+        if (!r.data) return;
+        if (r.tipo === "FNLT" || r.tipo === "MFO") tFim = Math.min(tFim, cal.ultimoFim(r.data));
+        else if ((r.tipo === "SNLT" || r.tipo === "MSO") && a.status !== "em_andamento") { var al = cal.proximoInicio(r.data); tIni = tIni === null ? al : Math.min(tIni, al); }
+      });
+      if (tIni !== null) tFim = Math.min(tFim, d > EPS ? cal.soma(tIni, d, false) : tIni);
+      lf[u] = tFim; ls[u] = d > EPS ? cal.soma(tFim, -d, true) : tFim;
+      if (a.status === "em_andamento") ls[u] = es[u];
+    }
+    var folgaH = {}, criticas = [];
+    ordem.forEach(function (u) {
+      var a = p.at[u]; if (a.status === "concluida") return;
+      var cal = calDe(p, a), ff = cal.entre(ef[u], lf[u]);
+      folgaH[u] = a.status === "em_andamento" ? ff : Math.min(cal.entre(es[u], ls[u]), ff);
+      if (folgaH[u] <= EPS) criticas.push(u);
+    });
+    if (p.terminoExigido && fimCedo > p.terminoExigido) avisos.push("Término cedo " + fmtBR(fimCedo) + " após o término exigido " + fmtBR(p.terminoExigido));
+    return { ordem: ordem, es: es, ef: ef, ls: ls, lf: lf, folgaH: folgaH, criticas: criticas, dataStatus: dd, termino: fimCedo, avisos: avisos, ligacoes: ligs };
+  }
+  function folgaDias(p, r, u) { return (r.folgaH[u] || 0) / calDe(p, p.at[u]).horasDia; }
+
+  /* ---------------- DCMA-14 (regra A5) ---------------- */
+  var BLOQ = { 1: 1, 3: 1, 6: 1, 7: 1, 11: 1 };
+  function pct(n, t) { return t ? Math.round(1000 * n / t) / 10 : 0; }
+  function dcma14(p, r) {
+    r = r || calcular(p);
+    var dd = r.dataStatus, ativs = Object.keys(p.at).map(function (u) { return p.at[u]; }).filter(noCalculo);
+    var abertas = ativs.filter(function (a) { return a.status !== "concluida"; }), tarefas = abertas.filter(function (a) { return !marco(a); });
+    var ligs = r.ligacoes, nA = abertas.length, tp = {}, tsx = {}, pts = [];
+    ligs.forEach(function (l) { tp[l.s] = 1; tsx[l.p] = 1; });
+    var cod = function (l) { return l.slice(0, 10).map(function (a) { return a.cod; }); };
+    function pt(n, nome, valor, lim, ok, det, aplic, ex) { pts.push({ ponto: n, nome: nome, valor: valor, limite: lim, passou: aplic === false ? null : ok, aplicavel: aplic !== false, detalhe: det, exemplos: ex || [] }); }
+    var sem = abertas.filter(function (a) { return (!tp[a.uid] && a.tipo !== "marco_inicio") || (!tsx[a.uid] && a.tipo !== "marco_fim"); });
+    pt(1, "Lógica (sem predecessora ou sucessora)", pct(sem.length, nA) + "%", "≤ 5%", pct(sem.length, nA) <= 5, sem.length + " de " + nA + " abertas", true, cod(sem));
+    var leads = ligs.filter(function (l) { return l.lag < -EPS; }); pt(2, "Leads (lag negativo)", leads.length, "0", !leads.length, leads.length + " ligações");
+    var lags = ligs.filter(function (l) { return l.lag > EPS; }); pt(3, "Lags", pct(lags.length, ligs.length) + "%", "≤ 5%", pct(lags.length, ligs.length) <= 5, lags.length + " de " + ligs.length + " ligações");
+    var fs = ligs.filter(function (l) { return l.t === "FS"; }); pt(4, "Ligações término-início (FS)", pct(fs.length, ligs.length) + "%", "≥ 90%", ligs.length ? pct(fs.length, ligs.length) >= 90 : true, fs.length + " de " + ligs.length + " ligações");
+    var rig = abertas.filter(function (a) { return a.restricoes.some(function (x) { return ["MSO", "MFO", "SNLT", "FNLT"].indexOf(x.tipo) >= 0; }); });
+    pt(5, "Restrições rígidas", pct(rig.length, nA) + "%", "≤ 5%", pct(rig.length, nA) <= 5, rig.length + " de " + nA + " abertas", true, cod(rig));
+    var fd = function (a) { return (r.folgaH[a.uid] || 0) / calDe(p, a).horasDia; };
+    var alta = abertas.filter(function (a) { return fd(a) > 44; }); pt(6, "Folga alta (> 44 dias úteis)", pct(alta.length, nA) + "%", "≤ 5%", pct(alta.length, nA) <= 5, alta.length + " de " + nA + " abertas", true, cod(alta));
+    var neg = abertas.filter(function (a) { return (r.folgaH[a.uid] || 0) < -EPS; }); pt(7, "Folga negativa", neg.length, "0", !neg.length, neg.length + " atividades", true, cod(neg));
+    var longas = tarefas.filter(function (a) { return a.restH / calDe(p, a).horasDia > 44; }); pt(8, "Duração alta (> 44 dias úteis)", pct(longas.length, tarefas.length) + "%", "≤ 5%", pct(longas.length, tarefas.length) <= 5, longas.length + " de " + tarefas.length + " tarefas", true, cod(longas));
+    var inval = ativs.filter(function (a) { return (a.iniReal && a.iniReal > dd) || (a.fimReal && a.fimReal > dd); })
+      .concat(abertas.filter(function (a) { return a.status === "nao_iniciada" && r.es[a.uid] < dd; }));
+    pt(9, "Datas inválidas", inval.length, "0", !inval.length, inval.length + " atividades", true, cod(inval));
+    var semRec = tarefas.filter(function (a) { return a.restH > EPS && !a.temRecurso; }); pt(10, "Tarefas sem recurso/custo", pct(semRec.length, tarefas.length) + "%", "0%", !semRec.length, semRec.length + " de " + tarefas.length + " tarefas", true, cod(semRec));
+    var dev = ativs.filter(function (a) { return a.fimPlan && a.fimPlan <= dd; });
+    var perd = dev.filter(function (a) { return !(a.status === "concluida" && a.fimReal && a.fimReal <= a.fimPlan); });
+    pt(11, "Tarefas perdidas (proxy: datas planejadas)", pct(perd.length, dev.length) + "%", "≤ 5%", pct(perd.length, dev.length) <= 5, perd.length + " de " + dev.length + " devidas", dev.length > 0, cod(perd));
+    var crA = r.criticas.filter(function (u) { return p.at[u].status !== "concluida"; });
+    if (crA.length) {
+      var u = crA[0], cal = calDe(p, p.at[u]), atraso = 100 * cal.horasDia, rr = {};
+      Object.keys(p.at).forEach(function (k) { rr[k] = p.at[k].restH; }); rr[u] += atraso;
+      var desl = cal.entre(r.termino, calcular(p, rr).termino);
+      pt(12, "Teste do caminho crítico (+100 dias numa crítica)", Math.round(desl / cal.horasDia) + " d", "= 100 d", desl >= atraso - 1, "atividade testada " + p.at[u].cod);
+    } else pt(12, "Teste do caminho crítico", "—", "= 100 d", null, "sem atividade crítica aberta", false);
+    if (p.terminoExigido) {
+      var c0 = p.calendarios[p.calPadrao] || p.calendarios._padrao, cpl = c0.entre(dd, r.termino), fp = c0.entre(r.termino, p.terminoExigido), cpli = cpl > EPS ? (cpl + fp) / cpl : 1;
+      pt(13, "CPLI", cpli.toFixed(2), "≥ 0,95", cpli >= 0.95, "término exigido do projeto");
+    } else pt(13, "CPLI", "—", "≥ 0,95", null, "projeto sem término exigido", false);
+    var conc = ativs.filter(function (a) { return a.status === "concluida"; }), bei = dev.length ? conc.length / dev.length : null;
+    pt(14, "BEI (proxy: datas planejadas)", bei === null ? "—" : bei.toFixed(2), "≥ 0,95", bei !== null && bei >= 0.95, conc.length + " concluídas / " + dev.length + " devidas", bei !== null);
+    var ap = pts.filter(function (x) { return x.aplicavel; }), nota = ap.length ? ap.filter(function (x) { return x.passou; }).length / ap.length : 0;
+    var bl = ap.filter(function (x) { return BLOQ[x.ponto] && !x.passou; }).map(function (x) { return x.ponto; });
+    return { pontos: pts, nota: Math.round(nota * 1000) / 1000, aplicaveis: ap.length, aprovado: nota >= 0.9 && !bl.length, bloqueios: bl };
+  }
+
+  /* ---------------- Monte Carlo ---------------- */
+  function monteCarlo(p, n, otim, pess) {
+    n = n || 500; otim = otim || 0.9; pess = pess || 1.3;
+    var seed = 42, rnd = function () { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+    var base = calcular(p), ids = base.ordem.filter(function (u) { return p.at[u].status !== "concluida"; }), fins = [];
+    for (var i = 0; i < n; i++) {
+      var d = {};
+      ids.forEach(function (u) { var m = p.at[u].restH, a = m * otim, b = m * pess, c = m, x = rnd(), f = (c - a) / ((b - a) || 1);
+        d[u] = x < f ? a + Math.sqrt(x * (b - a) * (c - a)) : b - Math.sqrt((1 - x) * (b - a) * (b - c)); });
+      fins.push(calcular(p, d).termino);
+    }
+    fins.sort(function (a, b) { return a - b; });
+    var q = function (x) { return fins[Math.min(Math.floor(x * n), n - 1)]; };
+    return { n: n, deterministico: base.termino, p50: q(.5), p80: q(.8), p90: q(.9) };
+  }
+
+  /* ---------------- Exportação ---------------- */
+  var CALC = ["early_start_date", "early_end_date", "late_start_date", "late_end_date", "total_float_hr_cnt"];
+  function gravarXER(p, r) {
+    var tb = p.origem; if (!tb) throw new Error("Projeto sem tabelas XER de origem (importado de outro formato)");
+    var out = [tb.cabecalho];
+    tb.ordem.forEach(function (nome) {
+      var campos = (tb.campos[nome] || []).slice(), linhas = (tb.linhas[nome] || []).filter(function (x) { return !("proj_id" in x) || x.proj_id === p.id; });
+      if (nome === "TASK" && r) CALC.forEach(function (c) { if (campos.indexOf(c) < 0) campos.push(c); });
+      out.push("%T\t" + nome); out.push("%F\t" + campos.join("\t"));
+      linhas.forEach(function (x) {
+        var v = Object.assign({}, x), u = x.task_id;
+        if (nome === "TASK" && r && r.es[u] !== undefined) {
+          v.early_start_date = fmtXER(r.es[u]); v.early_end_date = fmtXER(r.ef[u]);
+          v.late_start_date = fmtXER(r.ls[u]); v.late_end_date = fmtXER(r.lf[u]);
+          if (r.folgaH[u] !== undefined) v.total_float_hr_cnt = r.folgaH[u].toFixed(1);
+        }
+        out.push("%R\t" + campos.map(function (c) { return v[c] === undefined ? "" : v[c]; }).join("\t"));
+      });
+    });
+    out.push("%E");
+    return out.join(tb.fimLinha) + tb.fimLinha;
+  }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c]; }); }
+  function iso(t) { return t == null ? "" : fmtXER(t).replace(" ", "T") + ":00"; }
+  function durISO(h) { h = Math.max(h, 0); var i = Math.floor(h); return "PT" + i + "H" + Math.round((h - i) * 60) + "M0S"; }
+  function gravarMSPDI(p, r) {
+    var cal = p.calendarios[p.calPadrao] || p.calendarios._padrao, num0 = {}, preds = {};
+    r.ordem.forEach(function (u, i) { num0[u] = i + 1; });
+    r.ligacoes.forEach(function (l) { (preds[l.s] = preds[l.s] || []).push(l); });
+    var TP = { FF: 0, FS: 1, SF: 2, SS: 3 };
+    var hh = function (x) { return p2(Math.floor(x) % 24) + ":" + p2(Math.round((x % 1) * 60)) + ":00"; };
+    var semana = "";
+    for (var d = 0; d < 7; d++) {
+      var iv = cal.semana[d] || [];
+      semana += "<WeekDay><DayType>" + ((d + 1) % 7 + 1) + "</DayType><DayWorking>" + (iv.length ? 1 : 0) + "</DayWorking>" +
+        (iv.length ? "<WorkingTimes>" + iv.map(function (x) { return "<WorkingTime><FromTime>" + hh(x[0]) + "</FromTime><ToTime>" + hh(x[1]) + "</ToTime></WorkingTime>"; }).join("") + "</WorkingTimes>" : "") + "</WeekDay>";
+    }
+    var ini = r.ordem.length ? Math.min.apply(null, r.ordem.map(function (u) { return r.es[u]; })) : r.dataStatus;
+    var x = ['<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', '<Project xmlns="http://schemas.microsoft.com/project">',
+      "<Name>" + esc(p.nome) + "</Name><Title>" + esc(p.nome) + "</Title><StartDate>" + iso(ini) + "</StartDate><StatusDate>" + iso(r.dataStatus) + "</StatusDate>",
+      "<MinutesPerDay>" + Math.round(cal.horasDia * 60) + "</MinutesPerDay><CalendarUID>1</CalendarUID>",
+      "<Calendars><Calendar><UID>1</UID><Name>" + esc(cal.nome) + "</Name><IsBaseCalendar>1</IsBaseCalendar><WeekDays>" + semana + "</WeekDays></Calendar></Calendars>", "<Tasks>"];
+    r.ordem.forEach(function (u) {
+      var a = p.at[u], pc = a.status === "concluida" ? 100 : (a.status === "nao_iniciada" || a.durH <= 0 ? 0 : Math.max(0, Math.min(99, Math.floor(100 * (1 - a.restH / a.durH)))));
+      x.push("<Task><UID>" + num0[u] + "</UID><ID>" + num0[u] + "</ID><Name>" + esc(a.nome) + "</Name><WBS>" + esc(a.cod) + "</WBS><OutlineLevel>1</OutlineLevel>" +
+        "<Start>" + iso(r.es[u]) + "</Start><Finish>" + iso(r.ef[u]) + "</Finish><Duration>" + durISO(a.durH) + "</Duration><DurationFormat>7</DurationFormat>" +
+        "<RemainingDuration>" + durISO(a.status === "concluida" ? 0 : a.restH) + "</RemainingDuration><Milestone>" + (marco(a) ? 1 : 0) + "</Milestone>" +
+        "<PercentComplete>" + pc + "</PercentComplete><Cost>" + a.custo.toFixed(2) + "</Cost>" +
+        (a.iniReal ? "<ActualStart>" + iso(a.iniReal) + "</ActualStart>" : "") + (a.fimReal ? "<ActualFinish>" + iso(a.fimReal) + "</ActualFinish>" : "") +
+        (preds[u] || []).map(function (l) { return "<PredecessorLink><PredecessorUID>" + num0[l.p] + "</PredecessorUID><Type>" + TP[l.t] + "</Type><LinkLag>" + Math.round(l.lag * 600) + "</LinkLag><LagFormat>7</LagFormat></PredecessorLink>"; }).join("") +
+        "</Task>");
+    });
+    x.push("</Tasks>", "</Project>");
+    return x.join("\n") + "\n";
+  }
+
+  var API = { lerXER: lerXER, lerMSPDI: lerMSPDI, lerClndrData: lerClndrData, Calendario: Calendario, calcular: calcular,
+    folgaDias: folgaDias, dcma14: dcma14, monteCarlo: monteCarlo, gravarXER: gravarXER, gravarMSPDI: gravarMSPDI,
+    eHistorico: eHistorico, dataXER: dataXER, fmtXER: fmtXER, fmtBR: fmtBR, calDe: calDe, noCalculo: noCalculo };
+  if (typeof module !== "undefined" && module.exports) module.exports = API; else root.CronosEngine = API;
+})(this);
