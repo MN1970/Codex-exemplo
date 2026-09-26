@@ -20,7 +20,7 @@ class WorkflowExecution:
     """Execução de um workflow Maestro OS."""
     project_id: str
     workflow_id: str
-    status: str                    # 'running', 'completed', 'failed'
+    status: str = "running"      # 'running', 'completed', 'failed'
 
     # Fases
     phase_0_plan: Optional[Plano] = None

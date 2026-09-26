@@ -56,3 +56,24 @@ def test_fan_out_nao_usa_pool_do_detector():
 def test_fan_out_soma_declarados_sem_duplicar_e_mantem_ordem_do_plano():
     agentes = _fan_out("UHE com barragem e LT", ["agente-energia", "agente-cronograma"])
     assert agentes == ["agente-barragens", "agente-energia", "agente-cronograma"]
+
+
+def test_execute_workflow_roda_ate_o_fim_com_o_plano():
+    """Regressão: WorkflowExecution era criado sem `status` e
+    execute_workflow quebrava antes da Fase 0."""
+    from types import SimpleNamespace
+
+    orq = MaestroOrchestrator()
+    fila = _FakeQueue()
+    orq.queue_executor = fila
+    workflow = SimpleNamespace(
+        project=SimpleNamespace(id="proj-ete", title="ETE Lote 3"),
+        phase_1_fan_out=FanOutPhase(agents=[]),
+        phase_2_consensus=None,
+        phase_3_aggregate=None,
+        agents=[],
+    )
+    execucao = asyncio.run(orq.execute_workflow(workflow, "orçamento da ETE Lote 3"))
+    assert execucao.status == "completed", execucao.errors
+    assert execucao.phase_0_plan.agentes == ["agente-saneamento", "agente-orcamento"]
+    assert fila.agents == ["agente-saneamento", "agente-orcamento"]
