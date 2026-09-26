@@ -39,6 +39,8 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
+import re
 import sys
 from pathlib import Path
 
@@ -117,11 +119,32 @@ def load_claude_md() -> str:
     return claude_md.read_text(encoding="utf-8") if claude_md.exists() else ""
 
 
+# Mesma sintaxe ${VAR} / ${VAR:default} já usada (embora quebrada) no
+# .mcp.json deste repositório - aqui expandida de verdade pelo próprio
+# script, para que um --mcp-config possa ser versionado/compartilhado
+# sem segredos reais dentro dele (só os nomes das env vars).
+_ENV_VAR_RE = re.compile(r"\$\{([A-Za-z0-9_]+)(?::([^}]*))?\}")
+
+
+def _expand_env(value):
+    if isinstance(value, str):
+        def repl(m: re.Match) -> str:
+            name, default = m.group(1), m.group(2)
+            return os.environ.get(name, default if default is not None else "")
+
+        return _ENV_VAR_RE.sub(repl, value)
+    if isinstance(value, dict):
+        return {k: _expand_env(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_expand_env(v) for v in value]
+    return value
+
+
 def load_mcp_config(path: str | None) -> dict:
     if not path:
         return {}
     data = json.loads(Path(path).read_text(encoding="utf-8"))
-    return data.get("mcpServers", data)
+    return _expand_env(data.get("mcpServers", data))
 
 
 def build_options(

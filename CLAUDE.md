@@ -20,7 +20,12 @@ mesmo corrigido, seu schema (`enabled`/`tier`/`capabilities`/
 ABERTOS". `claude-agent-sdk` adicionado a `requirements.txt`. Escopo
 desta sessão: só o entrypoint de execução — não migra o orquestrador
 custom de `src/maestro/` (routing determinístico R1, ML/XGBoost etc.),
-que segue existindo em paralelo.
+que segue existindo em paralelo. Adicionado também
+`scripts/mcp-config.example.json` — template real de `--mcp-config`
+(Supabase MCP oficial via `npx`, MCP interno de SharePoint) com
+expansão de `${VAR}`/`${VAR:default}` a partir do ambiente (implementada
+em `load_mcp_config()`), para plugar MCPs reais sem versionar segredo
+nenhum.
 
 Consolida v5.4.8 (2026-09-20) — novo guardião transversal `dedup-guard`
 (detecta duplicação/redundância de dados entre abas/telas de qualquer
@@ -977,7 +982,8 @@ Codex-exemplo/
 │       ├── 2026_07_05_v4_2_agents_s6_s10.sql      # migração candidata v4.2
 │       └── 2026_07_31_v4_3_agents_s12_s13.sql     # migração candidata v4.3 (S12/S13 RAG+routing)
 ├── scripts/
-│   └── manta_maestro_agent_sdk.py         # 🆕 v5.4.9 — entrypoint via Claude Agent SDK (ver seção "AGENT SDK")
+│   ├── manta_maestro_agent_sdk.py         # 🆕 v5.4.9 — entrypoint via Claude Agent SDK (ver seção "AGENT SDK")
+│   └── mcp-config.example.json            # 🆕 v5.4.9 — template real de --mcp-config (Supabase + SharePoint), sem segredos
 └── tests/
     ├── lib/
     │   └── agent_loader.py                # parser compartilhado de .claude/agents/*.md (usado pelos testes E pelo entrypoint SDK acima)
@@ -1043,9 +1049,15 @@ schema (`enabled`/`tier`/`capabilities`/`authentication`/
 `rate_limiting` por servidor) que não é o formato real de `.mcp.json`
 do Claude Code/Agent SDK — que é `{"nome": {"command", "args", "env"}}`
 (stdio) ou `{"nome": {"type": "http"|"sse", "url", "headers"}}`. Para
-plugar um MCP real (SharePoint_Manta, Supabase) neste script, passe
-`--mcp-config caminho.json` com um arquivo já nesse formato — ver
-`_MCP_JSON_NOTE` no próprio script. Ver também novo item em "GAPS
+plugar um MCP real (SharePoint_Manta, Supabase) neste script, copie
+`scripts/mcp-config.example.json` para fora do git, preencha as env
+vars referenciadas nele (`SUPABASE_ACCESS_TOKEN` para o MCP oficial do
+Supabase via `npx`; `M365_MCP_URL`/`M365_MCP_TOKEN` para o MCP interno
+de SharePoint — confirmar com quem administra, não há URL/token real
+documentado aqui) e passe `--mcp-config caminho/da/sua/copia.json`. As
+placeholders `${VAR}`/`${VAR:default}` são expandidas pelo próprio
+`load_mcp_config()` a partir do ambiente — nada de segredo fica no
+arquivo versionado. Ver `_MCP_JSON_NOTE` no script e novo item em "GAPS
 ABERTOS".
 
 Fora do escopo desta versão: migrar o orquestrador custom de
@@ -1074,8 +1086,12 @@ existente.
   "GAPS ABERTOS" em vez de reescrito às cegas (faltam credenciais reais
   para os 4 servidores ali descritos). Fora do escopo: migrar o
   orquestrador custom de `src/maestro/` (routing R1, ML/XGBoost) para
-  cima do Agent SDK — os dois seguem em paralelo. Ver seção "AGENT SDK —
-  Execução fora do Claude Code CLI".
+  cima do Agent SDK — os dois seguem em paralelo. Adicionado
+  `scripts/mcp-config.example.json` (template real de `--mcp-config`
+  para Supabase MCP oficial + MCP interno de SharePoint) com expansão
+  de `${VAR}`/`${VAR:default}` a partir do ambiente em
+  `load_mcp_config()`, para plugar MCPs reais sem versionar segredo.
+  Ver seção "AGENT SDK — Execução fora do Claude Code CLI".
 - **v5.4.8** (2026-09-20) — criado o guardião transversal `dedup-guard`
   (detecta tabela/bloco/rótulo duplicado ou divergente entre abas/telas de
   qualquer artefato Manta, sem valores de negócio fixos) e sanitizado o

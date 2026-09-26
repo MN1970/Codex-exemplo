@@ -108,3 +108,36 @@ def test_build_options_model_override_wins_over_forced_agent_model():
 
 def test_load_mcp_config_without_path_is_empty():
     assert sdk_entrypoint.load_mcp_config(None) == {}
+
+
+def test_expand_env_substitutes_and_falls_back_to_default(monkeypatch):
+    monkeypatch.setenv("MMASDK_TEST_VAR", "valor-real")
+    monkeypatch.delenv("MMASDK_TEST_MISSING", raising=False)
+    result = sdk_entrypoint._expand_env(
+        {
+            "a": "${MMASDK_TEST_VAR}",
+            "b": "${MMASDK_TEST_MISSING:default-aqui}",
+            "c": "${MMASDK_TEST_MISSING}",
+            "nested": {"list": ["${MMASDK_TEST_VAR}", 1, None]},
+        }
+    )
+    assert result == {
+        "a": "valor-real",
+        "b": "default-aqui",
+        "c": "",
+        "nested": {"list": ["valor-real", 1, None]},
+    }
+
+
+def test_load_mcp_config_example_file_is_valid_and_expands(monkeypatch):
+    monkeypatch.setenv("SUPABASE_ACCESS_TOKEN", "sbp_test_token")
+    monkeypatch.setenv("M365_MCP_URL", "https://mcp-m365.example.com")
+    monkeypatch.delenv("M365_MCP_TOKEN", raising=False)
+
+    example = REPO_ROOT / "scripts" / "mcp-config.example.json"
+    cfg = sdk_entrypoint.load_mcp_config(str(example))
+
+    assert "_readme" not in cfg and "_notes" not in cfg
+    assert cfg["supabase-manta-maestro"]["env"]["SUPABASE_ACCESS_TOKEN"] == "sbp_test_token"
+    assert cfg["sharepoint-manta"]["url"] == "https://mcp-m365.example.com"
+    assert cfg["sharepoint-manta"]["headers"]["Authorization"] == "Bearer "
