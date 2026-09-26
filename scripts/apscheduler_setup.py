@@ -27,6 +27,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Optional, Callable
 import threading
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import time
 
 # Configure logging
@@ -380,6 +381,56 @@ class APSchedulerManager:
         }
 
 
+def start_health_server(manager: "APSchedulerManager") -> Optional[ThreadingHTTPServer]:
+    """
+    Sobe /health e /metrics (formato Prometheus) numa thread daemon.
+
+    É o endpoint que o HEALTHCHECK de deploy/Dockerfile, o
+    deploy/docker-compose.yml e o job "Test in Container" consultam em
+    :8080. Porta configurável por MAESTRO_HEALTH_PORT (0 desliga).
+    """
+    port = int(os.getenv("MAESTRO_HEALTH_PORT", "8080"))
+    if port == 0:
+        return None
+
+    class HealthHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            running = manager.scheduler.running
+            if self.path == "/health":
+                body = json.dumps({
+                    "status": "ok" if running else "stopped",
+                    "jobs": len(manager.scheduler.get_jobs()),
+                }).encode()
+                self._reply(200 if running else 503, "application/json", body)
+            elif self.path == "/metrics":
+                body = (
+                    "# HELP maestro_job_count Jobs registrados no APScheduler\n"
+                    "# TYPE maestro_job_count gauge\n"
+                    f"maestro_job_count {len(manager.scheduler.get_jobs())}\n"
+                    "# HELP maestro_scheduler_running 1 se o scheduler está rodando\n"
+                    "# TYPE maestro_scheduler_running gauge\n"
+                    f"maestro_scheduler_running {int(running)}\n"
+                ).encode()
+                self._reply(200, "text/plain; version=0.0.4", body)
+            else:
+                self._reply(404, "text/plain", b"not found\n")
+
+        def _reply(self, status: int, ctype: str, body: bytes):
+            self.send_response(status)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, format, *args):  # silencia o log por requisição
+            pass
+
+    server = ThreadingHTTPServer(("0.0.0.0", port), HealthHandler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    logger.info(f"Health/metrics em http://0.0.0.0:{port}/health e /metrics")
+    return server
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="APScheduler Setup — P7 Background Orchestration"
@@ -429,6 +480,7 @@ def main():
         logger.info("Mode: RUN_SCHEDULER (foreground)")
         if manager.start():
             try:
+                start_health_server(manager)
                 logger.info("Scheduler running. Press Ctrl+C to stop.")
                 while True:
                     time.sleep(1)
@@ -471,6 +523,7 @@ def main():
         logger.info("No option specified. Running scheduler...")
         if manager.start():
             try:
+                start_health_server(manager)
                 logger.info("Scheduler running. Press Ctrl+C to stop.")
                 while True:
                     time.sleep(1)

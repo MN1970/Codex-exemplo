@@ -25,6 +25,8 @@ Uso:
 """
 
 import json
+import re
+import unicodedata
 import os
 import sys
 import pytest
@@ -85,6 +87,17 @@ class TestCase:
 # MOCK MAESTRO ROUTER (Simulação R1)
 # ============================================================================
 
+def _norm(texto: str) -> str:
+    """minúsculas, sem acento, hífen/underscore como espaço."""
+    sem_acento = "".join(c for c in unicodedata.normalize("NFKD", texto)
+                         if not unicodedata.combining(c))
+    return re.sub(r"[-_]", " ", sem_acento.lower())
+
+
+def _has_word(texto: str, palavra: str) -> bool:
+    return re.search(r"(?<!\w)" + re.escape(palavra) + r"(?!\w)", texto) is not None
+
+
 class MockMaestroRouter:
     """
     Simulação simplificada do Maestro Router v5.0 para testes.
@@ -100,17 +113,19 @@ class MockMaestroRouter:
         """Constrói regras de routing por agente vertical."""
         return {
             "manta-03-s8": ["saneamento", "ETA", "ETE", "adutora", "esgoto", "água",
-                           "AySA", "drenagem", "SNIS", "PMSB", "Lei 14.026", "elevatória",
+                           "AySA", "drenagem urbana", "SNIS", "PMSB", "Lei 14.026", "elevatória",
                            "reservatório", "UASB", "MBR", "reuso"],
             "manta-03-s9": ["energia", "transmissao", "LT", "subestacao", "ANEEL", "RAP",
                            "leilao", "ONS", "EPE", "PDE", "geração", "eólica", "PV",
-                           "hidraulica", "PCH", "UHE", "usina", "termica", "nuclear"],
+                           "hidraulica", "PCH", "UHE", "usina", "termica", "nuclear",
+                           "solar"],
             "manta-03-s6": ["porto", "terminal", "ANTAQ", "dragagem", "molhe", "quebra-mar",
                            "berço", "calado", "contêiner", "granel", "cais", "píer",
                            "retroarea", "patio", "TUP", "TPS", "PIANC", "hidrovia"],
             "manta-03-s7": ["aeroporto", "pista", "RWY", "taxiway", "TWY", "patio", "TPS",
                            "TECA", "ANAC", "RBAC", "ICAO", "Annex 14", "FAA", "balizamento",
-                           "PAPI", "ILS", "PCN", "gate", "jetway", "ponte", "embarque"],
+                           "PAPI", "ILS", "PCN", "gate", "jetway", "ponte", "embarque",
+                           "passageiros", "pax"],
             "manta-03-s10": ["barragem", "vertedouro", "CFRD", "CCR", "RCC", "rejeitos", "TSF",
                             "PNSB", "ICOLD", "CBDB", "dique", "SIGBM", "ANM", "ANA", "Lei 12.334"],
             "manta-03-s1": ["rodovia", "pavimento", "CBUQ", "BGS", "terraplenagem", "SICRO",
@@ -169,30 +184,34 @@ class MockMaestroRouter:
         """
         prompt_lower = prompt.lower()
         context_hints = context_hints or []
+        prompt_norm = _norm(prompt)
+        hints_norm = {_norm(h) for h in context_hints}
 
         # Stage 1: Keyword matching
-        best_agent = None
-        best_score = 0.0
-
+        # Conta palavras inteiras (sem acento) do prompt + context_hints do
+        # intake. Não divide pelo tamanho da lista de keywords: um agente com
+        # 20 keywords não pode perder para um com 5 só por ter lista maior.
+        # Empate → vertical (manta-03-*) vence: o segmento é o dono da sessão.
+        scores: Dict[str, int] = {}
         for agent_id, keywords in self.routing_rules.items():
-            matches = sum(1 for kw in keywords if kw.lower() in prompt_lower)
-            score = matches / len(keywords) if keywords else 0
+            kws = {_norm(kw) for kw in keywords}
+            # hint que repete palavra do prompt não conta duas vezes
+            matches = len({kw for kw in kws if _has_word(prompt_norm, kw)} | (kws & hints_norm))
+            if matches:
+                scores[agent_id] = matches
 
-            # Boost score se keyword está em context_hints
-            for hint in context_hints:
-                if hint.lower() in keywords:
-                    score += 0.15
-
-            if score > best_score:
-                best_score = score
-                best_agent = agent_id
-
-        if not best_agent:
+        ranked = sorted(scores.items(),
+                        key=lambda kv: (kv[1], kv[0].startswith("manta-03")),
+                        reverse=True)
+        if ranked:
+            best_agent, best_score = ranked[0]
+            runner_up = ranked[1][1] if len(ranked) > 1 else 0
+        else:
             # Fallback: maestro (00)
-            best_agent = "manta-00"
+            best_agent, best_score, runner_up = "manta-00", 0, 0
 
-        # Stage 2: Phase inference
-        phase = self._infer_phase(prompt_lower)
+        # Stage 2: Phase inference (prompt primeiro; senão, fase citada nos hints)
+        phase = self._infer_phase(prompt_lower, context_hints)
 
         # Stage 3: Tiering
         if complexity_score is None:
@@ -200,8 +219,9 @@ class MockMaestroRouter:
 
         model_tier = self._compute_tiering(best_agent, complexity_score, len(prompt))
 
-        # Construct routing confidence
-        routing_confidence = min(0.95, best_score + 0.05)
+        # Confidence: cresce com as evidências e com a margem sobre o 2º colocado
+        routing_confidence = 0.0 if best_agent == "manta-00" else round(min(
+            0.95, 0.70 + 0.05 * best_score + 0.05 * (best_score - runner_up)), 2)
 
         # Get agent config
         agent_config = self.agent_configs.get(best_agent, {})
@@ -224,10 +244,11 @@ class MockMaestroRouter:
             }
         )
 
-    def _infer_phase(self, prompt: str) -> Optional[str]:
+    def _infer_phase(self, prompt: str, context_hints: Optional[List[str]] = None) -> Optional[str]:
         """Infere phase (ciclo de vida) baseado em keywords."""
         phases_map = {
-            "estudo-previo": ["estudo prévio", "diagnóstico", "benchmarking", "baseline"],
+            # R1 (EPE/ANEEL) = estudo de viabilidade técnico-econômica e socioambiental
+            "estudo-previo": ["estudo prévio", "diagnóstico", "benchmarking", "baseline", "aneel r1"],
             "projeto-basico": ["projeto básico", "conceito", "layout", "viabilidade"],
             "projeto-executivo": ["projeto executivo", "detalh", "especificação", "técnico"],
             "obra": ["obra", "execução", "construção", "implantação"],
@@ -237,8 +258,14 @@ class MockMaestroRouter:
             "encerramento": ["encerramento", "descomissionamento", "final"],
         }
 
+        prompt = _norm(prompt)
         for phase, keywords in phases_map.items():
-            if any(kw in prompt for kw in keywords):
+            if any(_norm(kw) in prompt for kw in keywords):
+                return phase
+
+        hints = {_norm(h) for h in (context_hints or [])}
+        for phase in phases_map:
+            if _norm(phase) in hints:
                 return phase
 
         # Default: projeto-basico se ambíguo
@@ -256,7 +283,7 @@ class MockMaestroRouter:
 
         if complexity_score < 3.0 and prompt_len < 1500:
             return "haiku-4-5"
-        elif complexity_score >= 4.5 or prompt_len > 3000:
+        elif complexity_score > 4.5 or prompt_len > 3000:
             return "opus"
         else:
             return "sonnet-5"
@@ -361,7 +388,8 @@ class TestMaestroRouterS9:
 
         assert result.agent_id == tc.expected_agent_id
         assert result.model_tier == "sonnet-5"
-        assert result.phase == "projeto-executivo"
+        # ANEEL R1 = estudo de viabilidade técnico-econômica (fase de estudo prévio)
+        assert result.phase == "estudo-previo"
 
     def test_s9_subestacao_omm(self, maestro_router, golden_test_cases):
         """S9-002: O&M subestação 500 MVA."""
