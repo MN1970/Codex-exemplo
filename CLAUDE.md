@@ -4,10 +4,9 @@ Registro mestre dos agentes IA da Manta Associados. Este arquivo é o
 "CLAUDE.md master" referenciado pelos SKILL.md e pelos runbooks
 operacionais no SharePoint.
 
-Versão: **v4.2.3** (2026-09-13) — v4.2 expansão S6–S10 (Portos,
-Aeroportos, Saneamento, Energia, Barragens) + variante de proposta
-técnico-comercial para concessões de grande porte, confirmada como já
-implementada na skill de produção (ver "MODELO MESTRE DE PROPOSTA").
+Versão: **v4.3** (2026-09-26) — criação da capacidade MOT (Faseamento
+de Tráfego em Trevos e Interseções), extensão de S1/S2. Ver histórico
+de versões no fim deste arquivo para detalhes.
 
 ---
 
@@ -201,6 +200,26 @@ mapa de routing.
 
 ## Histórico de versões
 
+- **v4.3** (2026-09-26) — criação da capacidade **MOT — Faseamento de
+  Tráfego em Trevos e Interseções**, como extensão dos agentes
+  **S1-Rodovias** e **S2-OAE** (não é um segmento novo no mapa de
+  agentes). Base construída sobre 8 casos-teste reais do projeto SP-258
+  (Motiva/CCR). Auditoria/QA da base documentou 9 achados, incluindo 2
+  erros reais já identificados em documento entregue ao cliente
+  (Anexo 9) e 1 contradição geométrica no km 282 ainda pendente de
+  confirmação com a equipe de projeto. Schema Supabase candidato
+  definido (`supabase/migrations/2026_09_26_v4_3_mot_fasamento.sql`),
+  mas **não aplicado em produção**. Pipeline de 6 subagentes
+  (`mot-leitor-edital`, `mot-leitor-projeto-executivo` e
+  `mot-leitor-cronograma` em paralelo; classificador-janela como
+  barreira de sincronização; motor-matching; gerador-grafico-memorial),
+  com código funcional e testado localmente
+  (`engine/mot/window-classifier.js`, `engine/mot/matching-engine.js`,
+  `engine/mot/svg-phase-generator.js`), 3 gates humanos obrigatórios
+  (TMP se V/C > 0,80; revisão do top-3 antes de produto final; toda
+  saída marcada "PENDENTE DE APROVAÇÃO MN" até confirmação). Ver
+  `.claude/skills/mot-orquestrador/SKILL.md`. Status: **aguardando
+  aprovação MN antes de qualquer deploy**.
 - **v4.2.3** (2026-09-13) — confirmado que a variante de proposta para
   concessões de grande porte (antigo "M6") já está implementada na skill
   de produção, sob nova estrutura/local (`02-atividades/A1-proposta/
