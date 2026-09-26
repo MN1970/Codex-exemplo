@@ -18,6 +18,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT))
 
+# claude-agent-sdk é pesado (mcp, starlette, uvicorn, cryptography...) e
+# não faz parte de requirements-test.txt de propósito (lane "unit" fica
+# leve/sem rede) - se não estiver instalado, pula este arquivo inteiro em
+# vez de quebrar a suíte.
+pytest.importorskip("claude_agent_sdk")
+
 import manta_maestro_agent_sdk as sdk_entrypoint  # noqa: E402
 from tests.lib.agent_loader import load_agent, load_all_agents  # noqa: E402
 

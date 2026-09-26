@@ -57,8 +57,15 @@ try:
         ToolUseBlock,
         query,
     )
-except ImportError as exc:  # pragma: no cover - mensagem de setup, não de teste
-    raise SystemExit(
+except ImportError as exc:
+    # Reaproveitado por tests/unit/test_manta_maestro_agent_sdk.py (via
+    # `pytest.importorskip`), que roda até na suíte "unit" leve (sem
+    # claude-agent-sdk instalado - não faz parte de requirements-test.txt
+    # de propósito, é pesado e tem rede/dependências próprias). Por isso
+    # aqui é uma Exception normal, não SystemExit: SystemExit é uma
+    # BaseException e escapa do collection error handling do pytest,
+    # derrubando a sessão inteira (INTERNALERROR) em vez de só este módulo.
+    raise ImportError(
         "claude-agent-sdk não instalado. Rode: pip install claude-agent-sdk"
     ) from exc
 
