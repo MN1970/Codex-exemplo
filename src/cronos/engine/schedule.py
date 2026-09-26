@@ -76,7 +76,7 @@ def calcular(p: Projeto, rest_h: dict[str, float] | None = None) -> dict:
         cedo_ini = cal.proximo_inicio(dd)                 # nunca antes da data de status
         cedo_fim = None
         for l in preds[u]:
-            pa, pcal = p.atividades[l.pred], p.cal(p.atividades[l.pred])
+            pcal = p.cal(p.atividades[l.pred])
             if a.status == "em_andamento" and l.tipo in ("SS", "SF"):
                 continue                                   # já começou: SS/SF satisfeitas
             if l.tipo == "FS":
@@ -126,7 +126,7 @@ def calcular(p: Projeto, rest_h: dict[str, float] | None = None) -> dict:
         tarde_fim = cal.ultimo_fim(fim_proj)
         tarde_ini = None
         for l in succs[u]:
-            sa, scal = p.atividades[l.succ], p.cal(p.atividades[l.succ])
+            sa = p.atividades[l.succ]
             if sa.status == "concluida":
                 continue
             pcal = cal
