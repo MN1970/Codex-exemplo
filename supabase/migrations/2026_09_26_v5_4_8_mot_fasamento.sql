@@ -1,7 +1,7 @@
 -- =============================================================================
 -- Manta Maestro — Migração candidata (Supabase/Postgres)
--- Arquivo: supabase/migrations/2026_09_26_v4_3_mot_fasamento.sql
--- Versão: v4.3 — MOT (Faseamento de Tráfego em Trevos e Interseções) —
+-- Arquivo: supabase/migrations/2026_09_26_v5_4_8_mot_fasamento.sql
+-- Versão: v5.4.8 — MOT (Faseamento de Tráfego em Trevos e Interseções) —
 --         casos precedentes de faseamento de obra rodoviária (dispositivos
 --         de trevo/rotatória e tipologias de duplicação)
 -- Data:   2026-09-26
@@ -20,7 +20,7 @@
 --        (a partir da raiz do repo, com o projeto Supabase linkado)
 --
 --   2) Via psql direto (ambiente de staging/homolog):
---        psql "$DATABASE_URL" -f supabase/migrations/2026_09_26_v4_3_mot_fasamento.sql
+--        psql "$DATABASE_URL" -f supabase/migrations/2026_09_26_v5_4_8_mot_fasamento.sql
 --
 -- Pré-requisitos:
 --   - Extensão `pgvector` habilitada no projeto (para a coluna `embedding`).
@@ -42,7 +42,7 @@
 -- Rastreabilidade dos 8 casos: todos vêm de documentos reais do projeto
 -- SP-258 (Motiva/CCR) — Anexo 9 (Relatório de Desvios de Tráfego e
 -- Sinalização Provisória), cronograma executivo real, e plantas
--- DE-/MD-/MC- lidas diretamente no SharePoint. Ver CLAUDE.md v4.3 e a
+-- DE-/MD-/MC- lidas diretamente no SharePoint. Ver CLAUDE.md v5.4.8 e a
 -- Central de Conhecimento MOT publicada nesta sessão para o detalhamento
 -- da auditoria/QA de cada caso.
 --

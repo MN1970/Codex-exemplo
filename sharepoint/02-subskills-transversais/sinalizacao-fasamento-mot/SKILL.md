@@ -108,10 +108,10 @@ de sinalização" isolado, sem pedir sequenciamento →
 ## 6. Base de conhecimento e status
 
 A base de 8 casos-teste reais (projeto SP-258, Motiva/CCR) está
-registrada em `supabase/migrations/2026_09_26_v4_3_mot_fasamento.sql`
+registrada em `supabase/migrations/2026_09_26_v5_4_8_mot_fasamento.sql`
 (migração candidata — não aplicada em produção sem aprovação MN). O
 código dos Blocos 3 e 4 (`engine/mot/window-classifier.js` e
 `engine/mot/matching-engine.js`) já roda e passa em testes locais
 (golden set dos casos reais), mas **todo o pipeline permanece em status
 "aguardando aprovação MN antes de qualquer deploy"** — ver CLAUDE.md
-v4.3.
+v5.4.8.
