@@ -1,0 +1,1 @@
+# Registry para aluci-guard

@@ -1,0 +1,336 @@
+{
+  "fase_1_status": "implementada",
+  "ticket": "MNT-2026-RAG-PHASE1-S10-DECONTAMINATION",
+  "data_implementacao": "2026-07-26",
+  "versao": "1.0",
+  "baseline_benchmark": {
+    "recall_at_1": 69.23,
+    "recall_at_3": 84.62,
+    "contaminacao_percentual": 20.51,
+    "timestamp": "2026-07-24"
+  },
+  "mudancas_aplicadas": {
+    "embedding_weights_updated": {
+      "status": "implementado",
+      "descricao": "Ajustado embedding_weight para domínio 'bar:' (S10)",
+      "de": 1.0,
+      "para": 0.85,
+      "impact": "Reduz ranking de Barragens em buscas ambíguas"
+    },
+    "domain_anti_terms_table_created": {
+      "status": "implementado",
+      "descricao": "Criada tabela domain_anti_terms com schema para mapear anti-vocabulário por domínio",
+      "colunas": [
+        "id SERIAL PRIMARY KEY",
+        "domain TEXT NOT NULL",
+        "domain_full_name TEXT",
+        "anti_term TEXT NOT NULL",
+        "reason TEXT NOT NULL",
+        "penalty_score DECIMAL(3, 2) DEFAULT 0.30",
+        "created_at TIMESTAMPTZ DEFAULT NOW()",
+        "UNIQUE(domain, anti_term)"
+      ],
+      "indices": [
+        "idx_domain_anti_terms_domain",
+        "idx_domain_anti_terms_anti_term"
+      ]
+    },
+    "anti_terms_inserted": {
+      "status": "implementado",
+      "total_registros": 31,
+      "distribuicao_por_dominio": {
+        "S1_rodovias": {
+          "quantidade": 5,
+          "exemplos": ["barragem", "rejeito", "TSF", "vertedouro", "CFRD"],
+          "penalty_medio": 0.38
+        },
+        "S2_oae": {
+          "quantidade": 5,
+          "exemplos": ["CFRD", "rejeito", "núcleo impermeável", "CCR", "vertedouro"],
+          "penalty_medio": 0.36
+        },
+        "S4_metro": {
+          "quantidade": 4,
+          "exemplos": ["via permanente ferroviária", "trilho ferroviário", "dormente ferroviário", "barragem"],
+          "penalty_medio": 0.36
+        },
+        "S6_portos": {
+          "quantidade": 5,
+          "exemplos": ["vertedouro", "aterro barragem", "CFRD", "rejeito", "ICOLD"],
+          "penalty_medio": 0.36
+        },
+        "S8_saneamento": {
+          "quantidade": 4,
+          "exemplos": ["trilho", "via permanente", "ferroviário", "pista pouso"],
+          "penalty_medio": 0.38
+        },
+        "S9_energia": {
+          "quantidade": 4,
+          "exemplos": ["trilho", "via permanente", "dragagem", "berço portaria"],
+          "penalty_medio": 0.38
+        },
+        "S10_barragens": {
+          "quantidade": 11,
+          "exemplos": ["trilho", "via permanente ferroviária", "dormente", "pista pouso", "ANAC", "dragagem", "berço", "ANTAQ", "pavimento CBUQ", "terraplenagem rodoviária", "ETA ETE"],
+          "penalty_medio": 0.38
+        }
+      },
+      "validacao": "SELECT COUNT(*) FROM domain_anti_terms; → deve retornar 31"
+    },
+    "search_function_modified": {
+      "status": "implementado",
+      "descricao": "Criadas funções calculate_anti_term_penalty() e search_rag_with_anti_terms()",
+      "funcoes_criadas": [
+        {
+          "nome": "calculate_anti_term_penalty(chunk_content TEXT, source_domain TEXT)",
+          "retorno": "DECIMAL",
+          "logica": "Itera sobre anti_terms do source_domain; se chunk contém anti-termo, acumula penalty; cap máximo 0.95"
+        },
+        {
+          "nome": "search_rag_with_anti_terms(query_text TEXT, source_domain TEXT, limit_results INT DEFAULT 10)",
+          "retorno": "TABLE(chunk_id, content, domain, score, penalty, final_score)",
+          "logica": "Busca por embedding + aplica penalização via calculate_anti_term_penalty()"
+        }
+      ]
+    },
+    "contamination_test_queries_table": {
+      "status": "implementado",
+      "descricao": "Criada tabela contamination_test_queries com 8 queries históricas de contaminação",
+      "total_queries": 8,
+      "queries": [
+        {
+          "numero": 1,
+          "query": "projeto de terraplenagem rodoviária",
+          "expected_domain": "S1",
+          "incorrectly_returned_domain": "S10",
+          "baseline_rank_position": 3,
+          "phase1_expected_rank": 1
+        },
+        {
+          "numero": 2,
+          "query": "fundação estrutural OAE",
+          "expected_domain": "S2",
+          "incorrectly_returned_domain": "S10",
+          "baseline_rank_position": 2,
+          "phase1_expected_rank": 1
+        },
+        {
+          "numero": 3,
+          "query": "drenagem rodoviária superficial",
+          "expected_domain": "S1",
+          "incorrectly_returned_domain": "S10",
+          "baseline_rank_position": 4,
+          "phase1_expected_rank": "1-2"
+        },
+        {
+          "numero": 4,
+          "query": "núcleo de aterro ponte",
+          "expected_domain": "S2",
+          "incorrectly_returned_domain": "S10",
+          "baseline_rank_position": 5,
+          "phase1_expected_rank": "1-2"
+        },
+        {
+          "numero": 5,
+          "query": "via permanente estação metrô",
+          "expected_domain": "S4",
+          "incorrectly_returned_domain": "S10",
+          "baseline_rank_position": 3,
+          "phase1_expected_rank": 1
+        },
+        {
+          "numero": 6,
+          "query": "dragagem porto terminal",
+          "expected_domain": "S6",
+          "incorrectly_returned_domain": "S10",
+          "baseline_rank_position": 2,
+          "phase1_expected_rank": 1
+        },
+        {
+          "numero": 7,
+          "query": "concreto rolado estrutura OAE",
+          "expected_domain": "S2",
+          "incorrectly_returned_domain": "S10",
+          "baseline_rank_position": 4,
+          "phase1_expected_rank": "1-2"
+        },
+        {
+          "numero": 8,
+          "query": "aterro rodoviário terraplenagem",
+          "expected_domain": "S1",
+          "incorrectly_returned_domain": "S10",
+          "baseline_rank_position": 3,
+          "phase1_expected_rank": 1
+        }
+      ]
+    },
+    "audit_and_monitoring_tables": {
+      "status": "implementado",
+      "tabelas": [
+        {
+          "nome": "rag_penalty_audit",
+          "propósito": "Log detalhado de penalizações aplicadas em cada busca",
+          "campos": ["id", "query_text", "source_domain", "chunk_id", "anti_terms_found[]", "penalty_applied", "timestamp"]
+        },
+        {
+          "nome": "rag_contamination_status (VIEW)",
+          "propósito": "Monitoramento de performance pós-deployment",
+          "agrega": ["expected_domain", "total_queries", "pending_tests", "passed_tests", "failed_tests", "pass_rate%"]
+        }
+      ]
+    }
+  },
+  "arquivos_criados": {
+    "migrations": [
+      {
+        "caminho": "supabase/migrations/2026_07_26_rag_phase_1_contamination_fix.sql",
+        "linhas": 381,
+        "descricao": "Migration principal Phase 1",
+        "secoes": 8,
+        "rollback_included": true
+      }
+    ],
+    "tests": [
+      {
+        "caminho": "tests/rag/phase1_contamination_validation.sql",
+        "linhas": 178,
+        "descricao": "Test suite para 8 queries históricas",
+        "assertions": 8
+      }
+    ],
+    "documentation": [
+      {
+        "caminho": "docs/RAG_PHASE_1_IMPLEMENTATION_REPORT.md",
+        "secoes": 15,
+        "descricao": "Documentação técnica completa",
+        "inclui": [
+          "Executive Summary",
+          "Mudanças Implementadas",
+          "Impacto Esperado",
+          "Deployment Checklist",
+          "Success Criteria",
+          "Rollback Plan"
+        ]
+      }
+    ],
+    "status": [
+      {
+        "caminho": "phase1_implementation_status.json",
+        "propósito": "JSON estruturado de status (este arquivo)"
+      }
+    ]
+  },
+  "impacto_esperado": {
+    "recall_at_1": {
+      "baseline": 69.23,
+      "target": "74-77",
+      "delta_percentual": "+4 a +8",
+      "reasoning": "8 queries com contaminação S10 fixadas (assume 50-75% sucesso)"
+    },
+    "recall_at_3": {
+      "baseline": 84.62,
+      "target": "87-88",
+      "delta_percentual": "+2 a +3",
+      "reasoning": "Melhoria em top-1 propaga para top-3"
+    },
+    "contaminacao_percentual": {
+      "baseline": 20.51,
+      "target": "12-14",
+      "delta_percentual": "-30 a -40%",
+      "reasoning": "8 queries de teste = ~15-20% das contaminações; anti-termos reduzem captura cruzada"
+    },
+    "coverage_por_dominio": {
+      "S1_rodovias": {
+        "queries_esperadas_passarem": 3,
+        "queries": ["terraplenagem", "drenagem", "aterro"]
+      },
+      "S2_oae": {
+        "queries_esperadas_passarem": 3,
+        "queries": ["fundação estrutural", "núcleo aterro", "concreto CCR"]
+      },
+      "S4_metro": {
+        "queries_esperadas_passarem": 1,
+        "queries": ["via permanente"]
+      },
+      "S6_portos": {
+        "queries_esperadas_passarem": 1,
+        "queries": ["dragagem"]
+      }
+    }
+  },
+  "deployment_requirements": {
+    "pre_deployment_staging": [
+      "Verificar schema existente de rag_chunks",
+      "Criar backup de rag_chunks, rag_collections",
+      "Executar migration em staging",
+      "Validar: SELECT COUNT(*) FROM domain_anti_terms; → 31",
+      "Executar test suite",
+      "Validar 8 queries de teste",
+      "Medir baseline embedding quality"
+    ],
+    "deployment_production": [
+      "Pull request com migration + tests + docs",
+      "Aprovação MN requerida",
+      "Executar: supabase db push --remote",
+      "Validação pós-deployment"
+    ],
+    "success_criteria": [
+      "Migration executa sem erros",
+      "31 anti-termos cadastrados",
+      "Recall@1 >= 74%",
+      "Recall@3 >= 87%",
+      "Contaminação <= 14%",
+      "8/8 testes: status = 'passed'",
+      "Zero negative impact em sample 100+ queries aleatórias"
+    ]
+  },
+  "rollback_plan": {
+    "tipo": "reversível",
+    "tempo_estimado": "< 5 minutos",
+    "data_loss": "nenhuma",
+    "comandos": [
+      "DROP VIEW rag_contamination_status",
+      "DROP TABLE contamination_test_queries",
+      "DROP TABLE rag_penalty_audit",
+      "DROP FUNCTION search_rag_with_anti_terms()",
+      "DROP FUNCTION calculate_anti_term_penalty()",
+      "DROP TABLE domain_anti_terms",
+      "UPDATE rag_chunks SET embedding_weight = 1.0 WHERE prefix = 'bar:'"
+    ]
+  },
+  "timeline": {
+    "2026-07-26": "Phase 1 IMPLEMENTED (este documento)",
+    "2026-07-27": "Deployment em staging, validação manual",
+    "2026-07-28": "Aprovação MN, deployment produção",
+    "2026-08-02": "Phase 2 (embedding retraining, se necessário)",
+    "2026-08-09": "Phase 3 (query expansion + synonym refinement)"
+  },
+  "proximas_fases": {
+    "phase_2": {
+      "nome": "Embedding Retraining",
+      "objetivos": [
+        "Fine-tune embeddings com corpus domínio-específico",
+        "Aumentar dimensionalidade (1536 → 2048)",
+        "Target: Recall@1 80-85%"
+      ]
+    },
+    "phase_3": {
+      "nome": "Query Expansion & Synonym Refinement",
+      "objetivos": [
+        "Adicionar synonyms por domínio",
+        "Implement query rewriting para termos ambíguos",
+        "Target: Recall@1 85-90%"
+      ]
+    }
+  },
+  "validacao_e_monitoramento": {
+    "durante_staging": "Executar tests/rag/phase1_contamination_validation.sql",
+    "apos_deployment": "View rag_contamination_status para monitoramento contínuo",
+    "auditoria": "Tabela rag_penalty_audit registra todas as penalizações"
+  },
+  "pronto_para_revalidacao": true,
+  "status_final": "READY FOR REVIEW & DEPLOYMENT",
+  "preparado_por": "Claude Code (Manta Maestro RAG Optimization Agent)",
+  "data_documento": "2026-07-26",
+  "versao_documento": "1.0"
+}

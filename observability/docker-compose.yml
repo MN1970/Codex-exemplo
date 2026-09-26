@@ -1,0 +1,61 @@
+# docker-compose.yml — Manta Maestro observability stack (LOCAL / Jaeger)
+#
+# Sobe:
+#   - jaeger        : all-in-one (UI + storage in-memory + OTLP receiver)
+#   - otel-collector: ponto único de ingestão OTLP para Maestro e agentes
+#                     (Python e Node.js), faz fan-out para o Jaeger.
+#
+# Uso:
+#   docker compose -f observability/docker-compose.yml up -d
+#   UI Jaeger: http://localhost:16686
+#
+# Apps apontam OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317 (gRPC)
+# ou http://localhost:4318 (HTTP), ambos servidos pelo otel-collector.
+#
+# Para também enviar para Datadog, ver docker-compose.datadog.yml
+# (overlay — sobe com `-f docker-compose.yml -f docker-compose.datadog.yml`).
+
+networks:
+  manta-observability:
+    name: manta-observability
+
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    container_name: manta-jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - SPAN_STORAGE_TYPE=memory
+      # Retenção in-memory limitada — suficiente para dev/debug local.
+      - MEMORY_MAX_TRACES=50000
+    ports:
+      # UI de busca/visualização de traces.
+      - "16686:16686"
+      # Portas OTLP do Jaeger ficam apenas na rede interna do compose
+      # (não publicadas no host) para que o único ponto de entrada externo
+      # seja o otel-collector, mantendo um único endpoint para instrumentar
+      # nas apps independentemente do backend final (Jaeger, Datadog, ambos).
+    expose:
+      - "4317"
+      - "4318"
+    networks:
+      - manta-observability
+    restart: unless-stopped
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.104.0
+    container_name: manta-otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      # Endpoint único que Maestro e agentes (Python/Node.js) usam via
+      # OTEL_EXPORTER_OTLP_ENDPOINT.
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "13133:13133" # health_check extension
+    depends_on:
+      - jaeger
+    networks:
+      - manta-observability
+    restart: unless-stopped

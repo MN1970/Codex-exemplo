@@ -1,0 +1,96 @@
+{
+  "arquitetura": {
+    "nome": "SICRO-Similaridade-Integração-v1.0",
+    "camadas": [
+      {
+        "id": "L1",
+        "nome": "Pré-processamento e Contexto (Filtragem + Granularidade + Unidades)",
+        "dimensoes_origem": ["Agente 8 (RegionPeriodResolver)", "Agente 9 (Granularidade)", "Agente 6 (Validação de Unidades)"],
+        "responsabilidade": "Recebe planilha bruta, resolve UF/período em FilterContext imutável, classifica item básico vs composto, normaliza e valida unidade de medida (família de grandeza, conversão, penalidade de incompatibilidade)."
+      },
+      {
+        "id": "L2",
+        "nome": "Indexação e Recuperação Híbrida (Core Matching)",
+        "dimensoes_origem": ["Agente 1 (BM25+TF-IDF)", "Agente 3 (Indexação cross-catálogo)", "Agente 5 (Clustering)", "Agente 9 (sicro_insumos/composicoes)"],
+        "responsabilidade": "Motor híbrido léxico (BM25) + vetorial (TF-IDF cosine) sobre índice SICRO/UF/mês, com pré-filtro de FilterContext (L1) e clustering técnico para completação em lote e aceleração de busca."
+      },
+      {
+        "id": "L3",
+        "nome": "Enriquecimento e Reforço Contextual",
+        "dimensoes_origem": ["Agente 10 (Correlação histórica Manta)", "Agente 11 (Benchmark SINAPI)", "Agente 12 (Autocomplete/predição)", "Agente 13 (Obsolescência/migração)", "Agente 14 (Metadados normativos)", "Agente 4 (Desagregação de sub-itens)", "Agente 7 (Versionamento histórico)"],
+        "responsabilidade": "Aplica priors sobre os candidatos do L2: histórico de uso Manta, de-para SINAPI/bases alternativas, predição com contexto parcial, checagem de código descontinuado/migrado (sicro_migration_map), normas técnicas associadas, decomposição em sub-itens e rastreamento de série temporal de preços (sicro_price_history)."
+      },
+      {
+        "id": "L4",
+        "nome": "Composição de Preço e Score de Confiança",
+        "dimensoes_origem": ["Agente 2 (composição M/MO/EQ)", "Agente 15 (RelevanceRanker)"],
+        "responsabilidade": "Decompõe custo unitário em Material/Mão-de-obra/Equipamento com variação UF/mês, sinaliza divergência preço-cliente vs teto SICRO, e calibra scores heterogêneos (BM25 + TF-IDF + priors) em um score de confiança único 0–100% com banda de decisão (auto-aceita / revisar / rejeita)."
+      },
+      {
+        "id": "L5",
+        "nome": "Orquestração End-to-End e Saída",
+        "dimensoes_origem": ["Agente 16 (pipeline orquestrador)"],
+        "responsabilidade": "Expõe as camadas L1-L4 como serviço único determinístico, agrega resultados por item, gera Excel final (código, custo, similaridade%, top-3 alternativas, flag de divergência) e loga trilha de auditoria para aluci-guard."
+      }
+    ],
+    "fluxo_dados": {
+      "entrada": "xlsx|csv — planilha de quantitativo com colunas: Descrição, Unidade, Quantidade, [Código SICRO opcional], UF, Período (mês/ano)",
+      "processamento": [
+        "1. Ingestão e parsing da planilha (item_parser)",
+        "2. Resolução de contexto: UF/período válido (FilterContext) + normalização/validação de unidade + classificação básico/composto",
+        "3. Busca híbrida BM25+TF-IDF no índice SICRO filtrado por FilterContext, com fallback em clusters técnicos similares",
+        "4. Checagem de obsolescência/migração de código (sicro_migration_map) e resolução para código vigente",
+        "5. Enriquecimento: prior histórico Manta, benchmark SINAPI, metadados normativos (NBR/DNIT), desagregação em sub-itens quando aplicável",
+        "6. Composição de preço M/MO/EQ + cálculo de divergência vs orçamento do cliente",
+        "7. Cálculo do score de confiança calibrado (RelevanceRanker) e definição da banda de decisão",
+        "8. Consulta ao histórico versionado (sicro_price_history) para contextualizar tendência de preço",
+        "9. Agregação e geração do Excel final + payload JSON para RAG/auditoria"
+      ],
+      "saída": "xlsx (Manta-padrão: código SICRO, descrição, unidade, custo unitário M/MO/EQ, similaridade%, score de confiança 0-100%, banda de decisão, top-3 alternativas, flag de divergência de preço, flag de obsolescência, média ponderada do orçamento) + JSON estruturado equivalente para consumo por outras skills (aluci-guard, RAG, dashboards)"
+    }
+  },
+  "skill_integration": {
+    "sicro_similaridade_entry_point": "sicro_similaridade.run(planilha, uf, periodo, options) -> ResultadoMatchingSICRO",
+    "parametros_requeridos": [
+      "planilha_quantitativo (xlsx|csv)",
+      "uf (string, ISO-BR)",
+      "periodo (mes/ano SICRO, formato MM-AAAA)",
+      "modo_granularidade (basico|composto|auto)",
+      "threshold_confianca (float, default 0.75)",
+      "usar_historico_manta (bool, default true)",
+      "usar_benchmark_sinapi (bool, default true)",
+      "resolver_obsolescencia (bool, default true)"
+    ],
+    "metricas_saida": [
+      "score_similaridade (BM25+TF-IDF cru)",
+      "score_confianca_calibrado (0-100%)",
+      "banda_decisao (auto_aceita|revisar|rejeitar)",
+      "flag_divergencia_preco",
+      "flag_obsolescencia",
+      "flag_incompatibilidade_unidade",
+      "top3_alternativas",
+      "composicao_M_MO_EQ",
+      "prior_historico_manta_score"
+    ]
+  },
+  "deployment": {
+    "mcp_servers": [
+      "Supabase (pgvector + tabelas relacionais)",
+      "SharePoint_Manta (leitura de planilhas de origem)"
+    ],
+    "environment_vars": {
+      "SICRO_DB_URL": "postgresql://...supabase",
+      "SICRO_INDEX_VERSION": "latest",
+      "SICRO_DEFAULT_UF": "",
+      "SICRO_CONFIDENCE_THRESHOLD": "0.75",
+      "SICRO_ENABLE_HISTORICO_MANTA": "true",
+      "SICRO_ENABLE_BENCHMARK_SINAPI": "true"
+    },
+    "skill_aliases": ["buscar-sicro", "completar-orcamento", "validar-sicro", "comparar-sicro", "sicro-similaridade"]
+  },
+  "performance": {
+    "latencia_esperada_ms": 180,
+    "throughput_itens_seg": 55,
+    "paralelismo": 16
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "registry_version": "1.0.0",
+  "registry_date": "2026-07-27",
+  "registry_author": "Manta Associados — Agent Registry",
+  "skills_registered": 5,
+  "status": "ok",
+  "description": "Registro oficial de 5 skills Manta verticais (Agentes S6-S10) no catálogo de inteligência artificial. Cada skill representa um agente especialista em um domínio setorial com modelo Sonnet e status Operacional.",
+  "skills": [
+    {
+      "id": 1,
+      "name": "manta-saneamento",
+      "manta_code": "Manta 03-S8",
+      "tier_default": "sonnet",
+      "tier_fallback": "opus",
+      "status": "Operacional",
+      "created_date": "2026-07-05",
+      "registered_date": "2026-07-27",
+      "description": "Agente especialista em saneamento básico (água, esgoto, drenagem urbana, resíduos sólidos) com PRIORIDADE AySA (projeto Argentina). Cobre estudo prévio, projeto básico, executivo, obra, O&M, licitação, DD e descomissionamento de ETAs, ETEs, sistemas de adução, distribuição de água, coleta e tratamento de esgoto, drenagem urbana e resíduos.",
+      "domain": "Saneamento",
+      "geographic_focus": ["Brasil", "Argentina"],
+      "key_regulators": ["ANA", "ARSESP", "AGERGS", "AGENERSA", "ADASA", "AySA", "ERAS"],
+      "aliases": [
+        "manta-03-s8",
+        "manta 03 s8",
+        "saneamento",
+        "san",
+        "AySA"
+      ],
+      "knowledge_engine_rag": {
+        "collection": "saneamento",
+        "prefix": "san:",
+        "subprefixes": [
+          "san:br:",
+          "san:ar:"
+        ],
+        "initial_sources": [
+          "SNIS",
+          "IWA",
+          "NBR 12211-12218",
+          "Lei 14.026",
+          "Editais BNDES"
+        ]
+      },
+      "sharepoint_path": "03_Projetos/Saneamento/*",
+      "handoffs": [
+        "manta-05 (orcamento)",
+        "manta-06 (modelagem)",
+        "manta-07 (cronograma)",
+        "agente-infraestrutura-S1",
+        "agente-energia-S9",
+        "manta-01 (claims)",
+        "manta-15 (advisory)"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "manta-energia",
+      "manta_code": "Manta 03-S9",
+      "tier_default": "sonnet",
+      "tier_fallback": "opus",
+      "status": "Operacional",
+      "created_date": "2026-07-05",
+      "registered_date": "2026-07-27",
+      "description": "Especialista em setor elétrico (geração, transmissão, distribuição). Prioridade transmissão (ANEEL/State Grid). Cobre estudo prévio, projeto básico, executivo, obra, O&M, leilão, DD e descomissionamento de linhas de transmissão, subestações, usinas (hidro, eólica, solar, térmica), sistemas de distribuição.",
+      "domain": "Energia",
+      "geographic_focus": ["Brasil", "América Latina"],
+      "key_regulators": ["ANEEL", "ONS", "EPE", "CCEE", "State Grid"],
+      "aliases": [
+        "manta-03-s9",
+        "manta 03 s9",
+        "energia",
+        "ene"
+      ],
+      "knowledge_engine_rag": {
+        "collection": "energia",
+        "prefix": "ene:",
+        "subprefixes": [],
+        "initial_sources": [
+          "ANEEL editais",
+          "R1-R5 EPE",
+          "ONS",
+          "IEEE"
+        ]
+      },
+      "sharepoint_path": "03_Projetos/Energia/*",
+      "handoffs": [
+        "manta-05 (orcamento)",
+        "manta-07 (cronograma)",
+        "agente-infraestrutura-S1",
+        "agente-saneamento-S8",
+        "manta-01 (claims)"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "manta-portos",
+      "manta_code": "Manta 03-S6",
+      "tier_default": "sonnet",
+      "tier_fallback": "opus",
+      "status": "Operacional",
+      "created_date": "2026-07-05",
+      "registered_date": "2026-07-27",
+      "description": "Especialista em projetos portuários e hidroviários. Cobre estudos prévios, projetos básico/executivo, obra e operação de terminais marítimos, fluviais e hidroviários com ênfase em regulação ANTAQ, PIANC e arrendamentos portuários.",
+      "domain": "Portos",
+      "geographic_focus": ["Brasil"],
+      "key_regulators": ["ANTAQ", "Marinha do Brasil", "IBAMA"],
+      "aliases": [
+        "manta-03-s6",
+        "manta 03 s6",
+        "portos",
+        "por"
+      ],
+      "knowledge_engine_rag": {
+        "collection": "portos",
+        "prefix": "por:",
+        "subprefixes": [],
+        "initial_sources": [
+          "ANTAQ",
+          "PIANC",
+          "Editais BNDES/ANTAQ"
+        ]
+      },
+      "sharepoint_path": "03_Projetos/Portos/*",
+      "handoffs": [
+        "manta-05 (orcamento)",
+        "manta-07 (cronograma)",
+        "agente-infraestrutura-S2",
+        "agente-saneamento-S8",
+        "manta-01 (claims)"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "manta-aeroportos",
+      "manta_code": "Manta 03-S7",
+      "tier_default": "sonnet",
+      "tier_fallback": "opus",
+      "status": "Operacional",
+      "created_date": "2026-07-05",
+      "registered_date": "2026-07-27",
+      "description": "Especialista em infraestrutura aeroportuária (lado ar + lado terra). Cobre pistas de pouso e decolagem, taxiways, pátios, TPS (terminal de passageiros), TECA (terminal de cargas), balizamento e sistemas visuais, torre de controle e apoio ao aeroporto.",
+      "domain": "Aeroportos",
+      "geographic_focus": ["Brasil"],
+      "key_regulators": ["ANAC", "DECEA", "ICAO", "FAA"],
+      "aliases": [
+        "manta-03-s7",
+        "manta 03 s7",
+        "aeroportos",
+        "aer"
+      ],
+      "knowledge_engine_rag": {
+        "collection": "aeroportos",
+        "prefix": "aer:",
+        "subprefixes": [],
+        "initial_sources": [
+          "ANAC/RBAC",
+          "ICAO Annex 14",
+          "FAA ACs"
+        ]
+      },
+      "sharepoint_path": "03_Projetos/Aeroportos/*",
+      "handoffs": [
+        "manta-05 (orcamento)",
+        "manta-07 (cronograma)",
+        "agente-infraestrutura-S1",
+        "agente-saneamento-S8",
+        "agente-energia-S9",
+        "manta-01 (claims)"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "manta-barragens",
+      "manta_code": "Manta 03-S10",
+      "tier_default": "sonnet",
+      "tier_fallback": "opus",
+      "status": "Operacional",
+      "created_date": "2026-07-05",
+      "registered_date": "2026-07-27",
+      "description": "Especialista em barragens (concreto, terra, enrocamento, rejeitos). Cobre estudo prévio, projeto básico, executivo, obra, O&M, DD, descomissionamento e descaracterização de barragens hidrelétricas, abastecimento e contenção de rejeitos.",
+      "domain": "Barragens",
+      "geographic_focus": ["Brasil"],
+      "key_regulators": ["ANM", "ANA", "ANEEL", "ICOLD", "CBDB"],
+      "aliases": [
+        "manta-03-s10",
+        "manta 03 s10",
+        "barragens",
+        "bar"
+      ],
+      "knowledge_engine_rag": {
+        "collection": "barragens",
+        "prefix": "bar:",
+        "subprefixes": [],
+        "initial_sources": [
+          "ICOLD",
+          "CBDB",
+          "SIGBM",
+          "Lei 12.334"
+        ]
+      },
+      "sharepoint_path": "03_Projetos/Barragens/*",
+      "handoffs": [
+        "manta-05 (orcamento)",
+        "manta-07 (cronograma)",
+        "agente-saneamento-S8",
+        "manta-01 (claims)"
+      ]
+    }
+  ],
+  "metadata": {
+    "registration_type": "Vertical Agents (Eixo 2 — C3 Segmentos)",
+    "tier_distribution": {
+      "sonnet": 5,
+      "opus": 0
+    },
+    "rag_collections_created": 5,
+    "sharepoint_folders_referenced": 5,
+    "total_handoff_relationships": 21,
+    "checklist": {
+      "agents_defined": true,
+      "skill_files_created": true,
+      "sharepoint_structures_ready": true,
+      "rag_collections_defined": true,
+      "routing_rules_available": true,
+      "skill_aliases_defined": true
+    }
+  }
+}
