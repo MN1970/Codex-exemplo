@@ -15,7 +15,7 @@
 > feita na skill; ver `docs/GAP-RECONCILIACAO-SHAREPOINT-REAL.md`
 > ("Recorrência confirmada — Variante Tipo A") para a evidência
 > completa e a recomendação ao MN.
-
+>
 > ⚠️ **Correção 2026-09-07**: a versão anterior desta seção (histórico
 > abaixo) descrevia a skill `proposta-comercial` como tendo 18 seções,
 > um "agente A7-bd" e um modo "M6" validado contra

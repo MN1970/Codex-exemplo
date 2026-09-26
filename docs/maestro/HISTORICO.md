@@ -137,6 +137,7 @@ assessment ESG, 4 dimensões (Ambiental/Social/Governança/Integração),
 integração com S6–S10, RAG + compliance mapping.
 
 Consolida v5.0.1 operacional (2026-07-31):
+
 - **v5.0.0 operacional** (aprovado 2026-07-22): 20 agentes em produção,
   infraestrutura Maestro-OS v6.0 completa (APScheduler, ML, observability)
 - **v5.0 consolidação** (2026-07-31): 4 eixos (S×A×F×D) formalizados,
@@ -148,11 +149,12 @@ padrão de output por cliente).
 
 > **Nota de proveniência**: este arquivo **reconcilia** dois work streams
 > paralelos na mesma data:
+>
 > 1. **v5.0.0 (main, 22/07)** — implementação operacional aprovada com
 >    todos os agentes em produção
 > 2. **v5.0 (branch, 31/07)** — formalização de arquitetura com gaps
 >    investigados e decisões explicitadas
-> 
+>
 > Diferenças encontradas durante merge (numeração segmentos, status de
 > produção) estão documentadas neste arquivo. Decisões divergentes foram
 > preservadas em notas explícitas (ver "Eixo S", "Gaps abertos") em vez
@@ -328,10 +330,10 @@ padrão de output por cliente).
   confirmada em duas varreduras do SharePoint (geral e pastas
   "Material Recebido" de 10 projetos) — nenhum brandbook localizado.
   Ticket `MNT-2026-MOTIVA-258-PATTERN`.
-- **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo 
-  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões 
-  (ambiental, social, governança, integração), integração co-agente com 
-  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap. 
+- **v5.1** (2026-08-02) — **Design Agents — ESG/Impact (P3-04)**. Novo
+  agente horizontal Manta 20 (manta-20-esg): ESG assessment, 4 dimensões
+  (ambiental, social, governança, integração), integração co-agente com
+  S6–S10, RAG collections, compliance mapping, 3 casos uso, Carbon Roadmap.
   Tier: Sonnet. Status: v1.0 operacional. Agentes totais: 21 (12 h + 9 v).
   Ticket `MNT-2026-P3-04-ESG-AGENT`.
 - **v5.0.1** (2026-07-31) — **UNIFICADA**: merge de v5.0.0 operacional

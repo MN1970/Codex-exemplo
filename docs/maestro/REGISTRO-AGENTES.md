@@ -176,7 +176,7 @@ do SharePoint — ver "Eixo S — Segmentos"; os códigos S originais destes
 exemplos, de `ARQUITETURA-AGENTES-IA.md` v3.0.0 §2.6, usavam a
 numeração antiga já corrigida):
 
-```
+```text
 S9.A3.D07  = Saneamento + Orçamento + Econômica
             → Manta 05 (agente-orcamento) com contexto de saneamento
               (RAG san:*, handoff de agente-saneamento)
@@ -271,7 +271,7 @@ agente** (não por número de segmento) — por isso a numeração dos
 segmentos (corrigida em 2026-09-07, ver "Eixo S") é apenas rótulo
 informativo, sem efeito sobre esta lógica:
 
-```
+```text
 IF menção a saneamento|ETA|ETE|adutora|esgoto|AySA|drenagem urbana|SNIS
    → agente-saneamento (S9)
 
@@ -323,6 +323,7 @@ que o usuário use as palavras-chave descritas em seus frontmatters.
 
 **Casos ambíguos** (documentados em `tests/routing/prompts.md`, mantidos
 sem alteração):
+
 - UHE (barragem + LT + SE) → dispatch primário `agente-barragens` +
   handoff `agente-energia`.
 - ETE + subestação → dispatch primário `agente-saneamento` + handoff
@@ -331,7 +332,6 @@ sem alteração):
   `agente-aeroportos`.
 - Adutora atravessa barragem de rejeitos → `agente-saneamento` com
   consulta técnica ao `agente-barragens`.
-
 
 ---
 
@@ -347,6 +347,7 @@ executou `list_tables` no projeto `ogxxgvgtulrbbppshjie`
 `maestro_routing_keywords` com 50 linhas, `manta_rag_chunks` com 204
 linhas e `manta_rag_documents` com 111 linhas.
 Sub-prefixos de contexto (mantidos do v4.2):
+
 - `san:br:` / `san:ar:` — saneamento por país (Brasil × Argentina AySA).
 - `ene:t:` / `ene:d:` / `ene:g:` — energia por transmissão/distribuição/geração.
 - `bar:c:` / `bar:t:` / `bar:e:` / `bar:r:` — barragens por tipologia.
@@ -372,15 +373,16 @@ em produção (ver seção RAG acima).
 
 | Agente | Pasta SP sugerida | Pattern |
 | --- | --- | --- |
-| agente-saneamento | 03_Projetos/Saneamento/* | *.pdf, *.dwg, *.xlsx |
-| agente-energia | 03_Projetos/Energia/* | *.pdf, *.dwg, *.xlsx |
-| agente-portos | 03_Projetos/Portos/* | *.pdf, *.dwg, *.xlsx |
-| agente-aeroportos | 03_Projetos/Aeroportos/* | *.pdf, *.dwg, *.xlsx |
-| agente-barragens | 03_Projetos/Barragens/* | *.pdf, *.dwg, *.xlsx |
-| agente-oleo-gas | 03_Projetos/OleoGas/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento sem numeração real confirmada |
-| agente-edificacoes | 03_Projetos/Edificacoes/* *(a criar)* | *.pdf, *.dwg, *.xlsx — 🔲 planejado, segmento renumerado para S6, pendente gate MN |
+| agente-saneamento | `03_Projetos/Saneamento/*` | `*.pdf`, `*.dwg`, `*.xlsx` |
+| agente-energia | `03_Projetos/Energia/*` | `*.pdf`, `*.dwg`, `*.xlsx` |
+| agente-portos | `03_Projetos/Portos/*` | `*.pdf`, `*.dwg`, `*.xlsx` |
+| agente-aeroportos | `03_Projetos/Aeroportos/*` | `*.pdf`, `*.dwg`, `*.xlsx` |
+| agente-barragens | `03_Projetos/Barragens/*` | `*.pdf`, `*.dwg`, `*.xlsx` |
+| agente-oleo-gas | `03_Projetos/OleoGas/*` *(a criar)* | `*.pdf`, `*.dwg`, `*.xlsx` — 🔲 planejado, segmento sem numeração real confirmada |
+| agente-edificacoes | `03_Projetos/Edificacoes/*` *(a criar)* | `*.pdf`, `*.dwg`, `*.xlsx` — 🔲 planejado, segmento renumerado para S6, pendente gate MN |
 
 ---
+
 ## PADRÕES DE OUTPUT POR CLIENTE
 
 Referências canônicas de formato de entregável (EAP em Excel/PPT,
@@ -406,9 +408,10 @@ O Maestro escala dinamicamente de tier dentro de uma sessão (Haiku →
 Sonnet ao entrar no vertical → Opus se detectar complexidade).
 
 ---
+
 ## Arquivos deste repositório
 
-```
+```text
 Codex-exemplo/
 ├── CLAUDE.md                              # este arquivo (master registry, v5.2)
 ├── README.md
@@ -455,4 +458,3 @@ Codex-exemplo/
     └── routing/
         └── prompts.md                     # smoke tests de routing por segmento
 ```
-
