@@ -115,6 +115,17 @@ if plano.requer_aprovacao:
     ...  # mostrar plano.resumo() ao usuário antes de executar
 ```
 
+## Integração com o orquestrador
+
+`src/maestro/orchestrator.py` (`MaestroOrchestrator`) roda o planejador
+como **Fase 0**: o fan-out invoca só `plano.agentes` mais os agentes que
+o autor do workflow declarou explicitamente, na ordem do plano e sem
+duplicatas. O `ComplexityDetector` (`src/maestro/detector.py`) continua
+existindo como métrica de complexidade legada, mas **não escolhe mais
+agentes** — o pool dele (8–16 agentes, com 4 horizontais sempre
+incluídos) era justamente o comportamento de "chamar todos".
+Teste: `tests/unit/test_orchestrator_plan.py`.
+
 ## Registro plano × executado
 
 Migração candidata: `supabase/migrations/2026_09_26_maestro_plans.sql`

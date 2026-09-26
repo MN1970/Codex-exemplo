@@ -172,5 +172,7 @@ sub-prefixos em `docs/maestro/REGISTRO-AGENTES.md`.
   `docs/maestro/PLANEJADOR.md`), hierarquia N0–N3 com tetos de tokens,
   regras de economia e núcleo enxuto: `CLAUDE.md` de 1.143 para ~200
   linhas, conteúdo detalhado movido sem alteração para `docs/maestro/`.
+  O `MaestroOrchestrator` passou a usar o plano no fan-out (o pool
+  grande do detector legado não escolhe mais agentes).
   Migração candidata `maestro_plans` (não aplicada). Histórico completo
   em `docs/maestro/HISTORICO.md`.
