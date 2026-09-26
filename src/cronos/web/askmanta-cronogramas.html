@@ -1,6 +1,6 @@
   <div id="view-cronos" hidden>
 <style>
-  .crn{display:grid;gap:18px}
+  .crn{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
   .crn-head{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;justify-content:space-between;border-left:3px solid var(--accent);background:var(--bg-alt);padding:12px 16px;border-radius:0 6px 6px 0}
   .crn-head h3{margin:0;font:600 18px/1.3 Montserrat,Arial,sans-serif;color:var(--heading)}
   .crn-head p{margin:4px 0 0;font-size:13px;color:var(--muted);max-width:74ch}
@@ -35,6 +35,29 @@
   .crn-curva svg{display:block}
   .crn-leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--muted);margin-top:6px}
   .crn-leg i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:4px;margin-right:6px}
+  .pv-wrap{position:relative;max-width:100%;border:1px solid var(--border);border-radius:6px;overflow:auto;max-height:640px;background:var(--bg)}
+  .pv{border-collapse:separate;border-spacing:0;table-layout:fixed;font:12px/1.2 Inter,system-ui,sans-serif;width:auto}
+  .pv th,.pv td{text-align:left;padding:0 6px;height:20px;border-bottom:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--bg)}
+  .pv thead th{position:sticky;top:0;z-index:3;height:34px;background:var(--bg-alt);font:600 11px Inter,system-ui,sans-serif;color:var(--heading);text-transform:none;letter-spacing:0;vertical-align:bottom;padding-bottom:4px;white-space:normal;line-height:1.15}
+  .pv .c0{position:sticky;left:0;z-index:2}.pv .c1{position:sticky;left:96px;z-index:2;border-right:1px solid var(--border)}
+  .pv thead .c0,.pv thead .c1{z-index:4}
+  .pv td.n,.pv th.n{text-align:right;font-variant-numeric:tabular-nums}
+  .pv tr.e td{font-weight:600;color:var(--heading)}
+  .pv tr.e0 td{background:color-mix(in srgb,var(--accent) 26%,var(--bg))}.pv tr.e1 td{background:color-mix(in srgb,var(--accent) 17%,var(--bg))}
+  .pv tr.e2 td{background:color-mix(in srgb,var(--accent) 11%,var(--bg))}.pv tr.e3 td{background:color-mix(in srgb,var(--accent) 6%,var(--bg))}
+  .pv tr.crit td.c1{color:var(--danger)}
+  .pv tr[hidden]{display:none}
+  .pv .tg{cursor:pointer;display:inline-block;width:12px;color:var(--accent-dark)}
+  .pv td.g{position:relative;padding:0;overflow:visible;background:transparent}
+  .pv .b{position:absolute;top:5px;height:10px;border-radius:2px;background:var(--accent)}
+  .pv .b.cr{background:var(--danger)}.pv .b.ok{background:var(--muted)}
+  .pv .b.s{top:7px;height:6px;border-radius:0;background:var(--heading)}
+  .pv .b.s::before,.pv .b.s::after{content:"";position:absolute;top:0;border:4px solid transparent;border-top:5px solid var(--heading)}
+  .pv .b.s::before{left:-4px;top:6px}.pv .b.s::after{right:-4px;top:6px}
+  .pv .m{position:absolute;top:5px;width:9px;height:9px;transform:translateX(-4.5px) rotate(45deg);background:var(--accent)}
+  .pv .m.cr{background:var(--danger)}.pv .m.ok{background:var(--muted)}
+  .pv .esc{position:relative;height:30px}.pv .esc span{position:absolute;font-weight:500;color:var(--muted);font-size:10px;padding-left:3px;border-left:1px solid var(--border);height:14px;line-height:14px}
+  .pv-dd{position:absolute;top:0;width:0;border-left:2px dashed var(--accent);z-index:1;pointer-events:none}
   .crn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
 </style>
 <div class="crn" id="crn-root">
@@ -49,14 +72,14 @@
   <div>
     <div class="crn-bar">
       <label class="crn-btn pri" for="crn-file">Abrir cronogramas…</label>
-      <input id="crn-file" type="file" accept=".xer,.xml" multiple hidden>
+      <input id="crn-file" type="file" accept=".xer,.xml,.pdf" multiple hidden>
       <label class="crn-btn" for="crn-dir">Abrir pasta…</label>
       <input id="crn-dir" type="file" webkitdirectory multiple hidden>
       <button type="button" class="crn-btn" id="crn-sample">Carregar exemplo</button>
       <button type="button" class="crn-btn" id="crn-clear">Limpar</button>
       <label class="crn-note"><input type="checkbox" id="crn-hist"> incluir versões históricas (OBSOLETO, DEPRECATED)</label>
     </div>
-    <div class="crn-drop" id="crn-drop">Ou arraste arquivos .xer / .xml aqui. Para .mpp: no MS Project use Arquivo › Salvar como › XML. Excel e PDF entram nas próximas fases.</div>
+    <div class="crn-drop" id="crn-drop">Ou arraste arquivos .xer, .xml ou .pdf aqui. PDF: relatório impresso do Primavera (layout com colunas de ID, nome, início e término; texto, não imagem). Para .mpp: no MS Project use Arquivo › Salvar como › XML.</div>
     <p class="crn-note" id="crn-status" aria-live="polite"></p>
   </div>
 
@@ -78,8 +101,14 @@
       <label class="crn-note"><input type="checkbox" id="crn-onlycrit"> só atividades críticas</label>
     </div>
     <p class="crn-note" id="crn-mcout" aria-live="polite"></p>
-    <div class="crn-gantt" id="crn-gantt"></div>
-    <p class="crn-note">Gantt por datas calculadas com os calendários do cronograma. Em vermelho: folga total ≤ 0. Cinza: concluída.</p>
+    <div class="crn-bar" style="margin-bottom:8px">
+      <span class="crn-note">Visão Primavera · níveis da EAP:</span>
+      <button type="button" class="crn-btn" data-pv-nivel="1">1</button><button type="button" class="crn-btn" data-pv-nivel="2">2</button><button type="button" class="crn-btn" data-pv-nivel="3">3</button><button type="button" class="crn-btn" data-pv-nivel="99">Tudo</button>
+      <input class="crn-sel" id="crn-pv-filtro" type="search" placeholder="Filtrar ID ou nome" aria-label="Filtrar atividades">
+      <button type="button" class="crn-btn" id="crn-exp-pv">Exportar visão Primavera (.html em .zip)</button>
+    </div>
+    <div class="pv-wrap" id="crn-gantt"></div>
+    <p class="crn-note" id="crn-pv-nota">Visão no formato do Primavera: EAP em árvore (clique ▸/▾ para abrir e fechar), colunas do P6 e barras. Vermelho: folga total ≤ 0. Cinza: concluída. Barra escura: resumo da EAP. Linha tracejada: data de status.</p>
     <div class="crn-h" style="margin-top:12px">2.1 Caminho crítico</div>
     <div class="crn-tw"><table><thead><tr><th>Código</th><th>Atividade</th><th>EAP</th><th>Início</th><th>Término</th><th class="n">Folga (d)</th><th class="n">Custo</th><th>Fonte</th></tr></thead>
     <tbody id="crn-crit"></tbody></table></div>
@@ -120,20 +149,21 @@
 
   function preparar(p, exemplo){
     p.exemplo = !!exemplo; p.cs = null; p.va = null;
-    try{ p.r = E.calcular(p); p.err = null; p.dcma = E.dcma14(p, p.r); }
+    try{ if(p.somenteLeitura){ p.r = E.resultadoDasDatas(p); p.dcma = null; } else { p.r = E.calcular(p); p.dcma = E.dcma14(p, p.r); } p.err = null; }
     catch(e){ p.r = null; p.err = e.message; p.dcma = null; }
     ST.v = ST.v.filter(function(x){ return x.chave !== p.chave; }).concat([p]);
   }
 
   function lerArquivos(files){
-    var arr = Array.prototype.slice.call(files).filter(function(f){ return /\.(xer|xml)$/i.test(f.name); });
+    var arr = Array.prototype.slice.call(files).filter(function(f){ return /\.(xer|xml|pdf)$/i.test(f.name); });
     var incluir = $('crn-hist').checked, ignorados = [], erros = [], feitos = 0, ultimo = null;
-    if(!arr.length){ $('crn-status').textContent = 'Nenhum arquivo .xer ou .xml encontrado.'; return; }
+    if(!arr.length){ $('crn-status').textContent = 'Nenhum arquivo .xer, .xml ou .pdf encontrado.'; return; }
     $('crn-status').textContent = 'Lendo ' + arr.length + ' arquivo(s)…';
     arr.forEach(function(file){
       var caminho = file.webkitRelativePath || file.name;
       if(!incluir && E.eHistorico(caminho)){ ignorados.push(file.name); if(++feitos === arr.length) fim(); return; }
       file.arrayBuffer().then(function(buf){
+        if(/\.pdf$/i.test(file.name)) return textoPDF(buf).then(function(pags){ E.lerRelatorioPDF(pags, file.name).forEach(function(p){ preparar(p); ultimo = p.chave; }); });
         var xer = /\.xer$/i.test(file.name);
         var txt = new TextDecoder(xer ? 'latin1' : 'utf-8').decode(buf);
         var ps = xer ? E.lerXER(txt, file.name) : E.lerMSPDI(txt, file.name);
@@ -149,6 +179,26 @@
     }
   }
 
+  /* ---- PDF: pdf.js da mesma versão que o Ask Manta já usa; o worker roda na página ---- */
+  var PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  function script(url){ return new Promise(function(ok, falha){ var s = document.createElement('script'); s.src = url; s.onload = ok; s.onerror = function(){ falha(new Error('não carregou ' + url)); }; document.head.appendChild(s); }); }
+  function carregarPDFjs(){
+    var fila = Promise.resolve();
+    if(!window.pdfjsLib) fila = fila.then(function(){ return script(PDFJS + 'pdf.min.js'); });
+    return fila.then(function(){ if(!(window.pdfjsWorker && window.pdfjsWorker.WorkerMessageHandler)) return script(PDFJS + 'pdf.worker.min.js'); })
+      .then(function(){ if(!window.pdfjsLib.GlobalWorkerOptions.workerSrc) window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; });
+  }
+  async function textoPDF(buf){
+    await carregarPDFjs();
+    var doc = await window.pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise, pags = [];
+    for(var i = 1; i <= doc.numPages; i++){
+      var pg = await doc.getPage(i), vp = pg.getViewport({ scale: 1 }), tc = await pg.getTextContent();
+      pags.push(tc.items.filter(function(it){ return it.str && it.str.trim(); }).map(function(it){ var t = window.pdfjsLib.Util.transform(vp.transform, it.transform); return { x: t[4], y: -t[5], s: it.str }; }));
+      if(i % 10 === 0) $('crn-status').textContent = 'Lendo PDF: página ' + i + ' de ' + doc.numPages + '…';
+    }
+    return pags;
+  }
+
   function renderVersoes(){
     var tb = $('crn-versions');
     if(!ST.v.length){ tb.innerHTML = '<tr><td colspan="9" class="crn-note">Nenhum cronograma aberto. Use “Abrir cronogramas…”, “Abrir pasta…” ou “Carregar exemplo”.</td></tr>'; $('crn-cmpbox').hidden = true; return; }
@@ -158,7 +208,7 @@
         '<td class="n">' + fmt(Object.keys(p.at).length) + '</td><td class="n">' + fmt(p.lig.length) + '</td>' +
         '<td>' + (p.r ? br(p.r.termino) : '<span class="crn-alert">' + esc(p.err) + '</span>') + '</td>' +
         '<td class="n">' + (p.custo ? 'R$ ' + fmt(p.custo, 2) : '<span class="crn-alert">sem custos</span>') + '</td>' +
-        '<td>' + (d ? (d.aprovado ? '<span class="crn-ok">' + fmt(d.nota * 100) + '% aprovado</span>' : '<span class="crn-alert">' + fmt(d.nota * 100) + '% reprovado</span>') : '—') + '</td>' +
+        '<td>' + (d ? (d.aprovado ? '<span class="crn-ok">' + fmt(d.nota * 100) + '% aprovado</span>' : '<span class="crn-alert">' + fmt(d.nota * 100) + '% reprovado</span>') : p.somenteLeitura ? '<span class="crn-note">PDF · sem lógica</span>' : '—') + '</td>' +
         '<td><button type="button" class="crn-btn" data-crn-ver="' + esc(p.chave) + '">Ver</button></td></tr>';
     }).join('');
     var opts = ST.v.map(function(p){ return '<option value="' + esc(p.chave) + '">' + esc(p.arquivo + ' · ' + p.nome) + '</option>'; }).join('');
@@ -176,11 +226,12 @@
     ['crn-mc','crn-exp-xer','crn-exp-xml','crn-exp-csv'].forEach(function(id){ $(id).disabled = !p.r; });
     $('crn-exp-xer').disabled = !p.r || !p.origem;
     if(!p.r){ $('crn-kpis').innerHTML = '<span class="crn-alert">' + esc(p.err) + '</span>'; $('crn-gantt').innerHTML = ''; $('crn-crit').innerHTML = ''; $('crn-dcma').innerHTML = ''; $('crn-avisos').textContent = ''; return; }
-    var r = p.r, d = p.dcma;
+    var r = p.r, d = p.dcma || { nota: 0, aprovado: false, bloqueios: [], pontos: [], aplicaveis: 0 };
+    $('crn-mc').disabled = !!p.somenteLeitura;
     $('crn-kpis').innerHTML = [
       [br(r.termino), 'término calculado'], [br(r.dataStatus), 'data de status'], [fmt(r.criticas.length), 'atividades críticas'],
       [p.custo ? 'R$ ' + fmt(p.custo / 1e6, 2) + ' mi' : '—', p.custo ? 'custo total (cost-loaded)' : 'sem carregamento de custos'],
-      [fmt(d.nota * 100) + '%', 'DCMA-14 · ' + (d.aprovado ? 'aprovado' : 'reprovado' + (d.bloqueios.length ? ' (bloqueios ' + d.bloqueios.join(', ') + ')' : ''))]
+      p.somenteLeitura ? ['PDF', 'sem lógica: DCMA-14, CPM e Monte Carlo não se aplicam'] : [fmt(d.nota * 100) + '%', 'DCMA-14 · ' + (d.aprovado ? 'aprovado' : 'reprovado' + (d.bloqueios.length ? ' (bloqueios ' + d.bloqueios.join(', ') + ')' : ''))]
     ].map(function(k){ return '<div><b>' + k[0] + '</b><span>' + esc(k[1]) + '</span></div>'; }).join('');
     $('crn-avisos').textContent = r.avisos.concat(p.alertas).join(' · ');
     gantt(p);
@@ -189,11 +240,11 @@
       var a = p.at[u];
       return '<tr><td>' + esc(a.cod) + '</td><td>' + esc(a.nome) + '</td><td>' + esc(a.wbs) + '</td><td>' + br(r.es[u]) + '</td><td>' + br(r.ef[u]) + '</td><td class="n">' + fmt(E.folgaDias(p, r, u), 1) + '</td><td class="n">' + (a.custo ? fmt(a.custo, 2) : '—') + '</td><td class="crn-note">' + esc(a.fonte) + '</td></tr>';
     }).join('') + (crit.length > 100 ? '<tr><td colspan="8" class="crn-note">… mais ' + (crit.length - 100) + ' atividades críticas</td></tr>' : '') || '<tr><td colspan="8" class="crn-note">Nenhuma atividade crítica aberta.</td></tr>';
-    $('crn-dcma-t').textContent = '2.2 DCMA-14 · nota ' + fmt(d.nota * 100) + '% (' + d.aplicaveis + ' pontos aplicáveis)';
+    $('crn-dcma-t').textContent = p.somenteLeitura ? '2.2 DCMA-14 · não aplicável (PDF sem predecessoras)' : '2.2 DCMA-14 · nota ' + fmt(d.nota * 100) + '% (' + d.aplicaveis + ' pontos aplicáveis)';
     $('crn-dcma').innerHTML = d.pontos.map(function(x){
       var res = !x.aplicavel ? '<span class="crn-note">não aplicável</span>' : x.passou ? '<span class="crn-ok">passou</span>' : '<span class="crn-alert">reprovado' + ([1,3,6,7,11].indexOf(x.ponto) >= 0 ? ' · bloqueia' : '') + '</span>';
       return '<tr><td class="n">' + x.ponto + '</td><td>' + esc(x.nome) + '</td><td class="n">' + esc(x.valor) + '</td><td>' + esc(x.limite) + '</td><td>' + res + '</td><td class="crn-note">' + esc(x.detalhe) + (x.exemplos.length ? ' · ex.: ' + esc(x.exemplos.join(', ')) : '') + '</td></tr>';
-    }).join('');
+    }).join('') || '<tr><td colspan="6" class="crn-note">O PDF não traz as ligações entre atividades. Para DCMA-14, CPM e Monte Carlo, abra o XER da mesma versão.</td></tr>';
     evm(p);
   }
 
@@ -248,36 +299,66 @@
       : '<p class="crn-note">Nenhum marco em comum entre as versões abertas.</p>';
   }
 
-  function gantt(p){
-    var css = getComputedStyle(document.documentElement), tok = function(n, f){ return css.getPropertyValue(n).trim() || f; };
-    var cT = tok('--text', '#374151'), cM = tok('--muted', '#6B7280'), cB = tok('--border', '#E5DDD3'), cA = tok('--accent', '#E07B3D'), cD = tok('--danger', '#B3261E');
-    var r = p.r, only = $('crn-onlycrit').checked, crit = {};
+  /* ---- Visão Primavera: EAP em árvore + colunas do P6 + Gantt (mesma marcação na aba e no HTML exportado) ---- */
+  var PV = {nivel: 99, filtro: ''};
+  function brc(t){ if(t == null) return ''; var d = new Date(t); return ('0' + d.getUTCDate()).slice(-2) + '/' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '/' + String(d.getUTCFullYear()).slice(2); }
+  function linhasPrimavera(p){
+    var r = p.r, crit = {}, todas = E.arvoreEAP(p, r), q = PV.filtro.trim().toLowerCase(), only = $('crn-onlycrit').checked;
     r.criticas.forEach(function(u){ crit[u] = 1; });
-    var ids = r.ordem.filter(function(u){ return !only || crit[u]; }).sort(function(a, b){ return r.es[a] - r.es[b]; }).slice(0, 400);
-    if(!ids.length){ $('crn-gantt').innerHTML = '<p class="crn-note" style="padding:10px">Nada para mostrar.</p>'; return; }
-    var t0 = Math.min.apply(null, ids.map(function(u){ return r.es[u]; })), t1 = Math.max.apply(null, ids.map(function(u){ return r.ef[u]; }));
-    t0 = Math.min(t0, r.dataStatus); var span = Math.max(t1 - t0, DIA);
-    var LW = 320, RH = 18, W = 1150, Hh = ids.length * RH + 36, sx = (W - LW - 20) / span;
-    var s = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + Hh + '" font-family="Inter,system-ui,sans-serif" font-size="11">';
-    var d0 = new Date(t0), passoMeses = span / DIA > 900 ? 6 : span / DIA > 300 ? 3 : 1;
-    for(var m = Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth(), 1); m <= t1; ){
-      var x = LW + (m - t0) * sx, dm = new Date(m);
-      if(x >= LW) s += '<line x1="' + x + '" y1="20" x2="' + x + '" y2="' + Hh + '" stroke="' + cB + '"/><text x="' + (x + 3) + '" y="13" fill="' + cM + '">' + ('0' + (dm.getUTCMonth() + 1)).slice(-2) + '/' + String(dm.getUTCFullYear()).slice(2) + '</text>';
-      m = Date.UTC(dm.getUTCFullYear(), dm.getUTCMonth() + passoMeses, 1);
-    }
-    var xs = LW + (r.dataStatus - t0) * sx;
-    s += '<line x1="' + xs + '" y1="18" x2="' + xs + '" y2="' + Hh + '" stroke="' + cA + '" stroke-dasharray="4 3"><title>Data de status ' + br(r.dataStatus) + '</title></line>';
-    ids.forEach(function(u, i){
-      var a = p.at[u], y = 26 + i * RH, x = LW + (r.es[u] - t0) * sx, w = Math.max((r.ef[u] - r.es[u]) * sx, 2);
-      var cor = a.status === 'concluida' ? cM : crit[u] ? cD : cA;
-      var lbl = (a.cod ? a.cod + ' · ' : '') + a.nome; if(lbl.length > 48) lbl = lbl.slice(0, 47) + '…';
-      var dica = esc(a.cod + ' ' + a.nome + ' — ' + br(r.es[u]) + ' a ' + br(r.ef[u]) + (r.folgaH[u] !== undefined ? ', folga ' + fmt(E.folgaDias(p, r, u), 1) + ' d' : ', concluída'));
-      s += '<text x="6" y="' + (y + 10) + '" fill="' + cT + '">' + esc(lbl) + '</text>';
-      s += (r.ef[u] - r.es[u] < 60000) ? '<path d="M' + x + ' ' + (y + 1) + ' l6 6 l-6 6 l-6 -6 z" fill="' + cor + '"><title>' + dica + '</title></path>'
-        : '<rect x="' + x + '" y="' + (y + 2) + '" width="' + w + '" height="11" rx="2" fill="' + cor + '"><title>' + dica + '</title></rect>';
+    if(!q && !only) return {linhas: todas, crit: crit};
+    var ok = function(u){ var a = p.at[u]; return (!only || crit[u]) && (!q || (a.cod + ' ' + a.nome).toLowerCase().indexOf(q) >= 0); };
+    var out = [], pilha = [];
+    todas.forEach(function(l){
+      if(l.k === 'eap'){ while(pilha.length && pilha[pilha.length - 1].nivel >= l.nivel) pilha.pop(); pilha.push({l: l, nivel: l.nivel, posto: false}); return; }
+      if(!ok(l.u)) return;
+      pilha.forEach(function(x){ if(!x.posto){ out.push(x.l); x.posto = true; } });
+      out.push(l);
     });
-    s += '</svg>';
-    $('crn-gantt').innerHTML = s + (r.ordem.length > ids.length && !only ? '<div class="crn-note" style="padding:6px 10px">Mostrando as primeiras 400 atividades por data de início.</div>' : '');
+    return {linhas: out, crit: crit};
+  }
+  function marcacaoPrimavera(p){
+    var r = p.r, L = linhasPrimavera(p), linhas = L.linhas, crit = L.crit;
+    if(!linhas.length) return {html: '<p class="crn-note" style="padding:10px">Nada para mostrar com este filtro.</p>', n: 0};
+    var datas = [r.dataStatus]; linhas.forEach(function(l){ var i = l.k === 'eap' ? l.ini : r.es[l.u], f = l.k === 'eap' ? l.fim : r.ef[l.u]; if(i != null) datas.push(i); if(f != null) datas.push(f); });
+    var d0 = new Date(Math.min.apply(null, datas)), t0 = Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth(), 1), d1 = new Date(Math.max.apply(null, datas)), t1 = Date.UTC(d1.getUTCFullYear(), d1.getUTCMonth() + 1, 1);
+    var meses = (d1.getUTCFullYear() - d0.getUTCFullYear()) * 12 + d1.getUTCMonth() - d0.getUTCMonth() + 1, W = Math.max(700, Math.min(2600, meses * (meses > 48 ? 12 : 28))), X = function(t){ return ((t - t0) / (t1 - t0) * W).toFixed(1); };
+    var esc0 = '', passo = meses > 48 ? 3 : 1;
+    for(var m = t0; m < t1; ){ var dm = new Date(m), mm = dm.getUTCMonth(); if(mm === 0 || m === t0) esc0 += '<span style="left:' + X(m) + 'px;top:0">' + dm.getUTCFullYear() + '</span>'; if(mm % passo === 0) esc0 += '<span style="left:' + X(m) + 'px;top:15px">' + (passo === 3 ? 'T' + (mm / 3 + 1) : ('0' + (mm + 1)).slice(-2)) + '</span>'; m = Date.UTC(dm.getUTCFullYear(), mm + 1, 1); }
+    var cw = [96, 340, 64, 84, 84, 62, 104], LW = cw.reduce(function(a, b){ return a + b; }, 0), ch = 0;
+    var h = '<table class="pv" style="width:' + (LW + W) + 'px"><colgroup>' + cw.map(function(w){ return '<col style="width:' + w + 'px">'; }).join('') + '<col style="width:' + W + 'px"></colgroup>' +
+      '<thead><tr><th class="c0">ID</th><th class="c1">Nome da atividade</th><th class="n" title="Duração remanescente, em dias">Rem. (d)</th><th>Início</th><th>Término</th><th class="n" title="Folga total, em dias">Folga (d)</th><th class="n">Custo</th><th class="g"><div class="esc">' + esc0 + '</div></th></tr></thead><tbody>';
+    linhas.forEach(function(l){
+      ch++;
+      var pad = 'padding-left:' + (6 + l.nivel * 14) + 'px';
+      if(l.k === 'eap'){
+        var bw = l.ini != null && l.fim != null ? '<div class="b s" style="left:' + X(l.ini) + 'px;width:' + Math.max(2, X(l.fim) - X(l.ini)) + 'px" title="' + esc(l.nome + ' — ' + brc(l.ini) + ' a ' + brc(l.fim)) + '"></div>' : '';
+        h += '<tr class="e e' + Math.min(l.nivel, 3) + '" data-nv="' + l.nivel + '"><td class="c0"><span class="tg" data-pv-t>▾</span>' + esc(l.codigo || '') + '</td><td class="c1" style="' + pad + '" title="' + esc(l.nome) + '">' + esc(l.nome) + '</td><td class="n"></td><td>' + brc(l.ini) + '</td><td>' + brc(l.fim) + '</td><td class="n"></td><td class="n">' + (l.custo ? fmt(l.custo, 0) : '') + '</td><td class="g">' + bw + '</td></tr>';
+        return;
+      }
+      var a = p.at[l.u], i = r.es[l.u], f = r.ef[l.u], cls = a.status === 'concluida' ? 'ok' : crit[l.u] ? 'cr' : '', fol = r.folgaH[l.u];
+      var dica = esc(a.cod + ' ' + a.nome + ' — ' + brc(i) + (a.iniReal != null ? ' A' : '') + ' a ' + brc(f) + (a.fimReal != null ? ' A' : '') + (fol !== undefined ? ', folga ' + fmt(E.folgaDias(p, r, l.u), 1) + ' d' : ''));
+      var barra = f - i < 60000 ? '<div class="m ' + cls + '" style="left:' + X(i) + 'px" title="' + dica + '"></div>' : '<div class="b ' + cls + '" style="left:' + X(i) + 'px;width:' + Math.max(2, X(f) - X(i)) + 'px" title="' + dica + '"></div>';
+      h += '<tr class="' + (crit[l.u] ? 'crit' : '') + '" data-nv="' + l.nivel + '"><td class="c0">' + esc(a.cod) + '</td><td class="c1" style="' + pad + '" title="' + esc(a.nome) + '">' + esc(a.nome) + '</td><td class="n">' + fmt(a.restH / E.calDe(p, a).horasDia, 0) + '</td><td>' + brc(i) + (a.iniReal != null ? ' A' : '') + '</td><td>' + brc(f) + (a.fimReal != null ? ' A' : '') + '</td><td class="n">' + (fol !== undefined ? fmt(E.folgaDias(p, r, l.u), 0) : '') + '</td><td class="n">' + (a.custo ? fmt(a.custo, 0) : '') + '</td><td class="g">' + barra + '</td></tr>';
+    });
+    h += '</tbody></table><div class="pv-dd" style="left:' + (LW + +X(r.dataStatus)) + 'px;height:' + (34 + ch * 21) + 'px" title="Data de status ' + brc(r.dataStatus) + '"></div>';
+    return {html: h, n: ch};
+  }
+  /* Abre/fecha pela ordem e pelo nível das linhas (mesmo algoritmo no HTML exportado). */
+  var VISIB = 'function(tb){var fx=null;Array.prototype.forEach.call(tb.rows,function(tr){var nv=+tr.getAttribute("data-nv");if(fx!==null&&nv<=fx)fx=null;tr.hidden=fx!==null;if(fx===null&&tr.classList.contains("fechado"))fx=nv;var t=tr.querySelector("[data-pv-t]");if(t)t.textContent=tr.classList.contains("fechado")?"\u25b8":"\u25be";});}';
+  var visibilidade = new Function('return ' + VISIB)();
+  function nivelPrimavera(tb, n){ Array.prototype.forEach.call(tb.rows, function(tr){ if(tr.classList.contains('e')) tr.classList.toggle('fechado', +tr.getAttribute('data-nv') >= n - 1); }); visibilidade(tb); }
+  function gantt(p){
+    var m = marcacaoPrimavera(p); $('crn-gantt').innerHTML = m.html;
+    var tb = $('crn-gantt').querySelector('tbody'); if(tb && PV.nivel < 99) nivelPrimavera(tb, PV.nivel);
+  }
+  function htmlPrimavera(p){
+    var css = Array.prototype.map.call(document.querySelectorAll('#crn-root style, #view-cronos style'), function(s){ return s.textContent; }).join('\n');
+    var cs = getComputedStyle(document.documentElement), v = ['--bg','--bg-alt','--text','--muted','--border','--accent','--accent-dark','--heading','--danger'].map(function(k){ return k + ':' + (cs.getPropertyValue(k).trim() || '#888'); }).join(';');
+    var m = marcacaoPrimavera(p), r = p.r;
+    return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(p.nome) + ' · visão Primavera</title><style>:root{' + v + '}body{margin:16px;background:var(--bg);color:var(--text);font:13px Inter,system-ui,sans-serif}h1{font:600 16px Montserrat,Arial,sans-serif;color:var(--heading);margin:0 0 4px}.nt{color:var(--muted);font-size:12px;margin:0 0 10px}.bt{font:12px Inter,sans-serif;border:1px solid var(--border);background:var(--bg);border-radius:5px;padding:4px 9px;cursor:pointer;margin-right:4px}' + css + '.pv-wrap{max-height:none}</style></head><body>' +
+      '<h1>' + esc(p.nome) + '</h1><p class="nt">' + esc(p.arquivo) + ' · data de status ' + brc(r.dataStatus) + ' · término ' + brc(r.termino) + ' · ' + m.n + ' linhas · gerado pelo Manta Cronos em ' + brc(Date.now()) + (p.somenteLeitura ? ' · lido de PDF (sem lógica)' : '') + '</p>' +
+      '<p><span class="nt">Níveis da EAP: </span><button class="bt" data-n="1">1</button><button class="bt" data-n="2">2</button><button class="bt" data-n="3">3</button><button class="bt" data-n="99">Tudo</button></p>' +
+      '<div class="pv-wrap">' + m.html + '</div><script>(function(){var vis=' + VISIB + ',tb=document.querySelector(".pv tbody");document.addEventListener("click",function(e){var t=e.target.closest("[data-pv-t]");if(t){t.closest("tr").classList.toggle("fechado");vis(tb);}var b=e.target.closest("[data-n]");if(b){var n=+b.getAttribute("data-n");Array.prototype.forEach.call(tb.rows,function(tr){if(tr.classList.contains("e"))tr.classList.toggle("fechado",+tr.getAttribute("data-nv")>=n-1);});vis(tb);}});})();<\/script></body></html>';
   }
 
   function comparar(){
@@ -321,7 +402,7 @@
     return new Blob([lh.buffer, nm, bytes, ch.buffer, nm, fim.buffer], {type: 'application/zip'});
   }
   function latin1(s){ var b = new Uint8Array(s.length); for(var i = 0; i < s.length; i++){ var c = s.charCodeAt(i); b[i] = c < 256 ? c : 63; } return b; }
-  function base(p){ return p.arquivo.replace(/\.(xer|xml)$/i, '') + '_cronos'; }
+  function base(p){ return p.arquivo.replace(/\.(xer|xml|pdf)$/i, '') + '_cronos'; }
   async function salvar(filename, data){
     var st = $('crn-mcout');
     try{
@@ -391,6 +472,10 @@
   $('crn-clear').addEventListener('click', function(){ ST.v = []; ST.sel = null; $('crn-detail').hidden = true; $('crn-cmpout').innerHTML = ''; $('crn-status').textContent = ''; renderVersoes(); });
   $('crn-versions').addEventListener('click', function(e){ var b = e.target.closest('[data-crn-ver]'); if(b) mostrar(b.getAttribute('data-crn-ver')); });
   $('crn-onlycrit').addEventListener('change', function(){ var p = atual(); if(p) gantt(p); });
+  $('crn-gantt').addEventListener('click', function(e){ var t = e.target.closest('[data-pv-t]'); if(!t) return; t.closest('tr').classList.toggle('fechado'); visibilidade($('crn-gantt').querySelector('tbody')); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-pv-nivel]'), function(b){ b.addEventListener('click', function(){ PV.nivel = +b.getAttribute('data-pv-nivel'); var tb = $('crn-gantt').querySelector('tbody'); if(tb) nivelPrimavera(tb, PV.nivel); }); });
+  var tFiltro = null; $('crn-pv-filtro').addEventListener('input', function(e){ clearTimeout(tFiltro); tFiltro = setTimeout(function(){ PV.filtro = e.target.value; var p = atual(); if(p) gantt(p); }, 250); });
+  $('crn-exp-pv').addEventListener('click', function(){ var p = atual(); if(!p) return; var n = base(p); salvar(n + '_primavera.zip', zip(n + '_primavera.html', new TextEncoder().encode(htmlPrimavera(p)))); });
   $('crn-curva-tipo').addEventListener('change', function(){ var p = atual(); if(p) curva(p); });
   $('crn-cmp').addEventListener('click', comparar);
   renderVersoes();

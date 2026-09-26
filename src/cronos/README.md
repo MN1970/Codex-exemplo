@@ -55,8 +55,20 @@ src/cronos/
 | Linha de base proxy | Sem datas target em todas as atividades, a curva planejada usa as calculadas e avisa |
 | N versões | Ordem por data de status, Δ término e Δ custo contra a anterior, deslizamento de marcos |
 
+## Regras implementadas (F2.1 — PDF e visão Primavera, no navegador)
+
+| Tema | Comportamento |
+|---|---|
+| PDF do P6 | Lê relatório impresso (layout de colunas): cabeçalho em até 3 linhas, em inglês ou português |
+| EAP do PDF | Faixas sem ID viram EAP; o nível vem do recuo impresso; nomes quebrados em 2 linhas são emendados |
+| Datas do PDF | `A` = data real; `*` ignorado; dd/mm ou mm/dd detectado; data de status do rodapé ("Data Date") |
+| Sem lógica | PDF não traz predecessoras: vale o que o P6 imprimiu, sem CPM, DCMA-14 nem Monte Carlo |
+| Visão Primavera | EAP em árvore (abrir/fechar, níveis 1/2/3), colunas do P6, barras e resumo; XER usa `PROJWBS` |
+| Exportação | A visão Primavera sai como HTML autônomo (em .zip); o PDF também exporta para MS Project XML |
+
 Ainda não implementado: nivelamento de recursos, LOE e resumo de EAP no
-cálculo, caminho mais longo, leitura de Excel e PDF, Tempo × Caminho e LOB.
+cálculo, caminho mais longo, leitura de Excel, leitura de PDF no motor Python,
+Tempo × Caminho e LOB.
 
 ## Uso
 

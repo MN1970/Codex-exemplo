@@ -161,7 +161,12 @@
       try { var x = lerClndrData(c.clndr_data || ""); cals[c.clndr_id] = new Calendario(c.clndr_id, c.clndr_name || c.clndr_id, x.semana, x.excecoes, num(c.day_hr_cnt) || 8, base); }
       catch (e) { alertas.push("Calendário " + c.clndr_id + " ilegível, usado o padrão 5×8: " + e.message); }
     });
-    var wbs = {}; L("PROJWBS").forEach(function (w) { wbs[w.wbs_id] = w.wbs_name || ""; });
+    var wbs = {}, wbsNo = {}; L("PROJWBS").forEach(function (w) { wbs[w.wbs_id] = w.wbs_name || ""; wbsNo[w.wbs_id] = w; });
+    function caminhoWBS(id) {
+      var c = [], vistos = {};
+      while (id && wbsNo[id] && !vistos[id]) { vistos[id] = 1; if (wbsNo[id].proj_node_flag !== "Y") c.unshift(id); id = wbsNo[id].parent_wbs_id; }
+      return c;
+    }
     var custo = {}, real = {}, rec = {};
     L("TASKRSRC").forEach(function (r) { custo[r.task_id] = (custo[r.task_id] || 0) + num(r.target_cost); real[r.task_id] = (real[r.task_id] || 0) + num(r.act_reg_cost) + num(r.act_ot_cost); rec[r.task_id] = true; });
     var P = {}, ordem = [];
@@ -184,7 +189,17 @@
         iniPlan: dataXER(a.target_start_date), fimPlan: dataXER(a.target_end_date),
         restricoes: restr, custo: custo[a.task_id] || 0, custoReal: real[a.task_id] || 0,
         pctFisico: a.phys_complete_pct !== undefined && a.phys_complete_pct !== "" ? num(a.phys_complete_pct) : null, temRecurso: !!rec[a.task_id],
-        fonte: arq + " › TASK › linha " + a._linha };
+        fonte: arq + " › TASK › linha " + a._linha, eapCaminho: caminhoWBS(a.wbs_id) };
+    });
+    ordem.forEach(function (k) {                  // nós da EAP em ordem de exibição (seq_num, como no P6)
+      var pr = P[k], filhos = {}, nos = [];
+      L("PROJWBS").forEach(function (w) { if (w.proj_id === k && w.proj_node_flag !== "Y") (filhos[w.parent_wbs_id] = filhos[w.parent_wbs_id] || []).push(w); });
+      var raizes = L("PROJWBS").filter(function (w) { return w.proj_id === k && w.proj_node_flag !== "Y" && (!wbsNo[w.parent_wbs_id] || wbsNo[w.parent_wbs_id].proj_node_flag === "Y"); });
+      (function dfs(lista, nivel, pai) {
+        lista.sort(function (a, b) { return num(a.seq_num) - num(b.seq_num) || String(a.wbs_short_name || a.wbs_name).localeCompare(String(b.wbs_short_name || b.wbs_name)); })
+          .forEach(function (w) { nos.push({ chave: w.wbs_id, nome: w.wbs_name || w.wbs_short_name || w.wbs_id, codigo: w.wbs_short_name || "", nivel: nivel, pai: pai }); dfs(filhos[w.wbs_id] || [], nivel + 1, w.wbs_id); });
+      })(raizes, 0, null);
+      pr.eapNos = nos;
     });
     L("TASKPRED").forEach(function (r) {
       var pr = P[r.proj_id] || P[r.pred_proj_id];
@@ -589,9 +604,208 @@
     return { versoes: versoes, tendenciaMarcos: tend };
   }
 
+  /* ---------------- Relatório do P6 impresso em PDF (layout de colunas) ----------------
+   * Entrada: páginas de itens de texto {x, y, s} (y cresce para cima, como no pdf.js).
+   * Saída: um projeto só de leitura (sem lógica): EAP, atividades, datas, durações.
+   * Datas com "A" são reais; "*" (restrição) é ignorado. */
+  function semAcento(s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim(); }
+  var COL_PDF = [
+    ["id", /(activity id|id da atividade|id atividade|codigo da atividade|^id$)/],
+    ["nome", /(activity name|nome da atividade|descricao|^nome$|^atividade$)/],
+    ["iniBL", /((baseline|bl project|linha de base|lb).*(start|inicio))/],
+    ["fimBL", /((baseline|bl project|linha de base|lb).*(finish|termino|fim))/],
+    ["rest", /(remaining|remanescente|restante)/],
+    ["dur", /(original|duracao|duration)/],
+    ["folga", /(total float|folga total|float|folga)/],
+    ["pct", /(% ?complete|% ?conclu|concluid)/],
+    ["ini", /(start|inicio)/],
+    ["fim", /(finish|termino|^fim)/],
+    ["cal", /(calendar|calendario)/],
+    ["custo", /(cost|custo)/]
+  ];
+  var MESES = { jan: 0, fev: 1, feb: 1, mar: 2, abr: 3, apr: 3, mai: 4, may: 4, jun: 5, jul: 6, ago: 7, aug: 7, set: 8, sep: 8, out: 9, oct: 9, nov: 10, dez: 11, dec: 11 };
+  var RE_DATA = /(\d{1,2})[\/.\-](\d{1,2}|[A-Za-zçÇ]{3})[\/.\-](\d{2,4})/;
+  function numPDF(v) {
+    var s = String(v || "").replace(/[^\d,.\-]/g, "");
+    if (!s) return null;
+    if (/,\d{1,2}$/.test(s)) s = s.replace(/\./g, "").replace(",", "."); else s = s.replace(/,/g, "");
+    var n = parseFloat(s); return isFinite(n) ? n : null;
+  }
+  function linhasPDF(itens) {
+    var ord = itens.filter(function (i) { return String(i.s).trim(); }).slice().sort(function (a, b) { return b.y - a.y || a.x - b.x; }), out = [];
+    ord.forEach(function (i) {
+      var l = out[out.length - 1];
+      if (l && Math.abs(l.y - i.y) <= 2.5) l.itens.push(i); else out.push({ y: i.y, itens: [i] });
+    });
+    out.forEach(function (l) { l.itens.sort(function (a, b) { return a.x - b.x; }); l.texto = l.itens.map(function (i) { return i.s; }).join(" "); });
+    return out;
+  }
+  function classificarCab(t) { t = semAcento(t); for (var i = 0; i < COL_PDF.length; i++) if (COL_PDF[i][1].test(t)) return COL_PDF[i][0]; return null; }
+  function cabecalhoPDF(linhas, i0) {
+    var zona = [linhas[i0]];
+    for (var j = i0 + 1; j < linhas.length && linhas[i0].y - linhas[j].y < 28 && !RE_DATA.test(linhas[j].texto); j++) zona.push(linhas[j]);
+    var grupos = [];
+    zona.forEach(function (l) { l.itens.forEach(function (it) {
+      var g = grupos.filter(function (g) { return Math.abs(g.x - it.x) < 18; })[0];
+      if (g) g.t += " " + it.s; else grupos.push({ x: it.x, t: String(it.s) });
+    }); });
+    // itens do mesmo cabeçalho na mesma linha, lado a lado ("Activity" "ID") viram um só
+    grupos.sort(function (a, b) { return a.x - b.x; });
+    var cols = [], vistos = {};
+    grupos.forEach(function (g) {
+      var k = classificarCab(g.t);
+      if (!k) { var ant = cols[cols.length - 1]; if (ant && !ant.k) { ant.t += " " + g.t; ant.k = classificarCab(ant.t); } else cols.push({ x: g.x, t: g.t, k: null }); return; }
+      cols.push({ x: g.x, t: g.t, k: k });
+    });
+    cols = cols.filter(function (c) { if (!c.k || vistos[c.k]) return false; vistos[c.k] = 1; return true; });
+    return { cols: cols, fim: i0 + zona.length };
+  }
+  function lerRelatorioPDF(paginas, arq) {
+    var todas = [], datas = [], ehCab = function (l) { var t = semAcento(l.texto), n = 0; ["activity id", "id da atividade", "activity name", "nome da atividade", "start", "inicio", "finish", "termino"].forEach(function (k) { if (t.indexOf(k) >= 0) n++; }); return n >= 3; };
+    paginas.forEach(function (itens, pg) { linhasPDF(itens).forEach(function (l) { l.pg = pg + 1; todas.push(l); }); });
+    todas.forEach(function (l) { var m, re = new RegExp(RE_DATA.source, "g"); while ((m = re.exec(l.texto))) datas.push(m); });
+    var dmy = !datas.some(function (m) { return /^\d+$/.test(m[2]) && +m[2] > 12; }) || datas.some(function (m) { return +m[1] > 12; });
+    function dataPDF(v, fim) {
+      var m = RE_DATA.exec(v || ""); if (!m) return null;
+      var d = +m[1], mes = /^\d+$/.test(m[2]) ? +m[2] - 1 : MESES[semAcento(m[2]).slice(0, 3)], a = +m[3];
+      if (!/^\d+$/.test(m[2]) || dmy) {} else { var t = d; d = mes + 1; mes = t - 1; }
+      if (mes == null || mes < 0 || mes > 11 || d < 1 || d > 31) return null;
+      if (a < 100) a += a < 70 ? 2000 : 1900;
+      return Date.UTC(a, mes, d, fim ? 17 : 8, 0);
+    }
+    var base = Date.UTC(1990, 0, 1), cal = new Calendario("_padrao", "Padrão 5×8", null, null, 8, base);
+    var pr = { id: "1", nome: arq, arquivo: arq, chave: arq + "#pdf", dataStatus: null, inicioPlan: null, terminoExigido: null, calPadrao: "_padrao",
+      calendarios: { _padrao: cal }, at: {}, lig: [], alertas: [], origem: null, somenteLeitura: true, formato: "pdf", colunasPDF: [], eap: [] };
+    var cab = null, ultimo = null, wbs = "", n = 0, colsUsadas = {}, sequencia = [];
+    for (var i = 0; i < todas.length; i++) {
+      var l = todas[i];
+      if (ehCab(l)) { var c = cabecalhoPDF(todas, i); if (c.cols.length >= 3) { cab = c.cols; c.cols.forEach(function (k) { colsUsadas[k.k] = 1; }); i = c.fim - 1; ultimo = null; continue; } }
+      if (!cab) continue;
+      var larg = 80; for (var q = 1; q < cab.length; q++) larg = Math.max(larg, cab[q].x - cab[q - 1].x);
+      var cel = {}, limite = cab[cab.length - 1].x + larg;
+      l.itens.forEach(function (it) {
+        if (it.x > limite) return;
+        var col = cab[0]; cab.forEach(function (c) { if (c.x <= it.x + 6) col = c; });
+        cel[col.k] = cel[col.k] ? cel[col.k] + " " + it.s : String(it.s);
+      });
+      var ini = dataPDF(cel.ini, false), fim = dataPDF(cel.fim, true), id = (cel.id || "").trim();
+      var ehAtv = id && /^[A-Za-z0-9][\w.\-\/]*$/.test(id) && (ini != null || fim != null);
+      if (!ehAtv && ini == null && fim == null) {
+        // continuação do nome (quebra de linha no PDF)
+        var soNome = Object.keys(cel).every(function (k) { return k === "nome" || k === "id"; });
+        if (ultimo && soNome && cel.nome && ultimo.pg === l.pg) { ultimo.alvo.nome += " " + (cel.id ? cel.id + " " : "") + cel.nome; }
+        continue;
+      }
+      if (!ehAtv) {
+        var nomeW = ((cel.id ? cel.id + " " : "") + (cel.nome || "")).trim(); if (!nomeW) continue;
+        var w = { nome: nomeW, ini: ini, fim: fim, pg: l.pg, nivel: 0, x: l.itens[0].x, idx: pr.eap.length };
+        pr.eap.push(w); wbs = nomeW; ultimo = { alvo: w, pg: l.pg }; sequencia.push({ eap: w.idx });
+        if (!pr.nomeDoPDF) pr.nomeDoPDF = w;
+        continue;
+      }
+      var real0 = /\bA\b/.test(cel.ini || ""), real1 = /\bA\b/.test(cel.fim || "");
+      var st = real1 ? "concluida" : real0 ? "em_andamento" : "nao_iniciada";
+      var durD = numPDF(cel.dur), restD = numPDF(cel.rest);
+      var i0 = ini != null ? ini : fim != null ? cal.proximoInicio(fim - 9 * H) : null, f0 = fim != null ? fim : ini;
+      var durH = durD != null ? durD * 8 : (ini != null && fim != null ? cal.entre(cal.proximoInicio(ini), fim) : 0);
+      var restH = st === "concluida" ? 0 : restD != null ? restD * 8 : durH;
+      var mk = (durD === 0 || restD === 0 && st === "nao_iniciada" || ini == null || fim == null) && (ini == null || fim == null || ini >= fim - 10 * H && durH < EPS);
+      if (mk && (real0 || real1)) st = "concluida";
+      var uid = "p" + (++n);
+      var a = pr.at[uid] = { uid: uid, cod: id, nome: (cel.nome || "").trim(), wbs: wbs, tipo: mk ? (fim == null ? "marco_inicio" : "marco_fim") : "tarefa", status: st,
+        durH: mk ? 0 : durH, restH: mk ? 0 : restH, cal: "", iniReal: real0 ? ini : null, fimReal: real1 ? fim : null, iniPlan: dataPDF(cel.iniBL, false), fimPlan: dataPDF(cel.fimBL, true),
+        restricoes: [], custo: numPDF(cel.custo) || 0, custoReal: 0, pctFisico: numPDF(cel.pct), temRecurso: !!numPDF(cel.custo),
+        fonte: arq + " › página " + l.pg, iniPDF: i0, fimPDF: f0, folgaPDF: numPDF(cel.folga), calPDF: (cel.cal || "").trim() };
+      a.eapIdx = pr.eap.length - 1; sequencia.push({ u: uid });
+      ultimo = { alvo: a, pg: l.pg };
+    }
+    pr.colunasPDF = Object.keys(colsUsadas);
+    // nível da EAP pelo recuo impresso; caminho de cada atividade até a raiz
+    var xs = []; pr.eap.forEach(function (w) { var x = Math.round(w.x / 4) * 4; if (xs.indexOf(x) < 0) xs.push(x); });
+    xs.sort(function (a, b) { return a - b; });
+    var pilhaE = [];
+    pr.eap.forEach(function (w) {
+      w.nivel = xs.indexOf(Math.round(w.x / 4) * 4);
+      while (pilhaE.length && pilhaE[pilhaE.length - 1].nivel >= w.nivel) pilhaE.pop();
+      w.pai = pilhaE.length ? "e" + pilhaE[pilhaE.length - 1].idx : null; w.caminho = pilhaE.map(function (x) { return "e" + x.idx; }).concat(["e" + w.idx]);
+      pilhaE.push(w);
+    });
+    pr.eapNos = pr.eap.map(function (w) { return { chave: "e" + w.idx, nome: w.nome, codigo: "", nivel: w.nivel, pai: w.pai, iniImpresso: w.ini, fimImpresso: w.fim }; });
+    Object.keys(pr.at).forEach(function (u) { var a = pr.at[u]; a.eapCaminho = a.eapIdx >= 0 ? pr.eap[a.eapIdx].caminho : []; });
+    pr.sequenciaPDF = sequencia;
+    var ids = Object.keys(pr.at);
+    if (!ids.length) throw new Error("Nenhuma atividade reconhecida: o PDF precisa ser um layout do P6/MS Project com colunas de ID, nome, início e término (texto, não imagem escaneada)");
+    var txt = todas.map(function (l) { return l.texto; }).join("\n"), md = /(data date|data de status|data dos dados|data da atualiza\S*|status date)\D{0,12}(\d{1,2}[\/.\-](?:\d{1,2}|[A-Za-z]{3})[\/.\-]\d{2,4})/i.exec(txt);
+    var reais = []; ids.forEach(function (u) { var a = pr.at[u]; if (a.fimReal != null) reais.push(a.fimReal); if (a.iniReal != null) reais.push(a.iniReal); });
+    pr.dataStatus = md ? dataPDF(md[2], false) : reais.length ? Math.max.apply(null, reais) : Math.min.apply(null, ids.map(function (u) { return pr.at[u].iniPDF; }).filter(function (x) { return x != null; }));
+    if (!md) pr.alertas.push("Data de status não encontrada no PDF: " + (reais.length ? "usada a última data real" : "usado o início do cronograma"));
+    pr.alertas.push("Lido de PDF: sem lógica (predecessoras); datas e folgas são as impressas pelo P6, sem recálculo CPM");
+    if (!colsUsadas.folga) pr.alertas.push("PDF sem coluna de folga total: caminho crítico não disponível");
+    if (!colsUsadas.custo) pr.alertas.push("PDF sem coluna de custo: curva financeira e valor agregado vazios");
+    if (pr.nomeDoPDF) pr.nome = pr.nomeDoPDF.nome; delete pr.nomeDoPDF;
+    pr.custo = sumCusto(pr);
+    return [pr];
+  }
+  /* Linhas da visão Primavera: faixas da EAP (com datas-resumo) e atividades, na ordem do P6. */
+  function arvoreEAP(p, r) {
+    var nos = (p.eapNos || []).map(function (n) { return { k: "eap", chave: n.chave, nome: n.nome, codigo: n.codigo, nivel: n.nivel, pai: n.pai, ini: null, fim: null, n: 0, custo: 0, criticas: 0 }; });
+    var porChave = {}; nos.forEach(function (n) { porChave[n.chave] = n; });
+    var noCalc = {}; r.ordem.forEach(function (u) { noCalc[u] = 1; });
+    var semEAP = { k: "eap", chave: "_sem", nome: "(sem EAP)", codigo: "", nivel: 0, pai: null, ini: null, fim: null, n: 0, custo: 0, criticas: 0 };
+    var crit = {}; r.criticas.forEach(function (u) { crit[u] = 1; });
+    var atvDe = {};
+    r.ordem.forEach(function (u) {
+      var a = p.at[u], cam = (a.eapCaminho || []).filter(function (c) { return porChave[c]; }), folha = cam.length ? cam[cam.length - 1] : "_sem";
+      (atvDe[folha] = atvDe[folha] || []).push(u);
+      (cam.length ? cam.map(function (c) { return porChave[c]; }) : [semEAP]).forEach(function (n) {
+        n.ini = n.ini == null ? r.es[u] : Math.min(n.ini, r.es[u]); n.fim = n.fim == null ? r.ef[u] : Math.max(n.fim, r.ef[u]);
+        n.n++; n.custo += a.custo; if (crit[u]) n.criticas++;
+      });
+    });
+    (p.eapNos || []).forEach(function (n) {           // PDF: vale o resumo impresso pelo P6
+      var x = porChave[n.chave]; if (n.iniImpresso != null) x.ini = n.iniImpresso; if (n.fimImpresso != null) x.fim = n.fimImpresso;
+    });
+    var linhas = [], nivelDe = function (c) { return porChave[c] ? porChave[c].nivel + 1 : 1; };
+    if (p.sequenciaPDF) {
+      p.sequenciaPDF.forEach(function (x) {
+        if (x.eap !== undefined) { var n = porChave["e" + x.eap]; if (n) linhas.push(n); }
+        else if (noCalc[x.u]) { var a = p.at[x.u], c = a.eapCaminho || []; linhas.push({ k: "atv", u: x.u, nivel: c.length ? nivelDe(c[c.length - 1]) : 1, pai: c.length ? c[c.length - 1] : "_sem" }); }
+      });
+      if (atvDe._sem) { linhas.unshift(semEAP); }
+    } else {
+      var ordAt = function (lista) { return lista.slice().sort(function (a, b) { return r.es[a] - r.es[b] || String(p.at[a].cod).localeCompare(String(p.at[b].cod)); }); };
+      var filhos = {}; nos.forEach(function (n) { (filhos[n.pai || ""] = filhos[n.pai || ""] || []).push(n); });
+      (function dfs(pai) {
+        (filhos[pai] || []).forEach(function (n) {
+          if (!n.n) return;
+          linhas.push(n);
+          ordAt(atvDe[n.chave] || []).forEach(function (u) { linhas.push({ k: "atv", u: u, nivel: n.nivel + 1, pai: n.chave }); });
+          dfs(n.chave);
+        });
+      })("");
+      if (atvDe._sem) { linhas.push(semEAP); ordAt(atvDe._sem).forEach(function (u) { linhas.push({ k: "atv", u: u, nivel: 1, pai: "_sem" }); }); }
+    }
+    if (atvDe._sem && p.sequenciaPDF) linhas.forEach(function (l) { if (l.k === "atv" && l.pai === "_sem") l.nivel = 1; });
+    return linhas;
+  }
+
+  /* Resultado no formato de calcular() a partir das datas impressas (projetos sem lógica). */
+  function resultadoDasDatas(p) {
+    var ordem = Object.keys(p.at).filter(function (u) { return p.at[u].iniPDF != null; }).sort(function (a, b) { return p.at[a].iniPDF - p.at[b].iniPDF; });
+    var r = { ordem: ordem, es: {}, ef: {}, ls: {}, lf: {}, folgaH: {}, criticas: [], dataStatus: p.dataStatus, termino: null, avisos: [], ligacoes: [], semLogica: true };
+    ordem.forEach(function (u) {
+      var a = p.at[u]; r.es[u] = a.iniPDF; r.ef[u] = Math.max(a.fimPDF, a.iniPDF);
+      if (a.status !== "concluida" && a.folgaPDF != null) { r.folgaH[u] = a.folgaPDF * 8; if (a.folgaPDF <= 0) r.criticas.push(u); }
+      r.ls[u] = null; r.lf[u] = null;
+      if (r.termino == null || r.ef[u] > r.termino) r.termino = r.ef[u];
+    });
+    return r;
+  }
+
   var API = { lerXER: lerXER, lerMSPDI: lerMSPDI, lerClndrData: lerClndrData, Calendario: Calendario, calcular: calcular,
     folgaDias: folgaDias, dcma14: dcma14, monteCarlo: monteCarlo, gravarXER: gravarXER, gravarMSPDI: gravarMSPDI,
     eHistorico: eHistorico, dataXER: dataXER, fmtXER: fmtXER, fmtBR: fmtBR, calDe: calDe, noCalculo: noCalculo,
-    curvaS: curvaS, valorAgregado: valorAgregado, pctConcluido: pctConcluido, linhaDoTempo: linhaDoTempo };
+    curvaS: curvaS, valorAgregado: valorAgregado, pctConcluido: pctConcluido, linhaDoTempo: linhaDoTempo,
+    lerRelatorioPDF: lerRelatorioPDF, arvoreEAP: arvoreEAP, linhasPDF: linhasPDF, resultadoDasDatas: resultadoDasDatas };
   if (typeof module !== "undefined" && module.exports) module.exports = API; else root.CronosEngine = API;
 })(this);
