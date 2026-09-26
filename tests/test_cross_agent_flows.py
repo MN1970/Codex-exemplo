@@ -173,7 +173,32 @@ class MockMaestroWithCrossAgent:
         }
 
         # Determine primary agent
-        if any(w in prompt_lower for w in ["eta", "ete", "esgoto", "saneamento", "adutora"]):
+        # Metrô é avaliado antes de saneamento: num projeto integrado
+        # ("metro linha 6 + ampliação ETA") o metrô é o dono da sessão e o
+        # saneamento entra como cross-agent call.
+        saneamento_words = ["eta", "ete", "esgoto", "saneamento", "adutora"]
+        if any(w in prompt_lower for w in ["metro", "vlt", "estação", "metrô"]):
+            routing_result["primary_agent"] = "manta-03-s4"
+            if "estrutura" in prompt_lower or "fundação" in prompt_lower:
+                job_id = self.coordinator.dispatch_job(
+                    "manta-03-s4", "manta-03-s2",
+                    {"input": "Análise estrutural para estação"}
+                )
+                routing_result["cross_agent_jobs"].append({
+                    "job_id": job_id,
+                    "called_agent": "manta-03-s2",
+                })
+            if any(w in prompt_lower.split() for w in saneamento_words):
+                job_id = self.coordinator.dispatch_job(
+                    "manta-03-s4", "manta-03-s8",
+                    {"input": "Interferência com sistema de saneamento"}
+                )
+                routing_result["cross_agent_jobs"].append({
+                    "job_id": job_id,
+                    "called_agent": "manta-03-s8",
+                })
+
+        elif any(w in prompt_lower for w in saneamento_words):
             routing_result["primary_agent"] = "manta-03-s8"
             if "custo" in prompt_lower or "orçamento" in prompt_lower:
                 job_id = self.coordinator.dispatch_job(
@@ -223,17 +248,6 @@ class MockMaestroWithCrossAgent:
                     "called_agent": "manta-02",
                 })
 
-        elif any(w in prompt_lower for w in ["metro", "vlt", "estação", "metrô"]):
-            routing_result["primary_agent"] = "manta-03-s4"
-            if "estrutura" in prompt_lower or "fundação" in prompt_lower:
-                job_id = self.coordinator.dispatch_job(
-                    "manta-03-s4", "manta-03-s2",
-                    {"input": "Análise estrutural para estação"}
-                )
-                routing_result["cross_agent_jobs"].append({
-                    "job_id": job_id,
-                    "called_agent": "manta-03-s2",
-                })
 
         return routing_result
 

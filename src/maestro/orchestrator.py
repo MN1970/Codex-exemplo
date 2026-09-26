@@ -9,6 +9,7 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 
 from .detector import ComplexityDetector, DetectionResult
+from .planner import Plano, planejar
 from .queue_executor import QueueExecutor, Task, TaskResult
 from .consensus import ConsensusEngine, Candidate, Vote, ConsensusResult
 from .parser import WorkflowDSL, Phase
@@ -19,9 +20,10 @@ class WorkflowExecution:
     """Execução de um workflow Maestro OS."""
     project_id: str
     workflow_id: str
-    status: str                    # 'running', 'completed', 'failed'
+    status: str = "running"      # 'running', 'completed', 'failed'
 
     # Fases
+    phase_0_plan: Optional[Plano] = None
     phase_1_detection: Optional[DetectionResult] = None
     phase_1_fan_out_results: Dict[str, TaskResult] = None
 
@@ -53,8 +55,10 @@ class MaestroOrchestrator:
     Orquestrador central do Maestro OS v6.0.
 
     Fluxo end-to-end:
-    1. Phase 1 Detection: Analisar projeto → identificar 8-16 agentes
-    2. Phase 1 Fan-out: Invocar agentes em paralelo (max 8 simultâneos)
+    0. Phase 0 Plan: planejador N0 escolhe o conjunto mínimo de agentes
+       (src/maestro/planner.py) — só eles são invocados no fan-out
+    1. Phase 1 Detection: métrica de complexidade (legado, não escolhe agentes)
+    2. Phase 1 Fan-out: Invocar agentes do plano (+ os declarados no workflow)
     3. Phase 2 Consensus: Coletar propostas, votar 3/5, resolver conflitos
     4. Phase 3 Aggregate: Consolidar outputs em DOCX/JSON/Matrix
     """
@@ -98,19 +102,23 @@ class MaestroOrchestrator:
         )
 
         try:
-            # Phase 1: Detection
-            print(f"\n[MAESTRO] Fase 1: Detecção para projeto '{workflow.project.title}'")
+            # Phase 0: Plano mínimo — decide quem roda antes de carregar qualquer agente
+            plano = planejar(project_description)
+            execution.phase_0_plan = plano
+            print(f"\n[MAESTRO] Fase 0: Plano para projeto '{workflow.project.title}'")
+            print(plano.resumo())
+
+            # Phase 1: Detection (métrica de complexidade; não seleciona agentes)
             detection = self.detector.detect(project_description)
             execution.phase_1_detection = detection
-            print(f"[MAESTRO] Detectado: {detection.complexity_level.value} "
-                  f"({detection.total_agents} agentes, {detection.token_budget}k tokens)")
+            print(f"[MAESTRO] Complexidade: {detection.complexity_level.value}")
 
             # Phase 1: Fan-out (paralelo)
             if workflow.phase_1_fan_out:
                 print(f"\n[MAESTRO] Fase 1b: Fan-out ({len(workflow.phase_1_fan_out.agents)} agentes)")
                 fan_out_results = await self._execute_fan_out(
                     workflow.phase_1_fan_out,
-                    detection
+                    plano
                 )
                 execution.phase_1_fan_out_results = fan_out_results
 
@@ -146,22 +154,22 @@ class MaestroOrchestrator:
     async def _execute_fan_out(
         self,
         fan_out_phase,
-        detection: DetectionResult
+        plano: Plano
     ) -> Dict[str, TaskResult]:
         """
-        Executa Phase 1: Fan-out (invocar 8-16 agentes em paralelo).
+        Executa Phase 1: Fan-out — só os agentes do plano, mais os que o
+        autor do workflow declarou explicitamente.
 
         Args:
             fan_out_phase: FanOutPhase com agentes e prompts
-            detection: Resultado da detecção
+            plano: Plano gerado pelo planejador N0
 
         Returns:
             Dict {agent_name: TaskResult}
         """
-        # Selecionar agentes: usar detecção + fase declarada
-        agents_to_invoke = list(set(
-            detection.agents_selected +
-            fan_out_phase.agents
+        # Ordem do plano primeiro (primário → handoffs), sem duplicatas
+        agents_to_invoke = list(dict.fromkeys(
+            plano.agentes + list(fan_out_phase.agents)
         ))
 
         print(f"[FAN-OUT] Invocando {len(agents_to_invoke)} agentes:")
@@ -309,14 +317,25 @@ class MaestroOrchestrator:
             f"ID: {execution.workflow_id}",
             f"Status: {execution.status}",
             f"",
-            "PHASE 1: Detection",
+            "PHASE 0: Plan",
         ]
+
+        if execution.phase_0_plan:
+            p = execution.phase_0_plan
+            lines.extend([
+                f"  Method: {p.metodo}",
+                f"  Agents planned: {len(p.agentes)} ({', '.join(p.agentes) or '-'})",
+                f"  Token ceiling: {p.teto_tokens}",
+                f"  Requires approval: {p.requer_aprovacao}",
+            ])
+
+        lines.extend(["", "PHASE 1: Detection"])
 
         if execution.phase_1_detection:
             d = execution.phase_1_detection
             lines.extend([
                 f"  Complexity: {d.complexity_level.value}",
-                f"  Agents detected: {d.total_agents}",
+                f"  Agents in legacy pool: {d.agents_needed}",
                 f"  Token budget: {d.token_budget}k",
             ])
 

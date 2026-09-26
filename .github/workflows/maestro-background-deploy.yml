@@ -116,7 +116,8 @@ jobs:
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix={{branch}}-
+            type=sha,prefix=sha-
+            type=ref,event=pr
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build Docker image
@@ -333,6 +334,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate, build, test]
     if: always()
+    env:
+      # action-slack lê o webhook desta variável; sem o secret, o envio é pulado.
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
     steps:
       - name: Build Slack notification
         id: slack-notification
@@ -340,10 +344,10 @@ jobs:
           if [ "${{ needs.validate.result }}" = "success" ] && \
              [ "${{ needs.build.result }}" = "success" ] && \
              [ "${{ needs.test.result }}" = "success" ]; then
-            STATUS="SUCCESS"
+            STATUS="success"
             COLOR="good"
           else
-            STATUS="FAILED"
+            STATUS="failure"
             COLOR="danger"
           fi
           echo "status=$STATUS" >> $GITHUB_OUTPUT
@@ -358,6 +362,5 @@ jobs:
             Commit: ${{ github.sha }}
             Branch: ${{ github.ref }}
             Author: ${{ github.actor }}
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
           fields: repo,message,commit,author,action,eventName,ref
-        if: always()
+        if: always() && env.SLACK_WEBHOOK_URL != ''
